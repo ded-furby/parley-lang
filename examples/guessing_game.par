@@ -1,0 +1,20 @@
+note: guess the secret number — talks back until you find it
+
+to main:
+    let secret be a random number from 1 to 10
+    let tries be 0
+    say "I picked a number from 1 to 10."
+    while yes:
+        let guess be ask for a number "your guess: "
+        if guess is nothing:
+            say "numbers only, please"
+            skip
+        set tries to tries plus 1
+        let g be value of guess
+        if g is secret:
+            say "You got it in {tries} tries!"
+            stop
+        otherwise if g is less than secret:
+            say "higher"
+        otherwise:
+            say "lower"

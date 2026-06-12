@@ -1,0 +1,37 @@
+note: a tiny todo list you drive by typing
+note: commands — add <thing> · done <number> · list · quit
+
+to show with items as list of text:
+    if length of items is 0:
+        say "nothing to do!"
+        give back
+    for each i from 1 to length of items:
+        let entry be item i of items
+        say "{i}. {entry}"
+
+to main:
+    let items be an empty list of text
+    while yes:
+        let command be ask "todo> "
+        if command is "quit":
+            say "bye"
+            stop
+        otherwise if command is "list":
+            show with items
+        otherwise if command starts with "add ":
+            let pieces be command split by "add "
+            add item 2 of pieces to items
+            say "added"
+        otherwise if command starts with "done ":
+            let pieces be command split by "done "
+            let n be number from item 2 of pieces
+            if n is nothing:
+                say "say which number to finish"
+            otherwise:
+                attempt:
+                    remove item (value of n) of items
+                    say "done!"
+                if it failed:
+                    say the error
+        otherwise:
+            say "commands: add <thing>, done <number>, list, quit"

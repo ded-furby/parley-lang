@@ -1,0 +1,137 @@
+"""Emitter tests: the generated Rust uses the mappings the docs promise."""
+
+from conftest import emit_text
+
+
+def test_clone_on_assign_for_heap_types():
+    rust = emit_text(
+        "to main:\n"
+        "    let first_list be a list of 1, 2\n"
+        "    let second_list be first_list\n"
+        "    say second_list\n")
+    assert "first_list.clone()" in rust
+
+
+def test_numbers_are_copied_not_cloned():
+    rust = emit_text(
+        "to main:\n"
+        "    let x be 1\n"
+        "    let y be x\n"
+        "    say y\n")
+    assert "x.clone()" not in rust
+
+
+def test_changing_param_is_mut_ref():
+    rust = emit_text(
+        "to bump with changing n as number:\n"
+        "    set n to n plus 1\n"
+        "to main:\n"
+        "    let c be 0\n"
+        "    bump with c\n"
+        "    say c\n")
+    assert "n: &mut i64" in rust
+    assert "bump(&mut c)" in rust
+    assert "(*n) = " in rust
+
+
+def test_enum_becomes_match():
+    rust = emit_text(
+        "a mood is one of happy, grumpy\n"
+        "to main:\n"
+        "    let m be happy\n"
+        "    when m:\n"
+        "        is happy:\n"
+        "            say 1\n"
+        "        is grumpy:\n"
+        "            say 2\n")
+    assert "enum Mood" in rust
+    assert "Mood::Happy => {" in rust
+    assert "match " in rust
+
+
+def test_record_becomes_struct():
+    rust = emit_text(
+        "a point has x as number, y as number\n"
+        "to main:\n"
+        "    let p be a point with x 1, y 2\n"
+        "    say p's x\n")
+    assert "struct Point {" in rust
+    assert "Point { x: 1i64, y: 2i64 }" in rust
+
+
+def test_interpolation_becomes_format():
+    rust = emit_text('to main:\n    let n be 3\n    say "n is {n}"\n')
+    assert 'format!("n is {}"' in rust
+
+
+def test_division_is_guarded_and_decimal():
+    rust = emit_text("to main:\n    say 10 divided by 4\n")
+    assert "parley_div" in rust
+
+
+def test_one_based_indexing_uses_helper():
+    rust = emit_text(
+        "to main:\n"
+        "    let xs be a list of 1, 2\n"
+        "    say item 1 of xs\n")
+    assert "parley_item" in rust
+
+
+def test_rust_keyword_names_are_mangled():
+    rust = emit_text(
+        "to main:\n"
+        "    let loop be 1\n"
+        "    let match be 2\n"
+        "    say loop plus match\n")
+    assert "let mut loop_p: i64" in rust
+    assert "let mut match_p: i64" in rust
+
+
+def test_rust_reserved_type_names_are_prefixed():
+    rust = emit_text(
+        "a string has x as number\n"
+        "to main:\n"
+        "    let s be a string with x 1\n"
+        "    say s's x\n")
+    assert "struct PString" in rust
+
+
+def test_number_promotes_to_decimal():
+    rust = emit_text(
+        "to main:\n"
+        "    let d be 1.5\n"
+        "    set d to 2\n"
+        "    say d\n")
+    assert "as f64" in rust
+
+
+def test_attempt_is_catch_unwind():
+    rust = emit_text(
+        "to main:\n"
+        "    attempt:\n"
+        "        say 1 divided by 0\n"
+        "    if it failed:\n"
+        "        say the error\n")
+    assert "catch_unwind" in rust
+    assert "parley_last_error()" in rust
+
+
+def test_main_catches_panics_in_english():
+    rust = emit_text("to main:\n    say 1\n")
+    assert "The program stopped" in rust
+    assert "fn main_p()" in rust
+
+
+def test_linemap_points_at_parley_lines():
+    from parley.checker import check_program
+    from parley.emit_rust import emit_program
+    from parley.parser import parse
+
+    program = parse("to main:\n    say 1\n    say 2\n")
+    assert not check_program(program)
+    rust, linemap = emit_program(program)
+    lines = rust.splitlines()
+    say_lines = sorted(i + 1 for i, l in enumerate(lines)
+                       if l.strip().startswith("println!"))
+    assert linemap[say_lines[0]] == 2
+    assert linemap[say_lines[1]] == 3

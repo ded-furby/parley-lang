@@ -1,0 +1,271 @@
+# Parley in 15 minutes
+
+Parley reads like English and compiles to a native binary. This walkthrough
+covers the whole language. Every snippet is a complete program — copy it into
+a file and `parley run file.par`.
+
+## 1. Say hello
+
+```parley
+to main:
+    say "Hello!"
+```
+
+Every program starts at `to main:`. Blocks are indentation (4 spaces), exactly
+like Python. `say` prints anything.
+
+## 2. Variables
+
+```parley
+to main:
+    let count be 10
+    set count to count plus 5
+    say count
+```
+
+`let` creates a variable, `set` changes it. A variable lives until the end of
+the block it was created in, and its type never changes.
+
+The basic types:
+
+| type | examples |
+|---|---|
+| `number` | `42`, `-3` (whole numbers) |
+| `decimal` | `2.5`, `0.1` |
+| `text` | `"hello"` |
+| `yesno` | `yes`, `no` |
+
+## 3. Talking values: interpolation
+
+```parley
+to main:
+    let who be "world"
+    say "Hello, {who}! Two plus two is {2 plus 2}."
+```
+
+Anything inside `{…}` in a string is a normal expression. Use `{{` and `}}`
+for literal braces.
+
+## 4. Math, in words or symbols
+
+```parley
+to main:
+    say 7 plus 3 times 2          # 13 — times binds tighter
+    say 10 divided by 4           # 2.5 — division always gives a decimal
+    say remainder of 10 divided by 3
+    say 2 to the power of 8
+    say square root of 144
+    say rounded 2.5
+```
+
+`+ - * / %` work too. `rounded`, `floor of`, `ceiling of` turn decimals into
+whole numbers.
+
+## 5. Deciding
+
+```parley
+to main:
+    let score be 75
+    if score is at least 90:
+        say "brilliant"
+    otherwise if score is more than 50:
+        say "solid"
+    otherwise:
+        say "keep going"
+```
+
+Comparisons: `is`, `is not`, `is more than`, `is less than`, `is at least`,
+`is at most`. Combine with `and`, `or`, `not`.
+
+## 6. Repeating
+
+```parley
+to main:
+    repeat 3 times:
+        say "hi"
+    for each i from 1 to 5:
+        say i
+    let n be 0
+    while n is less than 3:
+        set n to n plus 1
+```
+
+`stop` ends a loop early; `skip` jumps to the next turn.
+
+## 7. Lists
+
+```parley
+to main:
+    let primes be a list of 2, 3, 5, 7
+    add 11 to primes
+    say item 1 of primes          # items count from 1
+    say length of primes
+    say sum of primes
+    for each p in sorted primes:
+        say p
+```
+
+Also: `remove item 2 of primes`, `set item 1 of primes to 13`,
+`primes contains 7`, `smallest of`, `largest of`, `reversed`.
+An empty start: `let names be an empty list of text`.
+
+## 8. Maps
+
+```parley
+to main:
+    let ages be a map from text to number
+    set item "ada" of ages to 36
+    let ada be item "ada" of ages
+    say ada
+    for each name in keys of ages:
+        say name
+```
+
+Keys are `number` or `text`. `keys of` always comes back sorted, so programs
+behave the same every run.
+
+## 9. Text tools
+
+```parley
+to main:
+    let line be "milk, eggs, flour"
+    let parts be line split by ", "
+    say length of parts
+    say parts joined with " + "
+    say uppercase of "quiet"
+    if line starts with "milk":
+        say "dairy first"
+```
+
+Also: `lowercase of`, `trimmed`, `contains`, `ends with`, `reversed`.
+
+## 10. Records
+
+```parley
+a point has x as number, y as number
+
+to main:
+    let home be a point with x 3, y 4
+    say home's x
+    set home's y to 10
+    say home
+```
+
+A record bundles named fields. Read fields with `'s`. Records are **copied**
+when stored or passed — changing the copy never changes the original.
+
+## 11. Kinds (enums) and `when`
+
+```parley
+a mood is one of happy, neutral, grumpy
+
+to main:
+    let today be grumpy
+    when today:
+        is happy:
+            say "pet the cat"
+        is neutral:
+            say "observe the cat"
+        is grumpy:
+            say "feed the cat"
+```
+
+A `when` over a kind must cover every variant (or end with `otherwise:`).
+`when` also works on numbers and text — then `otherwise:` is required.
+
+## 12. Functions
+
+```parley
+to greet with name as text:
+    say "Hello, {name}!"
+
+to double with n as number giving number:
+    give back n times 2
+
+to main:
+    greet with "Ada"
+    say (double with 21)
+```
+
+`to name with parameters giving type:` defines; `give back` returns. As a
+statement, call plainly: `greet with "Ada"`. Inside an expression, wrap the
+call in parentheses: `(double with 21)`. A function with no parameters is
+called by its bare name: `let d be roll`.
+
+To let a function **change** the caller's variable, mark the parameter
+`changing`:
+
+```parley
+to bump with changing n as number:
+    set n to n plus 1
+
+to main:
+    let count be 0
+    bump with count
+    say count            # 1
+```
+
+## 13. Maybe: values that might be missing
+
+Some operations can fail honestly — they give back a `maybe`:
+
+```parley
+to main:
+    let answer be ask for a number "how many cats? "
+    if answer is nothing:
+        say "that was not a number"
+    otherwise:
+        say "{value of answer} cats!"
+```
+
+`ask for a number`, `number from text`, `decimal from text`, and `read file`
+all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
+`value of`. (Unwrapping nothing stops the program — check first.)
+
+## 14. When things go wrong: attempt
+
+Runtime problems (divide by zero, item out of range, …) stop the program with
+a plain-English message — unless you catch them:
+
+```parley
+to main:
+    attempt:
+        say 1 divided by 0
+    if it failed:
+        say "oops: {the error}"
+    say "still going"
+```
+
+## 15. Files, input, randomness
+
+```parley
+to main:
+    write "first line" to file "notes.txt"
+    append "\nsecond line" to file "notes.txt"
+    let content be read file "notes.txt"
+    if content is not nothing:
+        say value of content
+    let name be ask "your name: "
+    let roll be a random number from 1 to 6
+    say "{name} rolled {roll}"
+```
+
+## 16. Many files
+
+```parley
+include "helpers.par"
+
+to main:
+    say (helper_from_other_file)
+```
+
+`include` splices another file in — errors still point at the right file and
+line.
+
+## That's the whole language
+
+Next steps:
+
+* [REFERENCE.md](REFERENCE.md) — every construct with the Rust it becomes
+* [ERRORS.md](ERRORS.md) — every error code with its fix
+* `examples/` — nine programs from hello to a todo app

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parley-lang"
+version = "0.1.0"
+description = "Speak plainly, ship native binaries — an English-like compiled language for AI agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Arjun Avtani" }]
+keywords = ["compiler", "language", "ai-agents", "rust", "transpiler"]
+dependencies = ["lark>=1.1"]
+
+[project.urls]
+Homepage = "https://github.com/ded-furby/parley-lang"
+
+[project.scripts]
+parley = "parley.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["parley"]
+
+[tool.setuptools.package-data]
+parley = ["grammar.lark"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

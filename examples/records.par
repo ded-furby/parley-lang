@@ -1,0 +1,21 @@
+note: records hold named fields; functions can read or change them
+
+a point has x as number, y as number
+
+a rectangle has corner as point, width as number, height as number
+
+to area with r as rectangle giving number:
+    give back r's width times r's height
+
+to move_right with changing p as point, amount as number:
+    set p's x to p's x plus amount
+
+to main:
+    let origin be a point with x 0, y 0
+    let frame be a rectangle with corner origin, width 4, height 3
+    say "area: {(area with frame)}"
+
+    note: records are copied when stored, so frame keeps its own corner
+    move_right with origin, 10
+    say "origin moved to x {origin's x}"
+    say "frame's corner is still at x {frame's corner's x}"

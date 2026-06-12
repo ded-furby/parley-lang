@@ -1,0 +1,22 @@
+note: a kind ("enum") is one of a fixed set of variants
+
+a mood is one of happy, neutral, grumpy
+
+to describe with m as mood giving text:
+    when m:
+        is happy:
+            give back "all sunshine"
+        is neutral:
+            give back "perfectly balanced"
+        is grumpy:
+            give back "approach with snacks"
+
+to main:
+    let today be grumpy
+    say "the cat is {today}"
+    say (describe with today)
+    when today:
+        is happy:
+            say "pet it"
+        otherwise:
+            say "feed it first"

@@ -1,0 +1,16 @@
+note: write a small file, read it back, report what is inside
+
+to main:
+    let lines be a list of "the quick brown fox", "jumps over", "the lazy dog"
+    write lines joined with "\n" to file "parley_demo.txt"
+
+    let content be read file "parley_demo.txt"
+    if content is nothing:
+        say "could not read the file back"
+        give back
+    let full_text be value of content
+    let rows be full_text split by "\n"
+    say "the file has {length of rows} lines"
+    for each row in rows:
+        if row contains "lazy":
+            say "found it: {row}"

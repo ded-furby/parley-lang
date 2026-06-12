@@ -1,0 +1,22 @@
+note: lists keep order, maps connect keys to values
+
+to main:
+    let primes be a list of 2, 3, 5, 7, 11
+    say "I have {length of primes} primes; their sum is {sum of primes}"
+    add 13 to primes
+    say "item 3 is {item 3 of primes}"
+    if primes contains 7:
+        say "7 is in the list"
+
+    let shuffled be a list of 9, 1, 8, 2
+    let in_order be an empty list of text
+    for each n in sorted shuffled:
+        add text from n to in_order
+    say in_order joined with " < "
+
+    let ages be a map from text to number
+    set item "ada" of ages to 36
+    set item "alan" of ages to 41
+    let ada_age be item "ada" of ages
+    say "ada is {ada_age}"
+    say "people: {keys of ages joined with \", \"}"

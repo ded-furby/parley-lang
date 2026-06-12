@@ -1,0 +1,28 @@
+note: a tiny chatty calculator with decimals and safe division
+
+to main:
+    say "I can add, subtract, multiply and divide."
+    let a_text be ask "first number: "
+    let b_text be ask "second number: "
+    let op be ask "operation (+ - * /): "
+    let first be decimal from a_text
+    let second be decimal from b_text
+    if first is nothing or second is nothing:
+        say "those were not numbers"
+        give back
+    let x be value of first
+    let y be value of second
+    attempt:
+        when op:
+            is "+":
+                say x plus y
+            is "-":
+                say x minus y
+            is "*":
+                say x times y
+            is "/":
+                say x divided by y
+            otherwise:
+                say "I don't know the operation {op}"
+    if it failed:
+        say the error

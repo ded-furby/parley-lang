@@ -1,0 +1,6 @@
+note: hello — your first Parley program
+
+to main:
+    let who be "world"
+    say "Hello, {who}!"
+    say "Two plus two is {2 plus 2}."

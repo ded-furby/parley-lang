@@ -1,0 +1,12 @@
+note: the classic — multiples of 3 say Fizz, of 5 say Buzz
+
+to main:
+    for each i from 1 to 20:
+        if remainder of i divided by 15 is 0:
+            say "FizzBuzz"
+        otherwise if remainder of i divided by 3 is 0:
+            say "Fizz"
+        otherwise if remainder of i divided by 5 is 0:
+            say "Buzz"
+        otherwise:
+            say i

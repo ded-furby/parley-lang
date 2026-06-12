@@ -1,0 +1,262 @@
+// Parley grammar — an English-like language, parsed with LALR + indentation.
+//
+// Design rules that keep English deterministic:
+//   * Multi-word phrases ("is more than", "a list of") are single tokens,
+//     matched with flexible internal spacing and a trailing word boundary.
+//   * Commas separate fields/arguments/list items. A list literal or record
+//     construction sits directly after "be"/"to"/"give back", or inside
+//     parentheses anywhere else — so commas never become ambiguous.
+//   * Blocks are indentation, exactly like Python.
+//
+// Terminals prefixed with "_" are filtered from the parse tree; rule aliases
+// carry their meaning instead.
+
+start: _NL* item*
+
+item: record_def
+    | enum_def
+    | func_def
+
+record_def: _A NAME "has" field ("," field)* _NL
+field: NAME "as" type
+enum_def: _A NAME _IS_ONE_OF NAME ("," NAME)* _NL
+
+func_def: "to" NAME params giving ":" block
+params: ["with" param ("," param)*]
+param: [CHANGING] NAME "as" type
+giving: ["giving" type]
+
+type: "number"                  -> t_number
+    | "decimal"                 -> t_decimal
+    | "text"                    -> t_text
+    | "yesno"                   -> t_yesno
+    | _LIST_OF type             -> t_list
+    | _MAP_FROM type _TO type   -> t_map
+    | "maybe" type              -> t_maybe
+    | NAME                      -> t_named
+
+block: _NL _INDENT stmt+ _DEDENT
+
+?stmt: let_stmt
+     | set_item_stmt
+     | set_stmt
+     | say_stmt
+     | if_stmt
+     | when_stmt
+     | while_stmt
+     | repeat_stmt
+     | forrange_stmt
+     | foreach_stmt
+     | give_stmt
+     | stop_stmt
+     | skip_stmt
+     | attempt_stmt
+     | add_stmt
+     | remove_stmt
+     | write_stmt
+     | append_stmt
+     | call_stmt
+
+let_stmt: "let" NAME "be" rhs _NL
+set_stmt: "set" lvalue _TO rhs _NL
+set_item_stmt: "set" _ITEM sum_e _OF lvalue _TO rhs _NL
+say_stmt: "say" expr _NL
+give_stmt: _GIVE_BACK [rhs] _NL
+stop_stmt: "stop" _NL
+skip_stmt: "skip" _NL
+add_stmt: "add" expr _TO lvalue _NL
+remove_stmt: "remove" _ITEM sum_e _OF lvalue _NL
+write_stmt: "write" expr _TO_FILE expr _NL
+append_stmt: "append" expr _TO_FILE expr _NL
+call_stmt: NAME args _NL
+args: ["with" expr ("," expr)*]
+
+if_stmt: "if" expr ":" block elif_* [else_]
+elif_: _OTHERWISE_IF expr ":" block
+else_: "otherwise" ":" block
+
+when_stmt: "when" expr ":" _NL _INDENT when_arm+ [else_] _DEDENT
+when_arm: _IS pattern ":" block
+pattern: INT         -> pat_int
+       | FLOAT       -> pat_float
+       | STRING      -> pat_string
+       | "yes"       -> pat_yes
+       | "no"        -> pat_no
+       | _MINUS INT   -> pat_neg_int
+       | _MINUS FLOAT -> pat_neg_float
+       | NAME        -> pat_name
+
+while_stmt: "while" expr ":" block
+repeat_stmt: "repeat" atom _TIMES ":" block
+forrange_stmt: _FOR_EACH NAME "from" expr _TO expr ":" block
+foreach_stmt: _FOR_EACH NAME "in" expr ":" block
+attempt_stmt: "attempt" ":" block _IF_IT_FAILED ":" block
+
+lvalue: NAME (_APOS_S NAME)*
+
+// A "rhs" is anything that may follow "be" / "to" / "give back" directly.
+// List literals and record constructions live here (and inside parentheses)
+// so their commas can never be confused with argument or field commas.
+?rhs: expr
+    | list_lit
+    | empty_list
+    | empty_map
+    | construct
+
+list_lit: _A_LIST_OF expr ("," expr)*
+empty_list: _EMPTY_LIST_OF type
+empty_map: _A_MAP_FROM type _TO type
+construct: _A NAME "with" field_init ("," field_init)*
+field_init: NAME expr
+
+// ---------- expressions ----------
+
+?expr: or_e
+?or_e: and_e
+     | or_e "or" and_e          -> or_op
+?and_e: not_e
+      | and_e "and" not_e       -> and_op
+?not_e: "not" not_e             -> not_op
+      | cmp_e
+?cmp_e: link_e
+      | link_e _IS_NOT link_e        -> ne
+      | link_e _IS link_e            -> eq
+      | link_e _IS_MORE_THAN link_e  -> gt
+      | link_e _IS_LESS_THAN link_e  -> lt
+      | link_e _IS_AT_LEAST link_e   -> ge
+      | link_e _IS_AT_MOST link_e    -> le
+      | link_e _CONTAINS link_e      -> contains
+      | link_e _STARTS_WITH link_e   -> startswith
+      | link_e _ENDS_WITH link_e     -> endswith
+?link_e: sum_e
+       | link_e _SPLIT_BY sum_e      -> split_by
+       | link_e _JOINED_WITH sum_e   -> joined_with
+?sum_e: prod_e
+      | sum_e _PLUS prod_e      -> add_op
+      | sum_e _MINUS prod_e     -> sub_op
+?prod_e: pow_e
+       | prod_e _TIMES pow_e    -> mul_op
+       | prod_e _DIV pow_e      -> div_op
+       | prod_e _MOD pow_e      -> mod_op
+?pow_e: unary
+      | unary _POW unary        -> pow_op
+?unary: _MINUS unary            -> neg
+      | _LENGTH_OF unary        -> length_of
+      | _SUM_OF unary           -> sum_of
+      | _SMALLEST_OF unary      -> smallest_of
+      | _LARGEST_OF unary       -> largest_of
+      | _UPPERCASE_OF unary     -> uppercase_of
+      | _LOWERCASE_OF unary     -> lowercase_of
+      | _ABSOLUTE_OF unary      -> absolute_of
+      | _FLOOR_OF unary         -> floor_of
+      | _CEILING_OF unary       -> ceiling_of
+      | _SQRT_OF unary          -> sqrt_of
+      | _VALUE_OF unary         -> value_of
+      | _KEYS_OF unary          -> keys_of
+      | _TEXT_FROM unary        -> text_from
+      | _NUMBER_FROM unary      -> number_from
+      | _DECIMAL_FROM unary     -> decimal_from
+      | _SORTED unary           -> sorted_of
+      | _REVERSED unary         -> reversed_of
+      | _TRIMMED unary          -> trimmed_of
+      | _ROUNDED unary          -> rounded_of
+      | _REMAINDER_OF unary _DIV unary -> remainder
+      | _ITEM sum_e _OF unary   -> item_of
+      | _READ_FILE unary        -> read_file
+      | _ASK_NUM unary          -> ask_number
+      | _ASK unary              -> ask_text
+      | _RANDOM_FROM sum_e _TO unary -> random_from
+      | postfix_e
+?postfix_e: atom
+          | postfix_e _APOS_S NAME -> field_get
+?atom: INT                      -> num
+     | FLOAT                    -> dec
+     | STRING                   -> text_lit
+     | "yes"                    -> yes_lit
+     | "no"                     -> no_lit
+     | "nothing"                -> nothing_lit
+     | _THE_ERROR               -> the_error
+     | NAME                     -> var
+     | _LPAR rhs _RPAR          -> paren
+     | _LPAR NAME "with" expr ("," expr)* _RPAR -> call_expr
+
+// ---------- terminals ----------
+
+// Multi-word phrases: flexible single-line spacing, word-boundary guarded.
+_IS_ONE_OF.2: /is +one +of\b/
+_IS_MORE_THAN.2: /is +more +than\b/
+_IS_LESS_THAN.2: /is +less +than\b/
+_IS_AT_LEAST.2: /is +at +least\b/
+_IS_AT_MOST.2: /is +at +most\b/
+_IS_NOT.2: /is +not\b/
+_IS.2: /is\b/
+_CONTAINS.2: /contains\b/
+_STARTS_WITH.2: /starts +with\b/
+_ENDS_WITH.2: /ends +with\b/
+_SPLIT_BY.2: /split +by\b/
+_JOINED_WITH.2: /joined +with\b/
+_POW.2: /to +the +power +of\b/
+_GIVE_BACK.2: /give +back\b/
+_FOR_EACH.2: /for +each\b/
+_OTHERWISE_IF.2: /otherwise +if\b/
+_IF_IT_FAILED.2: /if +it +failed\b/
+_TO_FILE.2: /to +file\b/
+_TO.2: /to\b/
+_ITEM.2: /item\b/
+_OF.2: /of\b/
+_A.2: /an?\b/
+_TIMES.2: /times\b/ | "*"
+CHANGING.2: /changing\b/
+
+_LENGTH_OF.2: /length +of\b/
+_SUM_OF.2: /sum +of\b/
+_SMALLEST_OF.2: /smallest +of\b/
+_LARGEST_OF.2: /largest +of\b/
+_UPPERCASE_OF.2: /uppercase +of\b/
+_LOWERCASE_OF.2: /lowercase +of\b/
+_ABSOLUTE_OF.2: /absolute +of\b/
+_FLOOR_OF.2: /floor +of\b/
+_CEILING_OF.2: /ceiling +of\b/
+_SQRT_OF.2: /square +root +of\b/
+_VALUE_OF.2: /value +of\b/
+_KEYS_OF.2: /keys +of\b/
+_TEXT_FROM.2: /text +from\b/
+_NUMBER_FROM.2: /number +from\b/
+_DECIMAL_FROM.2: /decimal +from\b/
+_REMAINDER_OF.2: /remainder +of\b/
+_SORTED.2: /sorted\b/
+_REVERSED.2: /reversed\b/
+_TRIMMED.2: /trimmed\b/
+_ROUNDED.2: /rounded\b/
+_READ_FILE.2: /read +file\b/
+_ASK_NUM.2: /ask +for +a +number\b/
+_ASK.2: /ask\b/
+_RANDOM_FROM.2: /a +random +number +from\b/
+_THE_ERROR.2: /the +error\b/
+_A_LIST_OF.2: /a +list +of\b/
+_EMPTY_LIST_OF.2: /an +empty +list +of\b/
+_A_MAP_FROM.2: /a +map +from\b/
+_LIST_OF.2: /list +of\b/
+_MAP_FROM.2: /map +from\b/
+
+_PLUS.2: /plus\b/ | "+"
+_MINUS.2: /minus\b/ | "-"
+_DIV.2: /divided +by\b/ | "/"
+_MOD: "%"
+
+_APOS_S: "'s"
+_LPAR: "("
+_RPAR: ")"
+
+INT: /\d+/
+FLOAT: /\d+\.\d+/
+STRING: /"(\\.|[^"\\\n])*"/
+NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
+
+COMMENT: /(note:|#)[^\n]*/
+_NL: /((\r?\n[\t ]*)|((note:|#)[^\n]*))+/
+
+%ignore /[ \t]+/
+%ignore COMMENT
+
+%declare _INDENT _DEDENT
