@@ -98,6 +98,22 @@ class TEnum(Type):
         return self.name
 
 
+class TFunc(Type):
+    """A function value: Rust fn pointer, so Copy and zero-cost."""
+
+    def __init__(self, params: list[Type], ret: Optional[Type]):
+        self.params = params
+        self.ret = ret
+
+    def __str__(self):
+        out = "(function"
+        if self.params:
+            out += " taking " + ", ".join(str(p) for p in self.params)
+        if self.ret is not None:
+            out += f" giving {self.ret}"
+        return out + ")"
+
+
 def is_heap(ty: Type) -> bool:
     """Types that are not Copy in Rust — assignment must clone."""
     if isinstance(ty, (TText, TList, TMap, TRecord)):
@@ -211,14 +227,14 @@ class If(Stmt):
 
 @dataclass
 class Pattern(Node):
-    kind: str          # "int" | "dec" | "text" | "yes" | "no" | "name"
-    value: Union[int, float, str, None]
+    kind: str          # "int" | "dec" | "text" | "yes" | "no" | "name" | "range"
+    value: Union[int, float, str, tuple, None]   # "range": (lo Pattern, hi Pattern)
 
 
 @dataclass
 class When(Stmt):
     subject: Expr
-    arms: list[tuple[Pattern, list[Stmt]]]
+    arms: list[tuple[list[Pattern], list[Stmt]]]
     otherwise: Optional[list[Stmt]]
 
 
@@ -456,3 +472,9 @@ class Construct(Expr):
 class CallExpr(Expr):
     name: str
     args: list[Expr]
+
+
+@dataclass
+class FuncRef(Expr):
+    """`the function NAME` — a named function used as a value."""
+    name: str

@@ -96,18 +96,20 @@ cp -r skill/parley ~/.claude/skills/
 
 ## What the language has
 
-records · enums with exhaustive `when` · lists, maps (sorted iteration),
-`maybe` options · functions with `changing` (mutable) parameters and
-recursion · string interpolation `"{x}"` · `attempt:`/`if it failed:` error
-handling with `the error` · file I/O · stdin `ask` · random numbers ·
-multi-file programs via `include` · `stop`/`skip`/`give back` · whole-number
-and decimal math with guarded division, powers, roots · a text toolbox
-(`split by`, `joined with`, `uppercase of`, `contains`, …)
+records · enums with exhaustive `when` (multi-value arms, numeric ranges) ·
+function values (`the function f`, zero-cost Rust fn pointers) · lists, maps
+(sorted iteration), `maybe` options · functions with `changing` (mutable)
+parameters and recursion · string interpolation `"{x}"` ·
+`attempt:`/`if it failed:` error handling with `the error` · file I/O ·
+stdin `ask` · random numbers · multi-file programs via `include` ·
+`stop`/`skip`/`give back` · whole-number and decimal math with guarded
+division, powers, roots · a text toolbox (`split by`, `joined with`,
+`uppercase of`, `contains`, …)
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
 Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
-[docs/ERRORS.md](docs/ERRORS.md). Nine working programs: [examples/](examples).
+[docs/ERRORS.md](docs/ERRORS.md). Ten working programs: [examples/](examples).
 
 ## How it works
 
@@ -133,14 +135,15 @@ back at your `.par` line. `parley rust program.par` shows the generated code.
 
 ## Status & roadmap
 
-v0.1 is a working experiment — the full pipeline is real (all examples
+v0.2 is a working experiment — the full pipeline is real (all examples
 compile and run; the test suite builds every feature as a native binary),
 but the language is young and the syntax may still move. Known limits and
 the plan:
 
-- [ ] richer `when` patterns (ranges, multiple values per arm)
+- [x] richer `when` patterns (ranges, multiple values per arm) — v0.2
+- [x] function values (`the function f`, fn-pointer backed) — v0.2
+- [ ] anonymous closures with captured variables (today: named functions only)
 - [ ] borrow-based passing for big values (today: clone-on-assign)
-- [ ] closures / function values
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (paper in progress)
 - [ ] LSP server
 - [ ] packages beyond `include`
@@ -150,7 +153,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 90+ tests; e2e compiles real binaries (needs cargo)
+pytest            # 110+ tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

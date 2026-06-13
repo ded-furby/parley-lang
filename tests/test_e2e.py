@@ -262,3 +262,49 @@ def test_new_command(workdir):
     assert proc.returncode == 0, proc.stderr
     assert "Hello from fresh_proj!" in proc.stdout
     assert "the sum is 14" in proc.stdout
+
+
+# ------------------------------------------------------------------ v0.2: when patterns + function values
+
+def test_higher_order(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "higher_order.par")], cwd=workdir)
+    assert proc.returncode == 0
+    assert proc.stdout == (
+        "double twice: 20\n"
+        "triple twice: 45\n"
+        "double says 10\n"
+        "triple says 15\n")
+
+
+def test_when_ranges_and_multi_values(workdir):
+    proc = run_program(workdir, "ranges", (
+        "to grade with score as number giving text:\n"
+        "    when score:\n"
+        "        is 90 to 100:\n"
+        "            give back \"A\"\n"
+        "        is 80 to 89:\n"
+        "            give back \"B\"\n"
+        "        is 1, 2 or 3:\n"
+        "            give back \"tiny\"\n"
+        "        otherwise:\n"
+        "            give back \"other\"\n"
+        "to main:\n"
+        "    say (grade with 95)\n"
+        "    say (grade with 80)\n"
+        "    say (grade with 2)\n"
+        "    say (grade with 50)\n"))
+    assert proc.stdout == "A\nB\ntiny\nother\n"
+
+
+def test_decimal_when_with_int_arm(workdir):
+    proc = run_program(workdir, "decwhen", (
+        "to main:\n"
+        "    let x be 3.0\n"
+        "    when x:\n"
+        "        is 3:\n"
+        "            say \"three\"\n"
+        "        is 0.5 to 1.5:\n"
+        "            say \"around one\"\n"
+        "        otherwise:\n"
+        "            say \"other\"\n"))
+    assert proc.stdout == "three\n"

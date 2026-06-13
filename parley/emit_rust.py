@@ -65,6 +65,10 @@ def rust_type(ty: A.Type) -> str:
         return f"Option<{rust_type(ty.elem)}>"
     if isinstance(ty, (A.TRecord, A.TEnum)):
         return camel(ty.name)
+    if isinstance(ty, A.TFunc):
+        params = ", ".join(rust_type(p) for p in ty.params)
+        ret = f" -> {rust_type(ty.ret)}" if ty.ret is not None else ""
+        return f"fn({params}){ret}"
     raise AssertionError(f"no rust type for {ty}")
 
 
@@ -528,7 +532,11 @@ class Emitter:
                 f"{safe(n)}: {self.value(v, ftypes.get(n))}" for n, v in e.inits)
             return f"{camel(e.record)} {{ {inits} }}"
         if isinstance(e, A.CallExpr):
+            if getattr(e, "fn_value", False):
+                return self.value_call_str(e)
             return self.call_str(e.target_fn, e.args) if hasattr(e, "target_fn") else "/*?*/"
+        if isinstance(e, A.FuncRef):
+            return f"({self.fn_name(e.name)} as {rust_type(e.ty)})"
         raise AssertionError(f"no emission for {type(e).__name__}")
 
     def _value_binop(self, e: A.BinOp) -> str:
@@ -652,6 +660,15 @@ class Emitter:
             return f"parley_reversed(&({self.borrow(v)}))"
         raise AssertionError(op)
 
+    def value_call_str(self, node) -> str:
+        """Call through a variable holding a function value (fn pointer)."""
+        callee = safe(node.name)
+        if getattr(node, "callee_changing", False):
+            callee = f"(*{callee})"
+        args = ", ".join(self.value(a, pt)
+                         for a, pt in zip(node.args, node.fn_type.params))
+        return f"{callee}({args})"
+
     def call_str(self, fn: A.FuncDef, args: list[A.Expr]) -> str:
         parts = []
         for prm, arg in zip(fn.params, args):
@@ -714,8 +731,9 @@ class Emitter:
             ename = camel(subj_ty.name)
             self.out(f"match {self.value(st.subject)} {{", st.line)
             self.indent += 1
-            for pat, body in st.arms:
-                self.out(f"{ename}::{camel(pat.value)} => {{", pat.line or st.line)
+            for pats, body in st.arms:
+                rust_pats = " | ".join(f"{ename}::{camel(p.value)}" for p in pats)
+                self.out(f"{rust_pats} => {{", pats[0].line or st.line)
                 self.indent += 1
                 self.emit_block(body)
                 self.indent -= 1
@@ -734,11 +752,11 @@ class Emitter:
         subj = self.fresh("when")
         self.out(f"let {subj} = {self.value(st.subject)};", st.line)
         first = True
-        for pat, body in st.arms:
-            cond = self._pattern_cond(subj, pat)
+        for pats, body in st.arms:
+            cond = " || ".join(self._pattern_cond(subj, p, subj_ty) for p in pats)
             kw = "if" if first else "} else if"
             first = False
-            self.out(f"{kw} {cond} {{", pat.line or st.line)
+            self.out(f"{kw} {cond} {{", pats[0].line or st.line)
             self.indent += 1
             self.emit_block(body)
             self.indent -= 1
@@ -753,11 +771,22 @@ class Emitter:
         if not first:
             self.out("}")
 
-    def _pattern_cond(self, subj: str, pat: A.Pattern) -> str:
-        if pat.kind == "int":
-            return f"{subj} == {pat.value}"
-        if pat.kind == "dec":
-            return f"{subj} == {pat.value}"
+    def _pattern_num(self, value, subj_ty: A.Type) -> str:
+        """A numeric pattern literal, typed to match the subject."""
+        if isinstance(subj_ty, A.TDec):
+            s = repr(float(value))
+            if not any(c in s for c in ".e"):
+                s += ".0"
+            return s + "f64"
+        return f"{value}i64"
+
+    def _pattern_cond(self, subj: str, pat: A.Pattern, subj_ty: A.Type) -> str:
+        if pat.kind in ("int", "dec"):
+            return f"{subj} == {self._pattern_num(pat.value, subj_ty)}"
+        if pat.kind == "range":
+            lo, hi = pat.value
+            return (f"({subj} >= {self._pattern_num(lo.value, subj_ty)} "
+                    f"&& {subj} <= {self._pattern_num(hi.value, subj_ty)})")
         if pat.kind == "text":
             return f'{subj} == "{rust_str_lit(pat.value)}"'
         if pat.kind == "yes":
@@ -838,6 +867,13 @@ class Emitter:
                  f"{'true' if st.append else 'false'});", st.line)
 
     def em_callstmt(self, st: A.CallStmt):
+        if getattr(st, "fn_value", False):
+            call = self.value_call_str(st)
+            if st.fn_type.ret is not None:
+                self.out(f"let _ = {call};", st.line)
+            else:
+                self.out(f"{call};", st.line)
+            return
         if not hasattr(st, "target_fn"):
             return
         call = self.call_str(st.target_fn, st.args)

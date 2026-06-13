@@ -177,6 +177,16 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "`stop` ends the nearest loop and `skip` jumps to its next turn, so they need a loop around them.",
         "fix": "Use them inside while/repeat/for each, or use `give back` to leave a function.",
     },
+    "P312": {
+        "title": "Bad range in a `when` arm",
+        "explain": "A range arm (`is 1 to 10:`) needs a numeric `when` subject, numeric literal ends, and the smaller value first.",
+        "fix": "Make sure the `when` is over number or decimal, the ends are plain literals of the matching type, and the low end comes first.",
+    },
+    "P313": {
+        "title": "Cannot be used as a function value",
+        "explain": "`the function name` turns a defined function into a value, but `main`, functions with `changing` parameters, and variables cannot be used that way.",
+        "fix": "Use `the function` only on plain defined functions. A variable that already holds a function value is used directly, without `the function`.",
+    },
     # --- residual Rust errors (P9xx)
     "P901": {
         "title": "The Rust backend rejected the program",

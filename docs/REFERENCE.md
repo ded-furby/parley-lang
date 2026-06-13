@@ -23,6 +23,7 @@ Comments: `note: …` or `# …` to end of line.
 | `maybe T` | `Option<T>` | literal `nothing`; unwrap with `value of` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
+| `(function taking A, B giving R)` | `fn(A, B) -> R` | a function value; both clauses optional |
 
 **Value semantics:** storing or passing text/lists/maps/records copies them
 (the emitter inserts `.clone()`). Mutation crosses a function boundary only
@@ -49,6 +50,8 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `say expr` | `println!(…)` (yesno prints `yes`/`no`, maybe prints `nothing` or the value) |
 | `if c:` / `otherwise if c:` / `otherwise:` | `if c { } else if c { } else { }` |
 | `when x:` with `is v:` arms | `match` (enums) / `if`-chain (numbers, text, yesno) |
+| `is 1, 2 or 3:` (multi-value arm) | `1 \| 2 \| 3 =>` / chained `\|\|` |
+| `is 10 to 20:` (range arm, numeric `when`) | `x >= 10 && x <= 20` (inclusive) |
 | `while c:` | `while c { }` |
 | `repeat n times:` | `for _ in 0..n { }` |
 | `for each x in xs:` | `for x in xs.clone() { }` (iterates a copy) |
@@ -94,6 +97,11 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `nothing` | `None` | |
 | `value of m` | checked unwrap | inner type |
 | `the error` | last runtime error text | text |
+| `the function f` | `f as fn(…) -> …` | a function value (no `changing` params) |
+
+A variable holding a function value is called exactly like a function:
+`(f with x)` in expressions, `f with x` as a statement. Function values
+cannot be turned into text or said.
 
 ### Built-in operations
 

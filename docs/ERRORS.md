@@ -172,6 +172,18 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Use them inside while/repeat/for each, or use `give back` to leave a function.
 
+## P312 — Bad range in a `when` arm
+
+**What it means:** A range arm (`is 1 to 10:`) needs a numeric `when` subject, numeric literal ends, and the smaller value first.
+
+**How to fix it:** Make sure the `when` is over number or decimal, the ends are plain literals of the matching type, and the low end comes first.
+
+## P313 — Cannot be used as a function value
+
+**What it means:** `the function name` turns a defined function into a value, but `main`, functions with `changing` parameters, and variables cannot be used that way.
+
+**How to fix it:** Use `the function` only on plain defined functions. A variable that already holds a function value is used directly, without `the function`.
+
 ## P901 — The Rust backend rejected the program
 
 **What it means:** The generated Rust did not compile. This usually means a Parley checker gap — the position points at the Parley line involved.

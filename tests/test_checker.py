@@ -116,3 +116,76 @@ def test_block_scoping_let_dies_with_block():
 def test_loop_var_scoped():
     src = in_main("for each i from 1 to 3:", "    say i", "say i")
     assert "P201" in diag_codes(src)
+
+
+# ------------------------------------------------------------------ v0.2: when patterns + function values
+
+RANGE_AND_FUNC_CASES = [
+    ("range_over_text",
+     in_main('when "hi":', '    is 1 to 5:', "        say 1", "    otherwise:", "        say 2"),
+     "P312", "numeric"),
+    ("range_empty",
+     in_main("when 5:", "    is 9 to 2:", "        say 1", "    otherwise:", "        say 2"),
+     "P312", "empty"),
+    ("range_dec_end_on_number",
+     in_main("when 5:", "    is 1 to 2.5:", "        say 1", "    otherwise:", "        say 2"),
+     "P312", "whole numbers"),
+    ("the_function_unknown", in_main("let f be the function nope"), "P202", "no function"),
+    ("the_function_on_changing",
+     "to bump with changing n as number:\n    set n to n plus 1\n"
+     "to main:\n    let f be the function bump\n",
+     "P313", "changing parameter"),
+    ("the_function_on_main", in_main("let f be the function main"), "P313", "main"),
+    ("say_function_value",
+     "to double with x as number giving number:\n    give back x times 2\n"
+     "to main:\n    let f be the function double\n    say f\n",
+     "P301", "function value"),
+    ("fn_value_wrong_arity",
+     "to double with x as number giving number:\n    give back x times 2\n"
+     "to main:\n    let f be the function double\n    say (f with 1, 2)\n",
+     "P203", "takes 1 argument"),
+    ("fn_value_wrong_arg_type",
+     "to double with x as number giving number:\n    give back x times 2\n"
+     "to main:\n    let f be the function double\n    say (f with \"hi\")\n",
+     "P301", "needs number"),
+]
+
+
+@pytest.mark.parametrize("name,src,code,fragment", RANGE_AND_FUNC_CASES,
+                         ids=[c[0] for c in RANGE_AND_FUNC_CASES])
+def test_range_and_func_diagnostics(name, src, code, fragment):
+    diags = check_text(src)
+    assert any(d.code == code for d in diags), \
+        f"expected {code}, got {[(d.code, d.message) for d in diags]}"
+    blob = " ".join((d.message + " " + (d.hint or "")) for d in diags if d.code == code)
+    assert fragment in blob
+
+
+def test_function_value_round_trip_is_clean():
+    src = (
+        "to double with x as number giving number:\n"
+        "    give back x times 2\n"
+        "to apply_twice with f as (function taking number giving number), x as number giving number:\n"
+        "    give back (f with (f with x))\n"
+        "to main:\n"
+        "    let d be the function double\n"
+        "    say (apply_twice with d, 5)\n"
+        "    let fs be a list of the function double\n"
+        "    for each f in fs:\n"
+        "        say (f with 1)\n"
+    )
+    assert check_text(src) == []
+
+
+def test_when_multi_value_covers_enum():
+    src = (
+        "a mood is one of happy, grumpy, sleepy\n"
+        "to main:\n"
+        "    let m be happy\n"
+        "    when m:\n"
+        "        is happy, sleepy:\n"
+        "            say 1\n"
+        "        is grumpy:\n"
+        "            say 2\n"
+    )
+    assert check_text(src) == []

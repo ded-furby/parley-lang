@@ -62,8 +62,15 @@ to main:
     when felix's lives:                        # when over numbers/text needs otherwise
         is 9:
             say "all nine"
+        is 1, 2 or 3:                          # several values in one arm
+            say "few"
+        is 4 to 8:                             # inclusive range (numeric when only)
+            say "some"
         otherwise:
             say "fewer"
+
+    let f be the function feed                 # a function as a value
+    say (f with felix)                         # call it like any function
 
     attempt:                                   # catches runtime failures
         say 1 divided by 0
@@ -81,7 +88,9 @@ to main:
 ```
 
 Types: `number` (i64) · `decimal` (f64) · `text` · `yesno` (yes/no) ·
-`list of T` · `map from K to V` · `maybe T` · records · kinds.
+`list of T` · `map from K to V` · `maybe T` · records · kinds ·
+`(function taking A, B giving R)` (function value; both clauses optional —
+parameter example: `to apply with f as (function taking number giving number):`).
 
 Operators: `plus minus times divided by` (or `+ - * / %`),
 `remainder of a divided by b`, `a to the power of b`,
@@ -116,6 +125,9 @@ the error`.
 8. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
 9. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
 10. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
+11. **Function values are made with `the function name`** (not the bare name)
+    and only from functions without `changing` parameters. They cannot be
+    said or turned into text.
 
 ## Reading failures
 

@@ -64,7 +64,16 @@ parse-relevant highlights:
 * **Map keys** are `number` or `text` (P309) so iteration can be sorted.
 * **`when`** over an enum must be exhaustive or carry `otherwise:` (P208);
   over yesno, covering `yes` and `no` counts as exhaustive; over numbers and
-  text, `otherwise:` is mandatory.
+  text, `otherwise:` is mandatory. An arm may list several patterns
+  (`is 1, 2 or 3:`) and, when the subject is numeric, inclusive ranges
+  (`is 10 to 20:`); range ends are literals of the subject's type, smaller
+  first (P312).
+* **Function values.** `the function f` is a value of type
+  `(function taking …  giving …)` — a Rust `fn` pointer, so Copy, comparable
+  with `is`, and zero-cost. Only plain defined functions qualify: not `main`
+  and not functions with `changing` parameters (P313). A variable holding a
+  function value is called with the ordinary call forms. Function values
+  cannot be converted to text or said (P301).
 * **Functions** with `giving T` must give back on every path (P304).
   `changing` parameters require a plain variable argument of exactly the
   parameter's type (P305).

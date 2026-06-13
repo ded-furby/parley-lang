@@ -160,3 +160,59 @@ def test_include_missing(tmp_path):
     with pytest.raises(ParleyError) as ei:
         load_program(tmp_path / "main.par")
     assert ei.value.diagnostics[0].code == "P105"
+
+
+# ------------------------------------------------------------------ v0.2: when patterns + function values
+
+def test_rich_when_patterns_parse():
+    src = (
+        "to main:\n"
+        "    when 5:\n"
+        "        is 1, 2 or 3:\n"
+        "            say \"small\"\n"
+        "        is 10 to 20:\n"
+        "            say \"teens\"\n"
+        "        is -5 to -1:\n"
+        "            say \"negative\"\n"
+        "        otherwise:\n"
+        "            say \"other\"\n"
+    )
+    prog = parse(src)
+    when = prog.funcs[0].body[0]
+    assert isinstance(when, A.When)
+    assert [len(pats) for pats, _ in when.arms] == [3, 1, 1]
+    rng = when.arms[1][0][0]
+    assert rng.kind == "range"
+    lo, hi = rng.value
+    assert (lo.value, hi.value) == (10, 20)
+    neg = when.arms[2][0][0]
+    assert [p.value for p in neg.value] == [-5, -1]
+
+
+def test_function_types_and_refs_parse():
+    src = (
+        "to apply with f as (function taking number giving number), x as number giving number:\n"
+        "    give back (f with x)\n"
+        "to main:\n"
+        "    say 1\n"
+    )
+    prog = parse(src)
+    fty = prog.funcs[0].params[0].type
+    assert isinstance(fty, A.TFunc)
+    assert len(fty.params) == 1 and isinstance(fty.params[0], A.TNum)
+    assert isinstance(fty.ret, A.TNum)
+
+    ref = parse("to main:\n    let f be the function helper\n").funcs[0].body[0].value
+    assert isinstance(ref, A.FuncRef) and ref.name == "helper"
+
+
+def test_function_type_without_args_or_return():
+    src = (
+        "to run_it with f as (function), g as (function giving number):\n"
+        "    say 1\n"
+        "to main:\n"
+        "    say 2\n"
+    )
+    p0, p1 = parse(src).funcs[0].params
+    assert isinstance(p0.type, A.TFunc) and p0.type.params == [] and p0.type.ret is None
+    assert isinstance(p1.type, A.TFunc) and isinstance(p1.type.ret, A.TNum)

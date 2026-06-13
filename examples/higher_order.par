@@ -1,0 +1,21 @@
+note: Function values — functions passed around like any other value.
+note: `the function name` makes the value; a (function …) type declares one.
+
+to double with x as number giving number:
+    give back x times 2
+
+to triple with x as number giving number:
+    give back x times 3
+
+to apply_twice with f as (function taking number giving number), x as number giving number:
+    give back (f with (f with x))
+
+to describe with f as (function taking number giving number), label as text:
+    say "{label} says {(f with 5)}"
+
+to main:
+    let d be the function double
+    say "double twice: {(apply_twice with d, 5)}"
+    say "triple twice: {(apply_twice with the function triple, 5)}"
+    describe with d, "double"
+    describe with the function triple, "triple"

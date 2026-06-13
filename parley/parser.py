@@ -310,6 +310,11 @@ class ToAst(Transformer):
     def t_named(self, meta, ch):
         return A.TNamed(str(ch[0]))
 
+    def t_func(self, meta, ch):
+        # children: param types…, then the (possibly None) giving result;
+        # an absent `taking` clause leaves a None placeholder to drop
+        return A.TFunc(params=[t for t in ch[:-1] if t is not None], ret=ch[-1])
+
     # ---- statements
 
     def block(self, meta, ch):
@@ -386,7 +391,11 @@ class ToAst(Transformer):
         return A.When(subject=subject, arms=arms, otherwise=otherwise, **_pos(meta))
 
     def when_arm(self, meta, ch):
-        return (ch[0], ch[1])
+        pats = [p for p in ch[:-1] if p is not None]
+        return (pats, ch[-1])
+
+    def pat_range(self, meta, ch):
+        return A.Pattern(kind="range", value=(ch[0], ch[1]), **_pos(meta))
 
     def pat_int(self, meta, ch):
         return A.Pattern(kind="int", value=int(ch[0]), **_pos(meta))
@@ -636,6 +645,9 @@ class ToAst(Transformer):
 
     def call_expr(self, meta, ch):
         return A.CallExpr(name=str(ch[0]), args=list(ch[1:]), **_pos(meta))
+
+    def func_ref(self, meta, ch):
+        return A.FuncRef(name=str(ch[0]), **_pos(meta))
 
 
 # ------------------------------------------------------------------ errors

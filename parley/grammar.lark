@@ -34,6 +34,7 @@ type: "number"                  -> t_number
     | _MAP_FROM type _TO type   -> t_map
     | "maybe" type              -> t_maybe
     | NAME                      -> t_named
+    | _LPAR _FUNCTION [_TAKING type ("," type)*] giving _RPAR -> t_func
 
 block: _NL _INDENT stmt+ _DEDENT
 
@@ -76,15 +77,17 @@ elif_: _OTHERWISE_IF expr ":" block
 else_: "otherwise" ":" block
 
 when_stmt: "when" expr ":" _NL _INDENT when_arm+ [else_] _DEDENT
-when_arm: _IS pattern ":" block
-pattern: INT         -> pat_int
-       | FLOAT       -> pat_float
-       | STRING      -> pat_string
-       | "yes"       -> pat_yes
-       | "no"        -> pat_no
-       | _MINUS INT   -> pat_neg_int
-       | _MINUS FLOAT -> pat_neg_float
-       | NAME        -> pat_name
+when_arm: _IS pattern ("," pattern)* ["or" pattern] ":" block
+?pattern: pat_single
+        | pat_single _TO pat_single -> pat_range
+?pat_single: INT         -> pat_int
+           | FLOAT       -> pat_float
+           | STRING      -> pat_string
+           | "yes"       -> pat_yes
+           | "no"        -> pat_no
+           | _MINUS INT   -> pat_neg_int
+           | _MINUS FLOAT -> pat_neg_float
+           | NAME        -> pat_name
 
 while_stmt: "while" expr ":" block
 repeat_stmt: "repeat" atom _TIMES ":" block
@@ -179,6 +182,7 @@ field_init: NAME expr
      | NAME                     -> var
      | _LPAR rhs _RPAR          -> paren
      | _LPAR NAME "with" expr ("," expr)* _RPAR -> call_expr
+     | _THE_FUNCTION NAME       -> func_ref
 
 // ---------- terminals ----------
 
@@ -233,6 +237,9 @@ _ASK_NUM.2: /ask +for +a +number\b/
 _ASK.2: /ask\b/
 _RANDOM_FROM.2: /a +random +number +from\b/
 _THE_ERROR.2: /the +error\b/
+_THE_FUNCTION.2: /the +function\b/
+_FUNCTION.2: /function\b/
+_TAKING.2: /taking\b/
 _A_LIST_OF.2: /a +list +of\b/
 _EMPTY_LIST_OF.2: /an +empty +list +of\b/
 _A_MAP_FROM.2: /a +map +from\b/

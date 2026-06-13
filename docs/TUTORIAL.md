@@ -173,6 +173,21 @@ to main:
 A `when` over a kind must cover every variant (or end with `otherwise:`).
 `when` also works on numbers and text — then `otherwise:` is required.
 
+One arm can check several values, and numeric `when`s can check ranges
+(both ends included):
+
+```parley
+to main:
+    let score be 95
+    when score:
+        is 90 to 100:
+            say "A"
+        is 1, 2 or 3:
+            say "tiny"
+        otherwise:
+            say "keep going"
+```
+
 ## 12. Functions
 
 ```parley
@@ -204,6 +219,25 @@ to main:
     bump with count
     say count            # 1
 ```
+
+Functions are also values. `the function name` picks one up, and a
+`(function …)` type declares a parameter that accepts one — so behaviour
+can be passed around like any other value:
+
+```parley
+to double with x as number giving number:
+    give back x times 2
+
+to apply_twice with f as (function taking number giving number), x as number giving number:
+    give back (f with (f with x))
+
+to main:
+    let d be the function double
+    say (apply_twice with d, 5)    # 20
+```
+
+This works for any function without `changing` parameters. See
+[examples/higher_order.par](../examples/higher_order.par).
 
 ## 13. Maybe: values that might be missing
 

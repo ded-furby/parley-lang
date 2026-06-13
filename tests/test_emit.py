@@ -135,3 +135,55 @@ def test_linemap_points_at_parley_lines():
                        if l.strip().startswith("println!"))
     assert linemap[say_lines[0]] == 2
     assert linemap[say_lines[1]] == 3
+
+
+# ------------------------------------------------------------------ v0.2: when patterns + function values
+
+def test_multi_value_enum_arm_emits_or_patterns():
+    rust = emit_text(
+        "a mood is one of happy, grumpy, sleepy\n"
+        "to main:\n"
+        "    let m be happy\n"
+        "    when m:\n"
+        "        is happy, sleepy:\n"
+        "            say 1\n"
+        "        is grumpy:\n"
+        "            say 2\n")
+    assert "Mood::Happy | Mood::Sleepy =>" in rust
+
+
+def test_range_arm_emits_bounds_check():
+    rust = emit_text(
+        "to main:\n"
+        "    when 15:\n"
+        "        is 10 to 20:\n"
+        "            say 1\n"
+        "        otherwise:\n"
+        "            say 2\n")
+    assert ">= 10i64" in rust and "<= 20i64" in rust
+
+
+def test_decimal_when_uses_float_literals():
+    rust = emit_text(
+        "to main:\n"
+        "    let x be 2.5\n"
+        "    when x:\n"
+        "        is 3:\n"
+        "            say 1\n"
+        "        otherwise:\n"
+        "            say 2\n")
+    assert "== 3.0f64" in rust
+
+
+def test_function_value_is_fn_pointer():
+    rust = emit_text(
+        "to double with x as number giving number:\n"
+        "    give back x times 2\n"
+        "to apply with f as (function taking number giving number) giving number:\n"
+        "    give back (f with 21)\n"
+        "to main:\n"
+        "    let d be the function double\n"
+        "    say (apply with d)\n")
+    assert "fn(i64) -> i64" in rust
+    assert "(double as fn(i64) -> i64)" in rust
+    assert "f(21i64)" in rust

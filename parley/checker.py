@@ -45,7 +45,7 @@ RESERVED = {
     "stop", "skip", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",
     "in", "maybe", "include", "number", "decimal", "text", "yesno",
-    "list", "map",
+    "list", "map", "function", "taking", "the",
 }
 
 _NUMERIC = (A.TNum, A.TDec)
@@ -133,6 +133,10 @@ class Checker:
                 self.err("P309", f"Map keys must be number or text, not {key}.", node)
                 key = TErr()
             return A.TMap(key, self.resolve_type(ty.val, node))
+        if isinstance(ty, A.TFunc):
+            return A.TFunc(
+                [self.resolve_type(p, node) for p in ty.params],
+                None if ty.ret is None else self.resolve_type(ty.ret, node))
         return ty
 
     def assignable(self, expected: A.Type, actual: A.Type) -> bool:
@@ -356,6 +360,8 @@ class Checker:
         ty = self.infer(st.value)
         if isinstance(ty, A.TUnit):
             self.err("P301", "This gives nothing back, so there is nothing to say.", st)
+        elif isinstance(ty, A.TFunc):
+            self.err("P301", "A function value cannot be turned into text, so it cannot be said.", st)
 
     def _check_cond(self, cond: A.Expr, what: str):
         ty = self.infer(cond)
@@ -378,8 +384,9 @@ class Checker:
     def st_when(self, st: A.When):
         subj_ty = self.infer(st.subject)
         covered: set[str] = set()
-        for pat, body in st.arms:
-            self._check_pattern(pat, subj_ty, covered)
+        for pats, body in st.arms:
+            for pat in pats:
+                self._check_pattern(pat, subj_ty, covered)
             self.check_block(body)
         if st.otherwise is not None:
             self.check_block(st.otherwise)
@@ -404,6 +411,25 @@ class Checker:
 
     def _check_pattern(self, pat: A.Pattern, subj_ty: A.Type, covered: set[str]):
         if isinstance(subj_ty, TErr):
+            return
+        if pat.kind == "range":
+            lo, hi = pat.value
+            if not isinstance(subj_ty, _NUMERIC):
+                self.err("P312", f"A range arm (`is a to b:`) needs a numeric `when`, "
+                         f"but this one is over {subj_ty}.", pat)
+                return
+            for end in (lo, hi):
+                if end.kind not in ("int", "dec"):
+                    self.err("P312", "Range ends must be number or decimal literals.", end)
+                    return
+                if end.kind == "dec" and isinstance(subj_ty, A.TNum):
+                    self.err("P312", "This `when` is over number, so range ends must be "
+                             "whole numbers.", end)
+                    return
+            if lo.value > hi.value:
+                self.err("P312", f"This range is empty — {lo.value} is more than {hi.value}.",
+                         pat, hint="Write the smaller value first: "
+                                   f"`is {hi.value} to {lo.value}:`.")
             return
         if pat.kind == "name":
             if isinstance(subj_ty, A.TEnum):
@@ -539,11 +565,14 @@ class Checker:
     def _check_call(self, node, name: str, args: list[A.Expr], statement: bool) -> A.Type:
         fn = self.funcs.get(name)
         if fn is None:
+            vty = self.lookup(name)
+            if isinstance(vty, A.TFunc):
+                return self._check_value_call(node, name, vty, args)
             hint = None
             s = _suggest(name, self.funcs)
             if s:
                 hint = f'Did you mean "{s}"?'
-            elif self.lookup(name) is not None:
+            elif vty is not None:
                 hint = f'"{name}" is a variable; only functions can be called.'
             self.err("P202", f'There is no function called "{name}".', node, hint=hint)
             for a in args:
@@ -571,6 +600,26 @@ class Checker:
             elif not self.assignable(prm.type, a_ty):
                 self.type_mismatch(prm.type, a_ty, arg, f'The argument "{prm.name}" of {name}')
         return fn.ret or A.TUnit()
+
+    def _check_value_call(self, node, name: str, fty: A.TFunc, args: list[A.Expr]) -> A.Type:
+        """A call through a variable that holds a function value."""
+        node.fn_value = True
+        node.fn_type = fty
+        node.callee_changing = name in self.changing
+        if len(args) != len(fty.params):
+            sig = ", ".join(str(p) for p in fty.params) or "no arguments"
+            self.err("P203",
+                     f'"{name}" holds {fty}, which takes {len(fty.params)} argument(s), '
+                     f"but {len(args)} were given.",
+                     node, hint=f"It takes: {sig}.")
+            for a in args:
+                self.infer(a)
+            return fty.ret or A.TUnit()
+        for i, (pt, arg) in enumerate(zip(fty.params, args), 1):
+            a_ty = self.infer(arg)
+            if not self.assignable(pt, a_ty):
+                self.type_mismatch(pt, a_ty, arg, f"Argument {i} of {name}")
+        return fty.ret or A.TUnit()
 
     # ------------------------------------------------------------- expressions
 
@@ -602,6 +651,8 @@ class Checker:
                     pty = self.infer(p)
                     if isinstance(pty, A.TUnit):
                         self.err("P301", "This gives nothing back, so it cannot go inside a string.", p)
+                    elif isinstance(pty, A.TFunc):
+                        self.err("P301", "A function value cannot be turned into text.", p)
             return A.TText()
         if isinstance(e, A.Var):
             return self._infer_var(e)
@@ -685,7 +736,37 @@ class Checker:
                          f'"{e.name}" gives nothing back, so it cannot be used as a value.', e)
                 return TErr()
             return ret
+        if isinstance(e, A.FuncRef):
+            return self._infer_funcref(e)
         raise AssertionError(f"no inference for {type(e).__name__}")
+
+    def _infer_funcref(self, e: A.FuncRef) -> A.Type:
+        fn = self.funcs.get(e.name)
+        if fn is None:
+            vty = self.lookup(e.name)
+            if isinstance(vty, A.TFunc):
+                self.err("P313", f'"{e.name}" is already a function value — use it directly, '
+                         f'without `the function`.', e, replacement=e.name)
+                return vty
+            hint = None
+            s = _suggest(e.name, self.funcs)
+            if s:
+                hint = f'Did you mean "{s}"?'
+            elif vty is not None:
+                hint = f'"{e.name}" is a variable, not a function.'
+            self.err("P202", f'There is no function called "{e.name}".', e, hint=hint)
+            return TErr()
+        if e.name == "main":
+            self.err("P313", "`main` cannot be used as a function value.", e)
+            return TErr()
+        if any(p.changing for p in fn.params):
+            self.err("P313",
+                     f'"{e.name}" has a changing parameter, so it cannot be used as a value.',
+                     e, hint="Function values pass everything by value; "
+                             "rewrite the function to give back the changed value instead.")
+            return TErr()
+        e.target_fn = fn
+        return A.TFunc([p.type for p in fn.params], fn.ret)
 
     def _infer_var(self, e: A.Var) -> A.Type:
         ty = self.lookup(e.name)
@@ -848,6 +929,9 @@ class Checker:
         if op == "text_from":
             if isinstance(ty, A.TUnit):
                 self.err("P301", "This gives nothing back, so there is nothing to turn into text.", e)
+                return TErr()
+            if isinstance(ty, A.TFunc):
+                self.err("P301", "A function value cannot be turned into text.", e)
                 return TErr()
             return A.TText()
         if op == "number_from":
