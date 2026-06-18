@@ -63,6 +63,64 @@ def test_package_list_reads_lockfile(workdir):
     assert "mathkit 1.2.0 parley_modules/mathkit" in proc.stdout
 
 
+def test_package_search_reads_registry_manifest(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to triple with n as number giving number:\n    give back n times 3\n")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "1.2.3",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+            }
+        },
+    }))
+
+    proc = run_cli(["package", "search", "--registry", str(registry)], cwd=workdir)
+
+    assert proc.returncode == 0, proc.stderr
+    assert "registrykit 1.2.3 triples numbers" in proc.stdout
+
+
+def test_package_install_can_use_registry_entry(workdir, tmp_path):
+    source = tmp_path / "registrymath-src"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to triple with n as number giving number:\n    give back n times 3\n")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrymath": {
+                "version": "1.2.3",
+                "source": "registrymath-src",
+                "description": "triples numbers",
+            }
+        },
+    }))
+
+    install = run_cli(
+        ["package", "install", "registrymath", "--registry", str(registry)],
+        cwd=workdir,
+    )
+
+    assert install.returncode == 0, install.stderr
+    assert (workdir / "parley_modules" / "registrymath" / "main.par").is_file()
+    lock = json.loads((workdir / "parley.lock.json").read_text())
+    assert lock["packages"]["registrymath"]["version"] == "1.2.3"
+    assert lock["packages"]["registrymath"]["registry"] == str(registry)
+
+    program = workdir / "uses_registry_package.par"
+    program.write_text('include "registrymath"\n\nto main:\n    say (triple with 7)\n')
+    check = run_cli(["check", program.name, "--json"], cwd=workdir)
+    assert check.returncode == 0, check.stderr
+    assert json.loads(check.stdout)["ok"] is True
+
+
 def test_package_install_bad_source_keeps_existing_vendor(workdir):
     existing = workdir / "parley_modules" / "statkit"
     existing.mkdir(parents=True)

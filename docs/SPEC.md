@@ -147,6 +147,6 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 v0.3 is an experiment. Syntax may change; error codes are append-only.
 Known limits: no generics for user functions, no methods, single-threaded,
-and no remote package registry. Function values exist for named functions
+and no hosted public package index. Function values exist for named functions
 without `changing` parameters and anonymous functions with value captures. See
 the README roadmap.

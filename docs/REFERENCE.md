@@ -251,3 +251,17 @@ letters, numbers, dashes, underscores, and dots, and must start with a letter or
 number. Directory packages need a `main.par`. Installs are recorded in
 `parley.lock.json`, and `parley package list` prints the locked package names,
 versions, and vendored paths.
+
+Registry manifests use JSON:
+
+```json
+{"schema_version": 1, "packages": {"mathkit": {
+  "version": "1.0.0", "source": "../mathkit", "description": "math helpers"
+}}}
+```
+
+`parley package search --registry registry.json` lists available packages, and
+`parley package install mathkit --registry registry.json` vendors the package
+named by the registry. Relative registry sources resolve from the manifest's
+directory. A source may be a package directory, a single `.par` file, `file://`
+URL, or an `http(s)` URL pointing at a `.par` file.

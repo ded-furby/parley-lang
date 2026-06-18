@@ -123,7 +123,7 @@ runtime assertions with `assert condition, "message"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
 stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, and `std/map`
 packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
-local package vendoring with `parley package` and `parley.lock.json` ·
+local and registry-backed package vendoring with `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
@@ -184,16 +184,17 @@ the plan:
 - [x] custom runtime failures (`fail "message"`) — v0.3.10
 - [x] runtime assertions (`assert condition, "message"`) — v0.3.11
 - [x] benchmark CLI (`parley benchmark measure` / `summarize`) — v0.3.12
+- [x] registry-backed packages (`parley package search --registry`) — v0.3.13
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
-- [ ] remote package registry
+- [ ] hosted public package index
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 158 tests; e2e compiles real binaries (needs cargo)
+pytest            # 160 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

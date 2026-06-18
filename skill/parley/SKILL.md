@@ -131,6 +131,10 @@ Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into
 `parley_modules/name/`; names may contain letters, numbers, dashes,
 underscores, and dots. `parley package list` reads `parley.lock.json`.
+Registry manifests use `{"schema_version": 1, "packages": {"name":
+{"version": "1.0.0", "source": "path-or-url"}}}`. Search with
+`parley package search --registry registry.json`, then install with
+`parley package install name --registry registry.json`.
 
 ## Rules that catch agents out
 
@@ -181,3 +185,5 @@ underscores, and dots. `parley package list` reads `parley.lock.json`.
   local package readiness.
 * `parley benchmark measure` and `parley benchmark summarize` expose the
   research harness from the source checkout.
+* `parley package search --registry registry.json` and `parley package install
+  name --registry registry.json` use schema-1 package registries.

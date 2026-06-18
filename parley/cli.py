@@ -23,6 +23,9 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
+from urllib.parse import urljoin, urlparse
+from urllib.request import urlopen
 from pathlib import Path
 
 from . import __version__
@@ -59,6 +62,7 @@ to package_ready giving yesno:
 
 LOCK_FILE = "parley.lock.json"
 PACKAGE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+DEFAULT_REGISTRY = "parley.registry.json"
 
 
 # ------------------------------------------------------------------ pipeline
@@ -339,6 +343,63 @@ def _validate_package_name(name: str) -> None:
             "package names may only contain letters, numbers, dashes, underscores, and dots")
 
 
+def _is_url(value: str) -> bool:
+    return urlparse(value).scheme in {"http", "https", "file"}
+
+
+def _read_registry(path_or_url: str | None) -> tuple[dict, str]:
+    source = path_or_url or os.environ.get("PARLEY_REGISTRY") or DEFAULT_REGISTRY
+    try:
+        if _is_url(source):
+            with urlopen(source, timeout=30) as response:
+                raw = response.read().decode("utf-8")
+            base = source
+        else:
+            path = Path(source)
+            raw = path.read_text(encoding="utf-8")
+            base = str(path.resolve().parent)
+        data = json.loads(raw)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise OSError(f"cannot read package registry {source}: {exc}") from exc
+    if data.get("schema_version") != 1 or not isinstance(data.get("packages"), dict):
+        raise OSError("package registry must use schema_version 1 with a packages object")
+    return data, base
+
+
+def _registry_entry(registry: dict, name: str) -> dict:
+    entry = registry["packages"].get(name)
+    if not isinstance(entry, dict):
+        raise OSError(f"package '{name}' is not in the registry")
+    if not entry.get("source"):
+        raise OSError(f"package '{name}' registry entry is missing source")
+    return entry
+
+
+def _resolve_registry_source(source: str, base: str) -> str:
+    if _is_url(source):
+        return source
+    if _is_url(base):
+        return urljoin(base, source)
+    path = Path(source)
+    return str(path if path.is_absolute() else Path(base) / path)
+
+
+def _materialize_package_source(source: str, temp_root: Path | None = None) -> Path:
+    parsed = urlparse(source)
+    if parsed.scheme == "file":
+        return Path(parsed.path).resolve()
+    if parsed.scheme in {"http", "https"}:
+        if not parsed.path.endswith(".par"):
+            raise OSError("remote package sources must point to a .par file")
+        if temp_root is None:
+            raise OSError("internal error: missing temporary directory for remote package")
+        target = temp_root / "main.par"
+        with urlopen(source, timeout=60) as response:
+            target.write_bytes(response.read())
+        return target
+    return Path(source).resolve()
+
+
 def _copy_package_source(source: Path, target: Path) -> None:
     if source.is_dir():
         if not (source / "main.par").is_file():
@@ -361,20 +422,35 @@ def _copy_package_source(source: Path, target: Path) -> None:
 def cmd_package_install(args) -> int:
     try:
         _validate_package_name(args.name)
-        source = Path(args.source).resolve()
+        registry_path = None
+        version = args.version
+        source_text = args.source
+        if args.registry:
+            registry, registry_base = _read_registry(args.registry)
+            entry = _registry_entry(registry, args.name)
+            registry_path = args.registry
+            source_text = source_text or _resolve_registry_source(str(entry["source"]), registry_base)
+            version = version or str(entry.get("version") or "0.0.0")
+        if not source_text:
+            raise OSError("package source is required unless --registry is used")
+        version = version or "0.0.0"
         target = Path("parley_modules") / args.name
-        _copy_package_source(source, target)
+        with tempfile.TemporaryDirectory(prefix="parley-package-") as tmp:
+            source = _materialize_package_source(source_text, Path(tmp))
+            _copy_package_source(source, target)
         lock = _read_lock()
         lock["packages"][args.name] = {
-            "version": args.version,
-            "source": str(source),
+            "version": version,
+            "source": source_text,
             "path": target.as_posix(),
         }
+        if registry_path is not None:
+            lock["packages"][args.name]["registry"] = registry_path
         _write_lock(lock)
     except OSError as exc:
         print(f"package error: {exc}", file=sys.stderr)
         return 1
-    print(f"Installed {args.name} {args.version} -> {target.as_posix()}")
+    print(f"Installed {args.name} {version} -> {target.as_posix()}")
     return 0
 
 
@@ -402,6 +478,28 @@ def cmd_package_list(args) -> int:
     for name in sorted(packages):
         pkg = packages[name]
         print(f"{name} {pkg.get('version', '0.0.0')} {pkg.get('path', '')}")
+    return 0
+
+
+def cmd_package_search(args) -> int:
+    try:
+        registry, _ = _read_registry(args.registry)
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+    packages = registry.get("packages", {})
+    if not packages:
+        print("No packages found.")
+        return 0
+    query = (args.query or "").lower()
+    for name in sorted(packages):
+        entry = packages[name]
+        if not isinstance(entry, dict):
+            continue
+        description = str(entry.get("description") or "")
+        if query and query not in name.lower() and query not in description.lower():
+            continue
+        print(f"{name} {entry.get('version', '0.0.0')} {description}".rstrip())
     return 0
 
 
@@ -488,14 +586,19 @@ def main(argv: list[str] | None = None) -> int:
     package_sub = p.add_subparsers(dest="package_cmd", required=True)
     install = package_sub.add_parser("install", help="vendor a local package")
     install.add_argument("name")
-    install.add_argument("source")
-    install.add_argument("--version", default="0.0.0")
+    install.add_argument("source", nargs="?")
+    install.add_argument("--version")
+    install.add_argument("--registry", help="registry manifest JSON path or URL")
     install.set_defaults(fn=cmd_package_install)
     package_new = package_sub.add_parser("new", help="create a local package skeleton")
     package_new.add_argument("name")
     package_new.set_defaults(fn=cmd_package_new)
     package_list = package_sub.add_parser("list", help="list vendored packages")
     package_list.set_defaults(fn=cmd_package_list)
+    package_search = package_sub.add_parser("search", help="list packages in a registry")
+    package_search.add_argument("query", nargs="?")
+    package_search.add_argument("--registry", help="registry manifest JSON path or URL")
+    package_search.set_defaults(fn=cmd_package_search)
 
     p = sub.add_parser("benchmark", help="measure and summarize benchmark research data")
     benchmark_sub = p.add_subparsers(dest="benchmark_cmd", required=True)
