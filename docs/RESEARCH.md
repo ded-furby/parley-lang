@@ -82,8 +82,11 @@ first paper should stay small enough to run and audit.
 The compiler and documentation are ready for a pilot study. A Phase 1 seed
 harness now exists in [`benchmarks/`](../benchmarks/): it records source-size
 metrics for equivalent Parley, Python, and Rust references across the ten
-example tasks, and verifies each Parley source with `parley check --json`.
+example tasks, can add `tiktoken` model-token counts with
+`--llm-tokenizer`, verifies each Parley source with `parley check --json`,
+and can append generated attempts plus diagnostics/stdout/stderr to a JSONL
+run log with `benchmarks/runlog.py`.
 
-This is not yet a paper result. An LLM tokenizer, repeated agent runs,
-generated-source capture, and repair-turn logging still need to be built
-before any comparative claims should be made.
+This is not yet a paper result. Repeated agent runs, success judgments across
+fresh samples, and aggregate repair-turn analysis still need to be run before
+any comparative claims should be made.

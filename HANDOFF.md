@@ -54,10 +54,11 @@ Update it whenever you finish or start a work item.
   Arjun's brief, not a user interview — confirm with him before redesigns).
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
   benchmark plan, `benchmarks/` contains a Phase-1 Parley/Python/Rust seed
-  metrics harness, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
-  readiness checklist. `docs/SPEC.md` now correctly says v0.3 and no longer
-  claims higher-order functions are missing. `docs/DOMAINS.md` records checked
-  domain candidates; current recommendation is `parleylang.com`.
+  metrics harness with optional `tiktoken` counts plus JSONL attempt logging,
+  and `docs/RELEASE.md` records the GitHub/Pages/PyPI readiness checklist.
+  `docs/SPEC.md` now correctly says v0.3 and no longer claims higher-order
+  functions are missing. `docs/DOMAINS.md` records checked domain candidates;
+  current recommendation is `parleylang.com`.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
@@ -80,10 +81,11 @@ Update it whenever you finish or start a work item.
 
 ### Not started (the remaining roadmap, in suggested order)
 
-1. **Complete the benchmark runner** (goal 3). `benchmarks/` now measures
-   Parley/Python/Rust seed references and checks Parley with JSON diagnostics.
-   Still needed: LLM-tokenizer counts, generated-source capture, repair-turn
-   logging, and repeated agent error-rate runs.
+1. **Run the benchmark study** (goal 3). `benchmarks/` now measures
+   Parley/Python/Rust seed references, supports optional `tiktoken` token
+   counts, checks Parley with JSON diagnostics, and captures generated attempts
+   to JSONL. Still needed: repeated agent error-rate runs and aggregate
+   repair-turn analysis.
 2. **Borrow-based passing for big values** — perf optimisation in
    `emit_rust.py` (pass `&T` for non-changing heap params, clone only on
    store). Touches the whole emitter; do it with the e2e suite green.

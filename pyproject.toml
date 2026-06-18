@@ -25,6 +25,7 @@ parley = "parley.cli:main"
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 publish = ["build>=1", "twine>=5"]
+research = ["tiktoken>=0.7"]
 
 [tool.setuptools]
 packages = ["parley"]

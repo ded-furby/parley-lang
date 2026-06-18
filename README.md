@@ -149,8 +149,8 @@ the plan:
 - [x] function values (`the function f`, `Rc<dyn Fn>` backed) — v0.2/v0.3
 - [x] anonymous closures with captured values — v0.3
 - [ ] borrow-based passing for big values (today: clone-on-assign)
-- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (Parley/Python/
-      Rust seed corpus exists; tokenizer counts and agent runs still planned)
+- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
+      optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] LSP server
 - [ ] packages beyond `include`
 

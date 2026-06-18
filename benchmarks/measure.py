@@ -3,8 +3,9 @@
 
 This is a Phase 1 harness for repository readiness. It records source-size
 metrics and, by default, verifies each Parley task with `parley check --json`.
-The `rough_tokens` value is a stable regex count for comparisons inside this
-repo; it is not an LLM tokenizer and should not be used as a paper result.
+Use `--llm-tokenizer cl100k_base` after installing the `research` extra for
+model-token counts. The `rough_tokens` value remains a stable regex fallback
+for comparisons inside this repo.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 REPO = Path(__file__).resolve().parents[1]
 TASKS_FILE = Path(__file__).with_name("tasks.json")
@@ -82,10 +83,27 @@ def source_for(task: dict[str, Any], language: str) -> Path:
     return REPO / "benchmarks" / language / f"{task['id']}{LANGUAGE_EXTENSIONS[language]}"
 
 
-def source_metrics(path: Path) -> dict[str, int]:
+def load_llm_tokenizer(name: str | None) -> tuple[str | None, Callable[[str], int] | None]:
+    if not name:
+        return None, None
+    try:
+        import tiktoken  # type: ignore[import-not-found]
+    except ImportError as exc:
+        raise ValueError(
+            "LLM tokenizer counts need tiktoken. Install it with "
+            "`python3 -m pip install -e \".[research]\"`."
+        ) from exc
+    encoding = tiktoken.get_encoding(name)
+    return f"tiktoken:{name}", lambda text: len(encoding.encode(text))
+
+
+def source_metrics(
+    path: Path,
+    llm_token_counter: Callable[[str], int] | None = None,
+) -> dict[str, int]:
     text = path.read_text(encoding="utf-8")
     lines = text.splitlines()
-    return {
+    metrics = {
         "bytes": len(text.encode("utf-8")),
         "chars": len(text),
         "lines": len(lines),
@@ -93,6 +111,9 @@ def source_metrics(path: Path) -> dict[str, int]:
         "words": len(WORD_RE.findall(text)),
         "rough_tokens": len(ROUGH_TOKEN_RE.findall(text)),
     }
+    if llm_token_counter is not None:
+        metrics["llm_tokens"] = llm_token_counter(text)
+    return metrics
 
 
 def run_check(path: Path) -> dict[str, Any]:
@@ -138,6 +159,8 @@ def build_report(
     tasks_data: dict[str, Any],
     include_check: bool,
     languages: list[str],
+    llm_tokenizer: str | None = None,
+    llm_token_counter: Callable[[str], int] | None = None,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     for task in tasks_data["tasks"]:
@@ -153,7 +176,10 @@ def build_report(
             "interactive": bool(task.get("interactive", False)),
             "deterministic_run": bool(task.get("deterministic_run", False)),
             "features": list(task.get("features", [])),
-            "metrics": {lang: source_metrics(path) for lang, path in sources.items()},
+            "metrics": {
+                lang: source_metrics(path, llm_token_counter)
+                for lang, path in sources.items()
+            },
             "checks": {},
         }
         if "parley" in sources:
@@ -165,13 +191,18 @@ def build_report(
 
     by_language = {}
     for lang in languages:
-        by_language[lang] = {
+        totals_for_language = {
             "tasks": len(rows),
             "bytes": sum(row["metrics"][lang]["bytes"] for row in rows),
             "lines": sum(row["metrics"][lang]["lines"] for row in rows),
             "nonblank_lines": sum(row["metrics"][lang]["nonblank_lines"] for row in rows),
             "rough_tokens": sum(row["metrics"][lang]["rough_tokens"] for row in rows),
         }
+        if llm_token_counter is not None:
+            totals_for_language["llm_tokens"] = sum(
+                row["metrics"][lang]["llm_tokens"] for row in rows
+            )
+        by_language[lang] = totals_for_language
 
     totals = {
         "tasks": len(rows),
@@ -188,7 +219,7 @@ def build_report(
         ),
     }
 
-    return {
+    report = {
         "schema_version": 1,
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "language_version": tasks_data.get("language_version"),
@@ -200,6 +231,9 @@ def build_report(
         "tasks": rows,
         "totals": totals,
     }
+    if llm_tokenizer is not None:
+        report["method"]["llm_tokenizer"] = llm_tokenizer
+    return report
 
 
 def print_table(report: dict[str, Any]) -> None:
@@ -249,13 +283,24 @@ def main(argv: list[str] | None = None) -> int:
         default="parley,python,rust",
         help="comma-separated languages to measure: parley, python, rust",
     )
+    parser.add_argument(
+        "--llm-tokenizer",
+        help="optional tiktoken encoding name, e.g. cl100k_base, for LLM-token counts",
+    )
     parser.add_argument("--no-check", action="store_true", help="skip parley check --json verification")
     args = parser.parse_args(argv)
 
     try:
         languages = parse_languages(args.languages)
+        llm_tokenizer, llm_token_counter = load_llm_tokenizer(args.llm_tokenizer)
         tasks_data = load_tasks(args.tasks)
-        report = build_report(tasks_data, include_check=not args.no_check, languages=languages)
+        report = build_report(
+            tasks_data,
+            include_check=not args.no_check,
+            languages=languages,
+            llm_tokenizer=llm_tokenizer,
+            llm_token_counter=llm_token_counter,
+        )
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f"benchmark error: {exc}", file=sys.stderr)
         return 1

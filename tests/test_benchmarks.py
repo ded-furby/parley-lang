@@ -1,4 +1,5 @@
 import json
+import os
 import py_compile
 import shutil
 import subprocess
@@ -11,9 +12,20 @@ from conftest import REPO
 BENCHMARKS = REPO / "benchmarks"
 
 
-def run_measure(*args: str) -> subprocess.CompletedProcess:
+def run_measure(*args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(BENCHMARKS / "measure.py"), *args],
+        cwd=REPO,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+
+def run_runlog(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(BENCHMARKS / "runlog.py"), *args],
         cwd=REPO,
         capture_output=True,
         text=True,
@@ -68,6 +80,98 @@ def test_benchmark_measure_checks_examples(tmp_path):
     assert report["totals"]["tasks"] == 10
     assert report["totals"]["checked_ok"] == 10
     assert all(row["checks"]["parley"]["ok"] for row in report["tasks"])
+
+
+def test_benchmark_measure_llm_tokenizer_counts_with_tiktoken(tmp_path):
+    fake_tiktoken = tmp_path / "tiktoken.py"
+    fake_tiktoken.write_text(
+        "class Encoding:\n"
+        "    def encode(self, text):\n"
+        "        return [part for part in text.split() if part]\n"
+        "def get_encoding(name):\n"
+        "    return Encoding()\n"
+    )
+    output = tmp_path / "tokenized.json"
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(tmp_path) + os.pathsep + env.get("PYTHONPATH", "")
+
+    proc = run_measure(
+        "--no-check",
+        "--format",
+        "json",
+        "--llm-tokenizer",
+        "cl100k_base",
+        "--output",
+        str(output),
+        env=env,
+    )
+    assert proc.returncode == 0, proc.stderr
+
+    report = json.loads(proc.stdout)
+    assert report["method"]["llm_tokenizer"] == "tiktoken:cl100k_base"
+    assert report["totals"]["by_language"]["parley"]["llm_tokens"] > 0
+    assert report["totals"]["by_language"]["python"]["llm_tokens"] > 0
+    assert report["totals"]["by_language"]["rust"]["llm_tokens"] > 0
+    assert all("llm_tokens" in row["metrics"]["parley"] for row in report["tasks"])
+
+
+def test_runlog_append_captures_attempt_artifacts(tmp_path):
+    source = tmp_path / "answer.par"
+    prompt = tmp_path / "prompt.md"
+    diagnostics = tmp_path / "diagnostics.json"
+    stdout = tmp_path / "stdout.txt"
+    stderr = tmp_path / "stderr.txt"
+    source.write_text("to main:\n    say \"Hello\"\n")
+    prompt.write_text("Write hello in Parley.\n")
+    diagnostics.write_text('{"ok": true, "diagnostics": []}\n')
+    stdout.write_text("Hello\n")
+    stderr.write_text("")
+
+    log = tmp_path / "runs.jsonl"
+    proc = run_runlog(
+        "append",
+        "--log",
+        str(log),
+        "--task",
+        "hello",
+        "--language",
+        "parley",
+        "--model",
+        "test-model",
+        "--attempt",
+        "1",
+        "--status",
+        "first_run_success",
+        "--prompt-file",
+        str(prompt),
+        "--source-file",
+        str(source),
+        "--diagnostics-file",
+        str(diagnostics),
+        "--stdout-file",
+        str(stdout),
+        "--stderr-file",
+        str(stderr),
+        "--elapsed-seconds",
+        "1.25",
+    )
+    assert proc.returncode == 0, proc.stderr
+
+    rows = [json.loads(line) for line in log.read_text().splitlines()]
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["schema_version"] == 1
+    assert row["task_id"] == "hello"
+    assert row["language"] == "parley"
+    assert row["model"] == "test-model"
+    assert row["attempt"] == 1
+    assert row["status"] == "first_run_success"
+    assert row["elapsed_seconds"] == 1.25
+    assert row["artifacts"]["prompt_text"] == "Write hello in Parley.\n"
+    assert row["artifacts"]["source_text"].startswith("to main:")
+    assert row["artifacts"]["diagnostics_json"]["ok"] is True
+    assert row["artifacts"]["stdout"] == "Hello\n"
+    assert row["artifacts"]["stderr"] == ""
 
 
 def test_python_reference_sources_compile():

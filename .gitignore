@@ -9,3 +9,4 @@ target/
 .DS_Store
 .venv/
 benchmarks/results/*.json
+benchmarks/results/*.jsonl

@@ -25,18 +25,48 @@ python3 benchmarks/measure.py --no-check
 python3 benchmarks/measure.py --languages parley,rust
 ```
 
+For model-token counts, install the optional research dependency and choose a
+`tiktoken` encoding:
+
+```bash
+python3 -m pip install -e ".[research]"
+python3 benchmarks/measure.py --llm-tokenizer cl100k_base
+```
+
+To capture generated attempts from an agent run:
+
+```bash
+python3 benchmarks/runlog.py append \
+  --log benchmarks/results/runs.jsonl \
+  --task hello \
+  --language parley \
+  --model my-agent \
+  --attempt 1 \
+  --status first_run_success \
+  --prompt-file /tmp/prompt.md \
+  --source-file /tmp/answer.par \
+  --diagnostics-file /tmp/check.json \
+  --stdout-file /tmp/stdout.txt \
+  --stderr-file /tmp/stderr.txt
+```
+
 ## What this proves
 
 - The Phase 1 task list is explicit in `benchmarks/tasks.json`.
 - Each task has Parley, Python, and Rust reference sources.
 - Source-size metrics are reproducible inside the repo for all three
   languages.
+- LLM-token counts can be produced with a named `tiktoken` encoding.
+- Generated attempts, diagnostics, stdout/stderr, prompts, and patches can be
+  captured in a JSONL run log.
 - The Parley side of the corpus can be verified without a Rust build.
 
 ## What this does not prove yet
 
-- `rough_tokens` is a regex count, not an LLM tokenizer count.
-- It does not run agents, collect repair turns, or measure generated patches.
+- `rough_tokens` is a regex count; use `--llm-tokenizer` for model-token
+  counts.
+- It does not run agents by itself or make success judgments across repeated
+  samples.
 - It does not make a publishable claim about Parley outperforming another
   language.
 
