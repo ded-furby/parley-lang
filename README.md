@@ -7,6 +7,8 @@ through Rust.
 [![CI](https://github.com/ded-furby/parley-lang/actions/workflows/ci.yml/badge.svg)](https://github.com/ded-furby/parley-lang/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+Website: [ded-furby.github.io/parley-lang](https://ded-furby.github.io/parley-lang/)
+
 ```parley
 a cat has name as text, lives as number
 

@@ -52,7 +52,9 @@ Update it whenever you finish or start a work item.
   readiness checklist. `docs/SPEC.md` now correctly says v0.2 and no longer
   claims higher-order functions are missing.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
-  `ded-furby`).
+  `ded-furby`). It is public as of 2026-06-18. Live website:
+  https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
+  the `gh-pages` branch.
 
 ### Blocked (needs Arjun, not an agent)
 

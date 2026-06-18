@@ -19,6 +19,7 @@ The e2e tests require Rust and `cargo`.
 ## GitHub repository
 
 - The public repository is `https://github.com/ded-furby/parley-lang`.
+- The live website is `https://ded-furby.github.io/parley-lang/`.
 - `main` should contain the compiler, docs, examples, skill, website, and CI.
 - Keep `README.md` as the entry point for developers.
 - Keep `docs/SPEC.md`, `docs/REFERENCE.md`, `docs/TUTORIAL.md`,
@@ -47,6 +48,9 @@ site/main.js
 ```
 
 It has no build step. Any static host can serve the directory directly.
+
+The current production deployment is GitHub Pages from the `gh-pages` branch,
+with the static site files at the branch root.
 
 ### GitHub Pages option
 
