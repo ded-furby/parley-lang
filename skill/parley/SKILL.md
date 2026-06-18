@@ -80,7 +80,7 @@ to main:
         give back n plus felix's lives         # closure captures current value
 
     attempt:                                   # catches runtime failures
-        say 1 divided by 0
+        fail "custom failure"
     if it failed:
         say the error
 
@@ -112,7 +112,7 @@ uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·
 ceiling of · square root of · keys of · text from · number from ·
 decimal from · some · value of · ask · ask for a number · read file ·
 write … to file … · append … to file … · a random number from 1 to 6 ·
-the error`.
+fail · the error`.
 
 Multi-file code uses `include "helpers.par"`. Reusable local packages can live
 at `parley_modules/package_name/main.par` and be loaded with
@@ -147,14 +147,16 @@ underscores, and dots. `parley package list` reads `parley.lock.json`.
 6. **maybes must be checked.** Use `some x` to construct a present maybe value;
    `value of` on nothing stops the program.
 7. **`repeat` counts are atoms**: `repeat (n plus 1) times:`.
-8. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
-9. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
-10. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
-11. **Function values are made with `the function name`** (not the bare name)
+8. **Use `fail "message"` for custom runtime errors.** The message must be text
+   and can be caught by `attempt:` / `if it failed:`.
+9. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
+10. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
+11. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
+12. **Function values are made with `the function name`** (not the bare name)
     or with `a function taking ...:` closures. Named function values only work
     for functions without `changing` parameters. Function values cannot be
     compared, said, or turned into text.
-12. **Closures capture by value.** They can read outside variables as they
+13. **Closures capture by value.** They can read outside variables as they
     were when the closure was created, but cannot `set` captured variables.
 
 ## Reading failures

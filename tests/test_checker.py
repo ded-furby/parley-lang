@@ -50,6 +50,7 @@ CASES = [
     ("list_mix", in_main('let l be a list of 1, "two"'), "P301", "mixes"),
     ("plus_text_number", in_main('say 1 plus "a"'), "P302", "interpolation"),
     ("if_not_bool", in_main("if 5:", "    say 1"), "P303", "yes or no"),
+    ("fail_needs_text", in_main("fail 5"), "P301", "needs text"),
     ("missing_give_back",
      "to f giving number:\n    if yes:\n        give back 1\nto main:\n    say (f)\n",
      "P304", "not every path"),
@@ -90,6 +91,8 @@ def test_clean_program_no_diags():
         "a p has x as number\n"
         "to double with n as number giving number:\n"
         "    give back n times 2\n"
+        "to crash giving number:\n"
+        "    fail \"not a number\"\n"
         "to main:\n"
         "    let v be a p with x 3\n"
         "    say (double with v's x)\n"

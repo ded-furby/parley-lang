@@ -281,6 +281,11 @@ class Skip(Stmt):
 
 
 @dataclass
+class Fail(Stmt):
+    message: Expr
+
+
+@dataclass
 class Attempt(Stmt):
     body: list[Stmt]
     handler: list[Stmt]

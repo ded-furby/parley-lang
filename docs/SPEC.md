@@ -79,12 +79,15 @@ parse-relevant highlights:
   as a named function body. Outside variables read by the body are captured by
   value at creation time; later changes to the original variable do not affect
   the closure. Captured values cannot be changed inside the closure (P314).
-* **Functions** with `giving T` must give back on every path (P304).
+* **Functions** with `giving T` must give back on every path (P304). A `fail`
+  statement is terminal and therefore satisfies a returning path.
   `changing` parameters require a plain variable argument of exactly the
   parameter's type (P305).
 * **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
   and is a checked runtime operation.
+* **`fail expr`** requires `expr` to be text. It stops the current execution
+  with that message and can be caught by an enclosing `attempt:`.
 * **`attempt`** bodies may not `give back`, and may not `stop`/`skip` loops
   that started outside the attempt (P310).
 * The checker is total: any program it accepts must compile under rustc.
@@ -103,7 +106,7 @@ parse-relevant highlights:
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
 * **Failures.** These stop the program with an English message and exit
-  code 1: division/remainder by zero, out-of-range `item`, `value of`
+  code 1: `fail`, division/remainder by zero, out-of-range `item`, `value of`
   nothing, smallest/largest of an empty list, negative `square root of`,
   negative integer powers, overflowing powers, file write failures, reading
   input past end-of-file. An enclosing `attempt:` catches them; `the error`

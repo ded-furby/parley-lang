@@ -200,6 +200,30 @@ def test_attempt_catches_and_continues(workdir):
         "still alive\n")
 
 
+def test_fail_statement_can_be_caught(workdir):
+    src = '''to main:
+    attempt:
+        fail "custom failure"
+    if it failed:
+        say "caught: {the error}"
+    say "still alive"
+'''
+    proc = run_program(workdir, "fail_caught", src)
+    assert proc.stdout == "caught: custom failure\nstill alive\n"
+
+
+def test_uncaught_fail_statement_stops_in_english(workdir):
+    proc = run_program(
+        workdir,
+        "fail_uncaught",
+        'to main:\n    fail "custom failure"\n',
+        expect_ok=False,
+    )
+
+    assert proc.returncode == 1
+    assert "The program stopped: custom failure" in proc.stderr
+
+
 def test_value_semantics_copy_on_assign(workdir):
     src = '''to main:
     let first_list be a list of 1, 2

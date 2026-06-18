@@ -42,7 +42,7 @@ RESERVED = {
     "a", "an", "is", "of", "to", "item", "ask", "sorted", "reversed",
     "trimmed", "rounded", "contains", "times", "changing", "plus", "minus",
     "yes", "no", "nothing", "not", "and", "or", "say", "let", "be", "set",
-    "stop", "skip", "add", "remove", "write", "append", "if", "otherwise",
+    "stop", "skip", "fail", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",
     "in", "maybe", "include", "number", "decimal", "text", "yesno",
     "list", "map", "function", "taking", "the", "some",
@@ -269,7 +269,7 @@ class Checker:
 
     def _always_gives(self, body: list[A.Stmt]) -> bool:
         for st in body:
-            if isinstance(st, A.Give):
+            if isinstance(st, (A.Give, A.Fail)):
                 return True
             if isinstance(st, A.If) and st.otherwise is not None:
                 if all(self._always_gives(b) for _, b in st.arms) and self._always_gives(st.otherwise):
@@ -541,6 +541,11 @@ class Checker:
 
     def st_skip(self, st: A.Skip):
         self._loop_jump(st, "skip")
+
+    def st_fail(self, st: A.Fail):
+        ty = self.infer(st.message)
+        if not isinstance(ty, (A.TText, TErr)):
+            self.type_mismatch(A.TText(), ty, st.message, "`fail`")
 
     def _loop_jump(self, st, word: str):
         if self.loop_depth == 0:

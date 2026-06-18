@@ -374,6 +374,9 @@ class ToAst(Transformer):
     def skip_stmt(self, meta, ch):
         return A.Skip(**_pos(meta))
 
+    def fail_stmt(self, meta, ch):
+        return A.Fail(message=ch[0], **_pos(meta))
+
     def add_stmt(self, meta, ch):
         return A.Add(value=ch[0], target=ch[1], **_pos(meta))
 

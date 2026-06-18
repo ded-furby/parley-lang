@@ -45,6 +45,7 @@ to main:
         say 1 divided by 0
     if it failed:
         say the error
+    fail "manual failure"
     let parts be "a,b" split by ","
     say parts joined with "-"
     say 2 to the power of 8
@@ -63,6 +64,7 @@ to main:
     assert [f.name for f in prog.funcs] == ["greet", "bump", "main"]
     main = prog.funcs[2]
     assert len(main.body) > 20
+    assert any(isinstance(st, A.Fail) for st in main.body)
 
 
 def test_interpolation_parts():

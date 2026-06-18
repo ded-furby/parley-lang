@@ -143,6 +143,11 @@ def test_attempt_is_catch_unwind():
     assert "parley_last_error()" in rust
 
 
+def test_fail_statement_emits_runtime_failure():
+    rust = emit_text('to main:\n    fail "custom failure"\n')
+    assert 'panic!("{}", "custom failure".to_string());' in rust
+
+
 def test_main_catches_panics_in_english():
     rust = emit_text("to main:\n    say 1\n")
     assert "The program stopped" in rust

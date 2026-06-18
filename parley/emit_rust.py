@@ -1027,6 +1027,9 @@ class Emitter:
     def em_skip(self, st: A.Skip):
         self.out("continue;", st.line)
 
+    def em_fail(self, st: A.Fail):
+        self.out(f'panic!("{{}}", {self.value(st.message, A.TText())});', st.line)
+
     def em_attempt(self, st: A.Attempt):
         flag = self.fresh("attempt")
         self.out(f"let {flag} = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {{",

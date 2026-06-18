@@ -278,19 +278,22 @@ all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 `value of`. Use `some value` when your own function needs to give back a
 present maybe value. (Unwrapping nothing stops the program — check first.)
 
-## 14. When things go wrong: attempt
+## 14. When things go wrong: fail and attempt
 
-Runtime problems (divide by zero, item out of range, …) stop the program with
-a plain-English message — unless you catch them:
+Runtime problems (divide by zero, item out of range, `fail "message"`, …) stop
+the program with a plain-English message — unless you catch them:
 
 ```parley
 to main:
     attempt:
-        say 1 divided by 0
+        fail "custom failure"
     if it failed:
         say "oops: {the error}"
     say "still going"
 ```
+
+Use `fail` when your own code or a small helper package needs to reject an
+invalid state. The message must be text.
 
 ## 15. Files, input, randomness
 
