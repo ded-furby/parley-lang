@@ -63,7 +63,8 @@ with the static site files at the branch root.
 
 ### Custom domain option
 
-1. Pick the domain after checking current availability.
+1. Pick the domain after checking current availability. Current candidates are
+   tracked in [DOMAINS.md](DOMAINS.md).
 2. Add the domain in GitHub Pages settings.
 3. Add a `site/CNAME` file containing the chosen domain.
 4. Configure DNS records as GitHub Pages instructs.

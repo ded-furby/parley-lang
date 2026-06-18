@@ -50,7 +50,8 @@ Update it whenever you finish or start a work item.
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
   benchmark plan, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
   readiness checklist. `docs/SPEC.md` now correctly says v0.2 and no longer
-  claims higher-order functions are missing.
+  claims higher-order functions are missing. `docs/DOMAINS.md` records
+  checked domain candidates; current recommendation is `parleylang.com`.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

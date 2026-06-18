@@ -113,7 +113,8 @@ construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
 Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
 [docs/ERRORS.md](docs/ERRORS.md). Research plan:
 [docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
-[docs/RELEASE.md](docs/RELEASE.md). Ten working programs: [examples/](examples).
+[docs/RELEASE.md](docs/RELEASE.md). Domain options:
+[docs/DOMAINS.md](docs/DOMAINS.md). Ten working programs: [examples/](examples).
 
 ## How it works
 
