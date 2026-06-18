@@ -82,6 +82,9 @@ parse-relevant highlights:
 * **Functions** with `giving T` must give back on every path (P304).
   `changing` parameters require a plain variable argument of exactly the
   parameter's type (P305).
+* **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
+  constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
+  and is a checked runtime operation.
 * **`attempt`** bodies may not `give back`, and may not `stop`/`skip` loops
   that started outside the attempt (P310).
 * The checker is total: any program it accepts must compile under rustc.

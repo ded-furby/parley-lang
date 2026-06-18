@@ -108,7 +108,7 @@ cp -r skill/parley ~/.claude/skills/
 
 records · enums with exhaustive `when` (multi-value arms, numeric ranges) ·
 function values (`the function f`) and anonymous closures with captured values · lists, maps
-(sorted iteration), `maybe` options · functions with `changing` (mutable)
+(sorted iteration), `maybe` options (`some x`, `nothing`, `value of`) · functions with `changing` (mutable)
 parameters and recursion · string interpolation `"{x}"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
 stdin `ask` · random numbers · bundled `std/math`, `std/text`, and `std/list`
@@ -166,6 +166,7 @@ the plan:
 - [x] bundled standard packages (`std/math`, `std/text`) — v0.3.3
 - [x] local package vendoring and lockfile (`parley package`) — v0.3.4
 - [x] bundled list helpers (`std/list`) — v0.3.5
+- [x] present maybe values (`some x`) — v0.3.6
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] remote package registry
@@ -175,7 +176,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 141 tests; e2e compiles real binaries (needs cargo)
+pytest            # 143 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

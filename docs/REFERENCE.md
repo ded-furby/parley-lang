@@ -20,7 +20,7 @@ Comments: `note: …` or `# …` to end of line.
 | `yesno` | `bool` | literals `yes` / `no` |
 | `list of T` | `Vec<T>` | items count from 1 |
 | `map from K to V` | `HashMap<K, V>` | K is `number` or `text`; `keys of` is sorted |
-| `maybe T` | `Option<T>` | literal `nothing`; unwrap with `value of` |
+| `maybe T` | `Option<T>` | `some x` or `nothing`; unwrap with `value of` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
 | `(function taking A, B giving R)` | `Rc<dyn Fn(A, B) -> R>` | a cloneable function value; both clauses optional |
@@ -98,6 +98,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `a map from text to number` | `HashMap::new()` | |
 | `a point with x 1, y 2` | `Point { x: 1, y: 2 }` | all fields required |
 | `nothing` | `None` | |
+| `some x` | `Some(x)` | maybe of x's type |
 | `value of m` | checked unwrap | inner type |
 | `the error` | last runtime error text | text |
 | `the function f` | `Rc::new(move |…| f(…))` | a named function value (no `changing` params) |

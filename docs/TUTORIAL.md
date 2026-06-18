@@ -266,11 +266,16 @@ to main:
         say "that was not a number"
     otherwise:
         say "{value of answer} cats!"
+
+    let fallback be some 3
+    if fallback is not nothing:
+        say value of fallback
 ```
 
 `ask for a number`, `number from text`, `decimal from text`, and `read file`
 all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
-`value of`. (Unwrapping nothing stops the program — check first.)
+`value of`. Use `some value` when your own function needs to give back a
+present maybe value. (Unwrapping nothing stops the program — check first.)
 
 ## 14. When things go wrong: attempt
 

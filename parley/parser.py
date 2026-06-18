@@ -611,6 +611,9 @@ class ToAst(Transformer):
     def value_of(self, meta, ch):
         return self._prefix(meta, ch, "value")
 
+    def some_of(self, meta, ch):
+        return self._prefix(meta, ch, "some")
+
     def keys_of(self, meta, ch):
         return self._prefix(meta, ch, "keys")
 

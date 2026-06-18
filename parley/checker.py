@@ -45,7 +45,7 @@ RESERVED = {
     "stop", "skip", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",
     "in", "maybe", "include", "number", "decimal", "text", "yesno",
-    "list", "map", "function", "taking", "the",
+    "list", "map", "function", "taking", "the", "some",
 }
 
 _NUMERIC = (A.TNum, A.TDec)
@@ -995,6 +995,15 @@ class Checker:
             self.err("P307", f"`value of` unwraps a maybe, but this is already {ty}.", e,
                      hint="Just use the value directly.")
             return ty
+        if op == "some":
+            if isinstance(ty, TNothing):
+                self.err("P308", "`some` needs a real value, not bare `nothing`.", e,
+                         hint="Use `nothing` directly where a maybe value is expected.")
+                return TErr()
+            if isinstance(ty, A.TUnit):
+                self.err("P301", "This gives nothing back, so `some` cannot wrap it.", e)
+                return TErr()
+            return A.TMaybe(ty)
         if op == "keys":
             if isinstance(ty, A.TMap):
                 return A.TList(ty.key)

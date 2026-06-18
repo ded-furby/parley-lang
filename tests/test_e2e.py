@@ -143,6 +143,23 @@ def test_maybe_flow(workdir):
     assert proc.stdout == "42\nnothing\nbad is nothing\n43\n"
 
 
+def test_some_constructs_maybe_values(workdir):
+    src = '''to find with needle as number giving maybe number:
+    if needle is 5:
+        give back some needle
+    give back nothing
+
+to main:
+    let message be some "ready"
+    if message is not nothing:
+        say value of message
+    say (find with 5)
+    say (find with 9)
+'''
+    proc = run_program(workdir, "some_maybe", src)
+    assert proc.stdout == "ready\n5\nnothing\n"
+
+
 def test_map_operations(workdir):
     src = '''to main:
     let m be a map from number to text

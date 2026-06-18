@@ -15,7 +15,7 @@ to index_number with xs as list of number, needle as number giving maybe number:
     let index be 1
     for each value in xs:
         if value is needle:
-            give back number from (text from index)
+            give back some index
         set index to index plus 1
     give back nothing
 
@@ -39,6 +39,6 @@ to index_text with xs as list of text, needle as text giving maybe number:
     let index be 1
     for each value in xs:
         if value is needle:
-            give back number from (text from index)
+            give back some index
         set index to index plus 1
     give back nothing

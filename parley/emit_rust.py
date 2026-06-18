@@ -821,6 +821,9 @@ class Emitter:
             return f"parley_sqrt({inner})"
         if op == "value":
             return f"parley_value(&({self.borrow(v)}))"
+        if op == "some":
+            elem = e.ty.elem if isinstance(e.ty, A.TMaybe) else None
+            return f"Some({self.value(v, elem)})"
         if op == "keys":
             return f"parley_keys(&({self.borrow(v)}))"
         if op == "text_from":

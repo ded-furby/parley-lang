@@ -160,6 +160,7 @@ closure_param: NAME "as" type
       | _CEILING_OF unary       -> ceiling_of
       | _SQRT_OF unary          -> sqrt_of
       | _VALUE_OF unary         -> value_of
+      | _SOME unary             -> some_of
       | _KEYS_OF unary          -> keys_of
       | _TEXT_FROM unary        -> text_from
       | _NUMBER_FROM unary      -> number_from
@@ -228,6 +229,7 @@ _FLOOR_OF.2: /floor +of\b/
 _CEILING_OF.2: /ceiling +of\b/
 _SQRT_OF.2: /square +root +of\b/
 _VALUE_OF.2: /value +of\b/
+_SOME.2: /some\b/
 _KEYS_OF.2: /keys +of\b/
 _TEXT_FROM.2: /text +from\b/
 _NUMBER_FROM.2: /number +from\b/

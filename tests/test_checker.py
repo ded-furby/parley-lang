@@ -97,6 +97,19 @@ def test_clean_program_no_diags():
     assert check_text(src) == []
 
 
+def test_some_constructs_maybe_values_cleanly():
+    src = (
+        "to find giving maybe number:\n"
+        "    give back some 5\n"
+        "to main:\n"
+        "    let message be some \"ready\"\n"
+        "    if message is not nothing:\n"
+        "        say value of message\n"
+        "    say (find)\n"
+    )
+    assert check_text(src) == []
+
+
 def test_zero_arg_function_used_as_value():
     src = (
         "to roll giving number:\n"

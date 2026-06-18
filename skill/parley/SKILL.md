@@ -108,7 +108,7 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·
 ceiling of · square root of · keys of · text from · number from ·
-decimal from · value of · ask · ask for a number · read file ·
+decimal from · some · value of · ask · ask for a number · read file ·
 write … to file … · append … to file … · a random number from 1 to 6 ·
 the error`.
 
@@ -140,7 +140,8 @@ dashes, underscores, and dots. `parley package list` reads `parley.lock.json`.
 5. **Reserved vocabulary.** `a an is of to item ask sorted reversed trimmed
    rounded contains times changing plus minus yes no nothing not and or` and
    statement keywords cannot be names — P209 tells you and suggests one.
-6. **maybes must be checked.** `value of` on nothing stops the program.
+6. **maybes must be checked.** Use `some x` to construct a present maybe value;
+   `value of` on nothing stops the program.
 7. **`repeat` counts are atoms**: `repeat (n plus 1) times:`.
 8. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
 9. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
