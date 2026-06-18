@@ -113,6 +113,7 @@ parameters and recursion · string interpolation `"{x}"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
 stdin `ask` · random numbers · bundled `std/math` and `std/text` packages ·
 multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
+local package vendoring with `parley package` and `parley.lock.json` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `uppercase of`, `contains`, …)

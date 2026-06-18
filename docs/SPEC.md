@@ -126,6 +126,9 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 * `include "x"` is textual. It first resolves `x` relative to the including
   file, then as `parley_modules/x`, then through bundled standard packages,
   then through `PARLEY_PATH` roots. Package directories load `main.par`.
+* `parley package install name source --version X` vendors a local package
+  directory or `.par` file into `parley_modules/name/` and records it in
+  `parley.lock.json`. This is a local lockfile workflow, not a remote registry.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
   in `.parley-build/target/`.
 
@@ -133,6 +136,6 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 v0.3 is an experiment. Syntax may change; error codes are append-only.
 Known limits: no generics for user functions, no methods, single-threaded,
-and no versioned package manager. Function values exist for named functions
+and no remote package registry. Function values exist for named functions
 without `changing` parameters and anonymous functions with value captures. See
 the README roadmap.

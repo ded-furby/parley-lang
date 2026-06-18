@@ -200,7 +200,8 @@ Use `include "std/text"` for small text helpers:
 ## Local packages
 
 `parley package install name source --version 1.0.0` copies a local package
-directory or `.par` file into `parley_modules/name/`. Directory packages need a
-`main.par`. Installs are recorded in `parley.lock.json`, and
-`parley package list` prints the locked package names, versions, and vendored
-paths.
+directory or `.par` file into `parley_modules/name/`. Package names may contain
+letters, numbers, dashes, underscores, and dots, and must start with a letter or
+number. Directory packages need a `main.par`. Installs are recorded in
+`parley.lock.json`, and `parley package list` prints the locked package names,
+versions, and vendored paths.
