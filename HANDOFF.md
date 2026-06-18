@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.6** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 143 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.7** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 144 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -61,6 +61,8 @@ Update it whenever you finish or start a work item.
 - **v0.3.6 maybe constructor:** `some expr` constructs a present `maybe`
   value, so functions can directly `give back some index` alongside
   `give back nothing`.
+- **v0.3.7 bundled map helpers:** `include "std/map"` provides maybe lookups,
+  fallback lookups, and a text-key count helper for common map workflows.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -124,7 +126,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.6).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.7).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

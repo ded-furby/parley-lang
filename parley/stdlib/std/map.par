@@ -1,0 +1,25 @@
+to number_at with m as map from text to number, key as text giving maybe number:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to number_or with m as map from text to number, key as text, fallback as number giving number:
+    if m contains key:
+        give back item key of m
+    give back fallback
+
+to add_count with changing m as map from text to number, key as text:
+    if m contains key:
+        set item key of m to item key of m plus 1
+    otherwise:
+        set item key of m to 1
+
+to text_at with m as map from text to text, key as text giving maybe text:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to text_or with m as map from text to text, key as text, fallback as text giving text:
+    if m contains key:
+        give back item key of m
+    give back fallback

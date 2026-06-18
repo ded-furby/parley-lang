@@ -281,6 +281,29 @@ to main:
         "4\n8\n4.5\n2\n4\nnothing\nred\nred\n2\nnothing\n")
 
 
+def test_bundled_std_map_package_runs(workdir):
+    src = '''include "std/map"
+
+to main:
+    let scores be a map from text to number
+    set item "ada" of scores to 36
+    say (number_at with scores, "ada")
+    say (number_at with scores, "grace")
+    say (number_or with scores, "grace", 0)
+    add_count with scores, "ada"
+    add_count with scores, "grace"
+    say item "ada" of scores
+    say item "grace" of scores
+
+    let labels be a map from text to text
+    set item "a" of labels to "alpha"
+    say (text_at with labels, "a")
+    say (text_or with labels, "b", "missing")
+'''
+    proc = run_program(workdir, "bundled_std_map", src)
+    assert proc.stdout == "36\nnothing\n0\n37\n1\nalpha\nmissing\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

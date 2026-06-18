@@ -326,6 +326,7 @@ Bundled standard packages are available without extra files:
 include "std/math"
 include "std/text"
 include "std/list"
+include "std/map"
 
 to main:
     say (clamped with 12, 1, 10)
@@ -333,6 +334,9 @@ to main:
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)
+    let counts be a map from text to number
+    add_count with counts, "agent"
+    say (number_or with counts, "agent", 0)
 ```
 
 To vendor a local package into a project:

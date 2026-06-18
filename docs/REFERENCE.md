@@ -210,6 +210,16 @@ Use `include "std/list"` for common list helpers:
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 
+Use `include "std/map"` for common text-key map helpers:
+
+| Function | Gives |
+|---|---|
+| `number_at with m, key` | maybe number from a `map from text to number` |
+| `number_or with m, key, fallback` | number or fallback |
+| `add_count with changing m, key` | increments a text-key count in place |
+| `text_at with m, key` | maybe text from a `map from text to text` |
+| `text_or with m, key, fallback` | text or fallback |
+
 ## Local packages
 
 `parley package install name source --version 1.0.0` copies a local package
