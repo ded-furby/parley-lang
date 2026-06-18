@@ -89,6 +89,15 @@ $ parley check game.par --json
 write → check → fix loop is instant. `parley explain P204` documents any
 code. Humans get the same diagnostics with source carets and colors.
 
+For editor integration, start the stdio language server from your editor:
+
+```bash
+parley-lsp
+```
+
+It publishes the same stable P-code diagnostics as `parley check --json` for
+open `.par` documents.
+
 Install the skill so your agent already knows all of this:
 
 ```bash
@@ -150,9 +159,9 @@ the plan:
 - [x] function values (`the function f`, `Rc<dyn Fn>` backed) — v0.2/v0.3
 - [x] anonymous closures with captured values — v0.3
 - [x] borrow-based passing for big values — v0.3
+- [x] LSP diagnostics server (`parley-lsp`) — v0.3.1
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
-- [ ] LSP server
 - [ ] packages beyond `include`
 
 ## Development
@@ -160,7 +169,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 130 tests; e2e compiles real binaries (needs cargo)
+pytest            # 132 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

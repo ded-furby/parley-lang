@@ -170,3 +170,11 @@ if it failed:
 
 Codes are stable (see [ERRORS.md](ERRORS.md)); `parley explain P204` prints
 the catalog entry. The intended loop: **check → apply hint → re-check → run.**
+
+## Editor integration
+
+`parley-lsp` starts a stdio Language Server Protocol server. It publishes the
+same parser/checker diagnostics and stable P-codes as `parley check --json` for
+open `.par` documents. The initial server supports `initialize`,
+`textDocument/didOpen`, `textDocument/didChange`, `textDocument/didClose`, and
+`shutdown`.

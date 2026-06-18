@@ -21,6 +21,8 @@ comments are `note: …` or `# …`.
 Never guess at fixes when a hint is present — hints name the exact repair.
 If `parley` is missing: `pip install git+https://github.com/ded-furby/parley-lang`
 (needs Rust: https://rustup.rs).
+For editor diagnostics, run `parley-lsp` as a stdio Language Server Protocol
+server; it emits the same P-code diagnostics as `parley check --json`.
 
 ## The whole language on one screen
 
@@ -148,3 +150,5 @@ the error`.
 * `parley rust program.par` prints the generated Rust if you need to inspect
   the backend; `P901` means the checker missed something — simplify the line
   and report it.
+* `parley-lsp` publishes diagnostics for open `.par` files in editors that can
+  launch a stdio LSP server.

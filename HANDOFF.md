@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 130 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.1** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 132 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -43,6 +43,9 @@ Update it whenever you finish or start a work item.
   in generated Rust; a callee clones its local parameter only if it stores or
   mutates that parameter, preserving Parley value semantics without cloning
   every read-only call argument.
+- **v0.3.1 editor tooling:** `parley-lsp` is a stdio Language Server Protocol
+  server that publishes the same parser/checker P-code diagnostics as
+  `parley check --json` for open `.par` documents.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -90,7 +93,7 @@ Update it whenever you finish or start a work item.
    counts, checks Parley with JSON diagnostics, and captures generated attempts
    to JSONL with summary analysis. Still needed: repeated agent error-rate
    runs and a result write-up.
-2. **LSP server**, **packages beyond `include`** — later.
+2. **Packages beyond `include`** — later.
 
 ## Working on the compiler: the contract
 
@@ -106,7 +109,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.0).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.1).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

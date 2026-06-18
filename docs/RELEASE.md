@@ -9,8 +9,10 @@ Run from the repository root:
 
 ```bash
 python3 -m pytest tests/
+python3 -m pytest tests/test_lsp.py
 python3 -m pip install -e ".[dev]"
 parley check examples/higher_order.par --json
+parley --version
 parley run examples/hello.par
 ```
 
@@ -25,6 +27,8 @@ The e2e tests require Rust and `cargo`.
 - Keep `docs/SPEC.md`, `docs/REFERENCE.md`, `docs/TUTORIAL.md`,
   `docs/ERRORS.md`, and `skill/parley/SKILL.md` in sync for every language
   change.
+- Keep `parley-lsp` wired in `pyproject.toml`; it is the editor integration
+  entry point and publishes the same P-code diagnostics as `parley check`.
 
 ## CI
 
