@@ -242,6 +242,28 @@ to main:
     assert proc.stdout == "10\nyes\nhahaha\n"
 
 
+def test_bundled_std_list_package_runs(workdir):
+    src = '''include "std/list"
+
+to main:
+    let nums be a list of 4, 2, 4, 8
+    say (first_number with nums)
+    say (last_number with nums)
+    say (average_number with nums)
+    say (count_number with nums, 4)
+    say (index_number with nums, 8)
+    say (index_number with nums, 9)
+    let words be a list of "red", "blue", "red"
+    say (first_text with words)
+    say (last_text with words)
+    say (count_text with words, "red")
+    say (index_text with words, "green")
+'''
+    proc = run_program(workdir, "bundled_std_list", src)
+    assert proc.stdout == (
+        "4\n8\n4.5\n2\n4\nnothing\nred\nred\n2\nnothing\n")
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

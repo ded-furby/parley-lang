@@ -320,10 +320,14 @@ Bundled standard packages are available without extra files:
 ```parley
 include "std/math"
 include "std/text"
+include "std/list"
 
 to main:
     say (clamped with 12, 1, 10)
     say (repeated_text with "ha", 3)
+    let numbers be a list of 4, 2, 4, 8
+    say (average_number with numbers)
+    say (index_number with numbers, 8)
 ```
 
 To vendor a local package into a project:

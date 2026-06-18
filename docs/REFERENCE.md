@@ -197,6 +197,18 @@ Use `include "std/text"` for small text helpers:
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 
+Use `include "std/list"` for common list helpers:
+
+| Function | Gives |
+|---|---|
+| `first_number with xs` / `last_number with xs` | first or last number |
+| `count_number with xs, n` | occurrences of `n` |
+| `index_number with xs, n` | maybe 1-based index of `n` |
+| `average_number with xs` | decimal average |
+| `first_text with xs` / `last_text with xs` | first or last text |
+| `count_text with xs, t` | occurrences of `t` |
+| `index_text with xs, t` | maybe 1-based index of `t` |
+
 ## Local packages
 
 `parley package install name source --version 1.0.0` copies a local package

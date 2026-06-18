@@ -116,8 +116,10 @@ Multi-file code uses `include "helpers.par"`. Reusable local packages can live
 at `parley_modules/package_name/main.par` and be loaded with
 `include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
 Bundled packages are available as `include "std/math"` (`clamped`, `between`,
-`percent_of`) and `include "std/text"` (`is_blank`, `repeated_text`,
-`surrounded_with`).
+`percent_of`), `include "std/text"` (`is_blank`, `repeated_text`,
+`surrounded_with`), and `include "std/list"` (`first_number`, `last_number`,
+`count_number`, `index_number`, `average_number`, `first_text`, `last_text`,
+`count_text`, `index_text`).
 Use `parley package install name path --version 1.0.0` to vendor a local
 package into `parley_modules/name/`; names may contain letters, numbers,
 dashes, underscores, and dots. `parley package list` reads `parley.lock.json`.
