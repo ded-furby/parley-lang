@@ -1,4 +1,4 @@
-# Parley specification (v0.2)
+# Parley specification (v0.3)
 
 This document defines the language precisely enough to reimplement it.
 For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
@@ -69,11 +69,16 @@ parse-relevant highlights:
   (`is 10 to 20:`); range ends are literals of the subject's type, smaller
   first (P312).
 * **Function values.** `the function f` is a value of type
-  `(function taking …  giving …)` — a Rust `fn` pointer, so Copy, comparable
-  with `is`, and zero-cost. Only plain defined functions qualify: not `main`
-  and not functions with `changing` parameters (P313). A variable holding a
-  function value is called with the ordinary call forms. Function values
-  cannot be converted to text or said (P301).
+  `(function taking …  giving …)`, represented as a cloneable Rust
+  `Rc<dyn Fn...>`. Only plain defined functions qualify: not `main` and not
+  functions with `changing` parameters (P313). A variable holding a function
+  value is called with the ordinary call forms. Function values cannot be
+  compared, converted to text, or said (P301).
+* **Anonymous functions.** `a function taking x as number giving number:`
+  creates a function value. Its indented body follows the same statement rules
+  as a named function body. Outside variables read by the body are captured by
+  value at creation time; later changes to the original variable do not affect
+  the closure. Captured values cannot be changed inside the closure (P314).
 * **Functions** with `giving T` must give back on every path (P304).
   `changing` parameters require a plain variable argument of exactly the
   parameter's type (P305).
@@ -120,8 +125,8 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 ## 7. Stability
 
-v0.2 is an experiment. Syntax may change; error codes are append-only.
-Known limits: no anonymous closures with captured variables, no generics for
-user functions, no methods, single-threaded, `include` is textual. Function
-values exist today for named functions without `changing` parameters; richer
-closures are still on the roadmap. See the README roadmap.
+v0.3 is an experiment. Syntax may change; error codes are append-only.
+Known limits: no generics for user functions, no methods, single-threaded,
+`include` is textual. Function values exist for named functions without
+`changing` parameters and anonymous functions with value captures. See the
+README roadmap.

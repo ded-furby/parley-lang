@@ -175,7 +175,7 @@ def test_decimal_when_uses_float_literals():
     assert "== 3.0f64" in rust
 
 
-def test_function_value_is_fn_pointer():
+def test_function_value_is_rc_dyn_fn():
     rust = emit_text(
         "to double with x as number giving number:\n"
         "    give back x times 2\n"
@@ -184,6 +184,19 @@ def test_function_value_is_fn_pointer():
         "to main:\n"
         "    let d be the function double\n"
         "    say (apply with d)\n")
-    assert "fn(i64) -> i64" in rust
-    assert "(double as fn(i64) -> i64)" in rust
+    assert "Rc<dyn Fn(i64) -> i64>" in rust
+    assert "Rc::new(move |arg1: i64| -> i64 { double(arg1) })" in rust
     assert "f(21i64)" in rust
+
+
+def test_closure_emits_rc_dyn_fn_with_move_capture():
+    rust = emit_text(
+        "to main:\n"
+        "    let offset be 7\n"
+        "    let add_offset be a function taking x as number giving number:\n"
+        "        give back x plus offset\n"
+        "    say (add_offset with 5)\n"
+    )
+    assert "Rc<dyn Fn(i64) -> i64>" in rust
+    assert "Rc::new(move |x: i64|" in rust
+    assert "x plus offset" not in rust

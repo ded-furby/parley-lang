@@ -23,7 +23,7 @@ Comments: `note: …` or `# …` to end of line.
 | `maybe T` | `Option<T>` | literal `nothing`; unwrap with `value of` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
-| `(function taking A, B giving R)` | `fn(A, B) -> R` | a function value; both clauses optional |
+| `(function taking A, B giving R)` | `Rc<dyn Fn(A, B) -> R>` | a cloneable function value; both clauses optional |
 
 **Value semantics:** storing or passing text/lists/maps/records copies them
 (the emitter inserts `.clone()`). Mutation crosses a function boundary only
@@ -97,11 +97,17 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `nothing` | `None` | |
 | `value of m` | checked unwrap | inner type |
 | `the error` | last runtime error text | text |
-| `the function f` | `f as fn(…) -> …` | a function value (no `changing` params) |
+| `the function f` | `Rc::new(move |…| f(…))` | a named function value (no `changing` params) |
+| `a function taking x as number giving number: ...` | `Rc::new(move |x: i64| -> i64 { ... })` | anonymous closure with captured values |
 
 A variable holding a function value is called exactly like a function:
 `(f with x)` in expressions, `f with x` as a statement. Function values
-cannot be turned into text or said.
+cannot be compared, turned into text, or said.
+
+Anonymous functions capture outside variables by value when they are created.
+Changing the original variable later does not change the captured value.
+Closures can read captured values, but cannot `set` them; give back a changed
+value and assign it outside if you need that flow.
 
 ### Built-in operations
 

@@ -239,6 +239,21 @@ to main:
 This works for any function without `changing` parameters. See
 [examples/higher_order.par](../examples/higher_order.par).
 
+You can also make an anonymous function right where you need it. It captures
+outside values when it is created:
+
+```parley
+to main:
+    let offset be 7
+    let add_offset be a function taking x as number giving number:
+        give back x plus offset
+    set offset to 100
+    say (add_offset with 5)      # 12
+```
+
+The closure reads the original `offset` value. It cannot `set offset` inside
+the closure; give back a new value if you want to change something outside.
+
 ## 13. Maybe: values that might be missing
 
 Some operations can fail honestly — they give back a `maybe`:
@@ -302,4 +317,4 @@ Next steps:
 
 * [REFERENCE.md](REFERENCE.md) — every construct with the Rust it becomes
 * [ERRORS.md](ERRORS.md) — every error code with its fix
-* `examples/` — ten programs from hello to a todo app
+* `examples/` — eleven programs from hello to closures and a todo app

@@ -1,0 +1,17 @@
+note: anonymous functions capture outside values when they are created
+
+to main:
+    let offset be 7
+    let prefix be "value"
+
+    let add_offset be a function taking x as number giving number:
+        give back x plus offset
+
+    let label be a function taking n as number giving text:
+        give back "{prefix}: {n plus offset}"
+
+    set offset to 100
+    set prefix to "changed"
+
+    say (add_offset with 5)
+    say (label with 5)

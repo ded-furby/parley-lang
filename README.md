@@ -98,7 +98,7 @@ cp -r skill/parley ~/.claude/skills/
 ## What the language has
 
 records · enums with exhaustive `when` (multi-value arms, numeric ranges) ·
-function values (`the function f`, zero-cost Rust fn pointers) · lists, maps
+function values (`the function f`) and anonymous closures with captured values · lists, maps
 (sorted iteration), `maybe` options · functions with `changing` (mutable)
 parameters and recursion · string interpolation `"{x}"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
@@ -114,7 +114,7 @@ Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
 [docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
 [docs/RELEASE.md](docs/RELEASE.md). Domain options:
 [docs/DOMAINS.md](docs/DOMAINS.md). Seed benchmark harness:
-[benchmarks/](benchmarks). Ten working programs: [examples/](examples).
+[benchmarks/](benchmarks). Eleven working programs: [examples/](examples).
 
 ## How it works
 
@@ -140,14 +140,14 @@ back at your `.par` line. `parley rust program.par` shows the generated code.
 
 ## Status & roadmap
 
-v0.2 is a working experiment — the full pipeline is real (all examples
+v0.3 is a working experiment — the full pipeline is real (all examples
 compile and run; the test suite builds every feature as a native binary),
 but the language is young and the syntax may still move. Known limits and
 the plan:
 
 - [x] richer `when` patterns (ranges, multiple values per arm) — v0.2
-- [x] function values (`the function f`, fn-pointer backed) — v0.2
-- [ ] anonymous closures with captured variables (today: named functions only)
+- [x] function values (`the function f`, `Rc<dyn Fn>` backed) — v0.2/v0.3
+- [x] anonymous closures with captured values — v0.3
 - [ ] borrow-based passing for big values (today: clone-on-assign)
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (Parley/Python/
       Rust seed corpus exists; tokenizer counts and agent runs still planned)
@@ -159,7 +159,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 110+ tests; e2e compiles real binaries (needs cargo)
+pytest            # 125 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

@@ -58,11 +58,13 @@ block: _NL _INDENT stmt+ _DEDENT
      | append_stmt
      | call_stmt
 
-let_stmt: "let" NAME "be" rhs _NL
+let_stmt: "let" NAME "be" closure_lit
+        | "let" NAME "be" rhs _NL
 set_stmt: "set" lvalue _TO rhs _NL
 set_item_stmt: "set" _ITEM sum_e _OF lvalue _TO rhs _NL
 say_stmt: "say" expr _NL
-give_stmt: _GIVE_BACK [rhs] _NL
+give_stmt: _GIVE_BACK closure_lit
+         | _GIVE_BACK [rhs] _NL
 stop_stmt: "stop" _NL
 skip_stmt: "skip" _NL
 add_stmt: "add" expr _TO lvalue _NL
@@ -111,6 +113,9 @@ empty_list: _EMPTY_LIST_OF type
 empty_map: _A_MAP_FROM type _TO type
 construct: _A NAME "with" field_init ("," field_init)*
 field_init: NAME expr
+closure_lit: _A_FUNCTION closure_params giving ":" block
+closure_params: [_TAKING closure_param ("," closure_param)*]
+closure_param: NAME "as" type
 
 // ---------- expressions ----------
 
@@ -238,6 +243,7 @@ _ASK.2: /ask\b/
 _RANDOM_FROM.2: /a +random +number +from\b/
 _THE_ERROR.2: /the +error\b/
 _THE_FUNCTION.2: /the +function\b/
+_A_FUNCTION.3: /a +function\b/
 _FUNCTION.2: /function\b/
 _TAKING.2: /taking\b/
 _A_LIST_OF.2: /a +list +of\b/

@@ -148,6 +148,17 @@ RANGE_AND_FUNC_CASES = [
      "to double with x as number giving number:\n    give back x times 2\n"
      "to main:\n    let f be the function double\n    say (f with \"hi\")\n",
      "P301", "needs number"),
+    ("function_value_compare",
+     "to double with x as number giving number:\n    give back x times 2\n"
+     "to main:\n    let f be the function double\n    let g be the function double\n"
+     "    if f is g:\n        say 1\n",
+     "P301", "cannot be compared"),
+    ("closure_changes_capture",
+     "to main:\n    let offset be 7\n"
+     "    let bump be a function giving number:\n"
+     "        set offset to offset plus 1\n"
+     "        give back offset\n",
+     "P314", "cannot change"),
 ]
 
 
@@ -173,6 +184,19 @@ def test_function_value_round_trip_is_clean():
         "    let fs be a list of the function double\n"
         "    for each f in fs:\n"
         "        say (f with 1)\n"
+    )
+    assert check_text(src) == []
+
+
+def test_closure_capture_round_trip_is_clean():
+    src = (
+        "to apply with f as (function taking number giving number), x as number giving number:\n"
+        "    give back (f with x)\n"
+        "to main:\n"
+        "    let offset be 7\n"
+        "    let add_offset be a function taking x as number giving number:\n"
+        "        give back x plus offset\n"
+        "    say (apply with add_offset, 5)\n"
     )
     assert check_text(src) == []
 

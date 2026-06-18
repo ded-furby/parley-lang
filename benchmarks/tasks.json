@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "language_version": "0.2.0",
+  "language_version": "0.3.0",
   "description": "Seed benchmark tasks drawn from the checked Parley examples. These are the Parley side of the Phase 1 corpus; Python and Rust equivalents are still required before paper claims.",
   "tasks": [
     {

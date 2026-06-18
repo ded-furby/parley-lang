@@ -72,6 +72,8 @@ to main:
 
     let f be the function feed                 # a function as a value
     say (f with felix)                         # call it like any function
+    let add_lives be a function taking n as number giving number:
+        give back n plus felix's lives         # closure captures current value
 
     attempt:                                   # catches runtime failures
         say 1 divided by 0
@@ -92,6 +94,8 @@ Types: `number` (i64) · `decimal` (f64) · `text` · `yesno` (yes/no) ·
 `list of T` · `map from K to V` · `maybe T` · records · kinds ·
 `(function taking A, B giving R)` (function value; both clauses optional —
 parameter example: `to apply with f as (function taking number giving number):`).
+Anonymous function values use
+`a function taking x as number giving number:` followed by an indented body.
 
 Operators: `plus minus times divided by` (or `+ - * / %`),
 `remainder of a divided by b`, `a to the power of b`,
@@ -127,8 +131,11 @@ the error`.
 9. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
 10. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
 11. **Function values are made with `the function name`** (not the bare name)
-    and only from functions without `changing` parameters. They cannot be
-    said or turned into text.
+    or with `a function taking ...:` closures. Named function values only work
+    for functions without `changing` parameters. Function values cannot be
+    compared, said, or turned into text.
+12. **Closures capture by value.** They can read outside variables as they
+    were when the closure was created, but cannot `set` captured variables.
 
 ## Reading failures
 

@@ -22,18 +22,23 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.2** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). **114 tests pass**, including e2e tests that compile every
-  feature to a native binary and assert stdout. Ten examples in
+- **Language v0.3** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 125 tests, including e2e tests that
+  compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
 - **v0.2 features just added:** richer `when` patterns (multi-value arms
   `is 1, 2 or 3:`, inclusive numeric ranges `is 10 to 20:`, new P312) and
   first-class function values (`the function f`, type
-  `(function taking A giving R)`, Rust fn pointers, new P313). Also fixed
-  a latent bug: `when` over a decimal with an integer arm used to emit
-  Rust that did not compile (now typed literals, see `_pattern_num`).
+  `(function taking A giving R)`, now represented as cloneable `Rc<dyn Fn>`,
+  new P313). Also fixed a latent bug: `when` over a decimal with an integer
+  arm used to emit Rust that did not compile (now typed literals, see
+  `_pattern_num`).
+- **v0.3 closure feature:** anonymous function literals
+  (`a function taking x as number giving number:`) capture outside values at
+  creation time, can be passed anywhere a `(function ...)` value is expected,
+  and add P314 for attempts to mutate captured values.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -50,7 +55,7 @@ Update it whenever you finish or start a work item.
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
   benchmark plan, `benchmarks/` contains a Phase-1 Parley/Python/Rust seed
   metrics harness, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
-  readiness checklist. `docs/SPEC.md` now correctly says v0.2 and no longer
+  readiness checklist. `docs/SPEC.md` now correctly says v0.3 and no longer
   claims higher-order functions are missing. `docs/DOMAINS.md` records checked
   domain candidates; current recommendation is `parleylang.com`.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
@@ -75,20 +80,14 @@ Update it whenever you finish or start a work item.
 
 ### Not started (the remaining roadmap, in suggested order)
 
-1. **Anonymous closures with captured variables.** Today only named,
-   non-`changing` functions can be values. Design sketch: a closure
-   expression in English (e.g. `a function taking x as number giving
-   number: x times 2` — syntax undecided), emitted as `Rc<dyn Fn(...)>`
-   with clone-on-capture to preserve value semantics. This is the largest
-   remaining language gap.
-2. **Complete the benchmark runner** (goal 3). `benchmarks/` now measures
+1. **Complete the benchmark runner** (goal 3). `benchmarks/` now measures
    Parley/Python/Rust seed references and checks Parley with JSON diagnostics.
    Still needed: LLM-tokenizer counts, generated-source capture, repair-turn
    logging, and repeated agent error-rate runs.
-3. **Borrow-based passing for big values** — perf optimisation in
+2. **Borrow-based passing for big values** — perf optimisation in
    `emit_rust.py` (pass `&T` for non-changing heap params, clone only on
    store). Touches the whole emitter; do it with the e2e suite green.
-4. **LSP server**, **packages beyond `include`** — later.
+3. **LSP server**, **packages beyond `include`** — later.
 
 ## Working on the compiler: the contract
 
@@ -104,7 +103,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.2.0).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.0).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

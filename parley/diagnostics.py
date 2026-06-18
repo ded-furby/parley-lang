@@ -187,6 +187,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "`the function name` turns a defined function into a value, but `main`, functions with `changing` parameters, and variables cannot be used that way.",
         "fix": "Use `the function` only on plain defined functions. A variable that already holds a function value is used directly, without `the function`.",
     },
+    "P314": {
+        "title": "Closure cannot change captured value",
+        "explain": "An anonymous function captures outside variables by value when it is created.",
+        "fix": "Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.",
+    },
     # --- residual Rust errors (P9xx)
     "P901": {
         "title": "The Rust backend rejected the program",

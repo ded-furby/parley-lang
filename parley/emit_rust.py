@@ -68,7 +68,7 @@ def rust_type(ty: A.Type) -> str:
     if isinstance(ty, A.TFunc):
         params = ", ".join(rust_type(p) for p in ty.params)
         ret = f" -> {rust_type(ty.ret)}" if ty.ret is not None else ""
-        return f"fn({params}){ret}"
+        return f"Rc<dyn Fn({params}){ret}>"
     raise AssertionError(f"no rust type for {ty}")
 
 
@@ -95,6 +95,7 @@ def rust_str_lit(s: str, for_format: bool = False) -> str:
 PRELUDE = r"""
 use std::collections::HashMap;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 thread_local! {
     static LAST_ERROR: RefCell<String> = RefCell::new(String::new());
@@ -536,8 +537,56 @@ class Emitter:
                 return self.value_call_str(e)
             return self.call_str(e.target_fn, e.args) if hasattr(e, "target_fn") else "/*?*/"
         if isinstance(e, A.FuncRef):
-            return f"({self.fn_name(e.name)} as {rust_type(e.ty)})"
+            return self.func_ref_value(e)
+        if isinstance(e, A.Closure):
+            return self.closure_value(e)
         raise AssertionError(f"no emission for {type(e).__name__}")
+
+    def _render_inline_closure_body(self, body: list[A.Stmt], params: list[A.Param],
+                                    ret: A.Type | None) -> str:
+        saved_lines, saved_linemap = self.lines, self.linemap
+        saved_indent, saved_ret = self.indent, self.cur_ret
+        saved_changing = self.changing
+        self.lines, self.linemap = [], {}
+        self.indent = 0
+        self.cur_ret = ret
+        self.changing = set()
+        for p in params:
+            n = safe(p.name)
+            self.out(f"let mut {n} = {n};", p.line)
+        self.emit_block(body)
+        code = " ".join(line.strip() for line in self.lines)
+        self.lines, self.linemap = saved_lines, saved_linemap
+        self.indent, self.cur_ret = saved_indent, saved_ret
+        self.changing = saved_changing
+        return code
+
+    def func_ref_value(self, e: A.FuncRef) -> str:
+        fty = e.ty
+        assert isinstance(fty, A.TFunc)
+        params = []
+        args = []
+        for i, pty in enumerate(fty.params, 1):
+            name = f"arg{i}"
+            params.append(f"{name}: {rust_type(pty)}")
+            args.append(name)
+        ret = f" -> {rust_type(fty.ret)}" if fty.ret is not None else ""
+        call = f"{self.fn_name(e.name)}({', '.join(args)})"
+        return f"(Rc::new(move |{', '.join(params)}|{ret} {{ {call} }}) as {rust_type(fty)})"
+
+    def closure_value(self, e: A.Closure) -> str:
+        fty = e.ty
+        assert isinstance(fty, A.TFunc)
+        captures = []
+        for name, ty in e.captures:
+            src = f"(*{safe(name)})" if name in self.changing else safe(name)
+            val = f"{src}.clone()" if A.is_heap(ty) else src
+            captures.append(f"let {safe(name)} = {val};")
+        params = ", ".join(f"{safe(p.name)}: {rust_type(p.type)}" for p in e.params)
+        ret = f" -> {rust_type(e.ret)}" if e.ret is not None else ""
+        body = self._render_inline_closure_body(e.body, e.params, e.ret)
+        setup = " ".join(captures)
+        return f"{{ {setup} Rc::new(move |{params}|{ret} {{ {body} }}) as {rust_type(fty)} }}"
 
     def _value_binop(self, e: A.BinOp) -> str:
         op = e.op
@@ -661,7 +710,7 @@ class Emitter:
         raise AssertionError(op)
 
     def value_call_str(self, node) -> str:
-        """Call through a variable holding a function value (fn pointer)."""
+        """Call through a variable holding a function value."""
         callee = safe(node.name)
         if getattr(node, "callee_changing", False):
             callee = f"(*{callee})"

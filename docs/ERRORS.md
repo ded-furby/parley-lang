@@ -184,6 +184,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Use `the function` only on plain defined functions. A variable that already holds a function value is used directly, without `the function`.
 
+## P314 — Closure cannot change captured value
+
+**What it means:** An anonymous function captures outside variables by value when it is created.
+
+**How to fix it:** Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.
+
 ## P901 — The Rust backend rejected the program
 
 **What it means:** The generated Rust did not compile. This usually means a Parley checker gap — the position points at the Parley line involved.

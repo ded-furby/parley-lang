@@ -462,6 +462,15 @@ class ToAst(Transformer):
     def field_init(self, meta, ch):
         return (str(ch[0]), ch[1])
 
+    def closure_lit(self, meta, ch):
+        return A.Closure(params=ch[0], ret=ch[1], body=ch[2], **_pos(meta))
+
+    def closure_params(self, meta, ch):
+        return [p for p in ch if p is not None]
+
+    def closure_param(self, meta, ch):
+        return A.Param(name=str(ch[0]), type=ch[1], changing=False, **_pos(meta))
+
     # ---- expressions
 
     def or_op(self, meta, ch):

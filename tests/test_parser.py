@@ -216,3 +216,18 @@ def test_function_type_without_args_or_return():
     p0, p1 = parse(src).funcs[0].params
     assert isinstance(p0.type, A.TFunc) and p0.type.params == [] and p0.type.ret is None
     assert isinstance(p1.type, A.TFunc) and isinstance(p1.type.ret, A.TNum)
+
+
+def test_anonymous_function_literal_parse_shape():
+    prog = parse(
+        "to main:\n"
+        "    let offset be 7\n"
+        "    let add_offset be a function taking x as number giving number:\n"
+        "        give back x plus offset\n"
+    )
+    closure = prog.funcs[0].body[1].value
+    assert type(closure).__name__ == "Closure"
+    assert [p.name for p in closure.params] == ["x"]
+    assert isinstance(closure.params[0].type, A.TNum)
+    assert isinstance(closure.ret, A.TNum)
+    assert len(closure.body) == 1

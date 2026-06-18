@@ -308,3 +308,9 @@ def test_decimal_when_with_int_arm(workdir):
         "        otherwise:\n"
         "            say \"other\"\n"))
     assert proc.stdout == "three\n"
+
+
+def test_closure_captures_values(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "closures.par")], cwd=workdir)
+    assert proc.returncode == 0
+    assert proc.stdout == "12\nvalue: 12\n"

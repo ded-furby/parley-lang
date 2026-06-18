@@ -99,7 +99,7 @@ class TEnum(Type):
 
 
 class TFunc(Type):
-    """A function value: Rust fn pointer, so Copy and zero-cost."""
+    """A function value: cloneable Rust Rc<dyn Fn...>, so closures can capture."""
 
     def __init__(self, params: list[Type], ret: Optional[Type]):
         self.params = params
@@ -116,7 +116,7 @@ class TFunc(Type):
 
 def is_heap(ty: Type) -> bool:
     """Types that are not Copy in Rust — assignment must clone."""
-    if isinstance(ty, (TText, TList, TMap, TRecord)):
+    if isinstance(ty, (TText, TList, TMap, TRecord, TFunc)):
         return True
     if isinstance(ty, TMaybe):
         return is_heap(ty.elem)
@@ -478,3 +478,12 @@ class CallExpr(Expr):
 class FuncRef(Expr):
     """`the function NAME` — a named function used as a value."""
     name: str
+
+
+@dataclass
+class Closure(Expr):
+    """`a function taking ...:` — an anonymous function value with captures."""
+    params: list[Param]
+    ret: Optional[Type]
+    body: list[Stmt]
+    captures: list[tuple[str, Type]] = field(default_factory=list)

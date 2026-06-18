@@ -69,8 +69,11 @@ class Checker:
         self.scopes: list[dict[str, A.Type]] = []
         self.changing: set[str] = set()
         self.fn: A.FuncDef | None = None
+        self.current_name = ""
+        self.current_ret: A.Type | None = None
         self.loop_depth = 0
         self.attempt_loop_marks: list[int] = []
+        self.closure_stack: list[dict] = []
 
     # ------------------------------------------------------------- plumbing
 
@@ -90,10 +93,21 @@ class Checker:
         return True
 
     def lookup(self, name: str) -> A.Type | None:
-        for scope in reversed(self.scopes):
-            if name in scope:
-                return scope[name]
+        found = self.lookup_entry(name)
+        return found[0] if found is not None else None
+
+    def lookup_entry(self, name: str) -> tuple[A.Type, int] | None:
+        for i in range(len(self.scopes) - 1, -1, -1):
+            if name in self.scopes[i]:
+                return self.scopes[i][name], i
         return None
+
+    def maybe_capture(self, name: str, ty: A.Type, scope_index: int) -> None:
+        if not self.closure_stack:
+            return
+        info = self.closure_stack[-1]
+        if scope_index < info["local_start"]:
+            info["captures"].setdefault(name, ty)
 
     def declare(self, name: str, ty: A.Type, node) -> None:
         if self.lookup(name) is not None:
@@ -228,6 +242,8 @@ class Checker:
 
     def check_function(self, fn: A.FuncDef):
         self.fn = fn
+        self.current_name = fn.name
+        self.current_ret = fn.ret
         self.scopes = [{}]
         self.changing = set()
         self.loop_depth = 0
@@ -248,6 +264,8 @@ class Checker:
                      f'"{fn.name}" promises to give back {fn.ret}, but not every path does.',
                      fn, hint="Make sure every branch ends with `give back …`.")
         self.fn = None
+        self.current_name = ""
+        self.current_ret = None
 
     def _always_gives(self, body: list[A.Stmt]) -> bool:
         for st in body:
@@ -296,8 +314,8 @@ class Checker:
             self.declare(st.name, ty, st)
 
     def _resolve_lvalue(self, lv: A.LValue) -> A.Type:
-        base_ty = self.lookup(lv.base)
-        if base_ty is None:
+        found = self.lookup_entry(lv.base)
+        if found is None:
             hint = None
             s = _suggest(lv.base, self._known_names())
             if s:
@@ -306,6 +324,13 @@ class Checker:
                 hint = "Functions cannot be assigned to."
             self.err("P211" if not lv.fields else "P201",
                      f'There is no variable called "{lv.base}" here.', lv, hint=hint)
+            lv.ty = TErr()
+            return lv.ty
+        base_ty, scope_index = found
+        if self.closure_stack and scope_index < self.closure_stack[-1]["local_start"]:
+            self.err("P314",
+                     f'Closures can read "{lv.base}" from the outside, but cannot change it.',
+                     lv, hint="Store a new local value inside the closure, or return the changed value.")
             lv.ty = TErr()
             return lv.ty
         lv.is_changing = lv.base in self.changing
@@ -497,16 +522,17 @@ class Checker:
         if self.attempt_loop_marks:
             self.err("P310", "`give back` cannot jump out of an `attempt:` block.", st,
                      hint="Set a variable inside the attempt and give back after it.")
-        ret = self.fn.ret
+        ret = self.current_ret
+        name = self.current_name or "this function"
         if st.value is None:
             if ret is not None:
-                self.err("P304", f'"{self.fn.name}" must give back {ret}, but this gives back nothing.', st)
+                self.err("P304", f'"{name}" must give back {ret}, but this gives back nothing.', st)
             return
         ty = self.infer(st.value)
         if ret is None:
             self.err("P304",
-                     f'"{self.fn.name}" has no `giving` type, so it cannot give back a value.',
-                     st, hint=f"Add `giving {ty}` to the `to {self.fn.name} …:` line.")
+                     f'"{name}" has no `giving` type, so it cannot give back a value.',
+                     st, hint=f"Add `giving {ty}` to the function line.")
         elif not self.assignable(ret, ty):
             self.type_mismatch(ret, ty, st, "`give back`")
 
@@ -565,8 +591,10 @@ class Checker:
     def _check_call(self, node, name: str, args: list[A.Expr], statement: bool) -> A.Type:
         fn = self.funcs.get(name)
         if fn is None:
-            vty = self.lookup(name)
+            found = self.lookup_entry(name)
+            vty = found[0] if found is not None else None
             if isinstance(vty, A.TFunc):
+                self.maybe_capture(name, vty, found[1])
                 return self._check_value_call(node, name, vty, args)
             hint = None
             s = _suggest(name, self.funcs)
@@ -738,7 +766,49 @@ class Checker:
             return ret
         if isinstance(e, A.FuncRef):
             return self._infer_funcref(e)
+        if isinstance(e, A.Closure):
+            return self._infer_closure(e)
         raise AssertionError(f"no inference for {type(e).__name__}")
+
+    def _infer_closure(self, e: A.Closure) -> A.Type:
+        e.params = [A.Param(p.name, self.resolve_type(p.type, p), changing=False,
+                            line=p.line, col=p.col)
+                    for p in e.params]
+        if e.ret is not None:
+            e.ret = self.resolve_type(e.ret, e)
+
+        seen: set[str] = set()
+        local: dict[str, A.Type] = {}
+        for prm in e.params:
+            self.check_name_ok(prm.name, prm, "parameter")
+            if prm.name in seen:
+                self.err("P207", f'Parameter "{prm.name}" appears twice.', prm)
+                continue
+            seen.add(prm.name)
+            local[prm.name] = prm.type
+
+        info = {"local_start": len(self.scopes), "captures": {}}
+        old_name, old_ret = self.current_name, self.current_ret
+        old_loop, old_attempts = self.loop_depth, self.attempt_loop_marks
+        self.current_name = "anonymous function"
+        self.current_ret = e.ret
+        self.loop_depth = 0
+        self.attempt_loop_marks = []
+        self.closure_stack.append(info)
+        self.scopes.append(local)
+        self.check_block(e.body, new_scope=False)
+        self.scopes.pop()
+        self.closure_stack.pop()
+        self.current_name, self.current_ret = old_name, old_ret
+        self.loop_depth, self.attempt_loop_marks = old_loop, old_attempts
+
+        if e.ret is not None and not self._always_gives(e.body):
+            self.err("P304",
+                     f"This anonymous function promises to give back {e.ret}, "
+                     "but not every path does.",
+                     e, hint="Make sure every branch ends with `give back …`.")
+        e.captures = list(info["captures"].items())
+        return A.TFunc([p.type for p in e.params], e.ret)
 
     def _infer_funcref(self, e: A.FuncRef) -> A.Type:
         fn = self.funcs.get(e.name)
@@ -769,8 +839,10 @@ class Checker:
         return A.TFunc([p.type for p in fn.params], fn.ret)
 
     def _infer_var(self, e: A.Var) -> A.Type:
-        ty = self.lookup(e.name)
-        if ty is not None:
+        found = self.lookup_entry(e.name)
+        if found is not None:
+            ty, scope_index = found
+            self.maybe_capture(e.name, ty, scope_index)
             e.is_changing = e.name in self.changing
             return ty
         if e.name in self.variants:
@@ -841,6 +913,8 @@ class Checker:
                     other = rt if isinstance(lt, TNothing) else lt
                     self.err("P301",
                              f"Only maybe values can be compared with nothing; this is {other}.", e)
+            elif isinstance(lt, A.TFunc) or isinstance(rt, A.TFunc):
+                self.err("P301", "Function values cannot be compared.", e)
             elif isinstance(lt, A.TMaybe) != isinstance(rt, A.TMaybe):
                 inner = lt.elem if isinstance(lt, A.TMaybe) else rt.elem
                 self.err("P301", f"One side is a maybe and the other is not.",
