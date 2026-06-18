@@ -281,6 +281,12 @@ class Skip(Stmt):
 
 
 @dataclass
+class Assert(Stmt):
+    cond: Expr
+    message: Optional[Expr]
+
+
+@dataclass
 class Fail(Stmt):
     message: Expr
 

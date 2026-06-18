@@ -114,6 +114,7 @@ function values (`the function f`) and anonymous closures with captured values �
 (sorted iteration), `maybe` options (`some x`, `nothing`, `value of`) · functions with `changing` (mutable)
 parameters and recursion · string interpolation `"{x}"` ·
 custom runtime failures with `fail "message"` ·
+runtime assertions with `assert condition, "message"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
 stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, and `std/map`
 packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
@@ -176,6 +177,7 @@ the plan:
 - [x] local package skeletons (`parley package new`) — v0.3.8
 - [x] setup doctor (`parley doctor --json`) — v0.3.9
 - [x] custom runtime failures (`fail "message"`) — v0.3.10
+- [x] runtime assertions (`assert condition, "message"`) — v0.3.11
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] remote package registry
@@ -185,7 +187,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 150 tests; e2e compiles real binaries (needs cargo)
+pytest            # 156 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

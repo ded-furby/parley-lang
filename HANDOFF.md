@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.10** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 150 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.11** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 156 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -71,6 +71,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.10 custom runtime failures:** `fail "message"` stops execution with
   a user-provided English message, is catchable by `attempt:`, and counts as a
   terminal path for returning functions.
+- **v0.3.11 runtime assertions:** `assert condition, "message"` checks
+  invariants with a yes/no condition, optional text message, and catchable
+  runtime failure semantics.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -134,7 +137,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.10).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.11).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

@@ -148,6 +148,17 @@ def test_fail_statement_emits_runtime_failure():
     assert 'panic!("{}", "custom failure".to_string());' in rust
 
 
+def test_assert_statement_emits_guarded_runtime_failure():
+    rust = emit_text('to main:\n    assert no, "custom failure"\n')
+    assert 'if !(false)' in rust
+    assert 'panic!("{}", "custom failure".to_string());' in rust
+
+
+def test_assert_statement_without_message_uses_default_failure():
+    rust = emit_text("to main:\n    assert no\n")
+    assert 'panic!("{}", "Assertion failed.".to_string());' in rust
+
+
 def test_main_catches_panics_in_english():
     rust = emit_text("to main:\n    say 1\n")
     assert "The program stopped" in rust

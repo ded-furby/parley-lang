@@ -86,6 +86,9 @@ parse-relevant highlights:
 * **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
   and is a checked runtime operation.
+* **`assert condition`** requires `condition` to be yesno. Its optional
+  message form, `assert condition, expr`, requires `expr` to be text. A failed
+  assertion is a catchable runtime failure.
 * **`fail expr`** requires `expr` to be text. It stops the current execution
   with that message and can be caught by an enclosing `attempt:`.
 * **`attempt`** bodies may not `give back`, and may not `stop`/`skip` loops
@@ -106,11 +109,11 @@ parse-relevant highlights:
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
 * **Failures.** These stop the program with an English message and exit
-  code 1: `fail`, division/remainder by zero, out-of-range `item`, `value of`
-  nothing, smallest/largest of an empty list, negative `square root of`,
-  negative integer powers, overflowing powers, file write failures, reading
-  input past end-of-file. An enclosing `attempt:` catches them; `the error`
-  then holds the message.
+  code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
+  `item`, `value of` nothing, smallest/largest of an empty list, negative
+  `square root of`, negative integer powers, overflowing powers, file write
+  failures, reading input past end-of-file. An enclosing `attempt:` catches
+  them; `the error` then holds the message.
 * **I/O.** `say` writes a line to stdout. `ask` prompts on stdout and reads
   one line from stdin. File operations are whole-file. `a random number` is
   a non-cryptographic xorshift seeded from the clock.

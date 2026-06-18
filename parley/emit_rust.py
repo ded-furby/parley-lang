@@ -1027,6 +1027,11 @@ class Emitter:
     def em_skip(self, st: A.Skip):
         self.out("continue;", st.line)
 
+    def em_assert(self, st: A.Assert):
+        message = self.value(st.message, A.TText()) if st.message is not None \
+            else '"Assertion failed.".to_string()'
+        self.out(f'if !({self.value(st.cond)}) {{ panic!("{{}}", {message}); }}', st.line)
+
     def em_fail(self, st: A.Fail):
         self.out(f'panic!("{{}}", {self.value(st.message, A.TText())});', st.line)
 

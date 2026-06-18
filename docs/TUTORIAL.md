@@ -278,19 +278,23 @@ all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 `value of`. Use `some value` when your own function needs to give back a
 present maybe value. (Unwrapping nothing stops the program — check first.)
 
-## 14. When things go wrong: fail and attempt
+## 14. When things go wrong: assert, fail, and attempt
 
-Runtime problems (divide by zero, item out of range, `fail "message"`, …) stop
-the program with a plain-English message — unless you catch them:
+Runtime problems (divide by zero, item out of range, a failed
+`assert condition, "message"`, `fail "message"`, …) stop the program with a
+plain-English message — unless you catch them:
 
 ```parley
 to main:
     attempt:
-        fail "custom failure"
+        assert no, "custom assertion"
     if it failed:
         say "oops: {the error}"
     say "still going"
 ```
+
+Use `assert` for invariants that should already be true. The condition must
+give yes or no; the optional message must be text.
 
 Use `fail` when your own code or a small helper package needs to reject an
 invalid state. The message must be text.

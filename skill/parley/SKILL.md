@@ -79,8 +79,9 @@ to main:
     let add_lives be a function taking n as number giving number:
         give back n plus felix's lives         # closure captures current value
 
+    assert count is at least 0, "count cannot be negative"
     attempt:                                   # catches runtime failures
-        fail "custom failure"
+        assert no, "custom assertion"
     if it failed:
         say the error
 
@@ -112,7 +113,7 @@ uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·
 ceiling of · square root of · keys of · text from · number from ·
 decimal from · some · value of · ask · ask for a number · read file ·
 write … to file … · append … to file … · a random number from 1 to 6 ·
-fail · the error`.
+assert · fail · the error`.
 
 Multi-file code uses `include "helpers.par"`. Reusable local packages can live
 at `parley_modules/package_name/main.par` and be loaded with
@@ -147,16 +148,18 @@ underscores, and dots. `parley package list` reads `parley.lock.json`.
 6. **maybes must be checked.** Use `some x` to construct a present maybe value;
    `value of` on nothing stops the program.
 7. **`repeat` counts are atoms**: `repeat (n plus 1) times:`.
-8. **Use `fail "message"` for custom runtime errors.** The message must be text
+8. **Use `assert condition, "message"` for invariants.** The condition must
+   be yes/no, the optional message must be text, and failures are catchable.
+9. **Use `fail "message"` for custom runtime errors.** The message must be text
    and can be caught by `attempt:` / `if it failed:`.
-9. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
-10. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
-11. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
-12. **Function values are made with `the function name`** (not the bare name)
+10. **No early exit from `attempt:`** (`give back`/`stop`/`skip` can't cross it).
+11. **Text joins via interpolation**, not `plus`: `"total: {n}"`.
+12. **`when` needs `otherwise:`** unless it covers a whole enum (or yes and no).
+13. **Function values are made with `the function name`** (not the bare name)
     or with `a function taking ...:` closures. Named function values only work
     for functions without `changing` parameters. Function values cannot be
     compared, said, or turned into text.
-13. **Closures capture by value.** They can read outside variables as they
+14. **Closures capture by value.** They can read outside variables as they
     were when the closure was created, but cannot `set` captured variables.
 
 ## Reading failures

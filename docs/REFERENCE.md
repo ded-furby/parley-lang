@@ -61,6 +61,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `for each i from 1 to 10:` | `for i in 1..=10 { }` (inclusive) |
 | `stop` / `skip` | `break;` / `continue;` |
 | `give back expr` | `return expr;` |
+| `assert condition` / `assert condition, message` | catchable runtime check |
 | `fail "message"` | catchable runtime failure |
 | `add x to xs` | `xs.push(x);` |
 | `remove item i of xs` | bounds-checked `xs.remove(i-1)` |
@@ -137,17 +138,18 @@ value and assign it outside if you need that flow.
 
 ## Errors
 
-Runtime failures (`fail`, divide by zero, item out of range, `value of`
-nothing, file write trouble, end of input) **stop the program** with a
-one-line English message on stderr and exit code 1 — unless wrapped:
+Runtime failures (`assert`, `fail`, divide by zero, item out of range,
+`value of` nothing, file write trouble, end of input) **stop the program**
+with a one-line English message on stderr and exit code 1 — unless wrapped:
 
 ```parley
 attempt:
-    fail "that cannot work"
+    assert score is at least 0, "score cannot be negative"
 if it failed:
     say the error
 ```
 
+`assert` needs a yes/no condition, and its optional message must be text.
 `fail` needs a text expression. `give back`, `stop`, and `skip` cannot jump
 out of an `attempt:` block.
 

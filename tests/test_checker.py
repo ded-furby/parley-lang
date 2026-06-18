@@ -50,6 +50,8 @@ CASES = [
     ("list_mix", in_main('let l be a list of 1, "two"'), "P301", "mixes"),
     ("plus_text_number", in_main('say 1 plus "a"'), "P302", "interpolation"),
     ("if_not_bool", in_main("if 5:", "    say 1"), "P303", "yes or no"),
+    ("assert_needs_bool", in_main("assert 5"), "P303", "yes or no"),
+    ("assert_message_needs_text", in_main('assert yes, 5'), "P301", "needs text"),
     ("fail_needs_text", in_main("fail 5"), "P301", "needs text"),
     ("missing_give_back",
      "to f giving number:\n    if yes:\n        give back 1\nto main:\n    say (f)\n",
@@ -95,6 +97,7 @@ def test_clean_program_no_diags():
         "    fail \"not a number\"\n"
         "to main:\n"
         "    let v be a p with x 3\n"
+        "    assert v's x is 3, \"x should be three\"\n"
         "    say (double with v's x)\n"
     )
     assert check_text(src) == []

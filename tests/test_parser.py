@@ -45,6 +45,7 @@ to main:
         say 1 divided by 0
     if it failed:
         say the error
+    assert yes, "manual assert"
     fail "manual failure"
     let parts be "a,b" split by ","
     say parts joined with "-"
@@ -64,6 +65,7 @@ to main:
     assert [f.name for f in prog.funcs] == ["greet", "bump", "main"]
     main = prog.funcs[2]
     assert len(main.body) > 20
+    assert any(isinstance(st, A.Assert) for st in main.body)
     assert any(isinstance(st, A.Fail) for st in main.body)
 
 

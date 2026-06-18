@@ -374,6 +374,10 @@ class ToAst(Transformer):
     def skip_stmt(self, meta, ch):
         return A.Skip(**_pos(meta))
 
+    def assert_stmt(self, meta, ch):
+        message = ch[1] if len(ch) > 1 else None
+        return A.Assert(cond=ch[0], message=message, **_pos(meta))
+
     def fail_stmt(self, meta, ch):
         return A.Fail(message=ch[0], **_pos(meta))
 

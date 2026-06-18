@@ -51,6 +51,7 @@ block: _NL _INDENT stmt+ _DEDENT
      | give_stmt
      | stop_stmt
      | skip_stmt
+     | assert_stmt
      | fail_stmt
      | attempt_stmt
      | add_stmt
@@ -68,6 +69,7 @@ give_stmt: _GIVE_BACK closure_lit
          | _GIVE_BACK [rhs] _NL
 stop_stmt: "stop" _NL
 skip_stmt: "skip" _NL
+assert_stmt: "assert" expr ["," expr] _NL
 fail_stmt: "fail" expr _NL
 add_stmt: "add" expr _TO lvalue _NL
 remove_stmt: "remove" _ITEM sum_e _OF lvalue _NL

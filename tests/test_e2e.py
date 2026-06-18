@@ -224,6 +224,27 @@ def test_uncaught_fail_statement_stops_in_english(workdir):
     assert "The program stopped: custom failure" in proc.stderr
 
 
+def test_assert_statement_passes_when_condition_is_yes(workdir):
+    src = '''to main:
+    let count be 3
+    assert count is 3, "count changed"
+    say "ok"
+'''
+    proc = run_program(workdir, "assert_passes", src)
+    assert proc.stdout == "ok\n"
+
+
+def test_assert_statement_can_be_caught(workdir):
+    src = '''to main:
+    attempt:
+        assert no, "custom assertion"
+    if it failed:
+        say "caught: {the error}"
+'''
+    proc = run_program(workdir, "assert_caught", src)
+    assert proc.stdout == "caught: custom assertion\n"
+
+
 def test_value_semantics_copy_on_assign(workdir):
     src = '''to main:
     let first_list be a list of 1, 2

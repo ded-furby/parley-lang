@@ -42,7 +42,7 @@ RESERVED = {
     "a", "an", "is", "of", "to", "item", "ask", "sorted", "reversed",
     "trimmed", "rounded", "contains", "times", "changing", "plus", "minus",
     "yes", "no", "nothing", "not", "and", "or", "say", "let", "be", "set",
-    "stop", "skip", "fail", "add", "remove", "write", "append", "if", "otherwise",
+    "stop", "skip", "assert", "fail", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",
     "in", "maybe", "include", "number", "decimal", "text", "yesno",
     "list", "map", "function", "taking", "the", "some",
@@ -541,6 +541,13 @@ class Checker:
 
     def st_skip(self, st: A.Skip):
         self._loop_jump(st, "skip")
+
+    def st_assert(self, st: A.Assert):
+        self._check_cond(st.cond, "assert")
+        if st.message is not None:
+            ty = self.infer(st.message)
+            if not isinstance(ty, (A.TText, TErr)):
+                self.type_mismatch(A.TText(), ty, st.message, "The assertion message")
 
     def st_fail(self, st: A.Fail):
         ty = self.infer(st.message)
