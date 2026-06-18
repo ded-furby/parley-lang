@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.3** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 136 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.4** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 140 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -53,6 +53,9 @@ Update it whenever you finish or start a work item.
   `between`, and `percent_of`; `include "std/text"` provides `is_blank`,
   `repeated_text`, and `surrounded_with`. These `.par` files are packaged in
   the wheel under `parley/stdlib/`.
+- **v0.3.4 local package workflow:** `parley package install name source
+  --version X` vendors a local package into `parley_modules/name/` and records
+  it in `parley.lock.json`; `parley package list` prints the lockfile.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -100,7 +103,7 @@ Update it whenever you finish or start a work item.
    counts, checks Parley with JSON diagnostics, and captures generated attempts
    to JSONL with summary analysis. Still needed: repeated agent error-rate
    runs and a result write-up.
-2. **Versioned package manager** — later.
+2. **Remote package registry** — later.
 
 ## Working on the compiler: the contract
 
@@ -116,7 +119,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.3).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.4).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

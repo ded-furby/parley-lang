@@ -13,6 +13,7 @@ python3 -m pytest tests/test_lsp.py
 python3 -m pip install -e ".[dev]"
 parley check examples/higher_order.par --json
 python3 -m pytest tests/test_parser.py::test_include_bundled_std_package tests/test_e2e.py::test_bundled_std_packages_run
+python3 -m pytest tests/test_packages.py
 parley --version
 parley run examples/hello.par
 ```

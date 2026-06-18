@@ -7,6 +7,7 @@
   parley rust program.par         print the generated Rust
   parley explain P204             explain an error code
   parley new myproject            start a new program
+  parley package install name src vendor a local package
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -43,6 +45,9 @@ to main:
     let numbers be a list of 3, 1, 4, 1, 5
     say "the sum is {{sum of numbers}}"
 """
+
+LOCK_FILE = "parley.lock.json"
+PACKAGE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 
 
 # ------------------------------------------------------------------ pipeline
@@ -203,6 +208,83 @@ def cmd_new(args) -> int:
     return 0
 
 
+def _lock_path() -> Path:
+    return Path(LOCK_FILE)
+
+
+def _read_lock() -> dict:
+    path = _lock_path()
+    if not path.exists():
+        return {"schema_version": 1, "packages": {}}
+    try:
+        data = json.loads(path.read_text())
+    except json.JSONDecodeError:
+        data = {}
+    if data.get("schema_version") != 1 or not isinstance(data.get("packages"), dict):
+        return {"schema_version": 1, "packages": {}}
+    return data
+
+
+def _write_lock(data: dict) -> None:
+    _lock_path().write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+
+
+def _validate_package_name(name: str) -> None:
+    if not PACKAGE_NAME_RE.fullmatch(name):
+        raise OSError(
+            "package names may only contain letters, numbers, dashes, underscores, and dots")
+
+
+def _copy_package_source(source: Path, target: Path) -> None:
+    if source.is_dir():
+        if not (source / "main.par").is_file():
+            raise OSError("package directories need a main.par file")
+        if target.exists():
+            shutil.rmtree(target)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, target)
+        return
+    if source.is_file():
+        if target.exists():
+            shutil.rmtree(target)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.mkdir(parents=True)
+        shutil.copy2(source, target / "main.par")
+        return
+    raise OSError(f"package source does not exist: {source}")
+
+
+def cmd_package_install(args) -> int:
+    try:
+        _validate_package_name(args.name)
+        source = Path(args.source).resolve()
+        target = Path("parley_modules") / args.name
+        _copy_package_source(source, target)
+        lock = _read_lock()
+        lock["packages"][args.name] = {
+            "version": args.version,
+            "source": str(source),
+            "path": target.as_posix(),
+        }
+        _write_lock(lock)
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+    print(f"Installed {args.name} {args.version} -> {target.as_posix()}")
+    return 0
+
+
+def cmd_package_list(args) -> int:
+    packages = _read_lock().get("packages", {})
+    if not packages:
+        print("No packages installed.")
+        return 0
+    for name in sorted(packages):
+        pkg = packages[name]
+        print(f"{name} {pkg.get('version', '0.0.0')} {pkg.get('path', '')}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="parley",
@@ -235,6 +317,16 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("new", help="create a new Parley program")
     p.add_argument("name")
     p.set_defaults(fn=cmd_new)
+
+    p = sub.add_parser("package", help="manage local Parley packages")
+    package_sub = p.add_subparsers(dest="package_cmd", required=True)
+    install = package_sub.add_parser("install", help="vendor a local package")
+    install.add_argument("name")
+    install.add_argument("source")
+    install.add_argument("--version", default="0.0.0")
+    install.set_defaults(fn=cmd_package_install)
+    package_list = package_sub.add_parser("list", help="list vendored packages")
+    package_list.set_defaults(fn=cmd_package_list)
 
     args = ap.parse_args(argv)
     return args.fn(args)

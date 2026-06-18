@@ -196,3 +196,11 @@ Use `include "std/text"` for small text helpers:
 | `is_blank with t` | yes when `trimmed t` is empty |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
+
+## Local packages
+
+`parley package install name source --version 1.0.0` copies a local package
+directory or `.par` file into `parley_modules/name/`. Directory packages need a
+`main.par`. Installs are recorded in `parley.lock.json`, and
+`parley package list` prints the locked package names, versions, and vendored
+paths.

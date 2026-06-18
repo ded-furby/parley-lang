@@ -326,6 +326,16 @@ to main:
     say (repeated_text with "ha", 3)
 ```
 
+To vendor a local package into a project:
+
+```bash
+parley package install mathkit ../mathkit --version 1.0.0
+parley package list
+```
+
+This copies the package to `parley_modules/mathkit/` and records it in
+`parley.lock.json`.
+
 ## That's the whole language
 
 Next steps:

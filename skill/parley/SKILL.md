@@ -118,6 +118,9 @@ at `parley_modules/package_name/main.par` and be loaded with
 Bundled packages are available as `include "std/math"` (`clamped`, `between`,
 `percent_of`) and `include "std/text"` (`is_blank`, `repeated_text`,
 `surrounded_with`).
+Use `parley package install name path --version 1.0.0` to vendor a local
+package into `parley_modules/name/`; `parley package list` reads
+`parley.lock.json`.
 
 ## Rules that catch agents out
 

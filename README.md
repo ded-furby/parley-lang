@@ -163,16 +163,17 @@ the plan:
 - [x] LSP diagnostics server (`parley-lsp`) — v0.3.1
 - [x] package include roots (`parley_modules`, `PARLEY_PATH`) — v0.3.2
 - [x] bundled standard packages (`std/math`, `std/text`) — v0.3.3
+- [x] local package vendoring and lockfile (`parley package`) — v0.3.4
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
-- [ ] versioned package manager
+- [ ] remote package registry
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 136 tests; e2e compiles real binaries (needs cargo)
+pytest            # 140 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with
