@@ -310,7 +310,10 @@ to main:
 ```
 
 `include` splices another file in — errors still point at the right file and
-line.
+line. For reusable local packages, put `main.par` under
+`parley_modules/package_name/` and write `include "package_name"`. Shared
+package roots can also be listed in `PARLEY_PATH` using your operating system's
+path separator.
 
 ## That's the whole language
 

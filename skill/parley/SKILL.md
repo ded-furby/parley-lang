@@ -112,6 +112,10 @@ decimal from · value of · ask · ask for a number · read file ·
 write … to file … · append … to file … · a random number from 1 to 6 ·
 the error`.
 
+Multi-file code uses `include "helpers.par"`. Reusable local packages can live
+at `parley_modules/package_name/main.par` and be loaded with
+`include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
+
 ## Rules that catch agents out
 
 1. **Commas belong to arguments.** A list literal or record construction goes

@@ -38,7 +38,7 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **What it means:** An `include "file.par"` line points to a file that cannot be loaded.
 
-**How to fix it:** Check the path (it is relative to the including file) and make sure the file exists and is not included in a cycle.
+**How to fix it:** Check the relative path, parley_modules/ package, or PARLEY_PATH root, and make sure the file exists and is not included in a cycle.
 
 ## P201 — Unknown name
 

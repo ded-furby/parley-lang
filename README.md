@@ -111,7 +111,8 @@ function values (`the function f`) and anonymous closures with captured values �
 (sorted iteration), `maybe` options · functions with `changing` (mutable)
 parameters and recursion · string interpolation `"{x}"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
-stdin `ask` · random numbers · multi-file programs via `include` ·
+stdin `ask` · random numbers · multi-file programs via `include`, `parley_modules`,
+and `PARLEY_PATH` package roots ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `uppercase of`, `contains`, …)
@@ -160,16 +161,17 @@ the plan:
 - [x] anonymous closures with captured values — v0.3
 - [x] borrow-based passing for big values — v0.3
 - [x] LSP diagnostics server (`parley-lsp`) — v0.3.1
+- [x] package include roots (`parley_modules`, `PARLEY_PATH`) — v0.3.2
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
-- [ ] packages beyond `include`
+- [ ] versioned package manager
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 132 tests; e2e compiles real binaries (needs cargo)
+pytest            # 134 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

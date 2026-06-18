@@ -67,7 +67,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `set item k of m to v` | `m.insert(k, v);` |
 | `write t to file p` / `append t to file p` | `std::fs` (failure stops the program; catchable) |
 | `attempt:` / `if it failed:` | `catch_unwind` — see Errors below |
-| `include "lib.par"` | splices the file before parsing |
+| `include "lib.par"` | splices the file before parsing; resolves relative paths, `parley_modules`, then `PARLEY_PATH` |
 | `f with a, b` (statement call) | `f(a, b);` |
 
 ## Expressions

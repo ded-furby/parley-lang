@@ -162,6 +162,38 @@ def test_include_missing(tmp_path):
     assert ei.value.diagnostics[0].code == "P105"
 
 
+def test_include_package_from_parley_modules(tmp_path):
+    package = tmp_path / "parley_modules" / "mathkit"
+    package.mkdir(parents=True)
+    (package / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+    (tmp_path / "main.par").write_text(
+        'include "mathkit"\n\nto main:\n    say (double with 21)\n')
+
+    text, srcmap = load_program(tmp_path / "main.par")
+    prog = parse(text)
+
+    assert [f.name for f in prog.funcs] == ["double", "main"]
+    assert srcmap.loc(1)[0].endswith("parley_modules/mathkit/main.par")
+
+
+def test_include_package_from_parley_path(tmp_path, monkeypatch):
+    package_root = tmp_path / "shared_packages"
+    package = package_root / "strings"
+    package.mkdir(parents=True)
+    (package / "main.par").write_text(
+        'to shout with t as text giving text:\n    give back uppercase of t\n')
+    (tmp_path / "main.par").write_text(
+        'include "strings"\n\nto main:\n    say (shout with "hello")\n')
+    monkeypatch.setenv("PARLEY_PATH", str(package_root))
+
+    text, srcmap = load_program(tmp_path / "main.par")
+    prog = parse(text)
+
+    assert [f.name for f in prog.funcs] == ["shout", "main"]
+    assert srcmap.loc(1)[0].endswith("shared_packages/strings/main.par")
+
+
 # ------------------------------------------------------------------ v0.2: when patterns + function values
 
 def test_rich_when_patterns_parse():

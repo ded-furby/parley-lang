@@ -63,7 +63,7 @@ ERROR_CATALOG: dict[str, dict] = {
     "P105": {
         "title": "Include problem",
         "explain": "An `include \"file.par\"` line points to a file that cannot be loaded.",
-        "fix": "Check the path (it is relative to the including file) and make sure the file exists and is not included in a cycle.",
+        "fix": "Check the relative path, parley_modules/ package, or PARLEY_PATH root, and make sure the file exists and is not included in a cycle.",
     },
     # --- name errors (P2xx)
     "P201": {

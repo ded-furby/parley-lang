@@ -10,6 +10,7 @@ Pipeline pieces that live here:
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -54,6 +55,37 @@ def _display(p: Path) -> str:
         return str(p)
 
 
+def _candidate_package_files(root: Path, name: str) -> list[Path]:
+    target = root / name
+    out = [target]
+    if Path(name).suffix == "":
+        out.append(target.with_suffix(".par"))
+    out.append(target / "main.par")
+    return out
+
+
+def _include_roots(including_file: Path) -> list[Path]:
+    roots = [including_file.parent / "parley_modules"]
+    roots.extend(Path(p) for p in os.environ.get("PARLEY_PATH", "").split(os.pathsep) if p)
+    return roots
+
+
+def _resolve_include(name: str, including_file: Path) -> Path:
+    raw = Path(name)
+    if raw.is_absolute():
+        return raw.resolve()
+    relative = (including_file.parent / raw).resolve()
+    candidates = [relative]
+    if raw.suffix == "":
+        candidates.append(relative.with_suffix(".par"))
+    for root in _include_roots(including_file):
+        candidates.extend(_candidate_package_files(root, name))
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate.resolve()
+    return relative
+
+
 def load_program(path) -> tuple[str, SourceMap]:
     """Read a program and expand includes. Returns (combined_text, sourcemap)."""
     main = Path(path).resolve()
@@ -73,12 +105,13 @@ def load_program(path) -> tuple[str, SourceMap]:
             raise ParleyError([Diagnostic(
                 "P105", f'Cannot read "{_display(p)}": {e.strerror or e}.',
                 file=where, line=1,
-                hint="The path in an include is relative to the file that includes it.")])
+                hint="Includes are relative to the including file, or to "
+                     "parley_modules/ and PARLEY_PATH package roots.")])
         sources[_display(p)] = text
         for i, ln in enumerate(text.splitlines(), 1):
             m = INCLUDE_RE.match(ln)
             if m:
-                load((p.parent / m.group(1)).resolve(), stack + [p])
+                load(_resolve_include(m.group(1), p), stack + [p])
             else:
                 out_lines.append(ln)
                 entries.append((_display(p), i))

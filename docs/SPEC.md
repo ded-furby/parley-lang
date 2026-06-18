@@ -123,6 +123,9 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   that installs an English panic handler around the program.
 * A line map (rust line → parley file/line) accompanies emission; any
   residual rustc diagnostic is translated through it.
+* `include "x"` is textual. It first resolves `x` relative to the including
+  file, then as `parley_modules/x`, then through `PARLEY_PATH` roots. Package
+  directories load `main.par`.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
   in `.parley-build/target/`.
 
@@ -130,6 +133,6 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 v0.3 is an experiment. Syntax may change; error codes are append-only.
 Known limits: no generics for user functions, no methods, single-threaded,
-`include` is textual. Function values exist for named functions without
-`changing` parameters and anonymous functions with value captures. See the
-README roadmap.
+and no versioned package manager. Function values exist for named functions
+without `changing` parameters and anonymous functions with value captures. See
+the README roadmap.
