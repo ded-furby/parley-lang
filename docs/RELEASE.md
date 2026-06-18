@@ -15,6 +15,7 @@ parley check examples/higher_order.par --json
 python3 -m pytest tests/test_parser.py::test_include_bundled_std_package tests/test_e2e.py::test_bundled_std_packages_run tests/test_e2e.py::test_bundled_std_list_package_runs tests/test_e2e.py::test_bundled_std_map_package_runs
 python3 -m pytest tests/test_packages.py
 tmp="$(mktemp -d)" && (cd "$tmp" && parley package new demo_package)
+parley doctor --json
 parley --version
 parley run examples/hello.par
 ```
@@ -34,6 +35,8 @@ The e2e tests require Rust and `cargo`.
   entry point and publishes the same P-code diagnostics as `parley check`.
 - Keep bundled `.par` packages under `parley/stdlib/` listed in
   `tool.setuptools.package-data`.
+- Keep `parley doctor --json` passing; it is the quick setup proof for
+  installed users and automation.
 
 ## CI
 

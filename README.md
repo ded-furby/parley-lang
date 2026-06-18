@@ -67,7 +67,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 pip install git+https://github.com/ded-furby/parley-lang
 #    (or: pipx install git+https://github.com/ded-furby/parley-lang)
 
-# 3. Go
+# 3. Check the local toolchain, then go
+parley doctor
 parley new hello && parley run hello/main.par
 ```
 
@@ -87,7 +88,9 @@ $ parley check game.par --json
 
 `check` is parse + type-check only — milliseconds, no Rust build — so the
 write → check → fix loop is instant. `parley explain P204` documents any
-code. Humans get the same diagnostics with source carets and colors.
+code. `parley doctor --json` reports whether the local install can build
+native binaries and whether the bundled stdlib is present. Humans get the
+same diagnostics with source carets and colors.
 
 For editor integration, start the stdio language server from your editor:
 
@@ -114,6 +117,7 @@ parameters and recursion · string interpolation `"{x}"` ·
 stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, and `std/map`
 packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
 local package vendoring with `parley package` and `parley.lock.json` ·
+setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `uppercase of`, `contains`, …)
@@ -169,6 +173,7 @@ the plan:
 - [x] present maybe values (`some x`) — v0.3.6
 - [x] bundled map helpers (`std/map`) — v0.3.7
 - [x] local package skeletons (`parley package new`) — v0.3.8
+- [x] setup doctor (`parley doctor --json`) — v0.3.9
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] remote package registry
@@ -178,7 +183,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 145 tests; e2e compiles real binaries (needs cargo)
+pytest            # 146 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

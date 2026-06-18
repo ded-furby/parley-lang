@@ -21,6 +21,8 @@ comments are `note: …` or `# …`.
 Never guess at fixes when a hint is present — hints name the exact repair.
 If `parley` is missing: `pip install git+https://github.com/ded-furby/parley-lang`
 (needs Rust: https://rustup.rs).
+Use `parley doctor --json` to verify a fresh install before starting a larger
+program or debugging an environment problem.
 For editor diagnostics, run `parley-lsp` as a stdio Language Server Protocol
 server; it emits the same P-code diagnostics as `parley check --json`.
 
@@ -167,3 +169,5 @@ underscores, and dots. `parley package list` reads `parley.lock.json`.
   and report it.
 * `parley-lsp` publishes diagnostics for open `.par` files in editors that can
   launch a stdio LSP server.
+* `parley doctor --json` reports Parley, Python, cargo, bundled stdlib, and
+  local package readiness.

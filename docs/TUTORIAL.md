@@ -2,7 +2,8 @@
 
 Parley reads like English and compiles to a native binary. This walkthrough
 covers the whole language. Every snippet is a complete program — copy it into
-a file and `parley run file.par`.
+a file and `parley run file.par`. Run `parley doctor` once after install to
+check that Rust, the bundled stdlib, and local package support are available.
 
 ## 1. Say hello
 

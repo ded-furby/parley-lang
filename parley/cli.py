@@ -7,12 +7,14 @@
   parley rust program.par         print the generated Rust
   parley explain P204             explain an error code
   parley new myproject            start a new program
+  parley doctor                   verify local setup
   parley package install name src vendor a local package
 """
 
 from __future__ import annotations
 
 import argparse
+from importlib import resources
 import json
 import os
 import re
@@ -215,6 +217,99 @@ def cmd_new(args) -> int:
     return 0
 
 
+def _doctor_checks() -> list[dict]:
+    checks = [
+        {
+            "name": "parley",
+            "ok": True,
+            "detail": f"parley {__version__}",
+            "hint": "",
+        },
+        {
+            "name": "python",
+            "ok": True,
+            "detail": ".".join(map(str, sys.version_info[:3])),
+            "hint": "",
+        },
+    ]
+
+    cargo = shutil.which("cargo")
+    if cargo is None:
+        checks.append({
+            "name": "cargo",
+            "ok": False,
+            "detail": "not found",
+            "hint": "Install Rust from https://rustup.rs, then run parley doctor again.",
+        })
+    else:
+        try:
+            proc = subprocess.run(
+                ["cargo", "--version"],
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            cargo_ok = proc.returncode == 0
+            detail = proc.stdout.strip() or cargo
+        except (OSError, subprocess.SubprocessError) as exc:
+            cargo_ok = False
+            detail = str(exc)
+        checks.append({
+            "name": "cargo",
+            "ok": cargo_ok,
+            "detail": detail,
+            "hint": "" if cargo_ok else "Check that cargo runs from this shell.",
+        })
+
+    stdlib_root = resources.files("parley.stdlib.std")
+    stdlib = sorted(
+        f"std/{path.name[:-4]}"
+        for path in stdlib_root.iterdir()
+        if path.name.endswith(".par")
+    )
+    required_stdlib = ["std/math", "std/text", "std/list", "std/map"]
+    missing = [name for name in required_stdlib if name not in stdlib]
+    checks.append({
+        "name": "stdlib",
+        "ok": not missing,
+        "detail": ", ".join(stdlib),
+        "hint": "" if not missing else f"Missing bundled packages: {', '.join(missing)}.",
+    })
+
+    lock = _lock_path()
+    module_root = Path("parley_modules")
+    if lock.exists():
+        detail = f"{lock.as_posix()} present"
+    elif module_root.exists():
+        detail = f"{module_root.as_posix()} present; no lockfile yet"
+    else:
+        detail = "no local packages installed yet"
+    checks.append({
+        "name": "packages",
+        "ok": True,
+        "detail": detail,
+        "hint": "",
+    })
+    return checks
+
+
+def cmd_doctor(args) -> int:
+    checks = _doctor_checks()
+    ok = all(check["ok"] for check in checks)
+    if args.json:
+        print(json.dumps({"ok": ok, "version": __version__, "checks": checks}, indent=2))
+        return 0 if ok else 1
+
+    print("Parley doctor")
+    for check in checks:
+        status = "OK" if check["ok"] else "MISSING"
+        print(f"{status} {check['name']}: {check['detail']}")
+        if check["hint"]:
+            print(f"  hint: {check['hint']}")
+    print("Parley is ready." if ok else "Parley is not ready yet.")
+    return 0 if ok else 1
+
+
 def _lock_path() -> Path:
     return Path(LOCK_FILE)
 
@@ -340,6 +435,10 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("new", help="create a new Parley program")
     p.add_argument("name")
     p.set_defaults(fn=cmd_new)
+
+    p = sub.add_parser("doctor", help="verify local Parley setup")
+    p.add_argument("--json", action="store_true", help="machine-readable setup report")
+    p.set_defaults(fn=cmd_doctor)
 
     p = sub.add_parser("package", help="manage local Parley packages")
     package_sub = p.add_subparsers(dest="package_cmd", required=True)

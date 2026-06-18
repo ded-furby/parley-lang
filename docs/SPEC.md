@@ -132,6 +132,8 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 * `parley package install name source --version X` vendors a local package
   directory or `.par` file into `parley_modules/name/` and records it in
   `parley.lock.json`. This is a local lockfile workflow, not a remote registry.
+* `parley doctor` verifies the installed toolchain: Parley version, Python
+  version, Rust `cargo`, bundled standard packages, and local package state.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
   in `.parley-build/target/`.
 
