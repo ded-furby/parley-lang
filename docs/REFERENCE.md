@@ -222,6 +222,9 @@ Use `include "std/map"` for common text-key map helpers:
 
 ## Local packages
 
+`parley package new name` creates `name/main.par`, a starter local package
+that can be installed into a project.
+
 `parley package install name source --version 1.0.0` copies a local package
 directory or `.par` file into `parley_modules/name/`. Package names may contain
 letters, numbers, dashes, underscores, and dots, and must start with a letter or

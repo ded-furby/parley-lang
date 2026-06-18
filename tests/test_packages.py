@@ -26,6 +26,21 @@ def test_package_install_vendors_local_directory_and_lock(workdir, tmp_path):
     assert json.loads(check.stdout)["ok"] is True
 
 
+def test_package_new_creates_installable_package_skeleton(workdir):
+    created = run_cli(["package", "new", "mathkit"], cwd=workdir)
+    assert created.returncode == 0, created.stderr
+    assert (workdir / "mathkit" / "main.par").is_file()
+
+    install = run_cli(["package", "install", "mathkit", "mathkit"], cwd=workdir)
+    assert install.returncode == 0, install.stderr
+
+    program = workdir / "uses_new_package.par"
+    program.write_text('include "mathkit"\n\nto main:\n    say package_ready\n')
+    check = run_cli(["check", program.name, "--json"], cwd=workdir)
+    assert check.returncode == 0, check.stderr
+    assert json.loads(check.stdout)["ok"] is True
+
+
 def test_package_list_reads_lockfile(workdir):
     (workdir / "parley.lock.json").write_text(
         json.dumps(

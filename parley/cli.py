@@ -46,6 +46,13 @@ to main:
     say "the sum is {{sum of numbers}}"
 """
 
+PACKAGE_TEMPLATE = """\
+note: {name} package
+
+to package_ready giving yesno:
+    give back yes
+"""
+
 LOCK_FILE = "parley.lock.json"
 PACKAGE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 
@@ -274,6 +281,22 @@ def cmd_package_install(args) -> int:
     return 0
 
 
+def cmd_package_new(args) -> int:
+    try:
+        _validate_package_name(args.name)
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+    target = Path(args.name)
+    if target.exists():
+        print(f"package error: '{args.name}' already exists.", file=sys.stderr)
+        return 1
+    target.mkdir(parents=True)
+    (target / "main.par").write_text(PACKAGE_TEMPLATE.format(name=args.name))
+    print(f"Created {target.as_posix()}/main.par")
+    return 0
+
+
 def cmd_package_list(args) -> int:
     packages = _read_lock().get("packages", {})
     if not packages:
@@ -325,6 +348,9 @@ def main(argv: list[str] | None = None) -> int:
     install.add_argument("source")
     install.add_argument("--version", default="0.0.0")
     install.set_defaults(fn=cmd_package_install)
+    package_new = package_sub.add_parser("new", help="create a local package skeleton")
+    package_new.add_argument("name")
+    package_new.set_defaults(fn=cmd_package_new)
     package_list = package_sub.add_parser("list", help="list vendored packages")
     package_list.set_defaults(fn=cmd_package_list)
 

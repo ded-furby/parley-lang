@@ -168,6 +168,7 @@ the plan:
 - [x] bundled list helpers (`std/list`) — v0.3.5
 - [x] present maybe values (`some x`) — v0.3.6
 - [x] bundled map helpers (`std/map`) — v0.3.7
+- [x] local package skeletons (`parley package new`) — v0.3.8
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] remote package registry
@@ -177,7 +178,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 144 tests; e2e compiles real binaries (needs cargo)
+pytest            # 145 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

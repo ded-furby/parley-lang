@@ -121,9 +121,10 @@ Bundled packages are available as `include "std/math"` (`clamped`, `between`,
 `count_number`, `index_number`, `average_number`, `first_text`, `last_text`,
 `count_text`, `index_text`), and `include "std/map"` (`number_at`,
 `number_or`, `add_count`, `text_at`, `text_or`).
-Use `parley package install name path --version 1.0.0` to vendor a local
-package into `parley_modules/name/`; names may contain letters, numbers,
-dashes, underscores, and dots. `parley package list` reads `parley.lock.json`.
+Use `parley package new name` to create a local package skeleton, then
+`parley package install name path --version 1.0.0` to vendor it into
+`parley_modules/name/`; names may contain letters, numbers, dashes,
+underscores, and dots. `parley package list` reads `parley.lock.json`.
 
 ## Rules that catch agents out
 
