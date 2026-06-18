@@ -22,6 +22,11 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 TASKS_FILE = Path(__file__).with_name("tasks.json")
 DEFAULT_OUTPUT = Path(__file__).with_name("results") / "parley_seed_metrics.json"
+LANGUAGE_EXTENSIONS = {
+    "parley": ".par",
+    "python": ".py",
+    "rust": ".rs",
+}
 
 ROUGH_TOKEN_RE = re.compile(
     r"[A-Za-z_][A-Za-z0-9_']*|\d+\.\d+|\d+|==|!=|<=|>=|[^\s]",
@@ -58,6 +63,23 @@ def load_tasks(path: Path) -> dict[str, Any]:
             raise ValueError(f"{task_id}: source does not exist: {source}")
 
     return data
+
+
+def parse_languages(value: str) -> list[str]:
+    languages = [part.strip() for part in value.split(",") if part.strip()]
+    if not languages:
+        raise ValueError("--languages must include at least one language")
+    unknown = [lang for lang in languages if lang not in LANGUAGE_EXTENSIONS]
+    if unknown:
+        known = ", ".join(sorted(LANGUAGE_EXTENSIONS))
+        raise ValueError(f"unknown language(s): {', '.join(unknown)}; known: {known}")
+    return languages
+
+
+def source_for(task: dict[str, Any], language: str) -> Path:
+    if language == "parley":
+        return REPO / task["source"]
+    return REPO / "benchmarks" / language / f"{task['id']}{LANGUAGE_EXTENSIONS[language]}"
 
 
 def source_metrics(path: Path) -> dict[str, int]:
@@ -112,34 +134,56 @@ def run_check(path: Path) -> dict[str, Any]:
     }
 
 
-def build_report(tasks_data: dict[str, Any], include_check: bool) -> dict[str, Any]:
+def build_report(
+    tasks_data: dict[str, Any],
+    include_check: bool,
+    languages: list[str],
+) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     for task in tasks_data["tasks"]:
-        source = REPO / task["source"]
+        sources = {lang: source_for(task, lang) for lang in languages}
+        missing = [rel(path) for path in sources.values() if not path.is_file()]
+        if missing:
+            raise ValueError(f"{task['id']}: missing source(s): {', '.join(missing)}")
+
         row = {
             "id": task["id"],
             "title": task["title"],
-            "source": task["source"],
+            "sources": {lang: rel(path) for lang, path in sources.items()},
             "interactive": bool(task.get("interactive", False)),
             "deterministic_run": bool(task.get("deterministic_run", False)),
             "features": list(task.get("features", [])),
-            "metrics": source_metrics(source),
+            "metrics": {lang: source_metrics(path) for lang, path in sources.items()},
+            "checks": {},
         }
-        if include_check:
-            row["check"] = run_check(source)
-        else:
-            row["check"] = {"skipped": True}
+        if "parley" in sources:
+            if include_check:
+                row["checks"]["parley"] = run_check(sources["parley"])
+            else:
+                row["checks"]["parley"] = {"skipped": True}
         rows.append(row)
+
+    by_language = {}
+    for lang in languages:
+        by_language[lang] = {
+            "tasks": len(rows),
+            "bytes": sum(row["metrics"][lang]["bytes"] for row in rows),
+            "lines": sum(row["metrics"][lang]["lines"] for row in rows),
+            "nonblank_lines": sum(row["metrics"][lang]["nonblank_lines"] for row in rows),
+            "rough_tokens": sum(row["metrics"][lang]["rough_tokens"] for row in rows),
+        }
 
     totals = {
         "tasks": len(rows),
-        "bytes": sum(row["metrics"]["bytes"] for row in rows),
-        "lines": sum(row["metrics"]["lines"] for row in rows),
-        "nonblank_lines": sum(row["metrics"]["nonblank_lines"] for row in rows),
-        "rough_tokens": sum(row["metrics"]["rough_tokens"] for row in rows),
+        "languages": languages,
+        "by_language": by_language,
         "checked_ok": (
-            sum(1 for row in rows if row["check"].get("ok") is True)
-            if include_check
+            sum(
+                1
+                for row in rows
+                if row.get("checks", {}).get("parley", {}).get("ok") is True
+            )
+            if include_check and "parley" in languages
             else 0
         ),
     }
@@ -151,7 +195,7 @@ def build_report(tasks_data: dict[str, Any], include_check: bool) -> dict[str, A
         "method": {
             "source_metrics": "UTF-8 bytes, characters, lines, nonblank lines, words, and regex rough_tokens.",
             "rough_tokens": "Regex token count for stable repo-local tracking, not an LLM tokenizer.",
-            "check": "Runs `python -m parley.cli check <source> --json` from the repository root unless --no-check is used.",
+            "check": "Runs `python -m parley.cli check <source> --json` for Parley sources unless --no-check is used.",
         },
         "tasks": rows,
         "totals": totals,
@@ -159,26 +203,40 @@ def build_report(tasks_data: dict[str, Any], include_check: bool) -> dict[str, A
 
 
 def print_table(report: dict[str, Any]) -> None:
-    print("id               lines  rough_tokens  check  source")
-    print("---------------  -----  ------------  -----  -----------------------------")
+    print("id               lang    lines  rough_tokens  check  source")
+    print("---------------  ------  -----  ------------  -----  -----------------------------")
     for row in report["tasks"]:
-        check = "skip" if row["check"].get("skipped") else ("ok" if row["check"].get("ok") else "fail")
-        print(
-            f"{row['id']:<15}  "
-            f"{row['metrics']['lines']:>5}  "
-            f"{row['metrics']['rough_tokens']:>12}  "
-            f"{check:<5}  "
-            f"{row['source']}"
+        for index, lang in enumerate(report["totals"]["languages"]):
+            check_data = row.get("checks", {}).get(lang)
+            if check_data is None:
+                check = "-"
+            elif check_data.get("skipped"):
+                check = "skip"
+            else:
+                check = "ok" if check_data.get("ok") else "fail"
+            print(
+                f"{row['id'] if index == 0 else '':<15}  "
+                f"{lang:<6}  "
+                f"{row['metrics'][lang]['lines']:>5}  "
+                f"{row['metrics'][lang]['rough_tokens']:>12}  "
+                f"{check:<5}  "
+                f"{row['sources'][lang]}"
+            )
+    print("---------------  ------  -----  ------------  -----  -----------------------------")
+    for lang, totals in report["totals"]["by_language"].items():
+        check = (
+            f"{report['totals']['checked_ok']}/{report['totals']['tasks']}"
+            if lang == "parley"
+            else "-"
         )
-    totals = report["totals"]
-    print("---------------  -----  ------------  -----  -----------------------------")
-    print(
-        f"{'total':<15}  "
-        f"{totals['lines']:>5}  "
-        f"{totals['rough_tokens']:>12}  "
-        f"{totals['checked_ok']}/{totals['tasks']:<3}  "
-        "Parley seed corpus"
-    )
+        print(
+            f"{'total':<15}  "
+            f"{lang:<6}  "
+            f"{totals['lines']:>5}  "
+            f"{totals['rough_tokens']:>12}  "
+            f"{check:<5}  "
+            "benchmark corpus"
+        )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -186,12 +244,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tasks", type=Path, default=TASKS_FILE, help="benchmark task manifest")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="JSON report path")
     parser.add_argument("--format", choices=["table", "json"], default="table", help="stdout format")
+    parser.add_argument(
+        "--languages",
+        default="parley,python,rust",
+        help="comma-separated languages to measure: parley, python, rust",
+    )
     parser.add_argument("--no-check", action="store_true", help="skip parley check --json verification")
     args = parser.parse_args(argv)
 
     try:
+        languages = parse_languages(args.languages)
         tasks_data = load_tasks(args.tasks)
-        report = build_report(tasks_data, include_check=not args.no_check)
+        report = build_report(tasks_data, include_check=not args.no_check, languages=languages)
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print(f"benchmark error: {exc}", file=sys.stderr)
         return 1
@@ -205,7 +269,11 @@ def main(argv: list[str] | None = None) -> int:
         print_table(report)
         print(f"\nWrote {rel(args.output) if args.output.resolve().is_relative_to(REPO) else args.output}")
 
-    if not args.no_check and report["totals"]["checked_ok"] != report["totals"]["tasks"]:
+    if (
+        "parley" in report["totals"]["languages"]
+        and not args.no_check
+        and report["totals"]["checked_ok"] != report["totals"]["tasks"]
+    ):
         return 1
     return 0
 

@@ -149,8 +149,8 @@ the plan:
 - [x] function values (`the function f`, fn-pointer backed) — v0.2
 - [ ] anonymous closures with captured variables (today: named functions only)
 - [ ] borrow-based passing for big values (today: clone-on-assign)
-- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (Parley seed
-      harness exists; comparative corpora and agent runs still planned)
+- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (Parley/Python/
+      Rust seed corpus exists; tokenizer counts and agent runs still planned)
 - [ ] LSP server
 - [ ] packages beyond `include`
 
