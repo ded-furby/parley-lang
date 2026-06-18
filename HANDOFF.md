@@ -23,7 +23,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 125 tests, including e2e tests that
+  → cargo). The latest local suite has 129 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -39,6 +39,10 @@ Update it whenever you finish or start a work item.
   (`a function taking x as number giving number:`) capture outside values at
   creation time, can be passed anywhere a `(function ...)` value is expected,
   and add P314 for attempts to mutate captured values.
+- **v0.3 backend optimisation:** non-`changing` heap parameters are borrowed
+  in generated Rust; a callee clones its local parameter only if it stores or
+  mutates that parameter, preserving Parley value semantics without cloning
+  every read-only call argument.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -86,10 +90,7 @@ Update it whenever you finish or start a work item.
    counts, checks Parley with JSON diagnostics, and captures generated attempts
    to JSONL. Still needed: repeated agent error-rate runs and aggregate
    repair-turn analysis.
-2. **Borrow-based passing for big values** — perf optimisation in
-   `emit_rust.py` (pass `&T` for non-changing heap params, clone only on
-   store). Touches the whole emitter; do it with the e2e suite green.
-3. **LSP server**, **packages beyond `include`** — later.
+2. **LSP server**, **packages beyond `include`** — later.
 
 ## Working on the compiler: the contract
 

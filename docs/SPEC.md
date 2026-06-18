@@ -89,9 +89,12 @@ parse-relevant highlights:
 
 ## 5. Dynamic semantics
 
-* **Value model.** All values are owned; assignment, argument passing,
-  construction, and `for each` iteration copy heap values. The only aliasing
-  is `changing` parameters, which are exclusive mutable borrows for the call.
+* **Value model.** Parley exposes value semantics: assignment, construction,
+  return, and `for each` iteration copy heap values. In generated Rust,
+  read-only non-`changing` heap parameters are borrowed and are cloned only if
+  the callee stores or mutates its local parameter. The only user-visible
+  aliasing is `changing` parameters, which are exclusive mutable borrows for
+  the call.
 * **Numbers** are 64-bit (`i64`/`f64`). Integer overflow stops the program in
   debug builds (`parley run`); release builds (`parley build`) wrap.
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`

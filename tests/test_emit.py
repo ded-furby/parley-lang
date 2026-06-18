@@ -34,6 +34,33 @@ def test_changing_param_is_mut_ref():
     assert "(*n) = " in rust
 
 
+def test_read_only_heap_param_is_borrowed():
+    rust = emit_text(
+        "to count with xs as list of number giving number:\n"
+        "    give back length of xs\n"
+        "to main:\n"
+        "    let values be a list of 1, 2, 3\n"
+        "    say (count with values)\n")
+    assert "fn count(xs: &Vec<i64>) -> i64" in rust
+    assert "count(&(values))" in rust
+    assert "count(values.clone())" not in rust
+    assert "let mut xs" not in rust
+
+
+def test_mutated_heap_param_clones_inside_function():
+    rust = emit_text(
+        "to changed_size with xs as list of number giving number:\n"
+        "    add 4 to xs\n"
+        "    give back length of xs\n"
+        "to main:\n"
+        "    let values be a list of 1, 2, 3\n"
+        "    say (changed_size with values)\n")
+    assert "fn changed_size(xs: &Vec<i64>) -> i64" in rust
+    assert "let mut xs: Vec<i64> = (*xs).clone();" in rust
+    assert "changed_size(&(values))" in rust
+    assert "changed_size(values.clone())" not in rust
+
+
 def test_enum_becomes_match():
     rust = emit_text(
         "a mood is one of happy, grumpy\n"

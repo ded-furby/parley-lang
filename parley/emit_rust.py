@@ -3,8 +3,8 @@
 Every Parley construct maps to exactly one Rust construct. The checker has
 already annotated the AST with types, so emission is mechanical:
 
-  * heap values (text, lists, maps, records) are cloned when stored or passed
-    — ownership never appears in Parley syntax
+  * heap values (text, lists, maps, records) are cloned when stored; read-only
+    non-changing function parameters are borrowed in generated Rust
   * `changing` parameters become `&mut T`
   * runtime failures panic with English messages; `fn main` catches them and
     `attempt:` blocks scope them
@@ -297,6 +297,7 @@ class Emitter:
         self.indent = 0
         self.enums = {e.name: e for e in program.enums}
         self.tmp = 0
+        self.borrowed_params: set[str] = set()
 
     # --------------------------------------------------------------- output
 
@@ -364,21 +365,147 @@ class Emitter:
     def fn_name(self, name: str) -> str:
         return "main_p" if name == "main" else safe(name)
 
+    def param_takes_ref(self, p: A.Param) -> bool:
+        return not p.changing and A.is_heap(p.type)
+
+    def mutated_names_in_block(self, body: list[A.Stmt]) -> set[str]:
+        out: set[str] = set()
+        for st in body:
+            out |= self.mutated_names_in_stmt(st)
+        return out
+
+    def mutated_names_in_stmt(self, st: A.Stmt) -> set[str]:
+        out: set[str] = set()
+        if isinstance(st, A.Let):
+            return self.mutated_names_in_expr(st.value)
+        if isinstance(st, A.SetVar):
+            return {st.target.base} | self.mutated_names_in_expr(st.value)
+        if isinstance(st, A.SetItem):
+            return (
+                {st.target.base}
+                | self.mutated_names_in_expr(st.index)
+                | self.mutated_names_in_expr(st.value)
+            )
+        if isinstance(st, A.Say):
+            return self.mutated_names_in_expr(st.value)
+        if isinstance(st, A.If):
+            for cond, body in st.arms:
+                out |= self.mutated_names_in_expr(cond)
+                out |= self.mutated_names_in_block(body)
+            if st.otherwise is not None:
+                out |= self.mutated_names_in_block(st.otherwise)
+            return out
+        if isinstance(st, A.When):
+            out |= self.mutated_names_in_expr(st.subject)
+            for _, body in st.arms:
+                out |= self.mutated_names_in_block(body)
+            if st.otherwise is not None:
+                out |= self.mutated_names_in_block(st.otherwise)
+            return out
+        if isinstance(st, A.While):
+            return self.mutated_names_in_expr(st.cond) | self.mutated_names_in_block(st.body)
+        if isinstance(st, A.Repeat):
+            return self.mutated_names_in_expr(st.count) | self.mutated_names_in_block(st.body)
+        if isinstance(st, A.ForRange):
+            return (
+                self.mutated_names_in_expr(st.lo)
+                | self.mutated_names_in_expr(st.hi)
+                | self.mutated_names_in_block(st.body)
+            )
+        if isinstance(st, A.ForEach):
+            return self.mutated_names_in_expr(st.iter) | self.mutated_names_in_block(st.body)
+        if isinstance(st, A.Give):
+            return self.mutated_names_in_expr(st.value) if st.value is not None else set()
+        if isinstance(st, A.Attempt):
+            return self.mutated_names_in_block(st.body) | self.mutated_names_in_block(st.handler)
+        if isinstance(st, A.Add):
+            return {st.target.base} | self.mutated_names_in_expr(st.value)
+        if isinstance(st, A.RemoveItem):
+            return {st.target.base} | self.mutated_names_in_expr(st.index)
+        if isinstance(st, A.WriteFile):
+            return self.mutated_names_in_expr(st.value) | self.mutated_names_in_expr(st.path)
+        if isinstance(st, A.CallStmt):
+            return self.mutated_names_from_call(st) | self.mutated_names_in_exprs(st.args)
+        return set()
+
+    def mutated_names_in_exprs(self, exprs: list[A.Expr]) -> set[str]:
+        out: set[str] = set()
+        for expr in exprs:
+            out |= self.mutated_names_in_expr(expr)
+        return out
+
+    def mutated_names_from_call(self, node) -> set[str]:
+        fn = getattr(node, "target_fn", None)
+        if fn is None:
+            return set()
+        out: set[str] = set()
+        for prm, arg in zip(fn.params, node.args):
+            if prm.changing and isinstance(arg, A.Var):
+                out.add(arg.name)
+        return out
+
+    def mutated_names_in_expr(self, e: A.Expr | None) -> set[str]:
+        if e is None:
+            return set()
+        if isinstance(e, A.Str):
+            return self.mutated_names_in_exprs([p for p in e.parts if isinstance(p, A.Expr)])
+        if isinstance(e, A.FieldGet):
+            return self.mutated_names_in_expr(e.obj)
+        if isinstance(e, A.BinOp) or isinstance(e, A.Compare):
+            return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
+        if isinstance(e, A.Not) or isinstance(e, A.Neg) or isinstance(e, A.PrefixOp):
+            return self.mutated_names_in_expr(e.value)
+        if isinstance(e, A.SplitBy) or isinstance(e, A.JoinedWith):
+            return self.mutated_names_in_expr(e.value) | self.mutated_names_in_expr(e.sep)
+        if isinstance(e, A.Remainder):
+            return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
+        if isinstance(e, A.ItemOf):
+            return self.mutated_names_in_expr(e.index) | self.mutated_names_in_expr(e.container)
+        if isinstance(e, A.ReadFile) or isinstance(e, A.Ask):
+            return self.mutated_names_in_expr(e.path if isinstance(e, A.ReadFile) else e.prompt)
+        if isinstance(e, A.RandomFrom):
+            return self.mutated_names_in_expr(e.lo) | self.mutated_names_in_expr(e.hi)
+        if isinstance(e, A.ListLit):
+            return self.mutated_names_in_exprs(e.items)
+        if isinstance(e, A.Construct):
+            return self.mutated_names_in_exprs([value for _, value in e.inits])
+        if isinstance(e, A.CallExpr):
+            return self.mutated_names_from_call(e) | self.mutated_names_in_exprs(e.args)
+        return set()
+
     def emit_func(self, fn: A.FuncDef):
+        mutated_params = self.mutated_names_in_block(fn.body)
+        borrowed_params = {
+            p.name for p in fn.params
+            if self.param_takes_ref(p) and p.name not in mutated_params
+        }
         params = []
         for p in fn.params:
             t = rust_type(p.type)
-            params.append(f"{safe(p.name)}: " + (f"&mut {t}" if p.changing else t))
+            if p.changing:
+                rendered = f"&mut {t}"
+            elif self.param_takes_ref(p):
+                rendered = f"&{t}"
+            else:
+                rendered = t
+            params.append(f"{safe(p.name)}: {rendered}")
         ret = f" -> {rust_type(fn.ret)}" if fn.ret is not None else ""
         self.out(f"fn {self.fn_name(fn.name)}({', '.join(params)}){ret} {{", fn.line)
         self.cur_ret = fn.ret
         self.indent += 1
         for p in fn.params:
-            if not p.changing:
-                n = safe(p.name)
+            if p.changing:
+                continue
+            n = safe(p.name)
+            if self.param_takes_ref(p):
+                if p.name in mutated_params:
+                    self.out(f"let mut {n}: {rust_type(p.type)} = (*{n}).clone();", fn.line)
+            else:
                 self.out(f"let mut {n} = {n};", fn.line)
         self.changing = {p.name for p in fn.params if p.changing}
+        self.borrowed_params = borrowed_params
         self.emit_block(fn.body)
+        self.borrowed_params = set()
         self.indent -= 1
         self.out("}")
         self.out("")
@@ -399,6 +526,8 @@ class Emitter:
     def place(self, e: A.Expr) -> str:
         if isinstance(e, A.Var):
             n = safe(e.name)
+            if e.name in self.borrowed_params:
+                return f"(*{n})"
             return f"(*{n})" if getattr(e, "is_changing", False) else n
         if isinstance(e, A.FieldGet):
             return f"{self.place(e.obj)}.{safe(e.field_name)}"
@@ -547,10 +676,12 @@ class Emitter:
         saved_lines, saved_linemap = self.lines, self.linemap
         saved_indent, saved_ret = self.indent, self.cur_ret
         saved_changing = self.changing
+        saved_borrowed_params = self.borrowed_params
         self.lines, self.linemap = [], {}
         self.indent = 0
         self.cur_ret = ret
         self.changing = set()
+        self.borrowed_params = set()
         for p in params:
             n = safe(p.name)
             self.out(f"let mut {n} = {n};", p.line)
@@ -559,17 +690,19 @@ class Emitter:
         self.lines, self.linemap = saved_lines, saved_linemap
         self.indent, self.cur_ret = saved_indent, saved_ret
         self.changing = saved_changing
+        self.borrowed_params = saved_borrowed_params
         return code
 
     def func_ref_value(self, e: A.FuncRef) -> str:
         fty = e.ty
         assert isinstance(fty, A.TFunc)
+        fn = e.target_fn
         params = []
         args = []
-        for i, pty in enumerate(fty.params, 1):
+        for i, (prm, pty) in enumerate(zip(fn.params, fty.params), 1):
             name = f"arg{i}"
             params.append(f"{name}: {rust_type(pty)}")
-            args.append(name)
+            args.append(f"&({name})" if self.param_takes_ref(prm) else name)
         ret = f" -> {rust_type(fty.ret)}" if fty.ret is not None else ""
         call = f"{self.fn_name(e.name)}({', '.join(args)})"
         return f"(Rc::new(move |{', '.join(params)}|{ret} {{ {call} }}) as {rust_type(fty)})"
@@ -579,7 +712,11 @@ class Emitter:
         assert isinstance(fty, A.TFunc)
         captures = []
         for name, ty in e.captures:
-            src = f"(*{safe(name)})" if name in self.changing else safe(name)
+            src = (
+                f"(*{safe(name)})"
+                if name in self.changing or name in self.borrowed_params
+                else safe(name)
+            )
             val = f"{src}.clone()" if A.is_heap(ty) else src
             captures.append(f"let {safe(name)} = {val};")
         params = ", ".join(f"{safe(p.name)}: {rust_type(p.type)}" for p in e.params)
@@ -725,6 +862,8 @@ class Emitter:
                 # checker guarantees arg is a plain Var
                 n = safe(arg.name)
                 parts.append(f"&mut *{n}" if getattr(arg, "is_changing", False) else f"&mut {n}")
+            elif self.param_takes_ref(prm):
+                parts.append(f"&({self.borrow(arg)})")
             else:
                 parts.append(self.value(arg, prm.type))
         return f"{self.fn_name(fn.name)}({', '.join(parts)})"

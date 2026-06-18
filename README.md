@@ -125,9 +125,10 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 The compiler is ~2,500 lines of Python (Lark LALR grammar — yes, English is
 LALR(1) if multi-word phrases are tokens). Every Parley construct maps to
-exactly one Rust construct; heap values clone on assignment so ownership
-never leaks into the syntax; a line map points any residual rustc message
-back at your `.par` line. `parley rust program.par` shows the generated code.
+exactly one Rust construct; heap values clone when stored, while read-only
+heap parameters are borrowed in generated Rust so ownership never leaks into
+the syntax; a line map points any residual rustc message back at your `.par`
+line. `parley rust program.par` shows the generated code.
 
 | | Python | Rust | **Parley** |
 |---|---|---|---|
@@ -148,7 +149,7 @@ the plan:
 - [x] richer `when` patterns (ranges, multiple values per arm) — v0.2
 - [x] function values (`the function f`, `Rc<dyn Fn>` backed) — v0.2/v0.3
 - [x] anonymous closures with captured values — v0.3
-- [ ] borrow-based passing for big values (today: clone-on-assign)
+- [x] borrow-based passing for big values — v0.3
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, and run logging exist; agent runs still planned)
 - [ ] LSP server
@@ -159,7 +160,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 125 tests; e2e compiles real binaries (needs cargo)
+pytest            # 129 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

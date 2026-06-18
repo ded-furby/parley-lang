@@ -152,7 +152,8 @@ to main:
 ```
 
 A record bundles named fields. Read fields with `'s`. Records are **copied**
-when stored or passed — changing the copy never changes the original.
+when stored. Function calls preserve value semantics too: the generated Rust
+borrows read-only records and clones only if the callee mutates its local copy.
 
 ## 11. Kinds (enums) and `when`
 

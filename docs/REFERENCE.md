@@ -25,9 +25,11 @@ Comments: `note: …` or `# …` to end of line.
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
 | `(function taking A, B giving R)` | `Rc<dyn Fn(A, B) -> R>` | a cloneable function value; both clauses optional |
 
-**Value semantics:** storing or passing text/lists/maps/records copies them
-(the emitter inserts `.clone()`). Mutation crosses a function boundary only
-through `changing` parameters (`&mut T`).
+**Value semantics:** storing text/lists/maps/records copies them. Function
+calls keep the same behaviour, but generated Rust borrows read-only heap
+parameters and clones inside the callee only when that parameter is stored or
+mutated. Mutation crosses a function boundary only through `changing`
+parameters (`&mut T`).
 
 ## Declarations
 
@@ -36,6 +38,7 @@ through `changing` parameters (`&mut T`).
 | `a point has x as number, y as number` | `struct Point { x: i64, y: i64 }` |
 | `a mood is one of happy, grumpy` | `enum Mood { Happy, Grumpy }` |
 | `to f with a as number giving number:` | `fn f(a: i64) -> i64 {` |
+| `to f with xs as list of number:` | `fn f(xs: &Vec<i64>) {` |
 | `to f with changing xs as list of number:` | `fn f(xs: &mut Vec<i64>) {` |
 
 Variant names share one global namespace (so `happy` alone is unambiguous).

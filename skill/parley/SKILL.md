@@ -118,8 +118,9 @@ the error`.
 2. **Division always gives a decimal.** Convert back with `rounded x`,
    `floor of x`, `ceiling of x`.
 3. **Value semantics.** `let b be a_list` copies; mutating `b` never changes
-   `a_list`. Cross-function mutation only via `changing` parameters, whose
-   arguments must be plain variables.
+   `a_list`. Normal function calls preserve that behaviour even though the
+   backend borrows read-only heap parameters. Cross-function mutation only via
+   `changing` parameters, whose arguments must be plain variables.
 4. **`let` is block-scoped, no shadowing.** Create before the `if`/loop if
    you need it after. `set` changes; `let` creates.
 5. **Reserved vocabulary.** `a an is of to item ask sorted reversed trimmed
