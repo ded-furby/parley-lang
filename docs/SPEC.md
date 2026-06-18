@@ -1,4 +1,4 @@
-# Parley specification (v0.1)
+# Parley specification (v0.2)
 
 This document defines the language precisely enough to reimplement it.
 For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
@@ -120,7 +120,8 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 ## 7. Stability
 
-v0.1 is an experiment. Syntax may change; error codes are append-only.
-Known limits: no closures or higher-order functions, no generics for user
-functions, no methods, single-threaded, `include` is textual. See the README
-roadmap.
+v0.2 is an experiment. Syntax may change; error codes are append-only.
+Known limits: no anonymous closures with captured variables, no generics for
+user functions, no methods, single-threaded, `include` is textual. Function
+values exist today for named functions without `changing` parameters; richer
+closures are still on the roadmap. See the README roadmap.

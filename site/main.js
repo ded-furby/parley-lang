@@ -1,7 +1,10 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canvas = document.getElementById('scene');
+
+gsap.defaults({ duration: 0.72, ease: 'power3.out' });
 
 /* ---------- DOM: copy button ---------- */
 
@@ -11,23 +14,61 @@ copyBtn.addEventListener('click', async () => {
     await navigator.clipboard.writeText(
       document.getElementById('install-cmd').textContent.trim());
     copyBtn.textContent = 'Copied';
+    if (!reduceMotion) {
+      gsap.fromTo(copyBtn, { scale: 0.96 }, {
+        scale: 1,
+        duration: 0.42,
+        ease: 'back.out(1.7)',
+        clearProps: 'transform',
+      });
+    }
     setTimeout(() => { copyBtn.textContent = 'Copy command'; }, 1800);
   } catch {
     copyBtn.textContent = 'Select and copy';
   }
 });
 
+const install = document.querySelector('.install');
+if (install && !reduceMotion) {
+  const xTo = gsap.quickTo(install, 'x', { duration: 0.45, ease: 'power3' });
+  const yTo = gsap.quickTo(install, 'y', { duration: 0.45, ease: 'power3' });
+  install.addEventListener('pointermove', (e) => {
+    const r = install.getBoundingClientRect();
+    xTo((e.clientX - r.left - r.width / 2) * 0.025);
+    yTo((e.clientY - r.top - r.height / 2) * 0.08);
+  }, { passive: true });
+  install.addEventListener('pointerleave', () => {
+    xTo(0);
+    yTo(0);
+  }, { passive: true });
+}
+
 /* ---------- DOM: reveals (enhance-only; content is visible by default) ---------- */
 
 if (!reduceMotion && 'IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        gsap.to(e.target, {
+          autoAlpha: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.9,
+          ease: 'power3.out',
+          clearProps: 'transform,filter,visibility',
+        });
+        io.unobserve(e.target);
+      }
     }
   }, { threshold: 0.18 });
   for (const el of document.querySelectorAll('.reveal')) {
     const r = el.getBoundingClientRect();
-    if (r.top > innerHeight) { el.classList.add('will-reveal'); io.observe(el); }
+    if (r.top > innerHeight) {
+      el.classList.add('will-reveal');
+      gsap.set(el, { autoAlpha: 0, y: 28, filter: 'blur(8px)' });
+      io.observe(el);
+    }
   }
 }
 

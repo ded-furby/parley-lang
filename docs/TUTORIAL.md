@@ -302,4 +302,4 @@ Next steps:
 
 * [REFERENCE.md](REFERENCE.md) — every construct with the Rust it becomes
 * [ERRORS.md](ERRORS.md) — every error code with its fix
-* `examples/` — nine programs from hello to a todo app
+* `examples/` — ten programs from hello to a todo app

@@ -25,6 +25,24 @@ body {
 
 ::selection { background: var(--ember-deep); color: var(--ink); }
 
+.skip-link {
+  position: fixed;
+  top: 0.8rem;
+  left: 0.8rem;
+  z-index: 5;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: oklch(0.13 0.012 29);
+  background: var(--ink);
+  border-radius: 6px;
+  padding: 0.45rem 0.7rem;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.skip-link:focus { transform: translateY(0); }
+
 #scene {
   position: fixed;
   inset: 0;
@@ -241,6 +259,10 @@ code.inline {
   padding: clamp(1.25rem, 4vw, 3rem);
 }
 
+.finale > .reveal {
+  width: min(100%, 760px);
+}
+
 .finale-head {
   font-size: clamp(2.3rem, 6.5vw, 4.6rem);
   margin-bottom: 2.5rem;
@@ -249,6 +271,7 @@ code.inline {
 .install {
   display: inline-flex;
   align-items: stretch;
+  width: min(100%, 760px);
   max-width: 100%;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -261,6 +284,8 @@ code.inline {
   font-size: 0.85rem;
   color: var(--ink);
   padding: 0.85rem 1.2rem;
+  min-width: 0;
+  flex: 1 1 auto;
   white-space: nowrap;
   overflow-x: auto;
 }
@@ -308,12 +333,14 @@ code.inline {
 
 .will-reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(28px);
+  filter: blur(8px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.will-reveal.in { opacity: 1; transform: none; }
+.will-reveal.in { opacity: 1; transform: none; filter: none; }
 
 /* ---------- small screens ---------- */
 

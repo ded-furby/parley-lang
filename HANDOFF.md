@@ -18,7 +18,7 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-06-13)
+## Where things stand (2026-06-18)
 
 ### Done and verified
 
@@ -40,11 +40,17 @@ Update it whenever you finish or start a work item.
   style.css, main.js; Three.js via CDN import map). The hero headline
   "speak plainly." is ~15k ember particles that respond to the cursor;
   scrolling shreds it to dust and condenses it into a black monolith (the
-  native binary) behind the install command. Verified with Playwright
-  screenshots at 4 scroll positions, zero console errors. Design context
-  in `PRODUCT.md` / `DESIGN.md` (PRODUCT.md was synthesised from the repo
-  and Arjun's brief, not a user interview — confirm with him before
-  redesigns).
+  native binary) behind the install command. A 2026-06-18 readiness pass
+  added GSAP-powered DOM reveals/copy affordance, a skip link, and mobile
+  overflow fixes. Verified with Playwright at desktop and mobile widths:
+  no horizontal overflow; WebGL scene reaches `scene-ok`; no runtime errors
+  beyond headless Chromium WebGL performance warnings. Design context in
+  `PRODUCT.md` / `DESIGN.md` (PRODUCT.md was synthesised from the repo and
+  Arjun's brief, not a user interview — confirm with him before redesigns).
+- **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
+  benchmark plan, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
+  readiness checklist. `docs/SPEC.md` now correctly says v0.2 and no longer
+  claims higher-order functions are missing.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`).
 
@@ -57,9 +63,9 @@ Update it whenever you finish or start a work item.
   If you commit new work, commit it, then rebase it BELOW the CI commit
   (or cherry-pick the CI commit back on top) and push with
   `git push origin HEAD~1:main` so the CI commit stays the unpushed tip.
-- **PyPI.** The name `parley-lang` is unverified/unpublished. README's
-  `pip install parley-lang` path in the skill assumes it; the
-  git+https install works today.
+- **PyPI.** The name `parley-lang` is unverified/unpublished. The documented
+  install path uses `pip install git+https://github.com/ded-furby/parley-lang`,
+  which works before a PyPI release.
 
 ### Not started (the remaining roadmap, in suggested order)
 

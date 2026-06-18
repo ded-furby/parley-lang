@@ -14,11 +14,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm"
+  }
+}
 </script>
 </head>
 <body>
 
+<a class="skip-link" href="#content">Skip to content</a>
 <canvas id="scene" aria-hidden="true"></canvas>
 
 <header class="nav">
@@ -34,16 +40,15 @@
   <section class="hero">
     <h1 class="hero-fallback">speak plainly.</h1>
     <div class="hero-foot">
-      <p class="hero-intro">Parley is an English-like programming language where
-      AI&nbsp;agents are the primary authors. It compiles, through Rust, to a
-      ~350&nbsp;KiB native binary.</p>
+      <p class="hero-intro">An English-like language for AI&nbsp;agents, compiled
+      through Rust to a ~350&nbsp;KiB native binary.</p>
       <div class="scroll-hint" aria-hidden="true">
         <span>scroll</span><i></i>
       </div>
     </div>
   </section>
 
-  <section class="band">
+  <section class="band" id="content">
     <div class="col reveal">
       <h2>The syntax is English.</h2>
       <p>One canonical way to write each construct. Nothing to misremember,
@@ -115,6 +120,7 @@ $ parley build cats.par -o cats
       <p class="finale-links">
         <a href="https://github.com/ded-furby/parley-lang">Star the repository</a>
         <a href="https://github.com/ded-furby/parley-lang/blob/main/docs/TUTORIAL.md">Learn it in 15 minutes</a>
+        <a href="https://github.com/ded-furby/parley-lang/blob/main/docs/RESEARCH.md">Read the research plan</a>
       </p>
       <p class="colophon">MIT licensed. Built by
         <a href="https://github.com/ded-furby">Arjun Avtani</a> with Claude.</p>

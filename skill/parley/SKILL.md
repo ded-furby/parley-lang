@@ -19,7 +19,8 @@ comments are `note: …` or `# …`.
 5. Ship a binary with `parley build program.par -o name`.
 
 Never guess at fixes when a hint is present — hints name the exact repair.
-If `parley` is missing: `pip install parley-lang` (needs Rust: https://rustup.rs).
+If `parley` is missing: `pip install git+https://github.com/ded-furby/parley-lang`
+(needs Rust: https://rustup.rs).
 
 ## The whole language on one screen
 

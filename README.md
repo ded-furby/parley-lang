@@ -109,7 +109,9 @@ division, powers, roots · a text toolbox (`split by`, `joined with`,
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
 Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
-[docs/ERRORS.md](docs/ERRORS.md). Ten working programs: [examples/](examples).
+[docs/ERRORS.md](docs/ERRORS.md). Research plan:
+[docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
+[docs/RELEASE.md](docs/RELEASE.md). Ten working programs: [examples/](examples).
 
 ## How it works
 
@@ -144,7 +146,7 @@ the plan:
 - [x] function values (`the function f`, fn-pointer backed) — v0.2
 - [ ] anonymous closures with captured variables (today: named functions only)
 - [ ] borrow-based passing for big values (today: clone-on-assign)
-- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (paper in progress)
+- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (planned)
 - [ ] LSP server
 - [ ] packages beyond `include`
 
