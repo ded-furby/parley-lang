@@ -79,6 +79,11 @@ first paper should stay small enough to run and audit.
 
 ## Current status
 
-The compiler and documentation are ready for a pilot study. The benchmark
-harness and equivalent Python/Rust task corpus still need to be built before
-any paper claims should be made.
+The compiler and documentation are ready for a pilot study. A Phase 1 seed
+harness now exists in [`benchmarks/`](../benchmarks/): it records source-size
+metrics for the ten Parley examples and verifies each one with
+`parley check --json`.
+
+This is not yet a paper result. Equivalent Python/Rust implementations, an
+LLM tokenizer, repeated agent runs, and repair-turn logging still need to be
+built before any comparative claims should be made.

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "language_version": "0.2.0",
+  "description": "Seed benchmark tasks drawn from the checked Parley examples. These are the Parley side of the Phase 1 corpus; Python and Rust equivalents are still required before paper claims.",
+  "tasks": [
+    {
+      "id": "hello",
+      "title": "Hello and interpolation",
+      "source": "examples/hello.par",
+      "summary": "Print a greeting and a simple arithmetic result using interpolation.",
+      "features": ["main", "variables", "string interpolation", "arithmetic"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "fizzbuzz",
+      "title": "FizzBuzz",
+      "source": "examples/fizzbuzz.par",
+      "summary": "Print 1 through 20 with Fizz, Buzz, and FizzBuzz substitutions.",
+      "features": ["for range", "conditionals", "remainder", "integer arithmetic"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "records",
+      "title": "Records and changing parameters",
+      "source": "examples/records.par",
+      "summary": "Define records, compute rectangle area, and mutate a point through a changing parameter.",
+      "features": ["records", "field access", "changing parameters", "value semantics"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "enums_match",
+      "title": "Enums and when branching",
+      "source": "examples/enums_match.par",
+      "summary": "Define a finite kind and branch over variants with exhaustive and otherwise arms.",
+      "features": ["kinds", "when", "exhaustive branching", "text returns"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "lists_and_maps",
+      "title": "Lists and maps",
+      "source": "examples/lists_and_maps.par",
+      "summary": "Use lists, sorted iteration, maps, key lookup, and joined text output.",
+      "features": ["lists", "maps", "sorted iteration", "text conversion"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "higher_order",
+      "title": "Function values",
+      "source": "examples/higher_order.par",
+      "summary": "Pass named functions as first-class values and call them through function-typed parameters.",
+      "features": ["function values", "function types", "nested calls"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "file_stats",
+      "title": "File statistics",
+      "source": "examples/file_stats.par",
+      "summary": "Write a small file, read it back, split lines, and report matching content.",
+      "features": ["file I/O", "maybe values", "split", "contains"],
+      "interactive": false,
+      "deterministic_run": true
+    },
+    {
+      "id": "calculator",
+      "title": "Chatty calculator",
+      "source": "examples/calculator.par",
+      "summary": "Read two numbers and an operator, then perform decimal arithmetic with caught runtime errors.",
+      "features": ["stdin", "maybe conversion", "decimal arithmetic", "attempt"],
+      "interactive": true,
+      "deterministic_run": true,
+      "stdin_fixture": "3.5\n4\n+\n"
+    },
+    {
+      "id": "guessing_game",
+      "title": "Guessing game",
+      "source": "examples/guessing_game.par",
+      "summary": "Loop over numeric input until the random secret is guessed.",
+      "features": ["random", "stdin", "while", "skip", "stop"],
+      "interactive": true,
+      "deterministic_run": false,
+      "stdin_fixture": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n"
+    },
+    {
+      "id": "todo",
+      "title": "Todo list",
+      "source": "examples/todo.par",
+      "summary": "Drive a small todo list through text commands, list mutation, and recoverable errors.",
+      "features": ["stdin", "lists", "text parsing", "attempt", "loops"],
+      "interactive": true,
+      "deterministic_run": true,
+      "stdin_fixture": "add buy milk\nadd walk dog\nlist\ndone 1\nquit\n"
+    }
+  ]
+}

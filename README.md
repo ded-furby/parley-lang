@@ -4,7 +4,6 @@
 where AI agents are the primary authors — compiled to real machine code
 through Rust.
 
-[![CI](https://github.com/ded-furby/parley-lang/actions/workflows/ci.yml/badge.svg)](https://github.com/ded-furby/parley-lang/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Website: [ded-furby.github.io/parley-lang](https://ded-furby.github.io/parley-lang/)
@@ -114,7 +113,8 @@ Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
 [docs/ERRORS.md](docs/ERRORS.md). Research plan:
 [docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
 [docs/RELEASE.md](docs/RELEASE.md). Domain options:
-[docs/DOMAINS.md](docs/DOMAINS.md). Ten working programs: [examples/](examples).
+[docs/DOMAINS.md](docs/DOMAINS.md). Seed benchmark harness:
+[benchmarks/](benchmarks). Ten working programs: [examples/](examples).
 
 ## How it works
 
@@ -149,7 +149,8 @@ the plan:
 - [x] function values (`the function f`, fn-pointer backed) — v0.2
 - [ ] anonymous closures with captured variables (today: named functions only)
 - [ ] borrow-based passing for big values (today: clone-on-assign)
-- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (planned)
+- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (Parley seed
+      harness exists; comparative corpora and agent runs still planned)
 - [ ] LSP server
 - [ ] packages beyond `include`
 

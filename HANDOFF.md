@@ -48,10 +48,11 @@ Update it whenever you finish or start a work item.
   `PRODUCT.md` / `DESIGN.md` (PRODUCT.md was synthesised from the repo and
   Arjun's brief, not a user interview — confirm with him before redesigns).
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
-  benchmark plan, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
-  readiness checklist. `docs/SPEC.md` now correctly says v0.2 and no longer
-  claims higher-order functions are missing. `docs/DOMAINS.md` records
-  checked domain candidates; current recommendation is `parleylang.com`.
+  benchmark plan, `benchmarks/` contains a Phase-1 Parley seed metrics harness,
+  and `docs/RELEASE.md` records the GitHub/Pages/PyPI readiness checklist.
+  `docs/SPEC.md` now correctly says v0.2 and no longer claims higher-order
+  functions are missing. `docs/DOMAINS.md` records checked domain candidates;
+  current recommendation is `parleylang.com`.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
@@ -80,17 +81,14 @@ Update it whenever you finish or start a work item.
    number: x times 2` — syntax undecided), emitted as `Rc<dyn Fn(...)>`
    with clone-on-capture to preserve value semantics. This is the largest
    remaining language gap.
-2. **Deploy the landing page.** Easiest: GitHub Pages from `site/`
-   (Settings → Pages → deploy from branch, /site folder, or an Actions
-   workflow once the workflow scope is fixed). No build step needed.
-3. **Phase-1 benchmark harness** (goal 3). Token-count comparison of the
-   same programs in Python/Rust/Parley (tokenise with an LLM tokenizer);
-   then agent error-rate runs. Nothing exists yet; `examples/` are the
-   natural corpus seed.
-4. **Borrow-based passing for big values** — perf optimisation in
+2. **Complete the benchmark corpus** (goal 3). `benchmarks/` now measures the
+   Parley seed examples and checks them with JSON diagnostics. Still needed:
+   equivalent Python/Rust implementations, LLM-tokenizer counts, and agent
+   error-rate runs.
+3. **Borrow-based passing for big values** — perf optimisation in
    `emit_rust.py` (pass `&T` for non-changing heap params, clone only on
    store). Touches the whole emitter; do it with the e2e suite green.
-5. **LSP server**, **packages beyond `include`** — later.
+4. **LSP server**, **packages beyond `include`** — later.
 
 ## Working on the compiler: the contract
 

@@ -8,3 +8,4 @@ build/
 target/
 .DS_Store
 .venv/
+benchmarks/results/*.json
