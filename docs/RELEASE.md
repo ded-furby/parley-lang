@@ -37,6 +37,9 @@ The CI workflow runs the Python test suite on Ubuntu with Rust installed:
 If GitHub rejects pushes that add or modify workflow files, refresh the GitHub
 CLI/OAuth token with the `workflow` scope before pushing.
 
+Current status: the workflow commit is still local-only until the account is
+reauthorized through GitHub's device flow with the `workflow` scope.
+
 ## Website
 
 The landing page is a static site in `site/`:
@@ -50,16 +53,19 @@ site/main.js
 It has no build step. Any static host can serve the directory directly.
 
 The current production deployment is GitHub Pages from the `gh-pages` branch,
-with the static site files at the branch root.
+with the static site files at the branch root. Publish site updates with:
 
-### GitHub Pages option
+```bash
+scripts/deploy_pages.sh
+```
 
-1. Push `main`.
-2. In repository settings, enable Pages.
-3. Set the source to the `main` branch and `/site` folder, or use a Pages
-   deployment workflow after workflow-scope authentication is fixed.
-4. Visit the generated Pages URL and verify the canvas, copy button, nav links,
-   reduced-motion behavior, and mobile layout.
+### GitHub Pages source
+
+1. Keep source files in `site/` on `main`.
+2. Run `scripts/deploy_pages.sh` to copy them to the root of `gh-pages`.
+3. GitHub Pages serves `gh-pages` at `https://ded-furby.github.io/parley-lang/`.
+4. Verify the canvas, copy button, nav links, custom 404, reduced-motion
+   behavior, and mobile layout after every deploy.
 
 ### Custom domain option
 
@@ -82,11 +88,20 @@ PyPI publishing is not complete until the package name is reserved and an
 authenticated release is uploaded. Do not claim `pip install parley-lang`
 until that is verified.
 
+Release build commands:
+
+```bash
+python3 -m pip install -e ".[dev,publish]"
+python3 -m build
+python3 -m twine check dist/*
+```
+
 ## Pre-release audit
 
 - `python3 -m pytest tests/` passes.
 - All examples run through e2e tests.
 - The website renders without console errors.
+- `/404.html` renders as a branded error page.
 - The README install path is true.
 - The skill file matches the current syntax.
 - The GitHub branch is pushed and visible publicly.

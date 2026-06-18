@@ -8,19 +8,23 @@ version = "0.2.0"
 description = "Speak plainly, ship native binaries — an English-like compiled language for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "Arjun Avtani" }]
 keywords = ["compiler", "language", "ai-agents", "rust", "transpiler"]
 dependencies = ["lark>=1.1"]
 
 [project.urls]
-Homepage = "https://github.com/ded-furby/parley-lang"
+Homepage = "https://ded-furby.github.io/parley-lang/"
+Source = "https://github.com/ded-furby/parley-lang"
+Documentation = "https://github.com/ded-furby/parley-lang/tree/main/docs"
+Issues = "https://github.com/ded-furby/parley-lang/issues"
 
 [project.scripts]
 parley = "parley.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+publish = ["build>=1", "twine>=5"]
 
 [tool.setuptools]
 packages = ["parley"]

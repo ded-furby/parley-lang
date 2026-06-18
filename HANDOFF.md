@@ -37,7 +37,7 @@ Update it whenever you finish or start a work item.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
-  style.css, main.js; Three.js via CDN import map). The hero headline
+  style.css, main.js, 404.html; Three.js via CDN import map). The hero headline
   "speak plainly." is ~15k ember particles that respond to the cursor;
   scrolling shreds it to dust and condenses it into a black monolith (the
   native binary) behind the install command. A 2026-06-18 readiness pass
@@ -63,6 +63,8 @@ Update it whenever you finish or start a work item.
   main, deliberately unpushed: the gh OAuth token lacks the `workflow`
   scope, and any push containing that commit is rejected. Fix:
   `gh auth refresh -h github.com -s workflow`, then `git push`.
+  Attempted again on 2026-06-18; GitHub required device-code browser auth,
+  so the token still only has `gist`, `read:org`, and `repo`.
   If you commit new work, commit it, then rebase it BELOW the CI commit
   (or cherry-pick the CI commit back on top) and push with
   `git push origin HEAD~1:main` so the CI commit stays the unpushed tip.
