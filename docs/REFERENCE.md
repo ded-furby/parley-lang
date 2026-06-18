@@ -178,3 +178,21 @@ same parser/checker diagnostics and stable P-codes as `parley check --json` for
 open `.par` documents. The initial server supports `initialize`,
 `textDocument/didOpen`, `textDocument/didChange`, `textDocument/didClose`, and
 `shutdown`.
+
+## Bundled packages
+
+Use `include "std/math"` for small numeric helpers:
+
+| Function | Gives |
+|---|---|
+| `clamped with n, low, high` | `n` limited to the inclusive range |
+| `between with n, low, high` | yes/no range check |
+| `percent_of with part, whole` | decimal percentage |
+
+Use `include "std/text"` for small text helpers:
+
+| Function | Gives |
+|---|---|
+| `is_blank with t` | yes when `trimmed t` is empty |
+| `repeated_text with t, count` | text repeated `count` times |
+| `surrounded_with with t, wrapper` | wrapper + text + wrapper |

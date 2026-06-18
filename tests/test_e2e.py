@@ -229,6 +229,19 @@ def test_include_error_points_at_right_file(workdir):
     assert d["line"] == 2
 
 
+def test_bundled_std_packages_run(workdir):
+    src = '''include "std/math"
+include "std/text"
+
+to main:
+    say (clamped with 12, 1, 10)
+    say (is_blank with "   ")
+    say (repeated_text with "ha", 3)
+'''
+    proc = run_program(workdir, "bundled_std", src)
+    assert proc.stdout == "10\nyes\nhahaha\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

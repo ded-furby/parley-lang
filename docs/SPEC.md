@@ -124,8 +124,8 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 * A line map (rust line → parley file/line) accompanies emission; any
   residual rustc diagnostic is translated through it.
 * `include "x"` is textual. It first resolves `x` relative to the including
-  file, then as `parley_modules/x`, then through `PARLEY_PATH` roots. Package
-  directories load `main.par`.
+  file, then as `parley_modules/x`, then through bundled standard packages,
+  then through `PARLEY_PATH` roots. Package directories load `main.par`.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
   in `.parley-build/target/`.
 

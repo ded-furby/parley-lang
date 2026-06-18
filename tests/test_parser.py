@@ -194,6 +194,17 @@ def test_include_package_from_parley_path(tmp_path, monkeypatch):
     assert srcmap.loc(1)[0].endswith("shared_packages/strings/main.par")
 
 
+def test_include_bundled_std_package(tmp_path):
+    (tmp_path / "main.par").write_text(
+        'include "std/math"\n\nto main:\n    say (clamped with 12, 1, 10)\n')
+
+    text, srcmap = load_program(tmp_path / "main.par")
+    prog = parse(text)
+
+    assert "clamped" in [f.name for f in prog.funcs]
+    assert srcmap.loc(1)[0].endswith("stdlib/std/math.par")
+
+
 # ------------------------------------------------------------------ v0.2: when patterns + function values
 
 def test_rich_when_patterns_parse():

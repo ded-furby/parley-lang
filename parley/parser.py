@@ -65,7 +65,7 @@ def _candidate_package_files(root: Path, name: str) -> list[Path]:
 
 
 def _include_roots(including_file: Path) -> list[Path]:
-    roots = [including_file.parent / "parley_modules"]
+    roots = [including_file.parent / "parley_modules", Path(__file__).parent / "stdlib"]
     roots.extend(Path(p) for p in os.environ.get("PARLEY_PATH", "").split(os.pathsep) if p)
     return roots
 

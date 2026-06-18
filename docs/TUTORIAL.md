@@ -315,6 +315,17 @@ line. For reusable local packages, put `main.par` under
 package roots can also be listed in `PARLEY_PATH` using your operating system's
 path separator.
 
+Bundled standard packages are available without extra files:
+
+```parley
+include "std/math"
+include "std/text"
+
+to main:
+    say (clamped with 12, 1, 10)
+    say (repeated_text with "ha", 3)
+```
+
 ## That's the whole language
 
 Next steps:

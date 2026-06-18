@@ -1,0 +1,11 @@
+to is_blank with t as text giving yesno:
+    give back trimmed t is ""
+
+to repeated_text with t as text, count as number giving text:
+    let out be ""
+    repeat count times:
+        set out to "{out}{t}"
+    give back out
+
+to surrounded_with with t as text, wrapper as text giving text:
+    give back "{wrapper}{t}{wrapper}"

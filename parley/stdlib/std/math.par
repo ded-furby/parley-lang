@@ -1,0 +1,12 @@
+to clamped with n as number, low as number, high as number giving number:
+    if n is less than low:
+        give back low
+    if n is more than high:
+        give back high
+    give back n
+
+to between with n as number, low as number, high as number giving yesno:
+    give back n is at least low and n is at most high
+
+to percent_of with part as number, whole as number giving decimal:
+    give back (decimal from part) divided by (decimal from whole) times 100.0

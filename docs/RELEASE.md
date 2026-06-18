@@ -12,6 +12,7 @@ python3 -m pytest tests/
 python3 -m pytest tests/test_lsp.py
 python3 -m pip install -e ".[dev]"
 parley check examples/higher_order.par --json
+python3 -m pytest tests/test_parser.py::test_include_bundled_std_package tests/test_e2e.py::test_bundled_std_packages_run
 parley --version
 parley run examples/hello.par
 ```
@@ -29,6 +30,8 @@ The e2e tests require Rust and `cargo`.
   change.
 - Keep `parley-lsp` wired in `pyproject.toml`; it is the editor integration
   entry point and publishes the same P-code diagnostics as `parley check`.
+- Keep bundled `.par` packages under `parley/stdlib/` listed in
+  `tool.setuptools.package-data`.
 
 ## CI
 

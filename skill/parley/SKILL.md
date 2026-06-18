@@ -115,6 +115,9 @@ the error`.
 Multi-file code uses `include "helpers.par"`. Reusable local packages can live
 at `parley_modules/package_name/main.par` and be loaded with
 `include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
+Bundled packages are available as `include "std/math"` (`clamped`, `between`,
+`percent_of`) and `include "std/text"` (`is_blank`, `repeated_text`,
+`surrounded_with`).
 
 ## Rules that catch agents out
 
