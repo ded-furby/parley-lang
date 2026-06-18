@@ -50,6 +50,14 @@ python3 benchmarks/runlog.py append \
   --stderr-file /tmp/stderr.txt
 ```
 
+To summarize a run log by task/language/model:
+
+```bash
+python3 benchmarks/runlog.py summarize \
+  --log benchmarks/results/runs.jsonl \
+  --format json
+```
+
 ## What this proves
 
 - The Phase 1 task list is explicit in `benchmarks/tasks.json`.
@@ -59,14 +67,16 @@ python3 benchmarks/runlog.py append \
 - LLM-token counts can be produced with a named `tiktoken` encoding.
 - Generated attempts, diagnostics, stdout/stderr, prompts, and patches can be
   captured in a JSONL run log.
+- Run logs can be summarized into first-run success, eventual success, elapsed
+  time, and repair-turn counts by task/language/model.
 - The Parley side of the corpus can be verified without a Rust build.
 
 ## What this does not prove yet
 
 - `rough_tokens` is a regex count; use `--llm-tokenizer` for model-token
   counts.
-- It does not run agents by itself or make success judgments across repeated
-  samples.
+- It does not run agents by itself or decide semantic correctness beyond the
+  status labels recorded by the runner.
 - It does not make a publishable claim about Parley outperforming another
   language.
 

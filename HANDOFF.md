@@ -23,7 +23,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 129 tests, including e2e tests that
+  → cargo). The latest local suite has 130 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -59,10 +59,10 @@ Update it whenever you finish or start a work item.
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
   benchmark plan, `benchmarks/` contains a Phase-1 Parley/Python/Rust seed
   metrics harness with optional `tiktoken` counts plus JSONL attempt logging,
-  and `docs/RELEASE.md` records the GitHub/Pages/PyPI readiness checklist.
-  `docs/SPEC.md` now correctly says v0.3 and no longer claims higher-order
-  functions are missing. `docs/DOMAINS.md` records checked domain candidates;
-  current recommendation is `parleylang.com`.
+  run-log summaries, and `docs/RELEASE.md` records the GitHub/Pages/PyPI
+  readiness checklist. `docs/SPEC.md` now correctly says v0.3 and no longer
+  claims higher-order functions are missing. `docs/DOMAINS.md` records
+  checked domain candidates; current recommendation is `parleylang.com`.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
@@ -88,8 +88,8 @@ Update it whenever you finish or start a work item.
 1. **Run the benchmark study** (goal 3). `benchmarks/` now measures
    Parley/Python/Rust seed references, supports optional `tiktoken` token
    counts, checks Parley with JSON diagnostics, and captures generated attempts
-   to JSONL. Still needed: repeated agent error-rate runs and aggregate
-   repair-turn analysis.
+   to JSONL with summary analysis. Still needed: repeated agent error-rate
+   runs and a result write-up.
 2. **LSP server**, **packages beyond `include`** — later.
 
 ## Working on the compiler: the contract

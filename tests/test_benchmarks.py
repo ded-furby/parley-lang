@@ -174,6 +174,64 @@ def test_runlog_append_captures_attempt_artifacts(tmp_path):
     assert row["artifacts"]["stderr"] == ""
 
 
+def test_runlog_summarize_aggregates_repair_turns(tmp_path):
+    log = tmp_path / "runs.jsonl"
+    rows = [
+        {
+            "schema_version": 1,
+            "task_id": "hello",
+            "language": "parley",
+            "model": "agent-a",
+            "attempt": 1,
+            "repair_turn": 0,
+            "status": "check_failed",
+            "elapsed_seconds": 0.5,
+        },
+        {
+            "schema_version": 1,
+            "task_id": "hello",
+            "language": "parley",
+            "model": "agent-a",
+            "attempt": 2,
+            "repair_turn": 1,
+            "status": "first_run_success",
+            "elapsed_seconds": 0.7,
+        },
+        {
+            "schema_version": 1,
+            "task_id": "hello",
+            "language": "python",
+            "model": "agent-a",
+            "attempt": 1,
+            "repair_turn": 0,
+            "status": "first_run_success",
+            "elapsed_seconds": 0.2,
+        },
+    ]
+    log.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    proc = run_runlog("summarize", "--log", str(log), "--format", "json")
+    assert proc.returncode == 0, proc.stderr
+
+    summary = json.loads(proc.stdout)
+    assert summary["schema_version"] == 1
+    assert summary["totals"]["records"] == 3
+    assert summary["totals"]["groups"] == 2
+    assert summary["totals"]["successes"] == 2
+    assert summary["totals"]["first_run_successes"] == 1
+    parley = next(group for group in summary["groups"] if group["language"] == "parley")
+    assert parley["task_id"] == "hello"
+    assert parley["model"] == "agent-a"
+    assert parley["attempts"] == 2
+    assert parley["success"] is True
+    assert parley["first_run_success"] is False
+    assert parley["repair_turns_to_success"] == 1
+    assert parley["elapsed_seconds"] == 1.2
+    python = next(group for group in summary["groups"] if group["language"] == "python")
+    assert python["first_run_success"] is True
+    assert python["repair_turns_to_success"] == 0
+
+
 def test_python_reference_sources_compile():
     for path in sorted((BENCHMARKS / "python").glob("*.py")):
         py_compile.compile(str(path), doraise=True)
