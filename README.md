@@ -92,6 +92,11 @@ code. `parley doctor --json` reports whether the local install can build
 native binaries and whether the bundled stdlib is present. Humans get the
 same diagnostics with source carets and colors.
 
+For the research harness, run `parley benchmark measure --format json` from a
+source checkout to produce the Parley/Python/Rust seed-corpus metrics, and
+`parley benchmark summarize --log runs.jsonl --format json` to review recorded
+agent attempts.
+
 For editor integration, start the stdio language server from your editor:
 
 ```bash
@@ -178,8 +183,9 @@ the plan:
 - [x] setup doctor (`parley doctor --json`) — v0.3.9
 - [x] custom runtime failures (`fail "message"`) — v0.3.10
 - [x] runtime assertions (`assert condition, "message"`) — v0.3.11
+- [x] benchmark CLI (`parley benchmark measure` / `summarize`) — v0.3.12
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
-      optional tokenizer counts, and run logging exist; agent runs still planned)
+      optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 - [ ] remote package registry
 
 ## Development
@@ -187,7 +193,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 156 tests; e2e compiles real binaries (needs cargo)
+pytest            # 158 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

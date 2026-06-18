@@ -8,7 +8,7 @@ passes `parley check --json`.
 Run from the repository root:
 
 ```bash
-python3 benchmarks/measure.py
+parley benchmark measure
 ```
 
 The default report is written to:
@@ -20,9 +20,9 @@ benchmarks/results/parley_seed_metrics.json
 For automation:
 
 ```bash
-python3 benchmarks/measure.py --format json --output /tmp/parley_seed_metrics.json
-python3 benchmarks/measure.py --no-check
-python3 benchmarks/measure.py --languages parley,rust
+parley benchmark measure --format json --output /tmp/parley_seed_metrics.json
+parley benchmark measure --no-check
+parley benchmark measure --languages parley,rust
 ```
 
 For model-token counts, install the optional research dependency and choose a
@@ -30,13 +30,13 @@ For model-token counts, install the optional research dependency and choose a
 
 ```bash
 python3 -m pip install -e ".[research]"
-python3 benchmarks/measure.py --llm-tokenizer cl100k_base
+parley benchmark measure --llm-tokenizer cl100k_base
 ```
 
 To capture generated attempts from an agent run:
 
 ```bash
-python3 benchmarks/runlog.py append \
+parley benchmark append \
   --log benchmarks/results/runs.jsonl \
   --task hello \
   --language parley \
@@ -53,10 +53,14 @@ python3 benchmarks/runlog.py append \
 To summarize a run log by task/language/model:
 
 ```bash
-python3 benchmarks/runlog.py summarize \
+parley benchmark summarize \
   --log benchmarks/results/runs.jsonl \
   --format json
 ```
+
+The underlying scripts (`benchmarks/measure.py` and `benchmarks/runlog.py`)
+remain executable directly, but the `parley benchmark ...` command is the
+documented interface from the source checkout.
 
 ## What this proves
 

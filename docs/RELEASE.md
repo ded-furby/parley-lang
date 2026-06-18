@@ -17,6 +17,7 @@ python3 -m pytest tests/test_packages.py
 tmp="$(mktemp -d)" && (cd "$tmp" && parley package new demo_package)
 parley doctor --json
 parley --version
+parley benchmark measure --no-check --format json --output /tmp/parley_seed_metrics.json
 parley run examples/hello.par
 ```
 
@@ -37,6 +38,8 @@ The e2e tests require Rust and `cargo`.
   `tool.setuptools.package-data`.
 - Keep `parley doctor --json` passing; it is the quick setup proof for
   installed users and automation.
+- Keep `parley benchmark measure --format json` working from a source
+  checkout; it is the research readiness proof for the seed corpus.
 
 ## CI
 
@@ -116,5 +119,6 @@ python3 -m twine check dist/*
 - `/404.html` renders as a branded error page.
 - The README install path is true.
 - The skill file matches the current syntax.
+- The benchmark CLI can measure the seed corpus and summarize a run log.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.

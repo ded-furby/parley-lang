@@ -364,4 +364,5 @@ Next steps:
 
 * [REFERENCE.md](REFERENCE.md) — every construct with the Rust it becomes
 * [ERRORS.md](ERRORS.md) — every error code with its fix
+* `parley benchmark measure --format json` — the seed research corpus metrics
 * `examples/` — eleven programs from hello to closures and a todo app

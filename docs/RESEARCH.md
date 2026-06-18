@@ -80,12 +80,13 @@ first paper should stay small enough to run and audit.
 ## Current status
 
 The compiler and documentation are ready for a pilot study. A Phase 1 seed
-harness now exists in [`benchmarks/`](../benchmarks/): it records source-size
-metrics for equivalent Parley, Python, and Rust references across the ten
-example tasks, can add `tiktoken` model-token counts with
-`--llm-tokenizer`, verifies each Parley source with `parley check --json`,
-and can append generated attempts plus diagnostics/stdout/stderr to a JSONL
-run log with `benchmarks/runlog.py`. The same run log can be summarized into
+harness now exists in [`benchmarks/`](../benchmarks/) and is exposed through
+`parley benchmark`: it records source-size metrics for equivalent Parley,
+Python, and Rust references across the ten example tasks, can add `tiktoken`
+model-token counts with `--llm-tokenizer`, verifies each Parley source with
+`parley check --json`, and can append generated attempts plus
+diagnostics/stdout/stderr to a JSONL run log with `parley benchmark append`.
+The same run log can be summarized with `parley benchmark summarize` into
 first-run success, eventual success, elapsed time, and repair-turn counts by
 task/language/model.
 

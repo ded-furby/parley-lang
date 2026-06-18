@@ -9,11 +9,13 @@
   parley new myproject            start a new program
   parley doctor                   verify local setup
   parley package install name src vendor a local package
+  parley benchmark measure        measure the seed research corpus
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 from importlib import resources
 import json
 import os
@@ -403,7 +405,49 @@ def cmd_package_list(args) -> int:
     return 0
 
 
+def _load_benchmark_script(name: str):
+    path = Path("benchmarks") / f"{name}.py"
+    if not path.is_file():
+        raise OSError(
+            "benchmark harness not found; run this command from a Parley source checkout")
+    spec = importlib.util.spec_from_file_location(f"_parley_benchmark_{name}", path)
+    if spec is None or spec.loader is None:
+        raise OSError(f"could not load benchmark script: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def cmd_benchmark_measure(args) -> int:
+    try:
+        module = _load_benchmark_script("measure")
+    except OSError as exc:
+        print(f"benchmark error: {exc}", file=sys.stderr)
+        return 1
+    return module.main(args.benchmark_args)
+
+
+def cmd_benchmark_runlog(args) -> int:
+    try:
+        module = _load_benchmark_script("runlog")
+    except OSError as exc:
+        print(f"benchmark error: {exc}", file=sys.stderr)
+        return 1
+    return module.main([args.runlog_cmd, *args.benchmark_args])
+
+
 def main(argv: list[str] | None = None) -> int:
+    raw_argv = sys.argv[1:] if argv is None else list(argv)
+    if len(raw_argv) >= 2 and raw_argv[0] == "benchmark":
+        bench_cmd, bench_args = raw_argv[1], raw_argv[2:]
+        if bench_cmd == "measure":
+            return cmd_benchmark_measure(argparse.Namespace(benchmark_args=bench_args))
+        if bench_cmd in {"append", "summarize"}:
+            return cmd_benchmark_runlog(argparse.Namespace(
+                runlog_cmd=bench_cmd,
+                benchmark_args=bench_args,
+            ))
+
     ap = argparse.ArgumentParser(
         prog="parley",
         description="Parley — speak plainly, ship native binaries.")
@@ -453,7 +497,19 @@ def main(argv: list[str] | None = None) -> int:
     package_list = package_sub.add_parser("list", help="list vendored packages")
     package_list.set_defaults(fn=cmd_package_list)
 
-    args = ap.parse_args(argv)
+    p = sub.add_parser("benchmark", help="measure and summarize benchmark research data")
+    benchmark_sub = p.add_subparsers(dest="benchmark_cmd", required=True)
+    measure = benchmark_sub.add_parser("measure", help="measure the seed benchmark corpus")
+    measure.add_argument("benchmark_args", nargs=argparse.REMAINDER)
+    measure.set_defaults(fn=cmd_benchmark_measure)
+    append = benchmark_sub.add_parser("append", help="append one benchmark attempt log row")
+    append.add_argument("benchmark_args", nargs=argparse.REMAINDER)
+    append.set_defaults(fn=cmd_benchmark_runlog, runlog_cmd="append")
+    summarize = benchmark_sub.add_parser("summarize", help="summarize a benchmark run log")
+    summarize.add_argument("benchmark_args", nargs=argparse.REMAINDER)
+    summarize.set_defaults(fn=cmd_benchmark_runlog, runlog_cmd="summarize")
+
+    args = ap.parse_args(raw_argv)
     return args.fn(args)
 
 

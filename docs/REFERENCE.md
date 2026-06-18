@@ -183,6 +183,15 @@ the catalog entry. The intended loop: **check → apply hint → re-check → ru
 `parley doctor --json` in scripts or agent setup checks; it returns a
 machine-readable report with an `ok` field and one entry per check.
 
+## Benchmark research
+
+From a source checkout, `parley benchmark measure` runs the Phase 1 seed
+corpus metrics for Parley, Python, and Rust references. It forwards the same
+options as `benchmarks/measure.py`, including `--format json`, `--no-check`,
+`--languages`, `--output`, and `--llm-tokenizer`. Use `parley benchmark
+append` to record one generated attempt row in JSONL, and `parley benchmark
+summarize --log runs.jsonl` to aggregate attempts by task/language/model.
+
 ## Editor integration
 
 `parley-lsp` starts a stdio Language Server Protocol server. It publishes the
