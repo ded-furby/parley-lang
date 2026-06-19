@@ -354,7 +354,7 @@ parley package new mathkit
 parley package install mathkit ../mathkit --version 1.0.0
 parley package list
 parley package verify
-parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers"
+parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>"
 parley package check-registry registry.json
 ```
 
@@ -362,8 +362,9 @@ parley package check-registry registry.json
 package to `parley_modules/mathkit/` and records it in `parley.lock.json`.
 The lockfile includes the installed package SHA-256. `package verify` checks
 that vendored files still match the lockfile. `package publish` prints a
-registry-ready JSON entry with the same digest. `package check-registry`
-validates a registry manifest before you host it.
+registry-ready JSON entry with license, maintainer, and the same digest.
+`package check-registry` validates registry ownership metadata before you host
+it.
 
 For a registry manifest, use `parley package search --registry registry.json`
 and `parley package install mathkit --registry registry.json`. If the registry

@@ -9,7 +9,7 @@
   parley new myproject            start a new program
   parley doctor                   verify local setup
   parley package install name src vendor a local package
-  parley package publish name src print a registry-ready entry
+  parley package publish name src print a registry entry with owner metadata
   parley package verify           verify vendored packages against the lockfile
   parley package check-registry x validate a package registry manifest
   parley benchmark measure        measure the seed research corpus
@@ -512,6 +512,8 @@ def cmd_package_publish(args) -> int:
             "version": args.version,
             "source": source_ref,
             "description": args.description or "",
+            "license": args.license,
+            "maintainer": args.maintainer,
             "sha256": sha256,
         }
     except OSError as exc:
@@ -579,10 +581,13 @@ def cmd_package_check_registry(args) -> int:
                 _validate_package_name(name)
                 if not isinstance(entry, dict):
                     raise OSError(f"{name} registry entry must be an object")
-                if not str(entry.get("version") or "").strip():
-                    raise OSError(f"{name} registry entry is missing version")
-                if not str(entry.get("description") or "").strip():
-                    raise OSError(f"{name} registry entry is missing description")
+                missing = [
+                    field for field in ("version", "description", "license", "maintainer")
+                    if not str(entry.get(field) or "").strip()
+                ]
+                if missing:
+                    raise OSError("; ".join(
+                        f"{name} registry entry is missing {field}" for field in missing))
                 if not entry.get("sha256"):
                     raise OSError(f"{name} has no sha256")
                 expected_sha256 = _entry_sha256(entry)
@@ -743,6 +748,8 @@ def main(argv: list[str] | None = None) -> int:
     package_publish.add_argument("package_source")
     package_publish.add_argument("--version", required=True)
     package_publish.add_argument("--description", default="")
+    package_publish.add_argument("--license", required=True)
+    package_publish.add_argument("--maintainer", required=True)
     package_publish.add_argument("--source", help="source path or URL to place in the registry entry")
     package_publish.set_defaults(fn=cmd_package_publish)
     package_new = package_sub.add_parser("new", help="create a local package skeleton")

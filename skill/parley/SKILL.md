@@ -132,13 +132,16 @@ Use `parley package new name` to create a local package skeleton, then
 `parley_modules/name/`; names may contain letters, numbers, dashes,
 underscores, and dots. `parley package list` reads `parley.lock.json`.
 Registry manifests use `{"schema_version": 1, "packages": {"name":
-{"version": "1.0.0", "source": "path-or-url", "sha256": "..."}}}`. Search with
+{"version": "1.0.0", "source": "path-or-url", "description": "...",
+"license": "MIT", "maintainer": "Name <https://example.com>",
+"sha256": "..."}}}`. Search with
 `parley package search --registry registry.json`, then install with
 `parley package install name --registry registry.json`. When `sha256` is
 present, install verifies it before replacing an existing package and records
 the digest in `parley.lock.json`. Run `parley package verify` to check that
 vendored packages still match the lockfile. Use `parley package publish name
-path --version 1.0.0 --description "helpers"` to print a registry-ready entry.
+path --version 1.0.0 --description "helpers" --license MIT --maintainer
+"Name <https://example.com>"` to print a registry-ready entry.
 Use `parley package check-registry registry.json` before hosting a registry.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
@@ -199,9 +202,10 @@ The hosted starter index is
 * `parley package verify` checks installed package digests against
   `parley.lock.json`; run it after package installs or before release.
 * `parley package check-registry registry.json` validates package names,
-  required metadata, readable sources, and SHA-256 matches before a registry is
-  hosted.
-* `parley package publish name path --version X --description "..."` prints
-  the registry entry for a local package, including the deterministic SHA-256.
+  required version, description, license, maintainer, and source metadata,
+  readable sources, and SHA-256 matches before a registry is hosted.
+* `parley package publish name path --version X --description "..." --license
+  MIT --maintainer "Name <https://example.com>"` prints the registry entry for
+  a local package, including the deterministic SHA-256.
 * The hosted starter package index is
   `https://ded-furby.github.io/parley-lang/registry.json`.

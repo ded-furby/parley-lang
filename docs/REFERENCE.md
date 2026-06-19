@@ -257,6 +257,7 @@ Registry manifests use JSON:
 ```json
 {"schema_version": 1, "packages": {"mathkit": {
   "version": "1.0.0", "source": "../mathkit", "description": "math helpers",
+  "license": "MIT", "maintainer": "Your Name <https://example.com>",
   "sha256": "..."
 }}}
 ```
@@ -270,10 +271,11 @@ URL, or an `http(s)` URL pointing at a `.par` file. When the registry entry has
 copy and writes the digest to `parley.lock.json`.
 
 Use `parley package publish mathkit path --version 1.0.0 --description
-"math helpers" --source packages/mathkit/main.par` to print a registry-ready
-JSON entry with the deterministic package SHA-256. Directory packages hash every
-file by relative path and content; single-file packages hash the installed
-`main.par` layout.
+"math helpers" --license MIT --maintainer "Your Name <https://example.com>"
+--source packages/mathkit/main.par` to print a registry-ready JSON entry with
+license, maintainer, and the deterministic package SHA-256. Directory packages
+hash every file by relative path and content; single-file packages hash the
+installed `main.par` layout.
 
 Use `parley package verify` after checkout, install, or before release. It
 reads `parley.lock.json`, recomputes each vendored package digest, prints `OK`
@@ -281,9 +283,10 @@ for packages that still match, and exits non-zero if a package is missing, has
 no recorded `sha256`, or has been modified locally.
 
 Use `parley package check-registry registry.json` before hosting a registry.
-It validates package names, required `version`, `description`, `source`, and
-`sha256` fields, resolves each source from the registry location, recomputes
-the package digest, and exits non-zero if any entry is incomplete or changed.
+It validates package names, required `version`, `description`, `license`,
+`maintainer`, `source`, and `sha256` fields, resolves each source from the
+registry location, recomputes the package digest, and exits non-zero if any
+entry is incomplete or changed.
 
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

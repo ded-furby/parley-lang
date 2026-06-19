@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.17** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 171 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.18** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 172 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -95,6 +95,10 @@ Update it whenever you finish or start a work item.
   validates public package manifests before hosting: package names, required
   version/description/source fields, mandatory `sha256`, readable sources, and
   digest matches.
+- **v0.3.18 package ownership metadata:** public registry entries now carry
+  required `license` and `maintainer` fields, `parley package publish` requires
+  them when printing a registry entry, and `parley package check-registry`
+  rejects hosted manifests that omit either field.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -145,8 +149,9 @@ Update it whenever you finish or start a work item.
    `parley benchmark summarize`. Still needed: repeated agent error-rate runs
    and a result write-up.
 2. **Signed package publishing workflow** — checksum installs, publish-entry
-   generation, lock verification, and registry validation exist; still needed
-   later: signed releases, package submission rules, and version governance.
+   generation, lock verification, registry validation, and ownership metadata
+   exist; still needed later: signature verification, submission review, and
+   version governance.
 
 ## Working on the compiler: the contract
 
@@ -162,7 +167,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.17).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.18).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

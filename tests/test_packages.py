@@ -77,6 +77,8 @@ def test_package_search_reads_registry_manifest(workdir, tmp_path):
                 "version": "1.2.3",
                 "source": "registrykit-src",
                 "description": "triples numbers",
+                "license": "MIT",
+                "maintainer": "Registry Team <https://example.com>",
             }
         },
     }))
@@ -193,6 +195,8 @@ def test_package_publish_prints_registry_entry_with_sha256(workdir, tmp_path):
             "package", "publish", "mathkit", str(source),
             "--version", "1.2.3",
             "--description", "small math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
         ],
         cwd=workdir,
     )
@@ -204,6 +208,8 @@ def test_package_publish_prints_registry_entry_with_sha256(workdir, tmp_path):
         "version": "1.2.3",
         "source": "packages/mathkit",
         "description": "small math helpers",
+        "license": "MIT",
+        "maintainer": "Arjun Avtani <https://github.com/ded-furby>",
         "sha256": sha256,
     }
 
@@ -279,6 +285,8 @@ def test_package_check_registry_accepts_checksum_manifest(workdir, tmp_path):
                 "version": "1.2.3",
                 "source": "registrykit-src",
                 "description": "triples numbers",
+                "license": "MIT",
+                "maintainer": "Registry Team <https://example.com>",
                 "sha256": sha256,
             }
         },
@@ -303,6 +311,8 @@ def test_package_check_registry_rejects_bad_checksum(workdir, tmp_path):
                 "version": "1.2.3",
                 "source": "registrykit-src",
                 "description": "triples numbers",
+                "license": "MIT",
+                "maintainer": "Registry Team <https://example.com>",
                 "sha256": "0" * 64,
             }
         },
@@ -327,6 +337,8 @@ def test_package_check_registry_requires_sha256(workdir, tmp_path):
                 "version": "1.2.3",
                 "source": "registrykit-src",
                 "description": "triples numbers",
+                "license": "MIT",
+                "maintainer": "Registry Team <https://example.com>",
             }
         },
     }))
@@ -335,6 +347,32 @@ def test_package_check_registry_requires_sha256(workdir, tmp_path):
 
     assert check.returncode == 1
     assert "registrykit has no sha256" in check.stderr
+
+
+def test_package_check_registry_requires_license_and_maintainer(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    content = "to triple with n as number giving number:\n    give back n times 3\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "1.2.3",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+                "sha256": sha256,
+            }
+        },
+    }))
+
+    check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+
+    assert check.returncode == 1
+    assert "registrykit registry entry is missing license" in check.stderr
+    assert "registrykit registry entry is missing maintainer" in check.stderr
 
 
 def test_site_registry_manifest_can_install_package(workdir):
@@ -346,8 +384,13 @@ def test_site_registry_manifest_can_install_package(workdir):
     for entry in data["packages"].values():
         source = registry.parent / entry["source"]
         assert source.is_file()
+        assert entry["license"] == "MIT"
+        assert entry["maintainer"] == "Arjun Avtani <https://github.com/ded-furby>"
         expected = hashlib.sha256(b"main.par\0" + source.read_bytes()).hexdigest()
         assert entry["sha256"] == expected
+
+    registry_check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+    assert registry_check.returncode == 0, registry_check.stderr
 
     search = run_cli(["package", "search", "--registry", str(registry)], cwd=workdir)
     assert search.returncode == 0, search.stderr

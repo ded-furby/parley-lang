@@ -140,11 +140,13 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   `parley.lock.json` with the deterministic package SHA-256. Registry entries
   may include `sha256`; when present, install verifies it before replacing an
   existing vendored package. `parley package publish name source --version X`
-  prints a registry-ready entry with that digest. `parley package verify`
+  requires license and maintainer metadata, then prints a registry-ready entry
+  with those fields and that digest. `parley package verify`
   recomputes vendored package digests from the lockfile and fails if a package
   is missing, unchecked, or modified. `parley package check-registry registry`
   validates a public registry manifest before hosting by checking package
-  names, required metadata, readable sources, and digest matches.
+  names, required version, description, license, maintainer, and source
+  metadata, readable sources, and digest matches.
 * `parley doctor` verifies the installed toolchain: Parley version, Python
   version, Rust `cargo`, bundled standard packages, and local package state.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
