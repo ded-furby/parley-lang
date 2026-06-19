@@ -247,6 +247,9 @@ Use `include "std/list"` for common list helpers:
 | `average_decimal with xs` | decimal average |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
+| `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
+| `count_yes with xs` / `count_no with xs` | count yes or no values |
+| `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 
 Use `include "std/map"` for common map helpers:
 

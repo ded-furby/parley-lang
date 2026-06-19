@@ -144,3 +144,45 @@ to maybe_average_decimal with xs as list of decimal giving maybe decimal:
         give back nothing
     let value be (average_decimal with xs)
     give back some value
+
+to all_yes with xs as list of yesno giving yesno:
+    for each value in xs:
+        if value is no:
+            give back no
+    give back yes
+
+to any_yes with xs as list of yesno giving yesno:
+    for each value in xs:
+        if value:
+            give back yes
+    give back no
+
+to count_yes with xs as list of yesno giving number:
+    let count be 0
+    for each value in xs:
+        if value:
+            set count to count plus 1
+    give back count
+
+to count_no with xs as list of yesno giving number:
+    let count be 0
+    for each value in xs:
+        if value is no:
+            set count to count plus 1
+    give back count
+
+to index_yes with xs as list of yesno giving maybe number:
+    let index be 1
+    for each value in xs:
+        if value:
+            give back some index
+        set index to index plus 1
+    give back nothing
+
+to index_no with xs as list of yesno giving maybe number:
+    let index be 1
+    for each value in xs:
+        if value is no:
+            give back some index
+        set index to index plus 1
+    give back nothing

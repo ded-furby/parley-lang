@@ -362,6 +362,18 @@ to main:
     say (maybe_smallest_decimal with empty_decimals)
     say (maybe_largest_decimal with empty_decimals)
     say (maybe_average_decimal with empty_decimals)
+    let flags be a list of yes, no, yes
+    say (all_yes with flags)
+    say (any_yes with flags)
+    say (count_yes with flags)
+    say (count_no with flags)
+    say (index_yes with flags)
+    say (index_no with flags)
+    let empty_flags be an empty list of yesno
+    say (all_yes with empty_flags)
+    say (any_yes with empty_flags)
+    say (index_yes with empty_flags)
+    say (index_no with empty_flags)
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
@@ -370,7 +382,8 @@ to main:
         "red\nred\n2\nnothing\nred\nred\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\nnothing\nnothing\n"
-        "1.5\n2.5\n2\nnothing\nnothing\nnothing\n")
+        "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
+        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\nnothing\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

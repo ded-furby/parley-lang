@@ -349,6 +349,9 @@ to main:
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
     say (maybe_largest_decimal with prices)
+    let flags be a list of yes, no, yes
+    say (all_yes with flags)
+    say (index_no with flags)
     let counts be a map from text to number
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)
