@@ -129,7 +129,9 @@ Bundled packages are available as `include "std/math"` (`clamped`, `between`,
 `index_number`, `average_number`, `first_text`, `last_text`, `count_text`,
 `index_text`, `first_decimal`, `last_decimal`, `count_decimal`,
 `index_decimal`, `average_decimal`), and `include "std/map"` (`number_at`,
-`number_or`, `add_count`, `text_at`, `text_or`).
+`number_or`, `add_count`, `text_at`, `text_or`, `number_key_number_at`,
+`number_key_number_or`, `add_number_key_count`, `number_key_text_at`,
+`number_key_text_or`).
 Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into
 `parley_modules/name/`; names may contain letters, numbers, dashes,

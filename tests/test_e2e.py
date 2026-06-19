@@ -356,9 +356,26 @@ to main:
     set item "a" of labels to "alpha"
     say (text_at with labels, "a")
     say (text_or with labels, "b", "missing")
+
+    let seats be a map from number to number
+    set item 7 of seats to 42
+    say (number_key_number_at with seats, 7)
+    say (number_key_number_at with seats, 8)
+    say (number_key_number_or with seats, 8, 0)
+    add_number_key_count with seats, 7
+    add_number_key_count with seats, 8
+    say item 7 of seats
+    say item 8 of seats
+
+    let names be a map from number to text
+    set item 1 of names to "one"
+    say (number_key_text_at with names, 1)
+    say (number_key_text_or with names, 2, "missing")
 '''
     proc = run_program(workdir, "bundled_std_map", src)
-    assert proc.stdout == "36\nnothing\n0\n37\n1\nalpha\nmissing\n"
+    assert proc.stdout == (
+        "36\nnothing\n0\n37\n1\nalpha\nmissing\n"
+        "42\nnothing\n0\n43\n1\none\nmissing\n")
 
 
 def test_build_produces_native_binary(workdir):

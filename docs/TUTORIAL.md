@@ -348,6 +348,9 @@ to main:
     let counts be a map from text to number
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)
+    let seats be a map from number to number
+    add_number_key_count with seats, 7
+    say (number_key_number_or with seats, 7, 0)
 ```
 
 To vendor a local package into a project:

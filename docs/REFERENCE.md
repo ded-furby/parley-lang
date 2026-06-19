@@ -240,7 +240,7 @@ Use `include "std/list"` for common list helpers:
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
 
-Use `include "std/map"` for common text-key map helpers:
+Use `include "std/map"` for common map helpers:
 
 | Function | Gives |
 |---|---|
@@ -249,6 +249,11 @@ Use `include "std/map"` for common text-key map helpers:
 | `add_count with changing m, key` | increments a text-key count in place |
 | `text_at with m, key` | maybe text from a `map from text to text` |
 | `text_or with m, key, fallback` | text or fallback |
+| `number_key_number_at with m, key` | maybe number from a `map from number to number` |
+| `number_key_number_or with m, key, fallback` | number or fallback |
+| `add_number_key_count with changing m, key` | increments a number-key count in place |
+| `number_key_text_at with m, key` | maybe text from a `map from number to text` |
+| `number_key_text_or with m, key, fallback` | text or fallback |
 
 ## Local packages
 
