@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.22** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 181 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.23** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 183 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -113,6 +113,9 @@ Update it whenever you finish or start a work item.
   can attach HMAC-SHA256 release signatures, and `parley package
   check-registry --require-signatures --signing-secret ...` rejects unsigned or
   tampered registry entries before hosting.
+- **v0.3.23 benchmark prompts:** `parley benchmark prompt` renders
+  language-neutral prompts from `benchmarks/tasks.json`, so repeated agent
+  runs can use the same task wording without exposing reference sources.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -156,7 +159,8 @@ Update it whenever you finish or start a work item.
 
 ### Not started (the remaining roadmap, in suggested order)
 
-1. **Run the benchmark study** (goal 3). `parley benchmark measure` now measures
+1. **Run the benchmark study** (goal 3). `parley benchmark prompt` now renders
+   language-neutral task prompts, `parley benchmark measure` measures
    Parley/Python/Rust seed references, supports optional `tiktoken` token
    counts, checks Parley with JSON diagnostics, and captures generated attempts
    to JSONL with `parley benchmark append` and summary analysis through
@@ -183,7 +187,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.22).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.23).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

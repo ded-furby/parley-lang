@@ -185,12 +185,15 @@ machine-readable report with an `ok` field and one entry per check.
 
 ## Benchmark research
 
-From a source checkout, `parley benchmark measure` runs the Phase 1 seed
-corpus metrics for Parley, Python, and Rust references. It forwards the same
-options as `benchmarks/measure.py`, including `--format json`, `--no-check`,
-`--languages`, `--output`, and `--llm-tokenizer`. Use `parley benchmark
-append` to record one generated attempt row in JSONL, and `parley benchmark
-summarize --log runs.jsonl` to aggregate attempts by task/language/model.
+From a source checkout, `parley benchmark prompt --task hello --language parley`
+renders the language-neutral prompt for one seed task. Omit `--task` to render
+all prompts, or use `--format json` for automation. `parley benchmark measure`
+runs the Phase 1 seed corpus metrics for Parley, Python, and Rust references.
+It forwards the same options as `benchmarks/measure.py`, including
+`--format json`, `--no-check`, `--languages`, `--output`, and
+`--llm-tokenizer`. Use `parley benchmark append` to record one generated
+attempt row in JSONL, and `parley benchmark summarize --log runs.jsonl` to
+aggregate attempts by task/language/model.
 
 ## Editor integration
 

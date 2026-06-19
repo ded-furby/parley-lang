@@ -21,6 +21,8 @@ benchmarks/results/parley_seed_metrics.json
 For automation:
 
 ```bash
+parley benchmark prompt --task hello --language parley
+parley benchmark prompt --language python --format json --output /tmp/python_prompts.json
 parley benchmark measure --format json --output /tmp/parley_seed_metrics.json
 parley benchmark measure --no-check
 parley benchmark measure --languages parley,rust
@@ -68,6 +70,7 @@ documented interface from the source checkout.
 - The Phase 1 task list and reference source paths are explicit in
   `benchmarks/tasks.json`.
 - Each task has Parley, Python, and Rust reference sources.
+- Language-neutral prompts are reproducible from the same manifest.
 - Source-size metrics are reproducible inside the repo for all three
   languages.
 - LLM-token counts can be produced with a named `tiktoken` encoding.

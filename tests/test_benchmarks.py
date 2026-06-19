@@ -23,6 +23,16 @@ def run_measure(*args: str, env: dict[str, str] | None = None) -> subprocess.Com
     )
 
 
+def run_prompts(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(BENCHMARKS / "prompts.py"), *args],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+
 def run_runlog(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(BENCHMARKS / "runlog.py"), *args],
@@ -128,6 +138,29 @@ def test_benchmark_measure_llm_tokenizer_counts_with_tiktoken(tmp_path):
     assert report["totals"]["by_language"]["python"]["llm_tokens"] > 0
     assert report["totals"]["by_language"]["rust"]["llm_tokens"] > 0
     assert all("llm_tokens" in row["metrics"]["parley"] for row in report["tasks"])
+
+
+def test_benchmark_prompt_renders_language_neutral_task():
+    proc = run_prompts("--task", "hello", "--language", "parley")
+    assert proc.returncode == 0, proc.stderr
+
+    assert "# Benchmark task: Hello and interpolation" in proc.stdout
+    assert "Target language: Parley" in proc.stdout
+    assert "Print a greeting and a simple arithmetic result using interpolation." in proc.stdout
+    assert "Do not inspect the reference implementation" in proc.stdout
+    assert "examples/hello.par" not in proc.stdout
+
+
+def test_benchmark_prompt_json_lists_all_tasks():
+    proc = run_prompts("--language", "python", "--format", "json")
+    assert proc.returncode == 0, proc.stderr
+
+    payload = json.loads(proc.stdout)
+    assert payload["schema_version"] == 1
+    assert payload["language"] == "python"
+    assert payload["totals"]["prompts"] == 10
+    assert payload["prompts"][0]["task_id"] == "hello"
+    assert "Target language: Python" in payload["prompts"][0]["prompt"]
 
 
 def test_runlog_append_captures_attempt_artifacts(tmp_path):

@@ -25,9 +25,10 @@ Use `parley doctor --json` to verify a fresh install before starting a larger
 program or debugging an environment problem.
 For editor diagnostics, run `parley-lsp` as a stdio Language Server Protocol
 server; it emits the same P-code diagnostics as `parley check --json`.
-For research runs from the source checkout, use `parley benchmark measure
---format json` for seed-corpus metrics and `parley benchmark summarize --log
-runs.jsonl --format json` for attempt summaries.
+For research runs from the source checkout, use `parley benchmark prompt
+--task hello --language parley` for language-neutral prompts, `parley benchmark
+measure --format json` for seed-corpus metrics, and `parley benchmark
+summarize --log runs.jsonl --format json` for attempt summaries.
 
 ## The whole language on one screen
 
@@ -204,8 +205,9 @@ The hosted starter index is
   launch a stdio LSP server.
 * `parley doctor --json` reports Parley, Python, cargo, bundled stdlib, and
   local package readiness.
-* `parley benchmark measure` and `parley benchmark summarize` expose the
-  research harness from the source checkout.
+* `parley benchmark prompt`, `parley benchmark measure`, and
+  `parley benchmark summarize` expose the research harness from the source
+  checkout.
 * `parley package search --registry registry.json` and `parley package install
   name --registry registry.json` use schema-1 package registries. Prefer
   registry entries with `sha256`; installs reject mismatches before overwriting

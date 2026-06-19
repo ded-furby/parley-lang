@@ -21,6 +21,7 @@ tmp="$(mktemp -d)" && mkdir -p "$tmp/packages/demo_pkg" && printf 'to ready givi
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && hash="$(python3 -c 'import hashlib, pathlib, sys; p=pathlib.Path(sys.argv[1]); print(hashlib.sha256(b"main.par\0"+(p/"main.par").read_bytes()).hexdigest())' "$tmp/demo_pkg")" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package","license":"MIT","maintainer":"Demo Maintainer <https://example.com>","sha256":"%s"}}}\n' "$hash" > "$tmp/registry.json" && (cd "$tmp" && parley package check-registry registry.json && parley package search --registry registry.json && parley package install demo_pkg --registry registry.json && parley package verify)
 parley doctor --json
 parley --version
+parley benchmark prompt --task hello --language parley
 parley benchmark measure --no-check --format json --output /tmp/parley_seed_metrics.json
 parley run examples/hello.par
 ```
@@ -62,9 +63,10 @@ The e2e tests require Rust and `cargo`.
 - Keep `site/registry.json` and `site/packages/` deployed through
   `scripts/deploy_pages.sh`; the hosted starter index lives at
   `https://ded-furby.github.io/parley-lang/registry.json`.
-- Keep `parley benchmark measure --format json` working from a source
-  checkout; it is the research readiness proof for the seed corpus, whose
-  manifest records the Parley, Python, and Rust reference sources.
+- Keep `parley benchmark prompt --task hello --language parley` and
+  `parley benchmark measure --format json` working from a source checkout; they
+  are the research readiness proof for the seed corpus, whose manifest records
+  the Parley, Python, and Rust reference sources.
 
 ## CI
 
@@ -144,8 +146,9 @@ python3 -m twine check dist/*
 - `/404.html` renders as a branded error page.
 - The README install path is true.
 - The skill file matches the current syntax.
-- The benchmark CLI can measure the seed corpus, whose manifest records the
-  Parley/Python/Rust reference sources, and summarize a run log.
+- The benchmark CLI can render language-neutral prompts, measure the seed
+  corpus whose manifest records the Parley/Python/Rust reference sources, and
+  summarize a run log.
 - The package CLI can search a schema-1 registry, install a listed package,
   reject a bad checksum, verify a locked install, validate a registry manifest,
   dry-run a submission review, print a publish entry with license and

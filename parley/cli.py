@@ -14,6 +14,7 @@
   parley package verify           verify vendored packages against the lockfile
   parley package check-registry x validate a package registry manifest
   parley benchmark measure        measure the seed research corpus
+  parley benchmark prompt         render language-neutral benchmark prompts
 """
 
 from __future__ import annotations
@@ -820,6 +821,15 @@ def cmd_benchmark_measure(args) -> int:
     return module.main(args.benchmark_args)
 
 
+def cmd_benchmark_prompt(args) -> int:
+    try:
+        module = _load_benchmark_script("prompts")
+    except OSError as exc:
+        print(f"benchmark error: {exc}", file=sys.stderr)
+        return 1
+    return module.main(args.benchmark_args)
+
+
 def cmd_benchmark_runlog(args) -> int:
     try:
         module = _load_benchmark_script("runlog")
@@ -835,6 +845,8 @@ def main(argv: list[str] | None = None) -> int:
         bench_cmd, bench_args = raw_argv[1], raw_argv[2:]
         if bench_cmd == "measure":
             return cmd_benchmark_measure(argparse.Namespace(benchmark_args=bench_args))
+        if bench_cmd == "prompt":
+            return cmd_benchmark_prompt(argparse.Namespace(benchmark_args=bench_args))
         if bench_cmd in {"append", "summarize"}:
             return cmd_benchmark_runlog(argparse.Namespace(
                 runlog_cmd=bench_cmd,
@@ -935,6 +947,9 @@ def main(argv: list[str] | None = None) -> int:
     measure = benchmark_sub.add_parser("measure", help="measure the seed benchmark corpus")
     measure.add_argument("benchmark_args", nargs=argparse.REMAINDER)
     measure.set_defaults(fn=cmd_benchmark_measure)
+    prompt = benchmark_sub.add_parser("prompt", help="render language-neutral benchmark prompts")
+    prompt.add_argument("benchmark_args", nargs=argparse.REMAINDER)
+    prompt.set_defaults(fn=cmd_benchmark_prompt)
     append = benchmark_sub.add_parser("append", help="append one benchmark attempt log row")
     append.add_argument("benchmark_args", nargs=argparse.REMAINDER)
     append.set_defaults(fn=cmd_benchmark_runlog, runlog_cmd="append")
