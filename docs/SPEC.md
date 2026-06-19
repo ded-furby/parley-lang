@@ -109,9 +109,11 @@ parse-relevant highlights:
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
 * **Text operations** such as `split by`, `joined with`, `starts with`,
-  `ends with`, `contains`, and `replacing old with new` are deterministic
-  UTF-8 string operations. Replacement returns a new text value and does not
-  mutate the original text.
+  `ends with`, `contains`, `replacing old with new`, and
+  `position of needle in text` are deterministic UTF-8 string operations.
+  Replacement returns a new text value and does not mutate the original text.
+  Position returns `some n` with a 1-based character position, or `nothing`
+  when the needle is absent.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative

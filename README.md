@@ -132,8 +132,8 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
-`replacing … with …`, `uppercase of`, `contains`, line/word counts,
-word/line extraction, …) · number/text/decimal list
+`replacing … with …`, `position of … in …`, `uppercase of`, `contains`,
+line/word counts, word/line extraction, …) · number/text/decimal list
 helpers with safe maybe first/last/index and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
@@ -212,6 +212,7 @@ the plan:
 - [x] decimal helper variants for bundled `std/math` — v0.3.31
 - [x] word and non-empty line extraction helpers for bundled `std/text` — v0.3.32
 - [x] text replacement expression (`text replacing old with new`) — v0.3.33
+- [x] text search position expression (`position of needle in text`) — v0.3.34
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
@@ -220,7 +221,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 189 tests; e2e compiles real binaries (needs cargo)
+pytest            # 194 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

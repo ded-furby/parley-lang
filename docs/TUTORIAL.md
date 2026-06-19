@@ -134,6 +134,7 @@ to main:
     say length of parts
     say parts joined with " + "
     say line replacing "flour" with "bread"
+    say position of "eggs" in line
     say uppercase of "quiet"
     if line starts with "milk":
         say "dairy first"

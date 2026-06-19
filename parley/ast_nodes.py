@@ -429,6 +429,12 @@ class ReplacingWith(Expr):
 
 
 @dataclass
+class PositionOf(Expr):
+    needle: Expr
+    value: Expr
+
+
+@dataclass
 class PrefixOp(Expr):
     """English prefix builtins: length of, sum of, sorted, value of, ..."""
     op: str

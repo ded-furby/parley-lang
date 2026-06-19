@@ -97,6 +97,12 @@ def test_text_replacement_emits_rust_replace():
     assert ').as_str(), (' in rust
 
 
+def test_text_position_emits_utf8_safe_helper():
+    rust = emit_text('to main:\n    say position of "c" in "écart"\n')
+    assert "fn parley_position" in rust
+    assert "parley_position(&(" in rust
+
+
 def test_division_is_guarded_and_decimal():
     rust = emit_text("to main:\n    say 10 divided by 4\n")
     assert "parley_div" in rust

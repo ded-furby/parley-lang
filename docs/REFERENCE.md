@@ -92,6 +92,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `t split by ","` | `.split(…).collect()` | list of text |
 | `xs joined with ", "` | `.join(…)` (list of text) | text |
 | `t replacing old with new` | `.replace(old, new)` | text |
+| `position of needle in t` | UTF-8-safe substring search | maybe number |
 | `"{x} and {y}"` | `format!("{} and {}", x, y)` | text |
 | `(f with a, b)` | `f(a, b)` — calls in expressions take parens | |
 | `bob's name` | `bob.name` | field type |

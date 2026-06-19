@@ -105,13 +105,16 @@ def test_text_toolbox(workdir):
     say length of t
     say reversed "stressed"
     say t replacing "Quick" with "Quiet"
+    say position of "Quick" in t
+    say position of "Cat" in t
+    say position of "c" in "écart"
     if t starts with "The" and t ends with "Fox":
         say "framed"
     say "quick" contains "ick"
 '''
     proc = run_program(workdir, "text_toolbox", src)
     assert proc.stdout == (
-        "the quick fox\nTHE QUICK FOX\n13\ndesserts\nThe Quiet Fox\nframed\nyes\n")
+        "the quick fox\nTHE QUICK FOX\n13\ndesserts\nThe Quiet Fox\n5\nnothing\n2\nframed\nyes\n")
 
 
 def test_math_toolbox(workdir):

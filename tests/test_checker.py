@@ -79,6 +79,8 @@ CASES = [
     ("replace_target_needs_text", in_main('say 5 replacing "x" with "y"'), "P301", "needs text"),
     ("replace_old_needs_text", in_main('say "abc" replacing 1 with "x"'), "P301", "needs text"),
     ("replace_new_needs_text", in_main('say "abc" replacing "a" with 1'), "P301", "needs text"),
+    ("position_needle_needs_text", in_main('say position of 1 in "abc"'), "P301", "needs text"),
+    ("position_text_needs_text", in_main('say position of "a" in 5'), "P301", "needs text"),
 ]
 
 
@@ -132,6 +134,10 @@ def test_zero_arg_function_used_as_value():
 
 def test_text_replacement_expression_is_clean():
     assert check_text(in_main('say "one fish" replacing "one" with "two"')) == []
+
+
+def test_text_position_expression_is_maybe_number():
+    assert check_text(in_main('let found be position of "fish" in "one fish"', "say found")) == []
 
 
 def test_block_scoping_let_dies_with_block():

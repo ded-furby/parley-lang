@@ -110,7 +110,8 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 `remainder of a divided by b`, `a to the power of b`,
 `is / is not / is more than / is less than / is at least / is at most`,
 `and or not`, `contains`, `starts with`, `ends with`,
-`t split by ","`, `xs joined with ", "`, `t replacing old with new`.
+`t split by ","`, `xs joined with ", "`, `t replacing old with new`,
+`position of needle in t`.
 
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·
@@ -187,8 +188,9 @@ The hosted starter index is
 4. **`let` is block-scoped, no shadowing.** Create before the `if`/loop if
    you need it after. `set` changes; `let` creates.
 5. **Reserved vocabulary.** `a an is of to item ask sorted reversed trimmed
-   rounded contains times changing plus minus yes no nothing not and or` and
-   statement keywords cannot be names — P209 tells you and suggests one.
+   rounded contains replacing position times changing plus minus yes no
+   nothing not and or` and statement keywords cannot be names — P209 tells
+   you and suggests one.
 6. **maybes must be checked.** Use `some x` to construct a present maybe value;
    `value of` on nothing stops the program.
 7. **`repeat` counts are atoms**: `repeat (n plus 1) times:`.

@@ -200,6 +200,13 @@ fn parley_split(s: &str, sep: &str) -> Vec<String> {
     s.split(sep).map(|p| p.to_string()).collect()
 }
 
+fn parley_position(needle: &str, text: &str) -> Option<i64> {
+    text.find(needle).map(|byte_index| {
+        let chars_before = text[..byte_index].chars().count() as i64;
+        chars_before + 1
+    })
+}
+
 fn parley_div(a: f64, b: f64) -> f64 {
     if b == 0.0 { panic!("Cannot divide by zero."); }
     a / b
@@ -467,6 +474,8 @@ class Emitter:
                 | self.mutated_names_in_expr(e.old)
                 | self.mutated_names_in_expr(e.new)
             )
+        if isinstance(e, A.PositionOf):
+            return self.mutated_names_in_expr(e.needle) | self.mutated_names_in_expr(e.value)
         if isinstance(e, A.Remainder):
             return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
         if isinstance(e, A.ItemOf):
@@ -651,6 +660,8 @@ class Emitter:
                 f"({self.borrow(e.old)}).as_str(), "
                 f"({self.borrow(e.new)}).as_str())"
             )
+        if isinstance(e, A.PositionOf):
+            return f"parley_position(&({self.borrow(e.needle)}), &({self.borrow(e.value)}))"
         if isinstance(e, A.PrefixOp):
             return self._value_prefix(e)
         if isinstance(e, A.Remainder):

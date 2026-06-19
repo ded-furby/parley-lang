@@ -154,6 +154,7 @@ closure_param: NAME "as" type
 ?pow_e: unary
       | unary _POW unary        -> pow_op
 ?unary: _MINUS unary            -> neg
+      | _POSITION_OF sum_e "in" unary -> position_of
       | _LENGTH_OF unary        -> length_of
       | _SUM_OF unary           -> sum_of
       | _SMALLEST_OF unary      -> smallest_of
@@ -225,6 +226,7 @@ _TIMES.2: /times\b/ | "*"
 CHANGING.2: /changing\b/
 
 _LENGTH_OF.2: /length +of\b/
+_POSITION_OF.2: /position +of\b/
 _SUM_OF.2: /sum +of\b/
 _SMALLEST_OF.2: /smallest +of\b/
 _LARGEST_OF.2: /largest +of\b/
