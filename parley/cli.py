@@ -9,12 +9,14 @@
   parley new myproject            start a new program
   parley doctor                   verify local setup
   parley package install name src vendor a local package
+  parley package publish name src print a registry-ready entry
   parley benchmark measure        measure the seed research corpus
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 from importlib import resources
 import json
@@ -62,6 +64,7 @@ to package_ready giving yesno:
 
 LOCK_FILE = "parley.lock.json"
 PACKAGE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 DEFAULT_REGISTRY = "parley.registry.json"
 
 
@@ -375,6 +378,16 @@ def _registry_entry(registry: dict, name: str) -> dict:
     return entry
 
 
+def _entry_sha256(entry: dict) -> str | None:
+    value = entry.get("sha256")
+    if value is None:
+        return None
+    digest = str(value).strip()
+    if not SHA256_RE.fullmatch(digest):
+        raise OSError("package registry sha256 must be 64 hex characters")
+    return digest.lower()
+
+
 def _resolve_registry_source(source: str, base: str) -> str:
     if _is_url(source):
         return source
@@ -382,6 +395,32 @@ def _resolve_registry_source(source: str, base: str) -> str:
         return urljoin(base, source)
     path = Path(source)
     return str(path if path.is_absolute() else Path(base) / path)
+
+
+def _update_package_hash(sha, name: str, data: bytes) -> None:
+    sha.update(name.encode("utf-8"))
+    sha.update(b"\0")
+    sha.update(data)
+
+
+def _package_sha256(source: Path) -> str:
+    if source.is_file():
+        sha = hashlib.sha256()
+        _update_package_hash(sha, "main.par", source.read_bytes())
+        return sha.hexdigest()
+    if source.is_dir():
+        if not (source / "main.par").is_file():
+            raise OSError("package directories need a main.par file")
+        sha = hashlib.sha256()
+        files = sorted(p for p in source.rglob("*") if p.is_file())
+        for path in files:
+            _update_package_hash(
+                sha,
+                path.relative_to(source).as_posix(),
+                path.read_bytes(),
+            )
+        return sha.hexdigest()
+    raise OSError(f"package source does not exist: {source}")
 
 
 def _materialize_package_source(source: str, temp_root: Path | None = None) -> Path:
@@ -423,12 +462,14 @@ def cmd_package_install(args) -> int:
     try:
         _validate_package_name(args.name)
         registry_path = None
+        expected_sha256 = None
         version = args.version
         source_text = args.source
         if args.registry:
             registry, registry_base = _read_registry(args.registry)
             entry = _registry_entry(registry, args.name)
             registry_path = args.registry
+            expected_sha256 = _entry_sha256(entry)
             source_text = source_text or _resolve_registry_source(str(entry["source"]), registry_base)
             version = version or str(entry.get("version") or "0.0.0")
         if not source_text:
@@ -437,12 +478,17 @@ def cmd_package_install(args) -> int:
         target = Path("parley_modules") / args.name
         with tempfile.TemporaryDirectory(prefix="parley-package-") as tmp:
             source = _materialize_package_source(source_text, Path(tmp))
+            actual_sha256 = _package_sha256(source)
+            if expected_sha256 is not None and actual_sha256 != expected_sha256:
+                raise OSError(
+                    f"sha256 mismatch for {args.name}: expected {expected_sha256}, got {actual_sha256}")
             _copy_package_source(source, target)
         lock = _read_lock()
         lock["packages"][args.name] = {
             "version": version,
             "source": source_text,
             "path": target.as_posix(),
+            "sha256": actual_sha256,
         }
         if registry_path is not None:
             lock["packages"][args.name]["registry"] = registry_path
@@ -451,6 +497,25 @@ def cmd_package_install(args) -> int:
         print(f"package error: {exc}", file=sys.stderr)
         return 1
     print(f"Installed {args.name} {version} -> {target.as_posix()}")
+    return 0
+
+
+def cmd_package_publish(args) -> int:
+    try:
+        _validate_package_name(args.name)
+        source = Path(args.package_source).resolve()
+        sha256 = _package_sha256(source)
+        source_ref = args.source or (f"packages/{args.name}" if source.is_dir() else source.name)
+        entry = {
+            "version": args.version,
+            "source": source_ref,
+            "description": args.description or "",
+            "sha256": sha256,
+        }
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+    print(json.dumps({"name": args.name, "entry": entry}, indent=2, sort_keys=True))
     return 0
 
 
@@ -590,6 +655,14 @@ def main(argv: list[str] | None = None) -> int:
     install.add_argument("--version")
     install.add_argument("--registry", help="registry manifest JSON path or URL")
     install.set_defaults(fn=cmd_package_install)
+    package_publish = package_sub.add_parser(
+        "publish", help="print a registry-ready package entry")
+    package_publish.add_argument("name")
+    package_publish.add_argument("package_source")
+    package_publish.add_argument("--version", required=True)
+    package_publish.add_argument("--description", default="")
+    package_publish.add_argument("--source", help="source path or URL to place in the registry entry")
+    package_publish.set_defaults(fn=cmd_package_publish)
     package_new = package_sub.add_parser("new", help="create a local package skeleton")
     package_new.add_argument("name")
     package_new.set_defaults(fn=cmd_package_new)

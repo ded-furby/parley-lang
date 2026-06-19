@@ -15,7 +15,8 @@ parley check examples/higher_order.par --json
 python3 -m pytest tests/test_parser.py::test_include_bundled_std_package tests/test_e2e.py::test_bundled_std_packages_run tests/test_e2e.py::test_bundled_std_list_package_runs tests/test_e2e.py::test_bundled_std_map_package_runs
 python3 -m pytest tests/test_packages.py
 tmp="$(mktemp -d)" && (cd "$tmp" && parley package new demo_package)
-tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package"}}}\n' > "$tmp/registry.json" && parley package search --registry "$tmp/registry.json"
+tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && parley package publish demo_pkg "$tmp/demo_pkg" --version 1.0.0 --description "demo package"
+tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && hash="$(python3 -c 'import hashlib, pathlib, sys; p=pathlib.Path(sys.argv[1]); print(hashlib.sha256(b"main.par\0"+(p/"main.par").read_bytes()).hexdigest())' "$tmp/demo_pkg")" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package","sha256":"%s"}}}\n' "$hash" > "$tmp/registry.json" && parley package search --registry "$tmp/registry.json" && parley package install demo_pkg --registry "$tmp/registry.json"
 parley doctor --json
 parley --version
 parley benchmark measure --no-check --format json --output /tmp/parley_seed_metrics.json
@@ -40,7 +41,11 @@ The e2e tests require Rust and `cargo`.
 - Keep `parley doctor --json` passing; it is the quick setup proof for
   installed users and automation.
 - Keep `parley package search --registry` and registry-backed install covered;
-  this is the first public package-index surface.
+  this is the first public package-index surface. Registry entries may include
+  `sha256`; installs must verify it and record the digest in
+  `parley.lock.json`.
+- Keep `parley package publish` covered; it prints a registry-ready entry for
+  local package sources with the deterministic package SHA-256.
 - Keep `site/registry.json` and `site/packages/` deployed through
   `scripts/deploy_pages.sh`; the hosted starter index lives at
   `https://ded-furby.github.io/parley-lang/registry.json`.
@@ -126,7 +131,9 @@ python3 -m twine check dist/*
 - The README install path is true.
 - The skill file matches the current syntax.
 - The benchmark CLI can measure the seed corpus and summarize a run log.
-- The package CLI can search a schema-1 registry and install a listed package.
-- The hosted registry URL serves JSON and the listed package source files.
+- The package CLI can search a schema-1 registry, install a listed package,
+  reject a bad checksum, and print a publish entry for a local package.
+- The hosted registry URL serves JSON with SHA-256 metadata and the listed
+  package source files.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.

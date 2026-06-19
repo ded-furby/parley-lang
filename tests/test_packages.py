@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 from conftest import REPO, run_cli
@@ -121,6 +122,92 @@ def test_package_install_can_use_registry_entry(workdir, tmp_path):
     assert json.loads(check.stdout)["ok"] is True
 
 
+def test_package_install_verifies_registry_sha256_and_records_lock(workdir, tmp_path):
+    source = tmp_path / "signedmath"
+    source.mkdir()
+    content = "to double with n as number giving number:\n    give back n times 2\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "signedmath": {
+                "version": "2.0.0",
+                "source": "signedmath",
+                "description": "doubles numbers",
+                "sha256": sha256,
+            }
+        },
+    }))
+
+    install = run_cli(
+        ["package", "install", "signedmath", "--registry", str(registry)],
+        cwd=workdir,
+    )
+
+    assert install.returncode == 0, install.stderr
+    lock = json.loads((workdir / "parley.lock.json").read_text())
+    assert lock["packages"]["signedmath"]["sha256"] == sha256
+
+
+def test_package_install_rejects_registry_sha256_mismatch_without_overwriting(workdir, tmp_path):
+    existing = workdir / "parley_modules" / "badmath"
+    existing.mkdir(parents=True)
+    (existing / "main.par").write_text("to value giving number:\n    give back 1\n")
+    source = tmp_path / "badmath"
+    source.mkdir()
+    (source / "main.par").write_text("to value giving number:\n    give back 2\n")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "badmath": {
+                "version": "2.0.0",
+                "source": "badmath",
+                "description": "changed package",
+                "sha256": "0" * 64,
+            }
+        },
+    }))
+
+    install = run_cli(
+        ["package", "install", "badmath", "--registry", str(registry)],
+        cwd=workdir,
+    )
+
+    assert install.returncode == 1
+    assert "sha256 mismatch" in install.stderr
+    assert "give back 1" in (existing / "main.par").read_text()
+
+
+def test_package_publish_prints_registry_entry_with_sha256(workdir, tmp_path):
+    source = tmp_path / "mathkit"
+    source.mkdir()
+    content = "to double with n as number giving number:\n    give back n times 2\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+
+    publish = run_cli(
+        [
+            "package", "publish", "mathkit", str(source),
+            "--version", "1.2.3",
+            "--description", "small math helpers",
+        ],
+        cwd=workdir,
+    )
+
+    assert publish.returncode == 0, publish.stderr
+    payload = json.loads(publish.stdout)
+    assert payload["name"] == "mathkit"
+    assert payload["entry"] == {
+        "version": "1.2.3",
+        "source": "packages/mathkit",
+        "description": "small math helpers",
+        "sha256": sha256,
+    }
+
+
 def test_site_registry_manifest_can_install_package(workdir):
     registry = REPO / "site" / "registry.json"
     data = json.loads(registry.read_text())
@@ -128,7 +215,10 @@ def test_site_registry_manifest_can_install_package(workdir):
     assert data["schema_version"] == 1
     assert "mathkit" in data["packages"]
     for entry in data["packages"].values():
-        assert (registry.parent / entry["source"]).is_file()
+        source = registry.parent / entry["source"]
+        assert source.is_file()
+        expected = hashlib.sha256(b"main.par\0" + source.read_bytes()).hexdigest()
+        assert entry["sha256"] == expected
 
     search = run_cli(["package", "search", "--registry", str(registry)], cwd=workdir)
     assert search.returncode == 0, search.stderr

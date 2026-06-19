@@ -132,9 +132,12 @@ Use `parley package new name` to create a local package skeleton, then
 `parley_modules/name/`; names may contain letters, numbers, dashes,
 underscores, and dots. `parley package list` reads `parley.lock.json`.
 Registry manifests use `{"schema_version": 1, "packages": {"name":
-{"version": "1.0.0", "source": "path-or-url"}}}`. Search with
+{"version": "1.0.0", "source": "path-or-url", "sha256": "..."}}}`. Search with
 `parley package search --registry registry.json`, then install with
-`parley package install name --registry registry.json`.
+`parley package install name --registry registry.json`. When `sha256` is
+present, install verifies it before replacing an existing package and records
+the digest in `parley.lock.json`. Use `parley package publish name path
+--version 1.0.0 --description "helpers"` to print a registry-ready entry.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
 
@@ -188,6 +191,10 @@ The hosted starter index is
 * `parley benchmark measure` and `parley benchmark summarize` expose the
   research harness from the source checkout.
 * `parley package search --registry registry.json` and `parley package install
-  name --registry registry.json` use schema-1 package registries.
+  name --registry registry.json` use schema-1 package registries. Prefer
+  registry entries with `sha256`; installs reject mismatches before overwriting
+  `parley_modules/name`.
+* `parley package publish name path --version X --description "..."` prints
+  the registry entry for a local package, including the deterministic SHA-256.
 * The hosted starter package index is
   `https://ded-furby.github.io/parley-lang/registry.json`.

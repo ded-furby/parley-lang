@@ -249,14 +249,15 @@ that can be installed into a project.
 directory or `.par` file into `parley_modules/name/`. Package names may contain
 letters, numbers, dashes, underscores, and dots, and must start with a letter or
 number. Directory packages need a `main.par`. Installs are recorded in
-`parley.lock.json`, and `parley package list` prints the locked package names,
-versions, and vendored paths.
+`parley.lock.json` with the package SHA-256, and `parley package list` prints
+the locked package names, versions, and vendored paths.
 
 Registry manifests use JSON:
 
 ```json
 {"schema_version": 1, "packages": {"mathkit": {
-  "version": "1.0.0", "source": "../mathkit", "description": "math helpers"
+  "version": "1.0.0", "source": "../mathkit", "description": "math helpers",
+  "sha256": "..."
 }}}
 ```
 
@@ -264,7 +265,15 @@ Registry manifests use JSON:
 `parley package install mathkit --registry registry.json` vendors the package
 named by the registry. Relative registry sources resolve from the manifest's
 directory. A source may be a package directory, a single `.par` file, `file://`
-URL, or an `http(s)` URL pointing at a `.par` file.
+URL, or an `http(s)` URL pointing at a `.par` file. When the registry entry has
+`sha256`, install verifies the package before replacing an existing vendored
+copy and writes the digest to `parley.lock.json`.
+
+Use `parley package publish mathkit path --version 1.0.0 --description
+"math helpers" --source packages/mathkit/main.par` to print a registry-ready
+JSON entry with the deterministic package SHA-256. Directory packages hash every
+file by relative path and content; single-file packages hash the installed
+`main.par` layout.
 
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

@@ -137,7 +137,10 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   then through `PARLEY_PATH` roots. Package directories load `main.par`.
 * `parley package install name source --version X` vendors a local package
   directory or `.par` file into `parley_modules/name/` and records it in
-  `parley.lock.json`. This is a local lockfile workflow, not a remote registry.
+  `parley.lock.json` with the deterministic package SHA-256. Registry entries
+  may include `sha256`; when present, install verifies it before replacing an
+  existing vendored package. `parley package publish name source --version X`
+  prints a registry-ready entry with that digest.
 * `parley doctor` verifies the installed toolchain: Parley version, Python
   version, Rust `cargo`, bundled standard packages, and local package state.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
@@ -147,6 +150,6 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 v0.3 is an experiment. Syntax may change; error codes are append-only.
 Known limits: no generics for user functions, no methods, single-threaded,
-and no package trust/publishing workflow. Function values exist for named
+and no signed package-submission workflow. Function values exist for named
 functions without `changing` parameters and anonymous functions with value
 captures. See the README roadmap.
