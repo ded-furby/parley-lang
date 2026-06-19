@@ -26,6 +26,16 @@ to nonempty_line_count with t as text giving number:
             set count to count plus 1
     give back count
 
+to nonempty_lines with t as text giving list of text:
+    let out be an empty list of text
+    if t is "":
+        give back out
+    let lines be t split by "\n"
+    for each line in lines:
+        if (is_blank with line) is no:
+            add trimmed line to out
+    give back out
+
 to word_count with t as text giving number:
     if (is_blank with t):
         give back 0
@@ -35,3 +45,13 @@ to word_count with t as text giving number:
         if (is_blank with word) is no:
             set count to count plus 1
     give back count
+
+to words_of with t as text giving list of text:
+    let out be an empty list of text
+    if (is_blank with t):
+        give back out
+    let words be (trimmed t) split by " "
+    for each word in words:
+        if (is_blank with word) is no:
+            add word to out
+    give back out

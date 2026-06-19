@@ -342,6 +342,7 @@ to main:
     say (percent_of_decimal with 12.5, 50.0)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
+    say (words_of with "one  two three") joined with "|"
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)

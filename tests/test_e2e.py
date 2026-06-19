@@ -308,9 +308,21 @@ to main:
     say (line_count with "one\\ntwo\\nthree")
     say (nonempty_line_count with "one\\n\\n  \\ntwo")
     say (word_count with "  one  two three  ")
+    let words be (words_of with "  one  two three  ")
+    say length of words
+    say words joined with "|"
+    let no_words be (words_of with "   ")
+    say length of no_words
+    let lines be (nonempty_lines with " one \\n\\n  two\\n  ")
+    say length of lines
+    say lines joined with "|"
+    let no_lines be (nonempty_lines with "")
+    say length of no_lines
 '''
     proc = run_program(workdir, "bundled_std", src)
-    assert proc.stdout == "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
+    assert proc.stdout == (
+        "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
+        "3\none|two|three\n0\n2\none|two\n0\n")
 
 
 def test_bundled_std_list_package_runs(workdir):

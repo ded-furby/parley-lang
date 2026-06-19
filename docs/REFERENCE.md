@@ -225,7 +225,9 @@ Use `include "std/text"` for small text helpers:
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 | `line_count with t` | number of newline-separated lines, or 0 for empty text |
 | `nonempty_line_count with t` | number of lines whose trimmed text is not empty |
+| `nonempty_lines with t` | list of trimmed, non-blank lines |
 | `word_count with t` | number of non-blank space-separated words |
+| `words_of with t` | list of non-blank space-separated words |
 
 Use `include "std/list"` for common list helpers:
 
