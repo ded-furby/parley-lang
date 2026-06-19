@@ -1,0 +1,5 @@
+to shouted with t as text giving text:
+    give back uppercase of t
+
+to wrapped with t as text, wrapper as text giving text:
+    give back "{wrapper}{t}{wrapper}"

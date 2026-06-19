@@ -1,6 +1,6 @@
 import json
 
-from conftest import run_cli
+from conftest import REPO, run_cli
 
 
 def test_package_install_vendors_local_directory_and_lock(workdir, tmp_path):
@@ -119,6 +119,36 @@ def test_package_install_can_use_registry_entry(workdir, tmp_path):
     check = run_cli(["check", program.name, "--json"], cwd=workdir)
     assert check.returncode == 0, check.stderr
     assert json.loads(check.stdout)["ok"] is True
+
+
+def test_site_registry_manifest_can_install_package(workdir):
+    registry = REPO / "site" / "registry.json"
+    data = json.loads(registry.read_text())
+
+    assert data["schema_version"] == 1
+    assert "mathkit" in data["packages"]
+    for entry in data["packages"].values():
+        assert (registry.parent / entry["source"]).is_file()
+
+    search = run_cli(["package", "search", "--registry", str(registry)], cwd=workdir)
+    assert search.returncode == 0, search.stderr
+    assert "mathkit" in search.stdout
+
+    install = run_cli(["package", "install", "mathkit", "--registry", str(registry)], cwd=workdir)
+    assert install.returncode == 0, install.stderr
+
+    program = workdir / "uses_site_registry.par"
+    program.write_text('include "mathkit"\n\nto main:\n    say (double with 21)\n')
+    check = run_cli(["check", program.name, "--json"], cwd=workdir)
+    assert check.returncode == 0, check.stderr
+    assert json.loads(check.stdout)["ok"] is True
+
+
+def test_pages_deploy_script_publishes_registry_assets():
+    script = (REPO / "scripts" / "deploy_pages.sh").read_text()
+
+    assert "registry.json" in script
+    assert "packages" in script
 
 
 def test_package_install_bad_source_keeps_existing_vendor(workdir):

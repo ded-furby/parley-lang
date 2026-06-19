@@ -359,6 +359,12 @@ parley package list
 package to `parley_modules/mathkit/` and records it in `parley.lock.json`.
 For a registry manifest, use `parley package search --registry registry.json`
 and `parley package install mathkit --registry registry.json`.
+The hosted starter index is:
+
+```bash
+parley package search --registry https://ded-furby.github.io/parley-lang/registry.json
+parley package install mathkit --registry https://ded-furby.github.io/parley-lang/registry.json
+```
 
 ## That's the whole language
 

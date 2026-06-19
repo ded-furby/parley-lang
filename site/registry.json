@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "packages": {
+    "mathkit": {
+      "version": "0.1.0",
+      "source": "packages/mathkit/main.par",
+      "description": "Small number helpers for doubling, tripling, and even checks."
+    },
+    "textkit": {
+      "version": "0.1.0",
+      "source": "packages/textkit/main.par",
+      "description": "Small text helpers for shout and wrapping workflows."
+    }
+  }
+}

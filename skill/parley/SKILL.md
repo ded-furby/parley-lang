@@ -135,6 +135,8 @@ Registry manifests use `{"schema_version": 1, "packages": {"name":
 {"version": "1.0.0", "source": "path-or-url"}}}`. Search with
 `parley package search --registry registry.json`, then install with
 `parley package install name --registry registry.json`.
+The hosted starter index is
+`https://ded-furby.github.io/parley-lang/registry.json`.
 
 ## Rules that catch agents out
 
@@ -187,3 +189,5 @@ Registry manifests use `{"schema_version": 1, "packages": {"name":
   research harness from the source checkout.
 * `parley package search --registry registry.json` and `parley package install
   name --registry registry.json` use schema-1 package registries.
+* The hosted starter package index is
+  `https://ded-furby.github.io/parley-lang/registry.json`.

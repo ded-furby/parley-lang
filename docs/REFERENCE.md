@@ -265,3 +265,6 @@ Registry manifests use JSON:
 named by the registry. Relative registry sources resolve from the manifest's
 directory. A source may be a package directory, a single `.par` file, `file://`
 URL, or an `http(s)` URL pointing at a `.par` file.
+
+The public starter index is hosted with the website at
+`https://ded-furby.github.io/parley-lang/registry.json`.

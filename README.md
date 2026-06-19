@@ -185,16 +185,17 @@ the plan:
 - [x] runtime assertions (`assert condition, "message"`) — v0.3.11
 - [x] benchmark CLI (`parley benchmark measure` / `summarize`) — v0.3.12
 - [x] registry-backed packages (`parley package search --registry`) — v0.3.13
+- [x] hosted starter package index (`/registry.json`) — v0.3.14
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
-- [ ] hosted public package index
+- [ ] package trust and publishing workflow
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 160 tests; e2e compiles real binaries (needs cargo)
+pytest            # 162 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

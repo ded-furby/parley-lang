@@ -1,0 +1,8 @@
+to double with n as number giving number:
+    give back n times 2
+
+to triple with n as number giving number:
+    give back n times 3
+
+to is_even with n as number giving yesno:
+    give back (remainder of n divided by 2) is 0

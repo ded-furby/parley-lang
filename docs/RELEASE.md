@@ -41,6 +41,9 @@ The e2e tests require Rust and `cargo`.
   installed users and automation.
 - Keep `parley package search --registry` and registry-backed install covered;
   this is the first public package-index surface.
+- Keep `site/registry.json` and `site/packages/` deployed through
+  `scripts/deploy_pages.sh`; the hosted starter index lives at
+  `https://ded-furby.github.io/parley-lang/registry.json`.
 - Keep `parley benchmark measure --format json` working from a source
   checkout; it is the research readiness proof for the seed corpus.
 
@@ -124,5 +127,6 @@ python3 -m twine check dist/*
 - The skill file matches the current syntax.
 - The benchmark CLI can measure the seed corpus and summarize a run log.
 - The package CLI can search a schema-1 registry and install a listed package.
+- The hosted registry URL serves JSON and the listed package source files.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.
