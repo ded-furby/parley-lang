@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.37** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.38** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 203 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -160,6 +160,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.37 safe text character helper:** `std/text` adds
   `maybe_character`, returning `maybe text` for 1-based UTF-8 character lookup
   without runtime failure on non-positive or out-of-range indexes.
+- **v0.3.38 UTF-8 text slice helper:** `std/text` adds `text_slice`, returning
+  clamped 1-based inclusive character slices and empty text for reversed or
+  out-of-range requests.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -231,7 +234,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.37).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.38).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

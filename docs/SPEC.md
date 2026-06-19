@@ -114,6 +114,8 @@ parse-relevant highlights:
   deterministic UTF-8 string operations.
   `item i of text` uses 1-based character indexing and returns a one-character
   text value.
+  Bundled `std/text` helpers such as `maybe_character` and `text_slice` use
+  the same 1-based UTF-8 character indexing.
   Replacement returns a new text value and does not mutate the original text.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping

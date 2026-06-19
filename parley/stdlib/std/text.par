@@ -15,6 +15,26 @@ to maybe_character with t as text, index as number giving maybe text:
         give back nothing
     give back some item index of t
 
+to text_slice with t as text, first_index as number, last_index as number giving text:
+    if t is "":
+        give back ""
+    if first_index is more than last_index:
+        give back ""
+    if last_index is less than 1:
+        give back ""
+    if first_index is more than length of t:
+        give back ""
+    let start be first_index
+    if start is less than 1:
+        set start to 1
+    let finish be last_index
+    if finish is more than length of t:
+        set finish to length of t
+    let out be ""
+    for each i from start to finish:
+        set out to "{out}{item i of t}"
+    give back out
+
 to line_count with t as text giving number:
     if t is "":
         give back 0

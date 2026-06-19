@@ -340,11 +340,17 @@ to main:
     say (maybe_character with "éc", 2)
     say (maybe_character with "éc", 3)
     say (maybe_character with "éc", 0)
+    say (text_slice with "crème", 2, 4)
+    say (text_slice with "crème", 0, 2)
+    say (text_slice with "crème", 4, 99)
+    say (text_slice with "crème", 4, 2)
+    say (text_slice with "", 1, 1)
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
-        "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n")
+        "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
+        "rèm\ncr\nme\n\n\n")
 
 
 def test_bundled_std_list_package_runs(workdir):
