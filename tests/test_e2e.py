@@ -378,6 +378,15 @@ to main:
     say (maybe_smallest_number with empty_nums)
     say (maybe_largest_number with empty_nums)
     say (maybe_average_number with empty_nums)
+    let mid_nums be (list_slice_number with nums, 2, 3)
+    say length of mid_nums
+    say item 1 of mid_nums
+    say item 2 of mid_nums
+    let clamped_nums be (list_slice_number with nums, 0, 2)
+    say length of clamped_nums
+    say item 2 of clamped_nums
+    let no_nums be (list_slice_number with nums, 4, 2)
+    say length of no_nums
     let words be a list of "red", "blue", "red"
     say (first_text with words)
     say (last_text with words)
@@ -394,6 +403,10 @@ to main:
     say (maybe_largest_text with words)
     say (maybe_smallest_text with empty_words)
     say (maybe_largest_text with empty_words)
+    let word_slice be (list_slice_text with words, 2, 99)
+    say word_slice joined with "|"
+    let no_word_slice be (list_slice_text with words, 3, 2)
+    say length of no_word_slice
     let decimals be a list of 1.5, 2.5, 2.0
     say (first_decimal with decimals)
     say (last_decimal with decimals)
@@ -414,6 +427,10 @@ to main:
     say (maybe_smallest_decimal with empty_decimals)
     say (maybe_largest_decimal with empty_decimals)
     say (maybe_average_decimal with empty_decimals)
+    let decimal_slice be (list_slice_decimal with decimals, 0, 2)
+    say length of decimal_slice
+    say item 1 of decimal_slice
+    say item 2 of decimal_slice
     let flags be a list of yes, no, yes
     say (all_yes with flags)
     say (any_yes with flags)
@@ -424,6 +441,10 @@ to main:
     say (maybe_item_yesno with flags, 1)
     say (maybe_item_yesno with flags, 2)
     say (maybe_item_yesno with flags, 9)
+    let flag_slice be (list_slice_yesno with flags, 2, 99)
+    say length of flag_slice
+    say item 1 of flag_slice
+    say item 2 of flag_slice
     let empty_flags be an empty list of yesno
     say (all_yes with empty_flags)
     say (any_yes with empty_flags)
@@ -435,11 +456,14 @@ to main:
         "4\n8\n4.5\n2\n4\nnothing\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
+        "2\n2\n4\n2\n2\n0\n"
         "red\nred\n2\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
+        "blue|red\n0\n"
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
-        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\nyes\nno\nnothing\nnothing\n")
+        "2\n1.5\n2.5\n"
+        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\nyes\nno\nnothing\nnothing\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

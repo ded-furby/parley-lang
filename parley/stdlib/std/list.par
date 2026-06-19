@@ -19,6 +19,27 @@ to maybe_item_number with xs as list of number, index as number giving maybe num
         give back nothing
     give back some item index of xs
 
+to list_slice_number with xs as list of number, first_index as number, last_index as number giving list of number:
+    let out be an empty list of number
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let start be first_index
+    if start is less than 1:
+        set start to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from start to finish:
+        let value be item i of xs
+        add value to out
+    give back out
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -76,6 +97,27 @@ to maybe_item_text with xs as list of text, index as number giving maybe text:
         give back nothing
     give back some item index of xs
 
+to list_slice_text with xs as list of text, first_index as number, last_index as number giving list of text:
+    let out be an empty list of text
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let start be first_index
+    if start is less than 1:
+        set start to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from start to finish:
+        let value be item i of xs
+        add value to out
+    give back out
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -123,6 +165,27 @@ to maybe_item_decimal with xs as list of decimal, index as number giving maybe d
     if index is less than 1 or index is more than length of xs:
         give back nothing
     give back some item index of xs
+
+to list_slice_decimal with xs as list of decimal, first_index as number, last_index as number giving list of decimal:
+    let out be an empty list of decimal
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let start be first_index
+    if start is less than 1:
+        set start to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from start to finish:
+        let value be item i of xs
+        add value to out
+    give back out
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0
@@ -176,6 +239,27 @@ to maybe_item_yesno with xs as list of yesno, index as number giving maybe yesno
     if index is less than 1 or index is more than length of xs:
         give back nothing
     give back some item index of xs
+
+to list_slice_yesno with xs as list of yesno, first_index as number, last_index as number giving list of yesno:
+    let out be an empty list of yesno
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let start be first_index
+    if start is less than 1:
+        set start to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from start to finish:
+        let value be item i of xs
+        add value to out
+    give back out
 
 to count_yes with xs as list of yesno giving number:
     let count be 0

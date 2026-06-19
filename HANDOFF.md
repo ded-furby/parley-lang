@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.38** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.39** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 203 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -163,6 +163,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.38 UTF-8 text slice helper:** `std/text` adds `text_slice`, returning
   clamped 1-based inclusive character slices and empty text for reversed or
   out-of-range requests.
+- **v0.3.39 clamped list slice helpers:** `std/list` adds
+  `list_slice_number`, `list_slice_text`, `list_slice_decimal`, and
+  `list_slice_yesno`, returning list slices with clamped 1-based inclusive
+  bounds.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -234,7 +238,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.38).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.39).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

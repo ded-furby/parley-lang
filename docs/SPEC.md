@@ -121,6 +121,10 @@ parse-relevant highlights:
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns
   `length of text plus 1`.
+* **Bundled list helpers** in `std/list`, including `list_slice_number`,
+  `list_slice_text`, `list_slice_decimal`, and `list_slice_yesno`, use
+  1-based inclusive indexes. Slice helpers clamp bounds to the list and give
+  an empty list for reversed or out-of-range requests.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative
