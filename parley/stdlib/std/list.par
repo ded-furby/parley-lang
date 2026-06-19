@@ -4,6 +4,16 @@ to first_number with xs as list of number giving number:
 to last_number with xs as list of number giving number:
     give back item (length of xs) of xs
 
+to maybe_first_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    give back some item 1 of xs
+
+to maybe_last_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    give back some item (length of xs) of xs
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -28,6 +38,16 @@ to first_text with xs as list of text giving text:
 to last_text with xs as list of text giving text:
     give back item (length of xs) of xs
 
+to maybe_first_text with xs as list of text giving maybe text:
+    if length of xs is 0:
+        give back nothing
+    give back some item 1 of xs
+
+to maybe_last_text with xs as list of text giving maybe text:
+    if length of xs is 0:
+        give back nothing
+    give back some item (length of xs) of xs
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -48,6 +68,16 @@ to first_decimal with xs as list of decimal giving decimal:
 
 to last_decimal with xs as list of decimal giving decimal:
     give back item (length of xs) of xs
+
+to maybe_first_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    give back some item 1 of xs
+
+to maybe_last_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    give back some item (length of xs) of xs
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0
