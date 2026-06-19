@@ -353,13 +353,15 @@ To vendor a local package into a project:
 parley package new mathkit
 parley package install mathkit ../mathkit --version 1.0.0
 parley package list
+parley package verify
 parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers"
 ```
 
 `package new` creates a starter `main.par`; `package install` copies the
 package to `parley_modules/mathkit/` and records it in `parley.lock.json`.
-The lockfile includes the installed package SHA-256. `package publish` prints
-a registry-ready JSON entry with the same digest.
+The lockfile includes the installed package SHA-256. `package verify` checks
+that vendored files still match the lockfile. `package publish` prints a
+registry-ready JSON entry with the same digest.
 
 For a registry manifest, use `parley package search --registry registry.json`
 and `parley package install mathkit --registry registry.json`. If the registry

@@ -208,6 +208,63 @@ def test_package_publish_prints_registry_entry_with_sha256(workdir, tmp_path):
     }
 
 
+def test_package_verify_accepts_locked_package(workdir, tmp_path):
+    source = tmp_path / "mathkit"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+    install = run_cli(
+        ["package", "install", "mathkit", str(source), "--version", "1.2.0"],
+        cwd=workdir,
+    )
+    assert install.returncode == 0, install.stderr
+
+    verify = run_cli(["package", "verify"], cwd=workdir)
+
+    assert verify.returncode == 0, verify.stderr
+    assert "OK mathkit 1.2.0 parley_modules/mathkit" in verify.stdout
+
+
+def test_package_verify_rejects_modified_vendor(workdir, tmp_path):
+    source = tmp_path / "mathkit"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+    install = run_cli(
+        ["package", "install", "mathkit", str(source), "--version", "1.2.0"],
+        cwd=workdir,
+    )
+    assert install.returncode == 0, install.stderr
+    (workdir / "parley_modules" / "mathkit" / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 3\n")
+
+    verify = run_cli(["package", "verify"], cwd=workdir)
+
+    assert verify.returncode == 1
+    assert "sha256 mismatch for mathkit" in verify.stderr
+
+
+def test_package_verify_rejects_missing_digest(workdir):
+    package = workdir / "parley_modules" / "legacy"
+    package.mkdir(parents=True)
+    (package / "main.par").write_text("to ready giving yesno:\n    give back yes\n")
+    (workdir / "parley.lock.json").write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "legacy": {
+                "version": "0.1.0",
+                "source": "../legacy",
+                "path": "parley_modules/legacy",
+            }
+        },
+    }))
+
+    verify = run_cli(["package", "verify"], cwd=workdir)
+
+    assert verify.returncode == 1
+    assert "legacy has no sha256 in parley.lock.json" in verify.stderr
+
+
 def test_site_registry_manifest_can_install_package(workdir):
     registry = REPO / "site" / "registry.json"
     data = json.loads(registry.read_text())

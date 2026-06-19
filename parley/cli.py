@@ -10,6 +10,7 @@
   parley doctor                   verify local setup
   parley package install name src vendor a local package
   parley package publish name src print a registry-ready entry
+  parley package verify           verify vendored packages against the lockfile
   parley benchmark measure        measure the seed research corpus
 """
 
@@ -519,6 +520,43 @@ def cmd_package_publish(args) -> int:
     return 0
 
 
+def cmd_package_verify(args) -> int:
+    packages = _read_lock().get("packages", {})
+    if not packages:
+        print("No packages installed.")
+        return 0
+
+    ok = True
+    for name in sorted(packages):
+        pkg = packages[name]
+        path_text = str(pkg.get("path") or "")
+        version = str(pkg.get("version") or "0.0.0")
+        digest = str(pkg.get("sha256") or "").strip().lower()
+        if not path_text:
+            print(f"package error: {name} has no path in {LOCK_FILE}", file=sys.stderr)
+            ok = False
+            continue
+        if not SHA256_RE.fullmatch(digest):
+            print(f"package error: {name} has no sha256 in {LOCK_FILE}", file=sys.stderr)
+            ok = False
+            continue
+        try:
+            actual = _package_sha256(Path(path_text))
+        except OSError as exc:
+            print(f"package error: {name}: {exc}", file=sys.stderr)
+            ok = False
+            continue
+        if actual != digest:
+            print(
+                f"package error: sha256 mismatch for {name}: expected {digest}, got {actual}",
+                file=sys.stderr,
+            )
+            ok = False
+            continue
+        print(f"OK {name} {version} {path_text}")
+    return 0 if ok else 1
+
+
 def cmd_package_new(args) -> int:
     try:
         _validate_package_name(args.name)
@@ -668,6 +706,9 @@ def main(argv: list[str] | None = None) -> int:
     package_new.set_defaults(fn=cmd_package_new)
     package_list = package_sub.add_parser("list", help="list vendored packages")
     package_list.set_defaults(fn=cmd_package_list)
+    package_verify = package_sub.add_parser(
+        "verify", help="verify vendored packages against parley.lock.json")
+    package_verify.set_defaults(fn=cmd_package_verify)
     package_search = package_sub.add_parser("search", help="list packages in a registry")
     package_search.add_argument("query", nargs="?")
     package_search.add_argument("--registry", help="registry manifest JSON path or URL")

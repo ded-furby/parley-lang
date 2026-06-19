@@ -275,5 +275,10 @@ JSON entry with the deterministic package SHA-256. Directory packages hash every
 file by relative path and content; single-file packages hash the installed
 `main.par` layout.
 
+Use `parley package verify` after checkout, install, or before release. It
+reads `parley.lock.json`, recomputes each vendored package digest, prints `OK`
+for packages that still match, and exits non-zero if a package is missing, has
+no recorded `sha256`, or has been modified locally.
+
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

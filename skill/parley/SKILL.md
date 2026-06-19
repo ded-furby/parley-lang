@@ -136,8 +136,9 @@ Registry manifests use `{"schema_version": 1, "packages": {"name":
 `parley package search --registry registry.json`, then install with
 `parley package install name --registry registry.json`. When `sha256` is
 present, install verifies it before replacing an existing package and records
-the digest in `parley.lock.json`. Use `parley package publish name path
---version 1.0.0 --description "helpers"` to print a registry-ready entry.
+the digest in `parley.lock.json`. Run `parley package verify` to check that
+vendored packages still match the lockfile. Use `parley package publish name
+path --version 1.0.0 --description "helpers"` to print a registry-ready entry.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
 
@@ -194,6 +195,8 @@ The hosted starter index is
   name --registry registry.json` use schema-1 package registries. Prefer
   registry entries with `sha256`; installs reject mismatches before overwriting
   `parley_modules/name`.
+* `parley package verify` checks installed package digests against
+  `parley.lock.json`; run it after package installs or before release.
 * `parley package publish name path --version X --description "..."` prints
   the registry entry for a local package, including the deterministic SHA-256.
 * The hosted starter package index is

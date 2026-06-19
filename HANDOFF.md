@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.15** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 165 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.16** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 168 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -88,6 +88,9 @@ Update it whenever you finish or start a work item.
   installs verify the package before replacing an existing vendor directory,
   `parley.lock.json` records the installed digest, and `parley package
   publish` prints a registry-ready JSON entry for local package sources.
+- **v0.3.16 package lock verification:** `parley package verify` recomputes
+  vendored package digests from `parley.lock.json`, reports missing or legacy
+  unchecked entries, and fails if a local package has been modified.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -137,9 +140,9 @@ Update it whenever you finish or start a work item.
    to JSONL with `parley benchmark append` and summary analysis through
    `parley benchmark summarize`. Still needed: repeated agent error-rate runs
    and a result write-up.
-2. **Signed package publishing workflow** — checksum verification and
-   publish-entry generation exist; still needed later: signed releases,
-   package submission rules, and version governance.
+2. **Signed package publishing workflow** — checksum installs, publish-entry
+   generation, and lock verification exist; still needed later: signed
+   releases, package submission rules, and version governance.
 
 ## Working on the compiler: the contract
 
@@ -155,7 +158,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.15).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.16).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
