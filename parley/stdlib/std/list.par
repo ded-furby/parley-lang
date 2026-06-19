@@ -48,6 +48,24 @@ to clear_number with changing xs as list of number:
     while length of xs is more than 0:
         remove item 1 of xs
 
+to insert_number with changing xs as list of number, index as number, value as number:
+    let out be an empty list of number
+    let placed be no
+    if index is at most 1:
+        add value to out
+        set placed to yes
+    let spot be 1
+    for each current in xs:
+        if placed is no and spot is at least index:
+            add value to out
+            set placed to yes
+        add current to out
+        set spot to spot plus 1
+    if placed is no:
+        add value to out
+    clear_number with xs
+    extend_number with xs, out
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -134,6 +152,24 @@ to clear_text with changing xs as list of text:
     while length of xs is more than 0:
         remove item 1 of xs
 
+to insert_text with changing xs as list of text, index as number, value as text:
+    let out be an empty list of text
+    let placed be no
+    if index is at most 1:
+        add value to out
+        set placed to yes
+    let spot be 1
+    for each current in xs:
+        if placed is no and spot is at least index:
+            add value to out
+            set placed to yes
+        add current to out
+        set spot to spot plus 1
+    if placed is no:
+        add value to out
+    clear_text with xs
+    extend_text with xs, out
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -210,6 +246,24 @@ to extend_decimal with changing xs as list of decimal, more as list of decimal:
 to clear_decimal with changing xs as list of decimal:
     while length of xs is more than 0:
         remove item 1 of xs
+
+to insert_decimal with changing xs as list of decimal, index as number, value as decimal:
+    let out be an empty list of decimal
+    let placed be no
+    if index is at most 1:
+        add value to out
+        set placed to yes
+    let spot be 1
+    for each current in xs:
+        if placed is no and spot is at least index:
+            add value to out
+            set placed to yes
+        add current to out
+        set spot to spot plus 1
+    if placed is no:
+        add value to out
+    clear_decimal with xs
+    extend_decimal with xs, out
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0
@@ -292,6 +346,24 @@ to extend_yesno with changing xs as list of yesno, more as list of yesno:
 to clear_yesno with changing xs as list of yesno:
     while length of xs is more than 0:
         remove item 1 of xs
+
+to insert_yesno with changing xs as list of yesno, index as number, value as yesno:
+    let out be an empty list of yesno
+    let placed be no
+    if index is at most 1:
+        add value to out
+        set placed to yes
+    let spot be 1
+    for each current in xs:
+        if placed is no and spot is at least index:
+            add value to out
+            set placed to yes
+        add current to out
+        set spot to spot plus 1
+    if placed is no:
+        add value to out
+    clear_yesno with xs
+    extend_yesno with xs, out
 
 to count_yes with xs as list of yesno giving number:
     let count be 0

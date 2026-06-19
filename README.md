@@ -137,7 +137,7 @@ division, powers, roots · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, line/word counts, word/line extraction, …) · number/text/decimal list
-helpers with safe maybe first/last/index, clamped slicing, extend/clear mutation, and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
+helpers with safe maybe first/last/index, clamped slicing, extend/clear/insert mutation, and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -223,6 +223,7 @@ the plan:
 - [x] clamped list slice helpers for bundled `std/list` — v0.3.39
 - [x] extend/clear mutation helpers for bundled `std/list` — v0.3.40
 - [x] deterministic map values expression (`values of m`) — v0.3.41
+- [x] insert mutation helpers for bundled `std/list` — v0.3.42
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
