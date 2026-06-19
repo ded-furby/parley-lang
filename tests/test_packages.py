@@ -265,6 +265,78 @@ def test_package_verify_rejects_missing_digest(workdir):
     assert "legacy has no sha256 in parley.lock.json" in verify.stderr
 
 
+def test_package_check_registry_accepts_checksum_manifest(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    content = "to triple with n as number giving number:\n    give back n times 3\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "1.2.3",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+                "sha256": sha256,
+            }
+        },
+    }))
+
+    check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+
+    assert check.returncode == 0, check.stderr
+    assert "OK registrykit 1.2.3 registrykit-src" in check.stdout
+
+
+def test_package_check_registry_rejects_bad_checksum(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to triple with n as number giving number:\n    give back n times 3\n")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "1.2.3",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+                "sha256": "0" * 64,
+            }
+        },
+    }))
+
+    check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+
+    assert check.returncode == 1
+    assert "sha256 mismatch for registrykit" in check.stderr
+
+
+def test_package_check_registry_requires_sha256(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to triple with n as number giving number:\n    give back n times 3\n")
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "1.2.3",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+            }
+        },
+    }))
+
+    check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+
+    assert check.returncode == 1
+    assert "registrykit has no sha256" in check.stderr
+
+
 def test_site_registry_manifest_can_install_package(workdir):
     registry = REPO / "site" / "registry.json"
     data = json.loads(registry.read_text())

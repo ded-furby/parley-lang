@@ -11,6 +11,7 @@
   parley package install name src vendor a local package
   parley package publish name src print a registry-ready entry
   parley package verify           verify vendored packages against the lockfile
+  parley package check-registry x validate a package registry manifest
   parley benchmark measure        measure the seed research corpus
 """
 
@@ -557,6 +558,49 @@ def cmd_package_verify(args) -> int:
     return 0 if ok else 1
 
 
+def cmd_package_check_registry(args) -> int:
+    try:
+        registry, registry_base = _read_registry(args.registry)
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+
+    ok = True
+    packages = registry.get("packages", {})
+    if not packages:
+        print("No packages found.")
+        return 0
+
+    with tempfile.TemporaryDirectory(prefix="parley-registry-check-") as tmp:
+        temp_root = Path(tmp)
+        for name in sorted(packages):
+            entry = packages[name]
+            try:
+                _validate_package_name(name)
+                if not isinstance(entry, dict):
+                    raise OSError(f"{name} registry entry must be an object")
+                if not str(entry.get("version") or "").strip():
+                    raise OSError(f"{name} registry entry is missing version")
+                if not str(entry.get("description") or "").strip():
+                    raise OSError(f"{name} registry entry is missing description")
+                if not entry.get("sha256"):
+                    raise OSError(f"{name} has no sha256")
+                expected_sha256 = _entry_sha256(entry)
+                entry = _registry_entry(registry, name)
+                source_text = _resolve_registry_source(str(entry["source"]), registry_base)
+                source = _materialize_package_source(source_text, temp_root)
+                actual_sha256 = _package_sha256(source)
+                if actual_sha256 != expected_sha256:
+                    raise OSError(
+                        f"sha256 mismatch for {name}: expected {expected_sha256}, got {actual_sha256}")
+            except OSError as exc:
+                print(f"package error: {exc}", file=sys.stderr)
+                ok = False
+                continue
+            print(f"OK {name} {entry.get('version', '0.0.0')} {entry.get('source')}")
+    return 0 if ok else 1
+
+
 def cmd_package_new(args) -> int:
     try:
         _validate_package_name(args.name)
@@ -709,6 +753,10 @@ def main(argv: list[str] | None = None) -> int:
     package_verify = package_sub.add_parser(
         "verify", help="verify vendored packages against parley.lock.json")
     package_verify.set_defaults(fn=cmd_package_verify)
+    package_check_registry = package_sub.add_parser(
+        "check-registry", help="validate a registry manifest before publishing")
+    package_check_registry.add_argument("registry", nargs="?", help="registry manifest JSON path or URL")
+    package_check_registry.set_defaults(fn=cmd_package_check_registry)
     package_search = package_sub.add_parser("search", help="list packages in a registry")
     package_search.add_argument("query", nargs="?")
     package_search.add_argument("--registry", help="registry manifest JSON path or URL")

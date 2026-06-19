@@ -139,6 +139,7 @@ present, install verifies it before replacing an existing package and records
 the digest in `parley.lock.json`. Run `parley package verify` to check that
 vendored packages still match the lockfile. Use `parley package publish name
 path --version 1.0.0 --description "helpers"` to print a registry-ready entry.
+Use `parley package check-registry registry.json` before hosting a registry.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
 
@@ -197,6 +198,9 @@ The hosted starter index is
   `parley_modules/name`.
 * `parley package verify` checks installed package digests against
   `parley.lock.json`; run it after package installs or before release.
+* `parley package check-registry registry.json` validates package names,
+  required metadata, readable sources, and SHA-256 matches before a registry is
+  hosted.
 * `parley package publish name path --version X --description "..."` prints
   the registry entry for a local package, including the deterministic SHA-256.
 * The hosted starter package index is

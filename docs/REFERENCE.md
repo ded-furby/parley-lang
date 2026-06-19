@@ -280,5 +280,10 @@ reads `parley.lock.json`, recomputes each vendored package digest, prints `OK`
 for packages that still match, and exits non-zero if a package is missing, has
 no recorded `sha256`, or has been modified locally.
 
+Use `parley package check-registry registry.json` before hosting a registry.
+It validates package names, required `version`, `description`, `source`, and
+`sha256` fields, resolves each source from the registry location, recomputes
+the package digest, and exits non-zero if any entry is incomplete or changed.
+
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

@@ -142,7 +142,9 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   existing vendored package. `parley package publish name source --version X`
   prints a registry-ready entry with that digest. `parley package verify`
   recomputes vendored package digests from the lockfile and fails if a package
-  is missing, unchecked, or modified.
+  is missing, unchecked, or modified. `parley package check-registry registry`
+  validates a public registry manifest before hosting by checking package
+  names, required metadata, readable sources, and digest matches.
 * `parley doctor` verifies the installed toolchain: Parley version, Python
   version, Rust `cargo`, bundled standard packages, and local package state.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
