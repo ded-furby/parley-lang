@@ -3,6 +3,13 @@ to number_at with m as map from text to number, key as text giving maybe number:
         give back some item key of m
     give back nothing
 
+to take_number_at with changing m as map from text to number, key as text giving maybe number:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
+    give back nothing
+
 to number_or with m as map from text to number, key as text, fallback as number giving number:
     if m contains key:
         give back item key of m
@@ -19,6 +26,13 @@ to text_at with m as map from text to text, key as text giving maybe text:
         give back some item key of m
     give back nothing
 
+to take_text_at with changing m as map from text to text, key as text giving maybe text:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
+    give back nothing
+
 to text_or with m as map from text to text, key as text, fallback as text giving text:
     if m contains key:
         give back item key of m
@@ -27,6 +41,13 @@ to text_or with m as map from text to text, key as text, fallback as text giving
 to decimal_at with m as map from text to decimal, key as text giving maybe decimal:
     if m contains key:
         give back some item key of m
+    give back nothing
+
+to take_decimal_at with changing m as map from text to decimal, key as text giving maybe decimal:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
     give back nothing
 
 to decimal_or with m as map from text to decimal, key as text, fallback as decimal giving decimal:
@@ -39,6 +60,13 @@ to yesno_at with m as map from text to yesno, key as text giving maybe yesno:
         give back some item key of m
     give back nothing
 
+to take_yesno_at with changing m as map from text to yesno, key as text giving maybe yesno:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
+    give back nothing
+
 to yesno_or with m as map from text to yesno, key as text, fallback as yesno giving yesno:
     if m contains key:
         give back item key of m
@@ -47,6 +75,13 @@ to yesno_or with m as map from text to yesno, key as text, fallback as yesno giv
 to number_key_number_at with m as map from number to number, key as number giving maybe number:
     if m contains key:
         give back some item key of m
+    give back nothing
+
+to take_number_key_number_at with changing m as map from number to number, key as number giving maybe number:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
     give back nothing
 
 to number_key_number_or with m as map from number to number, key as number, fallback as number giving number:
@@ -65,6 +100,13 @@ to number_key_text_at with m as map from number to text, key as number giving ma
         give back some item key of m
     give back nothing
 
+to take_number_key_text_at with changing m as map from number to text, key as number giving maybe text:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
+    give back nothing
+
 to number_key_text_or with m as map from number to text, key as number, fallback as text giving text:
     if m contains key:
         give back item key of m
@@ -75,6 +117,13 @@ to number_key_decimal_at with m as map from number to decimal, key as number giv
         give back some item key of m
     give back nothing
 
+to take_number_key_decimal_at with changing m as map from number to decimal, key as number giving maybe decimal:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
+    give back nothing
+
 to number_key_decimal_or with m as map from number to decimal, key as number, fallback as decimal giving decimal:
     if m contains key:
         give back item key of m
@@ -83,6 +132,13 @@ to number_key_decimal_or with m as map from number to decimal, key as number, fa
 to number_key_yesno_at with m as map from number to yesno, key as number giving maybe yesno:
     if m contains key:
         give back some item key of m
+    give back nothing
+
+to take_number_key_yesno_at with changing m as map from number to yesno, key as number giving maybe yesno:
+    if m contains key:
+        let value be item key of m
+        remove item key of m
+        give back some value
     give back nothing
 
 to number_key_yesno_or with m as map from number to yesno, key as number, fallback as yesno giving yesno:

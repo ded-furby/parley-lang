@@ -63,6 +63,7 @@ to main:
     set item "a" of m to 1
     say keys of m joined with ", "             # sorted by key
     say sum of values of m                     # values also follow key order
+    remove item "a" of m                       # maps can delete keys
 
     let maybe_n be ask for a number "n? "      # maybe number
     if maybe_n is nothing:
@@ -141,11 +142,14 @@ Bundled packages are available as `include "std/math"` (`clamped`,
 `maybe_average_decimal`, `all_yes`, `any_yes`, `maybe_item_yesno`, `list_slice_yesno`, `extend_yesno`, `clear_yesno`, `insert_yesno`, `pop_yesno`, `remove_yesno`, `count_yes`,
 `count_no`, `index_yes`, `index_no`),
 and `include "std/map"` (`number_at`,
-`number_or`, `add_count`, `text_at`, `text_or`, `decimal_at`, `decimal_or`,
-`yesno_at`, `yesno_or`, `number_key_number_at`, `number_key_number_or`,
-`add_number_key_count`, `number_key_text_at`, `number_key_text_or`,
-`number_key_decimal_at`, `number_key_decimal_or`, `number_key_yesno_at`,
-`number_key_yesno_or`).
+`take_number_at`, `number_or`, `add_count`, `text_at`, `take_text_at`,
+`text_or`, `decimal_at`, `take_decimal_at`, `decimal_or`, `yesno_at`,
+`take_yesno_at`, `yesno_or`, `number_key_number_at`,
+`take_number_key_number_at`, `number_key_number_or`, `add_number_key_count`,
+`number_key_text_at`, `take_number_key_text_at`, `number_key_text_or`,
+`number_key_decimal_at`, `take_number_key_decimal_at`,
+`number_key_decimal_or`, `number_key_yesno_at`,
+`take_number_key_yesno_at`, `number_key_yesno_or`).
 Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into
 `parley_modules/name/`; names may contain letters, numbers, dashes,

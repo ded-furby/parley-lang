@@ -122,10 +122,13 @@ to main:
         say name
     let all_ages be values of ages
     say sum of all_ages
+    remove item "ada" of ages
+    say length of ages
 ```
 
-Keys are `number` or `text`. `keys of` always comes back sorted, and
-`values of` follows that same sorted-key order, so programs behave the same
+Keys are `number` or `text`. `remove item key of map` deletes a key when it
+exists and does nothing when it is missing. `keys of` always comes back sorted,
+and `values of` follows that same sorted-key order, so programs behave the same
 every run.
 
 ## 9. Text tools
@@ -376,6 +379,7 @@ to main:
     let counts be a map from text to number
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)
+    say (take_number_at with counts, "agent")
     let flags be a map from text to yesno
     set item "ready" of flags to yes
     say (yesno_at with flags, "ready")

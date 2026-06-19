@@ -63,7 +63,8 @@ parse-relevant highlights:
   binding (P211).
 * **Map keys** are `number` or `text` (P309) so iteration can be sorted.
   `keys of m` returns sorted keys; `values of m` returns values in sorted-key
-  order.
+  order. `remove item key of m` removes a map entry if it exists and leaves
+  the map unchanged when it does not.
 * **`when`** over an enum must be exhaustive or carry `otherwise:` (P208);
   over yesno, covering `yes` and `no` counts as exhaustive; over numbers and
   text, `otherwise:` is mandatory. An arm may list several patterns
@@ -133,6 +134,10 @@ parse-relevant highlights:
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
   value and return yes/no for whether anything changed.
+* **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
+  counted increments, and take helpers for text-key and number-key maps. Take
+  helpers use `changing` map parameters: they return `some value` and remove a
+  present key, or return `nothing` without mutation when the key is absent.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative

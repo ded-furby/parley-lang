@@ -64,7 +64,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `assert condition` / `assert condition, message` | catchable runtime check |
 | `fail "message"` | catchable runtime failure |
 | `add x to xs` | `xs.push(x);` |
-| `remove item i of xs` | bounds-checked `xs.remove(i-1)` |
+| `remove item i of xs` / `remove item k of m` | bounds-checked list removal or silent map-key removal |
 | `set item i of xs to v` | bounds-checked `xs[i-1] = v` |
 | `set item k of m to v` | `m.insert(k, v);` |
 | `write t to file p` / `append t to file p` | `std::fs` (failure stops the program; catchable) |
@@ -295,22 +295,30 @@ Use `include "std/map"` for common map helpers:
 | Function | Gives |
 |---|---|
 | `number_at with m, key` | maybe number from a `map from text to number` |
+| `take_number_at with changing m, key` | maybe number from a text-key map, removed when present |
 | `number_or with m, key, fallback` | number or fallback |
 | `add_count with changing m, key` | increments a text-key count in place |
 | `text_at with m, key` | maybe text from a `map from text to text` |
+| `take_text_at with changing m, key` | maybe text from a text-key map, removed when present |
 | `text_or with m, key, fallback` | text or fallback |
 | `decimal_at with m, key` | maybe decimal from a `map from text to decimal` |
+| `take_decimal_at with changing m, key` | maybe decimal from a text-key map, removed when present |
 | `decimal_or with m, key, fallback` | decimal or fallback |
 | `yesno_at with m, key` | maybe yes/no from a `map from text to yesno` |
+| `take_yesno_at with changing m, key` | maybe yes/no from a text-key map, removed when present |
 | `yesno_or with m, key, fallback` | yes/no or fallback |
 | `number_key_number_at with m, key` | maybe number from a `map from number to number` |
+| `take_number_key_number_at with changing m, key` | maybe number from a number-key map, removed when present |
 | `number_key_number_or with m, key, fallback` | number or fallback |
 | `add_number_key_count with changing m, key` | increments a number-key count in place |
 | `number_key_text_at with m, key` | maybe text from a `map from number to text` |
+| `take_number_key_text_at with changing m, key` | maybe text from a number-key map, removed when present |
 | `number_key_text_or with m, key, fallback` | text or fallback |
 | `number_key_decimal_at with m, key` | maybe decimal from a `map from number to decimal` |
+| `take_number_key_decimal_at with changing m, key` | maybe decimal from a number-key map, removed when present |
 | `number_key_decimal_or with m, key, fallback` | decimal or fallback |
 | `number_key_yesno_at with m, key` | maybe yes/no from a `map from number to yesno` |
+| `take_number_key_yesno_at with changing m, key` | maybe yes/no from a number-key map, removed when present |
 | `number_key_yesno_or with m, key, fallback` | yes/no or fallback |
 
 ## Local packages
