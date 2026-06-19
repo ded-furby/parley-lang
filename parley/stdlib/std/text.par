@@ -10,6 +10,11 @@ to repeated_text with t as text, count as number giving text:
 to surrounded_with with t as text, wrapper as text giving text:
     give back "{wrapper}{t}{wrapper}"
 
+to maybe_character with t as text, index as number giving maybe text:
+    if index is less than 1 or index is more than length of t:
+        give back nothing
+    give back some item index of t
+
 to line_count with t as text giving number:
     if t is "":
         give back 0

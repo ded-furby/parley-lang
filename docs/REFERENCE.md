@@ -224,6 +224,7 @@ Use `include "std/text"` for small text helpers:
 | Function | Gives |
 |---|---|
 | `is_blank with t` | yes when `trimmed t` is empty |
+| `maybe_character with t, index` | maybe one-character text at a 1-based UTF-8 character index |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 | `line_count with t` | number of newline-separated lines, or 0 for empty text |

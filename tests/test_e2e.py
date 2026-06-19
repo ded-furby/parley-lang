@@ -336,11 +336,15 @@ to main:
     say lines joined with "|"
     let no_lines be (nonempty_lines with "")
     say length of no_lines
+    say (maybe_character with "éc", 1)
+    say (maybe_character with "éc", 2)
+    say (maybe_character with "éc", 3)
+    say (maybe_character with "éc", 0)
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
-        "3\none|two|three\n0\n2\none|two\n0\n")
+        "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n")
 
 
 def test_bundled_std_list_package_runs(workdir):
