@@ -135,6 +135,7 @@ to main:
     say parts joined with " + "
     say line replacing "flour" with "bread"
     say position of "eggs" in line
+    say count of "," in line
     say uppercase of "quiet"
     if line starts with "milk":
         say "dairy first"

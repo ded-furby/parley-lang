@@ -103,6 +103,12 @@ def test_text_position_emits_utf8_safe_helper():
     assert "parley_position(&(" in rust
 
 
+def test_text_count_emits_utf8_safe_helper():
+    rust = emit_text('to main:\n    say count of "a" in "banana"\n')
+    assert "fn parley_count" in rust
+    assert "parley_count(&(" in rust
+
+
 def test_division_is_guarded_and_decimal():
     rust = emit_text("to main:\n    say 10 divided by 4\n")
     assert "parley_div" in rust

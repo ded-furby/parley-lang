@@ -564,6 +564,9 @@ class ToAst(Transformer):
     def position_of(self, meta, ch):
         return A.PositionOf(needle=ch[0], value=ch[1], **_pos(meta))
 
+    def count_of(self, meta, ch):
+        return A.CountOf(needle=ch[0], value=ch[1], **_pos(meta))
+
     def _bin(self, meta, ch, op):
         return A.BinOp(op=op, left=ch[0], right=ch[1], **_pos(meta))
 

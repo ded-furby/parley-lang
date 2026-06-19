@@ -111,7 +111,7 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 `is / is not / is more than / is less than / is at least / is at most`,
 `and or not`, `contains`, `starts with`, `ends with`,
 `t split by ","`, `xs joined with ", "`, `t replacing old with new`,
-`position of needle in t`.
+`position of needle in t`, `count of needle in t`.
 
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·

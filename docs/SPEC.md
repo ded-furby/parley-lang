@@ -110,10 +110,13 @@ parse-relevant highlights:
   stopping the program.
 * **Text operations** such as `split by`, `joined with`, `starts with`,
   `ends with`, `contains`, `replacing old with new`, and
-  `position of needle in text` are deterministic UTF-8 string operations.
+  `position of needle in text`, and `count of needle in text` are
+  deterministic UTF-8 string operations.
   Replacement returns a new text value and does not mutate the original text.
   Position returns `some n` with a 1-based character position, or `nothing`
-  when the needle is absent.
+  when the needle is absent. Count returns the number of non-overlapping
+  matches; an empty needle counts the character boundaries, so it returns
+  `length of text plus 1`.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative

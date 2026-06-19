@@ -207,6 +207,19 @@ fn parley_position(needle: &str, text: &str) -> Option<i64> {
     })
 }
 
+fn parley_count(needle: &str, text: &str) -> i64 {
+    if needle.is_empty() {
+        return text.chars().count() as i64 + 1;
+    }
+    let mut count = 0i64;
+    let mut rest = text;
+    while let Some(byte_index) = rest.find(needle) {
+        count += 1;
+        rest = &rest[(byte_index + needle.len())..];
+    }
+    count
+}
+
 fn parley_div(a: f64, b: f64) -> f64 {
     if b == 0.0 { panic!("Cannot divide by zero."); }
     a / b
@@ -476,6 +489,8 @@ class Emitter:
             )
         if isinstance(e, A.PositionOf):
             return self.mutated_names_in_expr(e.needle) | self.mutated_names_in_expr(e.value)
+        if isinstance(e, A.CountOf):
+            return self.mutated_names_in_expr(e.needle) | self.mutated_names_in_expr(e.value)
         if isinstance(e, A.Remainder):
             return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
         if isinstance(e, A.ItemOf):
@@ -662,6 +677,8 @@ class Emitter:
             )
         if isinstance(e, A.PositionOf):
             return f"parley_position(&({self.borrow(e.needle)}), &({self.borrow(e.value)}))"
+        if isinstance(e, A.CountOf):
+            return f"parley_count(&({self.borrow(e.needle)}), &({self.borrow(e.value)}))"
         if isinstance(e, A.PrefixOp):
             return self._value_prefix(e)
         if isinstance(e, A.Remainder):

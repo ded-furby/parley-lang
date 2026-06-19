@@ -435,6 +435,12 @@ class PositionOf(Expr):
 
 
 @dataclass
+class CountOf(Expr):
+    needle: Expr
+    value: Expr
+
+
+@dataclass
 class PrefixOp(Expr):
     """English prefix builtins: length of, sum of, sorted, value of, ..."""
     op: str

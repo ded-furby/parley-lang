@@ -750,6 +750,16 @@ class Checker:
                 if not isinstance(ty, (A.TText, TErr)):
                     self.type_mismatch(A.TText(), ty, part, what)
             return A.TMaybe(A.TNum())
+        if isinstance(e, A.CountOf):
+            checks = (
+                (e.needle, "The text to count"),
+                (e.value, "The text to search"),
+            )
+            for part, what in checks:
+                ty = self.infer(part)
+                if not isinstance(ty, (A.TText, TErr)):
+                    self.type_mismatch(A.TText(), ty, part, what)
+            return A.TNum()
         if isinstance(e, A.PrefixOp):
             return self._infer_prefix(e)
         if isinstance(e, A.Remainder):
