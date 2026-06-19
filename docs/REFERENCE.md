@@ -277,13 +277,15 @@ Use `parley package publish mathkit path --version 1.0.0 --description
 --source packages/mathkit/main.par` to print a registry-ready JSON entry with
 license, maintainer, and the deterministic package SHA-256. Directory packages
 hash every file by relative path and content; single-file packages hash the
-installed `main.par` layout.
+installed `main.par` layout. Add `--signing-key release-2026 --signing-secret
+SECRET` to include an HMAC-SHA256 release signature in the entry.
 
 Use `parley package review mathkit path --version 1.0.0 --description
 "math helpers" --license MIT --maintainer "Your Name <https://example.com>"`
 before submitting a package to a registry. It validates required metadata,
 computes the deterministic SHA-256, parses every package `.par` file, and
-prints the registry entry that would be submitted.
+prints the registry entry that would be submitted. It accepts the same
+`--signing-key` / `--signing-secret` options as `publish`.
 
 Use `parley package verify` after checkout, install, or before release. It
 reads `parley.lock.json`, recomputes each vendored package digest, prints `OK`
@@ -295,6 +297,8 @@ It validates package names, required `version`, `description`, `license`,
 `maintainer`, `source`, and `sha256` fields, resolves each source from the
 registry location, recomputes the package digest, and exits non-zero if any
 entry is incomplete, has a non-semantic version, or has changed.
+Add `--require-signatures --signing-secret SECRET` to reject unsigned or
+tampered package entries before hosting a signed registry.
 
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

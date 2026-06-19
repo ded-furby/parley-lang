@@ -17,6 +17,7 @@ python3 -m pytest tests/test_packages.py
 tmp="$(mktemp -d)" && (cd "$tmp" && parley package new demo_package)
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && parley package publish demo_pkg "$tmp/demo_pkg" --version 1.0.0 --description "demo package" --license MIT --maintainer "Demo Maintainer <https://example.com>"
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && parley package review demo_pkg "$tmp/demo_pkg" --version 1.0.0 --description "demo package" --license MIT --maintainer "Demo Maintainer <https://example.com>"
+tmp="$(mktemp -d)" && mkdir -p "$tmp/packages/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/packages/demo_pkg/main.par" && parley package publish demo_pkg "$tmp/packages/demo_pkg" --version 1.0.0 --description "demo package" --license MIT --maintainer "Demo Maintainer <https://example.com>" --signing-key release-test --signing-secret test-secret > "$tmp/published.json" && python3 -c 'import json, pathlib, sys; p=json.loads(pathlib.Path(sys.argv[1]).read_text()); print(json.dumps({"schema_version":1,"packages":{p["name"]:p["entry"]}}))' "$tmp/published.json" > "$tmp/registry.json" && parley package check-registry "$tmp/registry.json" --require-signatures --signing-secret test-secret
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && hash="$(python3 -c 'import hashlib, pathlib, sys; p=pathlib.Path(sys.argv[1]); print(hashlib.sha256(b"main.par\0"+(p/"main.par").read_bytes()).hexdigest())' "$tmp/demo_pkg")" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package","license":"MIT","maintainer":"Demo Maintainer <https://example.com>","sha256":"%s"}}}\n' "$hash" > "$tmp/registry.json" && (cd "$tmp" && parley package check-registry registry.json && parley package search --registry registry.json && parley package install demo_pkg --registry registry.json && parley package verify)
 parley doctor --json
 parley --version
@@ -56,7 +57,8 @@ The e2e tests require Rust and `cargo`.
 - Keep `parley package check-registry` covered; it must reject missing
   checksums, missing license/maintainer metadata, and package sources whose
   content no longer matches the registry. It must also reject non-semantic
-  package versions.
+  package versions. With `--require-signatures --signing-secret`, it must
+  reject unsigned or tampered signed-release entries.
 - Keep `site/registry.json` and `site/packages/` deployed through
   `scripts/deploy_pages.sh`; the hosted starter index lives at
   `https://ded-furby.github.io/parley-lang/registry.json`.
@@ -146,9 +148,10 @@ python3 -m twine check dist/*
   Parley/Python/Rust reference sources, and summarize a run log.
 - The package CLI can search a schema-1 registry, install a listed package,
   reject a bad checksum, verify a locked install, validate a registry manifest,
-  dry-run a submission review, and print a publish entry with license and
-  maintainer metadata for a local package. Package install, publish, review,
-  and registry validation reject non-semantic versions.
+  dry-run a submission review, print a publish entry with license and
+  maintainer metadata for a local package, and verify required signed-release
+  entries. Package install, publish, review, and registry validation reject
+  non-semantic versions.
 - The hosted registry URL serves JSON with license, maintainer, SHA-256
   metadata, and the listed package source files.
 - The GitHub branch is pushed and visible publicly.

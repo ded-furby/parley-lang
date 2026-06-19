@@ -251,6 +251,108 @@ def test_package_publish_rejects_invalid_version(workdir, tmp_path):
     assert "package versions must use semantic version form X.Y.Z" in publish.stderr
 
 
+def test_package_publish_can_sign_registry_entry(workdir, tmp_path):
+    source = tmp_path / "packages" / "signedkit"
+    source.mkdir(parents=True)
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+
+    publish = run_cli(
+        [
+            "package", "publish", "signedkit", str(source),
+            "--version", "1.2.3",
+            "--description", "signed math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+            "--signing-key", "release-2026",
+            "--signing-secret", "test-release-secret",
+        ],
+        cwd=workdir,
+    )
+
+    assert publish.returncode == 0, publish.stderr
+    entry = json.loads(publish.stdout)["entry"]
+    assert entry["signing_key"] == "release-2026"
+    assert entry["signature"].startswith("hmac-sha256:")
+
+
+def test_package_check_registry_verifies_required_signatures(workdir, tmp_path):
+    source = tmp_path / "packages" / "signedkit"
+    source.mkdir(parents=True)
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+    publish = run_cli(
+        [
+            "package", "publish", "signedkit", str(source),
+            "--version", "1.2.3",
+            "--description", "signed math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+            "--signing-key", "release-2026",
+            "--signing-secret", "test-release-secret",
+        ],
+        cwd=workdir,
+    )
+    assert publish.returncode == 0, publish.stderr
+    payload = json.loads(publish.stdout)
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {payload["name"]: payload["entry"]},
+    }))
+
+    check = run_cli(
+        [
+            "package", "check-registry", str(registry),
+            "--require-signatures",
+            "--signing-secret", "test-release-secret",
+        ],
+        cwd=workdir,
+    )
+
+    assert check.returncode == 0, check.stderr
+    assert "OK signedkit 1.2.3 packages/signedkit" in check.stdout
+
+
+def test_package_check_registry_rejects_bad_signature(workdir, tmp_path):
+    source = tmp_path / "packages" / "signedkit"
+    source.mkdir(parents=True)
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+    publish = run_cli(
+        [
+            "package", "publish", "signedkit", str(source),
+            "--version", "1.2.3",
+            "--description", "signed math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+            "--signing-key", "release-2026",
+            "--signing-secret", "test-release-secret",
+        ],
+        cwd=workdir,
+    )
+    assert publish.returncode == 0, publish.stderr
+    payload = json.loads(publish.stdout)
+    payload["entry"]["description"] = "tampered helpers"
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {payload["name"]: payload["entry"]},
+    }))
+
+    check = run_cli(
+        [
+            "package", "check-registry", str(registry),
+            "--require-signatures",
+            "--signing-secret", "test-release-secret",
+        ],
+        cwd=workdir,
+    )
+
+    assert check.returncode == 1
+    assert "signature mismatch for signedkit" in check.stderr
+
+
 def test_package_review_accepts_valid_submission(workdir, tmp_path):
     source = tmp_path / "reviewkit"
     source.mkdir()

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import hmac
 import importlib.util
 from importlib import resources
 import json
@@ -71,6 +72,7 @@ PACKAGE_VERSION_RE = re.compile(
     r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
     r"(?:-[0-9A-Za-z][0-9A-Za-z.-]*)?(?:\+[0-9A-Za-z][0-9A-Za-z.-]*)?$")
 SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
+SIGNATURE_RE = re.compile(r"^hmac-sha256:[0-9a-fA-F]{64}$")
 DEFAULT_REGISTRY = "parley.registry.json"
 
 
@@ -478,6 +480,47 @@ def _validate_submission_metadata(description: str, license_name: str, maintaine
         raise OSError("package submissions need " + ", ".join(missing))
 
 
+def _signature_payload(name: str, entry: dict) -> bytes:
+    payload = {"name": name}
+    for field in ("version", "source", "description", "license", "maintainer", "sha256", "signing_key"):
+        payload[field] = str(entry.get(field) or "")
+    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _sign_registry_entry(name: str, entry: dict, secret: str) -> str:
+    digest = hmac.new(secret.encode("utf-8"), _signature_payload(name, entry), hashlib.sha256)
+    return f"hmac-sha256:{digest.hexdigest()}"
+
+
+def _maybe_sign_registry_entry(args, name: str, entry: dict) -> None:
+    signing_key = getattr(args, "signing_key", None)
+    signing_secret = getattr(args, "signing_secret", None)
+    if bool(signing_key) != bool(signing_secret):
+        raise OSError("package signing needs both --signing-key and --signing-secret")
+    if not signing_key:
+        return
+    entry["signing_key"] = signing_key
+    entry["signature"] = _sign_registry_entry(name, entry, signing_secret)
+
+
+def _verify_registry_signature(name: str, entry: dict, signing_secret: str | None, required: bool) -> None:
+    signature = str(entry.get("signature") or "").strip()
+    signing_key = str(entry.get("signing_key") or "").strip()
+    if not signature and not signing_key:
+        if required:
+            raise OSError(f"{name} has no signature")
+        return
+    if not signature or not signing_key:
+        raise OSError(f"{name} signature needs both signature and signing_key")
+    if not SIGNATURE_RE.fullmatch(signature):
+        raise OSError(f"{name} signature must be hmac-sha256:<64 hex characters>")
+    if not signing_secret:
+        raise OSError("signature verification needs --signing-secret")
+    expected = _sign_registry_entry(name, entry, signing_secret)
+    if not hmac.compare_digest(signature.lower(), expected):
+        raise OSError(f"signature mismatch for {name}")
+
+
 def _materialize_package_source(source: str, temp_root: Path | None = None) -> Path:
     parsed = urlparse(source)
     if parsed.scheme == "file":
@@ -571,6 +614,7 @@ def cmd_package_publish(args) -> int:
             "maintainer": args.maintainer,
             "sha256": sha256,
         }
+        _maybe_sign_registry_entry(args, args.name, entry)
     except OSError as exc:
         print(f"package error: {exc}", file=sys.stderr)
         return 1
@@ -595,6 +639,7 @@ def cmd_package_review(args) -> int:
             "maintainer": args.maintainer,
             "sha256": sha256,
         }
+        _maybe_sign_registry_entry(args, args.name, entry)
     except OSError as exc:
         print(f"package error: {exc}", file=sys.stderr)
         return 1
@@ -690,6 +735,12 @@ def cmd_package_check_registry(args) -> int:
                 if actual_sha256 != expected_sha256:
                     raise OSError(
                         f"sha256 mismatch for {name}: expected {expected_sha256}, got {actual_sha256}")
+                _verify_registry_signature(
+                    name,
+                    entry,
+                    args.signing_secret,
+                    args.require_signatures,
+                )
             except OSError as exc:
                 print(f"package error: {exc}", file=sys.stderr)
                 ok = False
@@ -843,6 +894,8 @@ def main(argv: list[str] | None = None) -> int:
     package_publish.add_argument("--license", required=True)
     package_publish.add_argument("--maintainer", required=True)
     package_publish.add_argument("--source", help="source path or URL to place in the registry entry")
+    package_publish.add_argument("--signing-key", help="release signing key id to include in the registry entry")
+    package_publish.add_argument("--signing-secret", help="secret used to sign the registry entry")
     package_publish.set_defaults(fn=cmd_package_publish)
     package_review = package_sub.add_parser(
         "review", help="dry-run a package submission before registry publishing")
@@ -853,6 +906,8 @@ def main(argv: list[str] | None = None) -> int:
     package_review.add_argument("--license", required=True)
     package_review.add_argument("--maintainer", required=True)
     package_review.add_argument("--source", help="source path or URL to place in the registry entry")
+    package_review.add_argument("--signing-key", help="release signing key id to include in the registry entry")
+    package_review.add_argument("--signing-secret", help="secret used to sign the registry entry")
     package_review.set_defaults(fn=cmd_package_review)
     package_new = package_sub.add_parser("new", help="create a local package skeleton")
     package_new.add_argument("name")
@@ -865,6 +920,10 @@ def main(argv: list[str] | None = None) -> int:
     package_check_registry = package_sub.add_parser(
         "check-registry", help="validate a registry manifest before publishing")
     package_check_registry.add_argument("registry", nargs="?", help="registry manifest JSON path or URL")
+    package_check_registry.add_argument("--require-signatures", action="store_true",
+                                        help="require every package entry to carry a valid release signature")
+    package_check_registry.add_argument("--signing-secret",
+                                        help="secret used to verify package entry signatures")
     package_check_registry.set_defaults(fn=cmd_package_check_registry)
     package_search = package_sub.add_parser("search", help="list packages in a registry")
     package_search.add_argument("query", nargs="?")

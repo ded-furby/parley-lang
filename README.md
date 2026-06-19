@@ -126,7 +126,7 @@ packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PAT
 local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package verify`, plus registry validation with
 `parley package check-registry` and dry-run submission review with
-`parley package review`, via
+`parley package review`, and optional HMAC-SHA256 release signatures, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
@@ -197,16 +197,16 @@ the plan:
 - [x] package semantic-version governance — v0.3.19
 - [x] benchmark manifest with Parley/Python/Rust reference sources — v0.3.20
 - [x] package submission review (`parley package review`) — v0.3.21
+- [x] signed package release entries (`--require-signatures`) — v0.3.22
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
-- [ ] signed package releases
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 178 tests; e2e compiles real binaries (needs cargo)
+pytest            # 181 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

@@ -143,12 +143,17 @@ present, install verifies it before replacing an existing package and records
 the digest in `parley.lock.json`. Run `parley package verify` to check that
 vendored packages still match the lockfile. Use `parley package publish name
 path --version 1.0.0 --description "helpers" --license MIT --maintainer
-"Name <https://example.com>"` to print a registry-ready entry.
+"Name <https://example.com>"` to print a registry-ready entry. Add
+`--signing-key release-2026 --signing-secret SECRET` to attach an HMAC-SHA256
+release signature.
 Use `parley package review name path --version 1.0.0 --description "helpers"
 --license MIT --maintainer "Name <https://example.com>"` before submitting a
 package; it validates metadata, parses package `.par` files, computes the
-digest, and prints the registry entry that would be submitted.
+digest, and prints the registry entry that would be submitted. It accepts the
+same signing options as `publish`.
 Use `parley package check-registry registry.json` before hosting a registry.
+Use `--require-signatures --signing-secret SECRET` when the registry should
+reject unsigned or tampered signed-release entries.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
 
@@ -209,11 +214,12 @@ The hosted starter index is
   `parley.lock.json`; run it after package installs or before release.
 * `parley package check-registry registry.json` validates package names,
   required version, description, license, maintainer, and source metadata,
-  semantic versions, readable sources, and SHA-256 matches before a registry is
-  hosted.
+  semantic versions, readable sources, SHA-256 matches, and optional required
+  HMAC-SHA256 release signatures before a registry is hosted.
 * `parley package publish name path --version X --description "..." --license
   MIT --maintainer "Name <https://example.com>"` prints the registry entry for
-  a local package, including the deterministic SHA-256.
+  a local package, including the deterministic SHA-256. Add `--signing-key`
+  and `--signing-secret` to include a release signature.
 * `parley package review name path --version X --description "..." --license
   MIT --maintainer "Name <https://example.com>"` dry-runs a package submission
   by validating metadata, parsing package `.par` files, and printing the

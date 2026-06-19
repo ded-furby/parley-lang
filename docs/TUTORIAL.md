@@ -355,8 +355,8 @@ parley package install mathkit ../mathkit --version 1.0.0
 parley package list
 parley package verify
 parley package review mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>"
-parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>"
-parley package check-registry registry.json
+parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>" --signing-key release-2026 --signing-secret "$PARLEY_PACKAGE_SIGNING_SECRET"
+parley package check-registry registry.json --require-signatures --signing-secret "$PARLEY_PACKAGE_SIGNING_SECRET"
 ```
 
 `package new` creates a starter `main.par`; `package install` copies the
@@ -366,9 +366,11 @@ that vendored files still match the lockfile. `package publish` prints a
 registry-ready JSON entry with license, maintainer, and the same digest.
 `package review` dry-runs that registry submission, validates metadata, and
 parses package `.par` files before you submit it. `package check-registry`
-validates registry ownership metadata before you host it. Package versions must
-use semantic `X.Y.Z` form, such as `1.0.0` or
-`1.0.0-beta.1`.
+validates registry ownership metadata before you host it. Signed registries add
+`--signing-key` / `--signing-secret` when publishing and
+`--require-signatures` when checking. Keep the signing secret out of the
+registry file. Package versions must use semantic `X.Y.Z` form, such as
+`1.0.0` or `1.0.0-beta.1`.
 
 For a registry manifest, use `parley package search --registry registry.json`
 and `parley package install mathkit --registry registry.json`. If the registry
