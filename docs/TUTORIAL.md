@@ -364,6 +364,7 @@ to main:
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99
     say (pop_number with numbers, 2)
+    say (remove_number with numbers, 4)
     say length of numbers
     say (maybe_average_number with empty_numbers)
     let prices be a list of 1.5, 2.5, 2.0

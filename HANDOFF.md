@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.43** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.44** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -179,6 +179,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.43 list pop helpers:** `std/list` adds `pop_number`, `pop_text`,
   `pop_decimal`, and `pop_yesno`, returning `maybe` values while removing
   valid 1-based items from caller lists.
+- **v0.3.44 list remove helpers:** `std/list` adds `remove_number`,
+  `remove_text`, `remove_decimal`, and `remove_yesno`, removing the first
+  matching item from caller lists and returning yes/no for whether a value was
+  removed.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -250,7 +254,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.43).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.44).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

@@ -126,12 +126,13 @@ parse-relevant highlights:
 * **Bundled list helpers** in `std/list`, including `list_slice_number`,
   `list_slice_text`, `list_slice_decimal`, and `list_slice_yesno`, use
   1-based inclusive indexes. Slice helpers clamp bounds to the list and give
-  an empty list for reversed or out-of-range requests. Extend, clear, and
-  insert and pop helpers take a `changing` list parameter and mutate the
+  an empty list for reversed or out-of-range requests. Extend, clear, insert,
+  pop, and remove helpers take a `changing` list parameter and mutate the
   caller's list. Insert helpers clamp the target index: 1 or below inserts at
   the front, and an index past the end appends. Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
-  mutation for out-of-range indexes.
+  mutation for out-of-range indexes. Remove helpers delete the first matching
+  value and return yes/no for whether anything changed.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative

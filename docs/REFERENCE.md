@@ -247,6 +247,7 @@ Use `include "std/list"` for common list helpers:
 | `clear_number with changing xs` | remove every item from `xs` |
 | `insert_number with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_number with changing xs, index` | maybe removed number at a 1-based index |
+| `remove_number with changing xs, value` | remove the first matching number; yes if one was removed |
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
@@ -260,6 +261,7 @@ Use `include "std/list"` for common list helpers:
 | `clear_text with changing xs` | remove every item from `xs` |
 | `insert_text with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_text with changing xs, index` | maybe removed text at a 1-based index |
+| `remove_text with changing xs, value` | remove the first matching text; yes if one was removed |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
@@ -271,6 +273,7 @@ Use `include "std/list"` for common list helpers:
 | `clear_decimal with changing xs` | remove every item from `xs` |
 | `insert_decimal with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_decimal with changing xs, index` | maybe removed decimal at a 1-based index |
+| `remove_decimal with changing xs, value` | remove the first matching decimal; yes if one was removed |
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
@@ -283,6 +286,7 @@ Use `include "std/list"` for common list helpers:
 | `clear_yesno with changing xs` | remove every item from `xs` |
 | `insert_yesno with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_yesno with changing xs, index` | maybe removed yes/no at a 1-based index |
+| `remove_yesno with changing xs, value` | remove the first matching yes/no value; yes if one was removed |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 

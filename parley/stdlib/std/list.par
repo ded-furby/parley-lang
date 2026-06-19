@@ -73,6 +73,15 @@ to pop_number with changing xs as list of number, index as number giving maybe n
     remove item index of xs
     give back some value
 
+to remove_number with changing xs as list of number, value as number giving yesno:
+    let spot be 1
+    for each current in xs:
+        if current is value:
+            remove item spot of xs
+            give back yes
+        set spot to spot plus 1
+    give back no
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -184,6 +193,15 @@ to pop_text with changing xs as list of text, index as number giving maybe text:
     remove item index of xs
     give back some value
 
+to remove_text with changing xs as list of text, value as text giving yesno:
+    let spot be 1
+    for each current in xs:
+        if current is value:
+            remove item spot of xs
+            give back yes
+        set spot to spot plus 1
+    give back no
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -285,6 +303,15 @@ to pop_decimal with changing xs as list of decimal, index as number giving maybe
     let value be item index of xs
     remove item index of xs
     give back some value
+
+to remove_decimal with changing xs as list of decimal, value as decimal giving yesno:
+    let spot be 1
+    for each current in xs:
+        if current is value:
+            remove item spot of xs
+            give back yes
+        set spot to spot plus 1
+    give back no
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0
@@ -392,6 +419,15 @@ to pop_yesno with changing xs as list of yesno, index as number giving maybe yes
     let value be item index of xs
     remove item index of xs
     give back some value
+
+to remove_yesno with changing xs as list of yesno, value as yesno giving yesno:
+    let spot be 1
+    for each current in xs:
+        if current is value:
+            remove item spot of xs
+            give back yes
+        set spot to spot plus 1
+    give back no
 
 to count_yes with xs as list of yesno giving number:
     let count be 0
