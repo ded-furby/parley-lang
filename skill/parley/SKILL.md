@@ -56,6 +56,7 @@ to main:
     let xs be a list of 3, 1, 2                # list (1-based items)
     add 9 to xs
     say item 1 of xs
+    say item 1 of "text"
     for each x in sorted xs:
         say x times 10
     let m be a map from text to number         # keys: number or text only
@@ -111,7 +112,7 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 `is / is not / is more than / is less than / is at least / is at most`,
 `and or not`, `contains`, `starts with`, `ends with`,
 `t split by ","`, `xs joined with ", "`, `t replacing old with new`,
-`position of needle in t`, `count of needle in t`.
+`position of needle in t`, `count of needle in t`, `item i of t`.
 
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·

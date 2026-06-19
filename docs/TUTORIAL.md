@@ -131,6 +131,7 @@ behave the same every run.
 to main:
     let line be "milk, eggs, flour"
     let parts be line split by ", "
+    say item 1 of line
     say length of parts
     say parts joined with " + "
     say line replacing "flour" with "bread"

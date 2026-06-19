@@ -146,6 +146,10 @@ def test_text_count_expression_is_number():
     assert check_text(in_main('let n be count of "a" in "banana"', "say n plus 1")) == []
 
 
+def test_text_item_expression_is_clean():
+    assert check_text(in_main('let ch be item 2 of "éc"', "say ch")) == []
+
+
 def test_block_scoping_let_dies_with_block():
     src = in_main("if yes:", "    let x be 1", "say x")
     assert "P201" in diag_codes(src)

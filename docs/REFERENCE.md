@@ -97,7 +97,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `"{x} and {y}"` | `format!("{} and {}", x, y)` | text |
 | `(f with a, b)` | `f(a, b)` — calls in expressions take parens | |
 | `bob's name` | `bob.name` | field type |
-| `item i of xs` / `item k of m` | bounds/presence-checked access (1-based) | element |
+| `item i of xs` / `item i of t` / `item k of m` | bounds/presence-checked access (1-based) | element/text/value |
 | `a list of 1, 2, 3` | `vec![1, 2, 3]` | directly after be/to/give back, or in parens |
 | `an empty list of text` | `Vec::<String>::new()` | |
 | `a map from text to number` | `HashMap::new()` | |

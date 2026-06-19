@@ -111,6 +111,14 @@ def test_text_count_expression_parse():
     assert isinstance(expr.value, A.Str)
 
 
+def test_text_item_expression_parse():
+    prog = parse('to main:\n    say item 2 of "éc"\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.ItemOf)
+    assert isinstance(expr.index, A.Num)
+    assert isinstance(expr.container, A.Str)
+
+
 def test_possessive_chains():
     prog = parse("to main:\n    say box's corner's x\n")
     say = prog.funcs[0].body[0]

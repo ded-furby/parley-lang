@@ -133,7 +133,8 @@ setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, `position of … in …`, `count of … in …`,
-`uppercase of`, `contains`, line/word counts, word/line extraction, …) · number/text/decimal list
+`item i of text`, `uppercase of`, `contains`, line/word counts,
+word/line extraction, …) · number/text/decimal list
 helpers with safe maybe first/last/index and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
@@ -214,6 +215,7 @@ the plan:
 - [x] text replacement expression (`text replacing old with new`) — v0.3.33
 - [x] text search position expression (`position of needle in text`) — v0.3.34
 - [x] text occurrence count expression (`count of needle in text`) — v0.3.35
+- [x] text character indexing (`item i of text`) — v0.3.36
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
@@ -222,7 +224,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 199 tests; e2e compiles real binaries (needs cargo)
+pytest            # 203 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

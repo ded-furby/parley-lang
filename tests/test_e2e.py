@@ -111,13 +111,15 @@ def test_text_toolbox(workdir):
     say count of "o" in t
     say count of "aa" in "aaaa"
     say count of "" in "éc"
+    say item 1 of t
+    say item 2 of "éc"
     if t starts with "The" and t ends with "Fox":
         say "framed"
     say "quick" contains "ick"
 '''
     proc = run_program(workdir, "text_toolbox", src)
     assert proc.stdout == (
-        "the quick fox\nTHE QUICK FOX\n13\ndesserts\nThe Quiet Fox\n5\nnothing\n2\n1\n2\n3\nframed\nyes\n")
+        "the quick fox\nTHE QUICK FOX\n13\ndesserts\nThe Quiet Fox\n5\nnothing\n2\n1\n2\n3\nT\nc\nframed\nyes\n")
 
 
 def test_math_toolbox(workdir):
@@ -190,6 +192,15 @@ def test_uncaught_error_is_english_and_exit_1(workdir):
     proc = run_program(workdir, "boom", src, expect_ok=False)
     assert proc.returncode == 1
     assert "The program stopped: There is no item 5 — the list has 1 item(s)." in proc.stderr
+
+
+def test_text_item_out_of_range_is_english(workdir):
+    src = '''to main:
+    say item 3 of "éc"
+'''
+    proc = run_program(workdir, "text_boom", src, expect_ok=False)
+    assert proc.returncode == 1
+    assert "The program stopped: There is no character 3 — the text has 2 character(s)." in proc.stderr
 
 
 def test_attempt_catches_and_continues(workdir):

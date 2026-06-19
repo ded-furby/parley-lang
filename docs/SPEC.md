@@ -108,10 +108,12 @@ parse-relevant highlights:
   debug builds (`parley run`); release builds (`parley build`) wrap.
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
-* **Text operations** such as `split by`, `joined with`, `starts with`,
-  `ends with`, `contains`, `replacing old with new`, and
+* **Text operations** such as `split by`, `joined with`, `item i of text`,
+  `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are
   deterministic UTF-8 string operations.
+  `item i of text` uses 1-based character indexing and returns a one-character
+  text value.
   Replacement returns a new text value and does not mutate the original text.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping

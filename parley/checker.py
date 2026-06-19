@@ -1096,9 +1096,9 @@ class Checker:
                 self.type_mismatch(cty.key, ity, e.index, "This map's keys")
             return cty.val
         if isinstance(cty, A.TText):
-            self.err("P306", "Text has no items; split it first: `t split by \"\"` "
-                     "is not supported — use `split by` with a separator.", e)
-            return TErr()
+            if not self.assignable(A.TNum(), ity):
+                self.type_mismatch(A.TNum(), ity, e.index, "A text position")
+            return A.TText()
         if not isinstance(cty, TErr):
             self.err("P306", f"`item … of …` works on lists and maps, not {cty}.", e)
         return TErr()

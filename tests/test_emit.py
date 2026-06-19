@@ -122,6 +122,12 @@ def test_one_based_indexing_uses_helper():
     assert "parley_item" in rust
 
 
+def test_text_indexing_uses_utf8_helper():
+    rust = emit_text('to main:\n    say item 2 of "éc"\n')
+    assert "fn parley_text_item" in rust
+    assert "parley_text_item(&(" in rust
+
+
 def test_rust_keyword_names_are_mangled():
     rust = emit_text(
         "to main:\n"

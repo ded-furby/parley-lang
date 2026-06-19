@@ -133,6 +133,14 @@ fn parley_item<T: Clone>(xs: &[T], i: i64) -> T {
     xs[(i - 1) as usize].clone()
 }
 
+fn parley_text_item(s: &str, i: i64) -> String {
+    let len = s.chars().count();
+    if i < 1 || (i as usize) > len {
+        panic!("There is no character {} — the text has {} character(s).", i, len);
+    }
+    s.chars().nth((i - 1) as usize).unwrap().to_string()
+}
+
 fn parley_set_item<T>(xs: &mut Vec<T>, i: i64, v: T) {
     if i < 1 || (i as usize) > xs.len() {
         panic!("Cannot set item {} — the list has {} item(s).", i, xs.len());
@@ -687,6 +695,8 @@ class Emitter:
             cty = e.container.ty
             if isinstance(cty, A.TMap):
                 return f"parley_get(&({self.borrow(e.container)}), &({self.value(e.index, cty.key)}))"
+            if isinstance(cty, A.TText):
+                return f"parley_text_item(&({self.borrow(e.container)}), {self.value(e.index)})"
             return f"parley_item(&({self.borrow(e.container)}), {self.value(e.index)})"
         if isinstance(e, A.ReadFile):
             return f"parley_read_file(&({self.borrow(e.path)}))"
