@@ -324,6 +324,12 @@ to main:
     say (maybe_last_number with nums)
     say (maybe_first_number with empty_nums)
     say (maybe_last_number with empty_nums)
+    say (maybe_smallest_number with nums)
+    say (maybe_largest_number with nums)
+    say (maybe_average_number with nums)
+    say (maybe_smallest_number with empty_nums)
+    say (maybe_largest_number with empty_nums)
+    say (maybe_average_number with empty_nums)
     let words be a list of "red", "blue", "red"
     say (first_text with words)
     say (last_text with words)
@@ -334,6 +340,10 @@ to main:
     say (maybe_last_text with words)
     say (maybe_first_text with empty_words)
     say (maybe_last_text with empty_words)
+    say (maybe_smallest_text with words)
+    say (maybe_largest_text with words)
+    say (maybe_smallest_text with empty_words)
+    say (maybe_largest_text with empty_words)
     let decimals be a list of 1.5, 2.5, 2.0
     say (first_decimal with decimals)
     say (last_decimal with decimals)
@@ -346,12 +356,21 @@ to main:
     say (maybe_last_decimal with decimals)
     say (maybe_first_decimal with empty_decimals)
     say (maybe_last_decimal with empty_decimals)
+    say (maybe_smallest_decimal with decimals)
+    say (maybe_largest_decimal with decimals)
+    say (maybe_average_decimal with decimals)
+    say (maybe_smallest_decimal with empty_decimals)
+    say (maybe_largest_decimal with empty_decimals)
+    say (maybe_average_decimal with empty_decimals)
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
         "4\n8\n4.5\n2\n4\nnothing\n4\n8\nnothing\nnothing\n"
+        "2\n8\n4.5\nnothing\nnothing\nnothing\n"
         "red\nred\n2\nnothing\nred\nred\nnothing\nnothing\n"
-        "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\nnothing\nnothing\n")
+        "blue\nred\nnothing\nnothing\n"
+        "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\nnothing\nnothing\n"
+        "1.5\n2.5\n2\nnothing\nnothing\nnothing\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

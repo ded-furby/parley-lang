@@ -233,15 +233,20 @@ Use `include "std/list"` for common list helpers:
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
+| `maybe_smallest_number with xs` / `maybe_largest_number with xs` | maybe smallest or largest number |
+| `maybe_average_number with xs` | maybe decimal average |
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
+| `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
 | `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
 | `maybe_first_decimal with xs` / `maybe_last_decimal with xs` | maybe first or last decimal |
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
+| `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
+| `maybe_average_decimal with xs` | maybe decimal average |
 
 Use `include "std/map"` for common map helpers:
 

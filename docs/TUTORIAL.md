@@ -345,8 +345,10 @@ to main:
     say (index_number with numbers, 8)
     let empty_numbers be an empty list of number
     say (maybe_first_number with empty_numbers)
+    say (maybe_average_number with empty_numbers)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
+    say (maybe_largest_decimal with prices)
     let counts be a map from text to number
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)

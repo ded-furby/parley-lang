@@ -32,6 +32,24 @@ to index_number with xs as list of number, needle as number giving maybe number:
 to average_number with xs as list of number giving decimal:
     give back (decimal from (sum of xs)) divided by (decimal from (length of xs))
 
+to maybe_smallest_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    let value be smallest of xs
+    give back some value
+
+to maybe_largest_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    let value be largest of xs
+    give back some value
+
+to maybe_average_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (average_number with xs)
+    give back some value
+
 to first_text with xs as list of text giving text:
     give back item 1 of xs
 
@@ -62,6 +80,18 @@ to index_text with xs as list of text, needle as text giving maybe number:
             give back some index
         set index to index plus 1
     give back nothing
+
+to maybe_smallest_text with xs as list of text giving maybe text:
+    if length of xs is 0:
+        give back nothing
+    let value be smallest of xs
+    give back some value
+
+to maybe_largest_text with xs as list of text giving maybe text:
+    if length of xs is 0:
+        give back nothing
+    let value be largest of xs
+    give back some value
 
 to first_decimal with xs as list of decimal giving decimal:
     give back item 1 of xs
@@ -96,3 +126,21 @@ to index_decimal with xs as list of decimal, needle as decimal giving maybe numb
 
 to average_decimal with xs as list of decimal giving decimal:
     give back (sum of xs) divided by (decimal from (length of xs))
+
+to maybe_smallest_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be smallest of xs
+    give back some value
+
+to maybe_largest_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be largest of xs
+    give back some value
+
+to maybe_average_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (average_decimal with xs)
+    give back some value
