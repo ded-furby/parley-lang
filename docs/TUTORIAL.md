@@ -354,6 +354,7 @@ parley package new mathkit
 parley package install mathkit ../mathkit --version 1.0.0
 parley package list
 parley package verify
+parley package review mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>"
 parley package publish mathkit ../mathkit --version 1.0.0 --description "math helpers" --license MIT --maintainer "Your Name <https://example.com>"
 parley package check-registry registry.json
 ```
@@ -363,8 +364,10 @@ package to `parley_modules/mathkit/` and records it in `parley.lock.json`.
 The lockfile includes the installed package SHA-256. `package verify` checks
 that vendored files still match the lockfile. `package publish` prints a
 registry-ready JSON entry with license, maintainer, and the same digest.
-`package check-registry` validates registry ownership metadata before you host
-it. Package versions must use semantic `X.Y.Z` form, such as `1.0.0` or
+`package review` dry-runs that registry submission, validates metadata, and
+parses package `.par` files before you submit it. `package check-registry`
+validates registry ownership metadata before you host it. Package versions must
+use semantic `X.Y.Z` form, such as `1.0.0` or
 `1.0.0-beta.1`.
 
 For a registry manifest, use `parley package search --registry registry.json`

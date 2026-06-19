@@ -16,6 +16,7 @@ python3 -m pytest tests/test_parser.py::test_include_bundled_std_package tests/t
 python3 -m pytest tests/test_packages.py
 tmp="$(mktemp -d)" && (cd "$tmp" && parley package new demo_package)
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && parley package publish demo_pkg "$tmp/demo_pkg" --version 1.0.0 --description "demo package" --license MIT --maintainer "Demo Maintainer <https://example.com>"
+tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && parley package review demo_pkg "$tmp/demo_pkg" --version 1.0.0 --description "demo package" --license MIT --maintainer "Demo Maintainer <https://example.com>"
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && hash="$(python3 -c 'import hashlib, pathlib, sys; p=pathlib.Path(sys.argv[1]); print(hashlib.sha256(b"main.par\0"+(p/"main.par").read_bytes()).hexdigest())' "$tmp/demo_pkg")" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package","license":"MIT","maintainer":"Demo Maintainer <https://example.com>","sha256":"%s"}}}\n' "$hash" > "$tmp/registry.json" && (cd "$tmp" && parley package check-registry registry.json && parley package search --registry registry.json && parley package install demo_pkg --registry registry.json && parley package verify)
 parley doctor --json
 parley --version
@@ -47,6 +48,9 @@ The e2e tests require Rust and `cargo`.
 - Keep `parley package publish` covered; it prints a registry-ready entry for
   local package sources with license, maintainer, and the deterministic package
   SHA-256, and it must reject non-semantic versions.
+- Keep `parley package review` covered; it is the dry-run submission gate and
+  must validate metadata, package syntax, semantic versions, and the package
+  digest before printing the registry entry that would be submitted.
 - Keep `parley package verify` covered; it must fail for modified packages and
   old lock entries that lack a digest.
 - Keep `parley package check-registry` covered; it must reject missing
@@ -142,9 +146,9 @@ python3 -m twine check dist/*
   Parley/Python/Rust reference sources, and summarize a run log.
 - The package CLI can search a schema-1 registry, install a listed package,
   reject a bad checksum, verify a locked install, validate a registry manifest,
-  and print a publish entry with license and maintainer metadata for a local
-  package. Package install, publish, and registry validation reject
-  non-semantic versions.
+  dry-run a submission review, and print a publish entry with license and
+  maintainer metadata for a local package. Package install, publish, review,
+  and registry validation reject non-semantic versions.
 - The hosted registry URL serves JSON with license, maintainer, SHA-256
   metadata, and the listed package source files.
 - The GitHub branch is pushed and visible publicly.

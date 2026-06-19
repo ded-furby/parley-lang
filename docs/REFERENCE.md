@@ -279,6 +279,12 @@ license, maintainer, and the deterministic package SHA-256. Directory packages
 hash every file by relative path and content; single-file packages hash the
 installed `main.par` layout.
 
+Use `parley package review mathkit path --version 1.0.0 --description
+"math helpers" --license MIT --maintainer "Your Name <https://example.com>"`
+before submitting a package to a registry. It validates required metadata,
+computes the deterministic SHA-256, parses every package `.par` file, and
+prints the registry entry that would be submitted.
+
 Use `parley package verify` after checkout, install, or before release. It
 reads `parley.lock.json`, recomputes each vendored package digest, prints `OK`
 for packages that still match, and exits non-zero if a package is missing, has

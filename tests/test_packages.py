@@ -251,6 +251,54 @@ def test_package_publish_rejects_invalid_version(workdir, tmp_path):
     assert "package versions must use semantic version form X.Y.Z" in publish.stderr
 
 
+def test_package_review_accepts_valid_submission(workdir, tmp_path):
+    source = tmp_path / "reviewkit"
+    source.mkdir()
+    content = "to double with n as number giving number:\n    give back n times 2\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+
+    review = run_cli(
+        [
+            "package", "review", "reviewkit", str(source),
+            "--version", "1.2.3",
+            "--description", "reviewed math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+        ],
+        cwd=workdir,
+    )
+
+    assert review.returncode == 0, review.stderr
+    payload = json.loads(review.stdout)
+    assert payload["ok"] is True
+    assert payload["name"] == "reviewkit"
+    assert payload["entry"]["sha256"] == sha256
+    assert payload["entry"]["source"] == "packages/reviewkit"
+    assert payload["review"]["parley_files"] == ["main.par"]
+
+
+def test_package_review_rejects_syntax_errors(workdir, tmp_path):
+    source = tmp_path / "badkit"
+    source.mkdir()
+    (source / "main.par").write_text("to broken\n    say \"bad\"\n")
+
+    review = run_cli(
+        [
+            "package", "review", "badkit", str(source),
+            "--version", "1.0.0",
+            "--description", "broken package",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+        ],
+        cwd=workdir,
+    )
+
+    assert review.returncode == 1
+    assert "main.par" in review.stderr
+    assert "P101" in review.stderr
+
+
 def test_package_verify_accepts_locked_package(workdir, tmp_path):
     source = tmp_path / "mathkit"
     source.mkdir()

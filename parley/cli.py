@@ -10,6 +10,7 @@
   parley doctor                   verify local setup
   parley package install name src vendor a local package
   parley package publish name src print a registry entry with owner metadata
+  parley package review name src  dry-run package submission review
   parley package verify           verify vendored packages against the lockfile
   parley package check-registry x validate a package registry manifest
   parley benchmark measure        measure the seed research corpus
@@ -434,6 +435,49 @@ def _package_sha256(source: Path) -> str:
     raise OSError(f"package source does not exist: {source}")
 
 
+def _package_parley_files(source: Path) -> list[Path]:
+    if source.is_file():
+        return [source]
+    if source.is_dir():
+        return sorted(p for p in source.rglob("*.par") if p.is_file())
+    raise OSError(f"package source does not exist: {source}")
+
+
+def _review_package_parley_files(source: Path) -> list[str]:
+    files = _package_parley_files(source)
+    if not files:
+        raise OSError("package sources need at least one .par file")
+    reviewed: list[str] = []
+    root = source if source.is_dir() else source.parent
+    for path in files:
+        label = path.relative_to(root).as_posix()
+        try:
+            parse_program(path)
+        except ParleyError as exc:
+            diag = exc.diagnostics[0]
+            location = label
+            if diag.line:
+                location = f"{location}:{diag.line}"
+                if diag.col:
+                    location = f"{location}:{diag.col}"
+            raise OSError(f"{location}: {diag.code} {diag.message}") from exc
+        reviewed.append(label)
+    return reviewed
+
+
+def _validate_submission_metadata(description: str, license_name: str, maintainer: str) -> None:
+    missing = [
+        field for field, value in (
+            ("description", description),
+            ("license", license_name),
+            ("maintainer", maintainer),
+        )
+        if not str(value or "").strip()
+    ]
+    if missing:
+        raise OSError("package submissions need " + ", ".join(missing))
+
+
 def _materialize_package_source(source: str, temp_root: Path | None = None) -> Path:
     parsed = urlparse(source)
     if parsed.scheme == "file":
@@ -531,6 +575,38 @@ def cmd_package_publish(args) -> int:
         print(f"package error: {exc}", file=sys.stderr)
         return 1
     print(json.dumps({"name": args.name, "entry": entry}, indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_package_review(args) -> int:
+    try:
+        _validate_package_name(args.name)
+        _validate_package_version(args.version)
+        _validate_submission_metadata(args.description, args.license, args.maintainer)
+        source = Path(args.package_source).resolve()
+        sha256 = _package_sha256(source)
+        reviewed_files = _review_package_parley_files(source)
+        source_ref = args.source or (f"packages/{args.name}" if source.is_dir() else source.name)
+        entry = {
+            "version": args.version,
+            "source": source_ref,
+            "description": args.description,
+            "license": args.license,
+            "maintainer": args.maintainer,
+            "sha256": sha256,
+        }
+    except OSError as exc:
+        print(f"package error: {exc}", file=sys.stderr)
+        return 1
+    print(json.dumps({
+        "ok": True,
+        "name": args.name,
+        "entry": entry,
+        "review": {
+            "parley_files": reviewed_files,
+            "sha256": sha256,
+        },
+    }, indent=2, sort_keys=True))
     return 0
 
 
@@ -768,6 +844,16 @@ def main(argv: list[str] | None = None) -> int:
     package_publish.add_argument("--maintainer", required=True)
     package_publish.add_argument("--source", help="source path or URL to place in the registry entry")
     package_publish.set_defaults(fn=cmd_package_publish)
+    package_review = package_sub.add_parser(
+        "review", help="dry-run a package submission before registry publishing")
+    package_review.add_argument("name")
+    package_review.add_argument("package_source")
+    package_review.add_argument("--version", required=True)
+    package_review.add_argument("--description", required=True)
+    package_review.add_argument("--license", required=True)
+    package_review.add_argument("--maintainer", required=True)
+    package_review.add_argument("--source", help="source path or URL to place in the registry entry")
+    package_review.set_defaults(fn=cmd_package_review)
     package_new = package_sub.add_parser("new", help="create a local package skeleton")
     package_new.add_argument("name")
     package_new.set_defaults(fn=cmd_package_new)

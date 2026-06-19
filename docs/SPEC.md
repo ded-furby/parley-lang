@@ -142,12 +142,15 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   Registry entries may include `sha256`; when present, install verifies it
   before replacing an existing vendored package. `parley package publish name
   source --version X` requires license and maintainer metadata, then prints a
-  registry-ready entry with those fields and that digest. `parley package verify`
-  recomputes vendored package digests from the lockfile and fails if a package
-  is missing, unchecked, or modified. `parley package check-registry registry`
-  validates a public registry manifest before hosting by checking package
-  names, required version, description, license, maintainer, and source
-  metadata, readable sources, and digest matches.
+  registry-ready entry with those fields and that digest. `parley package review
+  name source --version X` validates submission metadata, computes the same
+  digest, parses package `.par` files, and prints the registry entry that would
+  be submitted. `parley package verify` recomputes vendored package digests
+  from the lockfile and fails if a package is missing, unchecked, or modified.
+  `parley package check-registry registry` validates a public registry manifest
+  before hosting by checking package names, required version, description,
+  license, maintainer, and source metadata, readable sources, and digest
+  matches.
 * `parley doctor` verifies the installed toolchain: Parley version, Python
   version, Rust `cargo`, bundled standard packages, and local package state.
 * Build directory: `.parley-build/<program>/` with a shared cargo target dir
@@ -157,6 +160,6 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
 
 v0.3 is an experiment. Syntax may change; error codes are append-only.
 Known limits: no generics for user functions, no methods, single-threaded,
-and no signed package-submission workflow. Function values exist for named
+and no signed package-release workflow. Function values exist for named
 functions without `changing` parameters and anonymous functions with value
 captures. See the README roadmap.

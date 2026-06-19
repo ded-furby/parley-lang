@@ -144,6 +144,10 @@ the digest in `parley.lock.json`. Run `parley package verify` to check that
 vendored packages still match the lockfile. Use `parley package publish name
 path --version 1.0.0 --description "helpers" --license MIT --maintainer
 "Name <https://example.com>"` to print a registry-ready entry.
+Use `parley package review name path --version 1.0.0 --description "helpers"
+--license MIT --maintainer "Name <https://example.com>"` before submitting a
+package; it validates metadata, parses package `.par` files, computes the
+digest, and prints the registry entry that would be submitted.
 Use `parley package check-registry registry.json` before hosting a registry.
 The hosted starter index is
 `https://ded-furby.github.io/parley-lang/registry.json`.
@@ -210,5 +214,9 @@ The hosted starter index is
 * `parley package publish name path --version X --description "..." --license
   MIT --maintainer "Name <https://example.com>"` prints the registry entry for
   a local package, including the deterministic SHA-256.
+* `parley package review name path --version X --description "..." --license
+  MIT --maintainer "Name <https://example.com>"` dry-runs a package submission
+  by validating metadata, parsing package `.par` files, and printing the
+  registry entry that would be submitted.
 * The hosted starter package index is
   `https://ded-furby.github.io/parley-lang/registry.json`.

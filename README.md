@@ -125,7 +125,8 @@ stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, and
 packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
 local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package verify`, plus registry validation with
-`parley package check-registry`, via
+`parley package check-registry` and dry-run submission review with
+`parley package review`, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
@@ -195,16 +196,17 @@ the plan:
 - [x] package license and maintainer metadata for public registries — v0.3.18
 - [x] package semantic-version governance — v0.3.19
 - [x] benchmark manifest with Parley/Python/Rust reference sources — v0.3.20
+- [x] package submission review (`parley package review`) — v0.3.21
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
-- [ ] signed package releases and submission review
+- [ ] signed package releases
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 176 tests; e2e compiles real binaries (needs cargo)
+pytest            # 178 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

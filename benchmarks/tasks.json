@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "language_version": "0.3.20",
+  "language_version": "0.3.21",
   "description": "Seed benchmark tasks drawn from checked Parley examples, with equivalent Parley, Python, and Rust reference sources for Phase 1 measurement.",
   "tasks": [
     {
