@@ -111,6 +111,10 @@ fn parley_fmt_maybe_disp<T: std::fmt::Display>(o: &Option<T>) -> String {
     match o { Some(v) => format!("{}", v), None => "nothing".to_string() }
 }
 
+fn parley_fmt_maybe_yesno(o: &Option<bool>) -> String {
+    match o { Some(v) => parley_yesno(*v).to_string(), None => "nothing".to_string() }
+}
+
 fn parley_fmt_maybe_dbg<T: std::fmt::Debug>(o: &Option<T>) -> String {
     match o { Some(v) => format!("{:?}", v), None => "nothing".to_string() }
 }
@@ -569,8 +573,12 @@ class Emitter:
         if isinstance(ty, A.TBool):
             return "{}", f"parley_yesno({self.value(e)})"
         if isinstance(ty, A.TMaybe):
-            fn = "parley_fmt_maybe_disp" if isinstance(ty.elem, (A.TNum, A.TDec, A.TText)) \
-                else "parley_fmt_maybe_dbg"
+            if isinstance(ty.elem, A.TBool):
+                fn = "parley_fmt_maybe_yesno"
+            elif isinstance(ty.elem, (A.TNum, A.TDec, A.TText)):
+                fn = "parley_fmt_maybe_disp"
+            else:
+                fn = "parley_fmt_maybe_dbg"
             return "{}", f"{fn}(&({self.borrow(e)}))"
         if isinstance(ty, (A.TList, A.TMap, A.TRecord)):
             return "{:?}", f"&({self.borrow(e)})"

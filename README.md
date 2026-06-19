@@ -133,7 +133,7 @@ setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `uppercase of`, `contains`, line/word counts, …) · number/text/decimal list
-helpers with safe maybe first/last and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers
+helpers with safe maybe first/last and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -206,6 +206,7 @@ the plan:
 - [x] maybe-returning first/last helpers for bundled `std/list` — v0.3.26
 - [x] maybe-returning aggregate helpers for bundled `std/list` — v0.3.27
 - [x] yes/no list predicates for bundled `std/list` — v0.3.28
+- [x] decimal and yes/no value helpers for bundled `std/map` — v0.3.29
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

@@ -24,6 +24,26 @@ to text_or with m as map from text to text, key as text, fallback as text giving
         give back item key of m
     give back fallback
 
+to decimal_at with m as map from text to decimal, key as text giving maybe decimal:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to decimal_or with m as map from text to decimal, key as text, fallback as decimal giving decimal:
+    if m contains key:
+        give back item key of m
+    give back fallback
+
+to yesno_at with m as map from text to yesno, key as text giving maybe yesno:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to yesno_or with m as map from text to yesno, key as text, fallback as yesno giving yesno:
+    if m contains key:
+        give back item key of m
+    give back fallback
+
 to number_key_number_at with m as map from number to number, key as number giving maybe number:
     if m contains key:
         give back some item key of m
@@ -46,6 +66,26 @@ to number_key_text_at with m as map from number to text, key as number giving ma
     give back nothing
 
 to number_key_text_or with m as map from number to text, key as number, fallback as text giving text:
+    if m contains key:
+        give back item key of m
+    give back fallback
+
+to number_key_decimal_at with m as map from number to decimal, key as number giving maybe decimal:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to number_key_decimal_or with m as map from number to decimal, key as number, fallback as decimal giving decimal:
+    if m contains key:
+        give back item key of m
+    give back fallback
+
+to number_key_yesno_at with m as map from number to yesno, key as number giving maybe yesno:
+    if m contains key:
+        give back some item key of m
+    give back nothing
+
+to number_key_yesno_or with m as map from number to yesno, key as number, fallback as yesno giving yesno:
     if m contains key:
         give back item key of m
     give back fallback

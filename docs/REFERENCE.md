@@ -260,11 +260,19 @@ Use `include "std/map"` for common map helpers:
 | `add_count with changing m, key` | increments a text-key count in place |
 | `text_at with m, key` | maybe text from a `map from text to text` |
 | `text_or with m, key, fallback` | text or fallback |
+| `decimal_at with m, key` | maybe decimal from a `map from text to decimal` |
+| `decimal_or with m, key, fallback` | decimal or fallback |
+| `yesno_at with m, key` | maybe yes/no from a `map from text to yesno` |
+| `yesno_or with m, key, fallback` | yes/no or fallback |
 | `number_key_number_at with m, key` | maybe number from a `map from number to number` |
 | `number_key_number_or with m, key, fallback` | number or fallback |
 | `add_number_key_count with changing m, key` | increments a number-key count in place |
 | `number_key_text_at with m, key` | maybe text from a `map from number to text` |
 | `number_key_text_or with m, key, fallback` | text or fallback |
+| `number_key_decimal_at with m, key` | maybe decimal from a `map from number to decimal` |
+| `number_key_decimal_or with m, key, fallback` | decimal or fallback |
+| `number_key_yesno_at with m, key` | maybe yes/no from a `map from number to yesno` |
+| `number_key_yesno_or with m, key, fallback` | yes/no or fallback |
 
 ## Local packages
 

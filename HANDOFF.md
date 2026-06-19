@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.28** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.29** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 183 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -132,6 +132,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.28 yes/no list helpers:** `std/list` adds `all_yes`, `any_yes`,
   `count_yes`, `count_no`, `index_yes`, and `index_no` for boolean-list
   workflows.
+- **v0.3.29 decimal and yes/no map helpers:** `std/map` adds maybe and
+  fallback lookups for decimal and yes/no values under both text and number
+  keys. Present `maybe yesno` values now print as `yes`/`no` instead of Rust's
+  raw `true`/`false`.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -203,7 +207,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.28).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.29).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
