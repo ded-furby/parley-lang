@@ -122,8 +122,9 @@ assert · fail · the error`.
 Multi-file code uses `include "helpers.par"`. Reusable local packages can live
 at `parley_modules/package_name/main.par` and be loaded with
 `include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
-Bundled packages are available as `include "std/math"` (`clamped`, `between`,
-`percent_of`), `include "std/text"` (`is_blank`, `repeated_text`,
+Bundled packages are available as `include "std/math"` (`clamped`,
+`clamped_decimal`, `between`, `between_decimal`, `percent_of`,
+`percent_of_decimal`), `include "std/text"` (`is_blank`, `repeated_text`,
 `surrounded_with`, `line_count`, `nonempty_line_count`, `word_count`),
 `include "std/list"` (`first_number`, `last_number`, `count_number`,
 `index_number`, `average_number`, `maybe_first_number`, `maybe_last_number`,

@@ -338,6 +338,8 @@ include "std/map"
 
 to main:
     say (clamped with 12, 1, 10)
+    say (clamped_decimal with 12.5, 1.5, 10.5)
+    say (percent_of_decimal with 12.5, 50.0)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     let numbers be a list of 4, 2, 4, 8

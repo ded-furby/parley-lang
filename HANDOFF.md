@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.30** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.31** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 183 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -139,6 +139,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.30 safe list indexing:** `std/list` adds `maybe_item_number`,
   `maybe_item_text`, `maybe_item_decimal`, and `maybe_item_yesno`, returning
   `nothing` for non-positive and out-of-range indexes.
+- **v0.3.31 decimal math helpers:** `std/math` adds `clamped_decimal`,
+  `between_decimal`, and `percent_of_decimal`, matching the existing number
+  helper workflows for decimal values.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -210,7 +213,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.30).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.31).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

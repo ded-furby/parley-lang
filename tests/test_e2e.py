@@ -297,6 +297,11 @@ include "std/text"
 
 to main:
     say (clamped with 12, 1, 10)
+    say (clamped_decimal with 12.5, 1.5, 10.5)
+    say (clamped_decimal with 0.5, 1.5, 10.5)
+    say (between_decimal with 2.5, 1.5, 3.5)
+    say (between_decimal with 4.5, 1.5, 3.5)
+    say (percent_of_decimal with 12.5, 50.0)
     say (is_blank with "   ")
     say (repeated_text with "ha", 3)
     say (line_count with "")
@@ -305,7 +310,7 @@ to main:
     say (word_count with "  one  two three  ")
 '''
     proc = run_program(workdir, "bundled_std", src)
-    assert proc.stdout == "10\nyes\nhahaha\n0\n3\n2\n3\n"
+    assert proc.stdout == "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
 
 
 def test_bundled_std_list_package_runs(workdir):

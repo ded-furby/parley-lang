@@ -130,7 +130,7 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package review`, and optional HMAC-SHA256 release signatures, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
-`stop`/`skip`/`give back` · whole-number and decimal math with guarded
+`stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `uppercase of`, `contains`, line/word counts, …) · number/text/decimal list
 helpers with safe maybe first/last/index and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values
@@ -208,6 +208,7 @@ the plan:
 - [x] yes/no list predicates for bundled `std/list` — v0.3.28
 - [x] decimal and yes/no value helpers for bundled `std/map` — v0.3.29
 - [x] safe indexed lookup helpers for bundled `std/list` — v0.3.30
+- [x] decimal helper variants for bundled `std/math` — v0.3.31
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

@@ -210,8 +210,11 @@ Use `include "std/math"` for small numeric helpers:
 | Function | Gives |
 |---|---|
 | `clamped with n, low, high` | `n` limited to the inclusive range |
+| `clamped_decimal with n, low, high` | decimal `n` limited to the inclusive range |
 | `between with n, low, high` | yes/no range check |
+| `between_decimal with n, low, high` | yes/no decimal range check |
 | `percent_of with part, whole` | decimal percentage |
+| `percent_of_decimal with part, whole` | decimal percentage from decimal inputs |
 
 Use `include "std/text"` for small text helpers:
 
