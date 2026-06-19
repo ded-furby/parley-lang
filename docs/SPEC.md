@@ -13,9 +13,9 @@ For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
    subset of Rust; rustc provides memory safety and native code generation.
 3. **No prose-parsing.** Every tool surface (checker, build errors, runtime
    failures) is available as structured JSON with stable codes.
-4. **Determinism.** Same program, same behaviour: map iteration is sorted,
-   integer overflow and division by zero are defined (they stop the program),
-   there is no undefined behaviour.
+4. **Determinism.** Same program, same behaviour: map key/value iteration is
+   sorted by key, integer overflow and division by zero are defined (they stop
+   the program), there is no undefined behaviour.
 
 ## 2. Lexical structure
 
@@ -62,6 +62,8 @@ parse-relevant highlights:
   redeclaration and shadowing are errors (P209). `set` requires an existing
   binding (P211).
 * **Map keys** are `number` or `text` (P309) so iteration can be sorted.
+  `keys of m` returns sorted keys; `values of m` returns values in sorted-key
+  order.
 * **`when`** over an enum must be exhaustive or carry `otherwise:` (P208);
   over yesno, covering `yes` and `no` counts as exhaustive; over numbers and
   text, `otherwise:` is mandatory. An arm may list several patterns

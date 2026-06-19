@@ -19,7 +19,7 @@ Comments: `note: …` or `# …` to end of line.
 | `text` | `String` | UTF-8; `length of` counts characters |
 | `yesno` | `bool` | literals `yes` / `no` |
 | `list of T` | `Vec<T>` | items count from 1 |
-| `map from K to V` | `HashMap<K, V>` | K is `number` or `text`; `keys of` is sorted |
+| `map from K to V` | `HashMap<K, V>` | K is `number` or `text`; `keys of` and `values of` are sorted by key |
 | `maybe T` | `Option<T>` | `some x` or `nothing`; unwrap with `value of` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
@@ -131,6 +131,7 @@ value and assign it outside if you need that flow.
 | `rounded x` / `floor of x` / `ceiling of x` | decimal (number passes through) | number |
 | `square root of x` | number/decimal | decimal |
 | `keys of m` | map | sorted list of keys |
+| `values of m` | map | list of values in sorted-key order |
 | `text from x` | anything | text |
 | `number from x` | text → **maybe** number; decimal → number | |
 | `decimal from x` | text → **maybe** decimal; number → decimal | |

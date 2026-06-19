@@ -168,6 +168,12 @@ fn parley_keys<K: Ord + Clone, V>(m: &HashMap<K, V>) -> Vec<K> {
     ks
 }
 
+fn parley_values<K: Ord + Clone + std::hash::Hash + Eq, V: Clone>(m: &HashMap<K, V>) -> Vec<V> {
+    let mut ks: Vec<K> = m.keys().cloned().collect();
+    ks.sort();
+    ks.into_iter().map(|k| m.get(&k).unwrap().clone()).collect()
+}
+
 fn parley_sum_i(xs: &[i64]) -> i64 { xs.iter().sum() }
 fn parley_sum_f(xs: &[f64]) -> f64 { xs.iter().sum() }
 
@@ -884,6 +890,8 @@ class Emitter:
             return f"Some({self.value(v, elem)})"
         if op == "keys":
             return f"parley_keys(&({self.borrow(v)}))"
+        if op == "values":
+            return f"parley_values(&({self.borrow(v)}))"
         if op == "text_from":
             spec, arg = self.fmt_arg(v)
             return f'format!("{spec}", {arg})'

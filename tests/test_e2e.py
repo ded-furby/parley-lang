@@ -174,14 +174,21 @@ def test_map_operations(workdir):
     let m be a map from number to text
     set item 1 of m to "one"
     set item 2 of m to "two"
+    let names be values of m
+    say names joined with "|"
     say length of m
     remove item 1 of m
     say length of m
     say m contains 2
     say m contains 1
+    let scores be a map from text to number
+    set item "grace" of scores to 42
+    set item "ada" of scores to 36
+    let values be values of scores
+    say sum of values
 '''
     proc = run_program(workdir, "map_ops", src)
-    assert proc.stdout == "2\n1\nyes\nno\n"
+    assert proc.stdout == "one|two\n2\n1\nyes\nno\n78\n"
 
 
 def test_uncaught_error_is_english_and_exit_1(workdir):

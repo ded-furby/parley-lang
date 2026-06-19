@@ -61,7 +61,8 @@ to main:
         say x times 10
     let m be a map from text to number         # keys: number or text only
     set item "a" of m to 1
-    say keys of m joined with ", "             # keys of is always sorted
+    say keys of m joined with ", "             # sorted by key
+    say sum of values of m                     # values also follow key order
 
     let maybe_n be ask for a number "n? "      # maybe number
     if maybe_n is nothing:
@@ -116,7 +117,7 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·
-ceiling of · square root of · keys of · text from · number from ·
+ceiling of · square root of · keys of · values of · text from · number from ·
 decimal from · some · value of · ask · ask for a number · read file ·
 write … to file … · append … to file … · a random number from 1 to 6 ·
 assert · fail · the error`.

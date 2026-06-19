@@ -21,12 +21,14 @@ to main:
     set item "naps today" of tally to 4
     for each key in keys of tally:
         say "{key}: {item key of tally}"
+    say "total: {sum of values of tally}"
 ```
 
 ```
 $ parley run cats.par
 Felix has 9 lives left
 naps today: 4
+total: 4
 
 $ parley build cats.par -o cats     # → a ~350 KiB native binary, no runtime
 ```
@@ -117,7 +119,7 @@ cp -r skill/parley ~/.claude/skills/
 
 records · enums with exhaustive `when` (multi-value arms, numeric ranges) ·
 function values (`the function f`) and anonymous closures with captured values · lists, maps
-(sorted iteration), `maybe` options (`some x`, `nothing`, `value of`) · functions with `changing` (mutable)
+(`keys of` and `values of` sorted by key), `maybe` options (`some x`, `nothing`, `value of`) · functions with `changing` (mutable)
 parameters and recursion · string interpolation `"{x}"` ·
 custom runtime failures with `fail "message"` ·
 runtime assertions with `assert condition, "message"` ·
@@ -220,6 +222,7 @@ the plan:
 - [x] UTF-8 text slice helper (`text_slice`) — v0.3.38
 - [x] clamped list slice helpers for bundled `std/list` — v0.3.39
 - [x] extend/clear mutation helpers for bundled `std/list` — v0.3.40
+- [x] deterministic map values expression (`values of m`) — v0.3.41
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
@@ -228,7 +231,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 203 tests; e2e compiles real binaries (needs cargo)
+pytest            # 207 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

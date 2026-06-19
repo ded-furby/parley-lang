@@ -109,6 +109,17 @@ def test_text_count_emits_utf8_safe_helper():
     assert "parley_count(&(" in rust
 
 
+def test_map_values_emit_sorted_helper():
+    rust = emit_text(
+        "to main:\n"
+        "    let scores be a map from text to number\n"
+        '    set item "grace" of scores to 42\n'
+        '    set item "ada" of scores to 36\n'
+        "    say values of scores\n")
+    assert "fn parley_values" in rust
+    assert "parley_values(&(" in rust
+
+
 def test_division_is_guarded_and_decimal():
     rust = emit_text("to main:\n    say 10 divided by 4\n")
     assert "parley_div" in rust

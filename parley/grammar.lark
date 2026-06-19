@@ -169,6 +169,7 @@ closure_param: NAME "as" type
       | _VALUE_OF unary         -> value_of
       | _SOME unary             -> some_of
       | _KEYS_OF unary          -> keys_of
+      | _VALUES_OF unary        -> values_of
       | _TEXT_FROM unary        -> text_from
       | _NUMBER_FROM unary      -> number_from
       | _DECIMAL_FROM unary     -> decimal_from
@@ -241,6 +242,7 @@ _SQRT_OF.2: /square +root +of\b/
 _VALUE_OF.2: /value +of\b/
 _SOME.2: /some\b/
 _KEYS_OF.2: /keys +of\b/
+_VALUES_OF.2: /values +of\b/
 _TEXT_FROM.2: /text +from\b/
 _NUMBER_FROM.2: /number +from\b/
 _DECIMAL_FROM.2: /decimal +from\b/

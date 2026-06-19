@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.40** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 203 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.41** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -170,6 +170,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.40 list mutation helpers:** `std/list` adds `extend_number`,
   `extend_text`, `extend_decimal`, `extend_yesno`, and matching `clear_*`
   helpers, using `changing` parameters to mutate caller lists.
+- **v0.3.41 deterministic map values:** `values of m` returns a list of map
+  values in sorted-key order, mirroring `keys of m` for predictable map
+  workflows.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -241,7 +244,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.40).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.41).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

@@ -86,6 +86,15 @@ def test_interpolation_with_escaped_quotes():
     assert isinstance(inner[0], A.JoinedWith)
 
 
+def test_map_values_expression_parse():
+    prog = parse("to main:\n    say values of scores\n")
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.PrefixOp)
+    assert expr.op == "values"
+    assert isinstance(expr.value, A.Var)
+    assert expr.value.name == "scores"
+
+
 def test_text_replacement_expression_parse():
     prog = parse('to main:\n    say "a-b-a" replacing "-" with ":"\n')
     expr = prog.funcs[0].body[0].value

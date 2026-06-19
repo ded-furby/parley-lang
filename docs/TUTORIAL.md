@@ -120,10 +120,13 @@ to main:
     say ada
     for each name in keys of ages:
         say name
+    let all_ages be values of ages
+    say sum of all_ages
 ```
 
-Keys are `number` or `text`. `keys of` always comes back sorted, so programs
-behave the same every run.
+Keys are `number` or `text`. `keys of` always comes back sorted, and
+`values of` follows that same sorted-key order, so programs behave the same
+every run.
 
 ## 9. Text tools
 

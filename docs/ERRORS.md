@@ -138,7 +138,7 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 ## P306 — item/contains used on the wrong type
 
-**What it means:** `item … of …`, `add … to …`, `keys of` and friends only work on lists, maps, or text as documented.
+**What it means:** `item … of …`, `add … to …`, `keys of`, `values of`, and friends only work on lists, maps, or text as documented.
 
 **How to fix it:** See the hint for which operations this type supports.
 

@@ -1052,6 +1052,11 @@ class Checker:
                 return A.TList(ty.key)
             self.err("P306", f"`keys of` works on maps, not {ty}.", e)
             return TErr()
+        if op == "values":
+            if isinstance(ty, A.TMap):
+                return A.TList(ty.val)
+            self.err("P306", f"`values of` works on maps, not {ty}.", e)
+            return TErr()
         if op == "text_from":
             if isinstance(ty, A.TUnit):
                 self.err("P301", "This gives nothing back, so there is nothing to turn into text.", e)

@@ -149,7 +149,7 @@ ERROR_CATALOG: dict[str, dict] = {
     },
     "P306": {
         "title": "item/contains used on the wrong type",
-        "explain": "`item … of …`, `add … to …`, `keys of` and friends only work on lists, maps, or text as documented.",
+        "explain": "`item … of …`, `add … to …`, `keys of`, `values of`, and friends only work on lists, maps, or text as documented.",
         "fix": "See the hint for which operations this type supports.",
     },
     "P307": {

@@ -63,6 +63,7 @@ CASES = [
      "to bump with changing n as number:\n    set n to n plus 1\nto main:\n    bump with 5\n",
      "P305", "must be a variable"),
     ("item_of_number", in_main("let x be 5", "say item 1 of x"), "P306", "lists and maps"),
+    ("values_of_number", in_main("let x be 5", "say values of x"), "P306", "values of"),
     ("foreach_over_map",
      in_main("let m be a map from text to number", "for each k in m:", "    say k"),
      "P306", "keys of"),
@@ -106,6 +107,17 @@ def test_clean_program_no_diags():
         "    let v be a p with x 3\n"
         "    assert v's x is 3, \"x should be three\"\n"
         "    say (double with v's x)\n"
+    )
+    assert check_text(src) == []
+
+
+def test_map_values_typecheck_cleanly():
+    src = in_main(
+        "let scores be a map from text to number",
+        'set item "ada" of scores to 36',
+        'set item "grace" of scores to 42',
+        "let vals be values of scores",
+        "say sum of vals",
     )
     assert check_text(src) == []
 
