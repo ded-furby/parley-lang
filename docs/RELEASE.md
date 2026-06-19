@@ -57,7 +57,8 @@ The e2e tests require Rust and `cargo`.
   `scripts/deploy_pages.sh`; the hosted starter index lives at
   `https://ded-furby.github.io/parley-lang/registry.json`.
 - Keep `parley benchmark measure --format json` working from a source
-  checkout; it is the research readiness proof for the seed corpus.
+  checkout; it is the research readiness proof for the seed corpus, whose
+  manifest records the Parley, Python, and Rust reference sources.
 
 ## CI
 
@@ -137,7 +138,8 @@ python3 -m twine check dist/*
 - `/404.html` renders as a branded error page.
 - The README install path is true.
 - The skill file matches the current syntax.
-- The benchmark CLI can measure the seed corpus and summarize a run log.
+- The benchmark CLI can measure the seed corpus, whose manifest records the
+  Parley/Python/Rust reference sources, and summarize a run log.
 - The package CLI can search a schema-1 registry, install a listed package,
   reject a bad checksum, verify a locked install, validate a registry manifest,
   and print a publish entry with license and maintainer metadata for a local

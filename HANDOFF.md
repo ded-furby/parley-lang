@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.19** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 175 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.20** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 176 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -102,6 +102,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.19 package version governance:** package install, publish, and
   registry validation now require semantic package versions in `X.Y.Z` form
   with optional prerelease/build suffixes.
+- **v0.3.20 benchmark reference manifest:** `benchmarks/tasks.json` now records
+  the Parley, Python, and Rust source path for every seed task, and tests verify
+  that those declared references exist.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -117,8 +120,8 @@ Update it whenever you finish or start a work item.
   Arjun's brief, not a user interview — confirm with him before redesigns).
 - **Release/research docs** — `docs/RESEARCH.md` now defines the publishable
   benchmark plan, `benchmarks/` contains a Phase-1 Parley/Python/Rust seed
-  metrics harness with optional `tiktoken` counts plus JSONL attempt logging,
-  run-log summaries, exposed through `parley benchmark`, and
+  metrics harness with explicit source references, optional `tiktoken` counts
+  plus JSONL attempt logging, run-log summaries, exposed through `parley benchmark`, and
   `docs/RELEASE.md` records the GitHub/Pages/PyPI
   readiness checklist. `docs/SPEC.md` now correctly says v0.3 and no longer
   claims higher-order functions are missing. `docs/DOMAINS.md` records
@@ -170,7 +173,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.19).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.20).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

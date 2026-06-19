@@ -55,6 +55,21 @@ def test_benchmark_tasks_reference_existing_examples():
         assert (BENCHMARKS / "rust" / f"{task['id']}.rs").is_file()
 
 
+def test_benchmark_manifest_records_all_reference_sources():
+    manifest = json.loads((BENCHMARKS / "tasks.json").read_text())
+    assert "still required" not in manifest["description"]
+
+    for task in manifest["tasks"]:
+        references = task["references"]
+        assert references == {
+            "parley": f"examples/{task['id']}.par",
+            "python": f"benchmarks/python/{task['id']}.py",
+            "rust": f"benchmarks/rust/{task['id']}.rs",
+        }
+        for source in references.values():
+            assert (REPO / source).is_file()
+
+
 def test_benchmark_measure_json_without_check(tmp_path):
     output = tmp_path / "metrics.json"
     proc = run_measure("--no-check", "--format", "json", "--output", str(output))

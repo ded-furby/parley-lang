@@ -3,7 +3,8 @@
 This directory turns the research plan in `docs/RESEARCH.md` into a runnable
 starting point. It is intentionally small: it measures equivalent Parley,
 Python, and Rust reference sources and verifies that every Parley seed task
-passes `parley check --json`.
+passes `parley check --json`. The manifest in `tasks.json` records the Parley,
+Python, and Rust source path for every task.
 
 Run from the repository root:
 
@@ -64,7 +65,8 @@ documented interface from the source checkout.
 
 ## What this proves
 
-- The Phase 1 task list is explicit in `benchmarks/tasks.json`.
+- The Phase 1 task list and reference source paths are explicit in
+  `benchmarks/tasks.json`.
 - Each task has Parley, Python, and Rust reference sources.
 - Source-size metrics are reproducible inside the repo for all three
   languages.
