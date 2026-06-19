@@ -339,9 +339,12 @@ include "std/map"
 to main:
     say (clamped with 12, 1, 10)
     say (repeated_text with "ha", 3)
+    say (word_count with "one two three")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)
+    let prices be a list of 1.5, 2.5, 2.0
+    say (average_decimal with prices)
     let counts be a map from text to number
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)

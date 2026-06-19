@@ -124,9 +124,11 @@ at `parley_modules/package_name/main.par` and be loaded with
 `include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
 Bundled packages are available as `include "std/math"` (`clamped`, `between`,
 `percent_of`), `include "std/text"` (`is_blank`, `repeated_text`,
-`surrounded_with`), `include "std/list"` (`first_number`, `last_number`,
-`count_number`, `index_number`, `average_number`, `first_text`, `last_text`,
-`count_text`, `index_text`), and `include "std/map"` (`number_at`,
+`surrounded_with`, `line_count`, `nonempty_line_count`, `word_count`),
+`include "std/list"` (`first_number`, `last_number`, `count_number`,
+`index_number`, `average_number`, `first_text`, `last_text`, `count_text`,
+`index_text`, `first_decimal`, `last_decimal`, `count_decimal`,
+`index_decimal`, `average_decimal`), and `include "std/map"` (`number_at`,
 `number_or`, `add_count`, `text_at`, `text_or`).
 Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into

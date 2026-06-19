@@ -220,6 +220,9 @@ Use `include "std/text"` for small text helpers:
 | `is_blank with t` | yes when `trimmed t` is empty |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
+| `line_count with t` | number of newline-separated lines, or 0 for empty text |
+| `nonempty_line_count with t` | number of lines whose trimmed text is not empty |
+| `word_count with t` | number of non-blank space-separated words |
 
 Use `include "std/list"` for common list helpers:
 
@@ -232,6 +235,10 @@ Use `include "std/list"` for common list helpers:
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
+| `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
+| `count_decimal with xs, d` | occurrences of `d` |
+| `index_decimal with xs, d` | maybe 1-based index of `d` |
+| `average_decimal with xs` | decimal average |
 
 Use `include "std/map"` for common text-key map helpers:
 

@@ -18,11 +18,11 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-06-19)
+## Where things stand (2026-06-20)
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.23** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.24** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 183 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -116,6 +116,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.23 benchmark prompts:** `parley benchmark prompt` renders
   language-neutral prompts from `benchmarks/tasks.json`, so repeated agent
   runs can use the same task wording without exposing reference sources.
+- **v0.3.24 stdlib coverage:** `std/text` adds `line_count`,
+  `nonempty_line_count`, and `word_count`; `std/list` now has decimal
+  first/last/count/index/average helpers to match the existing number and text
+  helpers.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -187,7 +191,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.23).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.24).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

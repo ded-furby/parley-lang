@@ -9,3 +9,29 @@ to repeated_text with t as text, count as number giving text:
 
 to surrounded_with with t as text, wrapper as text giving text:
     give back "{wrapper}{t}{wrapper}"
+
+to line_count with t as text giving number:
+    if t is "":
+        give back 0
+    let lines be t split by "\n"
+    give back length of lines
+
+to nonempty_line_count with t as text giving number:
+    if t is "":
+        give back 0
+    let lines be t split by "\n"
+    let count be 0
+    for each line in lines:
+        if (is_blank with line) is no:
+            set count to count plus 1
+    give back count
+
+to word_count with t as text giving number:
+    if (is_blank with t):
+        give back 0
+    let words be (trimmed t) split by " "
+    let count be 0
+    for each word in words:
+        if (is_blank with word) is no:
+            set count to count plus 1
+    give back count

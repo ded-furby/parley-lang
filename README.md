@@ -132,7 +132,8 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
-`uppercase of`, `contains`, …)
+`uppercase of`, `contains`, line/word counts, …) · number/text/decimal list
+helpers
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -200,6 +201,7 @@ the plan:
 - [x] package submission review (`parley package review`) — v0.3.21
 - [x] signed package release entries (`--require-signatures`) — v0.3.22
 - [x] language-neutral benchmark prompts (`parley benchmark prompt`) — v0.3.23
+- [x] expanded stdlib helpers for text counting and decimal lists — v0.3.24
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

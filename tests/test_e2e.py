@@ -299,9 +299,13 @@ to main:
     say (clamped with 12, 1, 10)
     say (is_blank with "   ")
     say (repeated_text with "ha", 3)
+    say (line_count with "")
+    say (line_count with "one\\ntwo\\nthree")
+    say (nonempty_line_count with "one\\n\\n  \\ntwo")
+    say (word_count with "  one  two three  ")
 '''
     proc = run_program(workdir, "bundled_std", src)
-    assert proc.stdout == "10\nyes\nhahaha\n"
+    assert proc.stdout == "10\nyes\nhahaha\n0\n3\n2\n3\n"
 
 
 def test_bundled_std_list_package_runs(workdir):
@@ -320,10 +324,18 @@ to main:
     say (last_text with words)
     say (count_text with words, "red")
     say (index_text with words, "green")
+    let decimals be a list of 1.5, 2.5, 2.0
+    say (first_decimal with decimals)
+    say (last_decimal with decimals)
+    say (average_decimal with decimals)
+    say (count_decimal with decimals, 2.5)
+    say (index_decimal with decimals, 2.0)
+    say (index_decimal with decimals, 9.0)
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
-        "4\n8\n4.5\n2\n4\nnothing\nred\nred\n2\nnothing\n")
+        "4\n8\n4.5\n2\n4\nnothing\nred\nred\n2\nnothing\n"
+        "1.5\n2\n2\n1\n3\nnothing\n")
 
 
 def test_bundled_std_map_package_runs(workdir):
