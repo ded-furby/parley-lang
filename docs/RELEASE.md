@@ -46,12 +46,13 @@ The e2e tests require Rust and `cargo`.
   `parley.lock.json`.
 - Keep `parley package publish` covered; it prints a registry-ready entry for
   local package sources with license, maintainer, and the deterministic package
-  SHA-256.
+  SHA-256, and it must reject non-semantic versions.
 - Keep `parley package verify` covered; it must fail for modified packages and
   old lock entries that lack a digest.
 - Keep `parley package check-registry` covered; it must reject missing
   checksums, missing license/maintainer metadata, and package sources whose
-  content no longer matches the registry.
+  content no longer matches the registry. It must also reject non-semantic
+  package versions.
 - Keep `site/registry.json` and `site/packages/` deployed through
   `scripts/deploy_pages.sh`; the hosted starter index lives at
   `https://ded-furby.github.io/parley-lang/registry.json`.
@@ -140,7 +141,8 @@ python3 -m twine check dist/*
 - The package CLI can search a schema-1 registry, install a listed package,
   reject a bad checksum, verify a locked install, validate a registry manifest,
   and print a publish entry with license and maintainer metadata for a local
-  package.
+  package. Package install, publish, and registry validation reject
+  non-semantic versions.
 - The hosted registry URL serves JSON with license, maintainer, SHA-256
   metadata, and the listed package source files.
 - The GitHub branch is pushed and visible publicly.

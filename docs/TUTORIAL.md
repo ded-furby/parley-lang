@@ -364,7 +364,8 @@ The lockfile includes the installed package SHA-256. `package verify` checks
 that vendored files still match the lockfile. `package publish` prints a
 registry-ready JSON entry with license, maintainer, and the same digest.
 `package check-registry` validates registry ownership metadata before you host
-it.
+it. Package versions must use semantic `X.Y.Z` form, such as `1.0.0` or
+`1.0.0-beta.1`.
 
 For a registry manifest, use `parley package search --registry registry.json`
 and `parley package install mathkit --registry registry.json`. If the registry

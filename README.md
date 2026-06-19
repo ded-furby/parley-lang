@@ -193,16 +193,17 @@ the plan:
 - [x] local package lock verification (`parley package verify`) — v0.3.16
 - [x] package registry validation (`parley package check-registry`) — v0.3.17
 - [x] package license and maintainer metadata for public registries — v0.3.18
+- [x] package semantic-version governance — v0.3.19
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
-- [ ] signed package releases, submission review, and version governance
+- [ ] signed package releases and submission review
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 172 tests; e2e compiles real binaries (needs cargo)
+pytest            # 175 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

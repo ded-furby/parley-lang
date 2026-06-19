@@ -248,9 +248,11 @@ that can be installed into a project.
 `parley package install name source --version 1.0.0` copies a local package
 directory or `.par` file into `parley_modules/name/`. Package names may contain
 letters, numbers, dashes, underscores, and dots, and must start with a letter or
-number. Directory packages need a `main.par`. Installs are recorded in
-`parley.lock.json` with the package SHA-256, and `parley package list` prints
-the locked package names, versions, and vendored paths.
+number. Package versions must use semantic `X.Y.Z` form, with optional
+prerelease/build suffixes such as `1.2.3-beta.1+build.5`. Directory packages
+need a `main.par`. Installs are recorded in `parley.lock.json` with the
+package SHA-256, and `parley package list` prints the locked package names,
+versions, and vendored paths.
 
 Registry manifests use JSON:
 
@@ -286,7 +288,7 @@ Use `parley package check-registry registry.json` before hosting a registry.
 It validates package names, required `version`, `description`, `license`,
 `maintainer`, `source`, and `sha256` fields, resolves each source from the
 registry location, recomputes the package digest, and exits non-zero if any
-entry is incomplete or changed.
+entry is incomplete, has a non-semantic version, or has changed.
 
 The public starter index is hosted with the website at
 `https://ded-furby.github.io/parley-lang/registry.json`.

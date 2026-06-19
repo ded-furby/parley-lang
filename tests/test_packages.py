@@ -27,6 +27,22 @@ def test_package_install_vendors_local_directory_and_lock(workdir, tmp_path):
     assert json.loads(check.stdout)["ok"] is True
 
 
+def test_package_install_rejects_invalid_version(workdir, tmp_path):
+    package = tmp_path / "invalidkit"
+    package.mkdir()
+    (package / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+
+    install = run_cli(
+        ["package", "install", "invalidkit", str(package), "--version", "latest"],
+        cwd=workdir,
+    )
+
+    assert install.returncode == 1
+    assert "package versions must use semantic version form X.Y.Z" in install.stderr
+    assert not (workdir / "parley_modules" / "invalidkit").exists()
+
+
 def test_package_new_creates_installable_package_skeleton(workdir):
     created = run_cli(["package", "new", "mathkit"], cwd=workdir)
     assert created.returncode == 0, created.stderr
@@ -214,6 +230,27 @@ def test_package_publish_prints_registry_entry_with_sha256(workdir, tmp_path):
     }
 
 
+def test_package_publish_rejects_invalid_version(workdir, tmp_path):
+    source = tmp_path / "mathkit"
+    source.mkdir()
+    (source / "main.par").write_text(
+        "to double with n as number giving number:\n    give back n times 2\n")
+
+    publish = run_cli(
+        [
+            "package", "publish", "mathkit", str(source),
+            "--version", "1",
+            "--description", "small math helpers",
+            "--license", "MIT",
+            "--maintainer", "Arjun Avtani <https://github.com/ded-furby>",
+        ],
+        cwd=workdir,
+    )
+
+    assert publish.returncode == 1
+    assert "package versions must use semantic version form X.Y.Z" in publish.stderr
+
+
 def test_package_verify_accepts_locked_package(workdir, tmp_path):
     source = tmp_path / "mathkit"
     source.mkdir()
@@ -373,6 +410,33 @@ def test_package_check_registry_requires_license_and_maintainer(workdir, tmp_pat
     assert check.returncode == 1
     assert "registrykit registry entry is missing license" in check.stderr
     assert "registrykit registry entry is missing maintainer" in check.stderr
+
+
+def test_package_check_registry_rejects_invalid_version(workdir, tmp_path):
+    source = tmp_path / "registrykit-src"
+    source.mkdir()
+    content = "to triple with n as number giving number:\n    give back n times 3\n"
+    (source / "main.par").write_text(content)
+    sha256 = hashlib.sha256(b"main.par\0" + content.encode()).hexdigest()
+    registry = tmp_path / "registry.json"
+    registry.write_text(json.dumps({
+        "schema_version": 1,
+        "packages": {
+            "registrykit": {
+                "version": "latest",
+                "source": "registrykit-src",
+                "description": "triples numbers",
+                "license": "MIT",
+                "maintainer": "Registry Team <https://example.com>",
+                "sha256": sha256,
+            }
+        },
+    }))
+
+    check = run_cli(["package", "check-registry", str(registry)], cwd=workdir)
+
+    assert check.returncode == 1
+    assert "registrykit version latest is invalid" in check.stderr
 
 
 def test_site_registry_manifest_can_install_package(workdir):

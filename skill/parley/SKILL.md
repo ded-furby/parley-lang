@@ -130,7 +130,9 @@ Bundled packages are available as `include "std/math"` (`clamped`, `between`,
 Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into
 `parley_modules/name/`; names may contain letters, numbers, dashes,
-underscores, and dots. `parley package list` reads `parley.lock.json`.
+underscores, and dots. Package versions must use semantic `X.Y.Z` form, with
+optional prerelease/build suffixes. `parley package list` reads
+`parley.lock.json`.
 Registry manifests use `{"schema_version": 1, "packages": {"name":
 {"version": "1.0.0", "source": "path-or-url", "description": "...",
 "license": "MIT", "maintainer": "Name <https://example.com>",
@@ -198,12 +200,13 @@ The hosted starter index is
 * `parley package search --registry registry.json` and `parley package install
   name --registry registry.json` use schema-1 package registries. Prefer
   registry entries with `sha256`; installs reject mismatches before overwriting
-  `parley_modules/name`.
+  `parley_modules/name`. Package versions must be semantic `X.Y.Z` strings.
 * `parley package verify` checks installed package digests against
   `parley.lock.json`; run it after package installs or before release.
 * `parley package check-registry registry.json` validates package names,
   required version, description, license, maintainer, and source metadata,
-  readable sources, and SHA-256 matches before a registry is hosted.
+  semantic versions, readable sources, and SHA-256 matches before a registry is
+  hosted.
 * `parley package publish name path --version X --description "..." --license
   MIT --maintainer "Name <https://example.com>"` prints the registry entry for
   a local package, including the deterministic SHA-256.

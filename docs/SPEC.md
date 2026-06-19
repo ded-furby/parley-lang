@@ -137,11 +137,12 @@ program.par ──parse──▶ AST ──check──▶ typed AST ──emit�
   then through `PARLEY_PATH` roots. Package directories load `main.par`.
 * `parley package install name source --version X` vendors a local package
   directory or `.par` file into `parley_modules/name/` and records it in
-  `parley.lock.json` with the deterministic package SHA-256. Registry entries
-  may include `sha256`; when present, install verifies it before replacing an
-  existing vendored package. `parley package publish name source --version X`
-  requires license and maintainer metadata, then prints a registry-ready entry
-  with those fields and that digest. `parley package verify`
+  `parley.lock.json` with the deterministic package SHA-256. Package versions
+  must use semantic `X.Y.Z` form, with optional prerelease/build suffixes.
+  Registry entries may include `sha256`; when present, install verifies it
+  before replacing an existing vendored package. `parley package publish name
+  source --version X` requires license and maintainer metadata, then prints a
+  registry-ready entry with those fields and that digest. `parley package verify`
   recomputes vendored package digests from the lockfile and fails if a package
   is missing, unchecked, or modified. `parley package check-registry registry`
   validates a public registry manifest before hosting by checking package

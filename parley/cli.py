@@ -66,6 +66,9 @@ to package_ready giving yesno:
 
 LOCK_FILE = "parley.lock.json"
 PACKAGE_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+PACKAGE_VERSION_RE = re.compile(
+    r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+    r"(?:-[0-9A-Za-z][0-9A-Za-z.-]*)?(?:\+[0-9A-Za-z][0-9A-Za-z.-]*)?$")
 SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 DEFAULT_REGISTRY = "parley.registry.json"
 
@@ -348,6 +351,12 @@ def _validate_package_name(name: str) -> None:
             "package names may only contain letters, numbers, dashes, underscores, and dots")
 
 
+def _validate_package_version(version: str, context: str = "") -> None:
+    if not PACKAGE_VERSION_RE.fullmatch(version):
+        raise OSError(
+            f"{context}package versions must use semantic version form X.Y.Z")
+
+
 def _is_url(value: str) -> bool:
     return urlparse(value).scheme in {"http", "https", "file"}
 
@@ -477,6 +486,7 @@ def cmd_package_install(args) -> int:
         if not source_text:
             raise OSError("package source is required unless --registry is used")
         version = version or "0.0.0"
+        _validate_package_version(str(version))
         target = Path("parley_modules") / args.name
         with tempfile.TemporaryDirectory(prefix="parley-package-") as tmp:
             source = _materialize_package_source(source_text, Path(tmp))
@@ -505,6 +515,7 @@ def cmd_package_install(args) -> int:
 def cmd_package_publish(args) -> int:
     try:
         _validate_package_name(args.name)
+        _validate_package_version(args.version)
         source = Path(args.package_source).resolve()
         sha256 = _package_sha256(source)
         source_ref = args.source or (f"packages/{args.name}" if source.is_dir() else source.name)
@@ -588,6 +599,11 @@ def cmd_package_check_registry(args) -> int:
                 if missing:
                     raise OSError("; ".join(
                         f"{name} registry entry is missing {field}" for field in missing))
+                version = str(entry.get("version") or "").strip()
+                _validate_package_version(
+                    version,
+                    f"{name} version {version} is invalid: ",
+                )
                 if not entry.get("sha256"):
                     raise OSError(f"{name} has no sha256")
                 expected_sha256 = _entry_sha256(entry)
