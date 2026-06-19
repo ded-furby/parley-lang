@@ -230,6 +230,7 @@ Use `include "std/list"` for common list helpers:
 |---|---|
 | `first_number with xs` / `last_number with xs` | first or last number |
 | `maybe_first_number with xs` / `maybe_last_number with xs` | maybe first or last number |
+| `maybe_item_number with xs, index` | maybe number at a 1-based index |
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
@@ -237,17 +238,20 @@ Use `include "std/list"` for common list helpers:
 | `maybe_average_number with xs` | maybe decimal average |
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
+| `maybe_item_text with xs, index` | maybe text at a 1-based index |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
 | `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
 | `maybe_first_decimal with xs` / `maybe_last_decimal with xs` | maybe first or last decimal |
+| `maybe_item_decimal with xs, index` | maybe decimal at a 1-based index |
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
+| `maybe_item_yesno with xs, index` | maybe yes/no value at a 1-based index |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 

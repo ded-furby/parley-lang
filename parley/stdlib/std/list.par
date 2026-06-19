@@ -14,6 +14,11 @@ to maybe_last_number with xs as list of number giving maybe number:
         give back nothing
     give back some item (length of xs) of xs
 
+to maybe_item_number with xs as list of number, index as number giving maybe number:
+    if index is less than 1 or index is more than length of xs:
+        give back nothing
+    give back some item index of xs
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -66,6 +71,11 @@ to maybe_last_text with xs as list of text giving maybe text:
         give back nothing
     give back some item (length of xs) of xs
 
+to maybe_item_text with xs as list of text, index as number giving maybe text:
+    if index is less than 1 or index is more than length of xs:
+        give back nothing
+    give back some item index of xs
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -108,6 +118,11 @@ to maybe_last_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
         give back nothing
     give back some item (length of xs) of xs
+
+to maybe_item_decimal with xs as list of decimal, index as number giving maybe decimal:
+    if index is less than 1 or index is more than length of xs:
+        give back nothing
+    give back some item index of xs
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0
@@ -156,6 +171,11 @@ to any_yes with xs as list of yesno giving yesno:
         if value:
             give back yes
     give back no
+
+to maybe_item_yesno with xs as list of yesno, index as number giving maybe yesno:
+    if index is less than 1 or index is more than length of xs:
+        give back nothing
+    give back some item index of xs
 
 to count_yes with xs as list of yesno giving number:
     let count be 0
