@@ -135,9 +135,10 @@ parse-relevant highlights:
   mutation for out-of-range indexes. Remove helpers delete the first matching
   value and return yes/no for whether anything changed.
 * **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
-  counted increments, and take helpers for text-key and number-key maps. Take
-  helpers use `changing` map parameters: they return `some value` and remove a
-  present key, or return `nothing` without mutation when the key is absent.
+  counted increments, take helpers, and clear helpers for text-key and
+  number-key maps. Take and clear helpers use `changing` map parameters: take
+  helpers return `some value` and remove a present key, or return `nothing`
+  without mutation when the key is absent; clear helpers remove every entry.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range
   `item`, `value of` nothing, smallest/largest of an empty list, negative

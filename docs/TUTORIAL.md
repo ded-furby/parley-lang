@@ -380,6 +380,7 @@ to main:
     add_count with counts, "agent"
     say (number_or with counts, "agent", 0)
     say (take_number_at with counts, "agent")
+    clear_number_map with counts
     let flags be a map from text to yesno
     set item "ready" of flags to yes
     say (yesno_at with flags, "ready")

@@ -21,6 +21,10 @@ to add_count with changing m as map from text to number, key as text:
     otherwise:
         set item key of m to 1
 
+to clear_number_map with changing m as map from text to number:
+    for each key in keys of m:
+        remove item key of m
+
 to text_at with m as map from text to text, key as text giving maybe text:
     if m contains key:
         give back some item key of m
@@ -37,6 +41,10 @@ to text_or with m as map from text to text, key as text, fallback as text giving
     if m contains key:
         give back item key of m
     give back fallback
+
+to clear_text_map with changing m as map from text to text:
+    for each key in keys of m:
+        remove item key of m
 
 to decimal_at with m as map from text to decimal, key as text giving maybe decimal:
     if m contains key:
@@ -55,6 +63,10 @@ to decimal_or with m as map from text to decimal, key as text, fallback as decim
         give back item key of m
     give back fallback
 
+to clear_decimal_map with changing m as map from text to decimal:
+    for each key in keys of m:
+        remove item key of m
+
 to yesno_at with m as map from text to yesno, key as text giving maybe yesno:
     if m contains key:
         give back some item key of m
@@ -71,6 +83,10 @@ to yesno_or with m as map from text to yesno, key as text, fallback as yesno giv
     if m contains key:
         give back item key of m
     give back fallback
+
+to clear_yesno_map with changing m as map from text to yesno:
+    for each key in keys of m:
+        remove item key of m
 
 to number_key_number_at with m as map from number to number, key as number giving maybe number:
     if m contains key:
@@ -95,6 +111,10 @@ to add_number_key_count with changing m as map from number to number, key as num
     otherwise:
         set item key of m to 1
 
+to clear_number_key_number_map with changing m as map from number to number:
+    for each key in keys of m:
+        remove item key of m
+
 to number_key_text_at with m as map from number to text, key as number giving maybe text:
     if m contains key:
         give back some item key of m
@@ -111,6 +131,10 @@ to number_key_text_or with m as map from number to text, key as number, fallback
     if m contains key:
         give back item key of m
     give back fallback
+
+to clear_number_key_text_map with changing m as map from number to text:
+    for each key in keys of m:
+        remove item key of m
 
 to number_key_decimal_at with m as map from number to decimal, key as number giving maybe decimal:
     if m contains key:
@@ -129,6 +153,10 @@ to number_key_decimal_or with m as map from number to decimal, key as number, fa
         give back item key of m
     give back fallback
 
+to clear_number_key_decimal_map with changing m as map from number to decimal:
+    for each key in keys of m:
+        remove item key of m
+
 to number_key_yesno_at with m as map from number to yesno, key as number giving maybe yesno:
     if m contains key:
         give back some item key of m
@@ -145,3 +173,7 @@ to number_key_yesno_or with m as map from number to yesno, key as number, fallba
     if m contains key:
         give back item key of m
     give back fallback
+
+to clear_number_key_yesno_map with changing m as map from number to yesno:
+    for each key in keys of m:
+        remove item key of m

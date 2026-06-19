@@ -564,6 +564,9 @@ to main:
     say (number_at with scores, "ada")
     say (take_number_at with scores, "missing")
     say length of scores
+    clear_number_map with scores
+    say length of scores
+    say (number_at with scores, "grace")
 
     let labels be a map from text to text
     set item "a" of labels to "alpha"
@@ -572,6 +575,10 @@ to main:
     say (take_text_at with labels, "a")
     say length of labels
     say (take_text_at with labels, "b")
+    set item "b" of labels to "bravo"
+    clear_text_map with labels
+    say length of labels
+    say (text_at with labels, "b")
 
     let prices be a map from text to decimal
     set item "tea" of prices to 2.5
@@ -581,6 +588,10 @@ to main:
     say (take_decimal_at with prices, "tea")
     say length of prices
     say (take_decimal_at with prices, "cake")
+    set item "cake" of prices to 3.5
+    clear_decimal_map with prices
+    say length of prices
+    say (decimal_at with prices, "cake")
 
     let flags be a map from text to yesno
     set item "ready" of flags to yes
@@ -590,6 +601,10 @@ to main:
     say (take_yesno_at with flags, "ready")
     say length of flags
     say (take_yesno_at with flags, "missing")
+    set item "missing" of flags to no
+    clear_yesno_map with flags
+    say length of flags
+    say (yesno_at with flags, "missing")
 
     let seats be a map from number to number
     set item 7 of seats to 42
@@ -604,6 +619,9 @@ to main:
     say length of seats
     say (number_key_number_at with seats, 7)
     say (take_number_key_number_at with seats, 99)
+    clear_number_key_number_map with seats
+    say length of seats
+    say (number_key_number_at with seats, 8)
 
     let names be a map from number to text
     set item 1 of names to "one"
@@ -612,6 +630,10 @@ to main:
     say (take_number_key_text_at with names, 1)
     say length of names
     say (take_number_key_text_at with names, 2)
+    set item 2 of names to "two"
+    clear_number_key_text_map with names
+    say length of names
+    say (number_key_text_at with names, 2)
 
     let ratios be a map from number to decimal
     set item 2 of ratios to 0.5
@@ -621,6 +643,10 @@ to main:
     say (take_number_key_decimal_at with ratios, 2)
     say length of ratios
     say (take_number_key_decimal_at with ratios, 3)
+    set item 3 of ratios to 1.5
+    clear_number_key_decimal_map with ratios
+    say length of ratios
+    say (number_key_decimal_at with ratios, 3)
 
     let switches be a map from number to yesno
     set item 1 of switches to yes
@@ -630,17 +656,21 @@ to main:
     say (take_number_key_yesno_at with switches, 1)
     say length of switches
     say (take_number_key_yesno_at with switches, 2)
+    set item 2 of switches to no
+    clear_number_key_yesno_map with switches
+    say length of switches
+    say (number_key_yesno_at with switches, 2)
 '''
     proc = run_program(workdir, "bundled_std_map", src)
     assert proc.stdout == (
-        "36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n"
-        "alpha\nmissing\nalpha\n0\nnothing\n"
-        "2.5\nnothing\n0\n2.5\n0\nnothing\n"
-        "yes\nnothing\nno\nyes\n0\nnothing\n"
-        "42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n"
-        "one\nmissing\none\n0\nnothing\n"
-        "0.5\nnothing\n1\n0.5\n0\nnothing\n"
-        "yes\nnothing\nno\nyes\n0\nnothing\n")
+        "36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n"
+        "alpha\nmissing\nalpha\n0\nnothing\n0\nnothing\n"
+        "2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n"
+        "yes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n"
+        "42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n"
+        "one\nmissing\none\n0\nnothing\n0\nnothing\n"
+        "0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n"
+        "yes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n")
 
 
 def test_build_produces_native_binary(workdir):
