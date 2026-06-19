@@ -387,6 +387,12 @@ to main:
     say item 2 of clamped_nums
     let no_nums be (list_slice_number with nums, 4, 2)
     say length of no_nums
+    let more_nums be a list of 10, 12
+    extend_number with nums, more_nums
+    say length of nums
+    say item 5 of nums
+    clear_number with nums
+    say length of nums
     let words be a list of "red", "blue", "red"
     say (first_text with words)
     say (last_text with words)
@@ -407,6 +413,12 @@ to main:
     say word_slice joined with "|"
     let no_word_slice be (list_slice_text with words, 3, 2)
     say length of no_word_slice
+    let more_words be a list of "green"
+    extend_text with words, more_words
+    say length of words
+    say item 4 of words
+    clear_text with words
+    say length of words
     let decimals be a list of 1.5, 2.5, 2.0
     say (first_decimal with decimals)
     say (last_decimal with decimals)
@@ -431,6 +443,12 @@ to main:
     say length of decimal_slice
     say item 1 of decimal_slice
     say item 2 of decimal_slice
+    let more_decimals be a list of 9.5
+    extend_decimal with decimals, more_decimals
+    say length of decimals
+    say item 4 of decimals
+    clear_decimal with decimals
+    say length of decimals
     let flags be a list of yes, no, yes
     say (all_yes with flags)
     say (any_yes with flags)
@@ -445,6 +463,12 @@ to main:
     say length of flag_slice
     say item 1 of flag_slice
     say item 2 of flag_slice
+    let more_flags be a list of no
+    extend_yesno with flags, more_flags
+    say length of flags
+    say item 4 of flags
+    clear_yesno with flags
+    say length of flags
     let empty_flags be an empty list of yesno
     say (all_yes with empty_flags)
     say (any_yes with empty_flags)
@@ -456,14 +480,14 @@ to main:
         "4\n8\n4.5\n2\n4\nnothing\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
-        "2\n2\n4\n2\n2\n0\n"
+        "2\n2\n4\n2\n2\n0\n6\n10\n0\n"
         "red\nred\n2\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
-        "blue|red\n0\n"
+        "blue|red\n0\n4\ngreen\n0\n"
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
-        "2\n1.5\n2.5\n"
-        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\nyes\nno\nnothing\nnothing\n")
+        "2\n1.5\n2.5\n4\n9.5\n0\n"
+        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n0\nyes\nno\nnothing\nnothing\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

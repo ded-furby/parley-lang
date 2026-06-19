@@ -242,6 +242,8 @@ Use `include "std/list"` for common list helpers:
 | `maybe_first_number with xs` / `maybe_last_number with xs` | maybe first or last number |
 | `maybe_item_number with xs, index` | maybe number at a 1-based index |
 | `list_slice_number with xs, first, last` | list of number from clamped 1-based inclusive bounds |
+| `extend_number with changing xs, more` | append every number from `more` to `xs` |
+| `clear_number with changing xs` | remove every item from `xs` |
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
@@ -251,6 +253,8 @@ Use `include "std/list"` for common list helpers:
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
 | `maybe_item_text with xs, index` | maybe text at a 1-based index |
 | `list_slice_text with xs, first, last` | list of text from clamped 1-based inclusive bounds |
+| `extend_text with changing xs, more` | append every text value from `more` to `xs` |
+| `clear_text with changing xs` | remove every item from `xs` |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
@@ -258,6 +262,8 @@ Use `include "std/list"` for common list helpers:
 | `maybe_first_decimal with xs` / `maybe_last_decimal with xs` | maybe first or last decimal |
 | `maybe_item_decimal with xs, index` | maybe decimal at a 1-based index |
 | `list_slice_decimal with xs, first, last` | list of decimal from clamped 1-based inclusive bounds |
+| `extend_decimal with changing xs, more` | append every decimal from `more` to `xs` |
+| `clear_decimal with changing xs` | remove every item from `xs` |
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
@@ -266,6 +272,8 @@ Use `include "std/list"` for common list helpers:
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
 | `maybe_item_yesno with xs, index` | maybe yes/no value at a 1-based index |
 | `list_slice_yesno with xs, first, last` | list of yes/no from clamped 1-based inclusive bounds |
+| `extend_yesno with changing xs, more` | append every yes/no value from `more` to `xs` |
+| `clear_yesno with changing xs` | remove every item from `xs` |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 

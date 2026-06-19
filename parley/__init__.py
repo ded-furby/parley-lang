@@ -5,4 +5,4 @@ Rust. Designed so AI agents (and humans) can write safe, fast programs in
 plain sentences.
 """
 
-__version__ = "0.3.39"
+__version__ = "0.3.40"

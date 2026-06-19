@@ -357,6 +357,9 @@ to main:
     say (maybe_item_number with numbers, 2)
     let middle_numbers be (list_slice_number with numbers, 2, 3)
     say length of middle_numbers
+    let more_numbers be a list of 10, 12
+    extend_number with numbers, more_numbers
+    say length of numbers
     say (maybe_average_number with empty_numbers)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
