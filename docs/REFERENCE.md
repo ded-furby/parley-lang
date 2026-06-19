@@ -75,7 +75,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 ## Expressions
 
 Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
-`split by`/`joined with` · `plus minus` · `times divided-by %` ·
+`split by`/`joined with`/`replacing … with …` · `plus minus` · `times divided-by %` ·
 `to the power of` · prefix operations · `'s` field access.
 
 | Parley | Rust | type |
@@ -91,6 +91,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `t starts with p` / `t ends with p` | `.starts_with` / `.ends_with` | yesno |
 | `t split by ","` | `.split(…).collect()` | list of text |
 | `xs joined with ", "` | `.join(…)` (list of text) | text |
+| `t replacing old with new` | `.replace(old, new)` | text |
 | `"{x} and {y}"` | `format!("{} and {}", x, y)` | text |
 | `(f with a, b)` | `f(a, b)` — calls in expressions take parens | |
 | `bob's name` | `bob.name` | field type |

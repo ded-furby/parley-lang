@@ -143,6 +143,7 @@ closure_param: NAME "as" type
 ?link_e: sum_e
        | link_e _SPLIT_BY sum_e      -> split_by
        | link_e _JOINED_WITH sum_e   -> joined_with
+       | link_e _REPLACING sum_e "with" sum_e -> replacing_with
 ?sum_e: prod_e
       | sum_e _PLUS prod_e      -> add_op
       | sum_e _MINUS prod_e     -> sub_op
@@ -209,6 +210,7 @@ _STARTS_WITH.2: /starts +with\b/
 _ENDS_WITH.2: /ends +with\b/
 _SPLIT_BY.2: /split +by\b/
 _JOINED_WITH.2: /joined +with\b/
+_REPLACING.2: /replacing\b/
 _POW.2: /to +the +power +of\b/
 _GIVE_BACK.2: /give +back\b/
 _FOR_EACH.2: /for +each\b/

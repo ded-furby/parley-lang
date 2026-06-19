@@ -40,7 +40,7 @@ class TNothing(A.Type):
 # uniformly refused with a clear message instead.
 RESERVED = {
     "a", "an", "is", "of", "to", "item", "ask", "sorted", "reversed",
-    "trimmed", "rounded", "contains", "times", "changing", "plus", "minus",
+    "trimmed", "rounded", "contains", "replacing", "times", "changing", "plus", "minus",
     "yes", "no", "nothing", "not", "and", "or", "say", "let", "be", "set",
     "stop", "skip", "assert", "fail", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",
@@ -728,6 +728,17 @@ class Checker:
                          e, hint="Convert items first: build a list of text using `text from x`.")
             if not isinstance(sty, (A.TText, TErr)):
                 self.type_mismatch(A.TText(), sty, e.sep, "The separator")
+            return A.TText()
+        if isinstance(e, A.ReplacingWith):
+            checks = (
+                (e.value, "The text being changed"),
+                (e.old, "The text to replace"),
+                (e.new, "The replacement"),
+            )
+            for part, what in checks:
+                ty = self.infer(part)
+                if not isinstance(ty, (A.TText, TErr)):
+                    self.type_mismatch(A.TText(), ty, part, what)
             return A.TText()
         if isinstance(e, A.PrefixOp):
             return self._infer_prefix(e)

@@ -133,6 +133,7 @@ to main:
     let parts be line split by ", "
     say length of parts
     say parts joined with " + "
+    say line replacing "flour" with "bread"
     say uppercase of "quiet"
     if line starts with "milk":
         say "dairy first"

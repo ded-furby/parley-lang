@@ -110,7 +110,7 @@ Operators: `plus minus times divided by` (or `+ - * / %`),
 `remainder of a divided by b`, `a to the power of b`,
 `is / is not / is more than / is less than / is at least / is at most`,
 `and or not`, `contains`, `starts with`, `ends with`,
-`t split by ","`, `xs joined with ", "`.
+`t split by ","`, `xs joined with ", "`, `t replacing old with new`.
 
 Builtins: `length of · sum of · smallest of · largest of · sorted · reversed ·
 uppercase of · lowercase of · trimmed · absolute of · rounded · floor of ·

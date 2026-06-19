@@ -91,6 +91,12 @@ def test_interpolation_becomes_format():
     assert 'format!("n is {}"' in rust
 
 
+def test_text_replacement_emits_rust_replace():
+    rust = emit_text('to main:\n    say "a-b-a" replacing "-" with ":"\n')
+    assert ".replace((" in rust
+    assert ').as_str(), (' in rust
+
+
 def test_division_is_guarded_and_decimal():
     rust = emit_text("to main:\n    say 10 divided by 4\n")
     assert "parley_div" in rust

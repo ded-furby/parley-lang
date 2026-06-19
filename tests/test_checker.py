@@ -76,6 +76,9 @@ CASES = [
     ("compare_maybe_with_plain",
      in_main('let m be number from "5"', "if m is 5:", "    say 1"),
      "P301", "maybe"),
+    ("replace_target_needs_text", in_main('say 5 replacing "x" with "y"'), "P301", "needs text"),
+    ("replace_old_needs_text", in_main('say "abc" replacing 1 with "x"'), "P301", "needs text"),
+    ("replace_new_needs_text", in_main('say "abc" replacing "a" with 1'), "P301", "needs text"),
 ]
 
 
@@ -125,6 +128,10 @@ def test_zero_arg_function_used_as_value():
         "    say d plus (roll)\n"
     )
     assert check_text(src) == []
+
+
+def test_text_replacement_expression_is_clean():
+    assert check_text(in_main('say "one fish" replacing "one" with "two"')) == []
 
 
 def test_block_scoping_let_dies_with_block():

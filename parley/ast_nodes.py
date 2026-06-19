@@ -422,6 +422,13 @@ class JoinedWith(Expr):
 
 
 @dataclass
+class ReplacingWith(Expr):
+    value: Expr
+    old: Expr
+    new: Expr
+
+
+@dataclass
 class PrefixOp(Expr):
     """English prefix builtins: length of, sum of, sorted, value of, ..."""
     op: str

@@ -86,6 +86,15 @@ def test_interpolation_with_escaped_quotes():
     assert isinstance(inner[0], A.JoinedWith)
 
 
+def test_text_replacement_expression_parse():
+    prog = parse('to main:\n    say "a-b-a" replacing "-" with ":"\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.ReplacingWith)
+    assert isinstance(expr.value, A.Str)
+    assert isinstance(expr.old, A.Str)
+    assert isinstance(expr.new, A.Str)
+
+
 def test_possessive_chains():
     prog = parse("to main:\n    say box's corner's x\n")
     say = prog.funcs[0].body[0]

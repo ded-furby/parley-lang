@@ -558,6 +558,9 @@ class ToAst(Transformer):
     def joined_with(self, meta, ch):
         return A.JoinedWith(value=ch[0], sep=ch[1], **_pos(meta))
 
+    def replacing_with(self, meta, ch):
+        return A.ReplacingWith(value=ch[0], old=ch[1], new=ch[2], **_pos(meta))
+
     def _bin(self, meta, ch, op):
         return A.BinOp(op=op, left=ch[0], right=ch[1], **_pos(meta))
 

@@ -461,6 +461,12 @@ class Emitter:
             return self.mutated_names_in_expr(e.value)
         if isinstance(e, A.SplitBy) or isinstance(e, A.JoinedWith):
             return self.mutated_names_in_expr(e.value) | self.mutated_names_in_expr(e.sep)
+        if isinstance(e, A.ReplacingWith):
+            return (
+                self.mutated_names_in_expr(e.value)
+                | self.mutated_names_in_expr(e.old)
+                | self.mutated_names_in_expr(e.new)
+            )
         if isinstance(e, A.Remainder):
             return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
         if isinstance(e, A.ItemOf):
@@ -639,6 +645,12 @@ class Emitter:
             return f"parley_split(&({self.borrow(e.value)}), &({self.borrow(e.sep)}))"
         if isinstance(e, A.JoinedWith):
             return f"({self.borrow(e.value)}).join(({self.borrow(e.sep)}).as_str())"
+        if isinstance(e, A.ReplacingWith):
+            return (
+                f"({self.borrow(e.value)}).replace("
+                f"({self.borrow(e.old)}).as_str(), "
+                f"({self.borrow(e.new)}).as_str())"
+            )
         if isinstance(e, A.PrefixOp):
             return self._value_prefix(e)
         if isinstance(e, A.Remainder):
