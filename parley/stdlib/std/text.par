@@ -140,6 +140,13 @@ to is_ascii with t as text giving yesno:
             give back no
     give back yes
 
+to is_printable with t as text giving yesno:
+    for each i from 1 to length of t:
+        let c be item i of t
+        if c is "\t" or c is "\n" or c is "\r":
+            give back no
+    give back yes
+
 to is_lowercase with t as text giving yesno:
     if t is "":
         give back no

@@ -131,6 +131,9 @@ parse-relevant highlights:
   letters. Lowercase and uppercase predicates accept only letters of that
   case. `is_ascii` accepts empty text, tab, newline, carriage return, and
   printable ASCII characters from space through `~`.
+  `is_printable` accepts empty text, spaces, ordinary printable text, and
+  non-ASCII printable characters, and rejects tab, newline, and carriage
+  return controls.
   `swap_case` swaps ASCII lowercase and uppercase letters and leaves
   digits, spaces, punctuation, and non-ASCII characters unchanged.
   `title_cased` uppercases the first character of each whitespace-delimited
