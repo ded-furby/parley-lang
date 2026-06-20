@@ -49,6 +49,37 @@ to without_suffix with t as text, suffix as text giving text:
         give back (text_slice with t, 1, length of t minus length of suffix)
     give back t
 
+to is_whitespace with c as text giving yesno:
+    if c is " ":
+        give back yes
+    if c is "\t":
+        give back yes
+    if c is "\n":
+        give back yes
+    if c is "\r":
+        give back yes
+    give back no
+
+to left_trimmed with t as text giving text:
+    if t is "":
+        give back ""
+    let start be 1
+    while start is at most length of t and (is_whitespace with (item start of t)):
+        set start to start plus 1
+    if start is more than length of t:
+        give back ""
+    give back (text_slice with t, start, length of t)
+
+to right_trimmed with t as text giving text:
+    if t is "":
+        give back ""
+    let finish be length of t
+    while finish is at least 1 and (is_whitespace with (item finish of t)):
+        set finish to finish minus 1
+    if finish is less than 1:
+        give back ""
+    give back (text_slice with t, 1, finish)
+
 to line_count with t as text giving number:
     if t is "":
         give back 0

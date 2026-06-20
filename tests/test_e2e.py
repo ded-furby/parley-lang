@@ -358,12 +358,22 @@ to main:
     say (without_suffix with "notes.par", ".par")
     say (without_suffix with "notes.par", ".txt")
     say (without_suffix with "notes.par", "")
+    say (is_whitespace with " ")
+    say (is_whitespace with "\\t")
+    say (is_whitespace with "x")
+    say (left_trimmed with "  left  ")
+    say (right_trimmed with "  right  ")
+    say (left_trimmed with "\\t\\nboth")
+    say (right_trimmed with "both\\t\\n")
+    say (left_trimmed with "   ")
+    say (right_trimmed with "   ")
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
-        "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n")
+        "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n"
+        "yes\nyes\nno\nleft  \n  right\nboth\nboth\n\n\n")
 
 
 def test_bundled_std_list_package_runs(workdir):

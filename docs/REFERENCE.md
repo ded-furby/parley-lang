@@ -236,6 +236,8 @@ Use `include "std/text"` for small text helpers:
 | `words_of with t` | list of non-blank space-separated words |
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
 | `without_suffix with t, suffix` | text with `suffix` removed when present |
+| `is_whitespace with c` | yes for a space, tab, newline, or carriage return character |
+| `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 
 Use `include "std/list"` for common list helpers:
 

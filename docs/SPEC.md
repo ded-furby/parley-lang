@@ -122,6 +122,8 @@ parse-relevant highlights:
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.
+  `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
+  newline, and carriage return as whitespace characters.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns

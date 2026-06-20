@@ -357,6 +357,8 @@ to main:
     say (text_slice with "crème", 2, 4)
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
+    say (left_trimmed with "  left")
+    say (right_trimmed with "right  ")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)
