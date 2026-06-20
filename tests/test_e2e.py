@@ -327,6 +327,12 @@ to main:
     say (between_decimal with 2.5, 1.5, 3.5)
     say (between_decimal with 4.5, 1.5, 3.5)
     say (percent_of_decimal with 12.5, 50.0)
+    say (factorial with 0)
+    say (factorial with 5)
+    attempt:
+        say (factorial with -1)
+    if it failed:
+        say "factorial error: {the error}"
     say (is_blank with "   ")
     say (repeated_text with "ha", 3)
     say (line_count with "")
@@ -510,7 +516,7 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
-        "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
+        "10\n10.5\n1.5\nyes\nno\n25\n1\n120\nfactorial error: factorial needs a non-negative number\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n4\n4\none|two|three|four\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\none cat two fish\nbaa\nbb\nabc\nabc\ne-e-é\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"

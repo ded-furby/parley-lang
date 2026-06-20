@@ -111,6 +111,8 @@ parse-relevant highlights:
   debug builds (`parley run`); release builds (`parley build`) wrap.
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
+  Bundled `std/math` includes `factorial`, returning `1` for `0`, multiplying
+  whole numbers through `n`, and failing with English text for negative input.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are

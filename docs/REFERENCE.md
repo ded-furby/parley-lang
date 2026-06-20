@@ -219,6 +219,7 @@ Use `include "std/math"` for small numeric helpers:
 | `between_decimal with n, low, high` | yes/no decimal range check |
 | `percent_of with part, whole` | decimal percentage |
 | `percent_of_decimal with part, whole` | decimal percentage from decimal inputs |
+| `factorial with n` | whole-number factorial; negative input fails with an English message |
 
 Use `include "std/text"` for small text helpers:
 

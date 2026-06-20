@@ -23,3 +23,13 @@ to percent_of with part as number, whole as number giving decimal:
 
 to percent_of_decimal with part as decimal, whole as decimal giving decimal:
     give back part divided by whole times 100.0
+
+to factorial with n as number giving number:
+    if n is less than 0:
+        fail "factorial needs a non-negative number"
+    let out be 1
+    let i be 2
+    while i is at most n:
+        set out to out times i
+        set i to i plus 1
+    give back out

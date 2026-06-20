@@ -133,7 +133,7 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
-division, powers, roots · a text toolbox (`split by`, `joined with`,
+division, powers, roots, factorials · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
@@ -259,6 +259,7 @@ the plan:
 - [x] bounded split helper for bundled `std/text` — v0.3.75
 - [x] whitespace-delimited word extraction for bundled `std/text` — v0.3.76
 - [x] bounded replacement helper for bundled `std/text` — v0.3.77
+- [x] factorial helper for bundled `std/math` — v0.3.78
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
