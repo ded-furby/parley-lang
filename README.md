@@ -137,7 +137,7 @@ division, powers, roots · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, line/word counts, word/line extraction, capitalization, ASCII digit/letter checks, prefix/suffix removal, one-sided trimming, left/right/center padding, …) · number/text/decimal list
-helpers with safe maybe first/last/index/pop, clamped slicing, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list predicates, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including maybe lookup, fallback, counted increment, take-and-remove, and clear variants
+helpers with safe maybe first/last/index/pop, copying, clamped slicing, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list predicates, copying, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including maybe lookup, fallback, counted increment, take-and-remove, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -237,6 +237,7 @@ the plan:
 - [x] capitalization helper for bundled `std/text` — v0.3.53
 - [x] yes/no list reverse helper for bundled `std/list` — v0.3.54
 - [x] yes/no list sort helper for bundled `std/list` — v0.3.55
+- [x] list copy helpers for bundled `std/list` — v0.3.56
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

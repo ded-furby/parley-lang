@@ -602,6 +602,31 @@ to main:
     say item 4 of sortable_flags
     sort_yesno with empty_flags
     say length of empty_flags
+    let copy_nums_source be a list of 5, 6
+    let copied_nums be (copy_number with copy_nums_source)
+    add 7 to copy_nums_source
+    say length of copied_nums
+    say item 1 of copied_nums
+    say item 2 of copied_nums
+    say length of copy_nums_source
+    let copy_words_source be a list of "alpha", "beta"
+    let copied_words be (copy_text with copy_words_source)
+    add "gamma" to copy_words_source
+    say copied_words joined with "|"
+    say length of copy_words_source
+    let copy_decimals_source be a list of 1.25, 2.75
+    let copied_decimals be (copy_decimal with copy_decimals_source)
+    add 3.5 to copy_decimals_source
+    say length of copied_decimals
+    say item 2 of copied_decimals
+    say length of copy_decimals_source
+    let copy_flags_source be a list of yes, no
+    let copied_flags be (copy_yesno with copy_flags_source)
+    add yes to copy_flags_source
+    say length of copied_flags
+    say item 1 of copied_flags
+    say item 2 of copied_flags
+    say length of copy_flags_source
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
@@ -615,7 +640,8 @@ to main:
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
-        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n")
+        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
+        "2\n5\n6\n3\nalpha|beta\n3\n2\n2.75\n3\n2\nyes\nno\n3\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

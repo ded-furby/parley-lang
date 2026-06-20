@@ -139,16 +139,17 @@ parse-relevant highlights:
 * **Bundled list helpers** in `std/list`, including `list_slice_number`,
   `list_slice_text`, `list_slice_decimal`, and `list_slice_yesno`, use
   1-based inclusive indexes. Slice helpers clamp bounds to the list and give
-  an empty list for reversed or out-of-range requests. Extend, clear, insert,
-  pop, remove, sort, and reverse helpers take a `changing` list parameter and mutate the
-  caller's list. Insert helpers clamp the target index: 1 or below inserts at
-  the front, and an index past the end appends. Pop helpers return `maybe`
-  values, removing a valid 1-based item and returning `nothing` without
-  mutation for out-of-range indexes. Remove helpers delete the first matching
-  value and return yes/no for whether anything changed. Sort helpers reorder
-  number, text, decimal, and yes/no caller lists in place, with yes/no sorting
-  placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
-  and yes/no caller lists in place.
+  an empty list for reversed or out-of-range requests. Copy helpers return a
+  fresh number, text, decimal, or yes/no list with the same items. Extend,
+  clear, insert, pop, remove, sort, and reverse helpers take a `changing` list
+  parameter and mutate the caller's list. Insert helpers clamp the target
+  index: 1 or below inserts at the front, and an index past the end appends.
+  Pop helpers return `maybe` values, removing a valid 1-based item and
+  returning `nothing` without mutation for out-of-range indexes. Remove helpers
+  delete the first matching value and return yes/no for whether anything
+  changed. Sort helpers reorder number, text, decimal, and yes/no caller lists
+  in place, with yes/no sorting placing `no` before `yes`. Reverse helpers
+  reorder number, text, decimal, and yes/no caller lists in place.
 * **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
   counted increments, take helpers, and clear helpers for text-key and
   number-key maps. Take and clear helpers use `changing` map parameters: take

@@ -374,6 +374,9 @@ to main:
     say (maybe_item_number with numbers, 2)
     let middle_numbers be (list_slice_number with numbers, 2, 3)
     say length of middle_numbers
+    let copied_numbers be (copy_number with numbers)
+    add 99 to numbers
+    say length of copied_numbers
     let more_numbers be a list of 10, 12
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99
@@ -387,6 +390,8 @@ to main:
     say (average_decimal with prices)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes
+    let copied_flags be (copy_yesno with flags)
+    say length of copied_flags
     say (all_yes with flags)
     say (index_no with flags)
     sort_yesno with flags
@@ -396,9 +401,9 @@ to main:
     say (number_or with counts, "agent", 0)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
-    let flags be a map from text to yesno
-    set item "ready" of flags to yes
-    say (yesno_at with flags, "ready")
+    let flag_map be a map from text to yesno
+    set item "ready" of flag_map to yes
+    say (yesno_at with flag_map, "ready")
     let seats be a map from number to number
     add_number_key_count with seats, 7
     say (number_key_number_or with seats, 7, 0)

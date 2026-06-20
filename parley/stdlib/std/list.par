@@ -40,6 +40,12 @@ to list_slice_number with xs as list of number, first_index as number, last_inde
         add value to out
     give back out
 
+to copy_number with xs as list of number giving list of number:
+    let out be an empty list of number
+    for each value in xs:
+        add value to out
+    give back out
+
 to extend_number with changing xs as list of number, more as list of number:
     for each value in more:
         add value to xs
@@ -170,6 +176,12 @@ to list_slice_text with xs as list of text, first_index as number, last_index as
         add value to out
     give back out
 
+to copy_text with xs as list of text giving list of text:
+    let out be an empty list of text
+    for each value in xs:
+        add value to out
+    give back out
+
 to extend_text with changing xs as list of text, more as list of text:
     for each value in more:
         add value to xs
@@ -288,6 +300,12 @@ to list_slice_decimal with xs as list of decimal, first_index as number, last_in
         set finish to length of xs
     for each i from start to finish:
         let value be item i of xs
+        add value to out
+    give back out
+
+to copy_decimal with xs as list of decimal giving list of decimal:
+    let out be an empty list of decimal
+    for each value in xs:
         add value to out
     give back out
 
@@ -414,6 +432,12 @@ to list_slice_yesno with xs as list of yesno, first_index as number, last_index 
         set finish to length of xs
     for each i from start to finish:
         let value be item i of xs
+        add value to out
+    give back out
+
+to copy_yesno with xs as list of yesno giving list of yesno:
+    let out be an empty list of yesno
+    for each value in xs:
         add value to out
     give back out
 
