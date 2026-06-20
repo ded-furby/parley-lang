@@ -441,21 +441,20 @@ to split_lines with t as text giving list of text:
     give back out
 
 to word_count with t as text giving number:
-    if (is_blank with t):
-        give back 0
-    let words be (trimmed t) split by " "
-    let count be 0
-    for each word in words:
-        if (is_blank with word) is no:
-            set count to count plus 1
-    give back count
+    let words be (words_of with t)
+    give back length of words
 
 to words_of with t as text giving list of text:
     let out be an empty list of text
-    if (is_blank with t):
-        give back out
-    let words be (trimmed t) split by " "
-    for each word in words:
-        if (is_blank with word) is no:
-            add word to out
+    let current be ""
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (is_whitespace with c):
+            if current is not "":
+                add current to out
+                set current to ""
+        otherwise:
+            set current to "{current}{c}"
+    if current is not "":
+        add current to out
     give back out

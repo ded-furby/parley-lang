@@ -338,6 +338,12 @@ to main:
     say words joined with "|"
     let no_words be (words_of with "   ")
     say length of no_words
+    say (word_count with "one\\ttwo\\n three\\r\\nfour")
+    let whitespace_words be (words_of with "one\\ttwo\\n three\\r\\nfour")
+    say length of whitespace_words
+    say whitespace_words joined with "|"
+    let no_whitespace_words be (words_of with "\\t\\n\\r ")
+    say length of no_whitespace_words
     let lines be (nonempty_lines with " one \\n\\n  two\\n  ")
     say length of lines
     say lines joined with "|"
@@ -499,7 +505,7 @@ to main:
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
-        "3\none|two|three\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
+        "3\none|two|three\n0\n4\n4\none|two|three|four\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")

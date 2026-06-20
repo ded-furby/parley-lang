@@ -352,7 +352,7 @@ to main:
     say (percent_of_decimal with 12.5, 50.0)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
-    say (words_of with "one  two three") joined with "|"
+    say (words_of with "one\ttwo\nthree") joined with "|"
     say (lines_of with "one\n\ntwo") joined with "|"
     say (split_lines with "one\r\ntwo\rthree\n") joined with "|"
     say (maybe_character with "éc", 2)

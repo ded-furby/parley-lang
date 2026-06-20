@@ -147,6 +147,9 @@ parse-relevant highlights:
   `split_lines` returns an empty list for empty text, splits on `\n`, `\r`,
   and `\r\n` line boundaries, preserves blank middle lines, and omits the
   synthetic final empty item for terminal line breaks.
+  `word_count` and `words_of` split on space, tab, newline, and carriage
+  return boundaries, collapse repeated whitespace, ignore leading and trailing
+  whitespace, and return `0` or an empty list for all-whitespace text.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
   `is_space` is a non-empty whole-text predicate over those same whitespace

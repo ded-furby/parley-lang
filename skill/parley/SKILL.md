@@ -156,6 +156,8 @@ and `include "std/map"` (`number_at`,
 `take_number_key_yesno_at`, `number_key_yesno_or`,
 `clear_number_key_number_map`, `clear_number_key_text_map`,
 `clear_number_key_decimal_map`, `clear_number_key_yesno_map`).
+`words_of` and `word_count` split words on space, tab, newline, and carriage
+return boundaries, collapsing repeated whitespace.
 Use `parley package new name` to create a local package skeleton, then
 `parley package install name path --version 1.0.0` to vendor it into
 `parley_modules/name/`; names may contain letters, numbers, dashes,

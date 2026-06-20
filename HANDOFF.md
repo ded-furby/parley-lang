@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.75** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.76** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -281,6 +281,9 @@ Update it whenever you finish or start a work item.
   text at most `max_splits` times from the left while preserving the unsplit
   right side, matching Python's common `split(separator, n)` workflow with
   deterministic no-op behavior for empty separators or non-positive counts.
+- **v0.3.76 whitespace word extraction:** `std/text` updates `word_count` and
+  `words_of` to split on space, tab, newline, and carriage-return boundaries,
+  collapsing repeated whitespace and ignoring leading/trailing whitespace.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -352,7 +355,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.75).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.76).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

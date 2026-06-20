@@ -243,8 +243,8 @@ Use `include "std/text"` for small text helpers:
 | `nonempty_lines with t` | list of trimmed, non-blank lines |
 | `lines_of with t` | list of newline-separated lines, preserving blank and trailing lines; empty text gives an empty list |
 | `split_lines with t` | list of lines split on `\n`, `\r`, and `\r\n`, preserving blank middle lines but not a synthetic final empty line |
-| `word_count with t` | number of non-blank space-separated words |
-| `words_of with t` | list of non-blank space-separated words |
+| `word_count with t` | number of whitespace-delimited words |
+| `words_of with t` | list of whitespace-delimited words, splitting on space, tab, newline, and carriage return |
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
 | `without_suffix with t, suffix` | text with `suffix` removed when present |
 | `has_prefix with t, prefix` | yes when text starts with `prefix`; empty prefix gives yes |
