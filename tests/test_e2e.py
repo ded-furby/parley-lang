@@ -587,6 +587,13 @@ to main:
     say (any_yes with empty_flags)
     say (index_yes with empty_flags)
     say (index_no with empty_flags)
+    let order_flags be a list of yes, no, no
+    reverse_yesno with order_flags
+    say item 1 of order_flags
+    say item 2 of order_flags
+    say item 3 of order_flags
+    reverse_yesno with empty_flags
+    say length of empty_flags
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
@@ -600,7 +607,7 @@ to main:
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
-        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\n")
+        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nno\nno\nyes\n0\n")
 
 
 def test_bundled_std_map_package_runs(workdir):

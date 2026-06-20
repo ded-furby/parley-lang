@@ -303,6 +303,7 @@ Use `include "std/list"` for common list helpers:
 | `insert_yesno with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_yesno with changing xs, index` | maybe removed yes/no at a 1-based index |
 | `remove_yesno with changing xs, value` | remove the first matching yes/no value; yes if one was removed |
+| `reverse_yesno with changing xs` | reverse a yes/no list in place |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 

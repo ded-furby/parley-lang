@@ -459,6 +459,15 @@ to remove_yesno with changing xs as list of yesno, value as yesno giving yesno:
         set spot to spot plus 1
     give back no
 
+to reverse_yesno with changing xs as list of yesno:
+    let out be an empty list of yesno
+    let index be length of xs
+    while index is at least 1:
+        add item index of xs to out
+        set index to index minus 1
+    clear_yesno with xs
+    extend_yesno with xs, out
+
 to count_yes with xs as list of yesno giving number:
     let count be 0
     for each value in xs:
