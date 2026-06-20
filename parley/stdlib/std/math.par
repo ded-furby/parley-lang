@@ -92,3 +92,21 @@ to permutation_count with total as number, chosen as number giving number:
         set out to out times (total minus i)
         set i to i plus 1
     give back out
+
+to integer_square_root with n as number giving number:
+    if n is less than 0:
+        fail "integer_square_root needs a non-negative number"
+    let root be 0
+    let odd be 1
+    let remaining be n
+    while remaining is at least odd:
+        set remaining to remaining minus odd
+        set odd to odd plus 2
+        set root to root plus 1
+    give back root
+
+to is_perfect_square with n as number giving yesno:
+    if n is less than 0:
+        give back no
+    let root be (integer_square_root with n)
+    give back root times root is n

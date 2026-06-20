@@ -355,6 +355,8 @@ to main:
     say (least_common_multiple with 6, 8)
     say (combination_count with 5, 2)
     say (permutation_count with 5, 2)
+    say (integer_square_root with 15)
+    say (is_perfect_square with 16)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     say (words_of with "one\ttwo\nthree") joined with "|"

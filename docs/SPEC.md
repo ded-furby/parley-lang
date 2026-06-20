@@ -119,6 +119,9 @@ parse-relevant highlights:
   `combination_count` and `permutation_count` return exact whole-number
   counts, return `0` when the chosen count is larger than the total, and fail
   with English text for negative inputs.
+  `integer_square_root` returns the floor of the square root for non-negative
+  whole numbers and fails with English text for negative input;
+  `is_perfect_square` returns no for negative inputs.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are

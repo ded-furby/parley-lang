@@ -224,6 +224,8 @@ Use `include "std/math"` for small numeric helpers:
 | `least_common_multiple with left, right` | non-negative least common multiple; returns `0` when either input is `0` |
 | `combination_count with total, chosen` | count unordered choices; returns `0` when `chosen` is greater than `total`; negative inputs fail |
 | `permutation_count with total, chosen` | count ordered arrangements; returns `0` when `chosen` is greater than `total`; negative inputs fail |
+| `integer_square_root with n` | floor of the square root for non-negative whole numbers; negative input fails |
+| `is_perfect_square with n` | yes when a whole number is a perfect square; negative input gives no |
 
 Use `include "std/text"` for small text helpers:
 
