@@ -130,6 +130,21 @@ to rpartition_text with t as text, separator as text giving list of text:
     add (text_slice with t, last_start plus sep_length, length of t) to out
     give back out
 
+to last_position with needle as text, t as text giving maybe number:
+    if needle is "":
+        give back some (length of t plus 1)
+    let needle_length be length of needle
+    let max_start be length of t minus needle_length plus 1
+    let found be 0
+    if max_start is at least 1:
+        for each i from 1 to max_start:
+            let candidate be (text_slice with t, i, i plus needle_length minus 1)
+            if candidate is needle:
+                set found to i
+    if found is 0:
+        give back nothing
+    give back some found
+
 to without_prefix with t as text, prefix as text giving text:
     if prefix is "":
         give back t

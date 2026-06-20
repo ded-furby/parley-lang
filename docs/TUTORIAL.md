@@ -359,6 +359,7 @@ to main:
     say (reversed_text with "Parley")
     say (partition_text with "key=value", "=") joined with "|"
     say (rpartition_text with "key=value=tail", "=") joined with "|"
+    say (last_position with "=", "key=value=tail")
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
     say (has_prefix with "parley-lang", "parley-")

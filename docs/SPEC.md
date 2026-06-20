@@ -127,6 +127,9 @@ parse-relevant highlights:
   `rpartition_text` uses the same three-item shape for the last separator
   match. Missing or empty separators produce the right-absent shape
   `["", "", t]`.
+  `last_position` returns `some n` for the last 1-based UTF-8 character
+  position of a needle, supports overlapping matches, returns `nothing` for
+  an absent needle, and returns the final text boundary for an empty needle.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.

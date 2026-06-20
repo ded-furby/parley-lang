@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.69** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.70** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -258,6 +258,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.69 right-side text partition helper:** `std/text` adds
   `rpartition_text`, returning before/separator/after for the last separator
   match, or empty/empty/text when absent.
+- **v0.3.70 last text position helper:** `std/text` adds `last_position`,
+  returning a `maybe number` for the last 1-based UTF-8 character position of
+  a needle, including overlapping matches and the final boundary for an empty
+  needle.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -329,7 +333,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.69).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.70).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
