@@ -161,6 +161,23 @@ to rpartition_text with t as text, separator as text giving list of text:
     add (text_slice with t, last_start plus sep_length, length of t) to out
     give back out
 
+to split_text with t as text, separator as text, max_splits as number giving list of text:
+    let out be an empty list of text
+    if separator is "" or max_splits is at most 0:
+        add t to out
+        give back out
+    let remaining be t
+    let split_count be 0
+    while split_count is less than max_splits:
+        let pieces be (partition_text with remaining, separator)
+        if item 2 of pieces is "":
+            stop
+        add item 1 of pieces to out
+        set remaining to item 3 of pieces
+        set split_count to split_count plus 1
+    add remaining to out
+    give back out
+
 to rsplit_text with t as text, separator as text, max_splits as number giving list of text:
     let out be an empty list of text
     if separator is "" or max_splits is at most 0:

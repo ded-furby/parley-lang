@@ -381,6 +381,19 @@ to main:
     say missing_right_partition joined with "|"
     let unicode_right_partition be (rpartition_text with "éclair", "c")
     say unicode_right_partition joined with "|"
+    let split_limited be (split_text with "a,b,c,d", ",", 2)
+    say length of split_limited
+    say split_limited joined with "|"
+    let split_all be (split_text with "a,b,c", ",", 9)
+    say split_all joined with "|"
+    let split_missing be (split_text with "abc", ",", 2)
+    say split_missing joined with "|"
+    let split_empty_sep be (split_text with "abc", "", 2)
+    say split_empty_sep joined with "|"
+    let split_zero be (split_text with "a,b", ",", 0)
+    say split_zero joined with "|"
+    let split_unicode be (split_text with "é::clair::fin", "::", 1)
+    say split_unicode joined with "|"
     let right_split_limited be (rsplit_text with "a,b,c,d", ",", 2)
     say length of right_split_limited
     say right_split_limited joined with "|"
@@ -487,7 +500,7 @@ to main:
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
-        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
+        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")
 
