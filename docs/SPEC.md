@@ -215,8 +215,10 @@ parse-relevant highlights:
   a first-class predicate function, return a fresh list, and preserve the
   original order of values where the predicate returns yes. Map helpers accept
   a first-class same-type transform function, return a fresh list, and
-  preserve item order. Count, index, and membership helpers work over number,
-  text, decimal, and yes/no items.
+  preserve item order. Predicate any/all helpers accept first-class predicate
+  functions, short-circuit over list items, and return no/yes respectively for
+  empty lists. Count, index, and membership helpers work over number, text,
+  decimal, and yes/no items.
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,

@@ -1271,6 +1271,46 @@ to main:
     assert proc.stdout == "3\n2\n4\n6\nADA|GRACE\n2\n2\n3\n2\nno\nyes\n"
 
 
+def test_bundled_std_list_predicate_helpers_run(workdir):
+    src = '''include "std/list"
+
+to is_even with n as number giving yesno:
+    give back remainder of n divided by 2 is 0
+
+to starts_with_a with t as text giving yesno:
+    give back t starts with "a"
+
+to over_two with d as decimal giving yesno:
+    give back d is more than 2.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 2, 4, 5
+    say (any_number with numbers, the function is_even)
+    say (all_number with numbers, the function is_even)
+    let empty_numbers be an empty list of number
+    say (any_number with empty_numbers, the function is_even)
+    say (all_number with empty_numbers, the function is_even)
+
+    let names be a list of "ada", "alan"
+    say (all_text with names, the function starts_with_a)
+    let other_names be a list of "grace", "linus"
+    say (any_text with other_names, the function starts_with_a)
+
+    let decimals be a list of 1.5, 2.5
+    say (any_decimal with decimals, the function over_two)
+    say (all_decimal with decimals, the function over_two)
+
+    let flags be a list of yes, no
+    say (any_yesno with flags, the function same)
+    say (all_yesno with flags, the function same)
+'''
+    proc = run_program(workdir, "bundled_std_list_predicate", src)
+    assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nyes\nno\nyes\nno\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

@@ -418,6 +418,8 @@ to main:
     say length of large_numbers
     let doubled_numbers be (map_number with numbers, the function doubled_number)
     say item 1 of doubled_numbers
+    say (any_number with numbers, the function is_large)
+    say (all_number with numbers, the function is_large)
     let more_numbers be a list of 10, 12
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99

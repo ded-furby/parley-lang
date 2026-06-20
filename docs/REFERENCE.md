@@ -284,6 +284,7 @@ Use `include "std/list"` for common list helpers:
 | `copy_number with xs` | fresh list of number with the same items |
 | `filter_number with xs, keep` | fresh list of numbers where `keep` returns yes |
 | `map_number with xs, transform` | fresh list of numbers after applying `transform` to each item |
+| `any_number with xs, test` / `all_number with xs, test` | predicate any/all over numbers; empty lists give no/yes |
 | `extend_number with changing xs, more` | append every number from `more` to `xs` |
 | `clear_number with changing xs` | remove every item from `xs` |
 | `insert_number with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -306,6 +307,7 @@ Use `include "std/list"` for common list helpers:
 | `copy_text with xs` | fresh list of text with the same items |
 | `filter_text with xs, keep` | fresh list of text values where `keep` returns yes |
 | `map_text with xs, transform` | fresh list of text values after applying `transform` to each item |
+| `any_text with xs, test` / `all_text with xs, test` | predicate any/all over text values; empty lists give no/yes |
 | `extend_text with changing xs, more` | append every text value from `more` to `xs` |
 | `clear_text with changing xs` | remove every item from `xs` |
 | `insert_text with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -324,6 +326,7 @@ Use `include "std/list"` for common list helpers:
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `filter_decimal with xs, keep` | fresh list of decimals where `keep` returns yes |
 | `map_decimal with xs, transform` | fresh list of decimals after applying `transform` to each item |
+| `any_decimal with xs, test` / `all_decimal with xs, test` | predicate any/all over decimals; empty lists give no/yes |
 | `extend_decimal with changing xs, more` | append every decimal from `more` to `xs` |
 | `clear_decimal with changing xs` | remove every item from `xs` |
 | `insert_decimal with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -347,6 +350,7 @@ Use `include "std/list"` for common list helpers:
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `filter_yesno with xs, keep` | fresh list of yes/no values where `keep` returns yes |
 | `map_yesno with xs, transform` | fresh list of yes/no values after applying `transform` to each item |
+| `any_yesno with xs, test` / `all_yesno with xs, test` | predicate any/all over yes/no values; empty lists give no/yes |
 | `extend_yesno with changing xs, more` | append every yes/no value from `more` to `xs` |
 | `clear_yesno with changing xs` | remove every item from `xs` |
 | `insert_yesno with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
