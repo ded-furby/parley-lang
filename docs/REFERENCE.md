@@ -347,8 +347,10 @@ Use `include "std/list"` for common list helpers:
 | `sort_yesno with changing xs` | sort a yes/no list in place, with `no` before `yes` |
 | `reverse_yesno with changing xs` | reverse a yes/no list in place |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
+| `count_yesno with xs, value` | occurrences of a yes/no value |
 | `contains_yesno with xs, value` | yes when a yes/no value is present |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
+| `index_yesno with xs, value` | maybe 1-based index of a yes/no value |
 
 Use `include "std/map"` for common map helpers:
 

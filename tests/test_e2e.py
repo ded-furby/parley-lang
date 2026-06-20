@@ -724,10 +724,14 @@ to main:
     say (any_yes with flags)
     say (count_yes with flags)
     say (count_no with flags)
+    say (count_yesno with flags, yes)
+    say (count_yesno with flags, no)
     say (contains_yesno with flags, yes)
     say (contains_yesno with flags, no)
     say (index_yes with flags)
     say (index_no with flags)
+    say (index_yesno with flags, yes)
+    say (index_yesno with flags, no)
     say (maybe_item_yesno with flags, 1)
     say (maybe_item_yesno with flags, 2)
     say (maybe_item_yesno with flags, 9)
@@ -756,8 +760,12 @@ to main:
     let empty_flags be an empty list of yesno
     say (all_yes with empty_flags)
     say (any_yes with empty_flags)
+    say (count_yesno with empty_flags, yes)
+    say (count_yesno with empty_flags, no)
     say (index_yes with empty_flags)
     say (index_no with empty_flags)
+    say (index_yesno with empty_flags, yes)
+    say (index_yesno with empty_flags, no)
     say (maybe_first_yesno with empty_flags)
     say (maybe_last_yesno with empty_flags)
     let order_flags be a list of yes, no, no
@@ -813,7 +821,7 @@ to main:
         "1.5\n2\n2\n7.5\n6\n1\nyes\nno\n3\nnothing\n1\n0\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
-        "yes\nyes\nyes\nyes\nno\nyes\n2\n1\nyes\nyes\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
+        "yes\nyes\nyes\nyes\nno\nyes\n2\n1\n2\n1\nyes\nyes\n1\n2\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\n0\n0\nnothing\nnothing\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
         "2\n5\n6\n3\nalpha|beta\n3\n2\n2.75\n3\n2\nyes\nno\n3\n")
 
 

@@ -574,6 +574,13 @@ to count_no with xs as list of yesno giving number:
             set count to count plus 1
     give back count
 
+to count_yesno with xs as list of yesno, needle as yesno giving number:
+    let count be 0
+    for each value in xs:
+        if value is needle:
+            set count to count plus 1
+    give back count
+
 to contains_yesno with xs as list of yesno, needle as yesno giving yesno:
     for each value in xs:
         if value is needle:
@@ -592,6 +599,14 @@ to index_no with xs as list of yesno giving maybe number:
     let index be 1
     for each value in xs:
         if value is no:
+            give back some index
+        set index to index plus 1
+    give back nothing
+
+to index_yesno with xs as list of yesno, needle as yesno giving maybe number:
+    let index be 1
+    for each value in xs:
+        if value is needle:
             give back some index
         set index to index plus 1
     give back nothing

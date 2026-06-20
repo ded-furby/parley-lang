@@ -429,7 +429,9 @@ to main:
     say (first_yesno with flags)
     say (maybe_last_yesno with flags)
     say (all_yes with flags)
+    say (count_yesno with flags, yes)
     say (index_no with flags)
+    say (index_yesno with flags, no)
     sort_yesno with flags
     reverse_yesno with flags
     let counts be a map from text to number
