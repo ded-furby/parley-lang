@@ -292,6 +292,7 @@ Use `include "std/list"` for common list helpers:
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
+| `product_number with xs` | product of all numbers; empty list gives `1` |
 | `maybe_smallest_number with xs` / `maybe_largest_number with xs` | maybe smallest or largest number |
 | `maybe_average_number with xs` | maybe decimal average |
 | `first_text with xs` / `last_text with xs` | first or last text |
@@ -324,6 +325,7 @@ Use `include "std/list"` for common list helpers:
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
+| `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |

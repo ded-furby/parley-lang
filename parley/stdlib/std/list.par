@@ -116,6 +116,12 @@ to index_number with xs as list of number, needle as number giving maybe number:
 to average_number with xs as list of number giving decimal:
     give back (decimal from (sum of xs)) divided by (decimal from (length of xs))
 
+to product_number with xs as list of number giving number:
+    let out be 1
+    for each value in xs:
+        set out to out times value
+    give back out
+
 to maybe_smallest_number with xs as list of number giving maybe number:
     if length of xs is 0:
         give back nothing
@@ -378,6 +384,12 @@ to index_decimal with xs as list of decimal, needle as decimal giving maybe numb
 
 to average_decimal with xs as list of decimal giving decimal:
     give back (sum of xs) divided by (decimal from (length of xs))
+
+to product_decimal with xs as list of decimal giving decimal:
+    let out be 1.0
+    for each value in xs:
+        set out to out times value
+    give back out
 
 to maybe_smallest_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:

@@ -560,10 +560,12 @@ to main:
     say (first_number with nums)
     say (last_number with nums)
     say (average_number with nums)
+    say (product_number with nums)
     say (count_number with nums, 4)
     say (index_number with nums, 8)
     say (index_number with nums, 9)
     let empty_nums be an empty list of number
+    say (product_number with empty_nums)
     say (maybe_first_number with nums)
     say (maybe_last_number with nums)
     say (maybe_item_number with nums, 2)
@@ -657,10 +659,12 @@ to main:
     say (first_decimal with decimals)
     say (last_decimal with decimals)
     say (average_decimal with decimals)
+    say (product_decimal with decimals)
     say (count_decimal with decimals, 2.5)
     say (index_decimal with decimals, 2.0)
     say (index_decimal with decimals, 9.0)
     let empty_decimals be an empty list of decimal
+    say (product_decimal with empty_decimals)
     say (maybe_first_decimal with decimals)
     say (maybe_last_decimal with decimals)
     say (maybe_item_decimal with decimals, 2)
@@ -787,14 +791,14 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
-        "4\n8\n4.5\n2\n4\nnothing\n4\n8\n2\nnothing\nnothing\n"
+        "4\n8\n4.5\n256\n2\n4\nnothing\n1\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
         "2\n2\n4\n2\n2\n0\n6\n10\n99\n77\n55\n77\n8\n4\nnothing\n8\nyes\n7\n2\nno\n7\n2\n99\n99\n2\n0\n"
         "red\nred\n2\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
         "blue|red\n0\n4\ngreen\nred|amber|blue|red|green|violet\nblue\nred|amber|red|green|violet\nnothing\nyes\namber|red|green|violet\nno\namber|green|red|violet\nviolet|red|green|amber\n0\n"
-        "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
+        "1.5\n2\n2\n7.5\n1\n3\nnothing\n1\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
         "yes\nyes\nyes\nyes\nno\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"

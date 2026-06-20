@@ -263,6 +263,7 @@ the plan:
 - [x] greatest-common-divisor and least-common-multiple helpers for bundled `std/math` — v0.3.79
 - [x] combination and permutation count helpers for bundled `std/math` — v0.3.80
 - [x] integer square root and perfect-square helpers for bundled `std/math` — v0.3.81
+- [x] product helpers for bundled number and decimal lists — v0.3.82
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

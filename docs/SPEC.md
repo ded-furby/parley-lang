@@ -214,7 +214,8 @@ parse-relevant highlights:
   value and return yes/no for whether anything changed. Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
-  and yes/no caller lists in place.
+  and yes/no caller lists in place. Product helpers multiply every number or
+  decimal item and return the multiplicative identity for empty lists.
 * **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
   counted increments, take helpers, and clear helpers for text-key and
   number-key maps. Take and clear helpers use `changing` map parameters: take
