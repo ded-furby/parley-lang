@@ -138,6 +138,9 @@ parse-relevant highlights:
   `lines_of` returns an empty list for empty text, otherwise the raw
   newline-separated lines including blank middle lines and trailing empty
   lines.
+  `split_lines` returns an empty list for empty text, splits on `\n`, `\r`,
+  and `\r\n` line boundaries, preserves blank middle lines, and omits the
+  synthetic final empty item for terminal line breaks.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
   `is_space` is a non-empty whole-text predicate over those same whitespace

@@ -375,6 +375,32 @@ to lines_of with t as text giving list of text:
         give back out
     give back t split by "\n"
 
+to split_lines with t as text giving list of text:
+    let out be an empty list of text
+    if t is "":
+        give back out
+    let current be ""
+    let i be 1
+    while i is at most length of t:
+        let c be item i of t
+        if c is "\n":
+            add current to out
+            set current to ""
+        otherwise if c is "\r":
+            add current to out
+            set current to ""
+            if i is less than length of t:
+                let next_index be i plus 1
+                if item next_index of t is "\n":
+                    set i to i plus 1
+        otherwise:
+            set current to "{current}{c}"
+        set i to i plus 1
+    let last be item length of t of t
+    if last is not "\n" and last is not "\r":
+        add current to out
+    give back out
+
 to word_count with t as text giving number:
     if (is_blank with t):
         give back 0
