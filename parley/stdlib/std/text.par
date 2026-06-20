@@ -261,6 +261,12 @@ to nonempty_lines with t as text giving list of text:
             add trimmed line to out
     give back out
 
+to lines_of with t as text giving list of text:
+    let out be an empty list of text
+    if t is "":
+        give back out
+    give back t split by "\n"
+
 to word_count with t as text giving number:
     if (is_blank with t):
         give back 0

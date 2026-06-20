@@ -353,6 +353,7 @@ to main:
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     say (words_of with "one  two three") joined with "|"
+    say (lines_of with "one\n\ntwo") joined with "|"
     say (maybe_character with "éc", 2)
     say (text_slice with "crème", 2, 4)
     say (without_prefix with "parley-lang", "parley-")

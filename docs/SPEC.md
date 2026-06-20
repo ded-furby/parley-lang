@@ -122,6 +122,9 @@ parse-relevant highlights:
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.
+  `lines_of` returns an empty list for empty text, otherwise the raw
+  newline-separated lines including blank middle lines and trailing empty
+  lines.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
   `is_space` is a non-empty whole-text predicate over those same whitespace

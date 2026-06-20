@@ -235,6 +235,7 @@ Use `include "std/text"` for small text helpers:
 | `line_count with t` | number of newline-separated lines, or 0 for empty text |
 | `nonempty_line_count with t` | number of lines whose trimmed text is not empty |
 | `nonempty_lines with t` | list of trimmed, non-blank lines |
+| `lines_of with t` | list of newline-separated lines, preserving blank and trailing lines; empty text gives an empty list |
 | `word_count with t` | number of non-blank space-separated words |
 | `words_of with t` | list of non-blank space-separated words |
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
