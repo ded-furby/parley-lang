@@ -283,6 +283,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_number with xs, first, last` | list of number from clamped 1-based inclusive bounds |
 | `copy_number with xs` | fresh list of number with the same items |
 | `filter_number with xs, keep` | fresh list of numbers where `keep` returns yes |
+| `map_number with xs, transform` | fresh list of numbers after applying `transform` to each item |
 | `extend_number with changing xs, more` | append every number from `more` to `xs` |
 | `clear_number with changing xs` | remove every item from `xs` |
 | `insert_number with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -304,6 +305,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_text with xs, first, last` | list of text from clamped 1-based inclusive bounds |
 | `copy_text with xs` | fresh list of text with the same items |
 | `filter_text with xs, keep` | fresh list of text values where `keep` returns yes |
+| `map_text with xs, transform` | fresh list of text values after applying `transform` to each item |
 | `extend_text with changing xs, more` | append every text value from `more` to `xs` |
 | `clear_text with changing xs` | remove every item from `xs` |
 | `insert_text with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -321,6 +323,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_decimal with xs, first, last` | list of decimal from clamped 1-based inclusive bounds |
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `filter_decimal with xs, keep` | fresh list of decimals where `keep` returns yes |
+| `map_decimal with xs, transform` | fresh list of decimals after applying `transform` to each item |
 | `extend_decimal with changing xs, more` | append every decimal from `more` to `xs` |
 | `clear_decimal with changing xs` | remove every item from `xs` |
 | `insert_decimal with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -343,6 +346,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_yesno with xs, first, last` | list of yes/no from clamped 1-based inclusive bounds |
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `filter_yesno with xs, keep` | fresh list of yes/no values where `keep` returns yes |
+| `map_yesno with xs, transform` | fresh list of yes/no values after applying `transform` to each item |
 | `extend_yesno with changing xs, more` | append every yes/no value from `more` to `xs` |
 | `clear_yesno with changing xs` | remove every item from `xs` |
 | `insert_yesno with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |

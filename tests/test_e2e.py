@@ -1226,6 +1226,51 @@ to main:
     assert proc.stdout == "2\n2\n4\nada|alan\n2\n1.5\n2.5\n2\nyes\nyes\n"
 
 
+def test_bundled_std_list_map_helpers_run(workdir):
+    src = '''include "std/list"
+
+to double with n as number giving number:
+    give back n times 2
+
+to shout with t as text giving text:
+    give back uppercase of t
+
+to add_half with d as decimal giving decimal:
+    give back d plus 0.5
+
+to flipped with flag as yesno giving yesno:
+    if flag:
+        give back no
+    give back yes
+
+to main:
+    let numbers be a list of 1, 2, 3
+    let doubled be (map_number with numbers, the function double)
+    say length of doubled
+    say item 1 of doubled
+    say item 2 of doubled
+    say item 3 of doubled
+
+    let names be a list of "ada", "grace"
+    let loud be (map_text with names, the function shout)
+    say loud joined with "|"
+
+    let decimals be a list of 1.5, 2.5
+    let shifted be (map_decimal with decimals, the function add_half)
+    say length of shifted
+    say item 1 of shifted
+    say item 2 of shifted
+
+    let flags be a list of yes, no
+    let inverted be (map_yesno with flags, the function flipped)
+    say length of inverted
+    say item 1 of inverted
+    say item 2 of inverted
+'''
+    proc = run_program(workdir, "bundled_std_list_map", src)
+    assert proc.stdout == "3\n2\n4\n6\nADA|GRACE\n2\n2\n3\n2\nno\nyes\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

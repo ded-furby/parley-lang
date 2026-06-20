@@ -349,6 +349,9 @@ include "std/map"
 to is_large with n as number giving yesno:
     give back n is more than 3
 
+to doubled_number with n as number giving number:
+    give back n times 2
+
 to main:
     say (clamped with 12, 1, 10)
     say (clamped_decimal with 12.5, 1.5, 10.5)
@@ -413,6 +416,8 @@ to main:
     say length of copied_numbers
     let large_numbers be (filter_number with numbers, the function is_large)
     say length of large_numbers
+    let doubled_numbers be (map_number with numbers, the function doubled_number)
+    say item 1 of doubled_numbers
     let more_numbers be a list of 10, 12
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99
