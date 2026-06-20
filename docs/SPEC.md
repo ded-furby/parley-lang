@@ -116,6 +116,9 @@ parse-relevant highlights:
   `greatest_common_divisor` and `least_common_multiple` normalize negative
   inputs to positive whole-number results; their zero behavior follows
   Python's `math.gcd` and `math.lcm` conventions.
+  `combination_count` and `permutation_count` return exact whole-number
+  counts, return `0` when the chosen count is larger than the total, and fail
+  with English text for negative inputs.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are

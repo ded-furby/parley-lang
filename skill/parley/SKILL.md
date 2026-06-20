@@ -129,7 +129,7 @@ at `parley_modules/package_name/main.par` and be loaded with
 Bundled packages are available as `include "std/math"` (`clamped`,
 `clamped_decimal`, `between`, `between_decimal`, `percent_of`,
 `percent_of_decimal`, `factorial`, `greatest_common_divisor`,
-`least_common_multiple`), `include "std/text"` (`is_blank`, `repeated_text`,
+`least_common_multiple`, `combination_count`, `permutation_count`), `include "std/text"` (`is_blank`, `repeated_text`,
 `surrounded_with`, `capitalized`, `title_cased`, `is_titlecase`, `line_count`, `nonempty_line_count`, `nonempty_lines`, `lines_of`, `split_lines`,
 `word_count`, `words_of`, `maybe_character`, `text_slice`, `reversed_text`, `partition_text`, `rpartition_text`, `replaced_text`, `split_text`, `rsplit_text`, `last_position`, `without_prefix`,
 `without_suffix`, `has_prefix`, `has_suffix`, `is_whitespace`, `is_space`, `left_trimmed`, `right_trimmed`,

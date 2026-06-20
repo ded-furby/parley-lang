@@ -222,6 +222,8 @@ Use `include "std/math"` for small numeric helpers:
 | `factorial with n` | whole-number factorial; negative input fails with an English message |
 | `greatest_common_divisor with left, right` | non-negative greatest common divisor; negatives are normalized |
 | `least_common_multiple with left, right` | non-negative least common multiple; returns `0` when either input is `0` |
+| `combination_count with total, chosen` | count unordered choices; returns `0` when `chosen` is greater than `total`; negative inputs fail |
+| `permutation_count with total, chosen` | count ordered arrangements; returns `0` when `chosen` is greater than `total`; negative inputs fail |
 
 Use `include "std/text"` for small text helpers:
 

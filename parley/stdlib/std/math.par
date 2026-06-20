@@ -57,3 +57,38 @@ to least_common_multiple with left as number, right as number giving number:
     while out % divisor is not 0:
         set out to out plus step
     give back out
+
+to combination_count with total as number, chosen as number giving number:
+    if total is less than 0 or chosen is less than 0:
+        fail "combination_count needs non-negative numbers"
+    if chosen is more than total:
+        give back 0
+    let pick be chosen
+    let complement be total minus chosen
+    if complement is less than pick:
+        set pick to complement
+    let numerator be 1
+    let denominator be 1
+    let i be 1
+    while i is at most pick:
+        set numerator to numerator times (total minus pick plus i)
+        set denominator to denominator times i
+        set i to i plus 1
+    let out be 0
+    let remaining be numerator
+    while remaining is at least denominator:
+        set remaining to remaining minus denominator
+        set out to out plus 1
+    give back out
+
+to permutation_count with total as number, chosen as number giving number:
+    if total is less than 0 or chosen is less than 0:
+        fail "permutation_count needs non-negative numbers"
+    if chosen is more than total:
+        give back 0
+    let out be 1
+    let i be 0
+    while i is less than chosen:
+        set out to out times (total minus i)
+        set i to i plus 1
+    give back out
