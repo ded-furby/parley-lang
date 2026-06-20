@@ -376,6 +376,8 @@ to main:
     say (is_uppercase with "PARLEY")
     say (is_uppercase with "PARLEY3")
     say (is_uppercase with "Parley")
+    say (swap_case with "Parley 3")
+    say (swap_case with "")
     say (capitalized with "pARLEY")
     say (capitalized with "mIxEd CASE")
     say (capitalized with "x")
@@ -403,7 +405,7 @@ to main:
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n"
-        "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
+        "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n.go..\n..go..\nwide\nx\nabxab\n")
 
 

@@ -129,7 +129,8 @@ parse-relevant highlights:
   `is_digit`, `is_alpha`, `is_alphanumeric`, `is_lowercase`, and
   `is_uppercase` are non-empty whole-text predicates over ASCII digits and
   letters. Lowercase and uppercase predicates accept only letters of that
-  case.
+  case. `swap_case` swaps ASCII lowercase and uppercase letters and leaves
+  digits, spaces, punctuation, and non-ASCII characters unchanged.
   `padded_left`, `padded_right`, and `padded_center` repeat a non-empty fill
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates

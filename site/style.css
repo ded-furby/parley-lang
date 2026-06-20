@@ -388,8 +388,20 @@ code.inline {
   .col { margin-left: 0; }
   .hero-foot { flex-direction: column; align-items: flex-start; }
   .scroll-hint { align-self: center; }
+  .pane pre {
+    overflow-x: hidden;
+    white-space: pre-wrap;
+  }
+  .pane code {
+    overflow-wrap: anywhere;
+  }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .install { flex-direction: column; }
+  .install code {
+    overflow-x: hidden;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
   #copy-btn { padding: 0.7rem 1.2rem; }
   .finale-links { gap: 1.25rem; flex-direction: column; }
 }

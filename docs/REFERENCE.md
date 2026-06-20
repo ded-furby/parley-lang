@@ -243,6 +243,7 @@ Use `include "std/text"` for small text helpers:
 | `is_alphanumeric with t` | yes when non-empty `t` contains only ASCII letters and digits |
 | `is_lowercase with t` | yes when non-empty `t` contains only ASCII lowercase letters |
 | `is_uppercase with t` | yes when non-empty `t` contains only ASCII uppercase letters |
+| `swap_case with t` | text with ASCII lowercase and uppercase letters swapped |
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
 | `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |
