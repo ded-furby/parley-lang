@@ -551,6 +551,10 @@ to main:
     clear_decimal with decimals
     say length of decimals
     let flags be a list of yes, no, yes
+    say (first_yesno with flags)
+    say (last_yesno with flags)
+    say (maybe_first_yesno with flags)
+    say (maybe_last_yesno with flags)
     say (all_yes with flags)
     say (any_yes with flags)
     say (count_yes with flags)
@@ -587,6 +591,8 @@ to main:
     say (any_yes with empty_flags)
     say (index_yes with empty_flags)
     say (index_no with empty_flags)
+    say (maybe_first_yesno with empty_flags)
+    say (maybe_last_yesno with empty_flags)
     let order_flags be a list of yes, no, no
     reverse_yesno with order_flags
     say item 1 of order_flags
@@ -640,7 +646,7 @@ to main:
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
-        "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
+        "yes\nyes\nyes\nyes\nno\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
         "2\n5\n6\n3\nalpha|beta\n3\n2\n2.75\n3\n2\nyes\nno\n3\n")
 
 

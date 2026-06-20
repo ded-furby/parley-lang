@@ -392,6 +392,8 @@ to main:
     let flags be a list of yes, no, yes
     let copied_flags be (copy_yesno with flags)
     say length of copied_flags
+    say (first_yesno with flags)
+    say (maybe_last_yesno with flags)
     say (all_yes with flags)
     say (index_no with flags)
     sort_yesno with flags

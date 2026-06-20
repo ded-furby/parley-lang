@@ -397,6 +397,22 @@ to maybe_average_decimal with xs as list of decimal giving maybe decimal:
     let value be (average_decimal with xs)
     give back some value
 
+to first_yesno with xs as list of yesno giving yesno:
+    give back item 1 of xs
+
+to last_yesno with xs as list of yesno giving yesno:
+    give back item (length of xs) of xs
+
+to maybe_first_yesno with xs as list of yesno giving maybe yesno:
+    if length of xs is 0:
+        give back nothing
+    give back some item 1 of xs
+
+to maybe_last_yesno with xs as list of yesno giving maybe yesno:
+    if length of xs is 0:
+        give back nothing
+    give back some item (length of xs) of xs
+
 to all_yes with xs as list of yesno giving yesno:
     for each value in xs:
         if value is no:

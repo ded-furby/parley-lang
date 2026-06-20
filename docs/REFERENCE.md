@@ -298,6 +298,8 @@ Use `include "std/list"` for common list helpers:
 | `average_decimal with xs` | decimal average |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
+| `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |
+| `maybe_first_yesno with xs` / `maybe_last_yesno with xs` | maybe first or last yes/no value |
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
 | `maybe_item_yesno with xs, index` | maybe yes/no value at a 1-based index |
 | `list_slice_yesno with xs, first, last` | list of yes/no from clamped 1-based inclusive bounds |
