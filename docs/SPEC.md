@@ -124,6 +124,9 @@ parse-relevant highlights:
   `partition_text` returns a three-item `list of text`: text before the first
   separator match, the separator, and text after it. Missing or empty
   separators produce the stable absent shape `[t, "", ""]`.
+  `rpartition_text` uses the same three-item shape for the last separator
+  match. Missing or empty separators produce the right-absent shape
+  `["", "", t]`.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.

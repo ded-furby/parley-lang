@@ -358,6 +358,7 @@ to main:
     say (text_slice with "crème", 2, 4)
     say (reversed_text with "Parley")
     say (partition_text with "key=value", "=") joined with "|"
+    say (rpartition_text with "key=value=tail", "=") joined with "|"
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
     say (has_prefix with "parley-lang", "parley-")

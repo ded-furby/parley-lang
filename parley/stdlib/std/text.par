@@ -105,6 +105,31 @@ to partition_text with t as text, separator as text giving list of text:
     add (text_slice with t, start plus length of separator, length of t) to out
     give back out
 
+to rpartition_text with t as text, separator as text giving list of text:
+    let out be an empty list of text
+    if separator is "":
+        add "" to out
+        add "" to out
+        add t to out
+        give back out
+    let sep_length be length of separator
+    let max_start be length of t minus sep_length plus 1
+    let last_start be 0
+    if max_start is at least 1:
+        for each i from 1 to max_start:
+            let candidate be (text_slice with t, i, i plus sep_length minus 1)
+            if candidate is separator:
+                set last_start to i
+    if last_start is 0:
+        add "" to out
+        add "" to out
+        add t to out
+        give back out
+    add (text_slice with t, 1, last_start minus 1) to out
+    add separator to out
+    add (text_slice with t, last_start plus sep_length, length of t) to out
+    give back out
+
 to without_prefix with t as text, prefix as text giving text:
     if prefix is "":
         give back t
