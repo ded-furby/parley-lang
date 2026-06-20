@@ -134,6 +134,8 @@ parse-relevant highlights:
   `title_cased` uppercases the first character of each whitespace-delimited
   word, lowercases the rest of each word, preserves the original whitespace,
   and returns empty text unchanged.
+  `is_titlecase` returns yes when non-empty text contains at least one ASCII
+  letter and is already equal to its `title_cased` form.
   `padded_left`, `padded_right`, and `padded_center` repeat a non-empty fill
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates

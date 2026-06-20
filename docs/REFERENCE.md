@@ -231,6 +231,7 @@ Use `include "std/text"` for small text helpers:
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 | `capitalized with t` | text with the first character uppercased and the rest lowercased |
 | `title_cased with t` | whitespace-delimited words title-cased while preserving original whitespace |
+| `is_titlecase with t` | yes when text has at least one ASCII letter and is already title-cased |
 | `line_count with t` | number of newline-separated lines, or 0 for empty text |
 | `nonempty_line_count with t` | number of lines whose trimmed text is not empty |
 | `nonempty_lines with t` | list of trimmed, non-blank lines |
