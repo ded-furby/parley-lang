@@ -137,7 +137,7 @@ division, powers, roots, integer square roots, perfect-square checks, factorials
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
-helpers with safe maybe first/last/index/pop, copying, clamped slicing, membership predicates, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list edge helpers, predicates, copying, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, maybe lookup, fallback, counted increment, take-and-remove, and clear variants
+helpers with safe maybe first/last/index/pop, copying, clamped slicing, membership predicates, explicit sum/product helpers, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list edge helpers, predicates, copying, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, maybe lookup, fallback, counted increment, copying, take-and-remove, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -266,6 +266,7 @@ the plan:
 - [x] product helpers for bundled number and decimal lists — v0.3.82
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
+- [x] explicit list sum helpers and map copy helpers — v0.3.85
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

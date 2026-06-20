@@ -216,11 +216,14 @@ parse-relevant highlights:
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
-  and yes/no caller lists in place. Product helpers multiply every number or
-  decimal item and return the multiplicative identity for empty lists.
+  and yes/no caller lists in place. Sum helpers wrap the built-in list sum for
+  number and decimal lists and return the additive identity for empty lists.
+  Product helpers multiply every number or decimal item and return the
+  multiplicative identity for empty lists.
 * **Bundled map helpers** in `std/map` provide key membership checks, maybe
-  lookup, fallback lookup, counted increments, take helpers, and clear helpers
-  for text-key and number-key maps. Take and clear helpers use `changing` map parameters: take
+  lookup, fallback lookup, counted increments, copy helpers, take helpers, and
+  clear helpers for text-key and number-key maps. Copy helpers return fresh maps
+  with the same entries. Take and clear helpers use `changing` map parameters: take
   helpers return `some value` and remove a present key, or return `nothing`
   without mutation when the key is absent; clear helpers remove every entry.
 * **Failures.** These stop the program with an English message and exit

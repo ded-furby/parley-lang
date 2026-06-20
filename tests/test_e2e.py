@@ -561,6 +561,7 @@ to main:
     say (last_number with nums)
     say (average_number with nums)
     say (product_number with nums)
+    say (sum_number with nums)
     say (count_number with nums, 4)
     say (contains_number with nums, 2)
     say (contains_number with nums, 9)
@@ -568,6 +569,7 @@ to main:
     say (index_number with nums, 9)
     let empty_nums be an empty list of number
     say (product_number with empty_nums)
+    say (sum_number with empty_nums)
     say (maybe_first_number with nums)
     say (maybe_last_number with nums)
     say (maybe_item_number with nums, 2)
@@ -664,6 +666,7 @@ to main:
     say (last_decimal with decimals)
     say (average_decimal with decimals)
     say (product_decimal with decimals)
+    say (sum_decimal with decimals)
     say (count_decimal with decimals, 2.5)
     say (contains_decimal with decimals, 1.5)
     say (contains_decimal with decimals, 9.0)
@@ -671,6 +674,7 @@ to main:
     say (index_decimal with decimals, 9.0)
     let empty_decimals be an empty list of decimal
     say (product_decimal with empty_decimals)
+    say (sum_decimal with empty_decimals)
     say (maybe_first_decimal with decimals)
     say (maybe_last_decimal with decimals)
     say (maybe_item_decimal with decimals, 2)
@@ -799,14 +803,14 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
-        "4\n8\n4.5\n256\n2\nyes\nno\n4\nnothing\n1\n4\n8\n2\nnothing\nnothing\n"
+        "4\n8\n4.5\n256\n18\n2\nyes\nno\n4\nnothing\n1\n0\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
         "2\n2\n4\n2\n2\n0\n6\n10\n99\n77\n55\n77\n8\n4\nnothing\n8\nyes\n7\n2\nno\n7\n2\n99\n99\n2\n0\n"
         "red\nred\n2\nyes\nno\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
         "blue|red\n0\n4\ngreen\nred|amber|blue|red|green|violet\nblue\nred|amber|red|green|violet\nnothing\nyes\namber|red|green|violet\nno\namber|green|red|violet\nviolet|red|green|amber\n0\n"
-        "1.5\n2\n2\n7.5\n1\nyes\nno\n3\nnothing\n1\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
+        "1.5\n2\n2\n7.5\n6\n1\nyes\nno\n3\nnothing\n1\n0\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
         "yes\nyes\nyes\nyes\nno\nyes\n2\n1\nyes\nyes\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
@@ -818,6 +822,11 @@ def test_bundled_std_map_package_runs(workdir):
 
 to main:
     let scores be a map from text to number
+    set item "ada" of scores to 36
+    let scores_copy be (copy_number_map with scores)
+    set item "ada" of scores to 99
+    say item "ada" of scores_copy
+    say item "ada" of scores
     set item "ada" of scores to 36
     say (number_has_key with scores, "ada")
     say (number_has_key with scores, "grace")
@@ -839,6 +848,11 @@ to main:
 
     let labels be a map from text to text
     set item "a" of labels to "alpha"
+    let labels_copy be (copy_text_map with labels)
+    set item "a" of labels to "after"
+    say item "a" of labels_copy
+    say item "a" of labels
+    set item "a" of labels to "alpha"
     say (text_has_key with labels, "a")
     say (text_has_key with labels, "b")
     say (text_at with labels, "a")
@@ -852,6 +866,11 @@ to main:
     say (text_at with labels, "b")
 
     let prices be a map from text to decimal
+    set item "tea" of prices to 2.5
+    let prices_copy be (copy_decimal_map with prices)
+    set item "tea" of prices to 9.5
+    say item "tea" of prices_copy
+    say item "tea" of prices
     set item "tea" of prices to 2.5
     say (decimal_has_key with prices, "tea")
     say (decimal_has_key with prices, "cake")
@@ -868,6 +887,11 @@ to main:
 
     let flags be a map from text to yesno
     set item "ready" of flags to yes
+    let flags_copy be (copy_yesno_map with flags)
+    set item "ready" of flags to no
+    say item "ready" of flags_copy
+    say item "ready" of flags
+    set item "ready" of flags to yes
     say (yesno_has_key with flags, "ready")
     say (yesno_has_key with flags, "missing")
     say (yesno_at with flags, "ready")
@@ -882,6 +906,11 @@ to main:
     say (yesno_at with flags, "missing")
 
     let seats be a map from number to number
+    set item 7 of seats to 42
+    let seats_copy be (copy_number_key_number_map with seats)
+    set item 7 of seats to 99
+    say item 7 of seats_copy
+    say item 7 of seats
     set item 7 of seats to 42
     say (number_key_number_has_key with seats, 7)
     say (number_key_number_has_key with seats, 8)
@@ -902,6 +931,11 @@ to main:
 
     let names be a map from number to text
     set item 1 of names to "one"
+    let names_copy be (copy_number_key_text_map with names)
+    set item 1 of names to "after"
+    say item 1 of names_copy
+    say item 1 of names
+    set item 1 of names to "one"
     say (number_key_text_has_key with names, 1)
     say (number_key_text_has_key with names, 2)
     say (number_key_text_at with names, 1)
@@ -915,6 +949,11 @@ to main:
     say (number_key_text_at with names, 2)
 
     let ratios be a map from number to decimal
+    set item 2 of ratios to 0.5
+    let ratios_copy be (copy_number_key_decimal_map with ratios)
+    set item 2 of ratios to 9.5
+    say item 2 of ratios_copy
+    say item 2 of ratios
     set item 2 of ratios to 0.5
     say (number_key_decimal_has_key with ratios, 2)
     say (number_key_decimal_has_key with ratios, 3)
@@ -931,6 +970,11 @@ to main:
 
     let switches be a map from number to yesno
     set item 1 of switches to yes
+    let switches_copy be (copy_number_key_yesno_map with switches)
+    set item 1 of switches to no
+    say item 1 of switches_copy
+    say item 1 of switches
+    set item 1 of switches to yes
     say (number_key_yesno_has_key with switches, 1)
     say (number_key_yesno_has_key with switches, 2)
     say (number_key_yesno_at with switches, 1)
@@ -946,14 +990,14 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std_map", src)
     assert proc.stdout == (
-        "yes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n"
-        "yes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\n"
-        "yes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n"
-        "yes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n"
-        "yes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n"
-        "yes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\n"
-        "yes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n"
-        "yes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n")
+        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n"
+        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\n"
+        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n"
+        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n"
+        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\n"
+        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n")
 
 
 def test_build_produces_native_binary(workdir):

@@ -24,6 +24,12 @@ to add_count with changing m as map from text to number, key as text:
     otherwise:
         set item key of m to 1
 
+to copy_number_map with m as map from text to number giving map from text to number:
+    let out be a map from text to number
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
+
 to clear_number_map with changing m as map from text to number:
     for each key in keys of m:
         remove item key of m
@@ -47,6 +53,12 @@ to text_or with m as map from text to text, key as text, fallback as text giving
     if m contains key:
         give back item key of m
     give back fallback
+
+to copy_text_map with m as map from text to text giving map from text to text:
+    let out be a map from text to text
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
 
 to clear_text_map with changing m as map from text to text:
     for each key in keys of m:
@@ -72,6 +84,12 @@ to decimal_or with m as map from text to decimal, key as text, fallback as decim
         give back item key of m
     give back fallback
 
+to copy_decimal_map with m as map from text to decimal giving map from text to decimal:
+    let out be a map from text to decimal
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
+
 to clear_decimal_map with changing m as map from text to decimal:
     for each key in keys of m:
         remove item key of m
@@ -95,6 +113,12 @@ to yesno_or with m as map from text to yesno, key as text, fallback as yesno giv
     if m contains key:
         give back item key of m
     give back fallback
+
+to copy_yesno_map with m as map from text to yesno giving map from text to yesno:
+    let out be a map from text to yesno
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
 
 to clear_yesno_map with changing m as map from text to yesno:
     for each key in keys of m:
@@ -126,6 +150,12 @@ to add_number_key_count with changing m as map from number to number, key as num
     otherwise:
         set item key of m to 1
 
+to copy_number_key_number_map with m as map from number to number giving map from number to number:
+    let out be a map from number to number
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
+
 to clear_number_key_number_map with changing m as map from number to number:
     for each key in keys of m:
         remove item key of m
@@ -149,6 +179,12 @@ to number_key_text_or with m as map from number to text, key as number, fallback
     if m contains key:
         give back item key of m
     give back fallback
+
+to copy_number_key_text_map with m as map from number to text giving map from number to text:
+    let out be a map from number to text
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
 
 to clear_number_key_text_map with changing m as map from number to text:
     for each key in keys of m:
@@ -174,6 +210,12 @@ to number_key_decimal_or with m as map from number to decimal, key as number, fa
         give back item key of m
     give back fallback
 
+to copy_number_key_decimal_map with m as map from number to decimal giving map from number to decimal:
+    let out be a map from number to decimal
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
+
 to clear_number_key_decimal_map with changing m as map from number to decimal:
     for each key in keys of m:
         remove item key of m
@@ -197,6 +239,12 @@ to number_key_yesno_or with m as map from number to yesno, key as number, fallba
     if m contains key:
         give back item key of m
     give back fallback
+
+to copy_number_key_yesno_map with m as map from number to yesno giving map from number to yesno:
+    let out be a map from number to yesno
+    for each key in keys of m:
+        set item key of out to item key of m
+    give back out
 
 to clear_number_key_yesno_map with changing m as map from number to yesno:
     for each key in keys of m:

@@ -396,6 +396,7 @@ to main:
     say (padded_center with "go", 5, ".")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
+    say (sum_number with numbers)
     say (product_number with numbers)
     say (contains_number with numbers, 2)
     say (index_number with numbers, 8)
@@ -418,6 +419,7 @@ to main:
     say (maybe_average_number with empty_numbers)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
+    say (sum_decimal with prices)
     say (product_decimal with prices)
     say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
@@ -432,8 +434,10 @@ to main:
     reverse_yesno with flags
     let counts be a map from text to number
     add_count with counts, "agent"
+    let counts_copy be (copy_number_map with counts)
     say (number_has_key with counts, "agent")
     say (number_or with counts, "agent", 0)
+    say (number_or with counts_copy, "agent", 0)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
     let flag_map be a map from text to yesno

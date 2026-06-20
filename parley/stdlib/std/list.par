@@ -128,6 +128,9 @@ to product_number with xs as list of number giving number:
         set out to out times value
     give back out
 
+to sum_number with xs as list of number giving number:
+    give back sum of xs
+
 to maybe_smallest_number with xs as list of number giving maybe number:
     if length of xs is 0:
         give back nothing
@@ -408,6 +411,11 @@ to product_decimal with xs as list of decimal giving decimal:
     for each value in xs:
         set out to out times value
     give back out
+
+to sum_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        give back 0.0
+    give back sum of xs
 
 to maybe_smallest_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
