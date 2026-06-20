@@ -871,6 +871,10 @@ to main:
     say (take_number_or with score_take_or, "a", 8)
     say (take_number_or with score_take_or, "a", 8)
     say length of score_take_or
+    let score_values be a map from text to number
+    set item "a" of score_values to 7
+    say (number_has_value with score_values, 7)
+    say (number_has_value with score_values, 8)
 
     let labels be a map from text to text
     set item "a" of labels to "alpha"
@@ -908,6 +912,10 @@ to main:
     say (take_text_or with label_take_or, "a", "fallback")
     say (take_text_or with label_take_or, "a", "fallback")
     say length of label_take_or
+    let label_values be a map from text to text
+    set item "a" of label_values to "found"
+    say (text_has_value with label_values, "found")
+    say (text_has_value with label_values, "missing")
 
     let prices be a map from text to decimal
     set item "tea" of prices to 2.5
@@ -946,6 +954,10 @@ to main:
     say (take_decimal_or with price_take_or, "a", 8.5)
     say (take_decimal_or with price_take_or, "a", 8.5)
     say length of price_take_or
+    let price_values be a map from text to decimal
+    set item "a" of price_values to 7.5
+    say (decimal_has_value with price_values, 7.5)
+    say (decimal_has_value with price_values, 8.5)
 
     let flags be a map from text to yesno
     set item "ready" of flags to yes
@@ -984,6 +996,10 @@ to main:
     say (take_yesno_or with flag_take_or, "a", yes)
     say (take_yesno_or with flag_take_or, "a", yes)
     say length of flag_take_or
+    let flag_values be a map from text to yesno
+    set item "a" of flag_values to yes
+    say (yesno_has_value with flag_values, yes)
+    say (yesno_has_value with flag_values, no)
 
     let seats be a map from number to number
     set item 7 of seats to 42
@@ -1026,6 +1042,10 @@ to main:
     say (take_number_key_number_or with seat_take_or, 1, 80)
     say (take_number_key_number_or with seat_take_or, 1, 80)
     say length of seat_take_or
+    let seat_values be a map from number to number
+    set item 1 of seat_values to 70
+    say (number_key_number_has_value with seat_values, 70)
+    say (number_key_number_has_value with seat_values, 80)
 
     let names be a map from number to text
     set item 1 of names to "one"
@@ -1063,6 +1083,10 @@ to main:
     say (take_number_key_text_or with name_take_or, 1, "fallback")
     say (take_number_key_text_or with name_take_or, 1, "fallback")
     say length of name_take_or
+    let name_values be a map from number to text
+    set item 1 of name_values to "found"
+    say (number_key_text_has_value with name_values, "found")
+    say (number_key_text_has_value with name_values, "missing")
 
     let ratios be a map from number to decimal
     set item 2 of ratios to 0.5
@@ -1101,6 +1125,10 @@ to main:
     say (take_number_key_decimal_or with ratio_take_or, 1, 8.5)
     say (take_number_key_decimal_or with ratio_take_or, 1, 8.5)
     say length of ratio_take_or
+    let ratio_values be a map from number to decimal
+    set item 1 of ratio_values to 7.5
+    say (number_key_decimal_has_value with ratio_values, 7.5)
+    say (number_key_decimal_has_value with ratio_values, 8.5)
 
     let switches be a map from number to yesno
     set item 1 of switches to yes
@@ -1139,17 +1167,21 @@ to main:
     say (take_number_key_yesno_or with switch_take_or, 1, yes)
     say (take_number_key_yesno_or with switch_take_or, 1, yes)
     say length of switch_take_or
+    let switch_values be a map from number to yesno
+    set item 1 of switch_values to yes
+    say (number_key_yesno_has_value with switch_values, yes)
+    say (number_key_yesno_has_value with switch_values, no)
 '''
     proc = run_program(workdir, "bundled_std_map", src)
     assert proc.stdout == (
-        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n2\n3\n2\n4\n4\n1\n7\n8\n0\n"
-        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\nfound\nfallback\n0\n"
-        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n7.5\n8.5\n0\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\nno\nyes\n0\n"
-        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n20\n30\n2\n40\n40\n1\n70\n80\n0\n"
-        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\nfound\nfallback\n0\n"
-        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n7.5\n8.5\n0\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\nno\nyes\n0\n")
+        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n2\n3\n2\n4\n4\n1\n7\n8\n0\nyes\nno\n"
+        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\nfound\nfallback\n0\nyes\nno\n"
+        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n7.5\n8.5\n0\nyes\nno\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\nno\nyes\n0\nyes\nno\n"
+        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n20\n30\n2\n40\n40\n1\n70\n80\n0\nyes\nno\n"
+        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\nfound\nfallback\n0\nyes\nno\n"
+        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n7.5\n8.5\n0\nyes\nno\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\nno\nyes\n0\nyes\nno\n")
 
 
 def test_build_produces_native_binary(workdir):

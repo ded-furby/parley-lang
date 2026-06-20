@@ -445,6 +445,7 @@ to main:
     set item "human" of more_counts to 2
     update_number_map with counts, more_counts
     say (number_or with counts, "agent", 0)
+    say (number_has_value with counts, 5)
     say (ensure_number_at with counts, "robot", 1)
     say (ensure_number_at with counts, "robot", 10)
     say (take_number_or with counts, "robot", 0)

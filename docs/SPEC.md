@@ -220,10 +220,12 @@ parse-relevant highlights:
   number and decimal lists and return the additive identity for empty lists.
   Product helpers multiply every number or decimal item and return the
   multiplicative identity for empty lists.
-* **Bundled map helpers** in `std/map` provide key membership checks, maybe
-  lookup, fallback lookup, fallback insertion, counted increments, copy
-  helpers, update helpers, take helpers, take-with-fallback helpers, and clear
-  helpers for text-key and number-key maps. Ensure helpers use a `changing`
+* **Bundled map helpers** in `std/map` provide key membership checks, value
+  membership checks, maybe lookup, fallback lookup, fallback insertion,
+  counted increments, copy helpers, update helpers, take helpers,
+  take-with-fallback helpers, and clear helpers for text-key and number-key
+  maps. Value membership helpers scan map values and return yes when any value
+  is equal to the requested value. Ensure helpers use a `changing`
   target map, return the present value when the key exists, otherwise insert
   the fallback and return it. Copy helpers return fresh maps with the same
   entries. Update helpers use a `changing` target map and copy every entry

@@ -6,6 +6,12 @@ to number_at with m as map from text to number, key as text giving maybe number:
 to number_has_key with m as map from text to number, key as text giving yesno:
     give back m contains key
 
+to number_has_value with m as map from text to number, needle as number giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
+
 to take_number_at with changing m as map from text to number, key as text giving maybe number:
     if m contains key:
         let value be item key of m
@@ -59,6 +65,12 @@ to text_at with m as map from text to text, key as text giving maybe text:
 to text_has_key with m as map from text to text, key as text giving yesno:
     give back m contains key
 
+to text_has_value with m as map from text to text, needle as text giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
+
 to take_text_at with changing m as map from text to text, key as text giving maybe text:
     if m contains key:
         let value be item key of m
@@ -105,6 +117,12 @@ to decimal_at with m as map from text to decimal, key as text giving maybe decim
 
 to decimal_has_key with m as map from text to decimal, key as text giving yesno:
     give back m contains key
+
+to decimal_has_value with m as map from text to decimal, needle as decimal giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
 
 to take_decimal_at with changing m as map from text to decimal, key as text giving maybe decimal:
     if m contains key:
@@ -153,6 +171,12 @@ to yesno_at with m as map from text to yesno, key as text giving maybe yesno:
 to yesno_has_key with m as map from text to yesno, key as text giving yesno:
     give back m contains key
 
+to yesno_has_value with m as map from text to yesno, needle as yesno giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
+
 to take_yesno_at with changing m as map from text to yesno, key as text giving maybe yesno:
     if m contains key:
         let value be item key of m
@@ -199,6 +223,12 @@ to number_key_number_at with m as map from number to number, key as number givin
 
 to number_key_number_has_key with m as map from number to number, key as number giving yesno:
     give back m contains key
+
+to number_key_number_has_value with m as map from number to number, needle as number giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
 
 to take_number_key_number_at with changing m as map from number to number, key as number giving maybe number:
     if m contains key:
@@ -253,6 +283,12 @@ to number_key_text_at with m as map from number to text, key as number giving ma
 to number_key_text_has_key with m as map from number to text, key as number giving yesno:
     give back m contains key
 
+to number_key_text_has_value with m as map from number to text, needle as text giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
+
 to take_number_key_text_at with changing m as map from number to text, key as number giving maybe text:
     if m contains key:
         let value be item key of m
@@ -300,6 +336,12 @@ to number_key_decimal_at with m as map from number to decimal, key as number giv
 to number_key_decimal_has_key with m as map from number to decimal, key as number giving yesno:
     give back m contains key
 
+to number_key_decimal_has_value with m as map from number to decimal, needle as decimal giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
+
 to take_number_key_decimal_at with changing m as map from number to decimal, key as number giving maybe decimal:
     if m contains key:
         let value be item key of m
@@ -346,6 +388,12 @@ to number_key_yesno_at with m as map from number to yesno, key as number giving 
 
 to number_key_yesno_has_key with m as map from number to yesno, key as number giving yesno:
     give back m contains key
+
+to number_key_yesno_has_value with m as map from number to yesno, needle as yesno giving yesno:
+    for each key in keys of m:
+        if item key of m is needle:
+            give back yes
+    give back no
 
 to take_number_key_yesno_at with changing m as map from number to yesno, key as number giving maybe yesno:
     if m contains key:
