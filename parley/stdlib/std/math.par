@@ -33,3 +33,27 @@ to factorial with n as number giving number:
         set out to out times i
         set i to i plus 1
     give back out
+
+to greatest_common_divisor with left as number, right as number giving number:
+    let x be absolute of left
+    let y be absolute of right
+    while y is not 0:
+        let remainder be x % y
+        set x to y
+        set y to remainder
+    give back x
+
+to least_common_multiple with left as number, right as number giving number:
+    let x be absolute of left
+    let y be absolute of right
+    if x is 0 or y is 0:
+        give back 0
+    let step be x
+    let divisor be y
+    if y is more than x:
+        set step to y
+        set divisor to x
+    let out be step
+    while out % divisor is not 0:
+        set out to out plus step
+    give back out

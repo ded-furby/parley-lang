@@ -351,6 +351,8 @@ to main:
     say (clamped_decimal with 12.5, 1.5, 10.5)
     say (percent_of_decimal with 12.5, 50.0)
     say (factorial with 5)
+    say (greatest_common_divisor with 54, 24)
+    say (least_common_multiple with 6, 8)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     say (words_of with "one\ttwo\nthree") joined with "|"

@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.78** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.79** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -290,6 +290,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.78 factorial math helper:** `std/math` adds `factorial`, returning
   whole-number factorials with `0! = 1` and a catchable English failure for
   negative input.
+- **v0.3.79 integer GCD/LCM helpers:** `std/math` adds
+  `greatest_common_divisor` and `least_common_multiple`, normalizing negative
+  inputs to non-negative results and returning `0` for zero LCM inputs.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -361,7 +364,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.78).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.79).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

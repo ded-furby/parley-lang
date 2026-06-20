@@ -113,6 +113,9 @@ parse-relevant highlights:
   stopping the program.
   Bundled `std/math` includes `factorial`, returning `1` for `0`, multiplying
   whole numbers through `n`, and failing with English text for negative input.
+  `greatest_common_divisor` and `least_common_multiple` normalize negative
+  inputs to positive whole-number results; their zero behavior follows
+  Python's `math.gcd` and `math.lcm` conventions.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are
