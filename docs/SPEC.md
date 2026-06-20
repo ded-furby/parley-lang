@@ -122,6 +122,8 @@ parse-relevant highlights:
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.
+  `has_prefix` and `has_suffix` return yes for matching text edges and also
+  for empty prefix or suffix checks.
   `lines_of` returns an empty list for empty text, otherwise the raw
   newline-separated lines including blank middle lines and trailing empty
   lines.

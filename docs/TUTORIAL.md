@@ -358,6 +358,8 @@ to main:
     say (text_slice with "crème", 2, 4)
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
+    say (has_prefix with "parley-lang", "parley-")
+    say (has_suffix with "notes.par", ".par")
     say (is_digit with "12345")
     say (is_alpha with "Parley")
     say (is_alphanumeric with "Parley3")

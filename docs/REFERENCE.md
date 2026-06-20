@@ -240,6 +240,8 @@ Use `include "std/text"` for small text helpers:
 | `words_of with t` | list of non-blank space-separated words |
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
 | `without_suffix with t, suffix` | text with `suffix` removed when present |
+| `has_prefix with t, prefix` | yes when text starts with `prefix`; empty prefix gives yes |
+| `has_suffix with t, suffix` | yes when text ends with `suffix`; empty suffix gives yes |
 | `is_whitespace with c` | yes for a space, tab, newline, or carriage return character |
 | `is_space with t` | yes when non-empty text contains only space, tab, newline, or carriage return characters |
 | `is_digit with t` | yes when non-empty `t` contains only ASCII digits |

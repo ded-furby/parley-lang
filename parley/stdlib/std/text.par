@@ -85,12 +85,22 @@ to without_prefix with t as text, prefix as text giving text:
         give back (text_slice with t, length of prefix plus 1, length of t)
     give back t
 
+to has_prefix with t as text, prefix as text giving yesno:
+    if prefix is "":
+        give back yes
+    give back t starts with prefix
+
 to without_suffix with t as text, suffix as text giving text:
     if suffix is "":
         give back t
     if t ends with suffix:
         give back (text_slice with t, 1, length of t minus length of suffix)
     give back t
+
+to has_suffix with t as text, suffix as text giving yesno:
+    if suffix is "":
+        give back yes
+    give back t ends with suffix
 
 to is_whitespace with c as text giving yesno:
     if c is " ":
