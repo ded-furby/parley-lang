@@ -121,6 +121,9 @@ parse-relevant highlights:
   the same 1-based UTF-8 character indexing.
   `reversed_text` reverses by those same UTF-8 characters and leaves empty
   text empty.
+  `partition_text` returns a three-item `list of text`: text before the first
+  separator match, the separator, and text after it. Missing or empty
+  separators produce the stable absent shape `[t, "", ""]`.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.

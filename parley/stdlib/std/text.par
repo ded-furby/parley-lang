@@ -86,6 +86,25 @@ to reversed_text with t as text giving text:
         set i to i minus 1
     give back out
 
+to partition_text with t as text, separator as text giving list of text:
+    let out be an empty list of text
+    if separator is "":
+        add t to out
+        add "" to out
+        add "" to out
+        give back out
+    let found be position of separator in t
+    if found is nothing:
+        add t to out
+        add "" to out
+        add "" to out
+        give back out
+    let start be value of found
+    add (text_slice with t, 1, start minus 1) to out
+    add separator to out
+    add (text_slice with t, start plus length of separator, length of t) to out
+    give back out
+
 to without_prefix with t as text, prefix as text giving text:
     if prefix is "":
         give back t
