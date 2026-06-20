@@ -124,6 +124,9 @@ parse-relevant highlights:
   when the requested edge text is empty or absent.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
+  `padded_left` and `padded_right` repeat a non-empty fill text enough times
+  to reach the requested width, leaving text unchanged when already wide
+  enough or when the fill text is empty.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns

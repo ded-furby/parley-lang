@@ -359,6 +359,8 @@ to main:
     say (without_suffix with "notes.par", ".par")
     say (left_trimmed with "  left")
     say (right_trimmed with "right  ")
+    say (padded_left with "7", 3, "0")
+    say (padded_right with "go", 5, ".")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)

@@ -10,6 +10,22 @@ to repeated_text with t as text, count as number giving text:
 to surrounded_with with t as text, wrapper as text giving text:
     give back "{wrapper}{t}{wrapper}"
 
+to padded_left with t as text, width as number, fill as text giving text:
+    if fill is "":
+        give back t
+    if length of t is at least width:
+        give back t
+    let needed be width minus length of t
+    give back "{(repeated_text with fill, needed)}{t}"
+
+to padded_right with t as text, width as number, fill as text giving text:
+    if fill is "":
+        give back t
+    if length of t is at least width:
+        give back t
+    let needed be width minus length of t
+    give back "{t}{(repeated_text with fill, needed)}"
+
 to maybe_character with t as text, index as number giving maybe text:
     if index is less than 1 or index is more than length of t:
         give back nothing
