@@ -356,6 +356,7 @@ to main:
     say (lines_of with "one\n\ntwo") joined with "|"
     say (maybe_character with "éc", 2)
     say (text_slice with "crème", 2, 4)
+    say (reversed_text with "Parley")
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
     say (has_prefix with "parley-lang", "parley-")

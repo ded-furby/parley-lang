@@ -119,6 +119,8 @@ parse-relevant highlights:
   text value.
   Bundled `std/text` helpers such as `maybe_character` and `text_slice` use
   the same 1-based UTF-8 character indexing.
+  `reversed_text` reverses by those same UTF-8 characters and leaves empty
+  text empty.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.

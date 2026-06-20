@@ -227,6 +227,7 @@ Use `include "std/text"` for small text helpers:
 | `is_blank with t` | yes when `trimmed t` is empty |
 | `maybe_character with t, index` | maybe one-character text at a 1-based UTF-8 character index |
 | `text_slice with t, first, last` | text from clamped 1-based inclusive UTF-8 character bounds, or empty text for reversed/empty ranges |
+| `reversed_text with t` | text reversed by UTF-8 characters; empty text gives empty text |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 | `capitalized with t` | text with the first character uppercased and the rest lowercased |

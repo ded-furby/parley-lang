@@ -78,6 +78,14 @@ to text_slice with t as text, first_index as number, last_index as number giving
         set out to "{out}{item i of t}"
     give back out
 
+to reversed_text with t as text giving text:
+    let out be ""
+    let i be length of t
+    while i is at least 1:
+        set out to "{out}{item i of t}"
+        set i to i minus 1
+    give back out
+
 to without_prefix with t as text, prefix as text giving text:
     if prefix is "":
         give back t
