@@ -446,6 +446,11 @@ to main:
     say (padded_right with "stay", 4, ".")
     say (padded_left with "x", 4, "")
     say (padded_right with "x", 4, "ab")
+    say (zero_filled with "42", 5)
+    say (zero_filled with "-42", 5)
+    say (zero_filled with "+7", 3)
+    say (zero_filled with "wide", 2)
+    say (zero_filled with "", 3)
     say (padded_center with "go", 5, ".")
     say (padded_center with "go", 6, ".")
     say (padded_center with "wide", 2, ".")
@@ -458,7 +463,7 @@ to main:
         "3\none|two|three\n0\n2\none|two\n4\none||  two|\n0\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
-        "007\ngo...\nwide\nstay\nx\nxababab\n.go..\n..go..\nwide\nx\nabxab\n")
+        "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\n.go..\n..go..\nwide\nx\nabxab\n")
 
 
 def test_bundled_std_list_package_runs(workdir):

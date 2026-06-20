@@ -163,6 +163,8 @@ parse-relevant highlights:
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates
   right then left, so an odd gap places the extra fill on the right.
+  `zero_filled` pads with zeroes to the requested width and preserves an
+  initial `+` or `-` before inserted zeroes.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns

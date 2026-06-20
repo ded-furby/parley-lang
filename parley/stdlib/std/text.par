@@ -37,6 +37,17 @@ to padded_right with t as text, width as number, fill as text giving text:
     let needed be width minus length of t
     give back "{t}{(repeated_text with fill, needed)}"
 
+to zero_filled with t as text, width as number giving text:
+    if length of t is at least width:
+        give back t
+    let needed be width minus length of t
+    let zeroes be (repeated_text with "0", needed)
+    if t starts with "-" or t starts with "+":
+        let sign be item 1 of t
+        let rest be (text_slice with t, 2, length of t)
+        give back "{sign}{zeroes}{rest}"
+    give back "{zeroes}{t}"
+
 to padded_center with t as text, width as number, fill as text giving text:
     if fill is "":
         give back t
