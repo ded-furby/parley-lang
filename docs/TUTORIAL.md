@@ -445,6 +445,8 @@ to main:
     set item "human" of more_counts to 2
     update_number_map with counts, more_counts
     say (number_or with counts, "agent", 0)
+    say (ensure_number_at with counts, "robot", 1)
+    say (ensure_number_at with counts, "robot", 10)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
     let flag_map be a map from text to yesno

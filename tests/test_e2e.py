@@ -862,6 +862,10 @@ to main:
     say item "a" of score_update_target
     say item "b" of score_update_target
     say length of score_update_target
+    let score_ensure be a map from text to number
+    say (ensure_number_at with score_ensure, "a", 4)
+    say (ensure_number_at with score_ensure, "a", 5)
+    say length of score_ensure
 
     let labels be a map from text to text
     set item "a" of labels to "alpha"
@@ -890,6 +894,10 @@ to main:
     say item "a" of label_update_target
     say item "b" of label_update_target
     say length of label_update_target
+    let label_ensure be a map from text to text
+    say (ensure_text_at with label_ensure, "a", "fallback")
+    say (ensure_text_at with label_ensure, "a", "ignored")
+    say length of label_ensure
 
     let prices be a map from text to decimal
     set item "tea" of prices to 2.5
@@ -919,6 +927,10 @@ to main:
     say item "a" of price_update_target
     say item "b" of price_update_target
     say length of price_update_target
+    let price_ensure be a map from text to decimal
+    say (ensure_decimal_at with price_ensure, "a", 4.5)
+    say (ensure_decimal_at with price_ensure, "a", 5.5)
+    say length of price_ensure
 
     let flags be a map from text to yesno
     set item "ready" of flags to yes
@@ -948,6 +960,10 @@ to main:
     say item "a" of flag_update_target
     say item "b" of flag_update_target
     say length of flag_update_target
+    let flag_ensure be a map from text to yesno
+    say (ensure_yesno_at with flag_ensure, "a", yes)
+    say (ensure_yesno_at with flag_ensure, "a", no)
+    say length of flag_ensure
 
     let seats be a map from number to number
     set item 7 of seats to 42
@@ -981,6 +997,10 @@ to main:
     say item 1 of seat_update_target
     say item 2 of seat_update_target
     say length of seat_update_target
+    let seat_ensure be a map from number to number
+    say (ensure_number_key_number_at with seat_ensure, 1, 40)
+    say (ensure_number_key_number_at with seat_ensure, 1, 50)
+    say length of seat_ensure
 
     let names be a map from number to text
     set item 1 of names to "one"
@@ -1009,6 +1029,10 @@ to main:
     say item 1 of name_update_target
     say item 2 of name_update_target
     say length of name_update_target
+    let name_ensure be a map from number to text
+    say (ensure_number_key_text_at with name_ensure, 1, "fallback")
+    say (ensure_number_key_text_at with name_ensure, 1, "ignored")
+    say length of name_ensure
 
     let ratios be a map from number to decimal
     set item 2 of ratios to 0.5
@@ -1038,6 +1062,10 @@ to main:
     say item 1 of ratio_update_target
     say item 2 of ratio_update_target
     say length of ratio_update_target
+    let ratio_ensure be a map from number to decimal
+    say (ensure_number_key_decimal_at with ratio_ensure, 1, 4.5)
+    say (ensure_number_key_decimal_at with ratio_ensure, 1, 5.5)
+    say length of ratio_ensure
 
     let switches be a map from number to yesno
     set item 1 of switches to yes
@@ -1067,17 +1095,21 @@ to main:
     say item 1 of switch_update_target
     say item 2 of switch_update_target
     say length of switch_update_target
+    let switch_ensure be a map from number to yesno
+    say (ensure_number_key_yesno_at with switch_ensure, 1, yes)
+    say (ensure_number_key_yesno_at with switch_ensure, 1, no)
+    say length of switch_ensure
 '''
     proc = run_program(workdir, "bundled_std_map", src)
     assert proc.stdout == (
-        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n2\n3\n2\n"
-        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\nafter\nnew\n2\n"
-        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\n"
-        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n20\n30\n2\n"
-        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\nafter\nnew\n2\n"
-        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\n")
+        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n2\n3\n2\n4\n4\n1\n"
+        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\n"
+        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\n"
+        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n20\n30\n2\n40\n40\n1\n"
+        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\nafter\nnew\n2\nfallback\nfallback\n1\n"
+        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n4.5\n4.5\n1\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\n")
 
 
 def test_build_produces_native_binary(workdir):

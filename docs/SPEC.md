@@ -221,10 +221,12 @@ parse-relevant highlights:
   Product helpers multiply every number or decimal item and return the
   multiplicative identity for empty lists.
 * **Bundled map helpers** in `std/map` provide key membership checks, maybe
-  lookup, fallback lookup, counted increments, copy helpers, update helpers,
-  take helpers, and clear helpers for text-key and number-key maps. Copy
-  helpers return fresh maps with the same entries. Update helpers use a
-  `changing` target map and copy every entry from the second map into it,
+  lookup, fallback lookup, fallback insertion, counted increments, copy
+  helpers, update helpers, take helpers, and clear helpers for text-key and
+  number-key maps. Ensure helpers use a `changing` target map, return the
+  present value when the key exists, otherwise insert the fallback and return
+  it. Copy helpers return fresh maps with the same entries. Update helpers use
+  a `changing` target map and copy every entry from the second map into it,
   overwriting matching keys and inserting missing ones. Take and clear helpers
   use `changing` map parameters: take helpers return `some value` and remove a
   present key, or return `nothing` without mutation when the key is absent;
