@@ -447,6 +447,7 @@ to main:
     say (number_or with counts, "agent", 0)
     say (ensure_number_at with counts, "robot", 1)
     say (ensure_number_at with counts, "robot", 10)
+    say (take_number_or with counts, "robot", 0)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
     let flag_map be a map from text to yesno

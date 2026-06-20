@@ -222,14 +222,16 @@ parse-relevant highlights:
   multiplicative identity for empty lists.
 * **Bundled map helpers** in `std/map` provide key membership checks, maybe
   lookup, fallback lookup, fallback insertion, counted increments, copy
-  helpers, update helpers, take helpers, and clear helpers for text-key and
-  number-key maps. Ensure helpers use a `changing` target map, return the
-  present value when the key exists, otherwise insert the fallback and return
-  it. Copy helpers return fresh maps with the same entries. Update helpers use
-  a `changing` target map and copy every entry from the second map into it,
-  overwriting matching keys and inserting missing ones. Take and clear helpers
-  use `changing` map parameters: take helpers return `some value` and remove a
-  present key, or return `nothing` without mutation when the key is absent;
+  helpers, update helpers, take helpers, take-with-fallback helpers, and clear
+  helpers for text-key and number-key maps. Ensure helpers use a `changing`
+  target map, return the present value when the key exists, otherwise insert
+  the fallback and return it. Copy helpers return fresh maps with the same
+  entries. Update helpers use a `changing` target map and copy every entry
+  from the second map into it, overwriting matching keys and inserting missing
+  ones. Take and clear helpers use `changing` map parameters: maybe take
+  helpers return `some value` and remove a present key, or return `nothing`
+  without mutation when the key is absent; take-with-fallback helpers remove
+  and return a present value, or return the fallback when the key is absent;
   clear helpers remove every entry.
 * **Failures.** These stop the program with an English message and exit
   code 1: failed `assert`, `fail`, division/remainder by zero, out-of-range

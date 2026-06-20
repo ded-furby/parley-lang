@@ -359,6 +359,7 @@ Use `include "std/map"` for common map helpers:
 | `number_has_key with m, key` | yes when a text key is present in a number map |
 | `number_at with m, key` | maybe number from a `map from text to number` |
 | `take_number_at with changing m, key` | maybe number from a text-key map, removed when present |
+| `take_number_or with changing m, key, fallback` | remove and return a text-key number value, or fallback when absent |
 | `number_or with m, key, fallback` | number or fallback |
 | `ensure_number_at with changing m, key, fallback` | existing number for `key`, or insert and return `fallback` |
 | `add_count with changing m, key` | increments a text-key count in place |
@@ -368,6 +369,7 @@ Use `include "std/map"` for common map helpers:
 | `text_has_key with m, key` | yes when a text key is present in a text map |
 | `text_at with m, key` | maybe text from a `map from text to text` |
 | `take_text_at with changing m, key` | maybe text from a text-key map, removed when present |
+| `take_text_or with changing m, key, fallback` | remove and return a text-key text value, or fallback when absent |
 | `text_or with m, key, fallback` | text or fallback |
 | `ensure_text_at with changing m, key, fallback` | existing text for `key`, or insert and return `fallback` |
 | `copy_text_map with m` | fresh copy of a `map from text to text` |
@@ -376,6 +378,7 @@ Use `include "std/map"` for common map helpers:
 | `decimal_has_key with m, key` | yes when a text key is present in a decimal map |
 | `decimal_at with m, key` | maybe decimal from a `map from text to decimal` |
 | `take_decimal_at with changing m, key` | maybe decimal from a text-key map, removed when present |
+| `take_decimal_or with changing m, key, fallback` | remove and return a text-key decimal value, or fallback when absent |
 | `decimal_or with m, key, fallback` | decimal or fallback |
 | `ensure_decimal_at with changing m, key, fallback` | existing decimal for `key`, or insert and return `fallback` |
 | `copy_decimal_map with m` | fresh copy of a `map from text to decimal` |
@@ -384,6 +387,7 @@ Use `include "std/map"` for common map helpers:
 | `yesno_has_key with m, key` | yes when a text key is present in a yes/no map |
 | `yesno_at with m, key` | maybe yes/no from a `map from text to yesno` |
 | `take_yesno_at with changing m, key` | maybe yes/no from a text-key map, removed when present |
+| `take_yesno_or with changing m, key, fallback` | remove and return a text-key yes/no value, or fallback when absent |
 | `yesno_or with m, key, fallback` | yes/no or fallback |
 | `ensure_yesno_at with changing m, key, fallback` | existing yes/no for `key`, or insert and return `fallback` |
 | `copy_yesno_map with m` | fresh copy of a `map from text to yesno` |
@@ -392,6 +396,7 @@ Use `include "std/map"` for common map helpers:
 | `number_key_number_has_key with m, key` | yes when a number key is present in a number-key number map |
 | `number_key_number_at with m, key` | maybe number from a `map from number to number` |
 | `take_number_key_number_at with changing m, key` | maybe number from a number-key map, removed when present |
+| `take_number_key_number_or with changing m, key, fallback` | remove and return a number-key number value, or fallback when absent |
 | `number_key_number_or with m, key, fallback` | number or fallback |
 | `ensure_number_key_number_at with changing m, key, fallback` | existing number for `key`, or insert and return `fallback` |
 | `add_number_key_count with changing m, key` | increments a number-key count in place |
@@ -401,6 +406,7 @@ Use `include "std/map"` for common map helpers:
 | `number_key_text_has_key with m, key` | yes when a number key is present in a number-key text map |
 | `number_key_text_at with m, key` | maybe text from a `map from number to text` |
 | `take_number_key_text_at with changing m, key` | maybe text from a number-key map, removed when present |
+| `take_number_key_text_or with changing m, key, fallback` | remove and return a number-key text value, or fallback when absent |
 | `number_key_text_or with m, key, fallback` | text or fallback |
 | `ensure_number_key_text_at with changing m, key, fallback` | existing text for `key`, or insert and return `fallback` |
 | `copy_number_key_text_map with m` | fresh copy of a `map from number to text` |
@@ -409,6 +415,7 @@ Use `include "std/map"` for common map helpers:
 | `number_key_decimal_has_key with m, key` | yes when a number key is present in a number-key decimal map |
 | `number_key_decimal_at with m, key` | maybe decimal from a `map from number to decimal` |
 | `take_number_key_decimal_at with changing m, key` | maybe decimal from a number-key map, removed when present |
+| `take_number_key_decimal_or with changing m, key, fallback` | remove and return a number-key decimal value, or fallback when absent |
 | `number_key_decimal_or with m, key, fallback` | decimal or fallback |
 | `ensure_number_key_decimal_at with changing m, key, fallback` | existing decimal for `key`, or insert and return `fallback` |
 | `copy_number_key_decimal_map with m` | fresh copy of a `map from number to decimal` |
@@ -417,6 +424,7 @@ Use `include "std/map"` for common map helpers:
 | `number_key_yesno_has_key with m, key` | yes when a number key is present in a number-key yes/no map |
 | `number_key_yesno_at with m, key` | maybe yes/no from a `map from number to yesno` |
 | `take_number_key_yesno_at with changing m, key` | maybe yes/no from a number-key map, removed when present |
+| `take_number_key_yesno_or with changing m, key, fallback` | remove and return a number-key yes/no value, or fallback when absent |
 | `number_key_yesno_or with m, key, fallback` | yes/no or fallback |
 | `ensure_number_key_yesno_at with changing m, key, fallback` | existing yes/no for `key`, or insert and return `fallback` |
 | `copy_number_key_yesno_map with m` | fresh copy of a `map from number to yesno` |
