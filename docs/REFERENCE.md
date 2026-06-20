@@ -290,6 +290,7 @@ Use `include "std/list"` for common list helpers:
 | `sort_number with changing xs` | sort a number list in place |
 | `reverse_number with changing xs` | reverse a number list in place |
 | `count_number with xs, n` | occurrences of `n` |
+| `contains_number with xs, n` | yes when `n` is present |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
@@ -308,6 +309,7 @@ Use `include "std/list"` for common list helpers:
 | `sort_text with changing xs` | sort a text list in place |
 | `reverse_text with changing xs` | reverse a text list in place |
 | `count_text with xs, t` | occurrences of `t` |
+| `contains_text with xs, t` | yes when `t` is present |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
 | `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
@@ -323,6 +325,7 @@ Use `include "std/list"` for common list helpers:
 | `sort_decimal with changing xs` | sort a decimal list in place |
 | `reverse_decimal with changing xs` | reverse a decimal list in place |
 | `count_decimal with xs, d` | occurrences of `d` |
+| `contains_decimal with xs, d` | yes when `d` is present |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
@@ -342,6 +345,7 @@ Use `include "std/list"` for common list helpers:
 | `sort_yesno with changing xs` | sort a yes/no list in place, with `no` before `yes` |
 | `reverse_yesno with changing xs` | reverse a yes/no list in place |
 | `count_yes with xs` / `count_no with xs` | count yes or no values |
+| `contains_yesno with xs, value` | yes when a yes/no value is present |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 
 Use `include "std/map"` for common map helpers:

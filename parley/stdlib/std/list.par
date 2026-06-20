@@ -105,6 +105,12 @@ to count_number with xs as list of number, needle as number giving number:
             set count to count plus 1
     give back count
 
+to contains_number with xs as list of number, needle as number giving yesno:
+    for each value in xs:
+        if value is needle:
+            give back yes
+    give back no
+
 to index_number with xs as list of number, needle as number giving maybe number:
     let index be 1
     for each value in xs:
@@ -247,6 +253,12 @@ to count_text with xs as list of text, needle as text giving number:
             set count to count plus 1
     give back count
 
+to contains_text with xs as list of text, needle as text giving yesno:
+    for each value in xs:
+        if value is needle:
+            give back yes
+    give back no
+
 to index_text with xs as list of text, needle as text giving maybe number:
     let index be 1
     for each value in xs:
@@ -373,6 +385,12 @@ to count_decimal with xs as list of decimal, needle as decimal giving number:
         if value is needle:
             set count to count plus 1
     give back count
+
+to contains_decimal with xs as list of decimal, needle as decimal giving yesno:
+    for each value in xs:
+        if value is needle:
+            give back yes
+    give back no
 
 to index_decimal with xs as list of decimal, needle as decimal giving maybe number:
     let index be 1
@@ -547,6 +565,12 @@ to count_no with xs as list of yesno giving number:
         if value is no:
             set count to count plus 1
     give back count
+
+to contains_yesno with xs as list of yesno, needle as yesno giving yesno:
+    for each value in xs:
+        if value is needle:
+            give back yes
+    give back no
 
 to index_yes with xs as list of yesno giving maybe number:
     let index be 1

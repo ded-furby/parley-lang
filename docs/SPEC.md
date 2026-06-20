@@ -211,7 +211,9 @@ parse-relevant highlights:
   the front, and an index past the end appends. Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
-  value and return yes/no for whether anything changed. Sort helpers reorder
+  value and return yes/no for whether anything changed. Membership helpers
+  return yes/no for the first equal number, text, decimal, or yes/no item.
+  Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
   and yes/no caller lists in place. Product helpers multiply every number or

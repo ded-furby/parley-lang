@@ -562,6 +562,8 @@ to main:
     say (average_number with nums)
     say (product_number with nums)
     say (count_number with nums, 4)
+    say (contains_number with nums, 2)
+    say (contains_number with nums, 9)
     say (index_number with nums, 8)
     say (index_number with nums, 9)
     let empty_nums be an empty list of number
@@ -620,6 +622,8 @@ to main:
     say (first_text with words)
     say (last_text with words)
     say (count_text with words, "red")
+    say (contains_text with words, "blue")
+    say (contains_text with words, "green")
     say (index_text with words, "green")
     let empty_words be an empty list of text
     say (maybe_first_text with words)
@@ -661,6 +665,8 @@ to main:
     say (average_decimal with decimals)
     say (product_decimal with decimals)
     say (count_decimal with decimals, 2.5)
+    say (contains_decimal with decimals, 1.5)
+    say (contains_decimal with decimals, 9.0)
     say (index_decimal with decimals, 2.0)
     say (index_decimal with decimals, 9.0)
     let empty_decimals be an empty list of decimal
@@ -714,6 +720,8 @@ to main:
     say (any_yes with flags)
     say (count_yes with flags)
     say (count_no with flags)
+    say (contains_yesno with flags, yes)
+    say (contains_yesno with flags, no)
     say (index_yes with flags)
     say (index_no with flags)
     say (maybe_item_yesno with flags, 1)
@@ -791,17 +799,17 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std_list", src)
     assert proc.stdout == (
-        "4\n8\n4.5\n256\n2\n4\nnothing\n1\n4\n8\n2\nnothing\nnothing\n"
+        "4\n8\n4.5\n256\n2\nyes\nno\n4\nnothing\n1\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
         "2\n2\n4\n2\n2\n0\n6\n10\n99\n77\n55\n77\n8\n4\nnothing\n8\nyes\n7\n2\nno\n7\n2\n99\n99\n2\n0\n"
-        "red\nred\n2\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
+        "red\nred\n2\nyes\nno\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
         "blue|red\n0\n4\ngreen\nred|amber|blue|red|green|violet\nblue\nred|amber|red|green|violet\nnothing\nyes\namber|red|green|violet\nno\namber|green|red|violet\nviolet|red|green|amber\n0\n"
-        "1.5\n2\n2\n7.5\n1\n3\nnothing\n1\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
+        "1.5\n2\n2\n7.5\n1\nyes\nno\n3\nnothing\n1\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
         "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
-        "yes\nyes\nyes\nyes\nno\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
+        "yes\nyes\nyes\nyes\nno\nyes\n2\n1\nyes\nyes\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\nnothing\nnothing\nno\nno\nyes\n0\nno\nno\nyes\nyes\n0\n"
         "2\n5\n6\n3\nalpha|beta\n3\n2\n2.75\n3\n2\nyes\nno\n3\n")
 
 

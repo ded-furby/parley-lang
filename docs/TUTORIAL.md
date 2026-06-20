@@ -397,6 +397,7 @@ to main:
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (product_number with numbers)
+    say (contains_number with numbers, 2)
     say (index_number with numbers, 8)
     let empty_numbers be an empty list of number
     say (maybe_first_number with empty_numbers)
@@ -418,6 +419,7 @@ to main:
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
     say (product_decimal with prices)
+    say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes
     let copied_flags be (copy_yesno with flags)
