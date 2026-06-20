@@ -230,6 +230,7 @@ Use `include "std/text"` for small text helpers:
 | `reversed_text with t` | text reversed by UTF-8 characters; empty text gives empty text |
 | `partition_text with t, separator` | three-item list: before first separator, separator, after; absent separator gives `t`, `""`, `""` |
 | `rpartition_text with t, separator` | three-item list: before last separator, separator, after; absent separator gives `""`, `""`, `t` |
+| `replaced_text with t, old, new, max_replacements` | text with at most `max_replacements` non-overlapping replacements; empty `old` or non-positive count leaves `t` unchanged |
 | `split_text with t, separator, max_splits` | list split at most `max_splits` times from the left; empty separator or non-positive count gives `[t]` |
 | `rsplit_text with t, separator, max_splits` | list split at most `max_splits` times from the right; empty separator or non-positive count gives `[t]` |
 | `last_position with needle, t` | maybe 1-based UTF-8 character position of the last match; empty needle gives `length of t plus 1` |

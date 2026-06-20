@@ -387,6 +387,12 @@ to main:
     say missing_right_partition joined with "|"
     let unicode_right_partition be (rpartition_text with "éclair", "c")
     say unicode_right_partition joined with "|"
+    say (replaced_text with "one fish two fish", "fish", "cat", 1)
+    say (replaced_text with "aaaa", "aa", "b", 1)
+    say (replaced_text with "aaaa", "aa", "b", 9)
+    say (replaced_text with "abc", "", "x", 3)
+    say (replaced_text with "abc", "z", "x", 2)
+    say (replaced_text with "é-é-é", "é", "e", 2)
     let split_limited be (split_text with "a,b,c,d", ",", 2)
     say length of split_limited
     say split_limited joined with "|"
@@ -506,7 +512,7 @@ to main:
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n4\n4\none|two|three|four\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
-        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
+        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\none cat two fish\nbaa\nbb\nabc\nabc\ne-e-é\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")
 

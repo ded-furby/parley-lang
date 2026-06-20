@@ -360,6 +360,7 @@ to main:
     say (reversed_text with "Parley")
     say (partition_text with "key=value", "=") joined with "|"
     say (rpartition_text with "key=value=tail", "=") joined with "|"
+    say (replaced_text with "one fish two fish", "fish", "cat", 1)
     say (split_text with "a,b,c,d", ",", 2) joined with "|"
     say (rsplit_text with "a,b,c,d", ",", 2) joined with "|"
     say (last_position with "=", "key=value=tail")

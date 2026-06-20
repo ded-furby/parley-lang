@@ -134,7 +134,7 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots · a text toolbox (`split by`, `joined with`,
-`replacing … with …`, `position of … in …`, `count of … in …`,
+`replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
 helpers with safe maybe first/last/index/pop, copying, clamped slicing, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list edge helpers, predicates, copying, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including maybe lookup, fallback, counted increment, take-and-remove, and clear variants
@@ -258,6 +258,7 @@ the plan:
 - [x] right-side split helper for bundled `std/text` — v0.3.74
 - [x] bounded split helper for bundled `std/text` — v0.3.75
 - [x] whitespace-delimited word extraction for bundled `std/text` — v0.3.76
+- [x] bounded replacement helper for bundled `std/text` — v0.3.77
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

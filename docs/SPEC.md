@@ -133,6 +133,10 @@ parse-relevant highlights:
   `rsplit_text` splits at most `max_splits` separator matches from the right,
   returns the unsplit left side followed by right-side pieces in original
   order, and returns `[t]` for empty separators or non-positive split counts.
+  `replaced_text` replaces at most `max_replacements` non-overlapping matches
+  of `old` with `new`, returns the original text for empty `old` or
+  non-positive counts, and uses the same UTF-8 character semantics as other
+  text helpers.
   `last_position` returns `some n` for the last 1-based UTF-8 character
   position of a needle, supports overlapping matches, returns `nothing` for
   an absent needle, and returns the final text boundary for an empty needle.
