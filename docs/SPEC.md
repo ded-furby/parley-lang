@@ -146,8 +146,9 @@ parse-relevant highlights:
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
   value and return yes/no for whether anything changed. Sort helpers reorder
-  number, text, and decimal caller lists in place. Reverse helpers reorder
-  number, text, decimal, and yes/no caller lists in place.
+  number, text, decimal, and yes/no caller lists in place, with yes/no sorting
+  placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
+  and yes/no caller lists in place.
 * **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
   counted increments, take helpers, and clear helpers for text-key and
   number-key maps. Take and clear helpers use `changing` map parameters: take

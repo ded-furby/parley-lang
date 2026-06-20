@@ -389,6 +389,7 @@ to main:
     let flags be a list of yes, no, yes
     say (all_yes with flags)
     say (index_no with flags)
+    sort_yesno with flags
     reverse_yesno with flags
     let counts be a map from text to number
     add_count with counts, "agent"
