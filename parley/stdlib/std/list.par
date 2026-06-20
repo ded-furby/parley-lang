@@ -82,6 +82,16 @@ to remove_number with changing xs as list of number, value as number giving yesn
         set spot to spot plus 1
     give back no
 
+to sort_number with changing xs as list of number:
+    let out be sorted xs
+    clear_number with xs
+    extend_number with xs, out
+
+to reverse_number with changing xs as list of number:
+    let out be reversed xs
+    clear_number with xs
+    extend_number with xs, out
+
 to count_number with xs as list of number, needle as number giving number:
     let count be 0
     for each value in xs:
@@ -202,6 +212,16 @@ to remove_text with changing xs as list of text, value as text giving yesno:
         set spot to spot plus 1
     give back no
 
+to sort_text with changing xs as list of text:
+    let out be sorted xs
+    clear_text with xs
+    extend_text with xs, out
+
+to reverse_text with changing xs as list of text:
+    let out be reversed xs
+    clear_text with xs
+    extend_text with xs, out
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
@@ -312,6 +332,16 @@ to remove_decimal with changing xs as list of decimal, value as decimal giving y
             give back yes
         set spot to spot plus 1
     give back no
+
+to sort_decimal with changing xs as list of decimal:
+    let out be sorted xs
+    clear_decimal with xs
+    extend_decimal with xs, out
+
+to reverse_decimal with changing xs as list of decimal:
+    let out be reversed xs
+    clear_decimal with xs
+    extend_decimal with xs, out
 
 to count_decimal with xs as list of decimal, needle as decimal giving number:
     let count be 0

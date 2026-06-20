@@ -248,6 +248,8 @@ Use `include "std/list"` for common list helpers:
 | `insert_number with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_number with changing xs, index` | maybe removed number at a 1-based index |
 | `remove_number with changing xs, value` | remove the first matching number; yes if one was removed |
+| `sort_number with changing xs` | sort a number list in place |
+| `reverse_number with changing xs` | reverse a number list in place |
 | `count_number with xs, n` | occurrences of `n` |
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
@@ -262,6 +264,8 @@ Use `include "std/list"` for common list helpers:
 | `insert_text with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_text with changing xs, index` | maybe removed text at a 1-based index |
 | `remove_text with changing xs, value` | remove the first matching text; yes if one was removed |
+| `sort_text with changing xs` | sort a text list in place |
+| `reverse_text with changing xs` | reverse a text list in place |
 | `count_text with xs, t` | occurrences of `t` |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
@@ -274,6 +278,8 @@ Use `include "std/list"` for common list helpers:
 | `insert_decimal with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
 | `pop_decimal with changing xs, index` | maybe removed decimal at a 1-based index |
 | `remove_decimal with changing xs, value` | remove the first matching decimal; yes if one was removed |
+| `sort_decimal with changing xs` | sort a decimal list in place |
+| `reverse_decimal with changing xs` | reverse a decimal list in place |
 | `count_decimal with xs, d` | occurrences of `d` |
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |

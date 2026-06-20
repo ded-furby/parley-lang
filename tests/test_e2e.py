@@ -414,6 +414,12 @@ to main:
     say item 2 of nums
     say (remove_number with nums, 123)
     say length of nums
+    sort_number with nums
+    say item 1 of nums
+    say item 7 of nums
+    reverse_number with nums
+    say item 1 of nums
+    say item 7 of nums
     clear_number with nums
     say length of nums
     let words be a list of "red", "blue", "red"
@@ -449,6 +455,10 @@ to main:
     say (remove_text with words, "red")
     say words joined with "|"
     say (remove_text with words, "missing")
+    sort_text with words
+    say words joined with "|"
+    reverse_text with words
+    say words joined with "|"
     clear_text with words
     say length of words
     let decimals be a list of 1.5, 2.5, 2.0
@@ -491,6 +501,12 @@ to main:
     say length of decimals
     say item 3 of decimals
     say (remove_decimal with decimals, 99.0)
+    sort_decimal with decimals
+    say item 1 of decimals
+    say item 4 of decimals
+    reverse_decimal with decimals
+    say item 1 of decimals
+    say item 4 of decimals
     clear_decimal with decimals
     say length of decimals
     let flags be a list of yes, no, yes
@@ -536,13 +552,13 @@ to main:
         "4\n8\n4.5\n2\n4\nnothing\n4\n8\n2\nnothing\nnothing\n"
         "nothing\nnothing\n"
         "2\n8\n4.5\nnothing\nnothing\nnothing\n"
-        "2\n2\n4\n2\n2\n0\n6\n10\n99\n77\n55\n77\n8\n4\nnothing\n8\nyes\n7\n2\nno\n7\n0\n"
+        "2\n2\n4\n2\n2\n0\n6\n10\n99\n77\n55\n77\n8\n4\nnothing\n8\nyes\n7\n2\nno\n7\n2\n99\n99\n2\n0\n"
         "red\nred\n2\nnothing\nred\nred\nblue\nnothing\nnothing\nnothing\n"
         "blue\nred\nnothing\nnothing\n"
-        "blue|red\n0\n4\ngreen\nred|amber|blue|red|green|violet\nblue\nred|amber|red|green|violet\nnothing\nyes\namber|red|green|violet\nno\n0\n"
+        "blue|red\n0\n4\ngreen\nred|amber|blue|red|green|violet\nblue\nred|amber|red|green|violet\nnothing\nyes\namber|red|green|violet\nno\namber|green|red|violet\nviolet|red|green|amber\n0\n"
         "1.5\n2\n2\n1\n3\nnothing\n1.5\n2\n2.5\nnothing\nnothing\nnothing\n"
         "1.5\n2.5\n2\nnothing\nnothing\nnothing\n"
-        "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0\n"
+        "2\n1.5\n2.5\n4\n9.5\n6\n0.5\n7.5\n9.5\n5\nnothing\nyes\n4\n2.5\nno\n0.5\n2.5\n2.5\n0.5\n0\n"
         "no\nyes\n2\n1\n1\n2\nyes\nno\nnothing\n2\nno\nyes\n4\nno\n6\nno\nyes\nyes\n5\nnothing\nyes\n4\nyes\nyes\n0\nyes\nno\nnothing\nnothing\n")
 
 

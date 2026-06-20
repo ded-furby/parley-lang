@@ -128,12 +128,13 @@ parse-relevant highlights:
   `list_slice_text`, `list_slice_decimal`, and `list_slice_yesno`, use
   1-based inclusive indexes. Slice helpers clamp bounds to the list and give
   an empty list for reversed or out-of-range requests. Extend, clear, insert,
-  pop, and remove helpers take a `changing` list parameter and mutate the
+  pop, remove, sort, and reverse helpers take a `changing` list parameter and mutate the
   caller's list. Insert helpers clamp the target index: 1 or below inserts at
   the front, and an index past the end appends. Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
-  value and return yes/no for whether anything changed.
+  value and return yes/no for whether anything changed. Sort and reverse
+  helpers reorder number, text, and decimal caller lists in place.
 * **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
   counted increments, take helpers, and clear helpers for text-key and
   number-key maps. Take and clear helpers use `changing` map parameters: take
