@@ -218,9 +218,9 @@ parse-relevant highlights:
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
   and yes/no caller lists in place. Product helpers multiply every number or
   decimal item and return the multiplicative identity for empty lists.
-* **Bundled map helpers** in `std/map` provide maybe lookup, fallback lookup,
-  counted increments, take helpers, and clear helpers for text-key and
-  number-key maps. Take and clear helpers use `changing` map parameters: take
+* **Bundled map helpers** in `std/map` provide key membership checks, maybe
+  lookup, fallback lookup, counted increments, take helpers, and clear helpers
+  for text-key and number-key maps. Take and clear helpers use `changing` map parameters: take
   helpers return `some value` and remove a present key, or return `nothing`
   without mutation when the key is absent; clear helpers remove every entry.
 * **Failures.** These stop the program with an English message and exit

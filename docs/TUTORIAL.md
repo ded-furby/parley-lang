@@ -432,6 +432,7 @@ to main:
     reverse_yesno with flags
     let counts be a map from text to number
     add_count with counts, "agent"
+    say (number_has_key with counts, "agent")
     say (number_or with counts, "agent", 0)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
@@ -440,6 +441,7 @@ to main:
     say (yesno_at with flag_map, "ready")
     let seats be a map from number to number
     add_number_key_count with seats, 7
+    say (number_key_number_has_key with seats, 7)
     say (number_key_number_or with seats, 7, 0)
 ```
 

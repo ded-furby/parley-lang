@@ -352,36 +352,44 @@ Use `include "std/map"` for common map helpers:
 
 | Function | Gives |
 |---|---|
+| `number_has_key with m, key` | yes when a text key is present in a number map |
 | `number_at with m, key` | maybe number from a `map from text to number` |
 | `take_number_at with changing m, key` | maybe number from a text-key map, removed when present |
 | `number_or with m, key, fallback` | number or fallback |
 | `add_count with changing m, key` | increments a text-key count in place |
 | `clear_number_map with changing m` | remove every entry from a `map from text to number` |
+| `text_has_key with m, key` | yes when a text key is present in a text map |
 | `text_at with m, key` | maybe text from a `map from text to text` |
 | `take_text_at with changing m, key` | maybe text from a text-key map, removed when present |
 | `text_or with m, key, fallback` | text or fallback |
 | `clear_text_map with changing m` | remove every entry from a `map from text to text` |
+| `decimal_has_key with m, key` | yes when a text key is present in a decimal map |
 | `decimal_at with m, key` | maybe decimal from a `map from text to decimal` |
 | `take_decimal_at with changing m, key` | maybe decimal from a text-key map, removed when present |
 | `decimal_or with m, key, fallback` | decimal or fallback |
 | `clear_decimal_map with changing m` | remove every entry from a `map from text to decimal` |
+| `yesno_has_key with m, key` | yes when a text key is present in a yes/no map |
 | `yesno_at with m, key` | maybe yes/no from a `map from text to yesno` |
 | `take_yesno_at with changing m, key` | maybe yes/no from a text-key map, removed when present |
 | `yesno_or with m, key, fallback` | yes/no or fallback |
 | `clear_yesno_map with changing m` | remove every entry from a `map from text to yesno` |
+| `number_key_number_has_key with m, key` | yes when a number key is present in a number-key number map |
 | `number_key_number_at with m, key` | maybe number from a `map from number to number` |
 | `take_number_key_number_at with changing m, key` | maybe number from a number-key map, removed when present |
 | `number_key_number_or with m, key, fallback` | number or fallback |
 | `add_number_key_count with changing m, key` | increments a number-key count in place |
 | `clear_number_key_number_map with changing m` | remove every entry from a `map from number to number` |
+| `number_key_text_has_key with m, key` | yes when a number key is present in a number-key text map |
 | `number_key_text_at with m, key` | maybe text from a `map from number to text` |
 | `take_number_key_text_at with changing m, key` | maybe text from a number-key map, removed when present |
 | `number_key_text_or with m, key, fallback` | text or fallback |
 | `clear_number_key_text_map with changing m` | remove every entry from a `map from number to text` |
+| `number_key_decimal_has_key with m, key` | yes when a number key is present in a number-key decimal map |
 | `number_key_decimal_at with m, key` | maybe decimal from a `map from number to decimal` |
 | `take_number_key_decimal_at with changing m, key` | maybe decimal from a number-key map, removed when present |
 | `number_key_decimal_or with m, key, fallback` | decimal or fallback |
 | `clear_number_key_decimal_map with changing m` | remove every entry from a `map from number to decimal` |
+| `number_key_yesno_has_key with m, key` | yes when a number key is present in a number-key yes/no map |
 | `number_key_yesno_at with m, key` | maybe yes/no from a `map from number to yesno` |
 | `take_number_key_yesno_at with changing m, key` | maybe yes/no from a number-key map, removed when present |
 | `number_key_yesno_or with m, key, fallback` | yes/no or fallback |
