@@ -240,6 +240,7 @@ Use `include "std/text"` for small text helpers:
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
 | `without_suffix with t, suffix` | text with `suffix` removed when present |
 | `is_whitespace with c` | yes for a space, tab, newline, or carriage return character |
+| `is_space with t` | yes when non-empty text contains only space, tab, newline, or carriage return characters |
 | `is_digit with t` | yes when non-empty `t` contains only ASCII digits |
 | `is_alpha with t` | yes when non-empty `t` contains only ASCII letters |
 | `is_alphanumeric with t` | yes when non-empty `t` contains only ASCII letters and digits |

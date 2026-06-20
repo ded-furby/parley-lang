@@ -103,6 +103,14 @@ to is_whitespace with c as text giving yesno:
         give back yes
     give back no
 
+to is_space with t as text giving yesno:
+    if t is "":
+        give back no
+    for each i from 1 to length of t:
+        if (is_whitespace with (item i of t)) is no:
+            give back no
+    give back yes
+
 to is_digit with t as text giving yesno:
     if t is "":
         give back no

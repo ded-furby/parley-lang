@@ -124,6 +124,8 @@ parse-relevant highlights:
   when the requested edge text is empty or absent.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
+  `is_space` is a non-empty whole-text predicate over those same whitespace
+  characters.
   `capitalized` returns empty text unchanged, uppercases the first UTF-8
   character, and lowercases the rest of the text.
   `is_digit`, `is_alpha`, `is_alphanumeric`, `is_lowercase`, and

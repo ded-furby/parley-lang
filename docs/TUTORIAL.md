@@ -362,6 +362,7 @@ to main:
     say (is_alphanumeric with "Parley3")
     say (is_ascii with "Parley 123!")
     say (is_printable with "Parley 123!")
+    say (is_space with " \t\n")
     say (is_lowercase with "parley")
     say (is_uppercase with "PARLEY")
     say (swap_case with "Parley 3")
