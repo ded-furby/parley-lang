@@ -853,6 +853,15 @@ to main:
     clear_number_map with scores
     say length of scores
     say (number_at with scores, "grace")
+    let score_update_target be a map from text to number
+    set item "a" of score_update_target to 1
+    let score_update_more be a map from text to number
+    set item "a" of score_update_more to 2
+    set item "b" of score_update_more to 3
+    update_number_map with score_update_target, score_update_more
+    say item "a" of score_update_target
+    say item "b" of score_update_target
+    say length of score_update_target
 
     let labels be a map from text to text
     set item "a" of labels to "alpha"
@@ -872,6 +881,15 @@ to main:
     clear_text_map with labels
     say length of labels
     say (text_at with labels, "b")
+    let label_update_target be a map from text to text
+    set item "a" of label_update_target to "old"
+    let label_update_more be a map from text to text
+    set item "a" of label_update_more to "after"
+    set item "b" of label_update_more to "new"
+    update_text_map with label_update_target, label_update_more
+    say item "a" of label_update_target
+    say item "b" of label_update_target
+    say length of label_update_target
 
     let prices be a map from text to decimal
     set item "tea" of prices to 2.5
@@ -892,6 +910,15 @@ to main:
     clear_decimal_map with prices
     say length of prices
     say (decimal_at with prices, "cake")
+    let price_update_target be a map from text to decimal
+    set item "a" of price_update_target to 1.5
+    let price_update_more be a map from text to decimal
+    set item "a" of price_update_more to 2.5
+    set item "b" of price_update_more to 3.5
+    update_decimal_map with price_update_target, price_update_more
+    say item "a" of price_update_target
+    say item "b" of price_update_target
+    say length of price_update_target
 
     let flags be a map from text to yesno
     set item "ready" of flags to yes
@@ -912,6 +939,15 @@ to main:
     clear_yesno_map with flags
     say length of flags
     say (yesno_at with flags, "missing")
+    let flag_update_target be a map from text to yesno
+    set item "a" of flag_update_target to yes
+    let flag_update_more be a map from text to yesno
+    set item "a" of flag_update_more to no
+    set item "b" of flag_update_more to yes
+    update_yesno_map with flag_update_target, flag_update_more
+    say item "a" of flag_update_target
+    say item "b" of flag_update_target
+    say length of flag_update_target
 
     let seats be a map from number to number
     set item 7 of seats to 42
@@ -936,6 +972,15 @@ to main:
     clear_number_key_number_map with seats
     say length of seats
     say (number_key_number_at with seats, 8)
+    let seat_update_target be a map from number to number
+    set item 1 of seat_update_target to 10
+    let seat_update_more be a map from number to number
+    set item 1 of seat_update_more to 20
+    set item 2 of seat_update_more to 30
+    update_number_key_number_map with seat_update_target, seat_update_more
+    say item 1 of seat_update_target
+    say item 2 of seat_update_target
+    say length of seat_update_target
 
     let names be a map from number to text
     set item 1 of names to "one"
@@ -955,6 +1000,15 @@ to main:
     clear_number_key_text_map with names
     say length of names
     say (number_key_text_at with names, 2)
+    let name_update_target be a map from number to text
+    set item 1 of name_update_target to "old"
+    let name_update_more be a map from number to text
+    set item 1 of name_update_more to "after"
+    set item 2 of name_update_more to "new"
+    update_number_key_text_map with name_update_target, name_update_more
+    say item 1 of name_update_target
+    say item 2 of name_update_target
+    say length of name_update_target
 
     let ratios be a map from number to decimal
     set item 2 of ratios to 0.5
@@ -975,6 +1029,15 @@ to main:
     clear_number_key_decimal_map with ratios
     say length of ratios
     say (number_key_decimal_at with ratios, 3)
+    let ratio_update_target be a map from number to decimal
+    set item 1 of ratio_update_target to 1.5
+    let ratio_update_more be a map from number to decimal
+    set item 1 of ratio_update_more to 2.5
+    set item 2 of ratio_update_more to 3.5
+    update_number_key_decimal_map with ratio_update_target, ratio_update_more
+    say item 1 of ratio_update_target
+    say item 2 of ratio_update_target
+    say length of ratio_update_target
 
     let switches be a map from number to yesno
     set item 1 of switches to yes
@@ -995,17 +1058,26 @@ to main:
     clear_number_key_yesno_map with switches
     say length of switches
     say (number_key_yesno_at with switches, 2)
+    let switch_update_target be a map from number to yesno
+    set item 1 of switch_update_target to yes
+    let switch_update_more be a map from number to yesno
+    set item 1 of switch_update_more to no
+    set item 2 of switch_update_more to yes
+    update_number_key_yesno_map with switch_update_target, switch_update_more
+    say item 1 of switch_update_target
+    say item 2 of switch_update_target
+    say length of switch_update_target
 '''
     proc = run_program(workdir, "bundled_std_map", src)
     assert proc.stdout == (
-        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n"
-        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\n"
-        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n"
-        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n"
-        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\n"
-        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n"
-        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\n")
+        "36\n99\nyes\nno\n36\nnothing\n0\n37\n1\n37\n1\nnothing\nnothing\n1\n0\nnothing\n2\n3\n2\n"
+        "alpha\nafter\nyes\nno\nalpha\nmissing\nalpha\n0\nnothing\n0\nnothing\nafter\nnew\n2\n"
+        "2.5\n9.5\nyes\nno\n2.5\nnothing\n0\n2.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\n"
+        "42\n99\nyes\nno\n42\nnothing\n0\n43\n1\n43\n1\nnothing\nnothing\n0\nnothing\n20\n30\n2\n"
+        "one\nafter\nyes\nno\none\nmissing\none\n0\nnothing\n0\nnothing\nafter\nnew\n2\n"
+        "0.5\n9.5\nyes\nno\n0.5\nnothing\n1\n0.5\n0\nnothing\n0\nnothing\n2.5\n3.5\n2\n"
+        "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\n")
 
 
 def test_build_produces_native_binary(workdir):

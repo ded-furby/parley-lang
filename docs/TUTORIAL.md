@@ -440,6 +440,11 @@ to main:
     say (number_has_key with counts, "agent")
     say (number_or with counts, "agent", 0)
     say (number_or with counts_copy, "agent", 0)
+    let more_counts be a map from text to number
+    set item "agent" of more_counts to 5
+    set item "human" of more_counts to 2
+    update_number_map with counts, more_counts
+    say (number_or with counts, "agent", 0)
     say (take_number_at with counts, "agent")
     clear_number_map with counts
     let flag_map be a map from text to yesno

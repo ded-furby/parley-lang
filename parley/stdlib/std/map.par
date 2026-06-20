@@ -30,6 +30,10 @@ to copy_number_map with m as map from text to number giving map from text to num
         set item key of out to item key of m
     give back out
 
+to update_number_map with changing m as map from text to number, more as map from text to number:
+    for each key in keys of more:
+        set item key of m to item key of more
+
 to clear_number_map with changing m as map from text to number:
     for each key in keys of m:
         remove item key of m
@@ -59,6 +63,10 @@ to copy_text_map with m as map from text to text giving map from text to text:
     for each key in keys of m:
         set item key of out to item key of m
     give back out
+
+to update_text_map with changing m as map from text to text, more as map from text to text:
+    for each key in keys of more:
+        set item key of m to item key of more
 
 to clear_text_map with changing m as map from text to text:
     for each key in keys of m:
@@ -90,6 +98,10 @@ to copy_decimal_map with m as map from text to decimal giving map from text to d
         set item key of out to item key of m
     give back out
 
+to update_decimal_map with changing m as map from text to decimal, more as map from text to decimal:
+    for each key in keys of more:
+        set item key of m to item key of more
+
 to clear_decimal_map with changing m as map from text to decimal:
     for each key in keys of m:
         remove item key of m
@@ -119,6 +131,10 @@ to copy_yesno_map with m as map from text to yesno giving map from text to yesno
     for each key in keys of m:
         set item key of out to item key of m
     give back out
+
+to update_yesno_map with changing m as map from text to yesno, more as map from text to yesno:
+    for each key in keys of more:
+        set item key of m to item key of more
 
 to clear_yesno_map with changing m as map from text to yesno:
     for each key in keys of m:
@@ -156,6 +172,10 @@ to copy_number_key_number_map with m as map from number to number giving map fro
         set item key of out to item key of m
     give back out
 
+to update_number_key_number_map with changing m as map from number to number, more as map from number to number:
+    for each key in keys of more:
+        set item key of m to item key of more
+
 to clear_number_key_number_map with changing m as map from number to number:
     for each key in keys of m:
         remove item key of m
@@ -185,6 +205,10 @@ to copy_number_key_text_map with m as map from number to text giving map from nu
     for each key in keys of m:
         set item key of out to item key of m
     give back out
+
+to update_number_key_text_map with changing m as map from number to text, more as map from number to text:
+    for each key in keys of more:
+        set item key of m to item key of more
 
 to clear_number_key_text_map with changing m as map from number to text:
     for each key in keys of m:
@@ -216,6 +240,10 @@ to copy_number_key_decimal_map with m as map from number to decimal giving map f
         set item key of out to item key of m
     give back out
 
+to update_number_key_decimal_map with changing m as map from number to decimal, more as map from number to decimal:
+    for each key in keys of more:
+        set item key of m to item key of more
+
 to clear_number_key_decimal_map with changing m as map from number to decimal:
     for each key in keys of m:
         remove item key of m
@@ -245,6 +273,10 @@ to copy_number_key_yesno_map with m as map from number to yesno giving map from 
     for each key in keys of m:
         set item key of out to item key of m
     give back out
+
+to update_number_key_yesno_map with changing m as map from number to yesno, more as map from number to yesno:
+    for each key in keys of more:
+        set item key of m to item key of more
 
 to clear_number_key_yesno_map with changing m as map from number to yesno:
     for each key in keys of m:
