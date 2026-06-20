@@ -129,7 +129,9 @@ parse-relevant highlights:
   `is_digit`, `is_alpha`, `is_alphanumeric`, `is_lowercase`, and
   `is_uppercase` are non-empty whole-text predicates over ASCII digits and
   letters. Lowercase and uppercase predicates accept only letters of that
-  case. `swap_case` swaps ASCII lowercase and uppercase letters and leaves
+  case. `is_ascii` accepts empty text, tab, newline, carriage return, and
+  printable ASCII characters from space through `~`.
+  `swap_case` swaps ASCII lowercase and uppercase letters and leaves
   digits, spaces, punctuation, and non-ASCII characters unchanged.
   `title_cased` uppercases the first character of each whitespace-delimited
   word, lowercases the rest of each word, preserves the original whitespace,

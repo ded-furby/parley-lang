@@ -132,6 +132,14 @@ to is_alphanumeric with t as text giving yesno:
             give back no
     give back yes
 
+to is_ascii with t as text giving yesno:
+    let ascii_chars be "\t\n\r !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{{|}}~"
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (ascii_chars contains c) is no:
+            give back no
+    give back yes
+
 to is_lowercase with t as text giving yesno:
     if t is "":
         give back no
