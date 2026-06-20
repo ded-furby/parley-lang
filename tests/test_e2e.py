@@ -373,6 +373,11 @@ to main:
     say (padded_right with "stay", 4, ".")
     say (padded_left with "x", 4, "")
     say (padded_right with "x", 4, "ab")
+    say (padded_center with "go", 5, ".")
+    say (padded_center with "go", 6, ".")
+    say (padded_center with "wide", 2, ".")
+    say (padded_center with "x", 4, "")
+    say (padded_center with "x", 4, "ab")
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
@@ -380,7 +385,7 @@ to main:
         "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n"
         "yes\nyes\nno\nleft  \n  right\nboth\nboth\n\n\n"
-        "007\ngo...\nwide\nstay\nx\nxababab\n")
+        "007\ngo...\nwide\nstay\nx\nxababab\n.go..\n..go..\nwide\nx\nabxab\n")
 
 
 def test_bundled_std_list_package_runs(workdir):

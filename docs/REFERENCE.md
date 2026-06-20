@@ -239,6 +239,7 @@ Use `include "std/text"` for small text helpers:
 | `is_whitespace with c` | yes for a space, tab, newline, or carriage return character |
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
+| `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |
 
 Use `include "std/list"` for common list helpers:
 

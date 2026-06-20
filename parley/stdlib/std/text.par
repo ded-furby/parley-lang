@@ -26,6 +26,22 @@ to padded_right with t as text, width as number, fill as text giving text:
     let needed be width minus length of t
     give back "{t}{(repeated_text with fill, needed)}"
 
+to padded_center with t as text, width as number, fill as text giving text:
+    if fill is "":
+        give back t
+    if length of t is at least width:
+        give back t
+    let out be t
+    let pad_right be yes
+    while length of out is less than width:
+        if pad_right:
+            set out to "{out}{fill}"
+            set pad_right to no
+        otherwise:
+            set out to "{fill}{out}"
+            set pad_right to yes
+    give back out
+
 to maybe_character with t as text, index as number giving maybe text:
     if index is less than 1 or index is more than length of t:
         give back nothing
