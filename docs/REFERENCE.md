@@ -234,6 +234,8 @@ Use `include "std/text"` for small text helpers:
 | `nonempty_lines with t` | list of trimmed, non-blank lines |
 | `word_count with t` | number of non-blank space-separated words |
 | `words_of with t` | list of non-blank space-separated words |
+| `without_prefix with t, prefix` | text with `prefix` removed when present |
+| `without_suffix with t, suffix` | text with `suffix` removed when present |
 
 Use `include "std/list"` for common list helpers:
 

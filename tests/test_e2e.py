@@ -352,12 +352,18 @@ to main:
     say (text_slice with "crème", 4, 99)
     say (text_slice with "crème", 4, 2)
     say (text_slice with "", 1, 1)
+    say (without_prefix with "parley-lang", "parley-")
+    say (without_prefix with "parley-lang", "rust-")
+    say (without_prefix with "parley-lang", "")
+    say (without_suffix with "notes.par", ".par")
+    say (without_suffix with "notes.par", ".txt")
+    say (without_suffix with "notes.par", "")
 '''
     proc = run_program(workdir, "bundled_std", src)
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
-        "rèm\ncr\nme\n\n\n")
+        "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n")
 
 
 def test_bundled_std_list_package_runs(workdir):

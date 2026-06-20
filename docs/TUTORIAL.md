@@ -355,6 +355,8 @@ to main:
     say (words_of with "one  two three") joined with "|"
     say (maybe_character with "éc", 2)
     say (text_slice with "crème", 2, 4)
+    say (without_prefix with "parley-lang", "parley-")
+    say (without_suffix with "notes.par", ".par")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (index_number with numbers, 8)

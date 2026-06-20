@@ -120,6 +120,8 @@ parse-relevant highlights:
   Bundled `std/text` helpers such as `maybe_character` and `text_slice` use
   the same 1-based UTF-8 character indexing.
   Replacement returns a new text value and does not mutate the original text.
+  `without_prefix` and `without_suffix` return the original text unchanged
+  when the requested edge text is empty or absent.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns

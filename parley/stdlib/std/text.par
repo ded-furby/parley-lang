@@ -35,6 +35,20 @@ to text_slice with t as text, first_index as number, last_index as number giving
         set out to "{out}{item i of t}"
     give back out
 
+to without_prefix with t as text, prefix as text giving text:
+    if prefix is "":
+        give back t
+    if t starts with prefix:
+        give back (text_slice with t, length of prefix plus 1, length of t)
+    give back t
+
+to without_suffix with t as text, suffix as text giving text:
+    if suffix is "":
+        give back t
+    if t ends with suffix:
+        give back (text_slice with t, 1, length of t minus length of suffix)
+    give back t
+
 to line_count with t as text giving number:
     if t is "":
         give back 0
