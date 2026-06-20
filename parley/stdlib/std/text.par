@@ -132,6 +132,26 @@ to is_alphanumeric with t as text giving yesno:
             give back no
     give back yes
 
+to is_lowercase with t as text giving yesno:
+    if t is "":
+        give back no
+    let letters be "abcdefghijklmnopqrstuvwxyz"
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (letters contains c) is no:
+            give back no
+    give back yes
+
+to is_uppercase with t as text giving yesno:
+    if t is "":
+        give back no
+    let letters be "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (letters contains c) is no:
+            give back no
+    give back yes
+
 to left_trimmed with t as text giving text:
     if t is "":
         give back ""

@@ -126,8 +126,10 @@ parse-relevant highlights:
   newline, and carriage return as whitespace characters.
   `capitalized` returns empty text unchanged, uppercases the first UTF-8
   character, and lowercases the rest of the text.
-  `is_digit`, `is_alpha`, and `is_alphanumeric` are non-empty whole-text
-  predicates over ASCII digits and letters.
+  `is_digit`, `is_alpha`, `is_alphanumeric`, `is_lowercase`, and
+  `is_uppercase` are non-empty whole-text predicates over ASCII digits and
+  letters. Lowercase and uppercase predicates accept only letters of that
+  case.
   `padded_left`, `padded_right`, and `padded_center` repeat a non-empty fill
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates
