@@ -46,6 +46,13 @@ to copy_number with xs as list of number giving list of number:
         add value to out
     give back out
 
+to filter_number with xs as list of number, keep as (function taking number giving yesno) giving list of number:
+    let out be an empty list of number
+    for each value in xs:
+        if (keep with value):
+            add value to out
+    give back out
+
 to extend_number with changing xs as list of number, more as list of number:
     for each value in more:
         add value to xs
@@ -197,6 +204,13 @@ to copy_text with xs as list of text giving list of text:
         add value to out
     give back out
 
+to filter_text with xs as list of text, keep as (function taking text giving yesno) giving list of text:
+    let out be an empty list of text
+    for each value in xs:
+        if (keep with value):
+            add value to out
+    give back out
+
 to extend_text with changing xs as list of text, more as list of text:
     for each value in more:
         add value to xs
@@ -328,6 +342,13 @@ to copy_decimal with xs as list of decimal giving list of decimal:
     let out be an empty list of decimal
     for each value in xs:
         add value to out
+    give back out
+
+to filter_decimal with xs as list of decimal, keep as (function taking decimal giving yesno) giving list of decimal:
+    let out be an empty list of decimal
+    for each value in xs:
+        if (keep with value):
+            add value to out
     give back out
 
 to extend_decimal with changing xs as list of decimal, more as list of decimal:
@@ -493,6 +514,13 @@ to copy_yesno with xs as list of yesno giving list of yesno:
     let out be an empty list of yesno
     for each value in xs:
         add value to out
+    give back out
+
+to filter_yesno with xs as list of yesno, keep as (function taking yesno giving yesno) giving list of yesno:
+    let out be an empty list of yesno
+    for each value in xs:
+        if (keep with value):
+            add value to out
     give back out
 
 to extend_yesno with changing xs as list of yesno, more as list of yesno:

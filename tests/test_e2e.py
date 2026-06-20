@@ -1184,6 +1184,48 @@ to main:
         "yes\nno\nyes\nno\nyes\nnothing\nno\nyes\n0\nnothing\n0\nnothing\nno\nyes\n2\nyes\nyes\n1\nno\nyes\n0\nyes\nno\n")
 
 
+def test_bundled_std_list_filter_helpers_run(workdir):
+    src = '''include "std/list"
+
+to is_even with n as number giving yesno:
+    give back remainder of n divided by 2 is 0
+
+to starts_with_a with t as text giving yesno:
+    give back t starts with "a"
+
+to over_one with d as decimal giving yesno:
+    give back d is more than 1.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 1, 2, 3, 4
+    let even_numbers be (filter_number with numbers, the function is_even)
+    say length of even_numbers
+    say item 1 of even_numbers
+    say item 2 of even_numbers
+
+    let names be a list of "ada", "grace", "alan"
+    let a_names be (filter_text with names, the function starts_with_a)
+    say a_names joined with "|"
+
+    let decimals be a list of 0.5, 1.5, 2.5
+    let bigger be (filter_decimal with decimals, the function over_one)
+    say length of bigger
+    say item 1 of bigger
+    say item 2 of bigger
+
+    let flags be a list of yes, no, yes
+    let yes_flags be (filter_yesno with flags, the function same)
+    say length of yes_flags
+    say item 1 of yes_flags
+    say item 2 of yes_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_filter", src)
+    assert proc.stdout == "2\n2\n4\nada|alan\n2\n1.5\n2.5\n2\nyes\nyes\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

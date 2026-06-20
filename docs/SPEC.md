@@ -211,7 +211,9 @@ parse-relevant highlights:
   the front, and an index past the end appends. Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
-  value and return yes/no for whether anything changed. Count, index, and
+  value and return yes/no for whether anything changed. Filter helpers accept
+  a first-class predicate function, return a fresh list, and preserve the
+  original order of values where the predicate returns yes. Count, index, and
   membership helpers work over number, text, decimal, and yes/no items.
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
