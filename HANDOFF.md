@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.51** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.52** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -206,6 +206,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.51 centered text padding:** `std/text` adds `padded_center`,
   centering text to a requested width with repeated fill text and placing the
   extra fill on the right when the gap is odd.
+- **v0.3.52 ASCII text classification:** `std/text` adds `is_digit`,
+  `is_alpha`, and `is_alphanumeric` for non-empty whole-text checks over
+  ASCII digits and letters.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -277,7 +280,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.51).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.52).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

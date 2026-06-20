@@ -237,6 +237,9 @@ Use `include "std/text"` for small text helpers:
 | `without_prefix with t, prefix` | text with `prefix` removed when present |
 | `without_suffix with t, suffix` | text with `suffix` removed when present |
 | `is_whitespace with c` | yes for a space, tab, newline, or carriage return character |
+| `is_digit with t` | yes when non-empty `t` contains only ASCII digits |
+| `is_alpha with t` | yes when non-empty `t` contains only ASCII letters |
+| `is_alphanumeric with t` | yes when non-empty `t` contains only ASCII letters and digits |
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
 | `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |

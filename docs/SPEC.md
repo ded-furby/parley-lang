@@ -124,6 +124,8 @@ parse-relevant highlights:
   when the requested edge text is empty or absent.
   `is_whitespace`, `left_trimmed`, and `right_trimmed` treat space, tab,
   newline, and carriage return as whitespace characters.
+  `is_digit`, `is_alpha`, and `is_alphanumeric` are non-empty whole-text
+  predicates over ASCII digits and letters.
   `padded_left`, `padded_right`, and `padded_center` repeat a non-empty fill
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates

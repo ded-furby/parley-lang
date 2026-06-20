@@ -361,6 +361,15 @@ to main:
     say (is_whitespace with " ")
     say (is_whitespace with "\\t")
     say (is_whitespace with "x")
+    say (is_digit with "12345")
+    say (is_digit with "12a")
+    say (is_digit with "")
+    say (is_alpha with "Parley")
+    say (is_alpha with "Parley3")
+    say (is_alpha with "")
+    say (is_alphanumeric with "Parley3")
+    say (is_alphanumeric with "Parley-3")
+    say (is_alphanumeric with "")
     say (left_trimmed with "  left  ")
     say (right_trimmed with "  right  ")
     say (left_trimmed with "\\t\\nboth")
@@ -384,7 +393,7 @@ to main:
         "10\n10.5\n1.5\nyes\nno\n25\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n2\none|two\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\n"
-        "yes\nyes\nno\nleft  \n  right\nboth\nboth\n\n\n"
+        "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n.go..\n..go..\nwide\nx\nabxab\n")
 
 

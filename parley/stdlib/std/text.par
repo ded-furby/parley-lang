@@ -92,6 +92,35 @@ to is_whitespace with c as text giving yesno:
         give back yes
     give back no
 
+to is_digit with t as text giving yesno:
+    if t is "":
+        give back no
+    let digits be "0123456789"
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (digits contains c) is no:
+            give back no
+    give back yes
+
+to is_alpha with t as text giving yesno:
+    if t is "":
+        give back no
+    let letters be "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (letters contains c) is no:
+            give back no
+    give back yes
+
+to is_alphanumeric with t as text giving yesno:
+    if t is "":
+        give back no
+    for each i from 1 to length of t:
+        let c be item i of t
+        if (is_alpha with c) is no and (is_digit with c) is no:
+            give back no
+    give back yes
+
 to left_trimmed with t as text giving text:
     if t is "":
         give back ""
