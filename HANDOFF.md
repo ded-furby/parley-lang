@@ -22,7 +22,7 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.71** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language v0.3 / toolchain v0.3.72** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest local suite has 207 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
@@ -265,6 +265,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.71 zero-fill text padding helper:** `std/text` adds `zero_filled`,
   padding text on the left with zeroes to a target width while preserving a
   leading `+` or `-` before the inserted zeroes.
+- **v0.3.72 tab expansion helper:** `std/text` adds `tabs_expanded`,
+  replacing tabs with spaces up to the next tab stop, resetting columns after
+  newline/carriage return, and removing tabs when the tab size is non-positive.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -336,7 +339,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.71).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.72).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

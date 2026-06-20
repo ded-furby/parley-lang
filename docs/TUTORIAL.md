@@ -381,6 +381,7 @@ to main:
     say (padded_left with "7", 3, "0")
     say (padded_right with "go", 5, ".")
     say (zero_filled with "-42", 5)
+    say (tabs_expanded with "a\tb", 4)
     say (padded_center with "go", 5, ".")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)

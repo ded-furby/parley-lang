@@ -48,6 +48,26 @@ to zero_filled with t as text, width as number giving text:
         give back "{sign}{zeroes}{rest}"
     give back "{zeroes}{t}"
 
+to tabs_expanded with t as text, tab_size as number giving text:
+    let out be ""
+    let column be 0
+    for each i from 1 to length of t:
+        let c be item i of t
+        if c is "\t":
+            if tab_size is more than 0:
+                let remainder be column % tab_size
+                let spaces be tab_size minus remainder
+                let pad be (repeated_text with " ", spaces)
+                set out to "{out}{pad}"
+                set column to column plus spaces
+        otherwise:
+            set out to "{out}{c}"
+            if c is "\n" or c is "\r":
+                set column to 0
+            otherwise:
+                set column to column plus 1
+    give back out
+
 to padded_center with t as text, width as number, fill as text giving text:
     if fill is "":
         give back t

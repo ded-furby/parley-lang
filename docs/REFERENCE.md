@@ -259,6 +259,7 @@ Use `include "std/text"` for small text helpers:
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
 | `zero_filled with t, width` | text padded on the left with `0`, preserving an initial `+` or `-` before the zeroes |
+| `tabs_expanded with t, tab_size` | text with tabs replaced by spaces up to the next tab stop; non-positive tab size removes tabs |
 | `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |
 
 Use `include "std/list"` for common list helpers:

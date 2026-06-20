@@ -165,6 +165,9 @@ parse-relevant highlights:
   right then left, so an odd gap places the extra fill on the right.
   `zero_filled` pads with zeroes to the requested width and preserves an
   initial `+` or `-` before inserted zeroes.
+  `tabs_expanded` replaces tabs with spaces up to the next tab stop, counts
+  UTF-8 characters as columns, resets the column after newline or carriage
+  return, and removes tabs when the requested tab size is non-positive.
   Position returns `some n` with a 1-based character position, or `nothing`
   when the needle is absent. Count returns the number of non-overlapping
   matches; an empty needle counts the character boundaries, so it returns
