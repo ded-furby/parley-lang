@@ -127,6 +127,9 @@ parse-relevant highlights:
   `rpartition_text` uses the same three-item shape for the last separator
   match. Missing or empty separators produce the right-absent shape
   `["", "", t]`.
+  `rsplit_text` splits at most `max_splits` separator matches from the right,
+  returns the unsplit left side followed by right-side pieces in original
+  order, and returns `[t]` for empty separators or non-positive split counts.
   `last_position` returns `some n` for the last 1-based UTF-8 character
   position of a needle, supports overlapping matches, returns `nothing` for
   an absent needle, and returns the final text boundary for an empty needle.
