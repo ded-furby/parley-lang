@@ -229,6 +229,7 @@ Use `include "std/text"` for small text helpers:
 | `text_slice with t, first, last` | text from clamped 1-based inclusive UTF-8 character bounds, or empty text for reversed/empty ranges |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
+| `capitalized with t` | text with the first character uppercased and the rest lowercased |
 | `line_count with t` | number of newline-separated lines, or 0 for empty text |
 | `nonempty_line_count with t` | number of lines whose trimmed text is not empty |
 | `nonempty_lines with t` | list of trimmed, non-blank lines |

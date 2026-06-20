@@ -136,7 +136,7 @@ setup checks with `parley doctor` ·
 division, powers, roots · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
-`contains`, line/word counts, word/line extraction, ASCII digit/letter checks, prefix/suffix removal, one-sided trimming, left/right/center padding, …) · number/text/decimal list
+`contains`, line/word counts, word/line extraction, capitalization, ASCII digit/letter checks, prefix/suffix removal, one-sided trimming, left/right/center padding, …) · number/text/decimal list
 helpers with safe maybe first/last/index/pop, clamped slicing, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list predicates · text-key and number-key map helpers for number, text, decimal, and yes/no values, including maybe lookup, fallback, counted increment, take-and-remove, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
@@ -234,6 +234,7 @@ the plan:
 - [x] text padding helpers for bundled `std/text` — v0.3.50
 - [x] centered text padding helper for bundled `std/text` — v0.3.51
 - [x] ASCII text classification helpers for bundled `std/text` — v0.3.52
+- [x] capitalization helper for bundled `std/text` — v0.3.53
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 

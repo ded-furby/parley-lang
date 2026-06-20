@@ -360,6 +360,7 @@ to main:
     say (is_digit with "12345")
     say (is_alpha with "Parley")
     say (is_alphanumeric with "Parley3")
+    say (capitalized with "pARLEY")
     say (left_trimmed with "  left")
     say (right_trimmed with "right  ")
     say (padded_left with "7", 3, "0")
