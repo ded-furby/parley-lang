@@ -131,6 +131,9 @@ parse-relevant highlights:
   letters. Lowercase and uppercase predicates accept only letters of that
   case. `swap_case` swaps ASCII lowercase and uppercase letters and leaves
   digits, spaces, punctuation, and non-ASCII characters unchanged.
+  `title_cased` uppercases the first character of each whitespace-delimited
+  word, lowercases the rest of each word, preserves the original whitespace,
+  and returns empty text unchanged.
   `padded_left`, `padded_right`, and `padded_center` repeat a non-empty fill
   text enough times to reach the requested width, leaving text unchanged when
   already wide enough or when the fill text is empty. Center padding alternates

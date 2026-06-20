@@ -363,6 +363,7 @@ to main:
     say (is_lowercase with "parley")
     say (is_uppercase with "PARLEY")
     say (swap_case with "Parley 3")
+    say (title_cased with "parley language")
     say (capitalized with "pARLEY")
     say (left_trimmed with "  left")
     say (right_trimmed with "right  ")
