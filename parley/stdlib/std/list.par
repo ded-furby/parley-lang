@@ -90,6 +90,14 @@ to maybe_find_number with xs as list of number, test as (function taking number 
             give back some value
     give back nothing
 
+to maybe_find_index_number with xs as list of number, test as (function taking number giving yesno) giving maybe number:
+    let spot be 1
+    for each value in xs:
+        if (test with value):
+            give back some spot
+        set spot to spot plus 1
+    give back nothing
+
 to count_where_number with xs as list of number, test as (function taking number giving yesno) giving number:
     let count be 0
     for each value in xs:
@@ -312,6 +320,14 @@ to maybe_find_text with xs as list of text, test as (function taking text giving
             give back some value
     give back nothing
 
+to maybe_find_index_text with xs as list of text, test as (function taking text giving yesno) giving maybe number:
+    let spot be 1
+    for each value in xs:
+        if (test with value):
+            give back some spot
+        set spot to spot plus 1
+    give back nothing
+
 to count_where_text with xs as list of text, test as (function taking text giving yesno) giving number:
     let count be 0
     for each value in xs:
@@ -514,6 +530,14 @@ to maybe_find_decimal with xs as list of decimal, test as (function taking decim
     for each value in xs:
         if (test with value):
             give back some value
+    give back nothing
+
+to maybe_find_index_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving maybe number:
+    let spot be 1
+    for each value in xs:
+        if (test with value):
+            give back some spot
+        set spot to spot plus 1
     give back nothing
 
 to count_where_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving number:
@@ -750,6 +774,14 @@ to maybe_find_yesno with xs as list of yesno, test as (function taking yesno giv
     for each value in xs:
         if (test with value):
             give back some value
+    give back nothing
+
+to maybe_find_index_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving maybe number:
+    let spot be 1
+    for each value in xs:
+        if (test with value):
+            give back some spot
+        set spot to spot plus 1
     give back nothing
 
 to count_where_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving number:

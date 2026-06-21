@@ -290,6 +290,7 @@ Use `include "std/list"` for common list helpers:
 | `fold_number with xs, initial, combine` | left fold with a number accumulator; empty lists give `initial` |
 | `any_number with xs, test` / `all_number with xs, test` | predicate any/all over numbers; empty lists give no/yes |
 | `maybe_find_number with xs, test` | maybe first number where `test` returns yes |
+| `maybe_find_index_number with xs, test` | maybe 1-based index of first number where `test` returns yes |
 | `count_where_number with xs, test` | number of values where `test` returns yes |
 | `take_while_number with xs, test` / `drop_while_number with xs, test` | leading matching prefix or remaining suffix |
 | `extend_number with changing xs, more` | append every number from `more` to `xs` |
@@ -318,6 +319,7 @@ Use `include "std/list"` for common list helpers:
 | `fold_text with xs, initial, combine` | left fold with a text accumulator; empty lists give `initial` |
 | `any_text with xs, test` / `all_text with xs, test` | predicate any/all over text values; empty lists give no/yes |
 | `maybe_find_text with xs, test` | maybe first text value where `test` returns yes |
+| `maybe_find_index_text with xs, test` | maybe 1-based index of first text value where `test` returns yes |
 | `count_where_text with xs, test` | number of text values where `test` returns yes |
 | `take_while_text with xs, test` / `drop_while_text with xs, test` | leading matching prefix or remaining suffix |
 | `extend_text with changing xs, more` | append every text value from `more` to `xs` |
@@ -342,6 +344,7 @@ Use `include "std/list"` for common list helpers:
 | `fold_decimal with xs, initial, combine` | left fold with a decimal accumulator; empty lists give `initial` |
 | `any_decimal with xs, test` / `all_decimal with xs, test` | predicate any/all over decimals; empty lists give no/yes |
 | `maybe_find_decimal with xs, test` | maybe first decimal where `test` returns yes |
+| `maybe_find_index_decimal with xs, test` | maybe 1-based index of first decimal where `test` returns yes |
 | `count_where_decimal with xs, test` | number of decimals where `test` returns yes |
 | `take_while_decimal with xs, test` / `drop_while_decimal with xs, test` | leading matching prefix or remaining suffix |
 | `extend_decimal with changing xs, more` | append every decimal from `more` to `xs` |
@@ -371,6 +374,7 @@ Use `include "std/list"` for common list helpers:
 | `fold_yesno with xs, initial, combine` | left fold with a yes/no accumulator; empty lists give `initial` |
 | `any_yesno with xs, test` / `all_yesno with xs, test` | predicate any/all over yes/no values; empty lists give no/yes |
 | `maybe_find_yesno with xs, test` | maybe first yes/no value where `test` returns yes |
+| `maybe_find_index_yesno with xs, test` | maybe 1-based index of first yes/no value where `test` returns yes |
 | `count_where_yesno with xs, test` | number of yes/no values where `test` returns yes |
 | `take_while_yesno with xs, test` / `drop_while_yesno with xs, test` | leading matching prefix or remaining suffix |
 | `extend_yesno with changing xs, more` | append every yes/no value from `more` to `xs` |

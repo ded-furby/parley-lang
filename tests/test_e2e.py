@@ -1539,6 +1539,44 @@ to main:
     assert proc.stdout == "1\n6\ngrace\n1\n4.5\n2\nno\nno\n0\n"
 
 
+def test_bundled_std_list_maybe_find_index_helpers_run(workdir):
+    src = '''include "std/list"
+
+to is_odd with n as number giving yesno:
+    give back remainder of n divided by 2 is 1
+
+to more_than_ten with n as number giving yesno:
+    give back n is more than 10
+
+to starts_with_g with t as text giving yesno:
+    give back t starts with "g"
+
+to over_two with d as decimal giving yesno:
+    give back d is more than 2.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 2, 4, 5, 7
+    say (maybe_find_index_number with numbers, the function is_odd)
+    say (maybe_find_index_number with numbers, the function more_than_ten)
+
+    let names be a list of "ada", "grace", "guido"
+    say (maybe_find_index_text with names, the function starts_with_g)
+
+    let decimals be a list of 1.5, 2.5, 4.5
+    say (maybe_find_index_decimal with decimals, the function over_two)
+
+    let flags be a list of no, yes
+    say (maybe_find_index_yesno with flags, the function same)
+    let empty_flags be an empty list of yesno
+    say (maybe_find_index_yesno with empty_flags, the function same)
+'''
+    proc = run_program(workdir, "bundled_std_list_maybe_find_index", src)
+    assert proc.stdout == "3\nnothing\n2\n2\n2\nnothing\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

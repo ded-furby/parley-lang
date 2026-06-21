@@ -431,6 +431,7 @@ to main:
     say (any_number with numbers, the function is_large)
     say (all_number with numbers, the function is_large)
     say (maybe_find_number with numbers, the function is_large)
+    say (maybe_find_index_number with numbers, the function is_large)
     say (count_where_number with numbers, the function is_large)
     let leading_large_numbers be (take_while_number with numbers, the function is_large)
     say length of leading_large_numbers
