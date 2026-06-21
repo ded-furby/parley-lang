@@ -219,6 +219,7 @@ Use `include "std/math"` for small numeric helpers:
 | `between_decimal with n, low, high` | yes/no decimal range check |
 | `percent_of with part, whole` | decimal percentage |
 | `percent_of_decimal with part, whole` | decimal percentage from decimal inputs |
+| `pi_value` / `tau_value` / `e_value` | decimal math constants |
 | `factorial with n` | whole-number factorial; negative input fails with an English message |
 | `greatest_common_divisor with left, right` | non-negative greatest common divisor; negatives are normalized |
 | `least_common_multiple with left, right` | non-negative least common multiple; returns `0` when either input is `0` |

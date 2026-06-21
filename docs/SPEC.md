@@ -127,6 +127,8 @@ parse-relevant highlights:
   `hypotenuse` returns the decimal square root of `x*x + y*y`.
   `copy_sign` returns the absolute magnitude with the sign of another decimal
   source, treating zero sign sources as non-negative.
+  `pi_value`, `tau_value`, and `e_value` expose common decimal math constants
+  as zero-parameter helpers.
   `radians_from_degrees` and `degrees_from_radians` convert decimal angles
   using the usual pi-based relationship between degrees and radians.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,

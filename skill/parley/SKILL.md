@@ -128,7 +128,7 @@ at `parley_modules/package_name/main.par` and be loaded with
 `include "package_name"`. Shared package roots can be listed in `PARLEY_PATH`.
 Bundled packages are available as `include "std/math"` (`clamped`,
 `clamped_decimal`, `between`, `between_decimal`, `percent_of`,
-`percent_of_decimal`, `factorial`, `greatest_common_divisor`,
+`percent_of_decimal`, `pi_value`, `tau_value`, `e_value`, `factorial`, `greatest_common_divisor`,
 `least_common_multiple`, `combination_count`, `permutation_count`,
 `integer_square_root`, `is_perfect_square`, `is_close`, `hypotenuse`, `copy_sign`,
 `radians_from_degrees`, `degrees_from_radians`), `include "std/text"` (`is_blank`, `repeated_text`,

@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.109** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 225 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.110** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 226 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -404,6 +404,9 @@ Update it whenever you finish or start a work item.
 - **v0.3.109 decimal angle conversion helpers:** `std/math` adds
   `radians_from_degrees` and `degrees_from_radians`, matching Python's
   common `math.radians` and `math.degrees` workflows for decimal angles.
+- **v0.3.110 decimal math constants:** `std/math` adds `pi_value`,
+  `tau_value`, and `e_value`, matching Python's common `math.pi`, `math.tau`,
+  and `math.e` workflows through zero-parameter helpers.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -475,7 +478,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.109).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.110).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

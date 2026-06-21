@@ -24,6 +24,15 @@ to percent_of with part as number, whole as number giving decimal:
 to percent_of_decimal with part as decimal, whole as decimal giving decimal:
     give back part divided by whole times 100.0
 
+to pi_value giving decimal:
+    give back 3.141592653589793
+
+to tau_value giving decimal:
+    give back 6.283185307179586
+
+to e_value giving decimal:
+    give back 2.718281828459045
+
 to is_close with left as decimal, right as decimal, relative_tolerance as decimal, absolute_tolerance as decimal giving yesno:
     if relative_tolerance is less than 0.0 or absolute_tolerance is less than 0.0:
         fail "is_close tolerances must be non-negative"
@@ -47,10 +56,10 @@ to copy_sign with magnitude as decimal, sign_source as decimal giving decimal:
     give back absolute of magnitude
 
 to radians_from_degrees with angle as decimal giving decimal:
-    give back angle times 3.141592653589793 divided by 180.0
+    give back angle times pi_value divided by 180.0
 
 to degrees_from_radians with angle as decimal giving decimal:
-    give back angle times 180.0 divided by 3.141592653589793
+    give back angle times 180.0 divided by pi_value
 
 to factorial with n as number giving number:
     if n is less than 0:

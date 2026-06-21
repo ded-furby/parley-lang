@@ -366,6 +366,9 @@ to main:
     say (permutation_count with 5, 2)
     say (integer_square_root with 15)
     say (is_perfect_square with 16)
+    say pi_value
+    say tau_value
+    say e_value
     say (is_close with 1.0, 1.001, 0.01, 0.0)
     say (hypotenuse with 3.0, 4.0)
     say (copy_sign with 3.5, -2.0)

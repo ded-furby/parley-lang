@@ -133,7 +133,7 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
-division, powers, roots, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations, decimal closeness, hypotenuse, sign-copy checks, and angle conversions · a text toolbox (`split by`, `joined with`,
+division, powers, roots, math constants, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations, decimal closeness, hypotenuse, sign-copy checks, and angle conversions · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, first and last search positions, numeric search fallbacks, line/word counts, raw, universal, keep-end, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, identifier, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, any-prefix/any-suffix checks, whitespace and explicit-character trimming, left/right/center/zero padding, …) · number/text/decimal list
@@ -271,6 +271,7 @@ the plan:
 - [x] decimal hypotenuse helper for bundled `std/math` — v0.3.107
 - [x] decimal sign-copy helper for bundled `std/math` — v0.3.108
 - [x] decimal angle conversion helpers for bundled `std/math` — v0.3.109
+- [x] decimal math constant helpers for bundled `std/math` — v0.3.110
 - [x] product helpers for bundled number and decimal lists — v0.3.82
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
@@ -299,7 +300,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 225 tests; e2e compiles real binaries (needs cargo)
+pytest            # 226 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

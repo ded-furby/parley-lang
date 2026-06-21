@@ -619,6 +619,19 @@ to main:
     assert proc.stdout == "yes\nyes\nyes\n"
 
 
+def test_bundled_std_math_constant_helpers_run(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (is_close with pi_value, 3.141592653589793, 0.0, 0.000000000001)
+    say (is_close with tau_value, pi_value times 2.0, 0.0, 0.000000000001)
+    say (is_close with e_value, 2.718281828459045, 0.0, 0.000000000001)
+    say (is_close with (radians_from_degrees with 180.0), pi_value, 0.0, 0.000000000001)
+'''
+    proc = run_program(workdir, "bundled_std_math_constants", src)
+    assert proc.stdout == "yes\nyes\nyes\nyes\n"
+
+
 def test_bundled_std_list_package_runs(workdir):
     src = '''include "std/list"
 
