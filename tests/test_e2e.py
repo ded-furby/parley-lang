@@ -1269,6 +1269,47 @@ to main:
     assert proc.stdout == "3\n3\n5\n0\n0\n3\n3\n5\n0\n5\n1\n0\n0\na|b\nc|d\n2\nyes\n2\nyes\n3\nno\n2\nyes\n"
 
 
+def test_bundled_std_list_enumerate_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 4, 8, 12
+    let indexed_numbers be (enumerate_number with numbers)
+    say length of indexed_numbers
+    say item 1 of indexed_numbers
+    say item 3 of indexed_numbers
+    let shifted_numbers be (enumerate_number_from with numbers, 10)
+    say length of shifted_numbers
+    say item 10 of shifted_numbers
+    say item 12 of shifted_numbers
+    let empty_numbers be an empty list of number
+    say length of (enumerate_number with empty_numbers)
+    let words be a list of "ada", "grace"
+    let indexed_words be (enumerate_text with words)
+    say item 1 of indexed_words
+    say item 2 of indexed_words
+    let shifted_words be (enumerate_text_from with words, 0)
+    say item 0 of shifted_words
+    say item 1 of shifted_words
+    let prices be a list of 1.25, 2.5
+    let indexed_prices be (enumerate_decimal with prices)
+    say (is_close with item 1 of indexed_prices, 1.25, 0.0, 0.000001)
+    let shifted_prices be (enumerate_decimal_from with prices, -1)
+    say (is_close with item -1 of shifted_prices, 1.25, 0.0, 0.000001)
+    say (is_close with item 0 of shifted_prices, 2.5, 0.0, 0.000001)
+    let flags be a list of yes, no, yes
+    let indexed_flags be (enumerate_yesno with flags)
+    say item 1 of indexed_flags
+    say item 2 of indexed_flags
+    let shifted_flags be (enumerate_yesno_from with flags, 5)
+    say item 5 of shifted_flags
+    say item 7 of shifted_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_enumerate_helpers", src)
+    assert proc.stdout == "3\n4\n12\n3\n4\n12\n0\nada\ngrace\nada\ngrace\nyes\nyes\nyes\nyes\nno\nyes\nyes\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

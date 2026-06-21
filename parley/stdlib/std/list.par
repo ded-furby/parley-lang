@@ -88,6 +88,17 @@ to drop_number with xs as list of number, count as number giving list of number:
         add item i of xs to out
     give back out
 
+to enumerate_number with xs as list of number giving map from number to number:
+    give back (enumerate_number_from with xs, 1)
+
+to enumerate_number_from with xs as list of number, start as number giving map from number to number:
+    let out be a map from number to number
+    let key be start
+    for each value in xs:
+        set item key of out to value
+        set key to key plus 1
+    give back out
+
 to copy_number with xs as list of number giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -848,6 +859,17 @@ to drop_text with xs as list of text, count as number giving list of text:
         add item i of xs to out
     give back out
 
+to enumerate_text with xs as list of text giving map from number to text:
+    give back (enumerate_text_from with xs, 1)
+
+to enumerate_text_from with xs as list of text, start as number giving map from number to text:
+    let out be a map from number to text
+    let key be start
+    for each value in xs:
+        set item key of out to value
+        set key to key plus 1
+    give back out
+
 to copy_text with xs as list of text giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -1207,6 +1229,17 @@ to drop_decimal with xs as list of decimal, count as number giving list of decim
         give back out
     for each i from start to length of xs:
         add item i of xs to out
+    give back out
+
+to enumerate_decimal with xs as list of decimal giving map from number to decimal:
+    give back (enumerate_decimal_from with xs, 1)
+
+to enumerate_decimal_from with xs as list of decimal, start as number giving map from number to decimal:
+    let out be a map from number to decimal
+    let key be start
+    for each value in xs:
+        set item key of out to value
+        set key to key plus 1
     give back out
 
 to copy_decimal with xs as list of decimal giving list of decimal:
@@ -1980,6 +2013,17 @@ to drop_yesno with xs as list of yesno, count as number giving list of yesno:
         give back out
     for each i from start to length of xs:
         add item i of xs to out
+    give back out
+
+to enumerate_yesno with xs as list of yesno giving map from number to yesno:
+    give back (enumerate_yesno_from with xs, 1)
+
+to enumerate_yesno_from with xs as list of yesno, start as number giving map from number to yesno:
+    let out be a map from number to yesno
+    let key be start
+    for each value in xs:
+        set item key of out to value
+        set key to key plus 1
     give back out
 
 to copy_yesno with xs as list of yesno giving list of yesno:

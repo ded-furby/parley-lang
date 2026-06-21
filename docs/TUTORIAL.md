@@ -476,6 +476,10 @@ to main:
     say length of first_two_numbers
     let later_numbers be (drop_number with numbers, 2)
     say item 1 of later_numbers
+    let indexed_numbers be (enumerate_number with numbers)
+    say item 1 of indexed_numbers
+    let shifted_numbers be (enumerate_number_from with numbers, 10)
+    say item 10 of shifted_numbers
     let copied_numbers be (copy_number with numbers)
     add 99 to numbers
     say length of copied_numbers
