@@ -227,6 +227,7 @@ Use `include "std/math"` for small numeric helpers:
 | `integer_square_root with n` | floor of the square root for non-negative whole numbers; negative input fails |
 | `is_perfect_square with n` | yes when a whole number is a perfect square; negative input gives no |
 | `is_close with left, right, relative_tolerance, absolute_tolerance` | yes when two decimals are close within the larger tolerance; negative tolerances fail |
+| `hypotenuse with x, y` | decimal square root of `x*x + y*y` |
 
 Use `include "std/text"` for small text helpers:
 

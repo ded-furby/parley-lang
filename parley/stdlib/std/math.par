@@ -38,6 +38,9 @@ to is_close with left as decimal, right as decimal, relative_tolerance as decima
         set limit to relative_limit
     give back difference is at most limit
 
+to hypotenuse with x as decimal, y as decimal giving decimal:
+    give back square root of (x times x plus y times y)
+
 to factorial with n as number giving number:
     if n is less than 0:
         fail "factorial needs a non-negative number"

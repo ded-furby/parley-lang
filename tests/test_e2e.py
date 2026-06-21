@@ -582,6 +582,18 @@ to main:
     assert proc.stdout == "yes\nno\nyes\nyes\nclose error: is_close tolerances must be non-negative\n"
 
 
+def test_bundled_std_math_hypotenuse_helper_runs(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (hypotenuse with 3.0, 4.0)
+    say (hypotenuse with -5.0, 12.0)
+    say (is_close with (hypotenuse with 1.5, 2.0), 2.5, 0.0, 0.000001)
+'''
+    proc = run_program(workdir, "bundled_std_math_hypotenuse", src)
+    assert proc.stdout == "5\n13\nyes\n"
+
+
 def test_bundled_std_list_package_runs(workdir):
     src = '''include "std/list"
 
