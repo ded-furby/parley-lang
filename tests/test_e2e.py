@@ -1320,6 +1320,54 @@ to main:
     assert proc.stdout == "2\n4\n5\n5\n1\n0\n0\n3\n3\n0\n5\n5\n5\n1\n0\n0\nc|d\na|b\n2\nyes\n2\nyes\n2\nno\n2\nno\n"
 
 
+def test_bundled_std_list_prefix_suffix_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4
+    let number_prefix be a list of 1, 2
+    let bad_number_prefix be a list of 1, 3
+    let long_number_prefix be a list of 1, 2, 3, 4, 5
+    let empty_numbers be an empty list of number
+    say (has_prefix_number with numbers, number_prefix)
+    say (has_prefix_number with numbers, bad_number_prefix)
+    say (has_prefix_number with numbers, long_number_prefix)
+    say (has_prefix_number with numbers, empty_numbers)
+    let number_suffix be a list of 3, 4
+    let bad_number_suffix be a list of 2, 4
+    let long_number_suffix be a list of 0, 1, 2, 3, 4
+    say (has_suffix_number with numbers, number_suffix)
+    say (has_suffix_number with numbers, bad_number_suffix)
+    say (has_suffix_number with numbers, long_number_suffix)
+    say (has_suffix_number with numbers, empty_numbers)
+    let words be a list of "ada", "grace", "alan"
+    let word_prefix be a list of "ada", "grace"
+    let word_suffix be a list of "grace", "alan"
+    let bad_word_suffix be a list of "ada", "alan"
+    say (has_prefix_text with words, word_prefix)
+    say (has_suffix_text with words, word_suffix)
+    say (has_suffix_text with words, bad_word_suffix)
+    let prices be a list of 1.25, 2.5, 3.75
+    let price_prefix be a list of 1.25, 2.5
+    let price_suffix be a list of 2.5, 3.75
+    let bad_price_prefix be a list of 1.25, 3.75
+    say (has_prefix_decimal with prices, price_prefix)
+    say (has_suffix_decimal with prices, price_suffix)
+    say (has_prefix_decimal with prices, bad_price_prefix)
+    let flags be a list of yes, no, yes
+    let flag_prefix be a list of yes, no
+    let flag_suffix be a list of no, yes
+    let bad_flag_suffix be a list of yes, yes
+    let empty_flags be an empty list of yesno
+    say (has_prefix_yesno with flags, flag_prefix)
+    say (has_suffix_yesno with flags, flag_suffix)
+    say (has_suffix_yesno with flags, bad_flag_suffix)
+    say (has_suffix_yesno with flags, empty_flags)
+'''
+    proc = run_program(workdir, "bundled_std_list_prefix_suffix", src)
+    assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nno\nyes\nyes\nyes\nno\nyes\nyes\nno\nyes\nyes\nno\nyes\n"
+
+
 def test_bundled_std_list_enumerate_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

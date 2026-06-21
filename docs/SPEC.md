@@ -233,7 +233,9 @@ parse-relevant highlights:
   returning a fresh copy. Tail take helpers return the last `count` items,
   with non-positive counts returning an empty list; tail drop helpers return
   everything before the last `count` items, with non-positive counts returning
-  a fresh copy. Enumerate helpers return fresh number-key maps from 1-based
+  a fresh copy. List prefix/suffix predicates compare typed values in order,
+  return yes for empty candidate lists, and return no when the candidate is
+  longer than the source list. Enumerate helpers return fresh number-key maps from 1-based
   indexes, or from a caller-provided starting key in the `_from` variants, to
   the corresponding typed list values. Copy helpers return a
   fresh number, text, decimal, or yes/no list with the same items. Yes/no edge

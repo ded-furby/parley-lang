@@ -297,6 +297,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_step_number with xs, first, last, step` | stepped list of number from clamped 1-based inclusive bounds; non-positive steps fail |
 | `take_number with xs, count` / `drop_number with xs, count` | fresh number list containing the first `count` items or everything after them |
 | `take_last_number with xs, count` / `drop_last_number with xs, count` | fresh number list containing the last `count` items or everything before them |
+| `has_prefix_number with xs, prefix` / `has_suffix_number with xs, suffix` | yes when a number list begins or ends with the requested values; empty prefix/suffix gives yes |
 | `enumerate_number with xs` / `enumerate_number_from with xs, start` | fresh number-key map from 1-based or custom indexes to number values |
 | `copy_number with xs` | fresh list of number with the same items |
 | `chain_number with left, right` | fresh number list containing `left` followed by `right`; inputs are not mutated |
@@ -367,6 +368,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_step_text with xs, first, last, step` | stepped list of text from clamped 1-based inclusive bounds; non-positive steps fail |
 | `take_text with xs, count` / `drop_text with xs, count` | fresh text list containing the first `count` items or everything after them |
 | `take_last_text with xs, count` / `drop_last_text with xs, count` | fresh text list containing the last `count` items or everything before them |
+| `has_prefix_text with xs, prefix` / `has_suffix_text with xs, suffix` | yes when a text list begins or ends with the requested values; empty prefix/suffix gives yes |
 | `enumerate_text with xs` / `enumerate_text_from with xs, start` | fresh number-key map from 1-based or custom indexes to text values |
 | `copy_text with xs` | fresh list of text with the same items |
 | `chain_text with left, right` | fresh text list containing `left` followed by `right`; inputs are not mutated |
@@ -405,6 +407,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_step_decimal with xs, first, last, step` | stepped list of decimal from clamped 1-based inclusive bounds; non-positive steps fail |
 | `take_decimal with xs, count` / `drop_decimal with xs, count` | fresh decimal list containing the first `count` items or everything after them |
 | `take_last_decimal with xs, count` / `drop_last_decimal with xs, count` | fresh decimal list containing the last `count` items or everything before them |
+| `has_prefix_decimal with xs, prefix` / `has_suffix_decimal with xs, suffix` | yes when a decimal list begins or ends with the requested values; empty prefix/suffix gives yes |
 | `enumerate_decimal with xs` / `enumerate_decimal_from with xs, start` | fresh number-key map from 1-based or custom indexes to decimal values |
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `chain_decimal with left, right` | fresh decimal list containing `left` followed by `right`; inputs are not mutated |
@@ -476,6 +479,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_step_yesno with xs, first, last, step` | stepped list of yes/no from clamped 1-based inclusive bounds; non-positive steps fail |
 | `take_yesno with xs, count` / `drop_yesno with xs, count` | fresh yes/no list containing the first `count` items or everything after them |
 | `take_last_yesno with xs, count` / `drop_last_yesno with xs, count` | fresh yes/no list containing the last `count` items or everything before them |
+| `has_prefix_yesno with xs, prefix` / `has_suffix_yesno with xs, suffix` | yes when a yes/no list begins or ends with the requested values; empty prefix/suffix gives yes |
 | `enumerate_yesno with xs` / `enumerate_yesno_from with xs, start` | fresh number-key map from 1-based or custom indexes to yes/no values |
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `chain_yesno with left, right` | fresh yes/no list containing `left` followed by `right`; inputs are not mutated |

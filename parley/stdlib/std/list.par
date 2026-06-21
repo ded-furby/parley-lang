@@ -116,6 +116,27 @@ to drop_last_number with xs as list of number, count as number giving list of nu
         add item i of xs to out
     give back out
 
+to has_prefix_number with xs as list of number, prefix as list of number giving yesno:
+    if length of prefix is 0:
+        give back yes
+    if length of prefix is more than length of xs:
+        give back no
+    for each i from 1 to length of prefix:
+        if item i of xs is not item i of prefix:
+            give back no
+    give back yes
+
+to has_suffix_number with xs as list of number, suffix as list of number giving yesno:
+    if length of suffix is 0:
+        give back yes
+    if length of suffix is more than length of xs:
+        give back no
+    let offset be length of xs minus length of suffix
+    for each i from 1 to length of suffix:
+        if item (offset plus i) of xs is not item i of suffix:
+            give back no
+    give back yes
+
 to enumerate_number with xs as list of number giving map from number to number:
     give back (enumerate_number_from with xs, 1)
 
@@ -915,6 +936,27 @@ to drop_last_text with xs as list of text, count as number giving list of text:
         add item i of xs to out
     give back out
 
+to has_prefix_text with xs as list of text, prefix as list of text giving yesno:
+    if length of prefix is 0:
+        give back yes
+    if length of prefix is more than length of xs:
+        give back no
+    for each i from 1 to length of prefix:
+        if item i of xs is not item i of prefix:
+            give back no
+    give back yes
+
+to has_suffix_text with xs as list of text, suffix as list of text giving yesno:
+    if length of suffix is 0:
+        give back yes
+    if length of suffix is more than length of xs:
+        give back no
+    let offset be length of xs minus length of suffix
+    for each i from 1 to length of suffix:
+        if item (offset plus i) of xs is not item i of suffix:
+            give back no
+    give back yes
+
 to enumerate_text with xs as list of text giving map from number to text:
     give back (enumerate_text_from with xs, 1)
 
@@ -1314,6 +1356,27 @@ to drop_last_decimal with xs as list of decimal, count as number giving list of 
     for each i from 1 to finish:
         add item i of xs to out
     give back out
+
+to has_prefix_decimal with xs as list of decimal, prefix as list of decimal giving yesno:
+    if length of prefix is 0:
+        give back yes
+    if length of prefix is more than length of xs:
+        give back no
+    for each i from 1 to length of prefix:
+        if item i of xs is not item i of prefix:
+            give back no
+    give back yes
+
+to has_suffix_decimal with xs as list of decimal, suffix as list of decimal giving yesno:
+    if length of suffix is 0:
+        give back yes
+    if length of suffix is more than length of xs:
+        give back no
+    let offset be length of xs minus length of suffix
+    for each i from 1 to length of suffix:
+        if item (offset plus i) of xs is not item i of suffix:
+            give back no
+    give back yes
 
 to enumerate_decimal with xs as list of decimal giving map from number to decimal:
     give back (enumerate_decimal_from with xs, 1)
@@ -2126,6 +2189,27 @@ to drop_last_yesno with xs as list of yesno, count as number giving list of yesn
     for each i from 1 to finish:
         add item i of xs to out
     give back out
+
+to has_prefix_yesno with xs as list of yesno, prefix as list of yesno giving yesno:
+    if length of prefix is 0:
+        give back yes
+    if length of prefix is more than length of xs:
+        give back no
+    for each i from 1 to length of prefix:
+        if item i of xs is not item i of prefix:
+            give back no
+    give back yes
+
+to has_suffix_yesno with xs as list of yesno, suffix as list of yesno giving yesno:
+    if length of suffix is 0:
+        give back yes
+    if length of suffix is more than length of xs:
+        give back no
+    let offset be length of xs minus length of suffix
+    for each i from 1 to length of suffix:
+        if item (offset plus i) of xs is not item i of suffix:
+            give back no
+    give back yes
 
 to enumerate_yesno with xs as list of yesno giving map from number to yesno:
     give back (enumerate_yesno_from with xs, 1)

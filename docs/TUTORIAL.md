@@ -480,6 +480,10 @@ to main:
     say item 1 of last_two_numbers
     let without_last_number be (drop_last_number with numbers, 1)
     say length of without_last_number
+    let number_prefix be a list of 4, 2
+    say (has_prefix_number with numbers, number_prefix)
+    let number_suffix be a list of 2, 4, 8
+    say (has_suffix_number with numbers, number_suffix)
     let indexed_numbers be (enumerate_number with numbers)
     say item 1 of indexed_numbers
     let shifted_numbers be (enumerate_number_from with numbers, 10)
