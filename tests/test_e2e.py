@@ -594,6 +594,19 @@ to main:
     assert proc.stdout == "5\n13\nyes\n"
 
 
+def test_bundled_std_math_distance_helpers_run(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (distance_2d with 0.0, 0.0, 3.0, 4.0)
+    say (distance_2d with -1.0, -2.0, 2.0, 2.0)
+    say (distance_3d with 0.0, 0.0, 0.0, 2.0, 3.0, 6.0)
+    say (is_close with (distance_3d with 1.0, 2.0, 3.0, 4.0, 6.0, 15.0), 13.0, 0.0, 0.000001)
+'''
+    proc = run_program(workdir, "bundled_std_math_distance", src)
+    assert proc.stdout == "5\n5\n7\nyes\n"
+
+
 def test_bundled_std_math_copy_sign_helper_runs(workdir):
     src = '''include "std/math"
 

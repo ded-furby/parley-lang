@@ -229,6 +229,7 @@ Use `include "std/math"` for small numeric helpers:
 | `is_perfect_square with n` | yes when a whole number is a perfect square; negative input gives no |
 | `is_close with left, right, relative_tolerance, absolute_tolerance` | yes when two decimals are close within the larger tolerance; negative tolerances fail |
 | `hypotenuse with x, y` | decimal square root of `x*x + y*y` |
+| `distance_2d with x1, y1, x2, y2` / `distance_3d with x1, y1, z1, x2, y2, z2` | decimal Euclidean point distance |
 | `copy_sign with magnitude, sign_source` | decimal magnitude with the sign of `sign_source`; zero sign sources count as non-negative |
 | `radians_from_degrees with angle` / `degrees_from_radians with angle` | decimal angle conversion helpers |
 

@@ -125,6 +125,8 @@ parse-relevant highlights:
   `is_close` checks decimal closeness using explicit relative and absolute
   tolerances and fails with English text when either tolerance is negative.
   `hypotenuse` returns the decimal square root of `x*x + y*y`.
+  `distance_2d` and `distance_3d` return Euclidean decimal distances between
+  two typed coordinate points.
   `copy_sign` returns the absolute magnitude with the sign of another decimal
   source, treating zero sign sources as non-negative.
   `pi_value`, `tau_value`, and `e_value` expose common decimal math constants
