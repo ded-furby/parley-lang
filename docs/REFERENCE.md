@@ -229,6 +229,7 @@ Use `include "std/math"` for small numeric helpers:
 | `is_close with left, right, relative_tolerance, absolute_tolerance` | yes when two decimals are close within the larger tolerance; negative tolerances fail |
 | `hypotenuse with x, y` | decimal square root of `x*x + y*y` |
 | `copy_sign with magnitude, sign_source` | decimal magnitude with the sign of `sign_source`; zero sign sources count as non-negative |
+| `radians_from_degrees with angle` / `degrees_from_radians with angle` | decimal angle conversion helpers |
 
 Use `include "std/text"` for small text helpers:
 

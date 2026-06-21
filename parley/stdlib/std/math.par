@@ -46,6 +46,12 @@ to copy_sign with magnitude as decimal, sign_source as decimal giving decimal:
         give back 0.0 minus absolute of magnitude
     give back absolute of magnitude
 
+to radians_from_degrees with angle as decimal giving decimal:
+    give back angle times 3.141592653589793 divided by 180.0
+
+to degrees_from_radians with angle as decimal giving decimal:
+    give back angle times 180.0 divided by 3.141592653589793
+
 to factorial with n as number giving number:
     if n is less than 0:
         fail "factorial needs a non-negative number"

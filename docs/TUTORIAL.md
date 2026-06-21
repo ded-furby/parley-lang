@@ -369,6 +369,8 @@ to main:
     say (is_close with 1.0, 1.001, 0.01, 0.0)
     say (hypotenuse with 3.0, 4.0)
     say (copy_sign with 3.5, -2.0)
+    say (radians_from_degrees with 180.0)
+    say (degrees_from_radians with 3.141592653589793)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     say (words_of with "one\ttwo\nthree") joined with "|"

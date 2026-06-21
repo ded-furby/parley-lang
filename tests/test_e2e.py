@@ -607,6 +607,18 @@ to main:
     assert proc.stdout == "-3.5\n3.5\n3.5\nyes\n"
 
 
+def test_bundled_std_math_angle_conversion_helpers_run(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (is_close with (radians_from_degrees with 180.0), 3.141592653589793, 0.0, 0.000000000001)
+    say (is_close with (degrees_from_radians with 3.141592653589793), 180.0, 0.0, 0.000000000001)
+    say (is_close with (degrees_from_radians with (radians_from_degrees with 45.0)), 45.0, 0.0, 0.000000000001)
+'''
+    proc = run_program(workdir, "bundled_std_math_angle_conversion", src)
+    assert proc.stdout == "yes\nyes\nyes\n"
+
+
 def test_bundled_std_list_package_runs(workdir):
     src = '''include "std/list"
 
