@@ -246,7 +246,9 @@ parse-relevant highlights:
   sort, and reverse helpers take a `changing` list parameter and mutate the
   caller's list. Chain helpers return fresh typed lists containing all values
   from the left input followed by all values from the right input, without
-  mutating either input. Repeat helpers return fresh typed lists containing a
+  mutating either input. Unique helpers return fresh typed lists with duplicate
+  values removed while preserving first-seen order. Repeat helpers return fresh
+  typed lists containing a
   requested number of copies of one value, or an empty list for non-positive
   counts. Cycle helpers return fresh typed lists by repeatedly walking a
   source list until the requested count is reached, with empty output for

@@ -162,6 +162,13 @@ to chain_number with left as list of number, right as list of number giving list
         add value to out
     give back out
 
+to unique_number with xs as list of number giving list of number:
+    let out be an empty list of number
+    for each value in xs:
+        if (out contains value) is no:
+            add value to out
+    give back out
+
 to repeat_number with value as number, count as number giving list of number:
     let out be an empty list of number
     if count is at most 0:
@@ -982,6 +989,13 @@ to chain_text with left as list of text, right as list of text giving list of te
         add value to out
     give back out
 
+to unique_text with xs as list of text giving list of text:
+    let out be an empty list of text
+    for each value in xs:
+        if (out contains value) is no:
+            add value to out
+    give back out
+
 to repeat_text with value as text, count as number giving list of text:
     let out be an empty list of text
     if count is at most 0:
@@ -1401,6 +1415,13 @@ to chain_decimal with left as list of decimal, right as list of decimal giving l
         add value to out
     for each value in right:
         add value to out
+    give back out
+
+to unique_decimal with xs as list of decimal giving list of decimal:
+    let out be an empty list of decimal
+    for each value in xs:
+        if (out contains value) is no:
+            add value to out
     give back out
 
 to repeat_decimal with value as decimal, count as number giving list of decimal:
@@ -2234,6 +2255,13 @@ to chain_yesno with left as list of yesno, right as list of yesno giving list of
         add value to out
     for each value in right:
         add value to out
+    give back out
+
+to unique_yesno with xs as list of yesno giving list of yesno:
+    let out be an empty list of yesno
+    for each value in xs:
+        if (out contains value) is no:
+            add value to out
     give back out
 
 to repeat_yesno with value as yesno, count as number giving list of yesno:

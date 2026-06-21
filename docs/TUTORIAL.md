@@ -494,6 +494,8 @@ to main:
     say length of copied_numbers
     let chained_numbers be (chain_number with copied_numbers, middle_numbers)
     say length of chained_numbers
+    let unique_numbers be (unique_number with numbers)
+    say length of unique_numbers
     let repeated_numbers be (repeat_number with 7, 3)
     say length of repeated_numbers
     let cycled_numbers be (cycle_number with copied_numbers, 5)

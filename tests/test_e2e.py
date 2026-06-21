@@ -1368,6 +1368,38 @@ to main:
     assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nno\nyes\nyes\nyes\nno\nyes\nyes\nno\nyes\nyes\nno\nyes\n"
 
 
+def test_bundled_std_list_unique_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 3, 1, 3, 2, 1
+    let unique_numbers be (unique_number with numbers)
+    say length of unique_numbers
+    say item 1 of unique_numbers
+    say item 2 of unique_numbers
+    say item 3 of unique_numbers
+    say length of numbers
+    let words be a list of "ada", "ada", "grace", "ada", "alan", "grace"
+    let unique_words be (unique_text with words)
+    say unique_words joined with "|"
+    let prices be a list of 1.25, 2.5, 1.25, 3.75, 2.5
+    let unique_prices be (unique_decimal with prices)
+    say length of unique_prices
+    say (is_close with item 2 of unique_prices, 2.5, 0.0, 0.000001)
+    say (is_close with item 3 of unique_prices, 3.75, 0.0, 0.000001)
+    let flags be a list of yes, no, yes, no
+    let unique_flags be (unique_yesno with flags)
+    say length of unique_flags
+    say item 1 of unique_flags
+    say item 2 of unique_flags
+    let empty_numbers be an empty list of number
+    say length of (unique_number with empty_numbers)
+'''
+    proc = run_program(workdir, "bundled_std_list_unique", src)
+    assert proc.stdout == "3\n3\n1\n2\n5\nada|grace|alan\n3\nyes\nyes\n2\nyes\nno\n0\n"
+
+
 def test_bundled_std_list_enumerate_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

@@ -302,6 +302,7 @@ Use `include "std/list"` for common list helpers:
 | `enumerate_number with xs` / `enumerate_number_from with xs, start` | fresh number-key map from 1-based or custom indexes to number values |
 | `copy_number with xs` | fresh list of number with the same items |
 | `chain_number with left, right` | fresh number list containing `left` followed by `right`; inputs are not mutated |
+| `unique_number with xs` | fresh number list with duplicates removed, preserving first-seen order |
 | `repeat_number with value, count` | fresh number list containing `count` copies of `value`; non-positive counts give an empty list |
 | `cycle_number with xs, count` | fresh number list cycling through `xs` until `count` items are produced; empty input or non-positive counts give an empty list |
 | `filter_number with xs, keep` | fresh list of numbers where `keep` returns yes |
@@ -373,6 +374,7 @@ Use `include "std/list"` for common list helpers:
 | `enumerate_text with xs` / `enumerate_text_from with xs, start` | fresh number-key map from 1-based or custom indexes to text values |
 | `copy_text with xs` | fresh list of text with the same items |
 | `chain_text with left, right` | fresh text list containing `left` followed by `right`; inputs are not mutated |
+| `unique_text with xs` | fresh text list with duplicates removed, preserving first-seen order |
 | `repeat_text with value, count` | fresh text list containing `count` copies of `value`; non-positive counts give an empty list |
 | `cycle_text with xs, count` | fresh text list cycling through `xs` until `count` items are produced; empty input or non-positive counts give an empty list |
 | `filter_text with xs, keep` | fresh list of text values where `keep` returns yes |
@@ -412,6 +414,7 @@ Use `include "std/list"` for common list helpers:
 | `enumerate_decimal with xs` / `enumerate_decimal_from with xs, start` | fresh number-key map from 1-based or custom indexes to decimal values |
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `chain_decimal with left, right` | fresh decimal list containing `left` followed by `right`; inputs are not mutated |
+| `unique_decimal with xs` | fresh decimal list with duplicates removed, preserving first-seen order |
 | `repeat_decimal with value, count` | fresh decimal list containing `count` copies of `value`; non-positive counts give an empty list |
 | `cycle_decimal with xs, count` | fresh decimal list cycling through `xs` until `count` items are produced; empty input or non-positive counts give an empty list |
 | `filter_decimal with xs, keep` | fresh list of decimals where `keep` returns yes |
@@ -484,6 +487,7 @@ Use `include "std/list"` for common list helpers:
 | `enumerate_yesno with xs` / `enumerate_yesno_from with xs, start` | fresh number-key map from 1-based or custom indexes to yes/no values |
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `chain_yesno with left, right` | fresh yes/no list containing `left` followed by `right`; inputs are not mutated |
+| `unique_yesno with xs` | fresh yes/no list with duplicates removed, preserving first-seen order |
 | `repeat_yesno with value, count` | fresh yes/no list containing `count` copies of `value`; non-positive counts give an empty list |
 | `cycle_yesno with xs, count` | fresh yes/no list cycling through `xs` until `count` items are produced; empty input or non-positive counts give an empty list |
 | `filter_yesno with xs, keep` | fresh list of yes/no values where `keep` returns yes |
