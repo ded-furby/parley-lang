@@ -310,6 +310,14 @@ parse-relevant highlights:
   equal-length inputs with at least two items are required, and constant input
   lists fail with English text. Maybe-returning variants return `nothing` for
   invalid lengths, too-short inputs, or constant correlation inputs.
+  Linear-regression helpers for number and decimal list pairs return a
+  two-item `list of decimal`: slope first, intercept second. Ordinary
+  regression uses the same centered deviation totals as covariance, requires
+  equal-length inputs with at least two items, and fails when the x input is
+  constant. Proportional regression forces the intercept to `0.0`, computes
+  slope as `sum(x times y) divided by sum(x times x)`, and fails when all
+  x values are zero. Maybe-returning variants return `nothing` for invalid
+  shapes or unusable x inputs.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

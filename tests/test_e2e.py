@@ -1316,6 +1316,99 @@ to main:
     )
 
 
+def test_bundled_std_list_linear_regression_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4
+    let targets be a list of 3, 5, 7, 9
+    let number_regression be (linear_regression_number with numbers, targets)
+    say length of number_regression
+    say (is_close with item 1 of number_regression, 2.0, 0.0, 0.000001)
+    say (is_close with item 2 of number_regression, 1.0, 0.0, 0.000001)
+    let number_proportional be (proportional_linear_regression_number with numbers, targets)
+    say length of number_proportional
+    say (is_close with item 1 of number_proportional, 2.3333333333333335, 0.0, 0.000001)
+    say (is_close with item 2 of number_proportional, 0.0, 0.0, 0.000001)
+    let maybe_number_regression be (maybe_linear_regression_number with numbers, targets)
+    if maybe_number_regression is not nothing:
+        let unwrapped_number_regression be value of maybe_number_regression
+        say (is_close with item 2 of unwrapped_number_regression, 1.0, 0.0, 0.000001)
+    let maybe_number_proportional be (maybe_proportional_linear_regression_number with numbers, targets)
+    if maybe_number_proportional is not nothing:
+        let unwrapped_number_proportional be value of maybe_number_proportional
+        say (is_close with item 1 of unwrapped_number_proportional, 2.3333333333333335, 0.0, 0.000001)
+    let one_number be a list of 1
+    say (maybe_linear_regression_number with one_number, one_number)
+    let constants be a list of 5, 5, 5
+    let spread be a list of 1, 2, 3
+    say (maybe_linear_regression_number with constants, spread)
+    let zero_numbers be a list of 0, 0, 0
+    say (maybe_proportional_linear_regression_number with zero_numbers, spread)
+    attempt:
+        say length of (linear_regression_number with numbers, one_number)
+    if it failed:
+        say "number linear length error: {the error}"
+    attempt:
+        say length of (linear_regression_number with constants, spread)
+    if it failed:
+        say "number linear constant error: {the error}"
+    attempt:
+        say length of (proportional_linear_regression_number with zero_numbers, spread)
+    if it failed:
+        say "number proportional zero error: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5, 4.5
+    let decimal_targets be a list of 2.0, 3.0, 5.0, 7.0
+    let decimal_regression be (linear_regression_decimal with decimals, decimal_targets)
+    say length of decimal_regression
+    say (is_close with item 1 of decimal_regression, 1.7, 0.0, 0.000001)
+    say (is_close with item 2 of decimal_regression, -0.85, 0.0, 0.000001)
+    let decimal_proportional be (proportional_linear_regression_decimal with decimals, decimal_targets)
+    say length of decimal_proportional
+    say (is_close with item 1 of decimal_proportional, 1.451219512195122, 0.0, 0.000001)
+    say (is_close with item 2 of decimal_proportional, 0.0, 0.0, 0.000001)
+    let maybe_decimal_regression be (maybe_linear_regression_decimal with decimals, decimal_targets)
+    if maybe_decimal_regression is not nothing:
+        let unwrapped_decimal_regression be value of maybe_decimal_regression
+        say (is_close with item 2 of unwrapped_decimal_regression, -0.85, 0.0, 0.000001)
+    let maybe_decimal_proportional be (maybe_proportional_linear_regression_decimal with decimals, decimal_targets)
+    if maybe_decimal_proportional is not nothing:
+        let unwrapped_decimal_proportional be value of maybe_decimal_proportional
+        say (is_close with item 1 of unwrapped_decimal_proportional, 1.451219512195122, 0.0, 0.000001)
+    let one_decimal be a list of 1.5
+    say (maybe_linear_regression_decimal with one_decimal, one_decimal)
+    let constant_decimals be a list of 4.0, 4.0, 4.0
+    let varied_decimals be a list of 1.0, 2.0, 3.0
+    say (maybe_linear_regression_decimal with constant_decimals, varied_decimals)
+    let zero_decimals be a list of 0.0, 0.0, 0.0
+    say (maybe_proportional_linear_regression_decimal with zero_decimals, varied_decimals)
+    attempt:
+        say length of (linear_regression_decimal with decimals, one_decimal)
+    if it failed:
+        say "decimal linear length error: {the error}"
+    attempt:
+        say length of (linear_regression_decimal with constant_decimals, varied_decimals)
+    if it failed:
+        say "decimal linear constant error: {the error}"
+    attempt:
+        say length of (proportional_linear_regression_decimal with zero_decimals, varied_decimals)
+    if it failed:
+        say "decimal proportional zero error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_linear_regression", src)
+    assert proc.stdout == (
+        "2\nyes\nyes\n2\nyes\nyes\nyes\nyes\nnothing\nnothing\nnothing\n"
+        "number linear length error: linear_regression_number needs lists with the same length\n"
+        "number linear constant error: linear_regression_number needs non-constant x values\n"
+        "number proportional zero error: proportional_linear_regression_number needs non-zero x values\n"
+        "2\nyes\nyes\n2\nyes\nyes\nyes\nyes\nnothing\nnothing\nnothing\n"
+        "decimal linear length error: linear_regression_decimal needs lists with the same length\n"
+        "decimal linear constant error: linear_regression_decimal needs non-constant x values\n"
+        "decimal proportional zero error: proportional_linear_regression_decimal needs non-zero x values\n"
+    )
+
+
 def test_bundled_std_list_mean_family_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"
