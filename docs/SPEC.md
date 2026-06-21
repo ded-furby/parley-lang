@@ -122,6 +122,8 @@ parse-relevant highlights:
   `integer_square_root` returns the floor of the square root for non-negative
   whole numbers and fails with English text for negative input;
   `is_perfect_square` returns no for negative inputs.
+  `is_close` checks decimal closeness using explicit relative and absolute
+  tolerances and fails with English text when either tolerance is negative.
 * **Text operations** such as `split by`, `joined with`, `item i of text`,
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are

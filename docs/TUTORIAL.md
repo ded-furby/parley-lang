@@ -366,6 +366,7 @@ to main:
     say (permutation_count with 5, 2)
     say (integer_square_root with 15)
     say (is_perfect_square with 16)
+    say (is_close with 1.0, 1.001, 0.01, 0.0)
     say (repeated_text with "ha", 3)
     say (word_count with "one two three")
     say (words_of with "one\ttwo\nthree") joined with "|"

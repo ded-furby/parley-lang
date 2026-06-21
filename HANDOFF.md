@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.105** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 221 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.106** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 222 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -392,6 +392,9 @@ Update it whenever you finish or start a work item.
   checking non-empty ASCII/Parley identifier text whose first character is a
   letter or underscore and whose remaining characters are letters, digits, or
   underscores.
+- **v0.3.106 decimal closeness helper:** `std/math` adds `is_close`, matching
+  Python's `math.isclose` workflow with explicit relative and absolute
+  tolerances and a catchable failure for negative tolerances.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -463,7 +466,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.105).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.106).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

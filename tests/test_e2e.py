@@ -565,6 +565,23 @@ to main:
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")
 
 
+def test_bundled_std_math_is_close_helper_runs(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (is_close with 1.0, 1.001, 0.01, 0.0)
+    say (is_close with 1.0, 1.2, 0.01, 0.0)
+    say (is_close with 0.0, 0.001, 0.0, 0.01)
+    say (is_close with -10.0, -10.4, 0.05, 0.0)
+    attempt:
+        say (is_close with 1.0, 1.0, -0.1, 0.0)
+    if it failed:
+        say "close error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_math_is_close", src)
+    assert proc.stdout == "yes\nno\nyes\nyes\nclose error: is_close tolerances must be non-negative\n"
+
+
 def test_bundled_std_list_package_runs(workdir):
     src = '''include "std/list"
 

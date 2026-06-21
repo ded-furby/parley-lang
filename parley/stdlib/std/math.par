@@ -24,6 +24,20 @@ to percent_of with part as number, whole as number giving decimal:
 to percent_of_decimal with part as decimal, whole as decimal giving decimal:
     give back part divided by whole times 100.0
 
+to is_close with left as decimal, right as decimal, relative_tolerance as decimal, absolute_tolerance as decimal giving yesno:
+    if relative_tolerance is less than 0.0 or absolute_tolerance is less than 0.0:
+        fail "is_close tolerances must be non-negative"
+    let difference be absolute of (left minus right)
+    let biggest be absolute of left
+    let right_size be absolute of right
+    if right_size is more than biggest:
+        set biggest to right_size
+    let relative_limit be relative_tolerance times biggest
+    let limit be absolute_tolerance
+    if relative_limit is more than limit:
+        set limit to relative_limit
+    give back difference is at most limit
+
 to factorial with n as number giving number:
     if n is less than 0:
         fail "factorial needs a non-negative number"
