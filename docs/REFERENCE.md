@@ -272,6 +272,7 @@ Use `include "std/text"` for small text helpers:
 | `is_uppercase with t` | yes when non-empty `t` contains only ASCII uppercase letters |
 | `swap_case with t` | text with ASCII lowercase and uppercase letters swapped |
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
+| `left_trimmed_of with t, chars` / `right_trimmed_of with t, chars` / `trimmed_of with t, chars` | text with explicit leading/trailing characters removed; empty `chars` leaves text unchanged |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
 | `zero_filled with t, width` | text padded on the left with `0`, preserving an initial `+` or `-` before the zeroes |
 | `tabs_expanded with t, tab_size` | text with tabs replaced by spaces up to the next tab stop; non-positive tab size removes tabs |

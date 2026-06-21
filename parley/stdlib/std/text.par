@@ -421,6 +421,29 @@ to right_trimmed with t as text giving text:
         give back ""
     give back (text_slice with t, 1, finish)
 
+to left_trimmed_of with t as text, chars as text giving text:
+    if t is "" or chars is "":
+        give back t
+    let start be 1
+    while start is at most length of t and (chars contains (item start of t)):
+        set start to start plus 1
+    if start is more than length of t:
+        give back ""
+    give back (text_slice with t, start, length of t)
+
+to right_trimmed_of with t as text, chars as text giving text:
+    if t is "" or chars is "":
+        give back t
+    let finish be length of t
+    while finish is at least 1 and (chars contains (item finish of t)):
+        set finish to finish minus 1
+    if finish is less than 1:
+        give back ""
+    give back (text_slice with t, 1, finish)
+
+to trimmed_of with t as text, chars as text giving text:
+    give back (right_trimmed_of with (left_trimmed_of with t, chars), chars)
+
 to line_count with t as text giving number:
     if t is "":
         give back 0

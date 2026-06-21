@@ -404,6 +404,7 @@ to main:
     say (capitalized with "pARLEY")
     say (left_trimmed with "  left")
     say (right_trimmed with "right  ")
+    say (trimmed_of with "***value!!", "*!")
     say (padded_left with "7", 3, "0")
     say (padded_right with "go", 5, ".")
     say (zero_filled with "-42", 5)

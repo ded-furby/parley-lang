@@ -155,7 +155,10 @@ parse-relevant highlights:
   number, returning `0` when the needle is absent.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
-  when the requested edge text is empty or absent.
+  when the requested edge text is empty or absent. `left_trimmed_of`,
+  `right_trimmed_of`, and `trimmed_of` remove any leading/trailing UTF-8
+  character that appears in an explicit character-set text, and leave the
+  original text unchanged for an empty character set.
   `has_prefix` and `has_suffix` return yes for matching text edges and also
   for empty prefix or suffix checks. `has_any_prefix` and `has_any_suffix`
   scan a list of candidate edges, return yes on the first match, return no

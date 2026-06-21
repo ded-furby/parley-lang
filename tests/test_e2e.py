@@ -1360,6 +1360,21 @@ to main:
     assert proc.stdout == "4\n0\n1\n2\n10\n0\n4\n2\n"
 
 
+def test_bundled_std_text_character_trim_helpers_run(workdir):
+    src = '''include "std/text"
+
+to main:
+    say (left_trimmed_of with "***value!!", "*!")
+    say (right_trimmed_of with "***value!!", "*!")
+    say (trimmed_of with "***value!!", "*!")
+    say (trimmed_of with "abc", "")
+    say (trimmed_of with "aaaa", "a")
+    say (trimmed_of with "é-éclair-é", "é-")
+'''
+    proc = run_program(workdir, "bundled_std_text_character_trim", src)
+    assert proc.stdout == "value!!\n***value\nvalue\nabc\n\nclair\n"
+
+
 def test_bundled_std_list_maybe_find_helpers_run(workdir):
     src = '''include "std/list"
 
