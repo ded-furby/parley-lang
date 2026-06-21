@@ -90,6 +90,26 @@ to count_where_number with xs as list of number, test as (function taking number
             set count to count plus 1
     give back count
 
+to take_while_number with xs as list of number, test as (function taking number giving yesno) giving list of number:
+    let out be an empty list of number
+    for each value in xs:
+        if (test with value):
+            add value to out
+        otherwise:
+            stop
+    give back out
+
+to drop_while_number with xs as list of number, test as (function taking number giving yesno) giving list of number:
+    let out be an empty list of number
+    let dropping be yes
+    for each value in xs:
+        if dropping:
+            if (test with value):
+                skip
+            set dropping to no
+        add value to out
+    give back out
+
 to extend_number with changing xs as list of number, more as list of number:
     for each value in more:
         add value to xs
@@ -285,6 +305,26 @@ to count_where_text with xs as list of text, test as (function taking text givin
             set count to count plus 1
     give back count
 
+to take_while_text with xs as list of text, test as (function taking text giving yesno) giving list of text:
+    let out be an empty list of text
+    for each value in xs:
+        if (test with value):
+            add value to out
+        otherwise:
+            stop
+    give back out
+
+to drop_while_text with xs as list of text, test as (function taking text giving yesno) giving list of text:
+    let out be an empty list of text
+    let dropping be yes
+    for each value in xs:
+        if dropping:
+            if (test with value):
+                skip
+            set dropping to no
+        add value to out
+    give back out
+
 to extend_text with changing xs as list of text, more as list of text:
     for each value in more:
         add value to xs
@@ -461,6 +501,26 @@ to count_where_decimal with xs as list of decimal, test as (function taking deci
         if (test with value):
             set count to count plus 1
     give back count
+
+to take_while_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving list of decimal:
+    let out be an empty list of decimal
+    for each value in xs:
+        if (test with value):
+            add value to out
+        otherwise:
+            stop
+    give back out
+
+to drop_while_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving list of decimal:
+    let out be an empty list of decimal
+    let dropping be yes
+    for each value in xs:
+        if dropping:
+            if (test with value):
+                skip
+            set dropping to no
+        add value to out
+    give back out
 
 to extend_decimal with changing xs as list of decimal, more as list of decimal:
     for each value in more:
@@ -670,6 +730,26 @@ to count_where_yesno with xs as list of yesno, test as (function taking yesno gi
         if (test with value):
             set count to count plus 1
     give back count
+
+to take_while_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving list of yesno:
+    let out be an empty list of yesno
+    for each value in xs:
+        if (test with value):
+            add value to out
+        otherwise:
+            stop
+    give back out
+
+to drop_while_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving list of yesno:
+    let out be an empty list of yesno
+    let dropping be yes
+    for each value in xs:
+        if dropping:
+            if (test with value):
+                skip
+            set dropping to no
+        add value to out
+    give back out
 
 to extend_yesno with changing xs as list of yesno, more as list of yesno:
     for each value in more:

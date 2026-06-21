@@ -226,7 +226,9 @@ parse-relevant highlights:
   functions, return `some value` for the first matching item, and return `nothing` for
   empty lists or no-match scans. Predicate-count helpers accept first-class
   predicate functions and return the number of matching items, with `0` for
-  empty lists. Count, index, and membership helpers work
+  empty lists. Take/drop-while helpers accept first-class predicate functions,
+  split the leading matching prefix from the remaining suffix, and return
+  fresh lists. Count, index, and membership helpers work
   over number, text, decimal, and yes/no items.
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting

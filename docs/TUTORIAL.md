@@ -430,6 +430,10 @@ to main:
     say (all_number with numbers, the function is_large)
     say (maybe_find_number with numbers, the function is_large)
     say (count_where_number with numbers, the function is_large)
+    let leading_large_numbers be (take_while_number with numbers, the function is_large)
+    say length of leading_large_numbers
+    let after_leading_large_numbers be (drop_while_number with numbers, the function is_large)
+    say length of after_leading_large_numbers
     let more_numbers be a list of 10, 12
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99

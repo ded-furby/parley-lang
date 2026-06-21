@@ -1449,6 +1449,54 @@ to main:
     assert proc.stdout == "19\n10\nada|grace|linus\nnone\n4.5\nno\nyes\n"
 
 
+def test_bundled_std_list_take_drop_while_helpers_run(workdir):
+    src = '''include "std/list"
+
+to below_five with n as number giving yesno:
+    give back n is less than 5
+
+to starts_with_a with t as text giving yesno:
+    give back t starts with "a"
+
+to below_three with d as decimal giving yesno:
+    give back d is less than 3.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 1, 2, 6, 3
+    let low_prefix be (take_while_number with numbers, the function below_five)
+    say length of low_prefix
+    say item 1 of low_prefix
+    say item 2 of low_prefix
+    let after_low_prefix be (drop_while_number with numbers, the function below_five)
+    say length of after_low_prefix
+    say item 1 of after_low_prefix
+    let empty_numbers be an empty list of number
+    say length of (take_while_number with empty_numbers, the function below_five)
+    say length of (drop_while_number with empty_numbers, the function below_five)
+
+    let names be a list of "ada", "alan", "grace", "amy"
+    say (take_while_text with names, the function starts_with_a) joined with "|"
+    say (drop_while_text with names, the function starts_with_a) joined with "|"
+
+    let decimals be a list of 1.5, 2.5, 4.5
+    let small_decimals be (take_while_decimal with decimals, the function below_three)
+    say length of small_decimals
+    let big_tail be (drop_while_decimal with decimals, the function below_three)
+    say item 1 of big_tail
+
+    let flags be a list of yes, yes, no, yes
+    say length of (take_while_yesno with flags, the function same)
+    let flag_tail be (drop_while_yesno with flags, the function same)
+    say length of flag_tail
+    say item 1 of flag_tail
+'''
+    proc = run_program(workdir, "bundled_std_list_take_drop_while", src)
+    assert proc.stdout == "2\n1\n2\n2\n6\n0\n0\nada|alan\ngrace|amy\n2\n4.5\n2\n2\nno\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"
