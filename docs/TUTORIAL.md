@@ -424,6 +424,7 @@ to main:
     say (padded_center with "go", 5, ".")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
+    say (median_number with numbers)
     say (sum_number with numbers)
     say (product_number with numbers)
     let weights be a list of 1, 2, 3, 4
@@ -465,12 +466,15 @@ to main:
     reverse_number with numbers
     say length of numbers
     say (maybe_average_number with empty_numbers)
+    say (maybe_median_number with empty_numbers)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
+    say (median_decimal with prices)
     say (sum_decimal with prices)
     say (product_decimal with prices)
     let quantities be a list of 2.0, 4.0, 1.0
     say (sum_product_decimal with prices, quantities)
+    say (maybe_median_decimal with prices)
     say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes

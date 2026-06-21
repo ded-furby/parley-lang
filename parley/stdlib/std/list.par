@@ -210,6 +210,18 @@ to index_number with xs as list of number, needle as number giving maybe number:
 to average_number with xs as list of number giving decimal:
     give back (decimal from (sum of xs)) divided by (decimal from (length of xs))
 
+to median_number with xs as list of number giving decimal:
+    if length of xs is 0:
+        fail "median_number needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let middle be floor of ((decimal from (count plus 1)) divided by 2.0)
+    if remainder of count divided by 2 is 1:
+        give back decimal from item middle of ordered
+    let left_index be floor of ((decimal from count) divided by 2.0)
+    let right_index be left_index plus 1
+    give back ((decimal from item left_index of ordered) plus (decimal from item right_index of ordered)) divided by 2.0
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -245,6 +257,12 @@ to maybe_average_number with xs as list of number giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (average_number with xs)
+    give back some value
+
+to maybe_median_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -680,6 +698,18 @@ to index_decimal with xs as list of decimal, needle as decimal giving maybe numb
 to average_decimal with xs as list of decimal giving decimal:
     give back (sum of xs) divided by (decimal from (length of xs))
 
+to median_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "median_decimal needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let middle be floor of ((decimal from (count plus 1)) divided by 2.0)
+    if remainder of count divided by 2 is 1:
+        give back item middle of ordered
+    let left_index be floor of ((decimal from count) divided by 2.0)
+    let right_index be left_index plus 1
+    give back ((item left_index of ordered) plus (item right_index of ordered)) divided by 2.0
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -717,6 +747,12 @@ to maybe_average_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (average_decimal with xs)
+    give back some value
+
+to maybe_median_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:

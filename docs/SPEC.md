@@ -266,6 +266,9 @@ parse-relevant highlights:
   Sum-product helpers multiply matching number or decimal items pairwise,
   add the products, return the additive identity for two empty lists, and fail
   with English text when the list lengths differ.
+  Median helpers sort a fresh number or decimal copy, return the middle value
+  or the average of the two middle values as a decimal, fail with English text
+  on empty lists, and also have maybe-returning empty-list-safe variants.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

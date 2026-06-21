@@ -949,6 +949,41 @@ to main:
     )
 
 
+def test_bundled_std_list_median_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let odd_numbers be a list of 9, 1, 5
+    say (median_number with odd_numbers)
+    let even_numbers be a list of 10, 2, 4, 8
+    say (median_number with even_numbers)
+    say (maybe_median_number with even_numbers)
+    let empty_numbers be an empty list of number
+    say (maybe_median_number with empty_numbers)
+    attempt:
+        say (median_number with empty_numbers)
+    if it failed:
+        say "number median error: {the error}"
+    let odd_decimals be a list of 3.5, 1.5, 9.5
+    say (is_close with (median_decimal with odd_decimals), 3.5, 0.0, 0.000001)
+    let even_decimals be a list of 1.5, 2.5, 8.5, 4.5
+    say (is_close with (median_decimal with even_decimals), 3.5, 0.0, 0.000001)
+    say (maybe_median_decimal with even_decimals)
+    let empty_decimals be an empty list of decimal
+    say (maybe_median_decimal with empty_decimals)
+    attempt:
+        say (median_decimal with empty_decimals)
+    if it failed:
+        say "decimal median error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_median", src)
+    assert proc.stdout == (
+        "5\n6\n6\nnothing\nnumber median error: median_number needs at least one item\n"
+        "yes\nyes\n3.5\nnothing\ndecimal median error: median_decimal needs at least one item\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 
