@@ -41,6 +41,11 @@ to is_close with left as decimal, right as decimal, relative_tolerance as decima
 to hypotenuse with x as decimal, y as decimal giving decimal:
     give back square root of (x times x plus y times y)
 
+to copy_sign with magnitude as decimal, sign_source as decimal giving decimal:
+    if sign_source is less than 0.0:
+        give back 0.0 minus absolute of magnitude
+    give back absolute of magnitude
+
 to factorial with n as number giving number:
     if n is less than 0:
         fail "factorial needs a non-negative number"

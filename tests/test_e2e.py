@@ -594,6 +594,19 @@ to main:
     assert proc.stdout == "5\n13\nyes\n"
 
 
+def test_bundled_std_math_copy_sign_helper_runs(workdir):
+    src = '''include "std/math"
+
+to main:
+    say (copy_sign with 3.5, -2.0)
+    say (copy_sign with -3.5, 2.0)
+    say (copy_sign with -3.5, 0.0)
+    say (is_close with (copy_sign with 1.25, -9.0), -1.25, 0.0, 0.000001)
+'''
+    proc = run_program(workdir, "bundled_std_math_copy_sign", src)
+    assert proc.stdout == "-3.5\n3.5\n3.5\nyes\n"
+
+
 def test_bundled_std_list_package_runs(workdir):
     src = '''include "std/list"
 
