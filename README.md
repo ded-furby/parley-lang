@@ -137,7 +137,7 @@ division, powers, roots, math constants, integer square roots, perfect-square ch
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
 `contains`, first and last search positions, numeric search fallbacks, line/word counts, raw, universal, keep-end, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, case folding, title casing and title-case checks, ASCII, printable, identifier, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, any-prefix/any-suffix checks, whitespace and explicit-character trimming, left/right/center/zero padding, …) · number/text/decimal list
-helpers with safe maybe first/last/index/pop, copying, fresh chaining, first-seen uniqueness, bounded repetition, bounded cycling, stepped slicing, count-based take/drop, tail take/drop, prefix/suffix predicates, indexed enumeration maps, function-value filtering, rejecting/filterfalse, selector compression, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, and take/drop-while, clamped slicing, membership predicates, explicit sum/product, cumulative sums/products/extrema, sum-product, arithmetic/geometric/harmonic means, covariance/correlation/regression, exclusive/inclusive quantiles, median, median-low/high, mode, plural-mode, population/sample variance, and population/sample standard-deviation helpers, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus text-list cumulative extrema, yes/no list edge helpers, predicates, value-parameter count/index helpers, copying, fresh chaining, first-seen uniqueness, bounded repetition, bounded cycling, stepped slicing, count-based take/drop, tail take/drop, prefix/suffix predicates, indexed enumeration maps, filtering, rejecting/filterfalse, selector compression, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, take/drop-while, sorting, mode helpers, plural-mode helpers, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, value membership, maybe lookup, fallback, fallback insertion, counted increment, copying, update merging, take-and-remove, take-with-fallback, and clear variants
+helpers with safe maybe first/last/index/pop, copying, fresh chaining, first-seen uniqueness, number-only stop-exclusive range generation, bounded repetition, bounded cycling, stepped slicing, count-based take/drop, tail take/drop, prefix/suffix predicates, indexed enumeration maps, function-value filtering, rejecting/filterfalse, selector compression, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, and take/drop-while, clamped slicing, membership predicates, explicit sum/product, cumulative sums/products/extrema, sum-product, arithmetic/geometric/harmonic means, covariance/correlation/regression, exclusive/inclusive quantiles, median, median-low/high, mode, plural-mode, population/sample variance, and population/sample standard-deviation helpers, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus text-list cumulative extrema, yes/no list edge helpers, predicates, value-parameter count/index helpers, copying, fresh chaining, first-seen uniqueness, bounded repetition, bounded cycling, stepped slicing, count-based take/drop, tail take/drop, prefix/suffix predicates, indexed enumeration maps, filtering, rejecting/filterfalse, selector compression, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, take/drop-while, sorting, mode helpers, plural-mode helpers, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, value membership, maybe lookup, fallback, fallback insertion, counted increment, copying, update merging, take-and-remove, take-with-fallback, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
 construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
@@ -300,6 +300,7 @@ the plan:
 - [x] list prefix/suffix predicates for bundled lists — v0.3.135
 - [x] text case-fold helper for bundled `std/text` — v0.3.136
 - [x] first-seen unique helpers for bundled lists — v0.3.137
+- [x] stop-exclusive range helpers for bundled number lists — v0.3.138
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -327,7 +328,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 253 tests; e2e compiles real binaries (needs cargo)
+pytest            # 254 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

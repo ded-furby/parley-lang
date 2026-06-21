@@ -1400,6 +1400,42 @@ to main:
     assert proc.stdout == "3\n3\n1\n2\n5\nada|grace|alan\n3\nyes\nyes\n2\nyes\nno\n0\n"
 
 
+def test_bundled_std_list_range_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let first_five be (range_number with 5)
+    say length of first_five
+    say item 1 of first_five
+    say item 5 of first_five
+    say length of (range_number with 0)
+    say length of (range_number with -2)
+    let from_three be (range_number_from with 3, 7)
+    say length of from_three
+    say item 1 of from_three
+    say item 4 of from_three
+    say length of (range_number_from with 7, 3)
+    let stepped be (range_number_step with 2, 11, 3)
+    say length of stepped
+    say item 1 of stepped
+    say item 2 of stepped
+    say item 3 of stepped
+    let descending be (range_number_step with 5, -2, -2)
+    say length of descending
+    say item 1 of descending
+    say item 4 of descending
+    say length of (range_number_step with 2, 11, -1)
+    say length of (range_number_step with 5, -2, 2)
+    attempt:
+        let broken be (range_number_step with 1, 4, 0)
+        say length of broken
+    if it failed:
+        say "range error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_range_helpers", src)
+    assert proc.stdout == "5\n0\n4\n0\n0\n4\n3\n6\n0\n3\n2\n5\n8\n4\n5\n-1\n0\n0\nrange error: range_number_step needs a non-zero step\n"
+
+
 def test_bundled_std_list_enumerate_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

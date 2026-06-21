@@ -169,6 +169,27 @@ to unique_number with xs as list of number giving list of number:
             add value to out
     give back out
 
+to range_number with stop_value as number giving list of number:
+    give back (range_number_from with 0, stop_value)
+
+to range_number_from with start as number, stop_value as number giving list of number:
+    give back (range_number_step with start, stop_value, 1)
+
+to range_number_step with start as number, stop_value as number, step as number giving list of number:
+    let out be an empty list of number
+    if step is 0:
+        fail "range_number_step needs a non-zero step"
+    let current be start
+    if step is more than 0:
+        while current is less than stop_value:
+            add current to out
+            set current to current plus step
+    otherwise:
+        while current is more than stop_value:
+            add current to out
+            set current to current plus step
+    give back out
+
 to repeat_number with value as number, count as number giving list of number:
     let out be an empty list of number
     if count is at most 0:

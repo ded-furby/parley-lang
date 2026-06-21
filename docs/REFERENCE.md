@@ -303,6 +303,7 @@ Use `include "std/list"` for common list helpers:
 | `copy_number with xs` | fresh list of number with the same items |
 | `chain_number with left, right` | fresh number list containing `left` followed by `right`; inputs are not mutated |
 | `unique_number with xs` | fresh number list with duplicates removed, preserving first-seen order |
+| `range_number with stop_value` / `range_number_from with start, stop_value` / `range_number_step with start, stop_value, step` | fresh number list following Python-style stop-exclusive range semantics; step `0` fails |
 | `repeat_number with value, count` | fresh number list containing `count` copies of `value`; non-positive counts give an empty list |
 | `cycle_number with xs, count` | fresh number list cycling through `xs` until `count` items are produced; empty input or non-positive counts give an empty list |
 | `filter_number with xs, keep` | fresh list of numbers where `keep` returns yes |
