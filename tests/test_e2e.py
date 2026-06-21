@@ -949,6 +949,31 @@ to main:
     )
 
 
+def test_bundled_std_list_accumulated_sum_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 3, -1, 4
+    let number_totals be (accumulated_sum_number with numbers)
+    say length of number_totals
+    say item 1 of number_totals
+    say item 2 of number_totals
+    say item 3 of number_totals
+    let empty_numbers be an empty list of number
+    say length of (accumulated_sum_number with empty_numbers)
+    let decimals be a list of 1.5, -0.5, 2.25
+    let decimal_totals be (accumulated_sum_decimal with decimals)
+    say (is_close with item 1 of decimal_totals, 1.5, 0.0, 0.000001)
+    say (is_close with item 2 of decimal_totals, 1.0, 0.0, 0.000001)
+    say (is_close with item 3 of decimal_totals, 3.25, 0.0, 0.000001)
+    let empty_decimals be an empty list of decimal
+    say length of (accumulated_sum_decimal with empty_decimals)
+'''
+    proc = run_program(workdir, "bundled_std_list_accumulated_sum", src)
+    assert proc.stdout == "3\n3\n2\n6\n0\nyes\nyes\nyes\n0\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

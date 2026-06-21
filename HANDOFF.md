@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.122** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 238 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.123** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 239 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -461,6 +461,10 @@ Update it whenever you finish or start a work item.
   `linear_regression_decimal`, `proportional_linear_regression_decimal`, and
   maybe-returning variants, matching Python's `statistics.linear_regression`
   workflows by returning `[slope, intercept]` decimal lists.
+- **v0.3.123 list accumulated-sum helpers:** `std/list` adds
+  `accumulated_sum_number` and `accumulated_sum_decimal`, matching Python's
+  default `itertools.accumulate` running-total workflow with fresh typed lists
+  and empty-list identity behavior.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -533,7 +537,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.122).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.123).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
