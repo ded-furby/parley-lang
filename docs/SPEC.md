@@ -284,6 +284,11 @@ parse-relevant highlights:
   length as the denominator. Population standard-deviation helpers return the
   square root of that variance. Empty population-statistics inputs fail with
   English text, and maybe-returning variants return `nothing` instead.
+  Sample variance helpers use the same squared-distance total but divide by
+  `length minus 1`, matching the usual unbiased sample estimate. Sample
+  standard-deviation helpers return the square root of that sample variance.
+  Inputs shorter than two items fail with English text, and maybe-returning
+  variants return `nothing` instead.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

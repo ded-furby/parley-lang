@@ -279,6 +279,22 @@ to population_standard_deviation_number with xs as list of number giving decimal
     let variance be (population_variance_number with xs)
     give back square root of variance
 
+to sample_variance_number with xs as list of number giving decimal:
+    if length of xs is less than 2:
+        fail "sample_variance_number needs at least two items"
+    let mean be (average_number with xs)
+    let total be 0.0
+    for each value in xs:
+        let diff be (decimal from value) minus mean
+        set total to total plus diff times diff
+    give back total divided by (decimal from ((length of xs) minus 1))
+
+to sample_standard_deviation_number with xs as list of number giving decimal:
+    if length of xs is less than 2:
+        fail "sample_standard_deviation_number needs at least two items"
+    let variance be (sample_variance_number with xs)
+    give back square root of variance
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -350,6 +366,18 @@ to maybe_population_standard_deviation_number with xs as list of number giving m
     if length of xs is 0:
         give back nothing
     let value be (population_standard_deviation_number with xs)
+    give back some value
+
+to maybe_sample_variance_number with xs as list of number giving maybe decimal:
+    if length of xs is less than 2:
+        give back nothing
+    let value be (sample_variance_number with xs)
+    give back some value
+
+to maybe_sample_standard_deviation_number with xs as list of number giving maybe decimal:
+    if length of xs is less than 2:
+        give back nothing
+    let value be (sample_standard_deviation_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -885,6 +913,22 @@ to population_standard_deviation_decimal with xs as list of decimal giving decim
     let variance be (population_variance_decimal with xs)
     give back square root of variance
 
+to sample_variance_decimal with xs as list of decimal giving decimal:
+    if length of xs is less than 2:
+        fail "sample_variance_decimal needs at least two items"
+    let mean be (average_decimal with xs)
+    let total be 0.0
+    for each value in xs:
+        let diff be value minus mean
+        set total to total plus diff times diff
+    give back total divided by (decimal from ((length of xs) minus 1))
+
+to sample_standard_deviation_decimal with xs as list of decimal giving decimal:
+    if length of xs is less than 2:
+        fail "sample_standard_deviation_decimal needs at least two items"
+    let variance be (sample_variance_decimal with xs)
+    give back square root of variance
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -958,6 +1002,18 @@ to maybe_population_standard_deviation_decimal with xs as list of decimal giving
     if length of xs is 0:
         give back nothing
     let value be (population_standard_deviation_decimal with xs)
+    give back some value
+
+to maybe_sample_variance_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is less than 2:
+        give back nothing
+    let value be (sample_variance_decimal with xs)
+    give back some value
+
+to maybe_sample_standard_deviation_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is less than 2:
+        give back nothing
+    let value be (sample_standard_deviation_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:

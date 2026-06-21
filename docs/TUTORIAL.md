@@ -431,6 +431,8 @@ to main:
     say length of (modes_number with numbers)
     say (population_variance_number with numbers)
     say (population_standard_deviation_number with numbers)
+    say (sample_variance_number with numbers)
+    say (sample_standard_deviation_number with numbers)
     say (sum_number with numbers)
     say (product_number with numbers)
     let weights be a list of 1, 2, 3, 4
@@ -478,6 +480,9 @@ to main:
     say (maybe_mode_number with empty_numbers)
     say (maybe_population_variance_number with empty_numbers)
     say (maybe_population_standard_deviation_number with empty_numbers)
+    let one_number be a list of 42
+    say (maybe_sample_variance_number with one_number)
+    say (maybe_sample_standard_deviation_number with one_number)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
     say (median_decimal with prices)
@@ -487,6 +492,8 @@ to main:
     say length of (modes_decimal with prices)
     say (population_variance_decimal with prices)
     say (population_standard_deviation_decimal with prices)
+    say (sample_variance_decimal with prices)
+    say (sample_standard_deviation_decimal with prices)
     say (sum_decimal with prices)
     say (product_decimal with prices)
     let quantities be a list of 2.0, 4.0, 1.0
@@ -498,6 +505,9 @@ to main:
     let empty_decimals be an empty list of decimal
     say (maybe_population_variance_decimal with empty_decimals)
     say (maybe_population_standard_deviation_decimal with empty_decimals)
+    let one_decimal be a list of 2.5
+    say (maybe_sample_variance_decimal with one_decimal)
+    say (maybe_sample_standard_deviation_decimal with one_decimal)
     say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes

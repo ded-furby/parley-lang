@@ -322,6 +322,8 @@ Use `include "std/list"` for common list helpers:
 | `modes_number with xs` | fresh number list of all tied modes in first-seen order; empty lists give an empty list |
 | `population_variance_number with xs` | decimal population variance; empty lists fail |
 | `population_standard_deviation_number with xs` | decimal population standard deviation; empty lists fail |
+| `sample_variance_number with xs` | decimal sample variance; lists shorter than two items fail |
+| `sample_standard_deviation_number with xs` | decimal sample standard deviation; lists shorter than two items fail |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
 | `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
@@ -332,6 +334,8 @@ Use `include "std/list"` for common list helpers:
 | `maybe_mode_number with xs` | maybe most common number |
 | `maybe_population_variance_number with xs` | maybe decimal population variance |
 | `maybe_population_standard_deviation_number with xs` | maybe decimal population standard deviation |
+| `maybe_sample_variance_number with xs` | maybe decimal sample variance |
+| `maybe_sample_standard_deviation_number with xs` | maybe decimal sample standard deviation |
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
 | `maybe_item_text with xs, index` | maybe text at a 1-based index |
@@ -393,6 +397,8 @@ Use `include "std/list"` for common list helpers:
 | `modes_decimal with xs` | fresh decimal list of all tied modes in first-seen order; empty lists give an empty list |
 | `population_variance_decimal with xs` | decimal population variance; empty lists fail |
 | `population_standard_deviation_decimal with xs` | decimal population standard deviation; empty lists fail |
+| `sample_variance_decimal with xs` | decimal sample variance; lists shorter than two items fail |
+| `sample_standard_deviation_decimal with xs` | decimal sample standard deviation; lists shorter than two items fail |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
 | `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
@@ -403,6 +409,8 @@ Use `include "std/list"` for common list helpers:
 | `maybe_mode_decimal with xs` | maybe most common decimal |
 | `maybe_population_variance_decimal with xs` | maybe decimal population variance |
 | `maybe_population_standard_deviation_decimal with xs` | maybe decimal population standard deviation |
+| `maybe_sample_variance_decimal with xs` | maybe decimal sample variance |
+| `maybe_sample_standard_deviation_decimal with xs` | maybe decimal sample standard deviation |
 | `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |
 | `maybe_first_yesno with xs` / `maybe_last_yesno with xs` | maybe first or last yes/no value |
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |

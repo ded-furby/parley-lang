@@ -1189,6 +1189,67 @@ to main:
     )
 
 
+def test_bundled_std_list_sample_stats_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 2, 4, 4, 4, 5, 5, 7, 9
+    say (is_close with (sample_variance_number with numbers), 4.571428571428571, 0.0, 0.000001)
+    say (is_close with (sample_standard_deviation_number with numbers), 2.138089935299395, 0.0, 0.000001)
+    let maybe_number_variance be (maybe_sample_variance_number with numbers)
+    let maybe_number_stdev be (maybe_sample_standard_deviation_number with numbers)
+    if maybe_number_variance is not nothing:
+        let number_variance be value of maybe_number_variance
+        say (is_close with number_variance, 4.571428571428571, 0.0, 0.000001)
+    if maybe_number_stdev is not nothing:
+        let number_stdev be value of maybe_number_stdev
+        say (is_close with number_stdev, 2.138089935299395, 0.0, 0.000001)
+    let one_number be a list of 42
+    say (maybe_sample_variance_number with one_number)
+    say (maybe_sample_standard_deviation_number with one_number)
+    attempt:
+        say (sample_variance_number with one_number)
+    if it failed:
+        say "number sample variance error: {the error}"
+    attempt:
+        say (sample_standard_deviation_number with one_number)
+    if it failed:
+        say "number sample stdev error: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5, 4.5
+    say (is_close with (sample_variance_decimal with decimals), 1.666666666666667, 0.0, 0.000001)
+    say (is_close with (sample_standard_deviation_decimal with decimals), 1.290994448735806, 0.0, 0.000001)
+    let maybe_decimal_variance be (maybe_sample_variance_decimal with decimals)
+    let maybe_decimal_stdev be (maybe_sample_standard_deviation_decimal with decimals)
+    if maybe_decimal_variance is not nothing:
+        let decimal_variance be value of maybe_decimal_variance
+        say (is_close with decimal_variance, 1.666666666666667, 0.0, 0.000001)
+    if maybe_decimal_stdev is not nothing:
+        let decimal_stdev be value of maybe_decimal_stdev
+        say (is_close with decimal_stdev, 1.290994448735806, 0.0, 0.000001)
+    let one_decimal be a list of 2.5
+    say (maybe_sample_variance_decimal with one_decimal)
+    say (maybe_sample_standard_deviation_decimal with one_decimal)
+    attempt:
+        say (sample_variance_decimal with one_decimal)
+    if it failed:
+        say "decimal sample variance error: {the error}"
+    attempt:
+        say (sample_standard_deviation_decimal with one_decimal)
+    if it failed:
+        say "decimal sample stdev error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_sample_stats", src)
+    assert proc.stdout == (
+        "yes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "number sample variance error: sample_variance_number needs at least two items\n"
+        "number sample stdev error: sample_standard_deviation_number needs at least two items\n"
+        "yes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "decimal sample variance error: sample_variance_decimal needs at least two items\n"
+        "decimal sample stdev error: sample_standard_deviation_decimal needs at least two items\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 
