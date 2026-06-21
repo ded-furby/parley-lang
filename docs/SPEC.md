@@ -276,6 +276,9 @@ parse-relevant highlights:
   list, return the most common value, keep the first value seen when counts
   tie, fail with English text on empty lists, and also have maybe-returning
   empty-list-safe variants.
+  Plural mode helpers return every value tied for the highest count in
+  first-seen order, suppress duplicates, and return an empty typed list for an
+  empty input list.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

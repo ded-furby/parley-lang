@@ -1088,6 +1088,46 @@ to main:
     )
 
 
+def test_bundled_std_list_modes_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let tied_numbers be a list of 4, 2, 4, 2, 9
+    let number_modes be (modes_number with tied_numbers)
+    say length of number_modes
+    say item 1 of number_modes
+    say item 2 of number_modes
+    let single_numbers be a list of 7, 7, 1, 1, 7
+    let single_number_modes be (modes_number with single_numbers)
+    say length of single_number_modes
+    say item 1 of single_number_modes
+    let empty_numbers be an empty list of number
+    say length of (modes_number with empty_numbers)
+    let tied_texts be a list of "red", "blue", "red", "blue", "green"
+    say (modes_text with tied_texts) joined with "|"
+    let empty_texts be an empty list of text
+    say length of (modes_text with empty_texts)
+    let tied_decimals be a list of 1.5, 2.5, 1.5, 2.5, 3.5
+    let decimal_modes be (modes_decimal with tied_decimals)
+    say length of decimal_modes
+    say item 1 of decimal_modes
+    say item 2 of decimal_modes
+    let empty_decimals be an empty list of decimal
+    say length of (modes_decimal with empty_decimals)
+    let flags be a list of no, yes, yes, no, yes, no
+    let flag_modes be (modes_yesno with flags)
+    say length of flag_modes
+    say item 1 of flag_modes
+    say item 2 of flag_modes
+    let empty_flags be an empty list of yesno
+    say length of (modes_yesno with empty_flags)
+'''
+    proc = run_program(workdir, "bundled_std_list_modes", src)
+    assert proc.stdout == (
+        "2\n4\n2\n1\n7\n0\nred|blue\n0\n2\n1.5\n2.5\n0\n2\nno\nyes\n0\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 

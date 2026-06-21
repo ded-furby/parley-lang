@@ -319,6 +319,7 @@ Use `include "std/list"` for common list helpers:
 | `median_number with xs` | decimal median of a sorted copy; empty lists fail |
 | `median_low_number with xs` / `median_high_number with xs` | lower or upper middle number from a sorted copy; empty lists fail |
 | `mode_number with xs` | most common number; ties keep the first value seen; empty lists fail |
+| `modes_number with xs` | fresh number list of all tied modes in first-seen order; empty lists give an empty list |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
 | `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
@@ -353,6 +354,7 @@ Use `include "std/list"` for common list helpers:
 | `contains_text with xs, t` | yes when `t` is present |
 | `index_text with xs, t` | maybe 1-based index of `t` |
 | `mode_text with xs` | most common text; ties keep the first value seen; empty lists fail |
+| `modes_text with xs` | fresh text list of all tied modes in first-seen order; empty lists give an empty list |
 | `maybe_mode_text with xs` | maybe most common text |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
 | `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
@@ -384,6 +386,7 @@ Use `include "std/list"` for common list helpers:
 | `median_decimal with xs` | median of a sorted copy; empty lists fail |
 | `median_low_decimal with xs` / `median_high_decimal with xs` | lower or upper middle decimal from a sorted copy; empty lists fail |
 | `mode_decimal with xs` | most common decimal; ties keep the first value seen; empty lists fail |
+| `modes_decimal with xs` | fresh decimal list of all tied modes in first-seen order; empty lists give an empty list |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
 | `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
@@ -421,6 +424,7 @@ Use `include "std/list"` for common list helpers:
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 | `index_yesno with xs, value` | maybe 1-based index of a yes/no value |
 | `mode_yesno with xs` | most common yes/no value; ties keep the first value seen; empty lists fail |
+| `modes_yesno with xs` | fresh yes/no list of all tied modes in first-seen order; empty lists give an empty list |
 | `maybe_mode_yesno with xs` | maybe most common yes/no value |
 
 Use `include "std/map"` for common map helpers:

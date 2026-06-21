@@ -428,6 +428,7 @@ to main:
     say (median_low_number with numbers)
     say (median_high_number with numbers)
     say (mode_number with numbers)
+    say length of (modes_number with numbers)
     say (sum_number with numbers)
     say (product_number with numbers)
     let weights be a list of 1, 2, 3, 4
@@ -479,6 +480,7 @@ to main:
     say (median_low_decimal with prices)
     say (median_high_decimal with prices)
     say (mode_decimal with prices)
+    say length of (modes_decimal with prices)
     say (sum_decimal with prices)
     say (product_decimal with prices)
     let quantities be a list of 2.0, 4.0, 1.0
@@ -499,6 +501,7 @@ to main:
     say (index_no with flags)
     say (index_yesno with flags, no)
     say (mode_yesno with flags)
+    say length of (modes_yesno with flags)
     sort_yesno with flags
     reverse_yesno with flags
     let counts be a map from text to number

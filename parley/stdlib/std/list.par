@@ -250,6 +250,19 @@ to mode_number with xs as list of number giving number:
             set best_count to value_count
     give back best
 
+to modes_number with xs as list of number giving list of number:
+    let out be an empty list of number
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_number with xs, value)
+        if value_count is more than best_count:
+            clear_number with out
+            add value to out
+            set best_count to value_count
+        otherwise if value_count is best_count and (contains_number with out, value) is no:
+            add value to out
+    give back out
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -532,6 +545,19 @@ to mode_text with xs as list of text giving text:
             set best_count to value_count
     give back best
 
+to modes_text with xs as list of text giving list of text:
+    let out be an empty list of text
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_text with xs, value)
+        if value_count is more than best_count:
+            clear_text with out
+            add value to out
+            set best_count to value_count
+        otherwise if value_count is best_count and (contains_text with out, value) is no:
+            add value to out
+    give back out
+
 to maybe_smallest_text with xs as list of text giving maybe text:
     if length of xs is 0:
         give back nothing
@@ -801,6 +827,19 @@ to mode_decimal with xs as list of decimal giving decimal:
             set best to value
             set best_count to value_count
     give back best
+
+to modes_decimal with xs as list of decimal giving list of decimal:
+    let out be an empty list of decimal
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_decimal with xs, value)
+        if value_count is more than best_count:
+            clear_decimal with out
+            add value to out
+            set best_count to value_count
+        otherwise if value_count is best_count and (contains_decimal with out, value) is no:
+            add value to out
+    give back out
 
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
@@ -1110,6 +1149,19 @@ to mode_yesno with xs as list of yesno giving yesno:
             set best to value
             set best_count to value_count
     give back best
+
+to modes_yesno with xs as list of yesno giving list of yesno:
+    let out be an empty list of yesno
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_yesno with xs, value)
+        if value_count is more than best_count:
+            clear_yesno with out
+            add value to out
+            set best_count to value_count
+        otherwise if value_count is best_count and (contains_yesno with out, value) is no:
+            add value to out
+    give back out
 
 to contains_yesno with xs as list of yesno, needle as yesno giving yesno:
     for each value in xs:
