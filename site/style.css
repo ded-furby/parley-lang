@@ -64,13 +64,16 @@ body {
   justify-content: space-between;
   align-items: baseline;
   padding: clamp(1.1rem, 2.5vw, 1.8rem) clamp(1.25rem, 4vw, 3rem);
+  background: oklch(0.13 0.012 29 / 0.84);
+  border-bottom: 1px solid oklch(0.28 0.02 29 / 0.38);
+  backdrop-filter: blur(14px);
 }
 
 .wordmark {
   font-family: var(--serif);
   font-weight: 700;
   font-size: 1.35rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color: var(--ink);
   text-decoration: none;
 }
@@ -184,7 +187,7 @@ main { position: relative; z-index: 1; }
 h2 {
   font-size: clamp(1.9rem, 4.2vw, 3.1rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   line-height: 1.12;
   margin-bottom: 1.1rem;
   text-wrap: balance;
@@ -200,7 +203,7 @@ h2 {
   margin-top: 2.25rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -259,7 +262,7 @@ code.inline {
   max-width: min(100%, 760px);
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   background: var(--line);
 }
 
@@ -316,7 +319,7 @@ code.inline {
   max-width: 100%;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -456,7 +459,7 @@ code.inline {
   max-width: 11ch;
   font-size: clamp(3rem, 9vw, 7.2rem);
   line-height: 0.95;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .not-found p:not(.not-found-code) {

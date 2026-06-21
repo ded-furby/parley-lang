@@ -279,6 +279,11 @@ parse-relevant highlights:
   Plural mode helpers return every value tied for the highest count in
   first-seen order, suppress duplicates, and return an empty typed list for an
   empty input list.
+  Population variance helpers for number and decimal lists return the mean of
+  squared distances from the list average as a decimal, using the full list
+  length as the denominator. Population standard-deviation helpers return the
+  square root of that variance. Empty population-statistics inputs fail with
+  English text, and maybe-returning variants return `nothing` instead.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

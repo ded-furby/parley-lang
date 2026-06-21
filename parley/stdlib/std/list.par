@@ -263,6 +263,22 @@ to modes_number with xs as list of number giving list of number:
             add value to out
     give back out
 
+to population_variance_number with xs as list of number giving decimal:
+    if length of xs is 0:
+        fail "population_variance_number needs at least one item"
+    let mean be (average_number with xs)
+    let total be 0.0
+    for each value in xs:
+        let diff be (decimal from value) minus mean
+        set total to total plus diff times diff
+    give back total divided by (decimal from (length of xs))
+
+to population_standard_deviation_number with xs as list of number giving decimal:
+    if length of xs is 0:
+        fail "population_standard_deviation_number needs at least one item"
+    let variance be (population_variance_number with xs)
+    give back square root of variance
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -322,6 +338,18 @@ to maybe_mode_number with xs as list of number giving maybe number:
     if length of xs is 0:
         give back nothing
     let value be (mode_number with xs)
+    give back some value
+
+to maybe_population_variance_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (population_variance_number with xs)
+    give back some value
+
+to maybe_population_standard_deviation_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (population_standard_deviation_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -841,6 +869,22 @@ to modes_decimal with xs as list of decimal giving list of decimal:
             add value to out
     give back out
 
+to population_variance_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "population_variance_decimal needs at least one item"
+    let mean be (average_decimal with xs)
+    let total be 0.0
+    for each value in xs:
+        let diff be value minus mean
+        set total to total plus diff times diff
+    give back total divided by (decimal from (length of xs))
+
+to population_standard_deviation_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "population_standard_deviation_decimal needs at least one item"
+    let variance be (population_variance_decimal with xs)
+    give back square root of variance
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -902,6 +946,18 @@ to maybe_mode_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (mode_decimal with xs)
+    give back some value
+
+to maybe_population_variance_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (population_variance_decimal with xs)
+    give back some value
+
+to maybe_population_standard_deviation_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (population_standard_deviation_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:

@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.116** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 232 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.117** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 233 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -431,6 +431,11 @@ Update it whenever you finish or start a work item.
   `modes_text`, `modes_decimal`, and `modes_yesno`, matching Python's
   `statistics.multimode` workflow by returning all tied modes in first-seen
   order and returning an empty list for empty input.
+- **v0.3.117 list population statistics helpers:** `std/list` adds
+  `population_variance_number`, `population_standard_deviation_number`,
+  `population_variance_decimal`, `population_standard_deviation_decimal`, and
+  maybe-returning variants, matching Python's population variance/stdev
+  workflow over typed numeric lists with catchable empty-list failures.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -503,7 +508,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.116).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.117).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

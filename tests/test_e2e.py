@@ -1128,6 +1128,67 @@ to main:
     )
 
 
+def test_bundled_std_list_population_stats_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 2, 4, 4, 4, 5, 5, 7, 9
+    say (is_close with (population_variance_number with numbers), 4.0, 0.0, 0.000001)
+    say (is_close with (population_standard_deviation_number with numbers), 2.0, 0.0, 0.000001)
+    let maybe_number_variance be (maybe_population_variance_number with numbers)
+    let maybe_number_stdev be (maybe_population_standard_deviation_number with numbers)
+    if maybe_number_variance is not nothing:
+        let number_variance be value of maybe_number_variance
+        say (is_close with number_variance, 4.0, 0.0, 0.000001)
+    if maybe_number_stdev is not nothing:
+        let number_stdev be value of maybe_number_stdev
+        say (is_close with number_stdev, 2.0, 0.0, 0.000001)
+    let empty_numbers be an empty list of number
+    say (maybe_population_variance_number with empty_numbers)
+    say (maybe_population_standard_deviation_number with empty_numbers)
+    attempt:
+        say (population_variance_number with empty_numbers)
+    if it failed:
+        say "number variance error: {the error}"
+    attempt:
+        say (population_standard_deviation_number with empty_numbers)
+    if it failed:
+        say "number stdev error: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5, 4.5
+    say (is_close with (population_variance_decimal with decimals), 1.25, 0.0, 0.000001)
+    say (is_close with (population_standard_deviation_decimal with decimals), 1.118033988749895, 0.0, 0.000001)
+    let maybe_decimal_variance be (maybe_population_variance_decimal with decimals)
+    let maybe_decimal_stdev be (maybe_population_standard_deviation_decimal with decimals)
+    if maybe_decimal_variance is not nothing:
+        let decimal_variance be value of maybe_decimal_variance
+        say (is_close with decimal_variance, 1.25, 0.0, 0.000001)
+    if maybe_decimal_stdev is not nothing:
+        let decimal_stdev be value of maybe_decimal_stdev
+        say (is_close with decimal_stdev, 1.118033988749895, 0.0, 0.000001)
+    let empty_decimals be an empty list of decimal
+    say (maybe_population_variance_decimal with empty_decimals)
+    say (maybe_population_standard_deviation_decimal with empty_decimals)
+    attempt:
+        say (population_variance_decimal with empty_decimals)
+    if it failed:
+        say "decimal variance error: {the error}"
+    attempt:
+        say (population_standard_deviation_decimal with empty_decimals)
+    if it failed:
+        say "decimal stdev error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_population_stats", src)
+    assert proc.stdout == (
+        "yes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "number variance error: population_variance_number needs at least one item\n"
+        "number stdev error: population_standard_deviation_number needs at least one item\n"
+        "yes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "decimal variance error: population_variance_decimal needs at least one item\n"
+        "decimal stdev error: population_standard_deviation_decimal needs at least one item\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 
