@@ -336,6 +336,7 @@ Use `include "std/list"` for common list helpers:
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
 | `accumulated_sum_number with xs` | fresh number list of running totals; empty list gives an empty list |
 | `accumulated_product_number with xs` | fresh number list of running products; empty list gives an empty list |
+| `accumulated_minimum_number with xs` / `accumulated_maximum_number with xs` | fresh number list of running minimum or maximum values; empty list gives an empty list |
 | `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
 | `maybe_smallest_number with xs` / `maybe_largest_number with xs` | maybe smallest or largest number |
 | `maybe_average_number with xs` | maybe decimal average |
@@ -426,6 +427,7 @@ Use `include "std/list"` for common list helpers:
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
 | `accumulated_sum_decimal with xs` | fresh decimal list of running totals; empty list gives an empty list |
 | `accumulated_product_decimal with xs` | fresh decimal list of running products; empty list gives an empty list |
+| `accumulated_minimum_decimal with xs` / `accumulated_maximum_decimal with xs` | fresh decimal list of running minimum or maximum values; empty list gives an empty list |
 | `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |

@@ -999,6 +999,38 @@ to main:
     assert proc.stdout == "3\n3\n-6\n-24\n0\nyes\nyes\nyes\n0\n"
 
 
+def test_bundled_std_list_accumulated_extrema_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 5, 3, 7, 2
+    let number_mins be (accumulated_minimum_number with numbers)
+    say item 1 of number_mins
+    say item 2 of number_mins
+    say item 3 of number_mins
+    say item 4 of number_mins
+    let number_maxes be (accumulated_maximum_number with numbers)
+    say item 1 of number_maxes
+    say item 2 of number_maxes
+    say item 3 of number_maxes
+    say item 4 of number_maxes
+    let empty_numbers be an empty list of number
+    say length of (accumulated_minimum_number with empty_numbers)
+    say length of (accumulated_maximum_number with empty_numbers)
+    let decimals be a list of 2.5, 1.5, 3.25, 1.25
+    let decimal_mins be (accumulated_minimum_decimal with decimals)
+    say (is_close with item 4 of decimal_mins, 1.25, 0.0, 0.000001)
+    let decimal_maxes be (accumulated_maximum_decimal with decimals)
+    say (is_close with item 3 of decimal_maxes, 3.25, 0.0, 0.000001)
+    let empty_decimals be an empty list of decimal
+    say length of (accumulated_minimum_decimal with empty_decimals)
+    say length of (accumulated_maximum_decimal with empty_decimals)
+'''
+    proc = run_program(workdir, "bundled_std_list_accumulated_extrema", src)
+    assert proc.stdout == "5\n3\n3\n2\n5\n5\n7\n7\n0\n0\nyes\nyes\n0\n0\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

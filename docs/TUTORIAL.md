@@ -452,6 +452,10 @@ to main:
     say item 3 of running_numbers
     let running_number_products be (accumulated_product_number with numbers)
     say item 3 of running_number_products
+    let running_number_mins be (accumulated_minimum_number with numbers)
+    say item 3 of running_number_mins
+    let running_number_maxes be (accumulated_maximum_number with numbers)
+    say item 3 of running_number_maxes
     let weights be a list of 1, 2, 3, 4
     say (sum_product_number with numbers, weights)
     say (contains_number with numbers, 2)
@@ -541,6 +545,10 @@ to main:
     say item 3 of running_prices
     let running_price_products be (accumulated_product_decimal with prices)
     say item 3 of running_price_products
+    let running_price_mins be (accumulated_minimum_decimal with prices)
+    say item 3 of running_price_mins
+    let running_price_maxes be (accumulated_maximum_decimal with prices)
+    say item 3 of running_price_maxes
     let quantities be a list of 2.0, 4.0, 1.0
     say (sum_product_decimal with prices, quantities)
     say (maybe_geometric_mean_decimal with prices)
