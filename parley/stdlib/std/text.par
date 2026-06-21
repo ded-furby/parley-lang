@@ -215,6 +215,12 @@ to rsplit_text with t as text, separator as text, max_splits as number giving li
         set i to i minus 1
     give back out
 
+to position_or_zero with needle as text, t as text giving number:
+    let found be position of needle in t
+    if found is nothing:
+        give back 0
+    give back value of found
+
 to last_position with needle as text, t as text giving maybe number:
     if needle is "":
         give back some (length of t plus 1)
@@ -229,6 +235,12 @@ to last_position with needle as text, t as text giving maybe number:
     if found is 0:
         give back nothing
     give back some found
+
+to last_position_or_zero with needle as text, t as text giving number:
+    let found be (last_position with needle, t)
+    if found is nothing:
+        give back 0
+    give back value of found
 
 to without_prefix with t as text, prefix as text giving text:
     if prefix is "":

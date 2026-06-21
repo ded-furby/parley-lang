@@ -151,6 +151,8 @@ parse-relevant highlights:
   `last_position` returns `some n` for the last 1-based UTF-8 character
   position of a needle, supports overlapping matches, returns `nothing` for
   an absent needle, and returns the final text boundary for an empty needle.
+  `position_or_zero` and `last_position_or_zero` unwrap search positions to a
+  number, returning `0` when the needle is absent.
   Replacement returns a new text value and does not mutate the original text.
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.

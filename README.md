@@ -136,7 +136,7 @@ setup checks with `parley doctor` ·
 division, powers, roots, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
-`contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, any-prefix/any-suffix checks, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
+`contains`, first and last search positions, numeric search fallbacks, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, any-prefix/any-suffix checks, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
 helpers with safe maybe first/last/index/pop, copying, function-value filtering, rejecting/filterfalse, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, and take/drop-while, clamped slicing, membership predicates, explicit sum/product helpers, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list edge helpers, predicates, value-parameter count/index helpers, copying, filtering, rejecting/filterfalse, mapping, folding, predicate any/all, maybe-find, predicate first/all indexes, predicate counts, take/drop-while, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, value membership, maybe lookup, fallback, fallback insertion, counted increment, copying, update merging, take-and-remove, take-with-fallback, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
@@ -259,6 +259,7 @@ the plan:
 - [x] bounded split helper for bundled `std/text` — v0.3.75
 - [x] whitespace-delimited word extraction for bundled `std/text` — v0.3.76
 - [x] bounded replacement helper for bundled `std/text` — v0.3.77
+- [x] numeric fallback text search helpers for bundled `std/text` — v0.3.102
 - [x] factorial helper for bundled `std/math` — v0.3.78
 - [x] greatest-common-divisor and least-common-multiple helpers for bundled `std/math` — v0.3.79
 - [x] combination and permutation count helpers for bundled `std/math` — v0.3.80
@@ -291,7 +292,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 218 tests; e2e compiles real binaries (needs cargo)
+pytest            # 219 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

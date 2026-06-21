@@ -459,6 +459,14 @@ to main:
     say (last_position with ":", "no match")
     say (last_position with "", "abc")
     say (last_position with "c", "éclair")
+    say (position_or_zero with "=", "key=value=tail")
+    say (position_or_zero with ":", "no match")
+    say (position_or_zero with "", "abc")
+    say (position_or_zero with "c", "éclair")
+    say (last_position_or_zero with "=", "key=value=tail")
+    say (last_position_or_zero with ":", "no match")
+    say (last_position_or_zero with "", "abc")
+    say (last_position_or_zero with "c", "éclair")
     say (without_prefix with "parley-lang", "parley-")
     say (without_prefix with "parley-lang", "rust-")
     say (without_prefix with "parley-lang", "")
@@ -547,7 +555,7 @@ to main:
     assert proc.stdout == (
         "10\n10.5\n1.5\nyes\nno\n25\n1\n120\nfactorial error: factorial needs a non-negative number\n6\n6\n0\n24\n24\n0\n10\n0\ncombination error: combination_count needs non-negative numbers\n20\n1\n0\npermutation error: permutation_count needs non-negative numbers\n0\n3\n4\ninteger square root error: integer_square_root needs a non-negative number\nyes\nno\nno\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n4\n4\none|two|three|four\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
-        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\none cat two fish\nbaa\nbb\nabc\nabc\ne-e-é\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
+        "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\none cat two fish\nbaa\nbb\nabc\nabc\ne-e-é\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\n4\n0\n1\n2\n10\n0\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
         "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")
 
@@ -1333,6 +1341,23 @@ to main:
 '''
     proc = run_program(workdir, "bundled_std_text_any_edge", src)
     assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nno\nyes\n"
+
+
+def test_bundled_std_text_position_fallback_helpers_run(workdir):
+    src = '''include "std/text"
+
+to main:
+    say (position_or_zero with "=", "key=value=tail")
+    say (position_or_zero with ":", "no match")
+    say (position_or_zero with "", "abc")
+    say (position_or_zero with "c", "éclair")
+    say (last_position_or_zero with "=", "key=value=tail")
+    say (last_position_or_zero with ":", "no match")
+    say (last_position_or_zero with "", "abc")
+    say (last_position_or_zero with "c", "éclair")
+'''
+    proc = run_program(workdir, "bundled_std_text_position_fallback", src)
+    assert proc.stdout == "4\n0\n1\n2\n10\n0\n4\n2\n"
 
 
 def test_bundled_std_list_maybe_find_helpers_run(workdir):

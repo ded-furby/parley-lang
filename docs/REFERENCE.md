@@ -240,7 +240,9 @@ Use `include "std/text"` for small text helpers:
 | `replaced_text with t, old, new, max_replacements` | text with at most `max_replacements` non-overlapping replacements; empty `old` or non-positive count leaves `t` unchanged |
 | `split_text with t, separator, max_splits` | list split at most `max_splits` times from the left; empty separator or non-positive count gives `[t]` |
 | `rsplit_text with t, separator, max_splits` | list split at most `max_splits` times from the right; empty separator or non-positive count gives `[t]` |
+| `position_or_zero with needle, t` | first 1-based UTF-8 character position, or `0` when missing |
 | `last_position with needle, t` | maybe 1-based UTF-8 character position of the last match; empty needle gives `length of t plus 1` |
+| `last_position_or_zero with needle, t` | last 1-based UTF-8 character position, or `0` when missing |
 | `repeated_text with t, count` | text repeated `count` times |
 | `surrounded_with with t, wrapper` | wrapper + text + wrapper |
 | `capitalized with t` | text with the first character uppercased and the rest lowercased |

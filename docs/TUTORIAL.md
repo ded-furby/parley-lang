@@ -380,6 +380,8 @@ to main:
     say (split_text with "a,b,c,d", ",", 2) joined with "|"
     say (rsplit_text with "a,b,c,d", ",", 2) joined with "|"
     say (last_position with "=", "key=value=tail")
+    say (position_or_zero with "=", "key=value=tail")
+    say (last_position_or_zero with "=", "key=value=tail")
     say (without_prefix with "parley-lang", "parley-")
     say (without_suffix with "notes.par", ".par")
     say (has_prefix with "parley-lang", "parley-")
