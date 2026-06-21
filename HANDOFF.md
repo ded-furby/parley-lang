@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.100** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 217 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.101** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 218 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -372,6 +372,10 @@ Update it whenever you finish or start a work item.
   `maybe_find_index_*` helpers for number, text, decimal, and yes/no lists,
   returning the first 1-based index where a predicate returns `yes` or
   `nothing` for empty/no-match scans.
+- **v0.3.101 list predicate-index collection helpers:** `std/list` adds
+  `indexes_where_*` helpers for number, text, decimal, and yes/no lists,
+  returning fresh `list of number` values with every 1-based index where a
+  predicate returns `yes`.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -443,7 +447,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.100).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.101).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

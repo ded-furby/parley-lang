@@ -1577,6 +1577,56 @@ to main:
     assert proc.stdout == "3\nnothing\n2\n2\n2\nnothing\n"
 
 
+def test_bundled_std_list_indexes_where_helpers_run(workdir):
+    src = '''include "std/list"
+
+to is_odd with n as number giving yesno:
+    give back remainder of n divided by 2 is 1
+
+to more_than_ten with n as number giving yesno:
+    give back n is more than 10
+
+to starts_with_g with t as text giving yesno:
+    give back t starts with "g"
+
+to over_two with d as decimal giving yesno:
+    give back d is more than 2.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 2, 5, 6, 7
+    let odd_indexes be (indexes_where_number with numbers, the function is_odd)
+    say length of odd_indexes
+    say item 1 of odd_indexes
+    say item 2 of odd_indexes
+    say length of (indexes_where_number with numbers, the function more_than_ten)
+
+    let names be a list of "ada", "grace", "guido"
+    let g_indexes be (indexes_where_text with names, the function starts_with_g)
+    say length of g_indexes
+    say item 1 of g_indexes
+    say item 2 of g_indexes
+
+    let decimals be a list of 1.5, 2.5, 4.5
+    let decimal_indexes be (indexes_where_decimal with decimals, the function over_two)
+    say length of decimal_indexes
+    say item 1 of decimal_indexes
+    say item 2 of decimal_indexes
+
+    let flags be a list of no, yes, no, yes
+    let yes_indexes be (indexes_where_yesno with flags, the function same)
+    say length of yes_indexes
+    say item 1 of yes_indexes
+    say item 2 of yes_indexes
+    let empty_flags be an empty list of yesno
+    say length of (indexes_where_yesno with empty_flags, the function same)
+'''
+    proc = run_program(workdir, "bundled_std_list_indexes_where", src)
+    assert proc.stdout == "2\n2\n4\n0\n2\n2\n3\n2\n2\n3\n2\n2\n4\n0\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"
