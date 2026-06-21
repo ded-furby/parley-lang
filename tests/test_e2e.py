@@ -1058,6 +1058,38 @@ to main:
     )
 
 
+def test_bundled_std_list_compress_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let selectors be a list of yes, no, yes
+    let numbers be a list of 4, 5, 6, 7
+    let compressed_numbers be (compress_number with numbers, selectors)
+    say length of compressed_numbers
+    say item 1 of compressed_numbers
+    say item 2 of compressed_numbers
+    let short_selectors be a list of no
+    say length of (compress_number with numbers, short_selectors)
+    let words be a list of "red", "green", "blue", "gold"
+    let compressed_words be (compress_text with words, selectors)
+    say compressed_words joined with "|"
+    let prices be a list of 1.5, 2.5, 3.5, 4.5
+    let compressed_prices be (compress_decimal with prices, selectors)
+    say length of compressed_prices
+    say (is_close with item 2 of compressed_prices, 3.5, 0.0, 0.000001)
+    let flags be a list of yes, no, no, yes
+    let compressed_flags be (compress_yesno with flags, selectors)
+    say length of compressed_flags
+    say item 1 of compressed_flags
+    say item 2 of compressed_flags
+    let empty_selectors be an empty list of yesno
+    say length of (compress_text with words, empty_selectors)
+'''
+    proc = run_program(workdir, "bundled_std_list_compress", src)
+    assert proc.stdout == "2\n4\n6\n0\nred|blue\n2\nyes\n2\nyes\nno\n0\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

@@ -477,6 +477,9 @@ to main:
     say length of large_numbers
     let smaller_numbers be (reject_number with numbers, the function is_large)
     say length of smaller_numbers
+    let selectors be a list of yes, no, yes
+    let selected_numbers be (compress_number with numbers, selectors)
+    say length of selected_numbers
     let doubled_numbers be (map_number with numbers, the function doubled_number)
     say item 1 of doubled_numbers
     say (fold_number with numbers, 0, the function add_number)

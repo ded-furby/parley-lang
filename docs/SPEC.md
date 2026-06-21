@@ -253,7 +253,10 @@ parse-relevant highlights:
   empty/no-match scans. Take/drop-while helpers accept first-class predicate functions,
   split the leading matching prefix from the remaining suffix, and return
   fresh lists. Reject helpers accept first-class predicate functions and return
-  fresh lists of values where the predicate returns `no`. Count, index, and
+  fresh lists of values where the predicate returns `no`. Compress helpers
+  accept a parallel `list of yesno` selector list, scan by 1-based position
+  until either list ends, and return a fresh typed list of values whose
+  selector is yes. Count, index, and
   membership helpers work
   over number, text, decimal, and yes/no items.
   Sort helpers reorder
