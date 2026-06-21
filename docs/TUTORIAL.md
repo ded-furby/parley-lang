@@ -426,6 +426,10 @@ to main:
     say (average_number with numbers)
     say (geometric_mean_number with numbers)
     say (harmonic_mean_number with numbers)
+    let number_quartiles be (quantiles_number with numbers, 4)
+    say item 2 of number_quartiles
+    let number_inclusive_quartiles be (inclusive_quantiles_number with numbers, 4)
+    say item 2 of number_inclusive_quartiles
     say (median_number with numbers)
     say (median_low_number with numbers)
     say (median_high_number with numbers)
@@ -478,6 +482,8 @@ to main:
     say (maybe_average_number with empty_numbers)
     say (maybe_geometric_mean_number with empty_numbers)
     say (maybe_harmonic_mean_number with empty_numbers)
+    say (maybe_quantiles_number with empty_numbers, 4)
+    say (maybe_inclusive_quantiles_number with empty_numbers, 4)
     say (maybe_median_number with empty_numbers)
     say (maybe_median_low_number with empty_numbers)
     say (maybe_median_high_number with empty_numbers)
@@ -491,6 +497,10 @@ to main:
     say (average_decimal with prices)
     say (geometric_mean_decimal with prices)
     say (harmonic_mean_decimal with prices)
+    let price_quartiles be (quantiles_decimal with prices, 4)
+    say item 2 of price_quartiles
+    let price_inclusive_quartiles be (inclusive_quantiles_decimal with prices, 4)
+    say item 2 of price_inclusive_quartiles
     say (median_decimal with prices)
     say (median_low_decimal with prices)
     say (median_high_decimal with prices)
@@ -506,6 +516,8 @@ to main:
     say (sum_product_decimal with prices, quantities)
     say (maybe_geometric_mean_decimal with prices)
     say (maybe_harmonic_mean_decimal with prices)
+    say (maybe_quantiles_decimal with prices, 4)
+    say (maybe_inclusive_quantiles_decimal with prices, 4)
     say (maybe_median_decimal with prices)
     say (maybe_median_low_decimal with prices)
     say (maybe_median_high_decimal with prices)

@@ -295,6 +295,14 @@ parse-relevant highlights:
   of reciprocal values, returning `0.0` when any value is zero. Empty inputs
   and negative values fail with English text; maybe-returning variants return
   `nothing` for those invalid inputs.
+  Quantile helpers for number and decimal lists sort a fresh copy and return
+  `groups minus 1` decimal cut points. `quantiles_*` uses the exclusive rank
+  `i times (length plus 1) divided by groups`; `inclusive_quantiles_*` uses the
+  inclusive rank `1 plus i times (length minus 1) divided by groups`.
+  `groups` must be at least `1`, `groups` of `1` returns an empty list,
+  singleton inputs repeat the only value, and empty inputs fail with English
+  text. Maybe-returning variants return `nothing` for invalid groups or empty
+  inputs.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

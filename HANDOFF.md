@@ -18,12 +18,12 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-06-21)
+## Where things stand (2026-06-22)
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.119** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 235 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.120** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 236 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -446,6 +446,11 @@ Update it whenever you finish or start a work item.
   `harmonic_mean_decimal`, and maybe-returning variants, covering the common
   Python statistics mean-family workflows with catchable empty/negative input
   failures and zero-aware harmonic means.
+- **v0.3.120 list quantile helpers:** `std/list` adds
+  `quantiles_number`, `inclusive_quantiles_number`, `quantiles_decimal`,
+  `inclusive_quantiles_decimal`, and maybe-returning variants, matching
+  Python's exclusive/default and inclusive `statistics.quantiles` workflows
+  with catchable empty input and invalid group failures.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -518,7 +523,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.119).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.120).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

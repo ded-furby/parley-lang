@@ -318,6 +318,8 @@ Use `include "std/list"` for common list helpers:
 | `average_number with xs` | decimal average |
 | `geometric_mean_number with xs` | decimal geometric mean; empty lists or negative items fail |
 | `harmonic_mean_number with xs` | decimal harmonic mean; empty lists or negative items fail; zero items give `0.0` |
+| `quantiles_number with xs, groups` | decimal exclusive quantile cut points; `groups` must be at least `1`; empty lists fail |
+| `inclusive_quantiles_number with xs, groups` | decimal inclusive quantile cut points; `groups` of `1` gives an empty list; empty lists fail |
 | `median_number with xs` | decimal median of a sorted copy; empty lists fail |
 | `median_low_number with xs` / `median_high_number with xs` | lower or upper middle number from a sorted copy; empty lists fail |
 | `mode_number with xs` | most common number; ties keep the first value seen; empty lists fail |
@@ -333,6 +335,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_average_number with xs` | maybe decimal average |
 | `maybe_geometric_mean_number with xs` | maybe decimal geometric mean |
 | `maybe_harmonic_mean_number with xs` | maybe decimal harmonic mean |
+| `maybe_quantiles_number with xs, groups` / `maybe_inclusive_quantiles_number with xs, groups` | maybe decimal quantile cut points |
 | `maybe_median_number with xs` | maybe decimal median |
 | `maybe_median_low_number with xs` / `maybe_median_high_number with xs` | maybe lower or upper middle number |
 | `maybe_mode_number with xs` | maybe most common number |
@@ -397,6 +400,8 @@ Use `include "std/list"` for common list helpers:
 | `average_decimal with xs` | decimal average |
 | `geometric_mean_decimal with xs` | decimal geometric mean; empty lists or negative items fail |
 | `harmonic_mean_decimal with xs` | decimal harmonic mean; empty lists or negative items fail; zero items give `0.0` |
+| `quantiles_decimal with xs, groups` | decimal exclusive quantile cut points; `groups` must be at least `1`; empty lists fail |
+| `inclusive_quantiles_decimal with xs, groups` | decimal inclusive quantile cut points; `groups` of `1` gives an empty list; empty lists fail |
 | `median_decimal with xs` | median of a sorted copy; empty lists fail |
 | `median_low_decimal with xs` / `median_high_decimal with xs` | lower or upper middle decimal from a sorted copy; empty lists fail |
 | `mode_decimal with xs` | most common decimal; ties keep the first value seen; empty lists fail |
@@ -412,6 +417,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `maybe_geometric_mean_decimal with xs` | maybe decimal geometric mean |
 | `maybe_harmonic_mean_decimal with xs` | maybe decimal harmonic mean |
+| `maybe_quantiles_decimal with xs, groups` / `maybe_inclusive_quantiles_decimal with xs, groups` | maybe decimal quantile cut points |
 | `maybe_median_decimal with xs` | maybe decimal median |
 | `maybe_median_low_decimal with xs` / `maybe_median_high_decimal with xs` | maybe lower or upper middle decimal |
 | `maybe_mode_decimal with xs` | maybe most common decimal |

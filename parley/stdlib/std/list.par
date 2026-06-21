@@ -327,6 +327,72 @@ to harmonic_mean_number with xs as list of number giving decimal:
         set total to total plus (1.0 divided by (decimal from value))
     give back (decimal from (length of xs)) divided by total
 
+to quantiles_number with xs as list of number, groups as number giving list of decimal:
+    let out be an empty list of decimal
+    if groups is less than 1:
+        fail "quantiles_number needs groups of at least 1"
+    if length of xs is 0:
+        fail "quantiles_number needs at least one item"
+    if groups is 1:
+        give back out
+    let ordered be sorted xs
+    let count be length of ordered
+    let last_group be groups minus 1
+    if count is 1:
+        let only be decimal from item 1 of ordered
+        for each i from 1 to last_group:
+            add only to out
+        give back out
+    for each i from 1 to last_group:
+        let rank be ((decimal from i) times (decimal from (count plus 1))) divided by (decimal from groups)
+        if rank is less than 1.0:
+            let first be decimal from item 1 of ordered
+            let second be decimal from item 2 of ordered
+            let interpolated be first plus (rank minus 1.0) times (second minus first)
+            add interpolated to out
+        otherwise if rank is more than (decimal from count):
+            let previous be decimal from item (count minus 1) of ordered
+            let last_value be decimal from item (count) of ordered
+            let interpolated be last_value plus (rank minus (decimal from count)) times (last_value minus previous)
+            add interpolated to out
+        otherwise:
+            let lower_index be floor of rank
+            if lower_index is at least count:
+                let endpoint be decimal from item (count) of ordered
+                add endpoint to out
+            otherwise:
+                let left be decimal from item lower_index of ordered
+                let right be decimal from item (lower_index plus 1) of ordered
+                let fraction be rank minus (decimal from lower_index)
+                let interpolated be left plus (right minus left) times fraction
+                add interpolated to out
+    give back out
+
+to inclusive_quantiles_number with xs as list of number, groups as number giving list of decimal:
+    let out be an empty list of decimal
+    if groups is less than 1:
+        fail "inclusive_quantiles_number needs groups of at least 1"
+    if length of xs is 0:
+        fail "inclusive_quantiles_number needs at least one item"
+    if groups is 1:
+        give back out
+    let ordered be sorted xs
+    let count be length of ordered
+    let last_group be groups minus 1
+    for each i from 1 to last_group:
+        let rank be 1.0 plus ((decimal from i) times (decimal from (count minus 1))) divided by (decimal from groups)
+        let lower_index be floor of rank
+        if lower_index is at least count:
+            let endpoint be decimal from item (count) of ordered
+            add endpoint to out
+        otherwise:
+            let left be decimal from item lower_index of ordered
+            let right be decimal from item (lower_index plus 1) of ordered
+            let fraction be rank minus (decimal from lower_index)
+            let interpolated be left plus (right minus left) times fraction
+            add interpolated to out
+    give back out
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -428,6 +494,22 @@ to maybe_harmonic_mean_number with xs as list of number giving maybe decimal:
         if value is less than 0:
             give back nothing
     let value be (harmonic_mean_number with xs)
+    give back some value
+
+to maybe_quantiles_number with xs as list of number, groups as number giving maybe list of decimal:
+    if groups is less than 1:
+        give back nothing
+    if length of xs is 0:
+        give back nothing
+    let value be (quantiles_number with xs, groups)
+    give back some value
+
+to maybe_inclusive_quantiles_number with xs as list of number, groups as number giving maybe list of decimal:
+    if groups is less than 1:
+        give back nothing
+    if length of xs is 0:
+        give back nothing
+    let value be (inclusive_quantiles_number with xs, groups)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -1011,6 +1093,72 @@ to harmonic_mean_decimal with xs as list of decimal giving decimal:
         set total to total plus (1.0 divided by value)
     give back (decimal from (length of xs)) divided by total
 
+to quantiles_decimal with xs as list of decimal, groups as number giving list of decimal:
+    let out be an empty list of decimal
+    if groups is less than 1:
+        fail "quantiles_decimal needs groups of at least 1"
+    if length of xs is 0:
+        fail "quantiles_decimal needs at least one item"
+    if groups is 1:
+        give back out
+    let ordered be sorted xs
+    let count be length of ordered
+    let last_group be groups minus 1
+    if count is 1:
+        let only be item 1 of ordered
+        for each i from 1 to last_group:
+            add only to out
+        give back out
+    for each i from 1 to last_group:
+        let rank be ((decimal from i) times (decimal from (count plus 1))) divided by (decimal from groups)
+        if rank is less than 1.0:
+            let first be item 1 of ordered
+            let second be item 2 of ordered
+            let interpolated be first plus (rank minus 1.0) times (second minus first)
+            add interpolated to out
+        otherwise if rank is more than (decimal from count):
+            let previous be item (count minus 1) of ordered
+            let last_value be item (count) of ordered
+            let interpolated be last_value plus (rank minus (decimal from count)) times (last_value minus previous)
+            add interpolated to out
+        otherwise:
+            let lower_index be floor of rank
+            if lower_index is at least count:
+                let endpoint be item (count) of ordered
+                add endpoint to out
+            otherwise:
+                let left be item lower_index of ordered
+                let right be item (lower_index plus 1) of ordered
+                let fraction be rank minus (decimal from lower_index)
+                let interpolated be left plus (right minus left) times fraction
+                add interpolated to out
+    give back out
+
+to inclusive_quantiles_decimal with xs as list of decimal, groups as number giving list of decimal:
+    let out be an empty list of decimal
+    if groups is less than 1:
+        fail "inclusive_quantiles_decimal needs groups of at least 1"
+    if length of xs is 0:
+        fail "inclusive_quantiles_decimal needs at least one item"
+    if groups is 1:
+        give back out
+    let ordered be sorted xs
+    let count be length of ordered
+    let last_group be groups minus 1
+    for each i from 1 to last_group:
+        let rank be 1.0 plus ((decimal from i) times (decimal from (count minus 1))) divided by (decimal from groups)
+        let lower_index be floor of rank
+        if lower_index is at least count:
+            let endpoint be item (count) of ordered
+            add endpoint to out
+        otherwise:
+            let left be item lower_index of ordered
+            let right be item (lower_index plus 1) of ordered
+            let fraction be rank minus (decimal from lower_index)
+            let interpolated be left plus (right minus left) times fraction
+            add interpolated to out
+    give back out
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -1114,6 +1262,22 @@ to maybe_harmonic_mean_decimal with xs as list of decimal giving maybe decimal:
         if value is less than 0.0:
             give back nothing
     let value be (harmonic_mean_decimal with xs)
+    give back some value
+
+to maybe_quantiles_decimal with xs as list of decimal, groups as number giving maybe list of decimal:
+    if groups is less than 1:
+        give back nothing
+    if length of xs is 0:
+        give back nothing
+    let value be (quantiles_decimal with xs, groups)
+    give back some value
+
+to maybe_inclusive_quantiles_decimal with xs as list of decimal, groups as number giving maybe list of decimal:
+    if groups is less than 1:
+        give back nothing
+    if length of xs is 0:
+        give back nothing
+    let value be (inclusive_quantiles_decimal with xs, groups)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:

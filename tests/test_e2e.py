@@ -1345,6 +1345,97 @@ to main:
     )
 
 
+def test_bundled_std_list_quantile_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4
+    let number_exclusive be (quantiles_number with numbers, 4)
+    say length of number_exclusive
+    say (is_close with item 1 of number_exclusive, 1.25, 0.0, 0.000001)
+    say (is_close with item 2 of number_exclusive, 2.5, 0.0, 0.000001)
+    say (is_close with item 3 of number_exclusive, 3.75, 0.0, 0.000001)
+    let number_inclusive be (inclusive_quantiles_number with numbers, 4)
+    say length of number_inclusive
+    say (is_close with item 1 of number_inclusive, 1.75, 0.0, 0.000001)
+    say (is_close with item 2 of number_inclusive, 2.5, 0.0, 0.000001)
+    say (is_close with item 3 of number_inclusive, 3.25, 0.0, 0.000001)
+    let maybe_number_quantiles be (maybe_quantiles_number with numbers, 4)
+    if maybe_number_quantiles is not nothing:
+        let unwrapped_number_quantiles be value of maybe_number_quantiles
+        say (is_close with item 2 of unwrapped_number_quantiles, 2.5, 0.0, 0.000001)
+    let maybe_number_inclusive be (maybe_inclusive_quantiles_number with numbers, 4)
+    if maybe_number_inclusive is not nothing:
+        let unwrapped_number_inclusive be value of maybe_number_inclusive
+        say (is_close with item 2 of unwrapped_number_inclusive, 2.5, 0.0, 0.000001)
+    let one_number be a list of 7
+    let singleton_number_quantiles be (quantiles_number with one_number, 4)
+    say length of singleton_number_quantiles
+    say item 1 of singleton_number_quantiles
+    say item 3 of singleton_number_quantiles
+    say length of (quantiles_number with numbers, 1)
+    say (maybe_quantiles_number with numbers, 0)
+    let empty_numbers be an empty list of number
+    say (maybe_quantiles_number with empty_numbers, 4)
+    attempt:
+        say length of (quantiles_number with numbers, 0)
+    if it failed:
+        say "number quantiles groups error: {the error}"
+    attempt:
+        say length of (inclusive_quantiles_number with empty_numbers, 4)
+    if it failed:
+        say "number inclusive empty error: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5, 4.5
+    let decimal_exclusive be (quantiles_decimal with decimals, 4)
+    say length of decimal_exclusive
+    say (is_close with item 1 of decimal_exclusive, 1.75, 0.0, 0.000001)
+    say (is_close with item 2 of decimal_exclusive, 3.0, 0.0, 0.000001)
+    say (is_close with item 3 of decimal_exclusive, 4.25, 0.0, 0.000001)
+    let decimal_inclusive be (inclusive_quantiles_decimal with decimals, 4)
+    say length of decimal_inclusive
+    say (is_close with item 1 of decimal_inclusive, 2.25, 0.0, 0.000001)
+    say (is_close with item 2 of decimal_inclusive, 3.0, 0.0, 0.000001)
+    say (is_close with item 3 of decimal_inclusive, 3.75, 0.0, 0.000001)
+    let maybe_decimal_quantiles be (maybe_quantiles_decimal with decimals, 4)
+    if maybe_decimal_quantiles is not nothing:
+        let unwrapped_decimal_quantiles be value of maybe_decimal_quantiles
+        say (is_close with item 2 of unwrapped_decimal_quantiles, 3.0, 0.0, 0.000001)
+    let maybe_decimal_inclusive be (maybe_inclusive_quantiles_decimal with decimals, 4)
+    if maybe_decimal_inclusive is not nothing:
+        let unwrapped_decimal_inclusive be value of maybe_decimal_inclusive
+        say (is_close with item 2 of unwrapped_decimal_inclusive, 3.0, 0.0, 0.000001)
+    let one_decimal be a list of 2.5
+    let singleton_decimal_quantiles be (inclusive_quantiles_decimal with one_decimal, 4)
+    say length of singleton_decimal_quantiles
+    say item 1 of singleton_decimal_quantiles
+    say item 3 of singleton_decimal_quantiles
+    say length of (inclusive_quantiles_decimal with decimals, 1)
+    say (maybe_inclusive_quantiles_decimal with decimals, 0)
+    let empty_decimals be an empty list of decimal
+    say (maybe_inclusive_quantiles_decimal with empty_decimals, 4)
+    attempt:
+        say length of (quantiles_decimal with decimals, 0)
+    if it failed:
+        say "decimal quantiles groups error: {the error}"
+    attempt:
+        say length of (inclusive_quantiles_decimal with empty_decimals, 4)
+    if it failed:
+        say "decimal inclusive empty error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_quantiles", src)
+    assert proc.stdout == (
+        "3\nyes\nyes\nyes\n3\nyes\nyes\nyes\nyes\nyes\n"
+        "3\n7\n7\n0\nnothing\nnothing\n"
+        "number quantiles groups error: quantiles_number needs groups of at least 1\n"
+        "number inclusive empty error: inclusive_quantiles_number needs at least one item\n"
+        "3\nyes\nyes\nyes\n3\nyes\nyes\nyes\nyes\nyes\n"
+        "3\n2.5\n2.5\n0\nnothing\nnothing\n"
+        "decimal quantiles groups error: quantiles_decimal needs groups of at least 1\n"
+        "decimal inclusive empty error: inclusive_quantiles_decimal needs at least one item\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 
