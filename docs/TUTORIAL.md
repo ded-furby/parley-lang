@@ -381,6 +381,10 @@ to main:
     say (without_suffix with "notes.par", ".par")
     say (has_prefix with "parley-lang", "parley-")
     say (has_suffix with "notes.par", ".par")
+    let allowed_prefixes be a list of "parley-", "docs-"
+    say (has_any_prefix with "parley-lang", allowed_prefixes)
+    let allowed_suffixes be a list of ".par", ".md"
+    say (has_any_suffix with "notes.par", allowed_suffixes)
     say (is_digit with "12345")
     say (is_alpha with "Parley")
     say (is_alphanumeric with "Parley3")

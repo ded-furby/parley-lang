@@ -136,7 +136,7 @@ setup checks with `parley doctor` ·
 division, powers, roots, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
 `item i of text`, safe character lookup and slicing, `uppercase of`,
-`contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
+`contains`, first and last search positions, line/word counts, raw, universal, and non-empty line extraction, whitespace word extraction, tab expansion, left and right partitioning, bounded left/right splitting, capitalization, title casing and title-case checks, ASCII, printable, and whitespace checks, ASCII digit/letter/case checks, reversal, case swapping, prefix/suffix checks and removal, any-prefix/any-suffix checks, one-sided trimming, left/right/center/zero padding, …) · number/text/decimal list
 helpers with safe maybe first/last/index/pop, copying, function-value filtering, mapping, and predicate any/all, clamped slicing, membership predicates, explicit sum/product helpers, extend/clear/insert/pop/remove/sort/reverse mutation, and aggregate variants, plus yes/no list edge helpers, predicates, value-parameter count/index helpers, copying, filtering, mapping, predicate any/all, sorting, and reversal · text-key and number-key map helpers for number, text, decimal, and yes/no values, including key membership, value membership, maybe lookup, fallback, fallback insertion, counted increment, copying, update merging, take-and-remove, take-with-fallback, and clear variants
 
 Learn it in 15 minutes: [docs/TUTORIAL.md](docs/TUTORIAL.md). Every
@@ -275,6 +275,7 @@ the plan:
 - [x] higher-order filter helpers for bundled lists — v0.3.91
 - [x] higher-order map helpers for bundled lists — v0.3.92
 - [x] higher-order any/all predicate helpers for bundled lists — v0.3.93
+- [x] any-prefix and any-suffix helpers for bundled text — v0.3.94
 - [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
       optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
 
@@ -283,7 +284,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 210 tests; e2e compiles real binaries (needs cargo)
+pytest            # 211 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

@@ -1311,6 +1311,30 @@ to main:
     assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nyes\nno\nyes\nno\n"
 
 
+def test_bundled_std_text_any_edge_helpers_run(workdir):
+    src = '''include "std/text"
+
+to main:
+    let prefixes be a list of "http://", "https://"
+    say (has_any_prefix with "https://example.com", prefixes)
+    say (has_any_prefix with "ftp://example.com", prefixes)
+    let empty_prefixes be an empty list of text
+    say (has_any_prefix with "anything", empty_prefixes)
+    let blank_prefix be a list of ""
+    say (has_any_prefix with "anything", blank_prefix)
+
+    let suffixes be a list of ".par", ".md"
+    say (has_any_suffix with "notes.par", suffixes)
+    say (has_any_suffix with "archive.zip", suffixes)
+    let empty_suffixes be an empty list of text
+    say (has_any_suffix with "anything", empty_suffixes)
+    let blank_suffix be a list of ""
+    say (has_any_suffix with "anything", blank_suffix)
+'''
+    proc = run_program(workdir, "bundled_std_text_any_edge", src)
+    assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nno\nyes\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

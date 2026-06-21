@@ -155,7 +155,10 @@ parse-relevant highlights:
   `without_prefix` and `without_suffix` return the original text unchanged
   when the requested edge text is empty or absent.
   `has_prefix` and `has_suffix` return yes for matching text edges and also
-  for empty prefix or suffix checks.
+  for empty prefix or suffix checks. `has_any_prefix` and `has_any_suffix`
+  scan a list of candidate edges, return yes on the first match, return no
+  for an empty candidate list, and keep the same empty-edge match behavior as
+  the single-edge helpers.
   `lines_of` returns an empty list for empty text, otherwise the raw
   newline-separated lines including blank middle lines and trailing empty
   lines.

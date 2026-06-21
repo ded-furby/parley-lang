@@ -242,6 +242,12 @@ to has_prefix with t as text, prefix as text giving yesno:
         give back yes
     give back t starts with prefix
 
+to has_any_prefix with t as text, prefixes as list of text giving yesno:
+    for each prefix in prefixes:
+        if (has_prefix with t, prefix):
+            give back yes
+    give back no
+
 to without_suffix with t as text, suffix as text giving text:
     if suffix is "":
         give back t
@@ -253,6 +259,12 @@ to has_suffix with t as text, suffix as text giving yesno:
     if suffix is "":
         give back yes
     give back t ends with suffix
+
+to has_any_suffix with t as text, suffixes as list of text giving yesno:
+    for each suffix in suffixes:
+        if (has_suffix with t, suffix):
+            give back yes
+    give back no
 
 to is_whitespace with c as text giving yesno:
     if c is " ":
