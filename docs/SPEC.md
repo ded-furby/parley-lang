@@ -220,8 +220,10 @@ parse-relevant highlights:
   a first-class same-type transform function, return a fresh list, and
   preserve item order. Predicate any/all helpers accept first-class predicate
   functions, short-circuit over list items, and return no/yes respectively for
-  empty lists. Count, index, and membership helpers work over number, text,
-  decimal, and yes/no items.
+  empty lists. Maybe-find helpers accept first-class predicate functions,
+  return `some value` for the first matching item, and return `nothing` for
+  empty lists or no-match scans. Count, index, and membership helpers work
+  over number, text, decimal, and yes/no items.
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting
   placing `no` before `yes`. Reverse helpers reorder number, text, decimal,
