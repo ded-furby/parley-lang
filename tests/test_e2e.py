@@ -491,6 +491,11 @@ to main:
     say (is_alphanumeric with "Parley3")
     say (is_alphanumeric with "Parley-3")
     say (is_alphanumeric with "")
+    say (is_identifier with "parley_3")
+    say (is_identifier with "_hidden")
+    say (is_identifier with "3parley")
+    say (is_identifier with "parley-name")
+    say (is_identifier with "")
     say (is_ascii with "Parley 123!")
     say (is_ascii with "\\tline\\n")
     say (is_ascii with "café")
@@ -556,7 +561,7 @@ to main:
         "10\n10.5\n1.5\nyes\nno\n25\n1\n120\nfactorial error: factorial needs a non-negative number\n6\n6\n0\n24\n24\n0\n10\n0\ncombination error: combination_count needs non-negative numbers\n20\n1\n0\npermutation error: permutation_count needs non-negative numbers\n0\n3\n4\ninteger square root error: integer_square_root needs a non-negative number\nyes\nno\nno\nyes\nhahaha\n0\n3\n2\n3\n"
         "3\none|two|three\n0\n4\n4\none|two|three|four\n0\n2\none|two\n4\none||  two|\n3\none|two|three\n2\none|\n0\n0\n0\né\nc\nnothing\nnothing\n"
         "rèm\ncr\nme\n\n\nyelraP\nrialcé\n\n3\nkey|=|value=tail\nno match||\né|c|lair\nkey=value|=|tail\n||no match\né|c|lair\none cat two fish\nbaa\nbb\nabc\nabc\ne-e-é\n3\na|b|c,d\na|b|c\nabc\nabc\na,b\né|clair::fin\n3\na,b|c|d\na|b|c\nabc\nabc\na,b\né::clair|fin\n10\n3\nnothing\n4\n2\n4\n0\n1\n2\n10\n0\n4\n2\nlang\nparley-lang\nparley-lang\nnotes\nnotes.par\nnotes.par\nyes\nno\nyes\nyes\nno\nyes\n"
-        "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
+        "yes\nyes\nno\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\nyes\nyes\nno\nno\nno\nyes\nyes\nno\nyes\nyes\nyes\nyes\nno\nyes\nyes\nyes\nno\nno\nyes\nno\nno\nyes\nno\nno\npARLEY 3\n\nParley Language\nMixed   Case\n\nyes\nno\nno\nno\nParley\nMixed case\nX\n\nleft  \n  right\nboth\nboth\n\n\n"
         "007\ngo...\nwide\nstay\nx\nxababab\n00042\n-0042\n+07\nwide\n000\na   b\nab  c\n    start\nab\né   c\n.go..\n..go..\nwide\nx\nabxab\n")
 
 

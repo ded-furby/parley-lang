@@ -181,11 +181,13 @@ parse-relevant highlights:
   characters.
   `capitalized` returns empty text unchanged, uppercases the first UTF-8
   character, and lowercases the rest of the text.
-  `is_digit`, `is_alpha`, `is_alphanumeric`, `is_lowercase`, and
+  `is_digit`, `is_alpha`, `is_alphanumeric`, `is_identifier`, `is_lowercase`, and
   `is_uppercase` are non-empty whole-text predicates over ASCII digits and
-  letters. Lowercase and uppercase predicates accept only letters of that
-  case. `is_ascii` accepts empty text, tab, newline, carriage return, and
-  printable ASCII characters from space through `~`.
+  letters. Identifier checks require a first ASCII letter or underscore and
+  then ASCII letters, digits, or underscores. Lowercase and uppercase
+  predicates accept only letters of that case. `is_ascii` accepts empty text,
+  tab, newline, carriage return, and printable ASCII characters from space
+  through `~`.
   `is_printable` accepts empty text, spaces, ordinary printable text, and
   non-ASCII printable characters, and rejects tab, newline, and carriage
   return controls.

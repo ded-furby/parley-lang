@@ -267,6 +267,7 @@ Use `include "std/text"` for small text helpers:
 | `is_digit with t` | yes when non-empty `t` contains only ASCII digits |
 | `is_alpha with t` | yes when non-empty `t` contains only ASCII letters |
 | `is_alphanumeric with t` | yes when non-empty `t` contains only ASCII letters and digits |
+| `is_identifier with t` | yes when non-empty `t` is an ASCII/Parley identifier-like name |
 | `is_ascii with t` | yes when every character is tab, newline, carriage return, or printable ASCII; empty text gives yes |
 | `is_printable with t` | yes when text has no tab, newline, or carriage return controls; empty text gives yes |
 | `is_lowercase with t` | yes when non-empty `t` contains only ASCII lowercase letters |

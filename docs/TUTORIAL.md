@@ -394,6 +394,7 @@ to main:
     say (is_digit with "12345")
     say (is_alpha with "Parley")
     say (is_alphanumeric with "Parley3")
+    say (is_identifier with "parley_3")
     say (is_ascii with "Parley 123!")
     say (is_printable with "Parley 123!")
     say (is_space with " \t\n")
