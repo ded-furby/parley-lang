@@ -1269,6 +1269,57 @@ to main:
     assert proc.stdout == "3\n3\n5\n0\n0\n3\n3\n5\n0\n5\n1\n0\n0\na|b\nc|d\n2\nyes\n2\nyes\n3\nno\n2\nyes\n"
 
 
+def test_bundled_std_list_take_last_drop_last_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4, 5
+    let last_numbers be (take_last_number with numbers, 2)
+    say length of last_numbers
+    say item 1 of last_numbers
+    say item 2 of last_numbers
+    let all_numbers be (take_last_number with numbers, 99)
+    say length of all_numbers
+    say item 1 of all_numbers
+    say length of (take_last_number with numbers, 0)
+    let negative_count be 0 minus 3
+    say length of (take_last_number with numbers, negative_count)
+    let before_last_numbers be (drop_last_number with numbers, 2)
+    say length of before_last_numbers
+    say item 3 of before_last_numbers
+    say length of (drop_last_number with numbers, 99)
+    let copied_numbers be (drop_last_number with numbers, 0)
+    say length of copied_numbers
+    say item 5 of copied_numbers
+    let copied_negative_numbers be (drop_last_number with numbers, negative_count)
+    say length of copied_negative_numbers
+    say item 1 of copied_negative_numbers
+    let empty_numbers be an empty list of number
+    say length of (take_last_number with empty_numbers, 2)
+    say length of (drop_last_number with empty_numbers, 2)
+    let words be a list of "a", "b", "c", "d"
+    say (take_last_text with words, 2) joined with "|"
+    say (drop_last_text with words, 2) joined with "|"
+    let prices be a list of 1.25, 2.5, 3.75
+    let last_prices be (take_last_decimal with prices, 2)
+    say length of last_prices
+    say (is_close with item 1 of last_prices, 2.5, 0.0, 0.000001)
+    let before_last_prices be (drop_last_decimal with prices, 1)
+    say length of before_last_prices
+    say (is_close with item 2 of before_last_prices, 2.5, 0.0, 0.000001)
+    let flags be a list of yes, no, no, yes
+    let last_flags be (take_last_yesno with flags, 2)
+    say length of last_flags
+    say item 1 of last_flags
+    let before_last_flags be (drop_last_yesno with flags, 2)
+    say length of before_last_flags
+    say item 2 of before_last_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_take_last_drop_last", src)
+    assert proc.stdout == "2\n4\n5\n5\n1\n0\n0\n3\n3\n0\n5\n5\n5\n1\n0\n0\nc|d\na|b\n2\nyes\n2\nyes\n2\nno\n2\nno\n"
+
+
 def test_bundled_std_list_enumerate_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

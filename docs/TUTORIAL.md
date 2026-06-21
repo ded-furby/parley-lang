@@ -476,6 +476,10 @@ to main:
     say length of first_two_numbers
     let later_numbers be (drop_number with numbers, 2)
     say item 1 of later_numbers
+    let last_two_numbers be (take_last_number with numbers, 2)
+    say item 1 of last_two_numbers
+    let without_last_number be (drop_last_number with numbers, 1)
+    say length of without_last_number
     let indexed_numbers be (enumerate_number with numbers)
     say item 1 of indexed_numbers
     let shifted_numbers be (enumerate_number_from with numbers, 10)

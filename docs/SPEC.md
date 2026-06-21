@@ -230,9 +230,12 @@ parse-relevant highlights:
   non-positive steps. Count-based take helpers return the first `count` items,
   with non-positive counts returning an empty list; count-based drop helpers
   return everything after the first `count` items, with non-positive counts
-  returning a fresh copy. Enumerate helpers return fresh number-key maps from
-  1-based indexes, or from a caller-provided starting key in the `_from`
-  variants, to the corresponding typed list values. Copy helpers return a
+  returning a fresh copy. Tail take helpers return the last `count` items,
+  with non-positive counts returning an empty list; tail drop helpers return
+  everything before the last `count` items, with non-positive counts returning
+  a fresh copy. Enumerate helpers return fresh number-key maps from 1-based
+  indexes, or from a caller-provided starting key in the `_from` variants, to
+  the corresponding typed list values. Copy helpers return a
   fresh number, text, decimal, or yes/no list with the same items. Yes/no edge
   helpers mirror the number, text, and decimal first/last helpers, including
   maybe-returning empty-list variants. Extend, clear, insert, pop, remove,
