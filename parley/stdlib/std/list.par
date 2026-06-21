@@ -295,6 +295,40 @@ to sample_standard_deviation_number with xs as list of number giving decimal:
     let variance be (sample_variance_number with xs)
     give back square root of variance
 
+to covariance_number with xs as list of number, ys as list of number giving decimal:
+    if length of xs is not length of ys:
+        fail "covariance_number needs lists with the same length"
+    if length of xs is less than 2:
+        fail "covariance_number needs at least two items"
+    let x_mean be (average_number with xs)
+    let y_mean be (average_number with ys)
+    let total be 0.0
+    for each i from 1 to length of xs:
+        let x_diff be (decimal from item i of xs) minus x_mean
+        let y_diff be (decimal from item i of ys) minus y_mean
+        set total to total plus x_diff times y_diff
+    give back total divided by (decimal from ((length of xs) minus 1))
+
+to correlation_number with xs as list of number, ys as list of number giving decimal:
+    if length of xs is not length of ys:
+        fail "correlation_number needs lists with the same length"
+    if length of xs is less than 2:
+        fail "correlation_number needs at least two items"
+    let x_mean be (average_number with xs)
+    let y_mean be (average_number with ys)
+    let cross_total be 0.0
+    let x_total be 0.0
+    let y_total be 0.0
+    for each i from 1 to length of xs:
+        let x_diff be (decimal from item i of xs) minus x_mean
+        let y_diff be (decimal from item i of ys) minus y_mean
+        set cross_total to cross_total plus x_diff times y_diff
+        set x_total to x_total plus x_diff times x_diff
+        set y_total to y_total plus y_diff times y_diff
+    if x_total is 0.0 or y_total is 0.0:
+        fail "correlation_number needs non-constant inputs"
+    give back cross_total divided by (square root of (x_total times y_total))
+
 to geometric_mean_number with xs as list of number giving decimal:
     if length of xs is 0:
         fail "geometric_mean_number needs at least one item"
@@ -476,6 +510,26 @@ to maybe_sample_standard_deviation_number with xs as list of number giving maybe
     if length of xs is less than 2:
         give back nothing
     let value be (sample_standard_deviation_number with xs)
+    give back some value
+
+to maybe_covariance_number with xs as list of number, ys as list of number giving maybe decimal:
+    if length of xs is not length of ys:
+        give back nothing
+    if length of xs is less than 2:
+        give back nothing
+    let value be (covariance_number with xs, ys)
+    give back some value
+
+to maybe_correlation_number with xs as list of number, ys as list of number giving maybe decimal:
+    if length of xs is not length of ys:
+        give back nothing
+    if length of xs is less than 2:
+        give back nothing
+    if (sample_variance_number with xs) is 0.0:
+        give back nothing
+    if (sample_variance_number with ys) is 0.0:
+        give back nothing
+    let value be (correlation_number with xs, ys)
     give back some value
 
 to maybe_geometric_mean_number with xs as list of number giving maybe decimal:
@@ -1061,6 +1115,40 @@ to sample_standard_deviation_decimal with xs as list of decimal giving decimal:
     let variance be (sample_variance_decimal with xs)
     give back square root of variance
 
+to covariance_decimal with xs as list of decimal, ys as list of decimal giving decimal:
+    if length of xs is not length of ys:
+        fail "covariance_decimal needs lists with the same length"
+    if length of xs is less than 2:
+        fail "covariance_decimal needs at least two items"
+    let x_mean be (average_decimal with xs)
+    let y_mean be (average_decimal with ys)
+    let total be 0.0
+    for each i from 1 to length of xs:
+        let x_diff be (item i of xs) minus x_mean
+        let y_diff be (item i of ys) minus y_mean
+        set total to total plus x_diff times y_diff
+    give back total divided by (decimal from ((length of xs) minus 1))
+
+to correlation_decimal with xs as list of decimal, ys as list of decimal giving decimal:
+    if length of xs is not length of ys:
+        fail "correlation_decimal needs lists with the same length"
+    if length of xs is less than 2:
+        fail "correlation_decimal needs at least two items"
+    let x_mean be (average_decimal with xs)
+    let y_mean be (average_decimal with ys)
+    let cross_total be 0.0
+    let x_total be 0.0
+    let y_total be 0.0
+    for each i from 1 to length of xs:
+        let x_diff be (item i of xs) minus x_mean
+        let y_diff be (item i of ys) minus y_mean
+        set cross_total to cross_total plus x_diff times y_diff
+        set x_total to x_total plus x_diff times x_diff
+        set y_total to y_total plus y_diff times y_diff
+    if x_total is 0.0 or y_total is 0.0:
+        fail "correlation_decimal needs non-constant inputs"
+    give back cross_total divided by (square root of (x_total times y_total))
+
 to geometric_mean_decimal with xs as list of decimal giving decimal:
     if length of xs is 0:
         fail "geometric_mean_decimal needs at least one item"
@@ -1244,6 +1332,26 @@ to maybe_sample_standard_deviation_decimal with xs as list of decimal giving may
     if length of xs is less than 2:
         give back nothing
     let value be (sample_standard_deviation_decimal with xs)
+    give back some value
+
+to maybe_covariance_decimal with xs as list of decimal, ys as list of decimal giving maybe decimal:
+    if length of xs is not length of ys:
+        give back nothing
+    if length of xs is less than 2:
+        give back nothing
+    let value be (covariance_decimal with xs, ys)
+    give back some value
+
+to maybe_correlation_decimal with xs as list of decimal, ys as list of decimal giving maybe decimal:
+    if length of xs is not length of ys:
+        give back nothing
+    if length of xs is less than 2:
+        give back nothing
+    if (sample_variance_decimal with xs) is 0.0:
+        give back nothing
+    if (sample_variance_decimal with ys) is 0.0:
+        give back nothing
+    let value be (correlation_decimal with xs, ys)
     give back some value
 
 to maybe_geometric_mean_decimal with xs as list of decimal giving maybe decimal:

@@ -439,6 +439,9 @@ to main:
     say (population_standard_deviation_number with numbers)
     say (sample_variance_number with numbers)
     say (sample_standard_deviation_number with numbers)
+    let comparison_numbers be a list of 2, 4, 6, 8
+    say (covariance_number with numbers, comparison_numbers)
+    say (correlation_number with numbers, comparison_numbers)
     say (sum_number with numbers)
     say (product_number with numbers)
     let weights be a list of 1, 2, 3, 4
@@ -493,6 +496,10 @@ to main:
     let one_number be a list of 42
     say (maybe_sample_variance_number with one_number)
     say (maybe_sample_standard_deviation_number with one_number)
+    say (maybe_covariance_number with one_number, one_number)
+    let constant_numbers be a list of 4, 4, 4
+    let spread_numbers be a list of 1, 2, 3
+    say (maybe_correlation_number with constant_numbers, spread_numbers)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
     say (geometric_mean_decimal with prices)
@@ -510,6 +517,9 @@ to main:
     say (population_standard_deviation_decimal with prices)
     say (sample_variance_decimal with prices)
     say (sample_standard_deviation_decimal with prices)
+    let expected_prices be a list of 2.0, 3.0, 4.0
+    say (covariance_decimal with prices, expected_prices)
+    say (correlation_decimal with prices, expected_prices)
     say (sum_decimal with prices)
     say (product_decimal with prices)
     let quantities be a list of 2.0, 4.0, 1.0
@@ -528,6 +538,10 @@ to main:
     let one_decimal be a list of 2.5
     say (maybe_sample_variance_decimal with one_decimal)
     say (maybe_sample_standard_deviation_decimal with one_decimal)
+    say (maybe_covariance_decimal with one_decimal, one_decimal)
+    let constant_decimals be a list of 4.0, 4.0, 4.0
+    let spread_decimals be a list of 1.0, 2.0, 3.0
+    say (maybe_correlation_decimal with constant_decimals, spread_decimals)
     say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes

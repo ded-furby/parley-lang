@@ -1250,6 +1250,72 @@ to main:
     )
 
 
+def test_bundled_std_list_covariance_correlation_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4
+    let doubled be a list of 2, 4, 6, 8
+    let alternating be a list of 1, 2, 1, 2
+    say (is_close with (covariance_number with numbers, doubled), 3.3333333333333335, 0.0, 0.000001)
+    say (is_close with (correlation_number with numbers, doubled), 1.0, 0.0, 0.000001)
+    say (is_close with (covariance_number with numbers, alternating), 0.3333333333333333, 0.0, 0.000001)
+    say (is_close with (correlation_number with numbers, alternating), 0.4472135954999579, 0.0, 0.000001)
+    let maybe_number_covariance be (maybe_covariance_number with numbers, doubled)
+    if maybe_number_covariance is not nothing:
+        say (is_close with value of maybe_number_covariance, 3.3333333333333335, 0.0, 0.000001)
+    let maybe_number_correlation be (maybe_correlation_number with numbers, doubled)
+    if maybe_number_correlation is not nothing:
+        say (is_close with value of maybe_number_correlation, 1.0, 0.0, 0.000001)
+    let one_number be a list of 1
+    say (maybe_covariance_number with one_number, one_number)
+    let constants be a list of 5, 5, 5
+    let spread be a list of 1, 2, 3
+    say (maybe_correlation_number with constants, spread)
+    attempt:
+        say (covariance_number with numbers, one_number)
+    if it failed:
+        say "number covariance length error: {the error}"
+    attempt:
+        say (correlation_number with constants, spread)
+    if it failed:
+        say "number correlation constant error: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5, 4.5
+    let decimal_targets be a list of 2.0, 3.0, 5.0, 7.0
+    say (is_close with (covariance_decimal with decimals, decimal_targets), 2.8333333333333335, 0.0, 0.000001)
+    say (is_close with (correlation_decimal with decimals, decimal_targets), 0.9897782665572894, 0.0, 0.000001)
+    let maybe_decimal_covariance be (maybe_covariance_decimal with decimals, decimal_targets)
+    if maybe_decimal_covariance is not nothing:
+        say (is_close with value of maybe_decimal_covariance, 2.8333333333333335, 0.0, 0.000001)
+    let maybe_decimal_correlation be (maybe_correlation_decimal with decimals, decimal_targets)
+    if maybe_decimal_correlation is not nothing:
+        say (is_close with value of maybe_decimal_correlation, 0.9897782665572894, 0.0, 0.000001)
+    let one_decimal be a list of 1.5
+    say (maybe_covariance_decimal with one_decimal, one_decimal)
+    let constant_decimals be a list of 4.0, 4.0, 4.0
+    let varied_decimals be a list of 1.0, 2.0, 3.0
+    say (maybe_correlation_decimal with constant_decimals, varied_decimals)
+    attempt:
+        say (covariance_decimal with decimals, one_decimal)
+    if it failed:
+        say "decimal covariance length error: {the error}"
+    attempt:
+        say (correlation_decimal with constant_decimals, varied_decimals)
+    if it failed:
+        say "decimal correlation constant error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_covariance_correlation", src)
+    assert proc.stdout == (
+        "yes\nyes\nyes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "number covariance length error: covariance_number needs lists with the same length\n"
+        "number correlation constant error: correlation_number needs non-constant inputs\n"
+        "yes\nyes\nyes\nyes\nnothing\nnothing\n"
+        "decimal covariance length error: covariance_decimal needs lists with the same length\n"
+        "decimal correlation constant error: correlation_decimal needs non-constant inputs\n"
+    )
+
+
 def test_bundled_std_list_mean_family_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

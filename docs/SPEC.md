@@ -303,6 +303,13 @@ parse-relevant highlights:
   singleton inputs repeat the only value, and empty inputs fail with English
   text. Maybe-returning variants return `nothing` for invalid groups or empty
   inputs.
+  Covariance helpers for number and decimal list pairs return sample
+  covariance as a decimal, requiring equal-length inputs with at least two
+  items. Correlation helpers return Pearson correlation by dividing the shared
+  deviation total by the square root of the two individual deviation totals;
+  equal-length inputs with at least two items are required, and constant input
+  lists fail with English text. Maybe-returning variants return `nothing` for
+  invalid lengths, too-short inputs, or constant correlation inputs.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,
