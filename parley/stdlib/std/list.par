@@ -46,6 +46,14 @@ to copy_number with xs as list of number giving list of number:
         add value to out
     give back out
 
+to chain_number with left as list of number, right as list of number giving list of number:
+    let out be an empty list of number
+    for each value in left:
+        add value to out
+    for each value in right:
+        add value to out
+    give back out
+
 to filter_number with xs as list of number, keep as (function taking number giving yesno) giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -728,6 +736,14 @@ to copy_text with xs as list of text giving list of text:
         add value to out
     give back out
 
+to chain_text with left as list of text, right as list of text giving list of text:
+    let out be an empty list of text
+    for each value in left:
+        add value to out
+    for each value in right:
+        add value to out
+    give back out
+
 to filter_text with xs as list of text, keep as (function taking text giving yesno) giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -1008,6 +1024,14 @@ to list_slice_decimal with xs as list of decimal, first_index as number, last_in
 to copy_decimal with xs as list of decimal giving list of decimal:
     let out be an empty list of decimal
     for each value in xs:
+        add value to out
+    give back out
+
+to chain_decimal with left as list of decimal, right as list of decimal giving list of decimal:
+    let out be an empty list of decimal
+    for each value in left:
+        add value to out
+    for each value in right:
         add value to out
     give back out
 
@@ -1703,6 +1727,14 @@ to list_slice_yesno with xs as list of yesno, first_index as number, last_index 
 to copy_yesno with xs as list of yesno giving list of yesno:
     let out be an empty list of yesno
     for each value in xs:
+        add value to out
+    give back out
+
+to chain_yesno with left as list of yesno, right as list of yesno giving list of yesno:
+    let out be an empty list of yesno
+    for each value in left:
+        add value to out
+    for each value in right:
         add value to out
     give back out
 

@@ -473,6 +473,8 @@ to main:
     let copied_numbers be (copy_number with numbers)
     add 99 to numbers
     say length of copied_numbers
+    let chained_numbers be (chain_number with copied_numbers, middle_numbers)
+    say length of chained_numbers
     let large_numbers be (filter_number with numbers, the function is_large)
     say length of large_numbers
     let smaller_numbers be (reject_number with numbers, the function is_large)

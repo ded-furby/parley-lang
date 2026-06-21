@@ -230,7 +230,9 @@ parse-relevant highlights:
   helpers mirror the number, text, and decimal first/last helpers, including
   maybe-returning empty-list variants. Extend, clear, insert, pop, remove,
   sort, and reverse helpers take a `changing` list parameter and mutate the
-  caller's list. Insert helpers clamp the target index: 1 or below inserts at
+  caller's list. Chain helpers return fresh typed lists containing all values
+  from the left input followed by all values from the right input, without
+  mutating either input. Insert helpers clamp the target index: 1 or below inserts at
   the front, and an index past the end appends. Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching

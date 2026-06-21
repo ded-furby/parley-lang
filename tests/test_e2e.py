@@ -1090,6 +1090,41 @@ to main:
     assert proc.stdout == "2\n4\n6\n0\nred|blue\n2\nyes\n2\nyes\nno\n0\n"
 
 
+def test_bundled_std_list_chain_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let left_numbers be a list of 1, 2
+    let right_numbers be a list of 3, 4
+    let chained_numbers be (chain_number with left_numbers, right_numbers)
+    add 99 to left_numbers
+    say length of chained_numbers
+    say item 1 of chained_numbers
+    say item 4 of chained_numbers
+    say length of left_numbers
+    let empty_numbers be an empty list of number
+    say length of (chain_number with empty_numbers, empty_numbers)
+    let left_words be a list of "alpha", "beta"
+    let right_words be a list of "gamma"
+    let chained_words be (chain_text with left_words, right_words)
+    say chained_words joined with "|"
+    let left_prices be a list of 1.5
+    let right_prices be a list of 2.5, 3.5
+    let chained_prices be (chain_decimal with left_prices, right_prices)
+    say length of chained_prices
+    say (is_close with item 3 of chained_prices, 3.5, 0.0, 0.000001)
+    let left_flags be a list of yes, no
+    let right_flags be a list of no, yes
+    let chained_flags be (chain_yesno with left_flags, right_flags)
+    say length of chained_flags
+    say item 1 of chained_flags
+    say item 3 of chained_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_chain", src)
+    assert proc.stdout == "4\n1\n4\n3\n0\nalpha|beta|gamma\n3\nyes\n4\nyes\nno\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"
