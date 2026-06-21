@@ -21,6 +21,11 @@ to capitalized with t as text giving text:
     let tail be lowercase of tail_raw
     give back "{head}{tail}"
 
+to case_folded with t as text giving text:
+    let folded be lowercase of t
+    set folded to folded replacing "ß" with "ss"
+    give back folded
+
 to padded_left with t as text, width as number, fill as text giving text:
     if fill is "":
         give back t

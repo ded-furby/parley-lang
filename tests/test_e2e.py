@@ -2565,6 +2565,19 @@ to main:
     assert proc.stdout == "yes\nno\nno\nyes\nyes\nno\nno\nyes\n"
 
 
+def test_bundled_std_text_case_fold_helper_runs(workdir):
+    src = '''include "std/text"
+
+to main:
+    say (case_folded with "PARLEY")
+    say (case_folded with "Straße")
+    say (case_folded with "Straße") is (case_folded with "STRASSE")
+    say (case_folded with "")
+'''
+    proc = run_program(workdir, "bundled_std_text_case_fold", src)
+    assert proc.stdout == "parley\nstrasse\nyes\n\n"
+
+
 def test_bundled_std_text_position_fallback_helpers_run(workdir):
     src = '''include "std/text"
 

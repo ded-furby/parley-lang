@@ -192,6 +192,8 @@ parse-relevant highlights:
   characters.
   `capitalized` returns empty text unchanged, uppercases the first UTF-8
   character, and lowercases the rest of the text.
+  `case_folded` lowercases the text and folds `ß` to `ss`, so common
+  case-insensitive comparisons can use equality on the folded values.
   `is_digit`, `is_alpha`, `is_alphanumeric`, `is_identifier`, `is_lowercase`, and
   `is_uppercase` are non-empty whole-text predicates over ASCII digits and
   letters. Identifier checks require a first ASCII letter or underscore and
