@@ -487,6 +487,14 @@ to accumulated_sum_number with xs as list of number giving list of number:
         add total to out
     give back out
 
+to accumulated_product_number with xs as list of number giving list of number:
+    let out be an empty list of number
+    let total be 1
+    for each value in xs:
+        set total to total times value
+        add total to out
+    give back out
+
 to sum_product_number with left as list of number, right as list of number giving number:
     if length of left is not length of right:
         fail "sum_product_number needs lists with the same length"
@@ -1381,6 +1389,14 @@ to accumulated_sum_decimal with xs as list of decimal giving list of decimal:
     let total be 0.0
     for each value in xs:
         set total to total plus value
+        add total to out
+    give back out
+
+to accumulated_product_decimal with xs as list of decimal giving list of decimal:
+    let out be an empty list of decimal
+    let total be 1.0
+    for each value in xs:
+        set total to total times value
         add total to out
     give back out
 

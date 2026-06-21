@@ -450,6 +450,8 @@ to main:
     say (product_number with numbers)
     let running_numbers be (accumulated_sum_number with numbers)
     say item 3 of running_numbers
+    let running_number_products be (accumulated_product_number with numbers)
+    say item 3 of running_number_products
     let weights be a list of 1, 2, 3, 4
     say (sum_product_number with numbers, weights)
     say (contains_number with numbers, 2)
@@ -537,6 +539,8 @@ to main:
     say (product_decimal with prices)
     let running_prices be (accumulated_sum_decimal with prices)
     say item 3 of running_prices
+    let running_price_products be (accumulated_product_decimal with prices)
+    say item 3 of running_price_products
     let quantities be a list of 2.0, 4.0, 1.0
     say (sum_product_decimal with prices, quantities)
     say (maybe_geometric_mean_decimal with prices)
