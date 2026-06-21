@@ -295,6 +295,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_item_number with xs, index` | maybe number at a 1-based index |
 | `list_slice_number with xs, first, last` | list of number from clamped 1-based inclusive bounds |
 | `list_slice_step_number with xs, first, last, step` | stepped list of number from clamped 1-based inclusive bounds; non-positive steps fail |
+| `take_number with xs, count` / `drop_number with xs, count` | fresh number list containing the first `count` items or everything after them |
 | `copy_number with xs` | fresh list of number with the same items |
 | `chain_number with left, right` | fresh number list containing `left` followed by `right`; inputs are not mutated |
 | `repeat_number with value, count` | fresh number list containing `count` copies of `value`; non-positive counts give an empty list |
@@ -362,6 +363,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_item_text with xs, index` | maybe text at a 1-based index |
 | `list_slice_text with xs, first, last` | list of text from clamped 1-based inclusive bounds |
 | `list_slice_step_text with xs, first, last, step` | stepped list of text from clamped 1-based inclusive bounds; non-positive steps fail |
+| `take_text with xs, count` / `drop_text with xs, count` | fresh text list containing the first `count` items or everything after them |
 | `copy_text with xs` | fresh list of text with the same items |
 | `chain_text with left, right` | fresh text list containing `left` followed by `right`; inputs are not mutated |
 | `repeat_text with value, count` | fresh text list containing `count` copies of `value`; non-positive counts give an empty list |
@@ -397,6 +399,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_item_decimal with xs, index` | maybe decimal at a 1-based index |
 | `list_slice_decimal with xs, first, last` | list of decimal from clamped 1-based inclusive bounds |
 | `list_slice_step_decimal with xs, first, last, step` | stepped list of decimal from clamped 1-based inclusive bounds; non-positive steps fail |
+| `take_decimal with xs, count` / `drop_decimal with xs, count` | fresh decimal list containing the first `count` items or everything after them |
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `chain_decimal with left, right` | fresh decimal list containing `left` followed by `right`; inputs are not mutated |
 | `repeat_decimal with value, count` | fresh decimal list containing `count` copies of `value`; non-positive counts give an empty list |
@@ -465,6 +468,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_item_yesno with xs, index` | maybe yes/no value at a 1-based index |
 | `list_slice_yesno with xs, first, last` | list of yes/no from clamped 1-based inclusive bounds |
 | `list_slice_step_yesno with xs, first, last, step` | stepped list of yes/no from clamped 1-based inclusive bounds; non-positive steps fail |
+| `take_yesno with xs, count` / `drop_yesno with xs, count` | fresh yes/no list containing the first `count` items or everything after them |
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `chain_yesno with left, right` | fresh yes/no list containing `left` followed by `right`; inputs are not mutated |
 | `repeat_yesno with value, count` | fresh yes/no list containing `count` copies of `value`; non-positive counts give an empty list |

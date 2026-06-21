@@ -472,6 +472,10 @@ to main:
     say length of middle_numbers
     let every_other_number be (list_slice_step_number with numbers, 1, 4, 2)
     say item 2 of every_other_number
+    let first_two_numbers be (take_number with numbers, 2)
+    say length of first_two_numbers
+    let later_numbers be (drop_number with numbers, 2)
+    say item 1 of later_numbers
     let copied_numbers be (copy_number with numbers)
     add 99 to numbers
     say length of copied_numbers

@@ -64,6 +64,30 @@ to list_slice_step_number with xs as list of number, first_index as number, last
         set index to index plus step
     give back out
 
+to take_number with xs as list of number, count as number giving list of number:
+    let out be an empty list of number
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let finish be count
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from 1 to finish:
+        add item i of xs to out
+    give back out
+
+to drop_number with xs as list of number, count as number giving list of number:
+    let out be an empty list of number
+    let start be count plus 1
+    if start is less than 1:
+        set start to 1
+    if start is more than length of xs:
+        give back out
+    for each i from start to length of xs:
+        add item i of xs to out
+    give back out
+
 to copy_number with xs as list of number giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -800,6 +824,30 @@ to list_slice_step_text with xs as list of text, first_index as number, last_ind
         set index to index plus step
     give back out
 
+to take_text with xs as list of text, count as number giving list of text:
+    let out be an empty list of text
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let finish be count
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from 1 to finish:
+        add item i of xs to out
+    give back out
+
+to drop_text with xs as list of text, count as number giving list of text:
+    let out be an empty list of text
+    let start be count plus 1
+    if start is less than 1:
+        set start to 1
+    if start is more than length of xs:
+        give back out
+    for each i from start to length of xs:
+        add item i of xs to out
+    give back out
+
 to copy_text with xs as list of text giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -1135,6 +1183,30 @@ to list_slice_step_decimal with xs as list of decimal, first_index as number, la
         let value be item index of xs
         add value to out
         set index to index plus step
+    give back out
+
+to take_decimal with xs as list of decimal, count as number giving list of decimal:
+    let out be an empty list of decimal
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let finish be count
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from 1 to finish:
+        add item i of xs to out
+    give back out
+
+to drop_decimal with xs as list of decimal, count as number giving list of decimal:
+    let out be an empty list of decimal
+    let start be count plus 1
+    if start is less than 1:
+        set start to 1
+    if start is more than length of xs:
+        give back out
+    for each i from start to length of xs:
+        add item i of xs to out
     give back out
 
 to copy_decimal with xs as list of decimal giving list of decimal:
@@ -1884,6 +1956,30 @@ to list_slice_step_yesno with xs as list of yesno, first_index as number, last_i
         let value be item index of xs
         add value to out
         set index to index plus step
+    give back out
+
+to take_yesno with xs as list of yesno, count as number giving list of yesno:
+    let out be an empty list of yesno
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let finish be count
+    if finish is more than length of xs:
+        set finish to length of xs
+    for each i from 1 to finish:
+        add item i of xs to out
+    give back out
+
+to drop_yesno with xs as list of yesno, count as number giving list of yesno:
+    let out be an empty list of yesno
+    let start be count plus 1
+    if start is less than 1:
+        set start to 1
+    if start is more than length of xs:
+        give back out
+    for each i from start to length of xs:
+        add item i of xs to out
     give back out
 
 to copy_yesno with xs as list of yesno giving list of yesno:

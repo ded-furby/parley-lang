@@ -227,7 +227,10 @@ parse-relevant highlights:
   1-based inclusive indexes. Slice helpers clamp bounds to the list and give
   an empty list for reversed or out-of-range requests. Stepped slice helpers
   use the same bounds but include every `step`th item and fail for
-  non-positive steps. Copy helpers return a
+  non-positive steps. Count-based take helpers return the first `count` items,
+  with non-positive counts returning an empty list; count-based drop helpers
+  return everything after the first `count` items, with non-positive counts
+  returning a fresh copy. Copy helpers return a
   fresh number, text, decimal, or yes/no list with the same items. Yes/no edge
   helpers mirror the number, text, and decimal first/last helpers, including
   maybe-returning empty-list variants. Extend, clear, insert, pop, remove,

@@ -1223,6 +1223,52 @@ to main:
     assert proc.stdout == "3\n20\n60\n2\n10\n40\n0\na|c|e\n2\nyes\n2\nno\nyes\n0\nstep error: list_slice_step_number needs a positive step\n"
 
 
+def test_bundled_std_list_take_drop_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3, 4, 5
+    let first_numbers be (take_number with numbers, 3)
+    say length of first_numbers
+    say item 3 of first_numbers
+    say length of (take_number with numbers, 99)
+    say length of (take_number with numbers, 0)
+    let negative_count be 0 minus 2
+    say length of (take_number with numbers, negative_count)
+    let after_numbers be (drop_number with numbers, 2)
+    say length of after_numbers
+    say item 1 of after_numbers
+    say item 3 of after_numbers
+    say length of (drop_number with numbers, 99)
+    let copied_numbers be (drop_number with numbers, negative_count)
+    say length of copied_numbers
+    say item 1 of copied_numbers
+    let empty_numbers be an empty list of number
+    say length of (take_number with empty_numbers, 3)
+    say length of (drop_number with empty_numbers, 3)
+    let words be a list of "a", "b", "c", "d"
+    say (take_text with words, 2) joined with "|"
+    say (drop_text with words, 2) joined with "|"
+    let prices be a list of 1.25, 2.5, 3.75
+    let first_prices be (take_decimal with prices, 2)
+    say length of first_prices
+    say (is_close with item 2 of first_prices, 2.5, 0.0, 0.000001)
+    let after_prices be (drop_decimal with prices, 1)
+    say length of after_prices
+    say (is_close with item 2 of after_prices, 3.75, 0.0, 0.000001)
+    let flags be a list of yes, no, no, yes
+    let first_flags be (take_yesno with flags, 3)
+    say length of first_flags
+    say item 2 of first_flags
+    let after_flags be (drop_yesno with flags, 2)
+    say length of after_flags
+    say item 2 of after_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_take_drop_count", src)
+    assert proc.stdout == "3\n3\n5\n0\n0\n3\n3\n5\n0\n5\n1\n0\n0\na|b\nc|d\n2\nyes\n2\nyes\n3\nno\n2\nyes\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"
