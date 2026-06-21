@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.113** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 229 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.114** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 230 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -418,6 +418,11 @@ Update it whenever you finish or start a work item.
   `median_decimal`, `maybe_median_number`, and `maybe_median_decimal`,
   matching Python's statistics median workflow over typed lists with catchable
   failures or explicit `nothing` results for empty lists.
+- **v0.3.114 list median-low/high helpers:** `std/list` adds
+  `median_low_number`, `median_high_number`, `median_low_decimal`,
+  `median_high_decimal`, and maybe-returning variants, matching Python's
+  `statistics.median_low` and `statistics.median_high` workflows over typed
+  lists.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -490,7 +495,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.113).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.114).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

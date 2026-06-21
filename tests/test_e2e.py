@@ -984,6 +984,60 @@ to main:
     )
 
 
+def test_bundled_std_list_median_low_high_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let odd_numbers be a list of 9, 1, 5
+    say (median_low_number with odd_numbers)
+    say (median_high_number with odd_numbers)
+    let even_numbers be a list of 10, 2, 4, 8
+    say (median_low_number with even_numbers)
+    say (median_high_number with even_numbers)
+    say (maybe_median_low_number with even_numbers)
+    say (maybe_median_high_number with even_numbers)
+    let empty_numbers be an empty list of number
+    say (maybe_median_low_number with empty_numbers)
+    say (maybe_median_high_number with empty_numbers)
+    attempt:
+        say (median_low_number with empty_numbers)
+    if it failed:
+        say "number low error: {the error}"
+    attempt:
+        say (median_high_number with empty_numbers)
+    if it failed:
+        say "number high error: {the error}"
+    let odd_decimals be a list of 3.5, 1.5, 9.5
+    say (median_low_decimal with odd_decimals)
+    say (median_high_decimal with odd_decimals)
+    let even_decimals be a list of 1.5, 2.5, 8.5, 4.5
+    say (median_low_decimal with even_decimals)
+    say (median_high_decimal with even_decimals)
+    say (maybe_median_low_decimal with even_decimals)
+    say (maybe_median_high_decimal with even_decimals)
+    let empty_decimals be an empty list of decimal
+    say (maybe_median_low_decimal with empty_decimals)
+    say (maybe_median_high_decimal with empty_decimals)
+    attempt:
+        say (median_low_decimal with empty_decimals)
+    if it failed:
+        say "decimal low error: {the error}"
+    attempt:
+        say (median_high_decimal with empty_decimals)
+    if it failed:
+        say "decimal high error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_median_low_high", src)
+    assert proc.stdout == (
+        "5\n5\n4\n8\n4\n8\nnothing\nnothing\n"
+        "number low error: median_low_number needs at least one item\n"
+        "number high error: median_high_number needs at least one item\n"
+        "3.5\n3.5\n2.5\n4.5\n2.5\n4.5\nnothing\nnothing\n"
+        "decimal low error: median_low_decimal needs at least one item\n"
+        "decimal high error: median_high_decimal needs at least one item\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 

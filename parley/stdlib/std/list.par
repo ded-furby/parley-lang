@@ -222,6 +222,22 @@ to median_number with xs as list of number giving decimal:
     let right_index be left_index plus 1
     give back ((decimal from item left_index of ordered) plus (decimal from item right_index of ordered)) divided by 2.0
 
+to median_low_number with xs as list of number giving number:
+    if length of xs is 0:
+        fail "median_low_number needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let low_index be floor of ((decimal from (count plus 1)) divided by 2.0)
+    give back item low_index of ordered
+
+to median_high_number with xs as list of number giving number:
+    if length of xs is 0:
+        fail "median_high_number needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let high_index be floor of ((decimal from (count plus 2)) divided by 2.0)
+    give back item high_index of ordered
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -263,6 +279,18 @@ to maybe_median_number with xs as list of number giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (median_number with xs)
+    give back some value
+
+to maybe_median_low_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_low_number with xs)
+    give back some value
+
+to maybe_median_high_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_high_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -710,6 +738,22 @@ to median_decimal with xs as list of decimal giving decimal:
     let right_index be left_index plus 1
     give back ((item left_index of ordered) plus (item right_index of ordered)) divided by 2.0
 
+to median_low_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "median_low_decimal needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let low_index be floor of ((decimal from (count plus 1)) divided by 2.0)
+    give back item low_index of ordered
+
+to median_high_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "median_high_decimal needs at least one item"
+    let ordered be sorted xs
+    let count be length of ordered
+    let high_index be floor of ((decimal from (count plus 2)) divided by 2.0)
+    give back item high_index of ordered
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -753,6 +797,18 @@ to maybe_median_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (median_decimal with xs)
+    give back some value
+
+to maybe_median_low_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_low_decimal with xs)
+    give back some value
+
+to maybe_median_high_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (median_high_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:

@@ -317,12 +317,14 @@ Use `include "std/list"` for common list helpers:
 | `index_number with xs, n` | maybe 1-based index of `n` |
 | `average_number with xs` | decimal average |
 | `median_number with xs` | decimal median of a sorted copy; empty lists fail |
+| `median_low_number with xs` / `median_high_number with xs` | lower or upper middle number from a sorted copy; empty lists fail |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
 | `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
 | `maybe_smallest_number with xs` / `maybe_largest_number with xs` | maybe smallest or largest number |
 | `maybe_average_number with xs` | maybe decimal average |
 | `maybe_median_number with xs` | maybe decimal median |
+| `maybe_median_low_number with xs` / `maybe_median_high_number with xs` | maybe lower or upper middle number |
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
 | `maybe_item_text with xs, index` | maybe text at a 1-based index |
@@ -376,12 +378,14 @@ Use `include "std/list"` for common list helpers:
 | `index_decimal with xs, d` | maybe 1-based index of `d` |
 | `average_decimal with xs` | decimal average |
 | `median_decimal with xs` | median of a sorted copy; empty lists fail |
+| `median_low_decimal with xs` / `median_high_decimal with xs` | lower or upper middle decimal from a sorted copy; empty lists fail |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
 | `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `maybe_median_decimal with xs` | maybe decimal median |
+| `maybe_median_low_decimal with xs` / `maybe_median_high_decimal with xs` | maybe lower or upper middle decimal |
 | `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |
 | `maybe_first_yesno with xs` / `maybe_last_yesno with xs` | maybe first or last yes/no value |
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
