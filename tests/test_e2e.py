@@ -1375,6 +1375,30 @@ to main:
     assert proc.stdout == "value!!\n***value\nvalue\nabc\n\nclair\n"
 
 
+def test_bundled_std_text_split_lines_kept_helper_runs(workdir):
+    src = '''include "std/text"
+
+to markers with t as text giving text:
+    let no_cr be (replaced_text with t, "\\r", "<r>", 10)
+    give back (replaced_text with no_cr, "\\n", "<n>", 10)
+
+to main:
+    let kept be (split_lines_kept with "one\\r\\ntwo\\rthree\\nfour")
+    say length of kept
+    say (markers with item 1 of kept)
+    say (markers with item 2 of kept)
+    say (markers with item 3 of kept)
+    say (markers with item 4 of kept)
+    let terminal be (split_lines_kept with "x\\n")
+    say length of terminal
+    say (markers with item 1 of terminal)
+    let empty be (split_lines_kept with "")
+    say length of empty
+'''
+    proc = run_program(workdir, "bundled_std_text_split_lines_kept", src)
+    assert proc.stdout == "4\none<r><n>\ntwo<r>\nthree<n>\nfour\n1\nx<n>\n0\n"
+
+
 def test_bundled_std_list_maybe_find_helpers_run(workdir):
     src = '''include "std/list"
 

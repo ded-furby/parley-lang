@@ -169,7 +169,9 @@ parse-relevant highlights:
   lines.
   `split_lines` returns an empty list for empty text, splits on `\n`, `\r`,
   and `\r\n` line boundaries, preserves blank middle lines, and omits the
-  synthetic final empty item for terminal line breaks.
+  synthetic final empty item for terminal line breaks. `split_lines_kept`
+  uses the same line boundaries but retains the matched newline text on each
+  returned line.
   `word_count` and `words_of` split on space, tab, newline, and carriage
   return boundaries, collapse repeated whitespace, ignore leading and trailing
   whitespace, and return `0` or an empty list for all-whitespace text.

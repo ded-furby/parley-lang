@@ -371,6 +371,7 @@ to main:
     say (words_of with "one\ttwo\nthree") joined with "|"
     say (lines_of with "one\n\ntwo") joined with "|"
     say (split_lines with "one\r\ntwo\rthree\n") joined with "|"
+    say length of (split_lines_kept with "one\n")
     say (maybe_character with "éc", 2)
     say (text_slice with "crème", 2, 4)
     say (reversed_text with "Parley")

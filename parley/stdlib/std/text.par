@@ -502,6 +502,31 @@ to split_lines with t as text giving list of text:
         add current to out
     give back out
 
+to split_lines_kept with t as text giving list of text:
+    let out be an empty list of text
+    if t is "":
+        give back out
+    let current be ""
+    let i be 1
+    while i is at most length of t:
+        let c be item i of t
+        set current to "{current}{c}"
+        if c is "\n":
+            add current to out
+            set current to ""
+        otherwise if c is "\r":
+            if i is less than length of t:
+                let next_index be i plus 1
+                if item next_index of t is "\n":
+                    set current to "{current}{item next_index of t}"
+                    set i to i plus 1
+            add current to out
+            set current to ""
+        set i to i plus 1
+    if current is not "":
+        add current to out
+    give back out
+
 to word_count with t as text giving number:
     let words be (words_of with t)
     give back length of words
