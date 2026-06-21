@@ -379,6 +379,7 @@ function init(renderer) {
   // trace Zodiak letterforms rather than the fallback serif.
   const start = () => {
     buildParticles();
+    document.documentElement.classList.remove('no-scene');
     document.documentElement.classList.add('scene-ok');
     if (reduceMotion) {
       // Static composition: the headline holds; scroll morph and cursor

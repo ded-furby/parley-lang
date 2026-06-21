@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.111** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 227 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.112** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 228 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -410,6 +410,10 @@ Update it whenever you finish or start a work item.
 - **v0.3.111 decimal point-distance helpers:** `std/math` adds `distance_2d`
   and `distance_3d`, matching Python's common `math.dist` workflow for fixed
   2D and 3D decimal coordinate points.
+- **v0.3.112 list sum-product helpers:** `std/list` adds
+  `sum_product_number` and `sum_product_decimal`, matching Python's
+  `math.sumprod` workflow over typed lists with catchable failures for length
+  mismatches.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -418,7 +422,8 @@ Update it whenever you finish or start a work item.
   scrolling shreds it to dust and condenses it into a black monolith (the
   native binary) behind the install command. A 2026-06-18 readiness pass
   added GSAP-powered DOM reveals/copy affordance, a skip link, and mobile
-  overflow fixes. Verified with Playwright at desktop and mobile widths:
+  overflow fixes. A 2026-06-21 fallback pass keeps the text hero visible when
+  CDN-loaded Three.js/GSAP assets are unavailable. Verified with Playwright at desktop and mobile widths:
   no horizontal overflow; WebGL scene reaches `scene-ok`; no runtime errors
   beyond headless Chromium WebGL performance warnings. Design context in
   `PRODUCT.md` / `DESIGN.md` (PRODUCT.md was synthesised from the repo and
@@ -481,7 +486,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.111).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.112).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

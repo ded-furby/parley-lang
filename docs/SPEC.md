@@ -263,6 +263,9 @@ parse-relevant highlights:
   number and decimal lists and return the additive identity for empty lists.
   Product helpers multiply every number or decimal item and return the
   multiplicative identity for empty lists.
+  Sum-product helpers multiply matching number or decimal items pairwise,
+  add the products, return the additive identity for two empty lists, and fail
+  with English text when the list lengths differ.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

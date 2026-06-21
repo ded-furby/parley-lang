@@ -918,6 +918,37 @@ to main:
         "2\n5\n6\n3\nalpha|beta\n3\n2\n2.75\n3\n2\nyes\nno\n3\n")
 
 
+def test_bundled_std_list_sum_product_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let left_numbers be a list of 1, 2, 3
+    let right_numbers be a list of 4, 5, 6
+    say (sum_product_number with left_numbers, right_numbers)
+    let empty_numbers be an empty list of number
+    say (sum_product_number with empty_numbers, empty_numbers)
+    attempt:
+        say (sum_product_number with left_numbers, empty_numbers)
+    if it failed:
+        say "number sumprod error: {the error}"
+    let left_decimals be a list of 1.5, 2.5
+    let right_decimals be a list of 2.0, 4.0
+    say (is_close with (sum_product_decimal with left_decimals, right_decimals), 13.0, 0.0, 0.000001)
+    let empty_decimals be an empty list of decimal
+    say (sum_product_decimal with empty_decimals, empty_decimals)
+    attempt:
+        say (sum_product_decimal with left_decimals, empty_decimals)
+    if it failed:
+        say "decimal sumprod error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_sum_product", src)
+    assert proc.stdout == (
+        "32\n0\nnumber sumprod error: sum_product_number needs lists with the same length\n"
+        "yes\n0\ndecimal sumprod error: sum_product_decimal needs lists with the same length\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 

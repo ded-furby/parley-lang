@@ -426,6 +426,8 @@ to main:
     say (average_number with numbers)
     say (sum_number with numbers)
     say (product_number with numbers)
+    let weights be a list of 1, 2, 3, 4
+    say (sum_product_number with numbers, weights)
     say (contains_number with numbers, 2)
     say (index_number with numbers, 8)
     let empty_numbers be an empty list of number
@@ -467,6 +469,8 @@ to main:
     say (average_decimal with prices)
     say (sum_decimal with prices)
     say (product_decimal with prices)
+    let quantities be a list of 2.0, 4.0, 1.0
+    say (sum_product_decimal with prices, quantities)
     say (contains_decimal with prices, 2.5)
     say (maybe_largest_decimal with prices)
     let flags be a list of yes, no, yes

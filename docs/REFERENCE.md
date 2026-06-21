@@ -318,6 +318,7 @@ Use `include "std/list"` for common list helpers:
 | `average_number with xs` | decimal average |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
+| `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
 | `maybe_smallest_number with xs` / `maybe_largest_number with xs` | maybe smallest or largest number |
 | `maybe_average_number with xs` | maybe decimal average |
 | `first_text with xs` / `last_text with xs` | first or last text |
@@ -374,6 +375,7 @@ Use `include "std/list"` for common list helpers:
 | `average_decimal with xs` | decimal average |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
+| `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
 | `maybe_smallest_decimal with xs` / `maybe_largest_decimal with xs` | maybe smallest or largest decimal |
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |

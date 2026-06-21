@@ -93,6 +93,7 @@ body {
 main { position: relative; z-index: 1; }
 
 .hero {
+  position: relative;
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
@@ -105,14 +106,19 @@ main { position: relative; z-index: 1; }
   position: absolute;
   top: 50%;
   left: 50%;
+  z-index: 2;
   transform: translate(-50%, -58%);
   font-size: clamp(2.6rem, 9vw, 5.75rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   white-space: nowrap;
   color: var(--ink);
+  text-shadow: 0 2px 28px oklch(0.45 0.17 29.2 / 0.34);
+  opacity: 1;
   transition: opacity 0.5s 0.25s ease;
 }
+
+.no-scene .hero-fallback { opacity: 1; }
 
 .scene-ok .hero-fallback { opacity: 0; pointer-events: none; }
 

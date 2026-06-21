@@ -219,6 +219,16 @@ to product_number with xs as list of number giving number:
 to sum_number with xs as list of number giving number:
     give back sum of xs
 
+to sum_product_number with left as list of number, right as list of number giving number:
+    if length of left is not length of right:
+        fail "sum_product_number needs lists with the same length"
+    let out be 0
+    if length of left is 0:
+        give back out
+    for each i from 1 to length of left:
+        set out to out plus (item i of left) times (item i of right)
+    give back out
+
 to maybe_smallest_number with xs as list of number giving maybe number:
     if length of xs is 0:
         give back nothing
@@ -680,6 +690,16 @@ to sum_decimal with xs as list of decimal giving decimal:
     if length of xs is 0:
         give back 0.0
     give back sum of xs
+
+to sum_product_decimal with left as list of decimal, right as list of decimal giving decimal:
+    if length of left is not length of right:
+        fail "sum_product_decimal needs lists with the same length"
+    let out be 0.0
+    if length of left is 0:
+        give back out
+    for each i from 1 to length of left:
+        set out to out plus (item i of left) times (item i of right)
+    give back out
 
 to maybe_smallest_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
