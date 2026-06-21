@@ -296,6 +296,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_number with xs, first, last` | list of number from clamped 1-based inclusive bounds |
 | `copy_number with xs` | fresh list of number with the same items |
 | `chain_number with left, right` | fresh number list containing `left` followed by `right`; inputs are not mutated |
+| `repeat_number with value, count` | fresh number list containing `count` copies of `value`; non-positive counts give an empty list |
 | `filter_number with xs, keep` | fresh list of numbers where `keep` returns yes |
 | `reject_number with xs, test` | fresh list of numbers where `test` returns no |
 | `compress_number with xs, selectors` | fresh list of numbers whose parallel yes/no selector is yes; stops when either list ends |
@@ -360,6 +361,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_text with xs, first, last` | list of text from clamped 1-based inclusive bounds |
 | `copy_text with xs` | fresh list of text with the same items |
 | `chain_text with left, right` | fresh text list containing `left` followed by `right`; inputs are not mutated |
+| `repeat_text with value, count` | fresh text list containing `count` copies of `value`; non-positive counts give an empty list |
 | `filter_text with xs, keep` | fresh list of text values where `keep` returns yes |
 | `reject_text with xs, test` | fresh list of text values where `test` returns no |
 | `compress_text with xs, selectors` | fresh list of text values whose parallel yes/no selector is yes; stops when either list ends |
@@ -392,6 +394,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_decimal with xs, first, last` | list of decimal from clamped 1-based inclusive bounds |
 | `copy_decimal with xs` | fresh list of decimal with the same items |
 | `chain_decimal with left, right` | fresh decimal list containing `left` followed by `right`; inputs are not mutated |
+| `repeat_decimal with value, count` | fresh decimal list containing `count` copies of `value`; non-positive counts give an empty list |
 | `filter_decimal with xs, keep` | fresh list of decimals where `keep` returns yes |
 | `reject_decimal with xs, test` | fresh list of decimals where `test` returns no |
 | `compress_decimal with xs, selectors` | fresh list of decimals whose parallel yes/no selector is yes; stops when either list ends |
@@ -457,6 +460,7 @@ Use `include "std/list"` for common list helpers:
 | `list_slice_yesno with xs, first, last` | list of yes/no from clamped 1-based inclusive bounds |
 | `copy_yesno with xs` | fresh list of yes/no with the same items |
 | `chain_yesno with left, right` | fresh yes/no list containing `left` followed by `right`; inputs are not mutated |
+| `repeat_yesno with value, count` | fresh yes/no list containing `count` copies of `value`; non-positive counts give an empty list |
 | `filter_yesno with xs, keep` | fresh list of yes/no values where `keep` returns yes |
 | `reject_yesno with xs, test` | fresh list of yes/no values where `test` returns no |
 | `compress_yesno with xs, selectors` | fresh list of yes/no values whose parallel yes/no selector is yes; stops when either list ends |

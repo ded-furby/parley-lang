@@ -475,6 +475,8 @@ to main:
     say length of copied_numbers
     let chained_numbers be (chain_number with copied_numbers, middle_numbers)
     say length of chained_numbers
+    let repeated_numbers be (repeat_number with 7, 3)
+    say length of repeated_numbers
     let large_numbers be (filter_number with numbers, the function is_large)
     say length of large_numbers
     let smaller_numbers be (reject_number with numbers, the function is_large)

@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.128** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 244 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.129** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 245 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -486,6 +486,10 @@ Update it whenever you finish or start a work item.
   `chain_text`, `chain_decimal`, and `chain_yesno`, matching Python's
   `itertools.chain` workflow by returning fresh typed lists that contain the
   left input followed by the right input without mutating either.
+- **v0.3.129 list bounded-repeat helpers:** `std/list` adds `repeat_number`,
+  `repeat_text`, `repeat_decimal`, and `repeat_yesno`, matching Python's
+  bounded `itertools.repeat(value, count)` workflow with fresh typed lists and
+  empty results for non-positive counts.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -558,7 +562,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.128).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.129).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

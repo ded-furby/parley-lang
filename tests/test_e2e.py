@@ -1125,6 +1125,32 @@ to main:
     assert proc.stdout == "4\n1\n4\n3\n0\nalpha|beta|gamma\n3\nyes\n4\nyes\nno\n"
 
 
+def test_bundled_std_list_repeat_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let repeated_numbers be (repeat_number with 7, 3)
+    say length of repeated_numbers
+    say item 1 of repeated_numbers
+    say item 3 of repeated_numbers
+    say length of (repeat_number with 7, 0)
+    let negative_count be 0 minus 2
+    say length of (repeat_number with 7, negative_count)
+    let repeated_words be (repeat_text with "ha", 2)
+    say repeated_words joined with "|"
+    let repeated_prices be (repeat_decimal with 1.25, 3)
+    say length of repeated_prices
+    say (is_close with item 2 of repeated_prices, 1.25, 0.0, 0.000001)
+    let repeated_flags be (repeat_yesno with no, 3)
+    say length of repeated_flags
+    say item 1 of repeated_flags
+    say item 3 of repeated_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_repeat", src)
+    assert proc.stdout == "3\n7\n7\n0\n0\nha|ha\n3\nyes\n3\nno\nno\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"
