@@ -425,6 +425,7 @@ to main:
     say (any_number with numbers, the function is_large)
     say (all_number with numbers, the function is_large)
     say (maybe_find_number with numbers, the function is_large)
+    say (count_where_number with numbers, the function is_large)
     let more_numbers be a list of 10, 12
     extend_number with numbers, more_numbers
     insert_number with numbers, 1, 99

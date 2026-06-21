@@ -1373,6 +1373,42 @@ to main:
     assert proc.stdout == "5\nnothing\ngrace\n2.5\nyes\nnothing\n"
 
 
+def test_bundled_std_list_count_where_helpers_run(workdir):
+    src = '''include "std/list"
+
+to is_even with n as number giving yesno:
+    give back remainder of n divided by 2 is 0
+
+to starts_with_a with t as text giving yesno:
+    give back t starts with "a"
+
+to over_two with d as decimal giving yesno:
+    give back d is more than 2.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 1, 2, 3, 4, 6
+    say (count_where_number with numbers, the function is_even)
+    let empty_numbers be an empty list of number
+    say (count_where_number with empty_numbers, the function is_even)
+
+    let names be a list of "ada", "grace", "alan"
+    say (count_where_text with names, the function starts_with_a)
+    let other_names be a list of "grace", "linus"
+    say (count_where_text with other_names, the function starts_with_a)
+
+    let decimals be a list of 1.5, 2.5, 3.5
+    say (count_where_decimal with decimals, the function over_two)
+
+    let flags be a list of yes, no, yes
+    say (count_where_yesno with flags, the function same)
+'''
+    proc = run_program(workdir, "bundled_std_list_count_where", src)
+    assert proc.stdout == "3\n0\n2\n0\n2\n2\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

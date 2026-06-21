@@ -77,6 +77,13 @@ to maybe_find_number with xs as list of number, test as (function taking number 
             give back some value
     give back nothing
 
+to count_where_number with xs as list of number, test as (function taking number giving yesno) giving number:
+    let count be 0
+    for each value in xs:
+        if (test with value):
+            set count to count plus 1
+    give back count
+
 to extend_number with changing xs as list of number, more as list of number:
     for each value in more:
         add value to xs
@@ -259,6 +266,13 @@ to maybe_find_text with xs as list of text, test as (function taking text giving
             give back some value
     give back nothing
 
+to count_where_text with xs as list of text, test as (function taking text giving yesno) giving number:
+    let count be 0
+    for each value in xs:
+        if (test with value):
+            set count to count plus 1
+    give back count
+
 to extend_text with changing xs as list of text, more as list of text:
     for each value in more:
         add value to xs
@@ -422,6 +436,13 @@ to maybe_find_decimal with xs as list of decimal, test as (function taking decim
         if (test with value):
             give back some value
     give back nothing
+
+to count_where_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving number:
+    let count be 0
+    for each value in xs:
+        if (test with value):
+            set count to count plus 1
+    give back count
 
 to extend_decimal with changing xs as list of decimal, more as list of decimal:
     for each value in more:
@@ -618,6 +639,13 @@ to maybe_find_yesno with xs as list of yesno, test as (function taking yesno giv
         if (test with value):
             give back some value
     give back nothing
+
+to count_where_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving number:
+    let count be 0
+    for each value in xs:
+        if (test with value):
+            set count to count plus 1
+    give back count
 
 to extend_yesno with changing xs as list of yesno, more as list of yesno:
     for each value in more:

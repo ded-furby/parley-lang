@@ -288,6 +288,7 @@ Use `include "std/list"` for common list helpers:
 | `map_number with xs, transform` | fresh list of numbers after applying `transform` to each item |
 | `any_number with xs, test` / `all_number with xs, test` | predicate any/all over numbers; empty lists give no/yes |
 | `maybe_find_number with xs, test` | maybe first number where `test` returns yes |
+| `count_where_number with xs, test` | number of values where `test` returns yes |
 | `extend_number with changing xs, more` | append every number from `more` to `xs` |
 | `clear_number with changing xs` | remove every item from `xs` |
 | `insert_number with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -312,6 +313,7 @@ Use `include "std/list"` for common list helpers:
 | `map_text with xs, transform` | fresh list of text values after applying `transform` to each item |
 | `any_text with xs, test` / `all_text with xs, test` | predicate any/all over text values; empty lists give no/yes |
 | `maybe_find_text with xs, test` | maybe first text value where `test` returns yes |
+| `count_where_text with xs, test` | number of text values where `test` returns yes |
 | `extend_text with changing xs, more` | append every text value from `more` to `xs` |
 | `clear_text with changing xs` | remove every item from `xs` |
 | `insert_text with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -332,6 +334,7 @@ Use `include "std/list"` for common list helpers:
 | `map_decimal with xs, transform` | fresh list of decimals after applying `transform` to each item |
 | `any_decimal with xs, test` / `all_decimal with xs, test` | predicate any/all over decimals; empty lists give no/yes |
 | `maybe_find_decimal with xs, test` | maybe first decimal where `test` returns yes |
+| `count_where_decimal with xs, test` | number of decimals where `test` returns yes |
 | `extend_decimal with changing xs, more` | append every decimal from `more` to `xs` |
 | `clear_decimal with changing xs` | remove every item from `xs` |
 | `insert_decimal with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
@@ -357,6 +360,7 @@ Use `include "std/list"` for common list helpers:
 | `map_yesno with xs, transform` | fresh list of yes/no values after applying `transform` to each item |
 | `any_yesno with xs, test` / `all_yesno with xs, test` | predicate any/all over yes/no values; empty lists give no/yes |
 | `maybe_find_yesno with xs, test` | maybe first yes/no value where `test` returns yes |
+| `count_where_yesno with xs, test` | number of yes/no values where `test` returns yes |
 | `extend_yesno with changing xs, more` | append every yes/no value from `more` to `xs` |
 | `clear_yesno with changing xs` | remove every item from `xs` |
 | `insert_yesno with changing xs, index, value` | insert `value` before the 1-based index, clamped to front/end |
