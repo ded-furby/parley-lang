@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "packages": {
+    "mathkit": {
+      "version": "0.1.0",
+      "source": "packages/mathkit/main.par",
+      "description": "Small number helpers for doubling, tripling, and even checks.",
+      "license": "MIT",
+      "maintainer": "Arjun Avtani <https://github.com/ded-furby>",
+      "sha256": "1dc909d706a8e65f8ecb400e6762ec4afe0a72856f16c326c121f136ba8e1172"
+    },
+    "textkit": {
+      "version": "0.1.0",
+      "source": "packages/textkit/main.par",
+      "description": "Small text helpers for shout and wrapping workflows.",
+      "license": "MIT",
+      "maintainer": "Arjun Avtani <https://github.com/ded-furby>",
+      "sha256": "502647978d0a654c1c75216f8bb1488146580ba63c93e541f759dbadb391b58e"
+    }
+  }
+}
