@@ -234,8 +234,11 @@ parse-relevant highlights:
   from the left input followed by all values from the right input, without
   mutating either input. Repeat helpers return fresh typed lists containing a
   requested number of copies of one value, or an empty list for non-positive
-  counts. Insert helpers clamp the target index: 1 or below inserts at
-  the front, and an index past the end appends. Pop helpers return `maybe`
+  counts. Cycle helpers return fresh typed lists by repeatedly walking a
+  source list until the requested count is reached, with empty output for
+  empty source lists or non-positive counts. Insert helpers clamp the target
+  index: 1 or below inserts at the front, and an index past the end appends.
+  Pop helpers return `maybe`
   values, removing a valid 1-based item and returning `nothing` without
   mutation for out-of-range indexes. Remove helpers delete the first matching
   value and return yes/no for whether anything changed. Filter helpers accept

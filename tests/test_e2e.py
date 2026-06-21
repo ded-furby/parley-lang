@@ -1151,6 +1151,39 @@ to main:
     assert proc.stdout == "3\n7\n7\n0\n0\nha|ha\n3\nyes\n3\nno\nno\n"
 
 
+def test_bundled_std_list_cycle_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 3
+    let cycled_numbers be (cycle_number with numbers, 8)
+    say length of cycled_numbers
+    say item 1 of cycled_numbers
+    say item 4 of cycled_numbers
+    say item 8 of cycled_numbers
+    say length of (cycle_number with numbers, 0)
+    let negative_count be 0 minus 2
+    say length of (cycle_number with numbers, negative_count)
+    let empty_numbers be an empty list of number
+    say length of (cycle_number with empty_numbers, 3)
+    let words be a list of "red", "blue"
+    let cycled_words be (cycle_text with words, 5)
+    say cycled_words joined with "|"
+    let prices be a list of 1.25, 2.5
+    let cycled_prices be (cycle_decimal with prices, 5)
+    say length of cycled_prices
+    say (is_close with item 3 of cycled_prices, 1.25, 0.0, 0.000001)
+    let flags be a list of yes, no
+    let cycled_flags be (cycle_yesno with flags, 5)
+    say length of cycled_flags
+    say item 1 of cycled_flags
+    say item 5 of cycled_flags
+'''
+    proc = run_program(workdir, "bundled_std_list_cycle", src)
+    assert proc.stdout == "8\n1\n1\n2\n0\n0\n0\nred|blue|red|blue|red\n5\nyes\n5\nyes\nyes\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

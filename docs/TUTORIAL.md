@@ -477,6 +477,8 @@ to main:
     say length of chained_numbers
     let repeated_numbers be (repeat_number with 7, 3)
     say length of repeated_numbers
+    let cycled_numbers be (cycle_number with copied_numbers, 5)
+    say item 5 of cycled_numbers
     let large_numbers be (filter_number with numbers, the function is_large)
     say length of large_numbers
     let smaller_numbers be (reject_number with numbers, the function is_large)

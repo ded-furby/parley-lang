@@ -62,6 +62,20 @@ to repeat_number with value as number, count as number giving list of number:
         add value to out
     give back out
 
+to cycle_number with xs as list of number, count as number giving list of number:
+    let out be an empty list of number
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let index be 1
+    repeat count times:
+        add item index of xs to out
+        set index to index plus 1
+        if index is more than length of xs:
+            set index to 1
+    give back out
+
 to filter_number with xs as list of number, keep as (function taking number giving yesno) giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -760,6 +774,20 @@ to repeat_text with value as text, count as number giving list of text:
         add value to out
     give back out
 
+to cycle_text with xs as list of text, count as number giving list of text:
+    let out be an empty list of text
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let index be 1
+    repeat count times:
+        add item index of xs to out
+        set index to index plus 1
+        if index is more than length of xs:
+            set index to 1
+    give back out
+
 to filter_text with xs as list of text, keep as (function taking text giving yesno) giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -1057,6 +1085,20 @@ to repeat_decimal with value as decimal, count as number giving list of decimal:
         give back out
     repeat count times:
         add value to out
+    give back out
+
+to cycle_decimal with xs as list of decimal, count as number giving list of decimal:
+    let out be an empty list of decimal
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let index be 1
+    repeat count times:
+        add item index of xs to out
+        set index to index plus 1
+        if index is more than length of xs:
+            set index to 1
     give back out
 
 to filter_decimal with xs as list of decimal, keep as (function taking decimal giving yesno) giving list of decimal:
@@ -1768,6 +1810,20 @@ to repeat_yesno with value as yesno, count as number giving list of yesno:
         give back out
     repeat count times:
         add value to out
+    give back out
+
+to cycle_yesno with xs as list of yesno, count as number giving list of yesno:
+    let out be an empty list of yesno
+    if count is at most 0:
+        give back out
+    if length of xs is 0:
+        give back out
+    let index be 1
+    repeat count times:
+        add item index of xs to out
+        set index to index plus 1
+        if index is more than length of xs:
+            set index to 1
     give back out
 
 to filter_yesno with xs as list of yesno, keep as (function taking yesno giving yesno) giving list of yesno:
