@@ -318,6 +318,7 @@ Use `include "std/list"` for common list helpers:
 | `average_number with xs` | decimal average |
 | `median_number with xs` | decimal median of a sorted copy; empty lists fail |
 | `median_low_number with xs` / `median_high_number with xs` | lower or upper middle number from a sorted copy; empty lists fail |
+| `mode_number with xs` | most common number; ties keep the first value seen; empty lists fail |
 | `product_number with xs` | product of all numbers; empty list gives `1` |
 | `sum_number with xs` | sum of all numbers; empty list gives `0` |
 | `sum_product_number with left, right` | sum of pairwise products; empty lists give `0`; length mismatch fails |
@@ -325,6 +326,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_average_number with xs` | maybe decimal average |
 | `maybe_median_number with xs` | maybe decimal median |
 | `maybe_median_low_number with xs` / `maybe_median_high_number with xs` | maybe lower or upper middle number |
+| `maybe_mode_number with xs` | maybe most common number |
 | `first_text with xs` / `last_text with xs` | first or last text |
 | `maybe_first_text with xs` / `maybe_last_text with xs` | maybe first or last text |
 | `maybe_item_text with xs, index` | maybe text at a 1-based index |
@@ -350,6 +352,8 @@ Use `include "std/list"` for common list helpers:
 | `count_text with xs, t` | occurrences of `t` |
 | `contains_text with xs, t` | yes when `t` is present |
 | `index_text with xs, t` | maybe 1-based index of `t` |
+| `mode_text with xs` | most common text; ties keep the first value seen; empty lists fail |
+| `maybe_mode_text with xs` | maybe most common text |
 | `maybe_smallest_text with xs` / `maybe_largest_text with xs` | maybe smallest or largest text |
 | `first_decimal with xs` / `last_decimal with xs` | first or last decimal |
 | `maybe_first_decimal with xs` / `maybe_last_decimal with xs` | maybe first or last decimal |
@@ -379,6 +383,7 @@ Use `include "std/list"` for common list helpers:
 | `average_decimal with xs` | decimal average |
 | `median_decimal with xs` | median of a sorted copy; empty lists fail |
 | `median_low_decimal with xs` / `median_high_decimal with xs` | lower or upper middle decimal from a sorted copy; empty lists fail |
+| `mode_decimal with xs` | most common decimal; ties keep the first value seen; empty lists fail |
 | `product_decimal with xs` | product of all decimals; empty list gives `1.0` |
 | `sum_decimal with xs` | sum of all decimals; empty list gives `0.0` |
 | `sum_product_decimal with left, right` | sum of pairwise products; empty lists give `0.0`; length mismatch fails |
@@ -386,6 +391,7 @@ Use `include "std/list"` for common list helpers:
 | `maybe_average_decimal with xs` | maybe decimal average |
 | `maybe_median_decimal with xs` | maybe decimal median |
 | `maybe_median_low_decimal with xs` / `maybe_median_high_decimal with xs` | maybe lower or upper middle decimal |
+| `maybe_mode_decimal with xs` | maybe most common decimal |
 | `first_yesno with xs` / `last_yesno with xs` | first or last yes/no value |
 | `maybe_first_yesno with xs` / `maybe_last_yesno with xs` | maybe first or last yes/no value |
 | `all_yes with xs` / `any_yes with xs` | yes/no aggregate over a `list of yesno`; empty lists give yes for `all_yes` and no for `any_yes` |
@@ -414,6 +420,8 @@ Use `include "std/list"` for common list helpers:
 | `contains_yesno with xs, value` | yes when a yes/no value is present |
 | `index_yes with xs` / `index_no with xs` | maybe 1-based index of the first yes or no |
 | `index_yesno with xs, value` | maybe 1-based index of a yes/no value |
+| `mode_yesno with xs` | most common yes/no value; ties keep the first value seen; empty lists fail |
+| `maybe_mode_yesno with xs` | maybe most common yes/no value |
 
 Use `include "std/map"` for common map helpers:
 

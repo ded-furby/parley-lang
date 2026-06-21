@@ -238,6 +238,18 @@ to median_high_number with xs as list of number giving number:
     let high_index be floor of ((decimal from (count plus 2)) divided by 2.0)
     give back item high_index of ordered
 
+to mode_number with xs as list of number giving number:
+    if length of xs is 0:
+        fail "mode_number needs at least one item"
+    let best be item 1 of xs
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_number with xs, value)
+        if value_count is more than best_count:
+            set best to value
+            set best_count to value_count
+    give back best
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -291,6 +303,12 @@ to maybe_median_high_number with xs as list of number giving maybe number:
     if length of xs is 0:
         give back nothing
     let value be (median_high_number with xs)
+    give back some value
+
+to maybe_mode_number with xs as list of number giving maybe number:
+    if length of xs is 0:
+        give back nothing
+    let value be (mode_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -502,6 +520,18 @@ to index_text with xs as list of text, needle as text giving maybe number:
         set index to index plus 1
     give back nothing
 
+to mode_text with xs as list of text giving text:
+    if length of xs is 0:
+        fail "mode_text needs at least one item"
+    let best be item 1 of xs
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_text with xs, value)
+        if value_count is more than best_count:
+            set best to value
+            set best_count to value_count
+    give back best
+
 to maybe_smallest_text with xs as list of text giving maybe text:
     if length of xs is 0:
         give back nothing
@@ -512,6 +542,12 @@ to maybe_largest_text with xs as list of text giving maybe text:
     if length of xs is 0:
         give back nothing
     let value be largest of xs
+    give back some value
+
+to maybe_mode_text with xs as list of text giving maybe text:
+    if length of xs is 0:
+        give back nothing
+    let value be (mode_text with xs)
     give back some value
 
 to first_decimal with xs as list of decimal giving decimal:
@@ -754,6 +790,18 @@ to median_high_decimal with xs as list of decimal giving decimal:
     let high_index be floor of ((decimal from (count plus 2)) divided by 2.0)
     give back item high_index of ordered
 
+to mode_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "mode_decimal needs at least one item"
+    let best be item 1 of xs
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_decimal with xs, value)
+        if value_count is more than best_count:
+            set best to value
+            set best_count to value_count
+    give back best
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -809,6 +857,12 @@ to maybe_median_high_decimal with xs as list of decimal giving maybe decimal:
     if length of xs is 0:
         give back nothing
     let value be (median_high_decimal with xs)
+    give back some value
+
+to maybe_mode_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    let value be (mode_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:
@@ -1045,6 +1099,18 @@ to count_yesno with xs as list of yesno, needle as yesno giving number:
             set count to count plus 1
     give back count
 
+to mode_yesno with xs as list of yesno giving yesno:
+    if length of xs is 0:
+        fail "mode_yesno needs at least one item"
+    let best be item 1 of xs
+    let best_count be 0
+    for each value in xs:
+        let value_count be (count_yesno with xs, value)
+        if value_count is more than best_count:
+            set best to value
+            set best_count to value_count
+    give back best
+
 to contains_yesno with xs as list of yesno, needle as yesno giving yesno:
     for each value in xs:
         if value is needle:
@@ -1074,3 +1140,9 @@ to index_yesno with xs as list of yesno, needle as yesno giving maybe number:
             give back some index
         set index to index plus 1
     give back nothing
+
+to maybe_mode_yesno with xs as list of yesno giving maybe yesno:
+    if length of xs is 0:
+        give back nothing
+    let value be (mode_yesno with xs)
+    give back some value

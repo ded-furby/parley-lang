@@ -1038,6 +1038,56 @@ to main:
     )
 
 
+def test_bundled_std_list_mode_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let numbers be a list of 4, 2, 4, 2, 9
+    say (mode_number with numbers)
+    say (maybe_mode_number with numbers)
+    let empty_numbers be an empty list of number
+    say (maybe_mode_number with empty_numbers)
+    attempt:
+        say (mode_number with empty_numbers)
+    if it failed:
+        say "number mode error: {the error}"
+    let texts be a list of "red", "blue", "red", "blue"
+    say (mode_text with texts)
+    say (maybe_mode_text with texts)
+    let empty_texts be an empty list of text
+    say (maybe_mode_text with empty_texts)
+    attempt:
+        say (mode_text with empty_texts)
+    if it failed:
+        say "text mode error: {the error}"
+    let decimals be a list of 1.5, 2.5, 1.5, 2.5
+    say (mode_decimal with decimals)
+    say (maybe_mode_decimal with decimals)
+    let empty_decimals be an empty list of decimal
+    say (maybe_mode_decimal with empty_decimals)
+    attempt:
+        say (mode_decimal with empty_decimals)
+    if it failed:
+        say "decimal mode error: {the error}"
+    let flags be a list of no, yes, yes, no
+    say (mode_yesno with flags)
+    say (maybe_mode_yesno with flags)
+    let empty_flags be an empty list of yesno
+    say (maybe_mode_yesno with empty_flags)
+    attempt:
+        say (mode_yesno with empty_flags)
+    if it failed:
+        say "yesno mode error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_mode", src)
+    assert proc.stdout == (
+        "4\n4\nnothing\nnumber mode error: mode_number needs at least one item\n"
+        "red\nred\nnothing\ntext mode error: mode_text needs at least one item\n"
+        "1.5\n1.5\nnothing\ndecimal mode error: mode_decimal needs at least one item\n"
+        "no\nno\nnothing\nyesno mode error: mode_yesno needs at least one item\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 

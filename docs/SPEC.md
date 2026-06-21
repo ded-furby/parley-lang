@@ -272,6 +272,10 @@ parse-relevant highlights:
   Median-low and median-high helpers return the lower or upper middle value
   from that sorted copy, preserving the original number or decimal item type,
   and also have maybe-returning empty-list-safe variants.
+  Mode helpers for number, text, decimal, and yes/no lists scan the original
+  list, return the most common value, keep the first value seen when counts
+  tie, fail with English text on empty lists, and also have maybe-returning
+  empty-list-safe variants.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,
