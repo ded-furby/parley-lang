@@ -1497,6 +1497,48 @@ to main:
     assert proc.stdout == "2\n1\n2\n2\n6\n0\n0\nada|alan\ngrace|amy\n2\n4.5\n2\n2\nno\n"
 
 
+def test_bundled_std_list_reject_helpers_run(workdir):
+    src = '''include "std/list"
+
+to below_five with n as number giving yesno:
+    give back n is less than 5
+
+to starts_with_a with t as text giving yesno:
+    give back t starts with "a"
+
+to below_three with d as decimal giving yesno:
+    give back d is less than 3.0
+
+to same with flag as yesno giving yesno:
+    give back flag
+
+to main:
+    let numbers be a list of 1, 6, 2
+    let high_numbers be (reject_number with numbers, the function below_five)
+    say length of high_numbers
+    say item 1 of high_numbers
+
+    let names be a list of "ada", "grace", "alan"
+    say (reject_text with names, the function starts_with_a) joined with "|"
+
+    let decimals be a list of 1.5, 4.5, 2.5
+    let large_decimals be (reject_decimal with decimals, the function below_three)
+    say length of large_decimals
+    say item 1 of large_decimals
+
+    let flags be a list of yes, no, yes, no
+    let false_flags be (reject_yesno with flags, the function same)
+    say length of false_flags
+    say item 1 of false_flags
+    say item 2 of false_flags
+
+    let empty_numbers be an empty list of number
+    say length of (reject_number with empty_numbers, the function below_five)
+'''
+    proc = run_program(workdir, "bundled_std_list_reject", src)
+    assert proc.stdout == "1\n6\ngrace\n1\n4.5\n2\nno\nno\n0\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

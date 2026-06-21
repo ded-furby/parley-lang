@@ -228,7 +228,9 @@ parse-relevant highlights:
   predicate functions and return the number of matching items, with `0` for
   empty lists. Take/drop-while helpers accept first-class predicate functions,
   split the leading matching prefix from the remaining suffix, and return
-  fresh lists. Count, index, and membership helpers work
+  fresh lists. Reject helpers accept first-class predicate functions and return
+  fresh lists of values where the predicate returns `no`. Count, index, and
+  membership helpers work
   over number, text, decimal, and yes/no items.
   Sort helpers reorder
   number, text, decimal, and yes/no caller lists in place, with yes/no sorting

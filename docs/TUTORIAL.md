@@ -423,6 +423,8 @@ to main:
     say length of copied_numbers
     let large_numbers be (filter_number with numbers, the function is_large)
     say length of large_numbers
+    let smaller_numbers be (reject_number with numbers, the function is_large)
+    say length of smaller_numbers
     let doubled_numbers be (map_number with numbers, the function doubled_number)
     say item 1 of doubled_numbers
     say (fold_number with numbers, 0, the function add_number)

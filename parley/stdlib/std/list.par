@@ -53,6 +53,13 @@ to filter_number with xs as list of number, keep as (function taking number givi
             add value to out
     give back out
 
+to reject_number with xs as list of number, test as (function taking number giving yesno) giving list of number:
+    let out be an empty list of number
+    for each value in xs:
+        if (test with value) is no:
+            add value to out
+    give back out
+
 to map_number with xs as list of number, transform as (function taking number giving number) giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -268,6 +275,13 @@ to filter_text with xs as list of text, keep as (function taking text giving yes
             add value to out
     give back out
 
+to reject_text with xs as list of text, test as (function taking text giving yesno) giving list of text:
+    let out be an empty list of text
+    for each value in xs:
+        if (test with value) is no:
+            add value to out
+    give back out
+
 to map_text with xs as list of text, transform as (function taking text giving text) giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -462,6 +476,13 @@ to filter_decimal with xs as list of decimal, keep as (function taking decimal g
     let out be an empty list of decimal
     for each value in xs:
         if (keep with value):
+            add value to out
+    give back out
+
+to reject_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving list of decimal:
+    let out be an empty list of decimal
+    for each value in xs:
+        if (test with value) is no:
             add value to out
     give back out
 
@@ -691,6 +712,13 @@ to filter_yesno with xs as list of yesno, keep as (function taking yesno giving 
     let out be an empty list of yesno
     for each value in xs:
         if (keep with value):
+            add value to out
+    give back out
+
+to reject_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving list of yesno:
+    let out be an empty list of yesno
+    for each value in xs:
+        if (test with value) is no:
             add value to out
     give back out
 
