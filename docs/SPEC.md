@@ -289,6 +289,12 @@ parse-relevant highlights:
   standard-deviation helpers return the square root of that sample variance.
   Inputs shorter than two items fail with English text, and maybe-returning
   variants return `nothing` instead.
+  Geometric mean helpers for number and decimal lists multiply non-negative
+  values and raise the product to `1 divided by length`, returning `0.0` when
+  any value is zero. Harmonic mean helpers divide the list length by the sum
+  of reciprocal values, returning `0.0` when any value is zero. Empty inputs
+  and negative values fail with English text; maybe-returning variants return
+  `nothing` for those invalid inputs.
 * **Bundled map helpers** in `std/map` provide key membership checks, value
   membership checks, maybe lookup, fallback lookup, fallback insertion,
   counted increments, copy helpers, update helpers, take helpers,

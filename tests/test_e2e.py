@@ -1250,6 +1250,101 @@ to main:
     )
 
 
+def test_bundled_std_list_mean_family_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 1, 2, 4
+    say (is_close with (geometric_mean_number with numbers), 2.0, 0.0, 0.000001)
+    say (is_close with (harmonic_mean_number with numbers), 1.7142857142857142, 0.0, 0.000001)
+    let maybe_number_geo be (maybe_geometric_mean_number with numbers)
+    let maybe_number_harmonic be (maybe_harmonic_mean_number with numbers)
+    if maybe_number_geo is not nothing:
+        let number_geo be value of maybe_number_geo
+        say (is_close with number_geo, 2.0, 0.0, 0.000001)
+    if maybe_number_harmonic is not nothing:
+        let number_harmonic be value of maybe_number_harmonic
+        say (is_close with number_harmonic, 1.7142857142857142, 0.0, 0.000001)
+    let zero_numbers be a list of 0, 2, 4
+    say (geometric_mean_number with zero_numbers)
+    say (harmonic_mean_number with zero_numbers)
+    let empty_numbers be an empty list of number
+    say (maybe_geometric_mean_number with empty_numbers)
+    say (maybe_harmonic_mean_number with empty_numbers)
+    attempt:
+        say (geometric_mean_number with empty_numbers)
+    if it failed:
+        say "number geometric error: {the error}"
+    attempt:
+        say (harmonic_mean_number with empty_numbers)
+    if it failed:
+        say "number harmonic error: {the error}"
+    let negative_numbers be a list of 1, -2, 4
+    say (maybe_geometric_mean_number with negative_numbers)
+    say (maybe_harmonic_mean_number with negative_numbers)
+    attempt:
+        say (geometric_mean_number with negative_numbers)
+    if it failed:
+        say "number geometric negative: {the error}"
+    attempt:
+        say (harmonic_mean_number with negative_numbers)
+    if it failed:
+        say "number harmonic negative: {the error}"
+    let decimals be a list of 1.5, 2.5, 3.5
+    say (is_close with (geometric_mean_decimal with decimals), 2.358846990158267, 0.0, 0.000001)
+    say (is_close with (harmonic_mean_decimal with decimals), 2.2183098591549295, 0.0, 0.000001)
+    let maybe_decimal_geo be (maybe_geometric_mean_decimal with decimals)
+    let maybe_decimal_harmonic be (maybe_harmonic_mean_decimal with decimals)
+    if maybe_decimal_geo is not nothing:
+        let decimal_geo be value of maybe_decimal_geo
+        say (is_close with decimal_geo, 2.358846990158267, 0.0, 0.000001)
+    if maybe_decimal_harmonic is not nothing:
+        let decimal_harmonic be value of maybe_decimal_harmonic
+        say (is_close with decimal_harmonic, 2.2183098591549295, 0.0, 0.000001)
+    let zero_decimals be a list of 0.0, 2.5, 3.5
+    say (geometric_mean_decimal with zero_decimals)
+    say (harmonic_mean_decimal with zero_decimals)
+    let empty_decimals be an empty list of decimal
+    say (maybe_geometric_mean_decimal with empty_decimals)
+    say (maybe_harmonic_mean_decimal with empty_decimals)
+    attempt:
+        say (geometric_mean_decimal with empty_decimals)
+    if it failed:
+        say "decimal geometric error: {the error}"
+    attempt:
+        say (harmonic_mean_decimal with empty_decimals)
+    if it failed:
+        say "decimal harmonic error: {the error}"
+    let negative_decimals be a list of 1.5, -2.5, 3.5
+    say (maybe_geometric_mean_decimal with negative_decimals)
+    say (maybe_harmonic_mean_decimal with negative_decimals)
+    attempt:
+        say (geometric_mean_decimal with negative_decimals)
+    if it failed:
+        say "decimal geometric negative: {the error}"
+    attempt:
+        say (harmonic_mean_decimal with negative_decimals)
+    if it failed:
+        say "decimal harmonic negative: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_mean_family", src)
+    assert proc.stdout == (
+        "yes\nyes\nyes\nyes\n0\n0\nnothing\nnothing\n"
+        "number geometric error: geometric_mean_number needs at least one item\n"
+        "number harmonic error: harmonic_mean_number needs at least one item\n"
+        "nothing\nnothing\n"
+        "number geometric negative: geometric_mean_number needs non-negative items\n"
+        "number harmonic negative: harmonic_mean_number does not support negative items\n"
+        "yes\nyes\nyes\nyes\n0\n0\nnothing\nnothing\n"
+        "decimal geometric error: geometric_mean_decimal needs at least one item\n"
+        "decimal harmonic error: harmonic_mean_decimal needs at least one item\n"
+        "nothing\nnothing\n"
+        "decimal geometric negative: geometric_mean_decimal needs non-negative items\n"
+        "decimal harmonic negative: harmonic_mean_decimal does not support negative items\n"
+    )
+
+
 def test_bundled_std_map_package_runs(workdir):
     src = '''include "std/map"
 

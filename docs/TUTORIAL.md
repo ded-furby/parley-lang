@@ -424,6 +424,8 @@ to main:
     say (padded_center with "go", 5, ".")
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
+    say (geometric_mean_number with numbers)
+    say (harmonic_mean_number with numbers)
     say (median_number with numbers)
     say (median_low_number with numbers)
     say (median_high_number with numbers)
@@ -474,6 +476,8 @@ to main:
     reverse_number with numbers
     say length of numbers
     say (maybe_average_number with empty_numbers)
+    say (maybe_geometric_mean_number with empty_numbers)
+    say (maybe_harmonic_mean_number with empty_numbers)
     say (maybe_median_number with empty_numbers)
     say (maybe_median_low_number with empty_numbers)
     say (maybe_median_high_number with empty_numbers)
@@ -485,6 +489,8 @@ to main:
     say (maybe_sample_standard_deviation_number with one_number)
     let prices be a list of 1.5, 2.5, 2.0
     say (average_decimal with prices)
+    say (geometric_mean_decimal with prices)
+    say (harmonic_mean_decimal with prices)
     say (median_decimal with prices)
     say (median_low_decimal with prices)
     say (median_high_decimal with prices)
@@ -498,6 +504,8 @@ to main:
     say (product_decimal with prices)
     let quantities be a list of 2.0, 4.0, 1.0
     say (sum_product_decimal with prices, quantities)
+    say (maybe_geometric_mean_decimal with prices)
+    say (maybe_harmonic_mean_decimal with prices)
     say (maybe_median_decimal with prices)
     say (maybe_median_low_decimal with prices)
     say (maybe_median_high_decimal with prices)

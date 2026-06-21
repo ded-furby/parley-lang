@@ -295,6 +295,38 @@ to sample_standard_deviation_number with xs as list of number giving decimal:
     let variance be (sample_variance_number with xs)
     give back square root of variance
 
+to geometric_mean_number with xs as list of number giving decimal:
+    if length of xs is 0:
+        fail "geometric_mean_number needs at least one item"
+    let product be 1.0
+    let has_zero be no
+    for each value in xs:
+        if value is less than 0:
+            fail "geometric_mean_number needs non-negative items"
+        if value is 0:
+            set has_zero to yes
+        otherwise:
+            set product to product times (decimal from value)
+    if has_zero:
+        give back 0.0
+    give back product to the power of (1.0 divided by (decimal from (length of xs)))
+
+to harmonic_mean_number with xs as list of number giving decimal:
+    if length of xs is 0:
+        fail "harmonic_mean_number needs at least one item"
+    let has_zero be no
+    for each value in xs:
+        if value is less than 0:
+            fail "harmonic_mean_number does not support negative items"
+        if value is 0:
+            set has_zero to yes
+    if has_zero:
+        give back 0.0
+    let total be 0.0
+    for each value in xs:
+        set total to total plus (1.0 divided by (decimal from value))
+    give back (decimal from (length of xs)) divided by total
+
 to product_number with xs as list of number giving number:
     let out be 1
     for each value in xs:
@@ -378,6 +410,24 @@ to maybe_sample_standard_deviation_number with xs as list of number giving maybe
     if length of xs is less than 2:
         give back nothing
     let value be (sample_standard_deviation_number with xs)
+    give back some value
+
+to maybe_geometric_mean_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    for each value in xs:
+        if value is less than 0:
+            give back nothing
+    let value be (geometric_mean_number with xs)
+    give back some value
+
+to maybe_harmonic_mean_number with xs as list of number giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    for each value in xs:
+        if value is less than 0:
+            give back nothing
+    let value be (harmonic_mean_number with xs)
     give back some value
 
 to first_text with xs as list of text giving text:
@@ -929,6 +979,38 @@ to sample_standard_deviation_decimal with xs as list of decimal giving decimal:
     let variance be (sample_variance_decimal with xs)
     give back square root of variance
 
+to geometric_mean_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "geometric_mean_decimal needs at least one item"
+    let product be 1.0
+    let has_zero be no
+    for each value in xs:
+        if value is less than 0.0:
+            fail "geometric_mean_decimal needs non-negative items"
+        if value is 0.0:
+            set has_zero to yes
+        otherwise:
+            set product to product times value
+    if has_zero:
+        give back 0.0
+    give back product to the power of (1.0 divided by (decimal from (length of xs)))
+
+to harmonic_mean_decimal with xs as list of decimal giving decimal:
+    if length of xs is 0:
+        fail "harmonic_mean_decimal needs at least one item"
+    let has_zero be no
+    for each value in xs:
+        if value is less than 0.0:
+            fail "harmonic_mean_decimal does not support negative items"
+        if value is 0.0:
+            set has_zero to yes
+    if has_zero:
+        give back 0.0
+    let total be 0.0
+    for each value in xs:
+        set total to total plus (1.0 divided by value)
+    give back (decimal from (length of xs)) divided by total
+
 to product_decimal with xs as list of decimal giving decimal:
     let out be 1.0
     for each value in xs:
@@ -1014,6 +1096,24 @@ to maybe_sample_standard_deviation_decimal with xs as list of decimal giving may
     if length of xs is less than 2:
         give back nothing
     let value be (sample_standard_deviation_decimal with xs)
+    give back some value
+
+to maybe_geometric_mean_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    for each value in xs:
+        if value is less than 0.0:
+            give back nothing
+    let value be (geometric_mean_decimal with xs)
+    give back some value
+
+to maybe_harmonic_mean_decimal with xs as list of decimal giving maybe decimal:
+    if length of xs is 0:
+        give back nothing
+    for each value in xs:
+        if value is less than 0.0:
+            give back nothing
+    let value be (harmonic_mean_decimal with xs)
     give back some value
 
 to first_yesno with xs as list of yesno giving yesno:
