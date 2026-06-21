@@ -352,6 +352,9 @@ to is_large with n as number giving yesno:
 to doubled_number with n as number giving number:
     give back n times 2
 
+to add_number with left as number, right as number giving number:
+    give back left plus right
+
 to main:
     say (clamped with 12, 1, 10)
     say (clamped_decimal with 12.5, 1.5, 10.5)
@@ -422,6 +425,7 @@ to main:
     say length of large_numbers
     let doubled_numbers be (map_number with numbers, the function doubled_number)
     say item 1 of doubled_numbers
+    say (fold_number with numbers, 0, the function add_number)
     say (any_number with numbers, the function is_large)
     say (all_number with numbers, the function is_large)
     say (maybe_find_number with numbers, the function is_large)

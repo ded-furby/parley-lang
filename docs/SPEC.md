@@ -220,8 +220,10 @@ parse-relevant highlights:
   a first-class same-type transform function, return a fresh list, and
   preserve item order. Predicate any/all helpers accept first-class predicate
   functions, short-circuit over list items, and return no/yes respectively for
-  empty lists. Maybe-find helpers accept first-class predicate functions,
-  return `some value` for the first matching item, and return `nothing` for
+  empty lists. Fold helpers accept first-class two-argument same-type
+  accumulator functions, scan left to right, and return the explicit initial
+  value for empty lists. Maybe-find helpers accept first-class predicate
+  functions, return `some value` for the first matching item, and return `nothing` for
   empty lists or no-match scans. Predicate-count helpers accept first-class
   predicate functions and return the number of matching items, with `0` for
   empty lists. Count, index, and membership helpers work

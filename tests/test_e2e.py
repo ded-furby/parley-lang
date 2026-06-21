@@ -1409,6 +1409,46 @@ to main:
     assert proc.stdout == "3\n0\n2\n0\n2\n2\n"
 
 
+def test_bundled_std_list_fold_helpers_run(workdir):
+    src = '''include "std/list"
+
+to add_numbers with left as number, right as number giving number:
+    give back left plus right
+
+to join_text with left as text, right as text giving text:
+    if left is "":
+        give back right
+    give back "{left}|{right}"
+
+to add_decimals with left as decimal, right as decimal giving decimal:
+    give back left plus right
+
+to both_yes with left as yesno, right as yesno giving yesno:
+    give back left and right
+
+to main:
+    let numbers be a list of 2, 3, 4
+    say (fold_number with numbers, 10, the function add_numbers)
+    let empty_numbers be an empty list of number
+    say (fold_number with empty_numbers, 10, the function add_numbers)
+
+    let names be a list of "ada", "grace", "linus"
+    say (fold_text with names, "", the function join_text)
+    let empty_names be an empty list of text
+    say (fold_text with empty_names, "none", the function join_text)
+
+    let decimals be a list of 1.5, 2.5
+    say (fold_decimal with decimals, 0.5, the function add_decimals)
+
+    let flags be a list of yes, no, yes
+    say (fold_yesno with flags, yes, the function both_yes)
+    let empty_flags be an empty list of yesno
+    say (fold_yesno with empty_flags, yes, the function both_yes)
+'''
+    proc = run_program(workdir, "bundled_std_list_fold", src)
+    assert proc.stdout == "19\n10\nada|grace|linus\nnone\n4.5\nno\nyes\n"
+
+
 def test_build_produces_native_binary(workdir):
     src = 'to main:\n    say "compiled!"\n'
     f = workdir / "binme.par"

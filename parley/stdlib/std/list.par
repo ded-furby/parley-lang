@@ -59,6 +59,12 @@ to map_number with xs as list of number, transform as (function taking number gi
         add (transform with value) to out
     give back out
 
+to fold_number with xs as list of number, initial as number, combine as (function taking number, number giving number) giving number:
+    let out be initial
+    for each value in xs:
+        set out to (combine with out, value)
+    give back out
+
 to any_number with xs as list of number, test as (function taking number giving yesno) giving yesno:
     for each value in xs:
         if (test with value):
@@ -248,6 +254,12 @@ to map_text with xs as list of text, transform as (function taking text giving t
         add (transform with value) to out
     give back out
 
+to fold_text with xs as list of text, initial as text, combine as (function taking text, text giving text) giving text:
+    let out be initial
+    for each value in xs:
+        set out to (combine with out, value)
+    give back out
+
 to any_text with xs as list of text, test as (function taking text giving yesno) giving yesno:
     for each value in xs:
         if (test with value):
@@ -417,6 +429,12 @@ to map_decimal with xs as list of decimal, transform as (function taking decimal
     let out be an empty list of decimal
     for each value in xs:
         add (transform with value) to out
+    give back out
+
+to fold_decimal with xs as list of decimal, initial as decimal, combine as (function taking decimal, decimal giving decimal) giving decimal:
+    let out be initial
+    for each value in xs:
+        set out to (combine with out, value)
     give back out
 
 to any_decimal with xs as list of decimal, test as (function taking decimal giving yesno) giving yesno:
@@ -620,6 +638,12 @@ to map_yesno with xs as list of yesno, transform as (function taking yesno givin
     let out be an empty list of yesno
     for each value in xs:
         add (transform with value) to out
+    give back out
+
+to fold_yesno with xs as list of yesno, initial as yesno, combine as (function taking yesno, yesno giving yesno) giving yesno:
+    let out be initial
+    for each value in xs:
+        set out to (combine with out, value)
     give back out
 
 to any_yesno with xs as list of yesno, test as (function taking yesno giving yesno) giving yesno:
