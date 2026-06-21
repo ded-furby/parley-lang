@@ -40,6 +40,30 @@ to list_slice_number with xs as list of number, first_index as number, last_inde
         add value to out
     give back out
 
+to list_slice_step_number with xs as list of number, first_index as number, last_index as number, step as number giving list of number:
+    let out be an empty list of number
+    if step is at most 0:
+        fail "list_slice_step_number needs a positive step"
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let index be first_index
+    if index is less than 1:
+        set index to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    while index is at most finish:
+        let value be item index of xs
+        add value to out
+        set index to index plus step
+    give back out
+
 to copy_number with xs as list of number giving list of number:
     let out be an empty list of number
     for each value in xs:
@@ -752,6 +776,30 @@ to list_slice_text with xs as list of text, first_index as number, last_index as
         add value to out
     give back out
 
+to list_slice_step_text with xs as list of text, first_index as number, last_index as number, step as number giving list of text:
+    let out be an empty list of text
+    if step is at most 0:
+        fail "list_slice_step_text needs a positive step"
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let index be first_index
+    if index is less than 1:
+        set index to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    while index is at most finish:
+        let value be item index of xs
+        add value to out
+        set index to index plus step
+    give back out
+
 to copy_text with xs as list of text giving list of text:
     let out be an empty list of text
     for each value in xs:
@@ -1063,6 +1111,30 @@ to list_slice_decimal with xs as list of decimal, first_index as number, last_in
     for each i from start to finish:
         let value be item i of xs
         add value to out
+    give back out
+
+to list_slice_step_decimal with xs as list of decimal, first_index as number, last_index as number, step as number giving list of decimal:
+    let out be an empty list of decimal
+    if step is at most 0:
+        fail "list_slice_step_decimal needs a positive step"
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let index be first_index
+    if index is less than 1:
+        set index to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    while index is at most finish:
+        let value be item index of xs
+        add value to out
+        set index to index plus step
     give back out
 
 to copy_decimal with xs as list of decimal giving list of decimal:
@@ -1788,6 +1860,30 @@ to list_slice_yesno with xs as list of yesno, first_index as number, last_index 
     for each i from start to finish:
         let value be item i of xs
         add value to out
+    give back out
+
+to list_slice_step_yesno with xs as list of yesno, first_index as number, last_index as number, step as number giving list of yesno:
+    let out be an empty list of yesno
+    if step is at most 0:
+        fail "list_slice_step_yesno needs a positive step"
+    if length of xs is 0:
+        give back out
+    if first_index is more than last_index:
+        give back out
+    if last_index is less than 1:
+        give back out
+    if first_index is more than length of xs:
+        give back out
+    let index be first_index
+    if index is less than 1:
+        set index to 1
+    let finish be last_index
+    if finish is more than length of xs:
+        set finish to length of xs
+    while index is at most finish:
+        let value be item index of xs
+        add value to out
+        set index to index plus step
     give back out
 
 to copy_yesno with xs as list of yesno giving list of yesno:

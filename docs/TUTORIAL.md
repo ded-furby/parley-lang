@@ -470,6 +470,8 @@ to main:
     say (maybe_item_number with numbers, 2)
     let middle_numbers be (list_slice_number with numbers, 2, 3)
     say length of middle_numbers
+    let every_other_number be (list_slice_step_number with numbers, 1, 4, 2)
+    say item 2 of every_other_number
     let copied_numbers be (copy_number with numbers)
     add 99 to numbers
     say length of copied_numbers

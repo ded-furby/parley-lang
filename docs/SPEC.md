@@ -225,7 +225,9 @@ parse-relevant highlights:
 * **Bundled list helpers** in `std/list`, including `list_slice_number`,
   `list_slice_text`, `list_slice_decimal`, and `list_slice_yesno`, use
   1-based inclusive indexes. Slice helpers clamp bounds to the list and give
-  an empty list for reversed or out-of-range requests. Copy helpers return a
+  an empty list for reversed or out-of-range requests. Stepped slice helpers
+  use the same bounds but include every `step`th item and fail for
+  non-positive steps. Copy helpers return a
   fresh number, text, decimal, or yes/no list with the same items. Yes/no edge
   helpers mirror the number, text, and decimal first/last helpers, including
   maybe-returning empty-list variants. Extend, clear, insert, pop, remove,

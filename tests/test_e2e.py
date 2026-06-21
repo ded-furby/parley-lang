@@ -1184,6 +1184,45 @@ to main:
     assert proc.stdout == "8\n1\n1\n2\n0\n0\n0\nred|blue|red|blue|red\n5\nyes\n5\nyes\nyes\n"
 
 
+def test_bundled_std_list_stepped_slice_helpers_run(workdir):
+    src = '''include "std/list"
+include "std/math"
+
+to main:
+    let numbers be a list of 10, 20, 30, 40, 50, 60
+    let every_other_number be (list_slice_step_number with numbers, 2, 6, 2)
+    say length of every_other_number
+    say item 1 of every_other_number
+    say item 3 of every_other_number
+    let clamped_numbers be (list_slice_step_number with numbers, 0, 99, 3)
+    say length of clamped_numbers
+    say item 1 of clamped_numbers
+    say item 2 of clamped_numbers
+    say length of (list_slice_step_number with numbers, 5, 2, 2)
+    let words be a list of "a", "b", "c", "d", "e"
+    let stepped_words be (list_slice_step_text with words, 1, 5, 2)
+    say stepped_words joined with "|"
+    let prices be a list of 1.1, 2.2, 3.3, 4.4
+    let stepped_prices be (list_slice_step_decimal with prices, 1, 4, 3)
+    say length of stepped_prices
+    say (is_close with item 2 of stepped_prices, 4.4, 0.0, 0.000001)
+    let flags be a list of yes, no, no, yes, no
+    let stepped_flags be (list_slice_step_yesno with flags, 2, 5, 2)
+    say length of stepped_flags
+    say item 1 of stepped_flags
+    say item 2 of stepped_flags
+    let empty_numbers be an empty list of number
+    say length of (list_slice_step_number with empty_numbers, 1, 3, 2)
+    attempt:
+        let broken be (list_slice_step_number with numbers, 1, 3, 0)
+        say length of broken
+    if it failed:
+        say "step error: {the error}"
+'''
+    proc = run_program(workdir, "bundled_std_list_stepped_slice", src)
+    assert proc.stdout == "3\n20\n60\n2\n10\n40\n0\na|c|e\n2\nyes\n2\nno\nyes\n0\nstep error: list_slice_step_number needs a positive step\n"
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"
