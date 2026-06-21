@@ -422,6 +422,11 @@ to main:
     say (zero_filled with "-42", 5)
     say (tabs_expanded with "a\tb", 4)
     say (padded_center with "go", 5, ".")
+    let words be a list of "delta", "bravo", "charlie", "echo"
+    let running_word_mins be (accumulated_minimum_text with words)
+    say item 3 of running_word_mins
+    let running_word_maxes be (accumulated_maximum_text with words)
+    say item 4 of running_word_maxes
     let numbers be a list of 4, 2, 4, 8
     say (average_number with numbers)
     say (geometric_mean_number with numbers)

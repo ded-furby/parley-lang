@@ -1031,6 +1031,33 @@ to main:
     assert proc.stdout == "5\n3\n3\n2\n5\n5\n7\n7\n0\n0\nyes\nyes\n0\n0\n"
 
 
+def test_bundled_std_list_text_accumulated_extrema_helpers_run(workdir):
+    src = '''include "std/list"
+
+to main:
+    let words be a list of "delta", "bravo", "charlie", "echo"
+    let mins be (accumulated_minimum_text with words)
+    say item 1 of mins
+    say item 2 of mins
+    say item 3 of mins
+    say item 4 of mins
+    let maxes be (accumulated_maximum_text with words)
+    say item 1 of maxes
+    say item 2 of maxes
+    say item 3 of maxes
+    say item 4 of maxes
+    let empty_words be an empty list of text
+    say length of (accumulated_minimum_text with empty_words)
+    say length of (accumulated_maximum_text with empty_words)
+'''
+    proc = run_program(workdir, "bundled_std_list_text_accumulated_extrema", src)
+    assert proc.stdout == (
+        "delta\nbravo\nbravo\nbravo\n"
+        "delta\ndelta\ndelta\necho\n"
+        "0\n0\n"
+    )
+
+
 def test_bundled_std_list_median_helpers_run(workdir):
     src = '''include "std/list"
 include "std/math"

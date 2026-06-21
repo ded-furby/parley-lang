@@ -374,6 +374,7 @@ Use `include "std/list"` for common list helpers:
 | `remove_text with changing xs, value` | remove the first matching text; yes if one was removed |
 | `sort_text with changing xs` | sort a text list in place |
 | `reverse_text with changing xs` | reverse a text list in place |
+| `accumulated_minimum_text with xs` / `accumulated_maximum_text with xs` | fresh text list of running minimum or maximum values; empty list gives an empty list |
 | `count_text with xs, t` | occurrences of `t` |
 | `contains_text with xs, t` | yes when `t` is present |
 | `index_text with xs, t` | maybe 1-based index of `t` |

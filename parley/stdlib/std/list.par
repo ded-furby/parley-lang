@@ -859,6 +859,28 @@ to reverse_text with changing xs as list of text:
     clear_text with xs
     extend_text with xs, out
 
+to accumulated_minimum_text with xs as list of text giving list of text:
+    let out be an empty list of text
+    if length of xs is 0:
+        give back out
+    let best be item 1 of xs
+    for each value in xs:
+        if value is less than best:
+            set best to value
+        add best to out
+    give back out
+
+to accumulated_maximum_text with xs as list of text giving list of text:
+    let out be an empty list of text
+    if length of xs is 0:
+        give back out
+    let best be item 1 of xs
+    for each value in xs:
+        if value is more than best:
+            set best to value
+        add best to out
+    give back out
+
 to count_text with xs as list of text, needle as text giving number:
     let count be 0
     for each value in xs:
