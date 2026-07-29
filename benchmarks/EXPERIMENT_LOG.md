@@ -697,3 +697,43 @@ Parley prompt overhead that remains visible in the clean-run cluster.
   isolate compiler ergonomics.
 - Verification: 284 tests passed, including native output and the prior
   non-changing heap-parameter clone regression.
+
+## 013 — Reliability restored, fixed-context gap
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.149, commit `dab87c7f29d582a3e8bed92a50d7ba19b9119c5d`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `340921143168951af65e743ca994cb4071e90058dfb4ab20a621f90847c39597`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/013-reliability-restored-context-gap.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 6/6 | 6/6 | 45,018.5 | 22.5310 | 0 |
+| Python | 6/6 | 5/6 | 6/6 | 43,061.0 | 17.6641 | 1 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,437.0 | 20.4717 | 0 |
+
+### Gate result
+
+Correctness and protocol compliance remained perfect. Parley reached 6/6
+first-public-check success with zero repairs, exceeding Python and tying Rust.
+The strict efficiency gate still **failed**: median tokens were 4.55% above
+Python and 3.64% above Rust; elapsed time was 27.55% above Python and 10.06%
+above Rust.
+
+### Isolated remaining gap
+
+All six Parley sessions passed immediately in a narrow 44,483–45,503-token
+band. The 3,152-character Parley prompt remained 1,683 characters larger than
+Python and 1,672 larger than Rust. Median Parley input exceeded Python by
+1,770 tokens while output exceeded it by 187.5, consistent with fixed context
+being replayed across a clean multi-turn tool interaction.
+
+### Next experiment
+
+Preserve the proven 1,519-character core, then reduce the always-loaded skill
+to the smallest executable contract that retains the exact six clean source
+families. Keep compiler 0.3.149 and protocol v2 frozen; run pilot 014 before
+starting the 90-session confirmation.

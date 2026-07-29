@@ -18,6 +18,7 @@ transformation, and chart-map notes.
 | 010 | Parley 0.3.146 | Natural aliases recovered bracket first-pass but two task families still repaired | [HTML](010-natural-alias-partial-recovery.html) |
 | 011 | Parley 0.3.147 | Repairs fell to five; paired text-conversion/output gaps remained | [HTML](011-conversion-output-gap.html) |
 | 012 | Parley 0.3.148 | All languages tied at 5/6 first-pass; strict token and elapsed parity still missed | [HTML](012-near-parity-single-outlier.html) |
+| 013 | Parley 0.3.149 | Parley reached 6/6 first-pass; fixed context left a 4.55% token gap | [HTML](013-reliability-restored-context-gap.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under
