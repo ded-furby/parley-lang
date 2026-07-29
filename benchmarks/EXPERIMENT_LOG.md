@@ -180,3 +180,42 @@ then run a new immutable matrix. Do not alter or selectively rerun iteration
 - Expected benchmark effect: remove the seven Parley non-first-pass sessions
   seen in iteration 003 and reduce repeated prompt input on clean runs. This
   expectation remains unproven until iteration 004.
+
+## 004 — First-pass safe-forms pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.141, commit `79ecfbb6e63952edda41113df9ece5cd70aad59d`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `4c2e898195dadc2e53e5193d215cdaa49d99681d96451647856e24ea091f3ad7`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `35f535243703a2a66ed5dccf81f15d597619d59488a7aca9e63db187bc8acf16`
+- Report: `benchmarks/reports/004-first-pass-pilot.html`
+
+| Language | Hidden success | First public pass | Median checks | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 6/6 | 1.0 | 31,636.5 | 19.9827 | 0 |
+| Python | 6/6 | 6/6 | 1.0 | 28,687.5 | 15.4619 | 0 |
+| Rust | 6/6 | 6/6 | 1.0 | 43,202.0 | 19.8809 | 0 |
+
+### Gate result
+
+The targeted directional first-pass gate passed: all seven failure patterns
+from iteration 003 were absent, and all Parley sessions passed their first
+public check and the hidden cases. Strict efficiency parity still **failed**.
+Parley used 10.3% more median tokens and 29.2% more median time than Python,
+although it used 26.8% fewer median tokens than Rust.
+
+### Integrity note
+
+An initial sandboxed launcher attempt could not write the configured Codex
+state database and exited all workers before session creation with zero
+tokens. It was rejected as an infrastructure incident. The recorded matrix is
+the subsequent complete rerun: 18 unique threads, no timeouts, no agent
+failures, and no checker-integrity failures.
+
+### Next experiment
+
+Reduce clean-run prompt overhead again without removing the four rules that
+prevented repairs. Run another immutable two-replicate pilot before spending
+90 sessions on confirmation. Do not alter or selectively rerun iteration 004.
