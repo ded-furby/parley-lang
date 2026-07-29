@@ -22,7 +22,11 @@ Otherwise run `parley check program.par --json`. Follow hints until
 - Use typed empty collections: `an empty list of text` or
   `a map from text to number`.
 - Use `ask ""` for line input without a prompt. `ask for a number ""` and
-  `number from text` give `maybe number`; check `is nothing` before `value of`.
+  `number from quantity_text` give `maybe number`; check `is nothing` before
+  `value of`.
+- Booleans are `yesno` with literals `yes` and `no`, never `true`/`false`.
+- Comparisons are exactly `is`, `is not`, `is less than`, `is at most`,
+  `is more than`, and `is at least`; never write `is equal to`.
 - Literal braces in strings are doubled (`"{{"`, `"}}"`); interpolation uses
   single braces (`"total: {count}"`).
 - In long conditions, bind calls or repeated `item ... of ...` expressions to
@@ -73,9 +77,10 @@ for each index from 1 to length of values:
     say item index of values
 ```
 
-Range endpoints are inclusive. Use `stop`/`skip`. Create variables before a
-block if needed after it. `let` creates; `set` mutates. Operators include
-`plus`, `minus`, `times`, `%`, comparisons, `and`, `or`, and `not`.
+Range endpoints are inclusive. `stop` and `skip` work only inside loops; use
+`otherwise` branching instead of `stop` to leave `main`. Create variables
+before a block if needed after it. `let` creates; `set` mutates. Arithmetic
+uses `plus`, `minus`, `times`, `divided by`, and `%`.
 
 Read `references/extended-reference.md` only for records, enums, closures,
 files, includes, packages, editors, or research tooling. Repository docs are

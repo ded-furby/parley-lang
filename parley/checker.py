@@ -903,6 +903,12 @@ class Checker:
             if fn.ret is None:
                 return A.TUnit()
             return fn.ret
+        if e.name in {"true", "false"}:
+            replacement = "yes" if e.name == "true" else "no"
+            hint = f'Parley uses `{replacement}` here, not `{e.name}`.'
+            self.err("P201", f'There is no "{e.name}" here.', e,
+                     hint=hint, replacement=replacement)
+            return TErr()
         s = _suggest(e.name, self._known_names())
         hint = f'Did you mean "{s}"?' if s else "Create it first with `let …`."
         self.err("P201", f'There is no "{e.name}" here.', e, hint=hint)

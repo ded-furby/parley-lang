@@ -14,6 +14,8 @@ def in_main(*lines: str) -> str:
 CASES = [
     # (name, source, expected code, fragment expected in message+hint)
     ("unknown_var", in_main("let count be 1", "say cuont"), "P201", 'Did you mean "count"'),
+    ("python_true_literal", in_main("if true:", "    say 1"), "P201", "uses `yes`"),
+    ("python_false_literal", in_main("if false:", "    say 1"), "P201", "uses `no`"),
     ("unknown_function", in_main("gret with 1"), "P202", "gret"),
     ("did_you_mean_function",
      "to greet with n as number:\n    say n\nto main:\n    gret with 1\n",

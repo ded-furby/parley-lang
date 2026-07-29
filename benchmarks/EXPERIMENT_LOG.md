@@ -279,3 +279,19 @@ elapsed time was 134.7% above Python.
 Restore only the four missing guardrails above, assert them in the skill
 regression test, and run a new immutable pilot. Treat 2,998 characters as
 below the demonstrated reliability floor for this task family.
+
+## Engineering changes after 005
+
+### 2026-07-29 — Parley 0.3.143 reliability-floor recovery
+
+- Restored `yes`/`no`, the exact comparison spellings, loop-only `stop`, and
+  the unambiguous `number from quantity_text` form identified by iteration
+  005, producing a 3,283-character core.
+- Kept the core 24.4% smaller than iteration 004's 4,340-character version;
+  metered task prompts are 4,730–4,774 characters versus 5,787–5,831 there.
+- Added P201 replacements from `true`/`false` to `yes`/`no` and exact P101
+  hints for `is equal to` / `is not equal to` and malformed
+  `number from text variable` conversions.
+- Expanded hard regression coverage for every newly observed omission. The
+  next immutable pilot must recover first-pass success before any conclusion
+  about the smaller prompt's efficiency is accepted.

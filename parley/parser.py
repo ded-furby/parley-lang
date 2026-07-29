@@ -780,6 +780,16 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
             " Write 'changing' only in the parameter declaration; pass the "
             "plain variable at the call site."
         )
+    if re.search(r"\bis\s+(?:not\s+)?equal\s+to\b", line):
+        hint = (hint or "") + (
+            " Equality is written `is`; inequality is `is not`. Do not write "
+            "`equal to`."
+        )
+    if re.search(r"\bnumber\s+from\s+text\s+[A-Za-z_]", line):
+        hint = (hint or "") + (
+            " Put only the value after `number from`, for example "
+            "`number from quantity_text`."
+        )
     return Diagnostic(
         "P101", f"I didn't expect {got} here.",
         line=getattr(tok, "line", 0) or 0, col=getattr(tok, "column", 0) or 0,

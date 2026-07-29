@@ -330,7 +330,7 @@ def test_agent_prompt_includes_current_skill_only_for_parley():
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 3_000
+    assert len(skill) < 3_400
     for required in [
         "an empty list of text",
         'Use `ask ""`',
@@ -342,6 +342,10 @@ def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
         "Names are a `snake_case` identifier",
         "Write `changing` only in a parameter declaration",
         "bind calls or repeated `item ... of ...` expressions to\n  temporary names first",
+        "literals `yes` and `no`, never `true`/`false`",
+        "never write `is equal to`",
+        "`number from quantity_text`",
+        "`stop` and `skip` work only inside loops",
     ]:
         assert required in skill
 

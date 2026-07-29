@@ -134,6 +134,15 @@ def test_text_position_expression_parse():
             "    record with changing values\n",
             "plain variable at the call site",
         ),
+        (
+            "to main:\n    if 1 is equal to 1:\n        say 1\n",
+            "Equality is written `is`",
+        ),
+        (
+            "to main:\n    let quantity_text be \"2\"\n"
+            "    let value be number from text quantity_text\n",
+            "`number from quantity_text`",
+        ),
     ],
 )
 def test_common_agent_parse_mistakes_have_exact_repair_hints(source, expected):

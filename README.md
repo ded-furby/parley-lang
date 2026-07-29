@@ -305,6 +305,7 @@ the plan:
 - [x] progressive-disclosure agent skill with compact core — v0.3.140
 - [x] benchmark-driven first-pass skill and parser hints — v0.3.141
 - [x] sub-3k always-injected safe-forms skill — v0.3.142
+- [x] benchmark-proven skill guardrails and literal diagnostics — v0.3.143
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -332,7 +333,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 268 tests; e2e compiles real binaries (needs cargo)
+pytest            # 272 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with
