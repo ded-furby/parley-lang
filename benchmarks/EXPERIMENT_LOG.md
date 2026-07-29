@@ -640,3 +640,44 @@ all six pilot-011 first sources type-check unchanged, then run pilot 012.
 - Left the always-loaded skill unchanged at 1,519 characters, isolating this
   experiment to compiler ergonomics.
 - All six pilot-011 first sources now parse and type-check unchanged.
+
+## 012 — Near parity, single outlier
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.148, commit `ba725eb6d5f767875c344df75f09e30575e5c1ce`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `b1f978100df5b6693b6db1df61275becb3500760d52d1f9979620ef8805b50f4`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/012-near-parity-single-outlier.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 5/6 | 6/6 | 45,060.0 | 21.9441 | 2 |
+| Python | 6/6 | 5/6 | 6/6 | 43,008.5 | 17.6208 | 1 |
+| Rust | 6/6 | 5/6 | 6/6 | 43,395.5 | 20.1728 | 2 |
+
+### Gate result
+
+Correctness and protocol compliance remained perfect. Parley improved from
+2/6 to 5/6 first public checks, tying both baselines, while median tokens fell
+39.8% and elapsed time fell 11.8% from iteration 011. Strict efficiency still
+**failed**: median tokens were 4.77% above Python and 3.84% above Rust;
+elapsed time was 24.54% above Python and 8.78% above Rust.
+
+### Isolated remaining failure
+
+Five Parley sessions passed first check in a tight 44,288–45,335-token band.
+The sole outlier defined a helper with natural `and`-separated parameters and
+calls, then mutated a list parameter without the explicit `changing` marker.
+The first repair changed separators to commas; the second inlined the helper
+after value semantics produced blank output. That run consumed 109,005 tokens.
+
+### Next experiment
+
+Accept natural `and` separators for parameter lists and multi-argument calls,
+and infer reference passing for a parameter demonstrably mutated by its
+function body. Preserve the compact skill, recheck the saved source unchanged,
+and run pilot 013. After first-pass reliability is complete, reduce the fixed
+Parley prompt overhead that remains visible in the clean-run cluster.
