@@ -219,3 +219,20 @@ failures, and no checker-integrity failures.
 Reduce clean-run prompt overhead again without removing the four rules that
 prevented repairs. Run another immutable two-replicate pilot before spending
 90 sessions on confirmation. Do not alter or selectively rerun iteration 004.
+
+## Engineering changes after 004
+
+### 2026-07-29 — Parley 0.3.142 sub-3k safe-forms core
+
+- Reduced the always-injected skill from 4,340 to 2,998 characters (31.0%)
+  without removing the first-pass rules validated directionally in iteration
+  004; the 21,224-character extended reference remains unchanged.
+- Reduced the metered Parley task prompts from 5,787–5,831 to
+  4,445–4,489 characters (about 23.1%).
+- Kept hard regression assertions for typed collections, promptless input,
+  literal braces, map lookup, single-token names, reserved `position`,
+  expression calls, declaration-only `changing`, temporary item values, and
+  exclusive use of the supplied checker.
+- Expected benchmark effect: reduce the 2,680-token median input gap observed
+  in iteration 004 without reintroducing public-check repairs. This remains
+  unproven until iteration 005.

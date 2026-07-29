@@ -304,6 +304,7 @@ the plan:
 - [x] borrow-safe evaluation of list/map mutation arguments — v0.3.139
 - [x] progressive-disclosure agent skill with compact core — v0.3.140
 - [x] benchmark-driven first-pass skill and parser hints — v0.3.141
+- [x] sub-3k always-injected safe-forms skill — v0.3.142
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
