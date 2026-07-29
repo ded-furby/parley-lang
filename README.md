@@ -313,6 +313,7 @@ the plan:
 - [x] postfix text conversion and destination-aware text-list insertion — v0.3.148
 - [x] natural `and` helper signatures/calls with inferred list/map mutation — v0.3.149
 - [x] one-shot general agent-instruction compression — v0.3.150
+- [x] evidence-backed rollback to the proven reliability core — v0.3.151
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

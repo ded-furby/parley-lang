@@ -793,3 +793,17 @@ core. Do not run another compression experiment. Freeze instructions and
 compiler semantics, then proceed to a broader corpus or the predeclared
 90-session confirmation. Future changes require general usefulness, semantic
 consistency, and maintainability—not improvement on one transcript.
+
+## Engineering changes after 014
+
+### 2026-07-29 — Parley 0.3.151 proven-core rollback
+
+- Restored `skill/parley/SKILL.md` byte-for-byte from the preserved 0.3.149
+  core (1,519 characters; SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`).
+- Restored the original metered Parley wrapper in `agent_runner.py` so future
+  confirmation results remain comparable to pilot 013.
+- Made no compiler or language change. No further instruction-compression
+  experiment is permitted in this optimization cycle.
+- Next evidence is distributional: a broader task corpus or the predeclared
+  10-replicate-per-cell confirmation, not another three-task tuning pass.
