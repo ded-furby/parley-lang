@@ -302,6 +302,7 @@ the plan:
 - [x] first-seen unique helpers for bundled lists — v0.3.137
 - [x] stop-exclusive range helpers for bundled number lists — v0.3.138
 - [x] borrow-safe evaluation of list/map mutation arguments — v0.3.139
+- [x] progressive-disclosure agent skill with compact core — v0.3.140
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -329,7 +330,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 261 tests; e2e compiles real binaries (needs cargo)
+pytest            # 263 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

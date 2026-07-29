@@ -59,7 +59,8 @@ def protocol_metadata(
     skill_file: Path,
     codex_command: str,
     parley_command: str,
-) -> dict[str, str]:
+) -> dict[str, Any]:
+    skill_text = skill_file.read_text(encoding="utf-8")
     return {
         "compiler_commit": command_version(["git", "rev-parse", "HEAD"], cwd=REPO),
         "parley_version": command_version([parley_command, "--version"]),
@@ -68,6 +69,7 @@ def protocol_metadata(
         "rustc_version": command_version(["rustc", "--version"]),
         "task_manifest_sha256": hashlib.sha256(tasks_file.read_bytes()).hexdigest(),
         "parley_skill_sha256": hashlib.sha256(skill_file.read_bytes()).hexdigest(),
+        "parley_skill_chars": len(skill_text),
     }
 
 
@@ -326,6 +328,7 @@ def render_prompt(
         f"Implement the task in {label} by creating `{source_name(language)}`.",
         "Work only inside the current directory. Do not inspect files or repositories outside it.",
         "Do not use the internet. Do not modify `check`, `check_public.py`, or `.benchmark_public.json`.",
+        "The workspace's `./check` is the only compiler/test command required. Do not invoke a global language command.",
         "After writing the solution, run `./check`. If it fails, use its feedback to repair the",
         "program and run `./check` again. Continue until it passes or you cannot make progress.",
         "The final answer should briefly state whether the public check passed.",
@@ -340,7 +343,8 @@ def render_prompt(
         lines.extend([
             "# Parley language instructions",
             "",
-            "The following is the complete Parley skill shipped with the tested compiler.",
+            "The following is the compact core Parley skill shipped with the tested compiler.",
+            "Rare-feature reference files are intentionally excluded unless the task needs them.",
             "Its tokens are included in this run's measured input cost.",
             "",
             parley_skill.rstrip(),

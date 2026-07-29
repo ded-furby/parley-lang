@@ -323,7 +323,33 @@ def test_agent_prompt_includes_current_skill_only_for_parley():
     assert "PARLEY-SKILL-SENTINEL" in parley
     assert "PARLEY-SKILL-SENTINEL" not in python
     assert "run `./check`" in parley
+    assert "Do not invoke a global language command" in parley
     assert task["hidden_cases"][1]["stdin"] not in parley
+
+
+def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
+    skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
+
+    assert len(skill) < 8_000
+    for required in [
+        "an empty list of text",
+        'Use `ask ""`',
+        "Literal braces inside a Parley string must be doubled",
+        "expression calls need parentheses",
+        "treat a direct map lookup as a maybe",
+        "Do not search for another compiler when `./check` exists",
+    ]:
+        assert required in skill
+
+
+def test_parley_extended_skill_reference_preserves_rare_tooling():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "extended-reference.md"
+    ).read_text()
+
+    assert "parley-lsp" in reference
+    assert "parley package check-registry" in reference
+    assert "maybe_linear_regression_number" in reference
 
 
 def test_agent_summary_aggregates_fresh_run_results():

@@ -65,3 +65,18 @@ same matrix before expanding the sample.
 - Expected benchmark effect: remove the P901 repair turn observed in both
   Parley bracket-report runs. This expectation remains unproven until the next
   fresh-session report.
+
+### 2026-07-29 — Parley 0.3.140 compact core skill
+
+- Reduced the always-injected skill from 21,264 to 7,168 characters (66.3%)
+  while retaining the prior exhaustive reference as an on-demand file.
+- Added exact first-pass forms for typed empty lists, promptless input,
+  literal braces, expression calls, conversion maybes, and direct map lookup.
+- Made `./check` explicitly authoritative in isolated benchmark workspaces so
+  sessions do not spend tool calls probing for a global compiler.
+- Added a hard test gate keeping the core below 8,000 characters and covering
+  the syntax patterns implicated by experiment 001.
+- The three Parley task prompts now contain 8,615–8,659 characters, down from
+  a baseline median of 22,473 characters (about 61.5%).
+- Expected benchmark effect: fewer initial prompt tokens and fewer public-check
+  repair turns. The next fresh-session report is the acceptance evidence.

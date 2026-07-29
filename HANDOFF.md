@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.139** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 261 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.140** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 263 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -530,6 +530,11 @@ Update it whenever you finish or start a work item.
   evaluate their indexes, keys, and values before taking the target's mutable
   borrow, so accepted expressions such as `remove item (length of xs) of xs`
   compile instead of surfacing P901 from rustc.
+- **v0.3.140 compact agent skill:** the default skill is a 7,168-character
+  task-facing core with explicit first-pass syntax for typed empty lists,
+  promptless input, literal braces, expression calls, maybes, and map lookup.
+  The prior exhaustive stdlib/package/LSP/research material remains available
+  on demand in `skill/parley/references/extended-reference.md`.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -602,7 +607,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.139).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.140).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
