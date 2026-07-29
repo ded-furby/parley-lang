@@ -80,3 +80,40 @@ same matrix before expanding the sample.
   a baseline median of 22,473 characters (about 61.5%).
 - Expected benchmark effect: fewer initial prompt tokens and fewer public-check
   repair turns. The next fresh-session report is the acceptance evidence.
+
+## 002 — Compact-skill efficiency parity pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.140, commit `b4bd7a4054db2ec967ddb04ad0288eb3dfb48776`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `1f0198f8fbbe0281f8a5a8f52e27d2de03b00c29f36b0a37d44fa8dedc2d445b`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `2718c72f8d9644ed2b9b41cda1f9dabf1095a45dd5b6f3d52864223f80d567d6`
+- Report: `benchmarks/reports/002-efficiency-parity.html`
+
+| Language | Hidden success | First public pass | Median checks | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 6/6 | 1.0 | 32,770.0 | 17.5059 | 0 |
+| Python | 6/6 | 4/6 | 1.0 | 43,471.0 | 21.3212 | 2 |
+| Rust | 6/6 | 6/6 | 1.0 | 43,249.0 | 20.0211 | 0 |
+
+### Interpretation
+
+Parley met the pilot acceptance gate: final correctness was preserved, median
+reported tokens were 24.6% below Python and 24.2% below Rust, median elapsed
+time was 17.9% below Python and 12.6% below Rust, and every Parley session
+passed its first public check. Versus iteration 001, Parley's median tokens
+fell 81.2%, median time fell 68.4%, and repair turns fell from 10 to 0.
+
+The result is not uniform by task. Parley led compact ranges, was between the
+baselines on bracket reporting, and trailed both baselines on inventory totals.
+With only two replicates per cell, this establishes directional parity but not
+a stable population estimate.
+
+### Next experiment
+
+Freeze Parley 0.3.140 and the current compact skill, then run 10 replicates per
+task-language cell. Do not optimize against those confirmation outcomes until
+the full 90-session matrix is complete. Preserve the result and report as
+iteration 003.
