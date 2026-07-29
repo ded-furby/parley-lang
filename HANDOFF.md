@@ -23,7 +23,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3 / toolchain v0.3.143** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 272 tests, including e2e tests that
+  → cargo). The latest local suite has 273 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -571,6 +571,11 @@ Update it whenever you finish or start a work item.
   readiness checklist. `docs/SPEC.md` now correctly says v0.3 and no longer
   claims higher-order functions are missing. `docs/DOMAINS.md` records
   checked domain candidates; current recommendation is `parleylang.com`.
+- **Fresh-agent benchmark protocol v2:** the language-neutral prompt forbids
+  listing or reading workspace/checker files, requires the solution as the
+  first tool action, and permits only exact `./check` shell commands. Each run
+  records compliance and violations, eliminating the exploration variance
+  observed in iteration 006.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

@@ -335,3 +335,20 @@ Freeze Parley 0.3.143. Amend the language-neutral prompt to prohibit listing
 or reading workspace files and require creating the solution immediately,
 then running only `./check`. Record the protocol flag, test the rendered
 prompt, and rerun all three languages as iteration 007.
+
+## Engineering changes after 006
+
+### 2026-07-29 — Fresh-agent benchmark protocol v2
+
+- The language-neutral prompt now prohibits listing, reading, or inspecting
+  existing workspace files and says all required information is already in
+  the prompt.
+- The first tool action must create the solution; after edits, the only
+  permitted shell command is exactly `./check` for every language.
+- Each run records `command_protocol_compliant` and the exact violating
+  commands. Language summaries record compliance counts and rates.
+- Added regression coverage for the prompt contract and command classifier.
+- Parley 0.3.143, its skill, tasks, model, reasoning, seed, public cases, and
+  hidden oracle remain frozen for iteration 007. This is an explicit protocol
+  revision, so its metrics are reported separately rather than silently
+  spliced into the earlier series.

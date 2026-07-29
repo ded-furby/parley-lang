@@ -8,7 +8,13 @@ import sys
 import pytest
 
 from conftest import REPO
-from benchmarks.agent_runner import load_tasks, rejudge_report, render_prompt, summarize
+from benchmarks.agent_runner import (
+    command_protocol,
+    load_tasks,
+    rejudge_report,
+    render_prompt,
+    summarize,
+)
 
 BENCHMARKS = REPO / "benchmarks"
 
@@ -324,7 +330,25 @@ def test_agent_prompt_includes_current_skill_only_for_parley():
     assert "PARLEY-SKILL-SENTINEL" not in python
     assert "run `./check`" in parley
     assert "Do not invoke a global language command" in parley
+    assert "Do not list, read, or inspect any existing workspace file" in parley
+    assert "the only shell command permitted is exactly `./check`" in parley
     assert task["hidden_cases"][1]["stdin"] not in parley
+
+
+def test_agent_command_protocol_allows_only_exact_public_check():
+    compliant = command_protocol([{"command": "/bin/zsh -lc ./check"}])
+    assert compliant == {
+        "compliant": True,
+        "commands": ["/bin/zsh -lc ./check"],
+        "violations": [],
+    }
+
+    exploratory = command_protocol([
+        {"command": "/bin/zsh -lc 'ls -la'"},
+        {"command": "/bin/zsh -lc ./check"},
+    ])
+    assert exploratory["compliant"] is False
+    assert exploratory["violations"] == ["/bin/zsh -lc 'ls -la'"]
 
 
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():

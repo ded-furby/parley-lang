@@ -326,9 +326,12 @@ def render_prompt(
     lines = [
         "You are participating in a controlled coding benchmark in a fresh workspace.",
         f"Implement the task in {label} by creating `{source_name(language)}`.",
-        "Work only inside the current directory. Do not inspect files or repositories outside it.",
-        "Do not use the internet. Do not modify `check`, `check_public.py`, or `.benchmark_public.json`.",
-        "The workspace's `./check` is the only compiler/test command required. Do not invoke a global language command.",
+        "Work only inside the current directory. All information needed is in this prompt.",
+        "Do not list, read, or inspect any existing workspace file, including checker/config files.",
+        "Do not use the internet or modify checker/config files.",
+        f"Your first tool action must create `{source_name(language)}`. Do not perform reconnaissance first.",
+        "After creating or editing the solution, the only shell command permitted is exactly `./check`.",
+        "Do not invoke a global language command.",
         "After writing the solution, run `./check`. If it fails, use its feedback to repair the",
         "program and run `./check` again. Continue until it passes or you cannot make progress.",
         "The final answer should briefly state whether the public check passed.",
@@ -396,6 +399,22 @@ def parse_codex_events(stdout: str) -> dict[str, Any]:
         "agent_messages": agent_messages,
         "command_events": command_events,
         "errors": errors,
+    }
+
+
+_ALLOWED_CHECK_COMMAND = re.compile(
+    r"^(?:/bin/(?:zsh|sh)\s+-lc\s+)?[\"']?\./check[\"']?$"
+)
+
+
+def command_protocol(command_events: list[dict[str, Any]]) -> dict[str, Any]:
+    """Require shell activity to be exactly the supplied public checker."""
+    commands = [str(event.get("command", "")).strip() for event in command_events]
+    violations = [command for command in commands if not _ALLOWED_CHECK_COMMAND.fullmatch(command)]
+    return {
+        "compliant": bool(commands) and not violations,
+        "commands": commands,
+        "violations": violations,
     }
 
 
@@ -476,6 +495,7 @@ def run_cell(
     elapsed = round(time.perf_counter() - started, 4)
 
     parsed = parse_codex_events(stdout)
+    command_compliance = command_protocol(parsed["command_events"])
     source = workdir / source_name(language)
     hidden = (
         judge(language, source, task["hidden_cases"], parley_command)
@@ -506,6 +526,8 @@ def run_cell(
         "agent_timed_out": timed_out,
         "elapsed_seconds": elapsed,
         "check_integrity_ok": integrity_ok,
+        "command_protocol_compliant": command_compliance["compliant"],
+        "command_protocol_violations": command_compliance["violations"],
         "public_check_attempts": len(attempts),
         "first_public_check_success": bool(attempts and attempts[0].get("ok")),
         "final_public_check_success": bool(attempts and attempts[-1].get("ok")),
@@ -537,6 +559,7 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
             continue
         successes = sum(bool(row["hidden_success"]) for row in rows)
         first_public = sum(bool(row["first_public_check_success"]) for row in rows)
+        protocol_compliant = sum(bool(row.get("command_protocol_compliant")) for row in rows)
         token_values = [int(row["total_tokens"]) for row in rows]
         elapsed_values = [float(row["elapsed_seconds"]) for row in rows]
         attempt_values = [int(row["public_check_attempts"]) for row in rows]
@@ -553,6 +576,8 @@ def summarize(results: list[dict[str, Any]]) -> dict[str, Any]:
             "hidden_success_rate": round(successes / len(rows), 4),
             "first_public_check_successes": first_public,
             "first_public_check_success_rate": round(first_public / len(rows), 4),
+            "command_protocol_compliant_runs": protocol_compliant,
+            "command_protocol_compliance_rate": round(protocol_compliant / len(rows), 4),
             "median_public_check_attempts": statistics.median(attempt_values),
             "median_total_tokens": statistics.median(token_values),
             "total_tokens": sum(token_values),
@@ -763,6 +788,8 @@ def main(argv: list[str] | None = None) -> int:
             "internet_for_agent_tools": False,
             "parley_skill_included_and_metered": True,
             "hidden_cases_withheld_until_final_judgment": True,
+            "workspace_inspection_prohibited": True,
+            "only_shell_command_permitted": "./check",
             "task_ids": task_ids,
             "languages": languages,
             "work_root": str(work_root),

@@ -100,6 +100,11 @@ command, and no hidden cases. The parent runner judges the final source after
 the session exits and records the complete transcript, source, compiler
 attempts, token usage, and hidden-case output.
 
+Protocol v2 also forbids listing or reading any existing workspace file. The
+first tool action must create the solution, and the only permitted shell
+command is exactly `./check`. Every result records command-protocol compliance
+and the exact violating commands, if any.
+
 Build or install the exact Parley revision being measured, then run:
 
 ```bash
@@ -115,7 +120,8 @@ The default matrix is three held-out tasks by Parley, Python, and Rust. Every
 cell uses a fresh temporary directory and ephemeral agent session. Parley gets
 the current `skill/parley/SKILL.md`, and its prompt tokens are included in the
 reported cost. Agent tool access has no internet, and hidden cases are not
-written into its workspace.
+written into its workspace. Runs with a command-protocol violation are not
+valid acceptance evidence even if their final source passes.
 
 If an objective hidden-test oracle error is found, saved sources can be
 rejudged without changing or rerunning agent attempts:
