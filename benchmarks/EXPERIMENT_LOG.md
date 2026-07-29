@@ -569,3 +569,21 @@ Add checked `expr as number` conversion and scalar-aware text joining, then
 state explicitly that `say` emits one complete line and numeric input uses
 `ask for a number`. Preserve the current core, keep the task/protocol frozen,
 and run pilot 011 before any confirmation.
+
+## Engineering changes after 010
+
+### 2026-07-29 — Parley 0.3.147 conversion/output recovery
+
+- Preserved the 1,371-character v0.3.146 partial-recovery core byte-for-byte
+  at `skill/parley/references/core-v0.3.146.md` (SHA-256
+  `c49d14eb2702981a9c1641f79a38239b59916e671392193bcff47424d3511e1f`).
+- Added postfix `text_expr as number` as a checked composition of
+  `number from` and `value of`; invalid numeric text still stops safely.
+- Made text `plus` non-text values format with the same rules as string
+  interpolation, accepting both independently repeated inventory drafts.
+- Added two concise core sentences: numeric input uses `ask for a number`,
+  and `say` emits one complete line, so fragments should be assembled before
+  output. The resulting core is 1,519 characters.
+- Rechecked all six pilot-010 first sources. Five now type-check unchanged;
+  only the compact-range source that treated plain text as a maybe remains
+  rejected, exactly where the new core gives the corrective form.

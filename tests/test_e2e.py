@@ -36,13 +36,26 @@ to main:
     set names to a list of "zebra", "ant"
     sort names
     print item 1 of names
+    set converted to "41" as number
+    print "answer=" + converted + 1
     repeat count - 1 times:
         print (character_count with "éx")
     stop
     print "unreachable"
 '''
     proc = run_program(workdir, "agent_natural_aliases", src)
-    assert proc.stdout == "ready\nant\n2\n"
+    assert proc.stdout == "ready\nant\nanswer=411\n2\n"
+
+
+def test_postfix_number_conversion_stops_on_invalid_text(workdir):
+    proc = run_program(
+        workdir,
+        "invalid_postfix_number",
+        'to main:\n    say "not-a-number" as number\n',
+        expect_ok=False,
+    )
+    assert proc.returncode == 1
+    assert "Tried to get the value of nothing" in proc.stderr
 
 
 def test_fizzbuzz(workdir):

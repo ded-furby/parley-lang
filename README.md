@@ -309,6 +309,7 @@ the plan:
 - [x] returning-function first-pass guardrail and diagnostics — v0.3.144
 - [x] 1.6k progressive-disclosure agent core with preserved fallback — v0.3.145
 - [x] transcript-backed natural aliases and executable 1.4k agent core — v0.3.146
+- [x] checked postfix number conversion and scalar text joining — v0.3.147
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -336,7 +337,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 278 tests; e2e compiles real binaries (needs cargo)
+pytest            # 279 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

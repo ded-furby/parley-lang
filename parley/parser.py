@@ -574,6 +574,11 @@ class ToAst(Transformer):
     def split_by(self, meta, ch):
         return A.SplitBy(value=ch[0], sep=ch[1], **_pos(meta))
 
+    def as_number(self, meta, ch):
+        pos = _pos(meta)
+        parsed = A.PrefixOp(op="number_from", value=ch[0], **pos)
+        return A.PrefixOp(op="value", value=parsed, **pos)
+
     def joined_with(self, meta, ch):
         return A.JoinedWith(value=ch[0], sep=ch[1], **_pos(meta))
 

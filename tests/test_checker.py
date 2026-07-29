@@ -49,7 +49,6 @@ CASES = [
     ("main_with_params", "to main with n as number:\n    say n\n", "P210", "no parameters"),
     ("set_wrong_type", in_main('let x be 1', 'set x to "hi"'), "P301", "needs number"),
     ("list_mix", in_main('let l be a list of 1, "two"'), "P301", "mixes"),
-    ("plus_text_number", in_main('say 1 plus "a"'), "P302", "interpolation"),
     ("if_not_bool", in_main("if 5:", "    say 1"), "P303", "yes or no"),
     ("assert_needs_bool", in_main("assert 5"), "P303", "yes or no"),
     ("assert_message_needs_text", in_main('assert yes, 5'), "P301", "needs text"),

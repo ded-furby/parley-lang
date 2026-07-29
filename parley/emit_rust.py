@@ -795,8 +795,9 @@ class Emitter:
             sym = "&&" if op == "and" else "||"
             return f"(({self.value(e.left)}) {sym} ({self.value(e.right)}))"
         if op == "+" and isinstance(e.ty, A.TText):
-            la, ra = self.borrow(e.left), self.borrow(e.right)
-            return f'format!("{{}}{{}}", &({la}), &({ra}))'
+            lspec, larg = self.fmt_arg(e.left)
+            rspec, rarg = self.fmt_arg(e.right)
+            return f'format!("{lspec}{rspec}", {larg}, {rarg})'
         if op == "+" and isinstance(e.ty, A.TList):
             return f"parley_concat(&({self.borrow(e.left)}), &({self.borrow(e.right)}))"
         if op == "/":

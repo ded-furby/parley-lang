@@ -290,6 +290,8 @@ all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 present maybe value. (Unwrapping nothing stops the program — check first.)
 The natural aliases `has no value` and `has value` / `has a value` mean
 `is nothing` and `is not nothing` respectively.
+For trusted numeric text, `raw as number` is a checked shorthand that unwraps
+`number from raw`; invalid text stops with the same English runtime error.
 
 ## 14. When things go wrong: assert, fail, and attempt
 

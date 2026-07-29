@@ -81,7 +81,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 
 | Parley | Rust | type |
 |---|---|---|
-| `a plus b` | `a + b` (texts: `format!`) | number/decimal/text/list |
+| `a plus b` | `a + b` (if either side is text, formats and joins both) | number/decimal/text/list |
 | `a minus b`, `a times b` | `a - b`, `a * b` | numeric |
 | `a divided by b` | guarded `a / b` | **always decimal**; ÷0 stops the program |
 | `remainder of a divided by b` | guarded `a % b` | number |
@@ -106,6 +106,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `a map from text to number` | `HashMap::new()` | |
 | `a point with x 1, y 2` | `Point { x: 1, y: 2 }` | all fields required |
 | `nothing` | `None` | |
+| `t as number` | checked parse and unwrap | number |
 | `some x` | `Some(x)` | maybe of x's type |
 | `value of m` | checked unwrap | inner type |
 | `the error` | last runtime error text | text |

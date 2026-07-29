@@ -944,12 +944,8 @@ class Checker:
         rt = self.infer(e.right)
         if isinstance(lt, TErr) or isinstance(rt, TErr):
             return TErr()
-        if e.op == "+" and isinstance(lt, A.TText) and isinstance(rt, A.TText):
-            return A.TText()
         if e.op == "+" and (isinstance(lt, A.TText) or isinstance(rt, A.TText)):
-            self.err("P302", f"`plus` cannot join {lt} and {rt}.", e,
-                     hint='Use interpolation instead: "score: {x}".')
-            return TErr()
+            return A.TText()
         if e.op == "+" and isinstance(lt, A.TList) and lt == rt:
             return lt
         if not (isinstance(lt, _NUMERIC) and isinstance(rt, _NUMERIC)):

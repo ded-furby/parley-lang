@@ -98,6 +98,8 @@ parse-relevant highlights:
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
   and is a checked runtime operation. `has no value` aliases `is nothing`;
   `has value` and `has a value` alias `is not nothing`.
+  For text, `expr as number` is exactly the checked composition
+  `value of (number from expr)` and therefore stops on invalid input.
 * **`assert condition`** requires `condition` to be yesno. Its optional
   message form, `assert condition, expr`, requires `expr` to be text. A failed
   assertion is a catchable runtime failure.
@@ -116,6 +118,8 @@ parse-relevant highlights:
   the callee stores or mutates its local parameter. The only user-visible
   aliasing is `changing` parameters, which are exclusive mutable borrows for
   the call.
+* **Text joining.** `plus` with text on either side formats the other value
+  using the same rules as interpolation and returns text.
 * **Numbers** are 64-bit (`i64`/`f64`). Integer overflow stops the program in
   debug builds (`parley run`); release builds (`parley build`) wrap.
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`

@@ -23,10 +23,8 @@ to main:
                 say line
 ```
 
-- `let x be value` creates; `set x to value` mutates or creates. `say`,
+- `let x be value` creates; `set x to value` mutates or creates. `say`/`print`,
   `give back`/`return`, and `is nothing`/`has no value` work.
-- Numeric input uses `ask for a number`; text conversion can use `x as number`.
-  `say` emits one full line; assemble pieces in a list and join them first.
 - Lists/text are 1-based. Use `an empty list of text`, `add x to xs`,
   `item i of xs`, `remove item i of xs`, `line split by ""`, and
   `parts joined with ","`.

@@ -355,7 +355,7 @@ def test_agent_command_protocol_allows_only_exact_public_check():
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 1_400
+    assert len(skill) < 1_550
     for required in [
         "to valid with line as text giving yesno:",
         'let count_input be ask for a number ""',
@@ -368,6 +368,9 @@ def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
         "Use only `./check`",
         "`let x be value` creates",
         "`set x to value` mutates or creates",
+        "Numeric input uses `ask for a number`",
+        "`x as number`",
+        "`say` emits one full line",
         "`line split by \"\"`",
         "`map contains key`",
         "sorted `keys of map`",
@@ -396,6 +399,17 @@ def test_parley_failed_micro_core_is_preserved_unchanged():
     assert len(reference) == 1_557
     assert hashlib.sha256(reference.encode()).hexdigest() == (
         "d8ca4eaf0889c200b4b14427756c884cc648702a58331cfb1fe17b5d7b2634b1"
+    )
+
+
+def test_parley_partial_recovery_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.3.146.md"
+    ).read_text()
+
+    assert len(reference) == 1_371
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "c49d14eb2702981a9c1641f79a38239b59916e671392193bcff47424d3511e1f"
     )
 
 
