@@ -405,3 +405,44 @@ number of lower-value core bytes. Add exact parse hints for `returns`,
 - Added three parser regression cases reproducing the iteration-007 repair
   sequence. Iteration 008 keeps protocol v2, tasks, model, reasoning, seed,
   public cases, and hidden oracle unchanged.
+
+## 008 — Clean-context gap pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.144, commit `504d93d38ff07a532ff79ac765fddf899de3cd6d`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `7dcd3e6e42fc8c5097f6d901741eb47f0da61c5d6fc4e91c42707f40903903db`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `f2683bdc7e78e98b55f101d38f42ee32646d423e7e51ac4370f952e1c0430284`
+- Report: `benchmarks/reports/008-clean-context-gap.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 6/6 | 6/6 | 46,040.5 | 20.6735 | 0 |
+| Python | 6/6 | 4/6 | 6/6 | 43,081.5 | 17.8991 | 2 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,476.5 | 19.3878 | 0 |
+
+### Gate result
+
+Parley satisfied hidden correctness, first-pass reliability, and protocol
+compliance, but strict efficiency still **failed**. Its median tokens were
+6.9% above Python and 5.9% above Rust; median elapsed time was 15.5% above
+Python and 6.6% above Rust.
+
+### Isolated residual
+
+All six Parley runs passed first check and clustered from 45,602 to 46,377
+tokens. Median input was 2,864.5 tokens above Python while median output was
+only 94.5 higher. Per-task gaps to the lower baseline were also consistent:
+3,115 on inventory, 2,943.5 on compact ranges, and 2,833.5 on bracket report.
+With repair and command variance removed, always-loaded language context is
+the remaining measured gap.
+
+### Next experiment
+
+Preserve the 3,280-character core as a fallback. Build a much smaller
+always-injected contract that retains every empirically observed trap and
+routes detailed syntax to the existing on-demand reference. Run a new
+protocol-v2 pilot; do not proceed to confirmation unless it preserves the
+iteration-008 reliability result and clears both efficiency medians.
