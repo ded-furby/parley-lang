@@ -807,3 +807,46 @@ consistency, and maintainability—not improvement on one transcript.
   experiment is permitted in this optimization cycle.
 - Next evidence is distributional: a broader task corpus or the predeclared
   10-replicate-per-cell confirmation, not another three-task tuning pass.
+
+## 015 — 90-session confirmation: strict parity not met
+
+- Date: 2026-07-29
+- Toolchain: Parley 0.3.151, commit `db39bda61dca9619dce72293ea2ba6ded5c81c2c`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 10 replicates = 90 fresh sessions
+- Result JSON SHA-256: `8fbe1639ba293915467b5ec142f8561f4d498f00fe76a20d9f2c0eef01a3ac24`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/015-confirmation-strict-parity-not-met.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 30/30 | 25/30 | 30/30 | 44,809.0 | 20.1131 | 6 |
+| Python | 30/30 | 23/30 | 30/30 | 43,031.0 | 17.4409 | 7 |
+| Rust | 30/30 | 29/30 | 30/30 | 43,366.5 | 20.1867 | 1 |
+
+### Gate result
+
+Hidden correctness and command-protocol compliance were perfect for all 90
+sessions. Parley exceeded Python on first-pass reliability and used fewer
+repairs, while nearly tying Rust on elapsed time. The predeclared strict gate
+nevertheless **failed**: Parley median tokens were 4.13% above Python and
+3.33% above Rust; elapsed time was 15.32% above Python (though 0.36% below
+Rust); first-pass reliability was below Rust's 96.67%.
+
+### Task-level result
+
+- Bracket report: Parley 44,991.5 tokens and 7/10 first-pass; Python 72,550
+  and 3/10; Rust 43,675 and 9/10.
+- Compact ranges: Parley 44,969.5 and 9/10; Python 43,033.5 and 10/10; Rust
+  43,622.5 and 10/10.
+- Inventory totals: Parley 44,668.5 and 9/10; Python 42,800 and 10/10; Rust
+  43,111 and 10/10.
+
+### Decision
+
+Do not optimize against individual confirmation transcripts. Freeze the
+current compiler and instruction core. The next useful evidence is a broader,
+predeclared task corpus spanning additional algorithms and programming
+constructs. Any future language change must be justified independently by
+generality, semantic consistency, and maintainability.

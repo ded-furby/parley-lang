@@ -613,6 +613,14 @@ Update it whenever you finish or start a work item.
   first tool action, and permits only exact `./check` shell commands. Each run
   records compliance and violations, eliminating the exploration variance
   observed in iteration 006.
+- **90-session confirmation (iteration 015):** all 90 fresh sessions passed
+  hidden cases and complied with protocol. Parley finished at 44,809 median
+  tokens, 20.1131 seconds, and 25/30 first-pass versus Python at 43,031,
+  17.4409, and 23/30, and Rust at 43,366.5, 20.1867, and 29/30. Parley is
+  competitive and more reliable than Python on this matrix, but the
+  predeclared strict best-baseline parity gate was not met. Compiler and skill
+  are frozen; the next benchmark work is a broader predeclared task corpus,
+  not transcript-level tuning.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

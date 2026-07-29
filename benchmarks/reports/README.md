@@ -20,6 +20,7 @@ transformation, and chart-map notes.
 | 012 | Parley 0.3.148 | All languages tied at 5/6 first-pass; strict token and elapsed parity still missed | [HTML](012-near-parity-single-outlier.html) |
 | 013 | Parley 0.3.149 | Parley reached 6/6 first-pass; fixed context left a 4.55% token gap | [HTML](013-reliability-restored-context-gap.html) |
 | 014 | Parley 0.3.150 | One-shot instruction compression regressed every task family and was rejected | [HTML](014-overcompression-rejected.html) |
+| 015 | Parley 0.3.151 | 90-session confirmation preserved correctness but did not meet strict parity | [HTML](015-confirmation-strict-parity-not-met.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under
