@@ -872,3 +872,48 @@ tuning loop or a publishable language ranking. Do not change the compiler or
 language because of one task or transcript. A future proposal must address an
 issue recurring across at least two unrelated tasks and independently satisfy
 general usefulness, semantic consistency, and maintainability.
+
+## 016 — Broad corpus: correctness holds, parity not met
+
+- Date: 2026-07-30
+- Toolchain: Parley 0.3.151, commit `632eb46dace340b9f65f7e34935224b5dbf2e062`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 8 tasks × 3 languages × 2 replicates = 48 fresh sessions
+- Result JSON SHA-256: `8529aff77c008edda63295f5d6d5f79e68e9a93e7e80be72eac4ce9fa69bdaa5`
+- Task manifest SHA-256: `cc8a0795b62c58c04056d097b4ff1af698dc8a9cc57865ab3fd874af618c50c3`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/016-broad-corpus-diagnostic.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 16/16 | 13/16 | 16/16 | 43,455.0 | 20.0663 | 8 |
+| Python | 16/16 | 15/16 | 16/16 | 41,832.5 | 16.5347 | 1 |
+| Rust | 16/16 | 16/16 | 16/16 | 42,020.5 | 17.1042 | 0 |
+
+### Result
+
+All 48 fresh sessions passed every hidden case, preserved checker integrity,
+and complied with protocol v2. Strict efficiency parity was **not met**:
+Parley median tokens were 3.88% above Python and 3.41% above Rust; median
+elapsed time was 21.36% above Python and 17.32% above Rust. Parley first-pass
+reliability was also below both baselines.
+
+### Cross-task evidence
+
+Six task medians placed Parley 3.0–4.24% above the best baseline with both
+Parley replicates passing their first public checks. Stable word
+deduplication had one repaired Parley run and a 38.49% token gap. Rotate words
+left had two repaired Parley runs, seven repair turns, and a 266.87% gap.
+Excluding rotation leaves Parley at 43,436 median tokens versus Python at
+41,843, a similar 3.81% gap; the aggregate median result is therefore not an
+artifact of the large rotation outlier.
+
+### Decision
+
+Make no compiler or syntax change from this experiment alone. Rotation
+repeated within one task but did not recur across unrelated tasks. The broad
+small token gap is consistent with fixed instruction/context overhead and
+does not identify a semantically justified language feature. Keep compiler
+and skill frozen. Any future proposal requires evidence across at least two
+unrelated tasks plus an independent case for general usefulness, semantic
+consistency, and maintainability.

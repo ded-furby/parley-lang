@@ -621,12 +621,14 @@ Update it whenever you finish or start a work item.
   predeclared strict best-baseline parity gate was not met. Compiler and skill
   are frozen; the next benchmark work is a broader predeclared task corpus,
   not transcript-level tuning.
-- **Broad-corpus pre-registration (iteration 016):**
-  `benchmarks/agent_tasks_broad.json` freezes eight new tasks across four
-  domains before any session output is observed. The planned matrix is 48
-  fresh sessions at two replicates per task-language cell. Its embedded change
-  rule rejects one-transcript syntax tuning and requires cross-task evidence,
-  general usefulness, semantic consistency, and maintainability.
+- **Broad-corpus result (iteration 016):** all 48 fresh sessions across eight
+  new tasks passed hidden cases and complied with protocol. Parley finished at
+  43,455 median tokens, 20.0663 seconds, and 13/16 first-pass versus Python at
+  41,832.5, 16.5347, and 15/16, and Rust at 42,020.5, 17.1042, and 16/16.
+  Seven of eight Parley repair turns were isolated to word rotation; excluding
+  that task leaves a similar 3.81% token gap to Python. No compiler change is
+  justified. Require cross-task evidence plus general usefulness, semantic
+  consistency, and maintainability for future proposals.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
