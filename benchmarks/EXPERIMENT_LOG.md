@@ -160,3 +160,23 @@ Make one predeclared skill/compiler pass against these exact failure classes,
 reduce the clean-run prompt overhead further, add direct regression coverage,
 then run a new immutable matrix. Do not alter or selectively rerun iteration
 003.
+
+## Engineering changes after 003
+
+### 2026-07-29 — Parley 0.3.141 first-pass safe forms
+
+- Reduced the always-injected skill from 7,168 to 4,340 characters (39.5%)
+  while retaining the complete 21,224-character reference on demand.
+- Reduced the three metered Parley task prompts to 5,787–5,831 characters,
+  down about 32.8% from iteration 003's 8,615–8,659-character range.
+- Put the four observed parse choices at the top of the core: never use
+  reserved `position`, use one snake_case identifier for every name,
+  parenthesize expression calls, and write `changing` only in declarations.
+- Added exact P101 repair hints for reserved `position`, space-separated
+  function names, unparenthesized condition calls, and `changing` at a call
+  site.
+- Added regression coverage for each diagnostic and for a clean compact-range
+  program using temporary item values and a changing list helper.
+- Expected benchmark effect: remove the seven Parley non-first-pass sessions
+  seen in iteration 003 and reduce repeated prompt input on clean runs. This
+  expectation remains unproven until iteration 004.

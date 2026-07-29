@@ -112,6 +112,36 @@ def test_text_position_expression_parse():
     assert isinstance(expr.value, A.Str)
 
 
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        (
+            "to main:\n    let position be 1\n    let value be item position of values\n",
+            "'position' is reserved Parley vocabulary",
+        ),
+        (
+            "to add compact run:\n    say 1\n",
+            "Function names are one identifier",
+        ),
+        (
+            "to valid with line as text giving yesno:\n    give back yes\n"
+            "to main:\n    if valid with \"x\":\n        say \"yes\"\n",
+            "call used as a condition needs parentheses",
+        ),
+        (
+            "to record with changing values as list of number:\n    add 1 to values\n"
+            "to main:\n    let values be an empty list of number\n"
+            "    record with changing values\n",
+            "plain variable at the call site",
+        ),
+    ],
+)
+def test_common_agent_parse_mistakes_have_exact_repair_hints(source, expected):
+    with pytest.raises(ParleyError) as exc:
+        parse(source)
+    assert expected in (exc.value.diagnostics[0].hint or "")
+
+
 def test_text_count_expression_parse():
     prog = parse('to main:\n    say count of "a" in "banana"\n')
     expr = prog.funcs[0].body[0].value

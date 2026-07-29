@@ -330,14 +330,18 @@ def test_agent_prompt_includes_current_skill_only_for_parley():
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 8_000
+    assert len(skill) < 4_500
     for required in [
         "an empty list of text",
         'Use `ask ""`',
-        "Literal braces inside a Parley string must be doubled",
-        "expression calls need parentheses",
-        "treat a direct map lookup as a maybe",
-        "Do not search for another compiler when `./check` exists",
+        "Literal braces in strings are doubled",
+        "Calls used as expressions require parentheses",
+        "Direct map lookup gives the value, not a maybe",
+        "Do not search\n   for or invoke another compiler",
+        "never name a\n  variable `position`",
+        "Names are one `snake_case` identifier",
+        "Write `changing` only in a parameter declaration",
+        "bind those expressions to temporary names first",
     ]:
         assert required in skill
 

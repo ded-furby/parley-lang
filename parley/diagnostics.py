@@ -107,9 +107,9 @@ ERROR_CATALOG: dict[str, dict] = {
         "fix": "Add the missing variants (listed in the hint) or add an `otherwise:` arm.",
     },
     "P209": {
-        "title": "Name already in use",
-        "explain": "A `let` reuses a name that already exists in this scope (or shadows a function).",
-        "fix": "Use `set name to …` to change an existing variable, or pick a new name.",
+        "title": "Invalid or reused name",
+        "explain": "A name is reserved Parley vocabulary, already exists in this scope, or shadows a function.",
+        "fix": "For reserved words, use the suggested specific name. For an existing variable, use `set name to …` or pick a new name.",
     },
     "P210": {
         "title": "Missing or malformed `to main:`",

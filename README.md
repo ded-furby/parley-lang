@@ -303,6 +303,7 @@ the plan:
 - [x] stop-exclusive range helpers for bundled number lists — v0.3.138
 - [x] borrow-safe evaluation of list/map mutation arguments — v0.3.139
 - [x] progressive-disclosure agent skill with compact core — v0.3.140
+- [x] benchmark-driven first-pass skill and parser hints — v0.3.141
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -322,15 +323,15 @@ the plan:
 - [x] reject/filterfalse helpers for bundled lists — v0.3.99
 - [x] predicate maybe-find-index helpers for bundled lists — v0.3.100
 - [x] predicate all-index helpers for bundled lists — v0.3.101
-- [ ] a formal token-efficiency benchmark vs Python/Rust/Zero (seed corpus,
-      optional tokenizer counts, CLI, and run logging exist; agent runs still planned)
+- [ ] confirm token-efficiency parity vs Python/Rust at 10 replicates per cell
+      (fresh-session harness and immutable HTML reports exist; optimization continues)
 
 ## Development
 
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-pytest            # 263 tests; e2e compiles real binaries (needs cargo)
+pytest            # 268 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

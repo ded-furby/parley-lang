@@ -111,6 +111,34 @@ def test_clean_program_no_diags():
     assert check_text(src) == []
 
 
+def test_compact_range_agent_idioms_are_clean():
+    src = (
+        "to record_range with low as number, high as number, changing pieces as list of text:\n"
+        "    add \"{low}-{high}\" to pieces\n"
+        "to main:\n"
+        "    let values be a list of 1, 2, 3, 5\n"
+        "    let pieces be an empty list of text\n"
+        "    let cursor be 1\n"
+        "    let count be length of values\n"
+        "    while cursor is at most count:\n"
+        "        let run_end be cursor\n"
+        "        let extending be yes\n"
+        "        while extending and run_end is less than count:\n"
+        "            let current_value be item run_end of values\n"
+        "            let next_index be run_end plus 1\n"
+        "            let next_value be item next_index of values\n"
+        "            if next_value is current_value plus 1:\n"
+        "                set run_end to next_index\n"
+        "            otherwise:\n"
+        "                set extending to no\n"
+        "        let low be item cursor of values\n"
+        "        let high be item run_end of values\n"
+        "        record_range with low, high, pieces\n"
+        "        set cursor to run_end plus 1\n"
+    )
+    assert check_text(src) == []
+
+
 def test_map_values_typecheck_cleanly():
     src = in_main(
         "let scores be a map from text to number",

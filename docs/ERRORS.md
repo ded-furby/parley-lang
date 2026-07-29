@@ -88,11 +88,11 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Add the missing variants (listed in the hint) or add an `otherwise:` arm.
 
-## P209 — Name already in use
+## P209 — Invalid or reused name
 
-**What it means:** A `let` reuses a name that already exists in this scope (or shadows a function).
+**What it means:** A name is reserved Parley vocabulary, already exists in this scope, or shadows a function.
 
-**How to fix it:** Use `set name to …` to change an existing variable, or pick a new name.
+**How to fix it:** For reserved words, use the suggested specific name. For an existing variable, use `set name to …` or pick a new name.
 
 ## P210 — Missing or malformed `to main:`
 

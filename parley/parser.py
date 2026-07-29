@@ -743,7 +743,7 @@ def _describe_terminal(t: str) -> str:
     return f"'{word}'"
 
 
-def _token_error(e: UnexpectedToken) -> Diagnostic:
+def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
     tok = e.token
     if tok.type == "$END":
         got = "the end of the file"
@@ -757,6 +757,29 @@ def _token_error(e: UnexpectedToken) -> Diagnostic:
         hint = (hint or "") + f" Note: '{word}' is a reserved Parley phrase, so it cannot be used as a name here."
     if "COLON" in expected:
         hint = (hint or "") + " Lines that open a block (to/if/while/when/…) end with ':'."
+    lines = text.splitlines()
+    line = lines[e.line - 1] if 1 <= e.line <= len(lines) else ""
+    if re.search(r"\b(?:let|set|item|for each)\s+position\b|\bitem\s+position\s+of\b", line):
+        hint = (hint or "") + (
+            " 'position' is reserved Parley vocabulary; rename that variable "
+            "everywhere to 'index' or 'cursor'."
+        )
+    definition = re.match(r"^\s*to\s+([A-Za-z_]\w*)\s+([A-Za-z_]\w*)", line)
+    if definition and definition.group(2) not in {"with", "giving"}:
+        hint = (hint or "") + (
+            " Function names are one identifier: join multiple words with "
+            "underscores, for example 'record_range'."
+        )
+    if re.match(r"^\s*(?:if|otherwise\s+if|while)\s+[A-Za-z_]\w*\s+with\b", line):
+        hint = (hint or "") + (
+            " A function call used as a condition needs parentheses, for "
+            "example `if (is_valid with line):`."
+        )
+    if not line.lstrip().startswith("to ") and re.search(r"\bwith\b.*\bchanging\s+[A-Za-z_]", line):
+        hint = (hint or "") + (
+            " Write 'changing' only in the parameter declaration; pass the "
+            "plain variable at the call site."
+        )
     return Diagnostic(
         "P101", f"I didn't expect {got} here.",
         line=getattr(tok, "line", 0) or 0, col=getattr(tok, "column", 0) or 0,
@@ -774,7 +797,7 @@ def parse(text: str) -> A.Program:
     try:
         tree = _lark().parse(text, start="start")
     except UnexpectedToken as e:
-        raise ParleyError([_token_error(e)])
+        raise ParleyError([_token_error(e, text)])
     except UnexpectedCharacters as e:
         raise ParleyError([Diagnostic(
             "P102", f"Parley does not recognise the character {text.splitlines()[e.line - 1][e.column - 1]!r}.",
