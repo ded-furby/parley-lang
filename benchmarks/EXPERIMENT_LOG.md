@@ -754,3 +754,42 @@ starting the 90-session confirmation.
 - Froze compiler semantics at the 0.3.149 behavior; 0.3.150 is an
   instruction-only release. This is the sole compression experiment before a
   broader corpus or the predeclared 90-session confirmation.
+
+## 014 — One-shot instruction compression rejected
+
+- Date: 2026-07-29
+- Toolchain: Parley 0.3.150, commit `a573dca29296cd7e75b013450c855e6f2ea6ca42`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `3517b51ec7288317a61624d4074b436bb2647f358d543448147045a407234939`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `3ea14e8165ec10dbe6f087bf02fc5641df50439fd0894c3523d76755f9d8d3ea`
+- Report: `benchmarks/reports/014-overcompression-rejected.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 0/6 | 6/6 | 446,534.5 | 161.0150 | 69 |
+| Python | 6/6 | 5/6 | 6/6 | 43,065.5 | 18.4376 | 1 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,329.0 | 18.7325 | 0 |
+
+### Gate result
+
+The compression hypothesis decisively **failed**. All Parley sessions
+eventually passed hidden cases and obeyed protocol, but none passed its first
+public check. Median checks rose to 12.5, median tokens to 10.37× Python, and
+median elapsed time to 8.73× Python.
+
+### Cross-task evidence
+
+The failure replicated across every task: bracket sessions used 8 and 20
+checks; compact ranges used 4 and 3; inventory totals used 23 and 17. This is
+not an isolated syntax miss. Removing the executable contract transferred a
+large language-discovery burden into repeated compiler repair loops.
+
+### Decision
+
+Reject the 343-character core and restore the proven 1,519-character 0.3.149
+core. Do not run another compression experiment. Freeze instructions and
+compiler semantics, then proceed to a broader corpus or the predeclared
+90-session confirmation. Future changes require general usefulness, semantic
+consistency, and maintainability—not improvement on one transcript.
