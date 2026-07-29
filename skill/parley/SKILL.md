@@ -5,85 +5,27 @@ description: Write, check, and run Parley programs (.par files), an English-like
 
 # Parley
 
-Write `.par` with 4-space indentation and `to main:`. If the workspace has
-`./check`, use it exclusively. Do not search for or invoke another compiler.
-Otherwise run `parley check program.par --json`. Follow hints until
-`"ok": true`.
+Use 4-space blocks and `to main:`. When present, use only `./check`; follow
+hints to `"ok": true`.
 
-## First-pass rules
+- Names are one `snake_case` token. `position`/commands are reserved; use
+  `index` or `cursor`.
+- Booleans: `yesno`, `yes`, `no` (not `true`/`false`). Comparisons: `is`,
+  `is not`, `is less than`, `is at most`, `is more than`, `is at least`.
+- Input: `ask ""`; number: `ask for a number ""` or
+  `number from quantity_text`; check the maybe, then `value of`.
+- Collections: `an empty list of text`; `a map from text to number`;
+  `add x to xs`; `item i of xs`; `remove item i of xs`; `map contains key`;
+  `set item key of map to value`; `keys of map`. Item lookup gives the value,
+  not a maybe.
+- Text: `line split by " "`; `parts joined with ","`; interpolation
+  `"{value}"`; literal braces `"{{"` / `"}}"`.
+- Return with `giving TYPE` / `give back value`. Parenthesize expression calls:
+  `if (valid with line):`. Statement calls are bare.
+- `changing` appears only in parameter declarations; calls pass plain vars.
+- Control: `if`/`otherwise`, `while`, `repeat n times`, `for each index from 1
+  to length of xs` (inclusive). `stop`/`skip` only inside loops. Block names
+  stay in their block.
+- Bind complex calls/items to temporary names before long conditions.
 
-- Names are a `snake_case` identifier, never spaced words. Never name a
-  variable `position`; use `index` or `cursor`. Avoid command words such as
-  `item`, `ask`, `add`, `set`, `remove`, and `say`.
-- Calls used as expressions require parentheses: `if (is_valid with line):`
-  or `say (double with 21)`. A standalone call is bare.
-- Return values with `giving TYPE` and `give back value`; never write
-  `returns`, `return value`, or `give value`.
-- Write `changing` only in a parameter declaration; pass the plain variable
-  at the call site.
-- Use typed empty collections: `an empty list of text` or
-  `a map from text to number`.
-- Use `ask ""` for line input without a prompt. `ask for a number ""` and
-  `number from quantity_text` give `maybe number`; check `is nothing` before
-  `value of`.
-- Booleans are `yesno` with literals `yes` and `no`, never `true`/`false`.
-- Comparisons are exactly `is`, `is not`, `is less than`, `is at most`,
-  `is more than`, and `is at least`; never write `is equal to`.
-- Literal braces in strings are doubled (`"{{"`, `"}}"`); interpolation uses
-  single braces (`"total: {count}"`).
-- In long conditions, bind calls or repeated `item ... of ...` expressions to
-  temporary names first.
-
-## Safe forms
-
-```parley
-to double with value as number giving number:
-    give back value times 2
-
-to record_label with label as text, changing labels as list of text:
-    add label to labels
-
-to main:
-    let maybe_count be ask for a number ""
-    if maybe_count is nothing:
-        fail "expected a number"
-    let count be value of maybe_count
-
-    let labels be an empty list of text
-    record_label with "count={count}", labels
-
-    let values be an empty list of number
-    add count to values
-    let first_value be item 1 of values
-    set item 1 of values to first_value plus 1
-
-    let totals be a map from text to number
-    set item "all" of totals to count
-    if totals contains "all":
-        say item "all" of totals
-```
-
-Lists/text are 1-based. Common forms: `length of values`,
-`item index of values`, `remove item index of values`, `sorted values`,
-`item index of line`, `line split by " "`, `parts joined with ","`,
-`trimmed line`, `keys of totals`. Direct map lookup gives the value, not a
-maybe; guard missing keys with `map contains key`.
-
-Control flow (`otherwise if` is valid):
-
-```parley
-while cursor is at most length of values:
-    set cursor to cursor plus 1
-
-repeat count times:
-    say count
-
-for each index from 1 to length of values:
-    say item index of values
-```
-
-Range endpoints are inclusive. `stop` and `skip` work only inside loops; use
-branching to leave `main`. Create variables before a block if needed after it.
-`let` creates; `set` mutates.
-
-For rare forms or tooling, read `references/extended-reference.md`.
+For more, read `references/core-v0.3.144.md`.

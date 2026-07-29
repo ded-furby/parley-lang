@@ -446,3 +446,21 @@ always-injected contract that retains every empirically observed trap and
 routes detailed syntax to the existing on-demand reference. Run a new
 protocol-v2 pilot; do not proceed to confirmation unless it preserves the
 iteration-008 reliability result and clears both efficiency medians.
+
+## Engineering changes after 008
+
+### 2026-07-29 — Parley 0.3.145 progressive-disclosure core
+
+- Preserved the proven 3,280-character v0.3.144 skill byte-for-byte at
+  `skill/parley/references/core-v0.3.144.md` (SHA-256
+  `f2683bdc7e78e98b55f101d38f42ee32646d423e7e51ac4370f952e1c0430284`).
+- Replaced the always-loaded contract with a 1,557-character core that keeps
+  every first-pass trap isolated by iterations 003–008: reserved names,
+  snake-case identifiers, booleans, exact comparisons, numeric conversion,
+  collection mutation and lookup, literal braces, expression calls,
+  declaration-only `changing`, returning functions, loop-only control, block
+  scope, and temporary bindings for complex conditions.
+- Reduced the median rendered Parley task prompt from 4,913 to 3,190
+  characters (35.1%) while retaining the on-demand exhaustive reference.
+- Added a regression test pinning the fallback's byte length and SHA-256 so a
+  future compression pass cannot silently destroy the last proven core.

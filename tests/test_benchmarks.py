@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import py_compile
@@ -354,25 +355,37 @@ def test_agent_command_protocol_allows_only_exact_public_check():
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 3_400
+    assert len(skill) < 1_700
     for required in [
         "an empty list of text",
-        'Use `ask ""`',
-        "Literal braces in strings are doubled",
-        "Calls used as expressions require parentheses",
-        "Direct map lookup gives the value, not a\nmaybe",
-        "Do not search for or invoke another compiler",
-        "Never name a\n  variable `position`",
-        "Names are a `snake_case` identifier",
-        "Write `changing` only in a parameter declaration",
-        "bind calls or repeated `item ... of ...` expressions to\n  temporary names first",
-        "literals `yes` and `no`, never `true`/`false`",
-        "never write `is equal to`",
+        '`ask ""`',
+        'literal braces `"{{"` / `"}}"`',
+        "Parenthesize expression calls",
+        "Item lookup gives the value,\n  not a maybe",
+        "use only `./check`",
+        "`position`/commands are reserved",
+        "one `snake_case` token",
+        "`changing` appears only in parameter declarations",
+        "temporary names before long conditions",
+        "`yes`, `no` (not `true`/`false`)",
+        "`is not`, `is less than`, `is at most`, `is more than`, `is at least`",
         "`number from quantity_text`",
-        "`stop` and `skip` work only inside loops",
-        "`giving TYPE` and `give back value`",
+        "`stop`/`skip` only inside loops",
+        "`giving TYPE` / `give back value`",
+        "references/core-v0.3.144.md",
     ]:
         assert required in skill
+
+
+def test_parley_previous_core_skill_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.3.144.md"
+    ).read_text()
+
+    assert len(reference) == 3_280
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "f2683bdc7e78e98b55f101d38f42ee32646d423e7e51ac4370f952e1c0430284"
+    )
 
 
 def test_parley_extended_skill_reference_preserves_rare_tooling():
