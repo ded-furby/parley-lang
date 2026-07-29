@@ -850,3 +850,25 @@ current compiler and instruction core. The next useful evidence is a broader,
 predeclared task corpus spanning additional algorithms and programming
 constructs. Any future language change must be justified independently by
 generality, semantic consistency, and maintainability.
+
+## Pre-registration for 016 — Broad out-of-sample corpus
+
+- Date frozen: 2026-07-30
+- Compiler: Parley 0.3.151, semantics unchanged from iteration 015
+- Instruction core: restored 1,519-character reliability core, unchanged
+- Matrix: 8 new tasks × 3 languages × 2 replicates = 48 fresh sessions
+- Seed: `20260730`
+- Manifest: `benchmarks/agent_tasks_broad.json`
+- Domains: text processing, numeric streams, stateful aggregation, and
+  sequence transformation, with two tasks in each domain
+- Primary outcomes: hidden success, first-public-check success,
+  command-protocol compliance, median total tokens, and median elapsed time
+
+### Analysis and change rule
+
+Report the complete corpus and every task-language cell, including failures
+and outliers. This experiment is out-of-sample diagnostic evidence, not a new
+tuning loop or a publishable language ranking. Do not change the compiler or
+language because of one task or transcript. A future proposal must address an
+issue recurring across at least two unrelated tasks and independently satisfy
+general usefulness, semantic consistency, and maintainability.

@@ -621,6 +621,12 @@ Update it whenever you finish or start a work item.
   predeclared strict best-baseline parity gate was not met. Compiler and skill
   are frozen; the next benchmark work is a broader predeclared task corpus,
   not transcript-level tuning.
+- **Broad-corpus pre-registration (iteration 016):**
+  `benchmarks/agent_tasks_broad.json` freezes eight new tasks across four
+  domains before any session output is observed. The planned matrix is 48
+  fresh sessions at two replicates per task-language cell. Its embedded change
+  rule rejects one-transcript syntax tuning and requires cross-task evidence,
+  general usefulness, semantic consistency, and maintainability.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

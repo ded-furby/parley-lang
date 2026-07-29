@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "description": "Predeclared broad-corpus evaluation for fresh-context coding agents. The compiler and Parley instruction core are frozen before any session runs. Tasks are intentionally distinct from both the seed corpus and the three-task confirmation corpus.",
+  "predeclared_analysis": {
+    "role": "Out-of-sample diagnostic evidence, not a tuning target or a publishable language ranking.",
+    "matrix": "8 tasks x 3 languages x 2 replicates = 48 fresh sessions",
+    "seed": 20260730,
+    "primary_outcomes": [
+      "hidden success rate",
+      "first public check success rate",
+      "command-protocol compliance rate",
+      "median total tokens",
+      "median elapsed seconds"
+    ],
+    "reporting": "Report the complete corpus and every task-language cell, including failures and outliers.",
+    "change_rule": "Do not change the compiler or language because of one task or transcript. A future proposal must address evidence recurring across at least two unrelated tasks and independently satisfy general usefulness, semantic consistency, and maintainability."
+  },
+  "tasks": [
+    {
+      "id": "stable_word_deduplication",
+      "title": "Stable word deduplication",
+      "category": "sequence transformation",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N nonempty lowercase ASCII words, one per line. Keep only the first occurrence of each distinct word and print the retained words on one line joined by `|`, in their original order. If N is zero, print one empty line.",
+      "public_cases": [
+        {
+          "stdin": "7\nalpha\nbeta\nalpha\ngamma\nbeta\ndelta\ngamma\n",
+          "stdout": "alpha|beta|gamma|delta\n"
+        }
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\nsolo\n", "stdout": "solo\n"},
+        {
+          "stdin": "8\nred\nred\nblue\nred\ngreen\nblue\ngold\ngold\n",
+          "stdout": "red|blue|green|gold\n"
+        },
+        {
+          "stdin": "6\nzebra\nant\nyak\nant\nzebra\nbee\n",
+          "stdout": "zebra|ant|yak|bee\n"
+        }
+      ]
+    },
+    {
+      "id": "run_length_encoding",
+      "title": "Run-length encoding",
+      "category": "text processing",
+      "statement": "Read one input line containing only lowercase ASCII letters; the line may be empty. Replace each maximal consecutive run with `letter:count` and print the groups on one line joined by commas. Preserve run order. For an empty input line, print one empty line.",
+      "public_cases": [
+        {"stdin": "aaabbcaaaa\n", "stdout": "a:3,b:2,c:1,a:4\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "\n", "stdout": "\n"},
+        {"stdin": "z\n", "stdout": "z:1\n"},
+        {"stdin": "abcde\n", "stdout": "a:1,b:1,c:1,d:1,e:1\n"},
+        {"stdin": "aabccccddda\n", "stdout": "a:2,b:1,c:4,d:3,a:1\n"}
+      ]
+    },
+    {
+      "id": "moving_window_sums",
+      "title": "Moving window sums",
+      "category": "numeric stream",
+      "statement": "Read a positive integer N, then a positive integer K, from the first two input lines. Read exactly N signed whole numbers, one per line. It is guaranteed that K is at most N. For every contiguous window of K values, print its sum. Print all sums on one line joined by commas with no spaces.",
+      "public_cases": [
+        {"stdin": "6\n3\n1\n2\n3\n4\n5\n6\n", "stdout": "6,9,12,15\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "1\n1\n-4\n", "stdout": "-4\n"},
+        {"stdin": "5\n2\n-1\n3\n0\n-2\n4\n", "stdout": "2,3,-2,2\n"},
+        {"stdin": "4\n4\n10\n-2\n7\n1\n", "stdout": "16\n"},
+        {"stdin": "7\n3\n0\n0\n1\n-1\n5\n-5\n2\n", "stdout": "1,0,5,-1,2\n"}
+      ]
+    },
+    {
+      "id": "longest_rising_run",
+      "title": "Longest rising run",
+      "category": "numeric stream",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N signed whole numbers, one per line. Print the length of the longest contiguous run in which every value is strictly greater than the value immediately before it. If N is zero, print `0`.",
+      "public_cases": [
+        {"stdin": "8\n1\n2\n3\n1\n2\n5\n6\n0\n", "stdout": "4\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "0\n"},
+        {"stdin": "1\n9\n", "stdout": "1\n"},
+        {"stdin": "5\n4\n4\n4\n4\n4\n", "stdout": "1\n"},
+        {"stdin": "7\n-3\n-2\n-1\n5\n2\n3\n4\n", "stdout": "4\n"}
+      ]
+    },
+    {
+      "id": "plurality_winner",
+      "title": "Plurality winner",
+      "category": "stateful aggregation",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N nonempty lowercase ASCII names, one per line. Count the occurrences of each name. Print the name with the greatest count, one space, and its count. Break a tie by choosing the alphabetically earliest name. If N is zero, print nothing.",
+      "public_cases": [
+        {
+          "stdin": "7\nada\ngrace\nada\nlinus\ngrace\nada\ngrace\n",
+          "stdout": "ada 3\n"
+        }
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": ""},
+        {"stdin": "1\nken\n", "stdout": "ken 1\n"},
+        {"stdin": "6\nzoe\namy\nzoe\namy\nbob\nbob\n", "stdout": "amy 2\n"},
+        {"stdin": "8\nivy\nmax\nivy\nivy\nmax\nleo\nmax\nmax\n", "stdout": "max 4\n"}
+      ]
+    },
+    {
+      "id": "merge_sorted_intervals",
+      "title": "Merge sorted intervals",
+      "category": "stateful aggregation",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N closed integer intervals. Each interval line contains `start end`; start is at most end. The intervals are sorted by start, then by end. Merge intervals that overlap or share an endpoint: merge the next interval exactly when its start is at most the current merged end. Print the merged intervals on one line as `start:end` joined by commas, with no spaces. If N is zero, print one empty line.",
+      "public_cases": [
+        {
+          "stdin": "5\n1 3\n2 6\n8 10\n10 12\n15 18\n",
+          "stdout": "1:6,8:12,15:18\n"
+        }
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\n-5 -1\n", "stdout": "-5:-1\n"},
+        {
+          "stdin": "5\n-8 -3\n-4 0\n2 2\n3 7\n7 9\n",
+          "stdout": "-8:0,2:2,3:9\n"
+        },
+        {
+          "stdin": "4\n1 10\n2 3\n4 8\n12 15\n",
+          "stdout": "1:10,12:15\n"
+        }
+      ]
+    },
+    {
+      "id": "rotate_words_left",
+      "title": "Rotate words left",
+      "category": "sequence transformation",
+      "statement": "Read a non-negative integer N, then a non-negative integer K, from the first two input lines. Read exactly N nonempty lowercase ASCII words, one per line. Rotate the sequence left by K positions, treating K modulo N when N is positive. Print the rotated words on one line joined by `|`. If N is zero, print one empty line.",
+      "public_cases": [
+        {
+          "stdin": "5\n2\nred\nblue\ngreen\ngold\nblack\n",
+          "stdout": "green|gold|black|red|blue\n"
+        }
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n9\n", "stdout": "\n"},
+        {"stdin": "1\n100\nsolo\n", "stdout": "solo\n"},
+        {"stdin": "4\n6\na\nb\nc\nd\n", "stdout": "c|d|a|b\n"},
+        {"stdin": "3\n0\nnorth\neast\nwest\n", "stdout": "north|east|west\n"}
+      ]
+    },
+    {
+      "id": "longest_common_prefix",
+      "title": "Longest common prefix",
+      "category": "text processing",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N lowercase ASCII text lines; a text line may be empty. Print the longest prefix shared by all N lines, followed by a newline. If N is zero, or if the lines share no nonempty prefix, print one empty line.",
+      "public_cases": [
+        {"stdin": "4\nflower\nflow\nflight\nflip\n", "stdout": "fl\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\nparley\n", "stdout": "parley\n"},
+        {"stdin": "3\ncat\ndog\ncow\n", "stdout": "\n"},
+        {"stdin": "4\ninterstate\ninternal\ninternet\ninterval\n", "stdout": "inter\n"},
+        {"stdin": "3\nprefix\n\nprelude\n", "stdout": "\n"}
+      ]
+    }
+  ]
+}

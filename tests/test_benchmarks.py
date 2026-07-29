@@ -320,6 +320,36 @@ def test_agent_tasks_are_held_out_and_have_public_and_hidden_cases():
     assert all(task["public_cases"] and task["hidden_cases"] for task in tasks)
 
 
+def test_broad_agent_tasks_are_predeclared_and_cross_domain():
+    manifest = json.loads((BENCHMARKS / "agent_tasks_broad.json").read_text())
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")
+
+    assert len(tasks) == 8
+    assert {task["category"] for task in tasks} == {
+        "text processing",
+        "numeric stream",
+        "stateful aggregation",
+        "sequence transformation",
+    }
+    assert all(
+        sum(task["category"] == category for task in tasks) == 2
+        for category in {task["category"] for task in tasks}
+    )
+    prior_ids = {
+        task["id"]
+        for filename in ("tasks.json", "agent_tasks.json")
+        for task in json.loads((BENCHMARKS / filename).read_text())["tasks"]
+    }
+    assert not ({task["id"] for task in tasks} & prior_ids)
+    analysis = manifest["predeclared_analysis"]
+    assert analysis["matrix"] == "8 tasks x 3 languages x 2 replicates = 48 fresh sessions"
+    assert analysis["seed"] == 20260730
+    assert "one task or transcript" in analysis["change_rule"]
+    for task in tasks:
+        assert len(task["public_cases"]) == 1
+        assert len(task["hidden_cases"]) >= 4
+
+
 def test_agent_prompt_includes_current_skill_only_for_parley():
     task = load_tasks(BENCHMARKS / "agent_tasks.json")[0]
     skill = "PARLEY-SKILL-SENTINEL"

@@ -123,6 +123,28 @@ reported cost. Agent tool access has no internet, and hidden cases are not
 written into its workspace. Runs with a command-protocol violation are not
 valid acceptance evidence even if their final source passes.
 
+The separately frozen `agent_tasks_broad.json` manifest expands coverage to
+eight tasks across text processing, numeric streams, stateful aggregation,
+and sequence transformation. It also records the predeclared 48-session
+matrix, outcomes, reporting policy, and change rule. Run it without altering
+the compiler or skill after the manifest is committed:
+
+```bash
+python3 benchmarks/agent_runner.py \
+  --tasks-file benchmarks/agent_tasks_broad.json \
+  --replicates 2 \
+  --seed 20260730 \
+  --model gpt-5.6-sol \
+  --reasoning medium \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/results/agent_broad_corpus.json
+```
+
+The broad corpus is diagnostic. A failure or efficiency difference isolated
+to one task is not a reason to add syntax. Future language changes must be
+useful across unrelated programs and must preserve semantic consistency and
+maintainability.
+
 If an objective hidden-test oracle error is found, saved sources can be
 rejudged without changing or rerunning agent attempts:
 
