@@ -1,0 +1,580 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Parley Agent Benchmark",
+    "description": "Fresh-context coding-agent pilot comparing Parley, Python, and Rust on correctness and agent effort.",
+    "generatedAt": "2026-07-29T12:15:43.616321Z",
+    "cards": [
+      {
+        "id": "sessions_card",
+        "description": "Independent ephemeral Codex sessions across three tasks, three languages, and two replicates.",
+        "dataset": "headline",
+        "sourceId": "pilot_results",
+        "metrics": [
+          {
+            "label": "Fresh sessions",
+            "field": "sessions",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "correctness_card",
+        "description": "Final solutions passing all withheld cases after the public-check repair loop.",
+        "dataset": "headline",
+        "sourceId": "pilot_results",
+        "metrics": [
+          {
+            "label": "Hidden success",
+            "field": "hidden_success_rate",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "token_multiple_card",
+        "description": "Median reported Parley tokens divided by the Python median.",
+        "dataset": "headline",
+        "sourceId": "pilot_results",
+        "metrics": [
+          {
+            "label": "Parley ÷ Python tokens",
+            "field": "token_multiple",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "repair_card",
+        "description": "Public-check repair turns used by the six Parley sessions.",
+        "dataset": "headline",
+        "sourceId": "pilot_results",
+        "metrics": [
+          {
+            "label": "Parley repair turns",
+            "field": "parley_repairs",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "median_tokens",
+        "title": "Parley used the most model tokens",
+        "subtitle": "Median reported total tokens per completed run; lower is better.",
+        "headerMarkdown": "Correctness was tied, so this chart isolates the **agent-effort cost** of reaching a correct solution.",
+        "intent": "comparison",
+        "question": "How many reported model tokens did a typical successful run consume in each language?",
+        "rationale": "A zero-based horizontal bar chart makes the three language medians directly comparable without implying a trend.",
+        "comparisonContext": {
+          "unit": "reported model tokens",
+          "grain": "median across six completed runs per language",
+          "denominator": "one completed benchmark run",
+          "semanticFamily": "agent effort"
+        },
+        "type": "horizontalBar",
+        "dataset": "language_summary",
+        "sourceId": "pilot_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_total_tokens",
+            "type": "quantitative",
+            "label": "Median reported tokens",
+            "format": "compact"
+          },
+          "tooltip": [
+            {
+              "field": "median_input_tokens",
+              "type": "quantitative",
+              "label": "Median input tokens",
+              "format": "compact"
+            },
+            {
+              "field": "median_output_tokens",
+              "type": "quantitative",
+              "label": "Median output tokens",
+              "format": "compact"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median reported tokens",
+        "valueFormat": "compact",
+        "layout": "half"
+      },
+      {
+        "id": "median_elapsed",
+        "title": "Parley also took more wall time",
+        "subtitle": "Median end-to-end agent elapsed seconds per completed run; lower is better.",
+        "headerMarkdown": "The time result tracks the token result: Parley took about **2.3×** as long as either baseline.",
+        "intent": "comparison",
+        "question": "How long did a typical successful run take in each language?",
+        "rationale": "A zero-based horizontal bar chart shows the absolute wall-time gap across the three languages.",
+        "comparisonContext": {
+          "unit": "seconds",
+          "grain": "median across six completed runs per language",
+          "denominator": "one completed benchmark run",
+          "semanticFamily": "elapsed time"
+        },
+        "type": "horizontalBar",
+        "dataset": "language_summary",
+        "sourceId": "pilot_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_elapsed_seconds",
+            "type": "quantitative",
+            "label": "Median elapsed seconds",
+            "format": "number",
+            "unit": "s"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median elapsed seconds",
+        "valueFormat": "number",
+        "unit": "s",
+        "layout": "half"
+      },
+      {
+        "id": "task_tokens",
+        "title": "The token gap appeared in every task",
+        "subtitle": "Median reported total tokens by task and language; each bar summarizes two fresh sessions.",
+        "headerMarkdown": "Parley remained the highest-token option on **bracket reporting, range compaction, and inventory totals**.",
+        "intent": "comparison",
+        "question": "Was Parley's token overhead isolated to one task or present across the whole pilot?",
+        "rationale": "Grouped bars preserve the task-level comparison while keeping every value on the same token scale.",
+        "comparisonContext": {
+          "unit": "reported model tokens",
+          "grain": "median of two runs for each task-language pair",
+          "denominator": "one completed benchmark run",
+          "semanticFamily": "agent effort"
+        },
+        "type": "bar",
+        "dataset": "task_tokens",
+        "sourceId": "pilot_results",
+        "encodings": {
+          "x": {
+            "field": "task",
+            "type": "ordinal",
+            "label": "Task"
+          },
+          "y": {
+            "field": "median_total_tokens",
+            "type": "quantitative",
+            "label": "Median reported tokens",
+            "format": "compact"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Task",
+        "yAxisTitle": "Median reported tokens",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "first_check_rate",
+        "title": "Only one Parley run passed its first public check",
+        "subtitle": "First-attempt public-check success across six runs per language; higher is better.",
+        "headerMarkdown": "Parley reached the same final correctness, but it usually needed a **compile or test repair loop** first.",
+        "intent": "comparison",
+        "question": "How often did each language produce a public-check-passing solution on the first attempt?",
+        "rationale": "A zero-based rate comparison makes the 16.7% versus 83.3% first-pass gap explicit.",
+        "comparisonContext": {
+          "unit": "share of runs",
+          "grain": "six completed runs per language",
+          "denominator": "all runs in that language",
+          "semanticFamily": "first-pass reliability"
+        },
+        "type": "horizontalBar",
+        "dataset": "language_summary",
+        "sourceId": "pilot_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "first_public_check_success_rate",
+            "type": "quantitative",
+            "label": "First public-check pass rate",
+            "format": "percent"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "First public-check pass rate",
+        "valueFormat": "percent",
+        "layout": "half"
+      },
+      {
+        "id": "repair_turns",
+        "title": "Repair work concentrated in Parley",
+        "subtitle": "Total public-check repair turns across the six runs in each language; lower is better.",
+        "headerMarkdown": "Parley consumed **10 of the pilot's 12 repair turns**.",
+        "intent": "comparison",
+        "question": "Which language generated the most public-check repair work?",
+        "rationale": "A horizontal bar chart directly compares the small set of non-negative repair totals from a common run count.",
+        "comparisonContext": {
+          "unit": "repair turns",
+          "grain": "sum across six completed runs per language",
+          "denominator": "six runs",
+          "semanticFamily": "repair burden"
+        },
+        "type": "horizontalBar",
+        "dataset": "language_summary",
+        "sourceId": "pilot_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "repair_turns",
+            "type": "quantitative",
+            "label": "Repair turns",
+            "format": "number"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Repair turns",
+        "valueFormat": "number",
+        "layout": "half"
+      }
+    ],
+    "tables": [
+      {
+        "id": "language_detail",
+        "title": "Language-level benchmark detail",
+        "subtitle": "Medians are across six fresh sessions per language; repair turns are totals.",
+        "dataset": "language_summary",
+        "sourceId": "pilot_results",
+        "defaultSort": {
+          "field": "median_total_tokens",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_success_rate",
+            "label": "Hidden success",
+            "format": "percent"
+          },
+          {
+            "field": "first_public_check_success_rate",
+            "label": "First public pass",
+            "format": "percent"
+          },
+          {
+            "field": "median_public_check_attempts",
+            "label": "Median checks",
+            "format": "number"
+          },
+          {
+            "field": "median_total_tokens",
+            "label": "Median tokens",
+            "format": "compact"
+          },
+          {
+            "field": "median_elapsed_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          {
+            "field": "median_prompt_chars",
+            "label": "Median prompt chars",
+            "format": "compact"
+          },
+          {
+            "field": "repair_turns",
+            "label": "Repair turns",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "pilot_results",
+        "label": "Fresh-context agent pilot results",
+        "path": "001-pilot-baseline.sql"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Parley Agent Benchmark\n\nFresh-context pilot · Parley vs Python vs Rust · 29 July 2026"
+      },
+      {
+        "id": "verdict",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## Verdict\n\n**Parley matched Python and Rust on final correctness, but did not reduce agent work in this pilot.** All 18 sessions passed the hidden cases. The median Parley run used **174,124 reported tokens**—3.49× Python and 3.04× Rust—and took **55.4 seconds**, roughly 2.3× either baseline. Only 1 of 6 Parley runs passed the first public check, versus 5 of 6 for both Python and Rust."
+      },
+      {
+        "id": "headline_metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions_card",
+          "correctness_card",
+          "token_multiple_card",
+          "repair_card"
+        ]
+      },
+      {
+        "id": "efficiency_intro",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## Correctness tied; efficiency did not\n\nEvery language finished with a hidden-pass rate of 100%, so the meaningful separation is the work required to get there. Tokens and elapsed time tell the same story: Parley was materially more expensive for this model and task set."
+      },
+      {
+        "id": "tokens_chart",
+        "type": "chart",
+        "chartId": "median_tokens",
+        "layout": "half"
+      },
+      {
+        "id": "elapsed_chart",
+        "type": "chart",
+        "chartId": "median_elapsed",
+        "layout": "half"
+      },
+      {
+        "id": "efficiency_readout",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "The Parley median prompt was **22,473 characters**, compared with 1,202 for Python and 1,213 for Rust. That prompt asymmetry is part of the measured language/tooling experience, but it is also a likely driver of the token gap rather than proof that Parley source code itself is intrinsically expensive."
+      },
+      {
+        "id": "task_section",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## The gap held across the task set\n\nParley had the highest median reported-token count on all three tasks. The largest absolute gap appeared on bracket reporting; the largest multiple versus Python appeared on inventory totals."
+      },
+      {
+        "id": "task_chart",
+        "type": "chart",
+        "chartId": "task_tokens",
+        "layout": "full"
+      },
+      {
+        "id": "task_readout",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "This consistency weakens the idea that one outlier task caused the aggregate result. It does not establish a universal ranking: each task-language cell contains only two runs."
+      },
+      {
+        "id": "repair_section",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## The repair loop is the clearest product signal\n\nParley eventually succeeded, but agents repeatedly needed diagnostics and another turn. The six Parley sessions used 10 public-check repair turns in total, while Python and Rust used one each."
+      },
+      {
+        "id": "first_check_chart",
+        "type": "chart",
+        "chartId": "first_check_rate",
+        "layout": "half"
+      },
+      {
+        "id": "repairs_chart",
+        "type": "chart",
+        "chartId": "repair_turns",
+        "layout": "half"
+      },
+      {
+        "id": "failure_readout",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "The observed Parley friction clustered around discoverability and diagnostics: empty typed-list syntax, literal brace escaping, promptless input, expression calls, a Rust-backend borrow-checker gap on list removal, and cascading maybe/map diagnostics. These are concrete targets for the skill text, checker, compiler lowering, and examples."
+      },
+      {
+        "id": "detail_table",
+        "type": "table",
+        "tableId": "language_detail",
+        "layout": "full"
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## Methodology\n\n- **18 independent sessions:** 3 tasks × 3 languages × 2 replicates.\n- **Same agent:** `gpt-5.6-sol` at medium reasoning in Codex CLI 0.142.5.\n- **Fresh context:** every run used a unique ephemeral thread with user configuration ignored and no internet tool access.\n- **Comparable loop:** agents wrote one solution, ran the provided public `./check`, repaired if needed, and were judged against withheld cases.\n- **Parley setup:** Parley 0.3.138 at compiler commit `98e613da`, with the shipped Parley skill included and its tokens metered.\n- **Clean execution:** no timeouts, runner failures, checker-integrity failures, or duplicate threads."
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## Limitations\n\nThis is a directional pilot, not a language shootout. It uses one model, three small CLI tasks, and two replicates per task-language cell. The Parley prompt deliberately includes a large skill document while the baseline prompts are short, so the result measures today's complete agent experience—not source-language semantics in isolation. The hidden oracle was corrected after the run because `(()[]{})` had been mislabeled invalid; all original sources and transcripts were preserved and rejudged."
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "pilot_results",
+        "body": "## What to do next\n\n1. Shorten and tier the Parley skill so common syntax does not require a 22.5k-character prompt.\n2. Add first-class examples for typed empty lists, literal braces, promptless input, and expression calls.\n3. Fix or pre-diagnose the list-removal borrow conflict before Rust code generation.\n4. Reduce cascading maybe/map diagnostics to one actionable root-cause message.\n5. Rerun the same harness with at least 10 replicates per cell, then add larger tasks and a skill-ablation arm.\n\n## Further questions\n\n- How much of the token gap disappears with a compact Parley skill?\n- Does first-pass performance improve after the four syntax examples are added?\n- Does Parley become competitive on larger programs where higher-level constructs have more room to pay off?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-29T12:15:43.616321Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "sessions": 18,
+          "hidden_success_rate": 1.0,
+          "token_multiple": 3.49,
+          "parley_repairs": 10
+        }
+      ],
+      "language_summary": [
+        {
+          "language": "Parley",
+          "runs": 6,
+          "hidden_success_rate": 1.0,
+          "first_public_check_success_rate": 0.1667,
+          "median_public_check_attempts": 3.0,
+          "median_total_tokens": 174124.0,
+          "median_input_tokens": 172397.0,
+          "median_output_tokens": 1648.5,
+          "median_prompt_chars": 22473.0,
+          "median_elapsed_seconds": 55.4335,
+          "repair_turns": 10
+        },
+        {
+          "language": "Python",
+          "runs": 6,
+          "hidden_success_rate": 1.0,
+          "first_public_check_success_rate": 0.8333,
+          "median_public_check_attempts": 1.0,
+          "median_total_tokens": 49837.5,
+          "median_input_tokens": 49226.5,
+          "median_output_tokens": 611.0,
+          "median_prompt_chars": 1202.0,
+          "median_elapsed_seconds": 23.5351,
+          "repair_turns": 1
+        },
+        {
+          "language": "Rust",
+          "runs": 6,
+          "hidden_success_rate": 1.0,
+          "first_public_check_success_rate": 0.8333,
+          "median_public_check_attempts": 1.0,
+          "median_total_tokens": 57275.5,
+          "median_input_tokens": 56616.5,
+          "median_output_tokens": 659.0,
+          "median_prompt_chars": 1213.0,
+          "median_elapsed_seconds": 24.2891,
+          "repair_turns": 1
+        }
+      ],
+      "task_tokens": [
+        {
+          "task": "Bracket report",
+          "language": "Parley",
+          "median_total_tokens": 204872.0
+        },
+        {
+          "task": "Bracket report",
+          "language": "Python",
+          "median_total_tokens": 50100.0
+        },
+        {
+          "task": "Bracket report",
+          "language": "Rust",
+          "median_total_tokens": 43191.0
+        },
+        {
+          "task": "Compact ranges",
+          "language": "Parley",
+          "median_total_tokens": 153275.0
+        },
+        {
+          "task": "Compact ranges",
+          "language": "Python",
+          "median_total_tokens": 57073.5
+        },
+        {
+          "task": "Compact ranges",
+          "language": "Rust",
+          "median_total_tokens": 57838.5
+        },
+        {
+          "task": "Inventory totals",
+          "language": "Parley",
+          "median_total_tokens": 173001.5
+        },
+        {
+          "task": "Inventory totals",
+          "language": "Python",
+          "median_total_tokens": 28042.0
+        },
+        {
+          "task": "Inventory totals",
+          "language": "Rust",
+          "median_total_tokens": 42860.0
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "pilot_results",
+      "label": "Fresh-context agent pilot results",
+      "path": "001-pilot-baseline.sql",
+      "query": {
+        "engine": "SQLite JSON1",
+        "query": "sqlite3 ':memory:' < benchmarks/reports/001-pilot-baseline.sql",
+        "description": "Reproducible report transformation over the completed per-run JSON, hidden judgments, metered usage, environment versions, and aggregate summaries.",
+        "executed_at": "2026-07-29T12:15:43.616321Z",
+        "language": "Python",
+        "metric_definitions": [
+          "Hidden success: final source passes every withheld case.",
+          "First public-check success: the first invocation of ./check passes.",
+          "Total tokens: input tokens plus output tokens reported by Codex.",
+          "Repair turn: an additional agent turn after a failed public check."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "001-pilot-baseline.artifact.json",
+    "snapshotPath": "agent_pilot_2026-07-29.json",
+    "originUrl": "artifact://parley-agent-benchmark"
+  }
+}

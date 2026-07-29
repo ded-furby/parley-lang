@@ -90,3 +90,53 @@ documented interface from the source checkout.
   language.
 
 Those are the next steps before an arXiv paper can make results claims.
+
+## Fresh-context coding-agent pilot
+
+`agent_runner.py` runs a small end-to-end pilot with new ephemeral Codex
+sessions. Its tasks live in `agent_tasks.json`, separate from the seed corpus.
+Each session receives one task, one public example, a uniform `./check`
+command, and no hidden cases. The parent runner judges the final source after
+the session exits and records the complete transcript, source, compiler
+attempts, token usage, and hidden-case output.
+
+Build or install the exact Parley revision being measured, then run:
+
+```bash
+python3 benchmarks/agent_runner.py \
+  --replicates 2 \
+  --model gpt-5.6-sol \
+  --reasoning medium \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/results/agent_pilot.json
+```
+
+The default matrix is three held-out tasks by Parley, Python, and Rust. Every
+cell uses a fresh temporary directory and ephemeral agent session. Parley gets
+the current `skill/parley/SKILL.md`, and its prompt tokens are included in the
+reported cost. Agent tool access has no internet, and hidden cases are not
+written into its workspace.
+
+If an objective hidden-test oracle error is found, saved sources can be
+rejudged without changing or rerunning agent attempts:
+
+```bash
+python3 benchmarks/agent_runner.py \
+  --rejudge-report benchmarks/results/agent_pilot.json \
+  --rejudge-note "Describe the oracle correction" \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/results/agent_pilot.json
+```
+
+This is a protocol and smoke-scale pilot, not a publishable sample. A serious
+comparison needs more held-out tasks, more repetitions, multiple models, a
+predeclared analysis, and an execution sandbox that prevents reads outside
+the per-run workspace rather than relying on the benchmark instruction.
+
+## Versioned benchmark reports
+
+Completed experiment reports live in `benchmarks/reports/`. Report filenames
+start with a monotonically increasing experiment number and are immutable;
+new results create a new HTML file instead of replacing an earlier one. The
+decision log, acceptance target, input hashes, and next experiment are kept in
+`benchmarks/EXPERIMENT_LOG.md`.

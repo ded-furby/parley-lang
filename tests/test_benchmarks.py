@@ -8,6 +8,7 @@ import sys
 import pytest
 
 from conftest import REPO
+from benchmarks.agent_runner import load_tasks, rejudge_report, render_prompt, summarize
 
 BENCHMARKS = REPO / "benchmarks"
 
@@ -297,3 +298,104 @@ def test_rust_reference_sources_compile(tmp_path):
             timeout=120,
         )
         assert proc.returncode == 0, f"{path.name}\nstdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+
+
+def test_agent_tasks_are_held_out_and_have_public_and_hidden_cases():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks.json")
+
+    assert {task["id"] for task in tasks} == {
+        "inventory_totals",
+        "compact_ranges",
+        "bracket_report",
+    }
+    seed_ids = {task["id"] for task in json.loads((BENCHMARKS / "tasks.json").read_text())["tasks"]}
+    assert not ({task["id"] for task in tasks} & seed_ids)
+    assert all(task["public_cases"] and task["hidden_cases"] for task in tasks)
+
+
+def test_agent_prompt_includes_current_skill_only_for_parley():
+    task = load_tasks(BENCHMARKS / "agent_tasks.json")[0]
+    skill = "PARLEY-SKILL-SENTINEL"
+
+    parley = render_prompt(task, "parley", skill)
+    python = render_prompt(task, "python", skill)
+
+    assert "PARLEY-SKILL-SENTINEL" in parley
+    assert "PARLEY-SKILL-SENTINEL" not in python
+    assert "run `./check`" in parley
+    assert task["hidden_cases"][1]["stdin"] not in parley
+
+
+def test_agent_summary_aggregates_fresh_run_results():
+    rows = [
+        {
+            "task_id": "inventory_totals",
+            "language": "parley",
+            "hidden_success": True,
+            "first_public_check_success": False,
+            "public_check_attempts": 2,
+            "total_tokens": 120,
+            "elapsed_seconds": 3.0,
+        },
+        {
+            "task_id": "inventory_totals",
+            "language": "parley",
+            "hidden_success": False,
+            "first_public_check_success": True,
+            "public_check_attempts": 1,
+            "total_tokens": 80,
+            "elapsed_seconds": 1.0,
+        },
+        {
+            "task_id": "inventory_totals",
+            "language": "python",
+            "hidden_success": True,
+            "first_public_check_success": True,
+            "public_check_attempts": 1,
+            "total_tokens": 50,
+            "elapsed_seconds": 0.5,
+        },
+    ]
+
+    summary = summarize(rows)
+
+    assert summary["runs"] == 3
+    assert summary["by_language"]["parley"]["hidden_success_rate"] == 0.5
+    assert summary["by_language"]["parley"]["median_public_check_attempts"] == 1.5
+    assert summary["by_language"]["parley"]["median_total_tokens"] == 100
+    assert summary["by_language"]["python"]["hidden_success_rate"] == 1.0
+
+
+def test_agent_report_can_be_rejudged_without_rerunning_agent(tmp_path):
+    task = load_tasks(BENCHMARKS / "agent_tasks.json")[0]
+    source = tmp_path / "solution.py"
+    source.write_text(
+        "import sys\n"
+        "lines = sys.stdin.buffer\n"
+        "n = int(lines.readline())\n"
+        "totals = {}\n"
+        "for _ in range(n):\n"
+        "    name, change = lines.readline().split()\n"
+        "    totals[name] = totals.get(name, 0) + int(change)\n"
+        "for name in sorted(totals):\n"
+        "    print(name.decode(), totals[name])\n"
+    )
+    report = {
+        "protocol": {},
+        "results": [{
+            "task_id": task["id"],
+            "language": "python",
+            "workdir": str(tmp_path),
+            "hidden_success": False,
+            "first_public_check_success": True,
+            "public_check_attempts": 1,
+            "total_tokens": 10,
+            "elapsed_seconds": 1,
+        }],
+    }
+
+    rejudged = rejudge_report(report, {task["id"]: task}, "unused", "oracle fix")
+
+    assert rejudged["results"][0]["hidden_success"] is True
+    assert rejudged["summary"]["by_language"]["python"]["hidden_success_rate"] == 1.0
+    assert rejudged["protocol"]["rejudgments"][0]["note"] == "oracle fix"
