@@ -956,13 +956,18 @@ class Emitter:
         tty = st.target.ty
         place = self.lplace(st.target)
         if isinstance(tty, A.TMap):
-            k = self.value(st.index, tty.key)
-            v = self.value(st.value, tty.val)
-            self.out(f"({place}).insert({k}, {v});", st.line)
+            index = self.fresh("index")
+            value = self.fresh("value")
+            self.out(f"let {index} = {self.value(st.index, tty.key)};", st.line)
+            self.out(f"let {value} = {self.value(st.value, tty.val)};", st.line)
+            self.out(f"({place}).insert({index}, {value});", st.line)
         else:
             elem = tty.elem if isinstance(tty, A.TList) else None
-            self.out(f"parley_set_item(&mut {place}, {self.value(st.index)}, "
-                     f"{self.value(st.value, elem)});", st.line)
+            index = self.fresh("index")
+            value = self.fresh("value")
+            self.out(f"let {index} = {self.value(st.index)};", st.line)
+            self.out(f"let {value} = {self.value(st.value, elem)};", st.line)
+            self.out(f"parley_set_item(&mut {place}, {index}, {value});", st.line)
 
     def em_say(self, st: A.Say):
         spec, arg = self.fmt_arg(st.value)
@@ -1122,10 +1127,13 @@ class Emitter:
     def em_removeitem(self, st: A.RemoveItem):
         tty = st.target.ty
         place = self.lplace(st.target)
+        index = self.fresh("index")
         if isinstance(tty, A.TMap):
-            self.out(f"({place}).remove(&({self.value(st.index, tty.key)}));", st.line)
+            self.out(f"let {index} = {self.value(st.index, tty.key)};", st.line)
+            self.out(f"({place}).remove(&{index});", st.line)
         else:
-            self.out(f"parley_remove(&mut {place}, {self.value(st.index)});", st.line)
+            self.out(f"let {index} = {self.value(st.index)};", st.line)
+            self.out(f"parley_remove(&mut {place}, {index});", st.line)
 
     def em_writefile(self, st: A.WriteFile):
         self.out(f"parley_write_file(&({self.borrow(st.path)}), &({self.borrow(st.value)}), "

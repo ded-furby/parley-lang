@@ -191,6 +191,23 @@ def test_map_operations(workdir):
     assert proc.stdout == "one|two\n2\n1\nyes\nno\n78\n"
 
 
+def test_item_mutation_arguments_can_read_the_target(workdir):
+    src = '''to main:
+    let xs be a list of 10, 20
+    set item (length of xs) of xs to item 1 of xs
+    remove item (length of xs) of xs
+    say length of xs
+    say item 1 of xs
+
+    let scores be a map from number to number
+    set item ((length of scores) plus 1) of scores to length of scores
+    remove item (length of scores) of scores
+    say length of scores
+'''
+    proc = run_program(workdir, "mutation_argument_order", src)
+    assert proc.stdout == "1\n10\n0\n"
+
+
 def test_uncaught_error_is_english_and_exit_1(workdir):
     src = '''to main:
     let xs be a list of 1

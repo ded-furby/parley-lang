@@ -52,3 +52,16 @@ rules needed for ordinary programs without embedding the full package catalog.
 Make the benchmark command path explicit, add regression tests for the four
 missed syntax forms, and fix the list-removal backend borrow conflict. Rerun the
 same matrix before expanding the sample.
+
+## Engineering changes after 001
+
+### 2026-07-29 — Parley 0.3.139 borrow-safe item mutation
+
+- Changed list/map `set item` and `remove item` lowering to evaluate indexes,
+  keys, and replacement values before mutably borrowing the target.
+- Added emitter and native-binary regression coverage for mutations whose
+  arguments read the same collection.
+- Verification: 261 tests passed.
+- Expected benchmark effect: remove the P901 repair turn observed in both
+  Parley bracket-report runs. This expectation remains unproven until the next
+  fresh-session report.

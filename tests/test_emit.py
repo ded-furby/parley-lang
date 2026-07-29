@@ -133,6 +133,34 @@ def test_one_based_indexing_uses_helper():
     assert "parley_item" in rust
 
 
+def test_list_item_mutations_evaluate_arguments_before_mutable_borrow():
+    rust = emit_text(
+        "to main:\n"
+        "    let xs be a list of 10, 20\n"
+        "    set item (length of xs) of xs to item 1 of xs\n"
+        "    remove item (length of xs) of xs\n")
+    set_call = rust.index("parley_set_item(&mut xs")
+    remove_call = rust.index("parley_remove(&mut xs")
+    assert rust.index("let __index1 = ((xs).len() as i64);") < set_call
+    assert rust.index("let __value2 = parley_item(&(xs), 1i64);") < set_call
+    assert rust.index("let __index3 = ((xs).len() as i64);") < remove_call
+    assert "parley_set_item(&mut xs, (xs).len()" not in rust
+    assert "parley_remove(&mut xs, (xs).len()" not in rust
+
+
+def test_map_item_mutations_evaluate_arguments_before_mutable_borrow():
+    rust = emit_text(
+        "to main:\n"
+        "    let scores be a map from number to number\n"
+        "    set item (length of scores) of scores to length of scores\n"
+        "    remove item (length of scores) of scores\n")
+    insert_call = rust.index("(scores).insert(__index1, __value2);")
+    remove_call = rust.index("(scores).remove(&__index3);")
+    assert rust.index("let __index1 = ((scores).len() as i64);") < insert_call
+    assert rust.index("let __value2 = ((scores).len() as i64);") < insert_call
+    assert rust.index("let __index3 = ((scores).len() as i64);") < remove_call
+
+
 def test_text_indexing_uses_utf8_helper():
     rust = emit_text('to main:\n    say item 2 of "éc"\n')
     assert "fn parley_text_item" in rust

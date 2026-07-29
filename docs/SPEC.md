@@ -64,7 +64,9 @@ parse-relevant highlights:
 * **Map keys** are `number` or `text` (P309) so iteration can be sorted.
   `keys of m` returns sorted keys; `values of m` returns values in sorted-key
   order. `remove item key of m` removes a map entry if it exists and leaves
-  the map unchanged when it does not.
+  the map unchanged when it does not. Item indexes, keys, and replacement
+  values are evaluated before the collection is mutably borrowed, so they may
+  read the same list or map being changed.
 * **`when`** over an enum must be exhaustive or carry `otherwise:` (P208);
   over yesno, covering `yes` and `no` counts as exhaustive; over numbers and
   text, `otherwise:` is mandatory. An arm may list several patterns
