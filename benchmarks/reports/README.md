@@ -15,6 +15,7 @@ transformation, and chart-map notes.
 | 007 | Parley 0.3.143 | Protocol v2 reached near parity; returning-function repair kept gate open | [HTML](007-protocol-v2-near-parity.html) |
 | 008 | Parley 0.3.144 | Perfect first-pass reliability isolated a 6–7% clean context gap | [HTML](008-clean-context-gap.html) |
 | 009 | Parley 0.3.145 | 1.6k core preserved correctness but collapsed first-pass efficiency | [HTML](009-progressive-disclosure-regression.html) |
+| 010 | Parley 0.3.146 | Natural aliases recovered bracket first-pass but two task families still repaired | [HTML](010-natural-alias-partial-recovery.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

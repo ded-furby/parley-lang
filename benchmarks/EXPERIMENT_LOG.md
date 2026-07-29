@@ -528,3 +528,44 @@ predictable natural aliases, then run protocol-v2 pilot 010.
   one executable safe-form example, including the required maybe-number
   check and unwrap. Rendered task prompts are 2,975–3,019 characters, versus
   4,884–4,928 for the proven v0.3.144 core.
+
+## 010 — Natural-alias partial recovery
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.146, commit `4ace8070c653af34fdcdadcb2d2adac452b48dbd`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `499e9de14c2c96de2af049c7dd574d879eec947ddaff42b59446ecd6d106fc8b`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `c49d14eb2702981a9c1641f79a38239b59916e671392193bcff47424d3511e1f`
+- Report: `benchmarks/reports/010-natural-alias-partial-recovery.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 2/6 | 6/6 | 78,314.0 | 44.3483 | 9 |
+| Python | 6/6 | 5/6 | 6/6 | 43,009.5 | 17.4465 | 1 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,394.5 | 18.6566 | 0 |
+
+### Gate result
+
+Correctness and protocol compliance remained perfect. First-pass reliability
+improved from 0/6 to 2/6, and repair turns fell from 19 to 9, but reliability
+and strict efficiency still **failed**. Parley's median tokens were 82.1%
+above Python and 80.5% above Rust; median elapsed time was 154.2% above Python
+and 137.7% above Rust.
+
+### Isolated remaining failures
+
+Both bracket sessions passed first check at a 44,920-token task median, close
+to Rust's 43,535.5. Both inventory sessions independently wrote
+`item 2 of parts as number` and joined text to numbers with `plus`; resolving
+those two missing natural forms dominated their 3–4 repair turns. Compact
+ranges needed one repair in each run: one emitted fragments with newline
+printing, and one read numeric inputs as text before trying `value of`.
+
+### Next experiment
+
+Add checked `expr as number` conversion and scalar-aware text joining, then
+state explicitly that `say` emits one complete line and numeric input uses
+`ask for a number`. Preserve the current core, keep the task/protocol frozen,
+and run pilot 011 before any confirmation.
