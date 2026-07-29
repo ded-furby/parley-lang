@@ -464,3 +464,46 @@ iteration-008 reliability result and clears both efficiency medians.
   characters (35.1%) while retaining the on-demand exhaustive reference.
 - Added a regression test pinning the fallback's byte length and SHA-256 so a
   future compression pass cannot silently destroy the last proven core.
+
+## 009 — Progressive-disclosure regression
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.145, commit `075fdb94a12468e4fd7537f9f1c3fbfd1454d440`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `a44f50f6fd88f18e43858d1a4eca5448031a39be95bf9beaefd62cf6c71f96ee`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `d8ca4eaf0889c200b4b14427756c884cc648702a58331cfb1fe17b5d7b2634b1`
+- Report: `benchmarks/reports/009-progressive-disclosure-regression.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 0/6 | 6/6 | 162,504.0 | 69.6042 | 19 |
+| Python | 6/6 | 5/6 | 6/6 | 43,086.5 | 15.4107 | 1 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,408.0 | 23.0070 | 0 |
+
+### Gate result
+
+Final correctness and command compliance remained perfect, but first-pass
+reliability and strict efficiency both **failed**. Parley's median tokens were
+277.2% above Python and 274.4% above Rust; median elapsed time was 351.7%
+above Python and 202.5% above Rust. Do not run the 90-session confirmation for
+this candidate.
+
+### Diagnosed regression
+
+The shorter prompt itself was not enough: its 3,190-character rendered median
+was 35.1% below iteration 008, yet all six Parley sessions needed 3–5 checks.
+Five initial solutions used `set x to` to introduce variables, four used
+`has no value`, and the set also tried `print`, `return`, bare `give back`,
+empty-text splitting, unsupported collection iteration, and `sort`. The tiny
+core retained isolated traps but removed the concrete safe-form backbone and
+the explicit rule that `let` creates while `set` mutates.
+
+### Next experiment
+
+Keep the v0.3.144 fallback immutable. Restore a compact executable safe-form
+example and the missing foundational forms—`let`, `set`, `is nothing`, `say`,
+1-based indexing/text traversal, and branching to leave `main`—while staying
+materially below 3,280 core characters. Add direct parser diagnostics for the
+predictable natural aliases, then run protocol-v2 pilot 010.
