@@ -579,6 +579,9 @@ class ToAst(Transformer):
         parsed = A.PrefixOp(op="number_from", value=ch[0], **pos)
         return A.PrefixOp(op="value", value=parsed, **pos)
 
+    def as_text(self, meta, ch):
+        return A.PrefixOp(op="text_from", value=ch[0], **_pos(meta))
+
     def joined_with(self, meta, ch):
         return A.JoinedWith(value=ch[0], sep=ch[1], **_pos(meta))
 

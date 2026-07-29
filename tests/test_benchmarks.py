@@ -413,6 +413,17 @@ def test_parley_partial_recovery_core_is_preserved_unchanged():
     )
 
 
+def test_parley_conversion_recovery_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.3.147.md"
+    ).read_text()
+
+    assert len(reference) == 1_519
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c"
+    )
+
+
 def test_parley_extended_skill_reference_preserves_rare_tooling():
     reference = (
         REPO / "skill" / "parley" / "references" / "extended-reference.md"

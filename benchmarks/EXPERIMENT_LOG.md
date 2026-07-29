@@ -625,3 +625,18 @@ destination-aware formatting when a scalar is added to a text list.
 
 Add those two mechanical forms without increasing the compact skill, confirm
 all six pilot-011 first sources type-check unchanged, then run pilot 012.
+
+## Engineering changes after 011
+
+### 2026-07-29 — Parley 0.3.148 symmetric text output
+
+- Preserved the 1,519-character v0.3.147 core byte-for-byte at
+  `skill/parley/references/core-v0.3.147.md` (SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`).
+- Added postfix `expr as text` as an exact alias for `text from expr`.
+- Made `add value to text_list` format non-text values using the same rules as
+  interpolation and text `plus`, while retaining type errors for unit and
+  function values.
+- Left the always-loaded skill unchanged at 1,519 characters, isolating this
+  experiment to compiler ergonomics.
+- All six pilot-011 first sources now parse and type-check unchanged.

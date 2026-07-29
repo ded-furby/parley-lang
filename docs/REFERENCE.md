@@ -64,7 +64,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `sort xs` | replaces `xs` with a sorted copy |
 | `assert condition` / `assert condition, message` | catchable runtime check |
 | `fail "message"` | catchable runtime failure |
-| `add x to xs` | `xs.push(x);` |
+| `add x to xs` | `xs.push(x);` (a text list formats non-text values) |
 | `remove item i of xs` / `remove item k of m` | bounds-checked list removal or silent map-key removal |
 | `set item i of xs to v` | bounds-checked `xs[i-1] = v` |
 | `set item k of m to v` | `m.insert(k, v);` |
@@ -107,6 +107,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `a point with x 1, y 2` | `Point { x: 1, y: 2 }` | all fields required |
 | `nothing` | `None` | |
 | `t as number` | checked parse and unwrap | number |
+| `x as text` | formats like interpolation / `text from x` | text |
 | `some x` | `Some(x)` | maybe of x's type |
 | `value of m` | checked unwrap | inner type |
 | `the error` | last runtime error text | text |

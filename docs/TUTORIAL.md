@@ -292,6 +292,7 @@ The natural aliases `has no value` and `has value` / `has a value` mean
 `is nothing` and `is not nothing` respectively.
 For trusted numeric text, `raw as number` is a checked shorthand that unwraps
 `number from raw`; invalid text stops with the same English runtime error.
+`value as text` is the postfix spelling of `text from value`.
 
 ## 14. When things go wrong: assert, fail, and attempt
 

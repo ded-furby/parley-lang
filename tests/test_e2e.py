@@ -38,13 +38,16 @@ to main:
     print item 1 of names
     set converted to "41" as number
     print "answer=" + converted + 1
+    set labels to an empty list of text
+    add converted to labels
+    print (converted as text) + ":" + (labels joined with ",")
     repeat count - 1 times:
         print (character_count with "éx")
     stop
     print "unreachable"
 '''
     proc = run_program(workdir, "agent_natural_aliases", src)
-    assert proc.stdout == "ready\nant\nanswer=411\n2\n"
+    assert proc.stdout == "ready\nant\nanswer=411\n41:41\n2\n"
 
 
 def test_postfix_number_conversion_stops_on_invalid_text(workdir):

@@ -149,6 +149,7 @@ closure_param: NAME "as" type
       | link_e _ENDS_WITH link_e     -> endswith
 ?link_e: sum_e
        | link_e _AS_NUMBER            -> as_number
+       | link_e _AS_TEXT              -> as_text
        | link_e _SPLIT_BY sum_e      -> split_by
        | link_e _JOINED_WITH sum_e   -> joined_with
        | link_e _REPLACING sum_e "with" sum_e -> replacing_with
@@ -257,6 +258,7 @@ _TEXT_FROM.2: /text +from\b/
 _NUMBER_FROM.2: /number +from\b/
 _DECIMAL_FROM.2: /decimal +from\b/
 _AS_NUMBER.2: /as +number\b/
+_AS_TEXT.2: /as +text\b/
 _REMAINDER_OF.2: /remainder +of\b/
 _SORTED.2: /sorted\b/
 _REVERSED.2: /reversed\b/

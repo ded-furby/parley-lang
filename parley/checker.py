@@ -589,6 +589,12 @@ class Checker:
         target_ty = self._resolve_lvalue(st.target)
         val_ty = self.infer(st.value)
         if isinstance(target_ty, A.TList):
+            if (
+                isinstance(target_ty.elem, A.TText)
+                and not isinstance(val_ty, (A.TText, A.TUnit, A.TFunc, TErr))
+            ):
+                st.format_as_text = True
+                return
             if not self.assignable(target_ty.elem, val_ty):
                 self.type_mismatch(target_ty.elem, val_ty, st, f"This list holds {target_ty.elem}, so `add`")
         elif isinstance(target_ty, A.TMap):

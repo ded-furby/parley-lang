@@ -1130,7 +1130,12 @@ class Emitter:
 
     def em_add(self, st: A.Add):
         elem = st.target.ty.elem if isinstance(st.target.ty, A.TList) else None
-        self.out(f"({self.lplace(st.target)}).push({self.value(st.value, elem)});", st.line)
+        if getattr(st, "format_as_text", False):
+            spec, arg = self.fmt_arg(st.value)
+            value = f'format!("{spec}", {arg})'
+        else:
+            value = self.value(st.value, elem)
+        self.out(f"({self.lplace(st.target)}).push({value});", st.line)
 
     def em_removeitem(self, st: A.RemoveItem):
         tty = st.target.ty
