@@ -24,8 +24,9 @@ to main:
     say count
 ```
 
-`let` creates a variable, `set` changes it. A variable lives until the end of
-the block it was created in, and its type never changes.
+`let` creates a variable and `set` changes it. For natural drafting,
+`set name to value` also creates `name` when it does not exist yet. A variable
+lives until the end of the block it was created in, and its type never changes.
 
 The basic types:
 
@@ -287,6 +288,8 @@ to main:
 all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 `value of`. Use `some value` when your own function needs to give back a
 present maybe value. (Unwrapping nothing stops the program — check first.)
+The natural aliases `has no value` and `has value` / `has a value` mean
+`is nothing` and `is not nothing` respectively.
 
 ## 14. When things go wrong: assert, fail, and attempt
 

@@ -47,7 +47,6 @@ CASES = [
     ("redeclared", in_main("let x be 1", "let x be 2"), "P209", "already exists"),
     ("no_main", "to helper:\n    say 1\n", "P210", "to main"),
     ("main_with_params", "to main with n as number:\n    say n\n", "P210", "no parameters"),
-    ("set_unknown", in_main("set y to 1"), "P211", "no variable"),
     ("set_wrong_type", in_main('let x be 1', 'set x to "hi"'), "P301", "needs number"),
     ("list_mix", in_main('let l be a list of 1, "two"'), "P301", "mixes"),
     ("plus_text_number", in_main('say 1 plus "a"'), "P302", "interpolation"),
@@ -75,7 +74,6 @@ CASES = [
     ("give_back_in_attempt",
      "to f giving number:\n    attempt:\n        give back 1\n    if it failed:\n        say 1\n    give back 2\nto main:\n    say (f)\n",
      "P310", "attempt"),
-    ("stop_outside_loop", in_main("stop"), "P311", "loop"),
     ("compare_maybe_with_plain",
      in_main('let m be number from "5"', "if m is 5:", "    say 1"),
      "P301", "maybe"),
@@ -254,6 +252,18 @@ def test_range_and_func_diagnostics(name, src, code, fragment):
         f"expected {code}, got {[(d.code, d.message) for d in diags]}"
     blob = " ".join((d.message + " " + (d.hint or "")) for d in diags if d.code == code)
     assert fragment in blob
+
+
+def test_set_can_introduce_a_variable_and_stop_can_leave_main():
+    src = in_main(
+        "set count to 1",
+        "set count to count plus 1",
+        "if count is 2:",
+        "    stop",
+        "print count",
+    )
+
+    assert check_text(src) == []
 
 
 def test_function_value_round_trip_is_clean():

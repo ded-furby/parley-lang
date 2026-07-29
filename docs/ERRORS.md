@@ -102,9 +102,9 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 ## P211 — Variable used before it exists
 
-**What it means:** `set` changes an existing variable, but this one was never created.
+**What it means:** An expression or field update refers to a variable that does not exist in this scope.
 
-**How to fix it:** Create it first with `let name be …`.
+**How to fix it:** Create it first with `let name be …` or `set name to …`.
 
 ## P301 — Type mismatch
 
@@ -168,9 +168,9 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 ## P311 — stop/skip outside a loop
 
-**What it means:** `stop` ends the nearest loop and `skip` jumps to its next turn, so they need a loop around them.
+**What it means:** `stop` ends the nearest loop (or leaves `main`) and `skip` jumps to a loop's next turn.
 
-**How to fix it:** Use them inside while/repeat/for each, or use `give back` to leave a function.
+**How to fix it:** Use them inside while/repeat/for each; use `stop` only in `main`, or `give back` to leave another function.
 
 ## P312 — Bad range in a `when` arm
 

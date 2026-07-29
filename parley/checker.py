@@ -359,6 +359,22 @@ class Checker:
         return TErr()
 
     def st_setvar(self, st: A.SetVar):
+        if not st.target.fields and self.lookup_entry(st.target.base) is None:
+            val_ty = self.infer(st.value)
+            if isinstance(val_ty, TNothing):
+                self.err("P308",
+                         f'I can\'t tell what type "{st.target.base}" should be from bare `nothing`.',
+                         st, hint="Start from a real value, or from an operation that gives a maybe "
+                                  "(ask for a number, read file, number from …).")
+                val_ty = TErr()
+            if isinstance(val_ty, A.TUnit):
+                self.err("P301", "This gives nothing back, so there is no value to store.", st)
+                val_ty = TErr()
+            if self.check_name_ok(st.target.base, st, "variable"):
+                self.declare(st.target.base, val_ty, st)
+            st.declares = True
+            st.target.ty = val_ty
+            return
         target_ty = self._resolve_lvalue(st.target)
         val_ty = self.infer(st.value)
         if not self.assignable(target_ty, val_ty):
@@ -537,6 +553,9 @@ class Checker:
             self.type_mismatch(ret, ty, st, "`give back`")
 
     def st_stop(self, st: A.Stop):
+        if self.loop_depth == 0 and self.current_name == "main":
+            st.exits_main = True
+            return
         self._loop_jump(st, "stop")
 
     def st_skip(self, st: A.Skip):

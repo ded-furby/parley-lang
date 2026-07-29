@@ -507,3 +507,24 @@ example and the missing foundational forms—`let`, `set`, `is nothing`, `say`,
 1-based indexing/text traversal, and branching to leave `main`—while staying
 materially below 3,280 core characters. Add direct parser diagnostics for the
 predictable natural aliases, then run protocol-v2 pilot 010.
+
+## Engineering changes after 009
+
+### 2026-07-29 — Parley 0.3.146 transcript-backed natural aliases
+
+- Preserved the failed 1,557-character v0.3.145 core byte-for-byte at
+  `skill/parley/references/core-v0.3.145.md` (SHA-256
+  `d8ca4eaf0889c200b4b14427756c884cc648702a58331cfb1fe17b5d7b2634b1`).
+- Added compiler support for the exact natural drafts repeated in iteration
+  009: `set name to value` can introduce a missing variable; `print` aliases
+  `say`; `return` aliases `give back`; `has no value` / `has [a] value` alias
+  maybe comparisons; `sort xs` mutates to a sorted copy; repeat counts accept
+  direct addition/subtraction; splitting by empty text yields Unicode
+  characters; and loop-free `stop` leaves `main`.
+- Rechecked all six recorded iteration-009 first sources against the new
+  compiler. Four now type-check unchanged; both remaining bracket sources are
+  rejected only for safely using a `maybe number` as a repeat count.
+- Replaced the abstract micro-core with a 1,371-character contract containing
+  one executable safe-form example, including the required maybe-number
+  check and unwrap. Rendered task prompts are 2,975–3,019 characters, versus
+  4,884–4,928 for the proven v0.3.144 core.

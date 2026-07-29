@@ -210,7 +210,7 @@ fn parley_concat<T: Clone>(a: &[T], b: &[T]) -> Vec<T> {
 }
 
 fn parley_split(s: &str, sep: &str) -> Vec<String> {
-    if sep.is_empty() { panic!("Cannot split by empty text."); }
+    if sep.is_empty() { return s.chars().map(|c| c.to_string()).collect(); }
     s.split(sep).map(|p| p.to_string()).collect()
 }
 
@@ -950,6 +950,13 @@ class Emitter:
         self.out(f"let mut {safe(st.name)}: {rust_type(ty)} = {self.value(st.value)};", st.line)
 
     def em_setvar(self, st: A.SetVar):
+        if getattr(st, "declares", False):
+            ty = st.value.ty
+            self.out(
+                f"let mut {safe(st.target.base)}: {rust_type(ty)} = {self.value(st.value)};",
+                st.line,
+            )
+            return
         self.out(f"{self.lplace(st.target)} = {self.value(st.value, st.target.ty)};", st.line)
 
     def em_setitem(self, st: A.SetItem):
@@ -1093,7 +1100,7 @@ class Emitter:
             self.out(f"return {self.value(st.value, self.cur_ret)};", st.line)
 
     def em_stop(self, st: A.Stop):
-        self.out("break;", st.line)
+        self.out("return;" if getattr(st, "exits_main", False) else "break;", st.line)
 
     def em_skip(self, st: A.Skip):
         self.out("continue;", st.line)

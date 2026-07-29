@@ -150,11 +150,6 @@ def test_text_position_expression_parse():
             "`giving TYPE`",
         ),
         (
-            "to double giving number:\n    return 2\n"
-            "to main:\n    say 1\n",
-            "`give back value`",
-        ),
-        (
             "to double giving number:\n    give 2\n"
             "to main:\n    say 1\n",
             "`give back value`",
@@ -165,6 +160,33 @@ def test_common_agent_parse_mistakes_have_exact_repair_hints(source, expected):
     with pytest.raises(ParleyError) as exc:
         parse(source)
     assert expected in (exc.value.diagnostics[0].hint or "")
+
+
+def test_agent_natural_aliases_parse_to_canonical_nodes():
+    prog = parse(
+        "to helper giving number:\n"
+        "    return 2\n"
+        "to main:\n"
+        "    set answer to number from \"2\"\n"
+        "    if answer has a value:\n"
+        "        print value of answer\n"
+        "    if answer has no value:\n"
+        "        stop\n"
+        "    set names to a list of \"b\", \"a\"\n"
+        "    sort names\n"
+        "    repeat 3 - 1 times:\n"
+        "        print item 1 of names\n"
+    )
+
+    helper, main = prog.funcs
+    assert isinstance(helper.body[0], A.Give)
+    assert isinstance(main.body[0], A.SetVar)
+    assert isinstance(main.body[1], A.If)
+    assert isinstance(main.body[1].arms[0][0], A.Compare)
+    assert isinstance(main.body[4], A.SetVar)
+    assert isinstance(main.body[4].value, A.PrefixOp)
+    assert isinstance(main.body[5], A.Repeat)
+    assert isinstance(main.body[5].count, A.BinOp)
 
 
 def test_text_count_expression_parse():

@@ -118,8 +118,8 @@ ERROR_CATALOG: dict[str, dict] = {
     },
     "P211": {
         "title": "Variable used before it exists",
-        "explain": "`set` changes an existing variable, but this one was never created.",
-        "fix": "Create it first with `let name be …`.",
+        "explain": "An expression or field update refers to a variable that does not exist in this scope.",
+        "fix": "Create it first with `let name be …` or `set name to …`.",
     },
     # --- type errors (P3xx)
     "P301": {
@@ -174,8 +174,8 @@ ERROR_CATALOG: dict[str, dict] = {
     },
     "P311": {
         "title": "stop/skip outside a loop",
-        "explain": "`stop` ends the nearest loop and `skip` jumps to its next turn, so they need a loop around them.",
-        "fix": "Use them inside while/repeat/for each, or use `give back` to leave a function.",
+        "explain": "`stop` ends the nearest loop (or leaves `main`) and `skip` jumps to a loop's next turn.",
+        "fix": "Use them inside while/repeat/for each; use `stop` only in `main`, or `give back` to leave another function.",
     },
     "P312": {
         "title": "Bad range in a `when` arm",

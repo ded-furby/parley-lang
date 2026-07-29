@@ -48,19 +48,20 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | Parley | Rust |
 |---|---|
 | `let x be 5` | `let mut x: i64 = 5;` |
-| `set x to 6` | `x = 6;` |
+| `set x to 6` | creates `x` if absent; otherwise `x = 6;` |
 | `set p's x to 6` | `p.x = 6;` |
-| `say expr` | `println!(…)` (yesno prints `yes`/`no`, maybe prints `nothing` or the value) |
+| `say expr` / `print expr` | `println!(…)` (yesno prints `yes`/`no`, maybe prints `nothing` or the value) |
 | `if c:` / `otherwise if c:` / `otherwise:` | `if c { } else if c { } else { }` |
 | `when x:` with `is v:` arms | `match` (enums) / `if`-chain (numbers, text, yesno) |
 | `is 1, 2 or 3:` (multi-value arm) | `1 \| 2 \| 3 =>` / chained `\|\|` |
 | `is 10 to 20:` (range arm, numeric `when`) | `x >= 10 && x <= 20` (inclusive) |
 | `while c:` | `while c { }` |
-| `repeat n times:` | `for _ in 0..n { }` |
+| `repeat n times:` / `repeat n - 1 times:` | `for _ in 0..n { }` |
 | `for each x in xs:` | `for x in xs.clone() { }` (iterates a copy) |
 | `for each i from 1 to 10:` | `for i in 1..=10 { }` (inclusive) |
-| `stop` / `skip` | `break;` / `continue;` |
-| `give back expr` | `return expr;` |
+| `stop` / `skip` | `break;` / `continue;`; outside a loop, `stop` leaves `main` |
+| `give back expr` / `return expr` | `return expr;` |
+| `sort xs` | replaces `xs` with a sorted copy |
 | `assert condition` / `assert condition, message` | catchable runtime check |
 | `fail "message"` | catchable runtime failure |
 | `add x to xs` | `xs.push(x);` |
@@ -86,10 +87,12 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `remainder of a divided by b` | guarded `a % b` | number |
 | `a to the power of b` | `a.pow(b)` / `a.powf(b)` | |
 | `x is y` / `x is not y` | `==` / `!=` | yesno |
+| `x has no value` / `x has [a] value` | `x is nothing` / `x is not nothing` | yesno |
 | `is more than / less than / at least / at most` | `> < >= <=` | yesno |
 | `xs contains x` | `.contains(…)` (list, map key, or substring) | yesno |
 | `t starts with p` / `t ends with p` | `.starts_with` / `.ends_with` | yesno |
 | `t split by ","` | `.split(…).collect()` | list of text |
+| `t split by ""` | UTF-8 characters | list of text |
 | `xs joined with ", "` | `.join(…)` (list of text) | text |
 | `t replacing old with new` | `.replace(old, new)` | text |
 | `position of needle in t` | UTF-8-safe substring search | maybe number |

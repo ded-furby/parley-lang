@@ -20,6 +20,31 @@ def test_hello(workdir):
     assert proc.stdout == "Hello, world!\nTwo plus two is 4.\n"
 
 
+def test_agent_natural_aliases_run(workdir):
+    src = '''to character_count with line as text giving number:
+    set characters to line split by ""
+    return length of characters
+
+to main:
+    set maybe_count to number from "2"
+    if maybe_count has no value:
+        print "missing"
+        stop
+    set count to value of maybe_count
+    if maybe_count has a value:
+        print "ready"
+    set names to a list of "zebra", "ant"
+    sort names
+    print item 1 of names
+    repeat count - 1 times:
+        print (character_count with "éx")
+    stop
+    print "unreachable"
+'''
+    proc = run_program(workdir, "agent_natural_aliases", src)
+    assert proc.stdout == "ready\nant\n2\n"
+
+
 def test_fizzbuzz(workdir):
     proc = run_cli(["run", str(EXAMPLES / "fizzbuzz.par")], cwd=workdir)
     lines = proc.stdout.splitlines()

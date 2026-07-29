@@ -355,23 +355,23 @@ def test_agent_command_protocol_allows_only_exact_public_check():
 def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 1_700
+    assert len(skill) < 1_400
     for required in [
+        "to valid with line as text giving yesno:",
+        'let count_input be ask for a number ""',
+        "if count_input is nothing:",
+        "let count be value of count_input",
+        "if (valid with line):",
         "an empty list of text",
-        '`ask ""`',
-        'literal braces `"{{"` / `"}}"`',
+        'Literal braces are `"{{"` / `"}}"`',
         "Parenthesize expression calls",
-        "Item lookup gives the value,\n  not a maybe",
-        "use only `./check`",
-        "`position`/commands are reserved",
-        "one `snake_case` token",
-        "`changing` appears only in parameter declarations",
-        "temporary names before long conditions",
-        "`yes`, `no` (not `true`/`false`)",
-        "`is not`, `is less than`, `is at most`, `is more than`, `is at least`",
-        "`number from quantity_text`",
-        "`stop`/`skip` only inside loops",
-        "`giving TYPE` / `give back value`",
+        "Use only `./check`",
+        "`let x be value` creates",
+        "`set x to value` mutates or creates",
+        "`line split by \"\"`",
+        "`map contains key`",
+        "sorted `keys of map`",
+        "`yesno`/`yes`/`no`",
         "references/core-v0.3.144.md",
     ]:
         assert required in skill
@@ -385,6 +385,17 @@ def test_parley_previous_core_skill_is_preserved_unchanged():
     assert len(reference) == 3_280
     assert hashlib.sha256(reference.encode()).hexdigest() == (
         "f2683bdc7e78e98b55f101d38f42ee32646d423e7e51ac4370f952e1c0430284"
+    )
+
+
+def test_parley_failed_micro_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.3.145.md"
+    ).read_text()
+
+    assert len(reference) == 1_557
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "d8ca4eaf0889c200b4b14427756c884cc648702a58331cfb1fe17b5d7b2634b1"
     )
 
 

@@ -48,12 +48,18 @@ parse-relevant highlights:
 * **Calls.** Statement calls are bare: `f with a, b`. Expression calls are
   parenthesised: `(f with a, b)`. Zero-parameter functions are called by
   bare name.
-* **repeat counts** are atoms (`repeat n times:`); parenthesise anything
-  bigger: `repeat (n plus 1) times:` — this disambiguates against the
-  `times` multiplication operator.
+* **repeat counts** accept addition/subtraction directly
+  (`repeat n minus 1 times:`); parenthesise expressions containing
+  multiplication or other operators to disambiguate the delimiter `times`.
 
 ## 4. Static semantics
 
+* **Variable introduction.** `let name be value` always creates a variable.
+  `set name to value` creates it when absent and mutates it when present;
+  field targets still require an existing base variable.
+* **Natural statement aliases.** `print` is `say`, `return` is `give back`,
+  and `sort xs` replaces an existing list with its sorted copy. `stop` outside
+  a loop is valid only in `main`, where it returns from the program.
 * **Types** as in REFERENCE.md. No implicit conversions except
   number → decimal promotion (at assignment, argument, return and mixed
   arithmetic positions). Division always yields decimal.
@@ -90,7 +96,8 @@ parse-relevant highlights:
   parameter's type (P305).
 * **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
-  and is a checked runtime operation.
+  and is a checked runtime operation. `has no value` aliases `is nothing`;
+  `has value` and `has a value` alias `is not nothing`.
 * **`assert condition`** requires `condition` to be yesno. Its optional
   message form, `assert condition, expr`, requires `expr` to be text. A failed
   assertion is a catchable runtime failure.
@@ -139,6 +146,7 @@ parse-relevant highlights:
   `starts with`, `ends with`, `contains`, `replacing old with new`,
   `position of needle in text`, and `count of needle in text` are
   deterministic UTF-8 string operations.
+  Splitting by empty text returns a list of Unicode characters.
   `item i of text` uses 1-based character indexing and returns a one-character
   text value.
   Bundled `std/text` helpers such as `maybe_character` and `text_slice` use

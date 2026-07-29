@@ -365,6 +365,15 @@ class ToAst(Transformer):
     def say_stmt(self, meta, ch):
         return A.Say(value=ch[0], **_pos(meta))
 
+    def sort_stmt(self, meta, ch):
+        name = str(ch[0])
+        pos = _pos(meta)
+        return A.SetVar(
+            target=A.LValue(base=name, fields=[], **pos),
+            value=A.PrefixOp(op="sorted", value=A.Var(name=name, **pos), **pos),
+            **pos,
+        )
+
     def give_stmt(self, meta, ch):
         return A.Give(value=ch[0], **_pos(meta))
 
@@ -542,6 +551,16 @@ class ToAst(Transformer):
 
     def le(self, meta, ch):
         return self._cmp(meta, ch, "<=")
+
+    def has_no_value(self, meta, ch):
+        return A.Compare(
+            op="==", left=ch[0], right=A.NothingLit(**_pos(meta)), **_pos(meta)
+        )
+
+    def has_value(self, meta, ch):
+        return A.Compare(
+            op="!=", left=ch[0], right=A.NothingLit(**_pos(meta)), **_pos(meta)
+        )
 
     def contains(self, meta, ch):
         return self._cmp(meta, ch, "contains")

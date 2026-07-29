@@ -42,6 +42,7 @@ block: _NL _INDENT stmt+ _DEDENT
      | set_item_stmt
      | set_stmt
      | say_stmt
+     | sort_stmt
      | if_stmt
      | when_stmt
      | while_stmt
@@ -64,9 +65,10 @@ let_stmt: "let" NAME "be" closure_lit
         | "let" NAME "be" rhs _NL
 set_stmt: "set" lvalue _TO rhs _NL
 set_item_stmt: "set" _ITEM sum_e _OF lvalue _TO rhs _NL
-say_stmt: "say" expr _NL
-give_stmt: _GIVE_BACK closure_lit
-         | _GIVE_BACK [rhs] _NL
+say_stmt: ("say" | "print") expr _NL
+sort_stmt: "sort" NAME _NL
+give_stmt: (_GIVE_BACK | "return") closure_lit
+         | (_GIVE_BACK | "return") [rhs] _NL
 stop_stmt: "stop" _NL
 skip_stmt: "skip" _NL
 assert_stmt: "assert" expr ["," expr] _NL
@@ -96,7 +98,10 @@ when_arm: _IS pattern ("," pattern)* ["or" pattern] ":" block
            | NAME        -> pat_name
 
 while_stmt: "while" expr ":" block
-repeat_stmt: "repeat" atom _TIMES ":" block
+repeat_stmt: "repeat" repeat_count _TIMES ":" block
+?repeat_count: atom
+             | repeat_count _PLUS atom  -> add_op
+             | repeat_count _MINUS atom -> sub_op
 forrange_stmt: _FOR_EACH NAME "from" expr _TO expr ":" block
 foreach_stmt: _FOR_EACH NAME "in" expr ":" block
 attempt_stmt: "attempt" ":" block _IF_IT_FAILED ":" block
@@ -137,6 +142,8 @@ closure_param: NAME "as" type
       | link_e _IS_LESS_THAN link_e  -> lt
       | link_e _IS_AT_LEAST link_e   -> ge
       | link_e _IS_AT_MOST link_e    -> le
+      | link_e _HAS_NO_VALUE         -> has_no_value
+      | link_e _HAS_VALUE            -> has_value
       | link_e _CONTAINS link_e      -> contains
       | link_e _STARTS_WITH link_e   -> startswith
       | link_e _ENDS_WITH link_e     -> endswith
@@ -208,6 +215,8 @@ _IS_AT_LEAST.2: /is +at +least\b/
 _IS_AT_MOST.2: /is +at +most\b/
 _IS_NOT.2: /is +not\b/
 _IS.2: /is\b/
+_HAS_NO_VALUE.2: /has +no +value\b/
+_HAS_VALUE.2: /has +(a +)?value\b/
 _CONTAINS.2: /contains\b/
 _STARTS_WITH.2: /starts +with\b/
 _ENDS_WITH.2: /ends +with\b/
