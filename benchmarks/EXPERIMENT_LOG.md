@@ -390,3 +390,18 @@ removed from the compact core during earlier compression.
 Add the canonical returning-function form while removing at least the same
 number of lower-value core bytes. Add exact parse hints for `returns`,
 `return value`, and `give value`, then rerun the unchanged protocol-v2 pilot.
+
+## Engineering changes after 007
+
+### 2026-07-29 — Parley 0.3.144 returning-function guardrail
+
+- Added canonical `giving TYPE` and `give back value` forms to the core and
+  explicitly rejected common `returns`, `return value`, and `give value`
+  substitutions.
+- Added exact P101 repair hints for each of those three observed parse forms.
+- Removed lower-value reference prose so the core is 3,280 characters, three
+  bytes smaller than 0.3.143; protocol-v2 task prompts remain
+  4,884–4,928 characters.
+- Added three parser regression cases reproducing the iteration-007 repair
+  sequence. Iteration 008 keeps protocol v2, tasks, model, reasoning, seed,
+  public cases, and hidden oracle unchanged.

@@ -370,6 +370,7 @@ def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
         "never write `is equal to`",
         "`number from quantity_text`",
         "`stop` and `skip` work only inside loops",
+        "`giving TYPE` and `give back value`",
     ]:
         assert required in skill
 

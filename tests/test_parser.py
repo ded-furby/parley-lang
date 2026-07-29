@@ -143,6 +143,22 @@ def test_text_position_expression_parse():
             "    let value be number from text quantity_text\n",
             "`number from quantity_text`",
         ),
+        (
+            "to double with value as number returns number:\n"
+            "    give back value times 2\n"
+            "to main:\n    say 1\n",
+            "`giving TYPE`",
+        ),
+        (
+            "to double giving number:\n    return 2\n"
+            "to main:\n    say 1\n",
+            "`give back value`",
+        ),
+        (
+            "to double giving number:\n    give 2\n"
+            "to main:\n    say 1\n",
+            "`give back value`",
+        ),
     ],
 )
 def test_common_agent_parse_mistakes_have_exact_repair_hints(source, expected):

@@ -17,6 +17,8 @@ Otherwise run `parley check program.par --json`. Follow hints until
   `item`, `ask`, `add`, `set`, `remove`, and `say`.
 - Calls used as expressions require parentheses: `if (is_valid with line):`
   or `say (double with 21)`. A standalone call is bare.
+- Return values with `giving TYPE` and `give back value`; never write
+  `returns`, `return value`, or `give value`.
 - Write `changing` only in a parameter declaration; pass the plain variable
   at the call site.
 - Use typed empty collections: `an empty list of text` or
@@ -35,6 +37,9 @@ Otherwise run `parley check program.par --json`. Follow hints until
 ## Safe forms
 
 ```parley
+to double with value as number giving number:
+    give back value times 2
+
 to record_label with label as text, changing labels as list of text:
     add label to labels
 
@@ -78,10 +83,7 @@ for each index from 1 to length of values:
 ```
 
 Range endpoints are inclusive. `stop` and `skip` work only inside loops; use
-`otherwise` branching instead of `stop` to leave `main`. Create variables
-before a block if needed after it. `let` creates; `set` mutates. Arithmetic
-uses `plus`, `minus`, `times`, `divided by`, and `%`.
+branching to leave `main`. Create variables before a block if needed after it.
+`let` creates; `set` mutates.
 
-Read `references/extended-reference.md` only for records, enums, closures,
-files, includes, packages, editors, or research tooling. Repository docs are
-authoritative.
+For rare forms or tooling, read `references/extended-reference.md`.

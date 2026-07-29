@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.143** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 273 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.144** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 276 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -549,6 +549,10 @@ Update it whenever you finish or start a work item.
   one first pass in six, the core restores exact `yes`/`no`, comparison,
   loop-only `stop`, and numeric-conversion forms at 3,283 characters. P101
   and P201 now give direct repairs for the corresponding agent mistakes.
+- **v0.3.144 returning-function guardrail:** the 3,280-character core includes
+  canonical `giving TYPE` / `give back value`, and P101 directly repairs
+  common `returns`, `return`, and bare `give` substitutions observed in
+  protocol-v2 iteration 007 without increasing prompt size.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -626,7 +630,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.143).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.144).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

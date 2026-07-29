@@ -790,6 +790,10 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
             " Put only the value after `number from`, for example "
             "`number from quantity_text`."
         )
+    if re.match(r"^\s*to\b.*\breturns\b", line):
+        hint = (hint or "") + " Write `giving TYPE`, not `returns TYPE`."
+    if re.match(r"^\s*(?:return\b|give\s+(?!back\b))", line):
+        hint = (hint or "") + " Return a value with `give back value`."
     return Diagnostic(
         "P101", f"I didn't expect {got} here.",
         line=getattr(tok, "line", 0) or 0, col=getattr(tok, "column", 0) or 0,
