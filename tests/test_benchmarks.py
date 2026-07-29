@@ -352,30 +352,23 @@ def test_agent_command_protocol_allows_only_exact_public_check():
     assert exploratory["violations"] == ["/bin/zsh -lc 'ls -la'"]
 
 
-def test_parley_core_skill_stays_compact_and_covers_first_pass_traps():
+def test_parley_core_skill_is_a_general_diagnostic_first_quickstart():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) < 1_550
+    assert len(skill) < 400
     for required in [
-        "to valid with line as text giving yesno:",
-        'let count_input be ask for a number ""',
-        "if count_input is nothing:",
-        "let count be value of count_input",
-        "if (valid with line):",
-        "an empty list of text",
-        'Literal braces are `"{{"` / `"}}"`',
-        "Parenthesize expression calls",
-        "Use only `./check`",
-        "`let x be value` creates",
-        "`set x to value` mutates or creates",
-        "Numeric input uses `ask for a number`",
-        "`x as number`",
-        "`say` emits one full line",
-        "`line split by \"\"`",
-        "`map contains key`",
-        "sorted `keys of map`",
-        "`yesno`/`yes`/`no`",
-        "references/core-v0.3.144.md",
+        "Create `solution.par` first",
+        "4-space blocks",
+        "start `to main:`",
+        "Run only\n`./check`",
+        "follow its diagnostics",
+        "`let x be value`",
+        "`set x to\nvalue`",
+        "`say value`",
+        '`ask ""`',
+        '`ask for a number ""` gives a maybe',
+        "`is\nnothing`",
+        "`value of`",
     ]:
         assert required in skill
 
@@ -416,6 +409,17 @@ def test_parley_partial_recovery_core_is_preserved_unchanged():
 def test_parley_conversion_recovery_core_is_preserved_unchanged():
     reference = (
         REPO / "skill" / "parley" / "references" / "core-v0.3.147.md"
+    ).read_text()
+
+    assert len(reference) == 1_519
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c"
+    )
+
+
+def test_parley_reliability_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.3.149.md"
     ).read_text()
 
     assert len(reference) == 1_519

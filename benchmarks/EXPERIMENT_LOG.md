@@ -737,3 +737,20 @@ Preserve the proven 1,519-character core, then reduce the always-loaded skill
 to the smallest executable contract that retains the exact six clean source
 families. Keep compiler 0.3.149 and protocol v2 frozen; run pilot 014 before
 starting the 90-session confirmation.
+
+## Engineering changes after 013
+
+### 2026-07-29 — Parley 0.3.150 one-shot general instruction compression
+
+- Preserved the 1,519-character reliability core byte-for-byte at
+  `skill/parley/references/core-v0.3.149.md` (SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`).
+- Replaced it with a 343-character general quickstart covering only entry
+  point, indentation, state, output, text input, safe numeric input, and the
+  compiler-diagnostic repair loop. It contains no benchmark-task hints.
+- Removed redundant Parley-only explanatory wrapper prose from the runner;
+  workspace restrictions, exact-command protocol, tasks, and check loop are
+  unchanged.
+- Froze compiler semantics at the 0.3.149 behavior; 0.3.150 is an
+  instruction-only release. This is the sole compression experiment before a
+  broader corpus or the predeclared 90-session confirmation.

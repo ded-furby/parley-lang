@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.149** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 284 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.150** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 285 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -576,6 +576,12 @@ Update it whenever you finish or start a work item.
   for a list/map parameter directly mutated by its body; comma-separated
   signatures retain established value semantics. The exact pilot-012 first
   source now checks unchanged, and the full 284-test suite passes.
+- **v0.3.150 one-shot instruction compression:** after pilot 013 reached 6/6
+  first-pass with zero Parley repairs, the always-loaded skill was reduced
+  once from 1,519 to 343 characters using only general entry-point, state,
+  I/O, and diagnostic-loop guidance. The redundant benchmark-only wrapper was
+  removed. The proven 0.3.149 core is preserved byte-for-byte; compiler
+  semantics and protocol constraints are unchanged.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -653,7 +659,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.149).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.150).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

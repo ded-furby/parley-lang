@@ -344,12 +344,6 @@ def render_prompt(
     ]
     if language == "parley":
         lines.extend([
-            "# Parley language instructions",
-            "",
-            "The following is the compact core Parley skill shipped with the tested compiler.",
-            "Rare-feature reference files are intentionally excluded unless the task needs them.",
-            "Its tokens are included in this run's measured input cost.",
-            "",
             parley_skill.rstrip(),
             "",
         ])
