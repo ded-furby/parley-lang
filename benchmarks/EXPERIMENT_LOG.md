@@ -587,3 +587,41 @@ and run pilot 011 before any confirmation.
 - Rechecked all six pilot-010 first sources. Five now type-check unchanged;
   only the compact-range source that treated plain text as a maybe remains
   rejected, exactly where the new core gives the corrective form.
+
+## 011 — Conversion/output gap
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.147, commit `d1ffece41d46784365d6c2c23480a7c93cb1407e`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `c1b82867234f2aaadaf3b382b9b0ff8eeea98d3dec3114632f77f84861311435`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/011-conversion-output-gap.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 2/6 | 6/6 | 74,819.0 | 24.8918 | 5 |
+| Python | 6/6 | 4/6 | 6/6 | 43,048.0 | 19.4613 | 2 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,395.5 | 19.3580 | 0 |
+
+### Gate result
+
+Correctness and protocol compliance remained perfect. Parley stayed at 2/6
+first-pass, but repairs fell from nine to five and median elapsed time nearly
+halved. Strict efficiency still **failed**: median tokens were 73.8% above
+Python and 72.4% above Rust; elapsed time was 27.9% above Python and 28.6%
+above the slightly faster Rust median.
+
+### Isolated remaining failures
+
+Both compact-range sessions independently wrote `number as text`; both
+inventory sessions independently added a numeric total directly to a
+`list of text`. Bracket reporting remained 2/2 first-pass. The repeated
+pairing supports two narrow language affordances: postfix `as text`, and
+destination-aware formatting when a scalar is added to a text list.
+
+### Next experiment
+
+Add those two mechanical forms without increasing the compact skill, confirm
+all six pilot-011 first sources type-check unchanged, then run pilot 012.
