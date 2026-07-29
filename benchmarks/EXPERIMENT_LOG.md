@@ -117,3 +117,46 @@ Freeze Parley 0.3.140 and the current compact skill, then run 10 replicates per
 task-language cell. Do not optimize against those confirmation outcomes until
 the full 90-session matrix is complete. Preserve the result and report as
 iteration 003.
+
+## 003 — Ten-replicate confirmation
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.140, code/skill unchanged from iteration 002
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 10 replicates = 90 fresh sessions
+- Result JSON SHA-256: `1ae43a70982986342ae893a14697e9c70c24f821d520eb72fe68b4dca5a1247f`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `2718c72f8d9644ed2b9b41cda1f9dabf1095a45dd5b6f3d52864223f80d567d6`
+- Report: `benchmarks/reports/003-confirmation-gap.html`
+
+| Language | Hidden success | First public pass | Median checks | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 30/30 | 23/30 | 1.0 | 33,100.0 | 21.6486 | 11 |
+| Python | 30/30 | 24/30 | 1.0 | 28,711.5 | 16.0883 | 6 |
+| Rust | 30/30 | 30/30 | 1.0 | 43,139.5 | 18.2593 | 0 |
+
+### Gate result
+
+Strict parity was **not confirmed**. Parley preserved 100% hidden success and
+used 23.3% fewer median tokens than Rust, but used 15.3% more tokens than
+Python and took longer than both baselines. The better-baseline gate therefore
+fails.
+
+### Diagnosed concentration
+
+- Bracket report: Parley 8/10 first-pass, 41,027.5 median tokens; better token
+  median than both baselines.
+- Inventory totals: Parley 10/10 first-pass, 32,409.5 median tokens; above
+  Python but below Rust.
+- Compact ranges: Parley 5/10 first-pass, 66,314.5 median tokens; above both
+  baselines and responsible for eight of Parley's eleven repair turns.
+- The failed Parley first attempts used reserved `position` as a variable,
+  command words such as `add` at the start of helper names, `changing` at call
+  sites, or unparenthesized complex item/call expressions.
+
+### Next experiment
+
+Make one predeclared skill/compiler pass against these exact failure classes,
+reduce the clean-run prompt overhead further, add direct regression coverage,
+then run a new immutable matrix. Do not alter or selectively rerun iteration
+003.

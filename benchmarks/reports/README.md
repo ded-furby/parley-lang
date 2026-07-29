@@ -8,6 +8,7 @@ transformation, and chart-map notes.
 | --- | --- | --- | --- |
 | 001 | Parley 0.3.138 | Correctness tied; Parley missed efficiency parity | [HTML](001-pilot-baseline.html) |
 | 002 | Parley 0.3.140 | Pilot-level correctness and efficiency parity reached | [HTML](002-efficiency-parity.html) |
+| 003 | Parley 0.3.140 | Ten-replicate run preserved correctness but missed strict Python parity | [HTML](003-confirmation-gap.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under
