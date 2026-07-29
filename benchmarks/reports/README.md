@@ -12,6 +12,7 @@ transformation, and chart-map notes.
 | 004 | Parley 0.3.141 | First-pass pilot recovered; clean-run medians still missed Python | [HTML](004-first-pass-pilot.html) |
 | 005 | Parley 0.3.142 | Sub-3k core preserved final correctness but regressed first-pass efficiency | [HTML](005-overcompression-regression.html) |
 | 006 | Parley 0.3.143 | Reliability recovered; optional workspace exploration kept efficiency below gate | [HTML](006-reliable-exploration-gap.html) |
+| 007 | Parley 0.3.143 | Protocol v2 reached near parity; returning-function repair kept gate open | [HTML](007-protocol-v2-near-parity.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

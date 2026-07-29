@@ -352,3 +352,41 @@ prompt, and rerun all three languages as iteration 007.
   hidden oracle remain frozen for iteration 007. This is an explicit protocol
   revision, so its metrics are reported separately rather than silently
   spliced into the earlier series.
+
+## 007 — Exact-check-only protocol-v2 pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.143, benchmark commit `339d854bdc38e41e8aa72c3ccb31d66898d7ebda`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `14dfef712901eac42983b1f9d36fe1bfdd9aadae39b82d0edcc1af58ed145d20`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `0fc414fed62ef5118cdc4c6edac9d646c89f7887609ba2154d22f1871418d686`
+- Report: `benchmarks/reports/007-protocol-v2-near-parity.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 5/6 | 6/6 | 45,947.5 | 20.4253 | 3 |
+| Python | 6/6 | 4/6 | 6/6 | 43,047.5 | 20.8073 | 2 |
+| Rust | 6/6 | 6/6 | 6/6 | 43,604.5 | 19.6029 | 0 |
+
+### Gate result
+
+All 18 sessions complied with protocol v2 and passed hidden cases. Strict
+parity still **failed**, but the gap narrowed sharply: Parley used 6.7% more
+median tokens than Python and 5.4% more than Rust; it was 1.8% faster than
+Python but 4.2% slower than Rust. Its 5/6 first-pass rate was below Rust's 6/6.
+
+### Diagnosed concentration
+
+Five Parley runs passed first check and clustered between 45,680 and 46,726
+tokens. The remaining bracket run wrote `returns yesno`, `return valid`, then
+`give valid`; generic P101 hints led to three repair turns before the agent
+inlined the helper. Canonical `giving yesno` / `give back valid` had been
+removed from the compact core during earlier compression.
+
+### Next experiment
+
+Add the canonical returning-function form while removing at least the same
+number of lower-value core bytes. Add exact parse hints for `returns`,
+`return value`, and `give value`, then rerun the unchanged protocol-v2 pilot.
