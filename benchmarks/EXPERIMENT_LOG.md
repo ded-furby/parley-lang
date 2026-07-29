@@ -295,3 +295,43 @@ below the demonstrated reliability floor for this task family.
 - Expanded hard regression coverage for every newly observed omission. The
   next immutable pilot must recover first-pass success before any conclusion
   about the smaller prompt's efficiency is accepted.
+
+## 006 — Reliability-floor recovery pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.143, commit `e6227a558b7d90ee1ddbfb21370fdc426ff0987a`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `9b33b71ab9d2313b0a4b5e2e08e6e610872d0c89d45838c51777808dbd0ade1a`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `0fc414fed62ef5118cdc4c6edac9d646c89f7887609ba2154d22f1871418d686`
+- Report: `benchmarks/reports/006-reliable-exploration-gap.html`
+
+| Language | Hidden success | First public pass | Median checks | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 6/6 | 1.0 | 63,997.5 | 28.1329 | 0 |
+| Python | 6/6 | 5/6 | 1.0 | 51,180.5 | 18.8539 | 1 |
+| Rust | 6/6 | 5/6 | 1.0 | 43,190.5 | 18.7361 | 1 |
+
+### Gate result
+
+The reliability recovery passed: all six Parley sessions passed first check
+and the hidden cases. Strict efficiency still **failed**. Parley used 25.0%
+more median tokens than Python, 48.2% more than Rust, and about 50% more median
+time than either baseline.
+
+### Protocol diagnosis
+
+Every Parley session ran an extra pre-solution command (`ls`, `rg --files`, or
+`sed` over public checker/config files) before its successful `./check`.
+Baseline sessions did this inconsistently. The prompt prohibited modifying
+checker files but did not prohibit reading them, creating avoidable tool and
+context variance despite identical task information already being present in
+the prompt.
+
+### Next experiment
+
+Freeze Parley 0.3.143. Amend the language-neutral prompt to prohibit listing
+or reading workspace files and require creating the solution immediately,
+then running only `./check`. Record the protocol flag, test the rendered
+prompt, and rerun all three languages as iteration 007.
