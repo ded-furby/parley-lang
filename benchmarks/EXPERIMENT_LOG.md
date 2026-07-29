@@ -236,3 +236,46 @@ prevented repairs. Run another immutable two-replicate pilot before spending
 - Expected benchmark effect: reduce the 2,680-token median input gap observed
   in iteration 004 without reintroducing public-check repairs. This remains
   unproven until iteration 005.
+
+## 005 — Sub-3k core regression pilot
+
+- Date: 2026-07-29
+- Compiler: Parley 0.3.142, commit `eaf63dbb5cbf63cc600c658c3ae25fcb62d45869`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.142.5
+- Matrix: 3 tasks × 3 languages × 2 replicates = 18 fresh sessions
+- Result JSON SHA-256: `85bcc25c87ac2d54b99816b69df463efa556bc81bbc21de3d27fd25b93a4d4e5`
+- Task manifest SHA-256: `63820d71c388bdbb22aea49f47b7a9c2113c9fd37fd9209b3ecdc7f2dd0ca20e`
+- Parley skill SHA-256: `15d71d0c8057ad9c7845f200da4119d975cb4d456b96d1bef22bc484d156c7a6`
+- Report: `benchmarks/reports/005-overcompression-regression.html`
+
+| Language | Hidden success | First public pass | Median checks | Median tokens | Median seconds | Repair turns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 6/6 | 1/6 | 2.0 | 95,558.0 | 46.3064 | 7 |
+| Python | 6/6 | 5/6 | 1.0 | 43,094.0 | 19.7339 | 1 |
+| Rust | 6/6 | 5/6 | 1.0 | 36,383.5 | 23.4845 | 1 |
+
+### Gate result
+
+The sub-3k core **failed** the directional and strict gates. Hidden
+correctness remained 100%, but Parley passed only one first public check and
+used 121.7% more median tokens than Python and 162.6% more than Rust. Median
+elapsed time was 134.7% above Python.
+
+### Diagnosed omissions
+
+- Both bracket sessions used `true`/`false` because the compact core no longer
+  stated Parley's `yes`/`no` literals.
+- One compact session used `stop` outside a loop after the break-only wording
+  was shortened; another used unsupported `is equal to` / `is not equal to`
+  spellings after the exact comparison list was removed.
+- One inventory session twice malformed conversion as
+  `number from text quantity_text` / `number from text_quantity` before
+  reaching the accepted `number from quantity_text` form.
+- The iteration-003 reserved-name, spaced-function-name, changing-call, and
+  expression-call mistakes did not recur.
+
+### Next experiment
+
+Restore only the four missing guardrails above, assert them in the skill
+regression test, and run a new immutable pilot. Treat 2,998 characters as
+below the demonstrated reliability floor for this task family.
