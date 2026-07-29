@@ -225,6 +225,18 @@ class Checker:
             if f.ret is not None:
                 f.ret = self.resolve_type(f.ret, f)
 
+        # A natural `x as T and y as U` signature expresses an action over
+        # its arguments. When that body directly mutates a list or map
+        # parameter, make the reference behavior explicit in the checked AST.
+        # Comma-separated signatures retain Parley's established value
+        # semantics, so existing programs do not change meaning.
+        for f in p.funcs:
+            mutated = self._directly_mutated_names(f.body)
+            for prm in f.params:
+                if (prm.natural_separator and prm.name in mutated
+                        and isinstance(prm.type, (A.TList, A.TMap))):
+                    prm.changing = True
+
         main = self.funcs.get("main")
         if main is None:
             self.err("P210", "Every program needs a `to main:` to start from.", p,
@@ -239,6 +251,29 @@ class Checker:
             if f.name in self.funcs and self.funcs[f.name] is f:
                 self.check_function(f)
         return self.diags
+
+    def _directly_mutated_names(self, body: list[A.Stmt]) -> set[str]:
+        """Names assigned or container-mutated anywhere in a statement tree."""
+        names: set[str] = set()
+        for st in body:
+            if isinstance(st, (A.SetVar, A.SetItem, A.Add, A.RemoveItem)):
+                names.add(st.target.base)
+            if isinstance(st, A.If):
+                for _, arm in st.arms:
+                    names |= self._directly_mutated_names(arm)
+                if st.otherwise is not None:
+                    names |= self._directly_mutated_names(st.otherwise)
+            elif isinstance(st, A.When):
+                for _, arm in st.arms:
+                    names |= self._directly_mutated_names(arm)
+                if st.otherwise is not None:
+                    names |= self._directly_mutated_names(st.otherwise)
+            elif isinstance(st, (A.While, A.Repeat, A.ForRange, A.ForEach)):
+                names |= self._directly_mutated_names(st.body)
+            elif isinstance(st, A.Attempt):
+                names |= self._directly_mutated_names(st.body)
+                names |= self._directly_mutated_names(st.handler)
+        return names
 
     def check_function(self, fn: A.FuncDef):
         self.fn = fn
@@ -644,6 +679,12 @@ class Checker:
                 self.infer(a)
             return TErr()
         node.target_fn = fn
+        flattened = []
+        for arg in args:
+            flattened.extend(self._flatten_natural_call_arg(arg))
+        if len(args) != len(fn.params) and len(flattened) == len(fn.params):
+            args = flattened
+            node.args = flattened
         if len(args) != len(fn.params):
             sig = ", ".join(f"{p.name} as {p.type}" for p in fn.params) or "no parameters"
             self.err("P203",
@@ -665,6 +706,13 @@ class Checker:
             elif not self.assignable(prm.type, a_ty):
                 self.type_mismatch(prm.type, a_ty, arg, f'The argument "{prm.name}" of {name}')
         return fn.ret or A.TUnit()
+
+    def _flatten_natural_call_arg(self, expr: A.Expr) -> list[A.Expr]:
+        """Flatten `a and b` only when call arity proves `and` is a separator."""
+        if isinstance(expr, A.BinOp) and expr.op == "and":
+            return (self._flatten_natural_call_arg(expr.left)
+                    + self._flatten_natural_call_arg(expr.right))
+        return [expr]
 
     def _check_value_call(self, node, name: str, fty: A.TFunc, args: list[A.Expr]) -> A.Type:
         """A call through a variable that holds a function value."""

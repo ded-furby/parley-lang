@@ -189,6 +189,18 @@ def test_agent_natural_aliases_parse_to_canonical_nodes():
     assert isinstance(main.body[5].count, A.BinOp)
 
 
+def test_natural_and_separates_function_parameters():
+    prog = parse(
+        "to append_pair with low as number and high as number and parts as list of text:\n"
+        "    add \"{low}-{high}\" to parts\n"
+        "to main:\n"
+        "    say \"ready\"\n"
+    )
+    params = prog.funcs[0].params
+    assert [param.name for param in params] == ["low", "high", "parts"]
+    assert all(param.natural_separator for param in params)
+
+
 def test_text_count_expression_parse():
     prog = parse('to main:\n    say count of "a" in "banana"\n')
     expr = prog.funcs[0].body[0].value

@@ -3,6 +3,8 @@
 import pytest
 
 from conftest import check_text, diag_codes
+from parley.checker import check_program
+from parley.parser import parse
 
 MAIN = "to main:\n{body}\n"
 
@@ -136,6 +138,20 @@ def test_compact_range_agent_idioms_are_clean():
         "        set cursor to run_end plus 1\n"
     )
     assert check_text(src) == []
+
+
+def test_natural_helper_call_infers_mutated_list_parameter():
+    src = (
+        "to append_pair with low as number and high as number and parts as list of text:\n"
+        "    add \"{low}-{high}\" to parts\n"
+        "to main:\n"
+        "    let parts be an empty list of text\n"
+        "    append_pair with 1 and 3 and parts\n"
+        "    say parts joined with \",\"\n"
+    )
+    program = parse(src)
+    assert check_program(program) == []
+    assert program.funcs[0].params[2].changing
 
 
 def test_map_values_typecheck_cleanly():

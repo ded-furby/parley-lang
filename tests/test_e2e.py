@@ -340,6 +340,18 @@ def test_value_semantics_copy_on_assign(workdir):
     assert proc.stdout == "2\n3\n"
 
 
+def test_natural_and_helper_updates_list_argument(workdir):
+    src = '''to append_pair with low as number and high as number and parts as list of text:
+    add "{low}-{high}" to parts
+to main:
+    let parts be an empty list of text
+    append_pair with 1 and 3 and parts
+    say parts joined with ","
+'''
+    proc = run_program(workdir, "natural_and_helper", src)
+    assert proc.stdout == "1-3\n"
+
+
 def test_recursion(workdir):
     src = '''to fact with n as number giving number:
     if n is at most 1:

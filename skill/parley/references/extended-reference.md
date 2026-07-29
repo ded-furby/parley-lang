@@ -103,6 +103,12 @@ to main:
         say i
 ```
 
+Parameters and call arguments may use natural `and` instead of commas. In an
+`and`-separated signature, directly mutating a list/map parameter makes it
+`changing` automatically; comma-separated signatures keep value semantics.
+Example: `to append_pair with low as number and high as number and parts as
+list of text:` pairs with `append_pair with 1 and 3 and parts`.
+
 Types: `number` (i64) · `decimal` (f64) · `text` · `yesno` (yes/no) ·
 `list of T` · `map from K to V` · `maybe T` · records · kinds ·
 `(function taking A, B giving R)` (function value; both clauses optional —

@@ -220,6 +220,18 @@ statement, call plainly: `greet with "Ada"`. Inside an expression, wrap the
 call in parentheses: `(double with 21)`. A function with no parameters is
 called by its bare name: `let d be roll`.
 
+For several parameters, commas and natural `and` are both accepted:
+
+```parley
+to append_pair with low as number and high as number and parts as list of text:
+    add "{low}-{high}" to parts
+```
+
+Call it with the same natural form: `append_pair with 1 and 3 and parts`.
+Because this `and`-separated action directly mutates the list, `parts` updates
+in the caller automatically. A comma-separated signature keeps the usual
+value-copy behavior unless the parameter is explicitly marked `changing`.
+
 To let a function **change** the caller's variable, mark the parameter
 `changing`:
 

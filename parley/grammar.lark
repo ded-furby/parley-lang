@@ -22,7 +22,7 @@ field: NAME "as" type
 enum_def: _A NAME _IS_ONE_OF NAME ("," NAME)* _NL
 
 func_def: "to" NAME params giving ":" block
-params: ["with" param ("," param)*]
+params: ["with" param (("," param) | (PARAM_AND param))*]
 param: [CHANGING] NAME "as" type
 giving: ["giving" type]
 
@@ -237,6 +237,7 @@ _OF.2: /of\b/
 _A.2: /an?\b/
 _TIMES.2: /times\b/ | "*"
 CHANGING.2: /changing\b/
+PARAM_AND: "and"
 
 _LENGTH_OF.2: /length +of\b/
 _COUNT_OF.2: /count +of\b/

@@ -143,6 +143,7 @@ class Param(Node):
     name: str
     type: Type
     changing: bool = False
+    natural_separator: bool = False
 
 
 @dataclass

@@ -40,6 +40,7 @@ parameters (`&mut T`).
 | `to f with a as number giving number:` | `fn f(a: i64) -> i64 {` |
 | `to f with xs as list of number:` | `fn f(xs: &Vec<i64>) {` |
 | `to f with changing xs as list of number:` | `fn f(xs: &mut Vec<i64>) {` |
+| `to f with a as number and b as number:` | natural multi-parameter form |
 
 Variant names share one global namespace (so `happy` alone is unambiguous).
 
@@ -115,8 +116,15 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `a function taking x as number giving number: ...` | `Rc::new(move |x: i64| -> i64 { ... })` | anonymous closure with captured values |
 
 A variable holding a function value is called exactly like a function:
-`(f with x)` in expressions, `f with x` as a statement. Function values
+`(f with x)` in expressions, `f with x` as a statement. Named-function calls
+may separate several arguments with commas or natural `and` when the callee's
+arity makes the split unambiguous. Function values
 cannot be compared, turned into text, or said.
+
+In an `and`-separated named-function signature, directly adding to, setting,
+or removing from a list/map parameter makes that parameter `changing`
+automatically. Use a comma-separated signature when the callee should mutate
+only its private value copy; explicit `changing` remains valid in either form.
 
 Anonymous functions capture outside variables by value when they are created.
 Changing the original variable later does not change the captured value.

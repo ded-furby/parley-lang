@@ -681,3 +681,19 @@ and infer reference passing for a parameter demonstrably mutated by its
 function body. Preserve the compact skill, recheck the saved source unchanged,
 and run pilot 013. After first-pass reliability is complete, reduce the fixed
 Parley prompt overhead that remains visible in the clean-run cluster.
+
+## Engineering changes after 012
+
+### 2026-07-29 — Parley 0.3.149 natural helper actions
+
+- Added `and` as a parameter separator and arity-directed call-argument
+  separator; one-argument boolean expressions retain their existing meaning.
+- For an `and`-separated signature only, directly mutating a list/map
+  parameter infers `changing`. Comma-separated signatures preserve the
+  existing value-semantics contract.
+- Rechecked the exact pilot-012 first source: zero diagnostics, with only its
+  `parts` parameter inferred changing and both three-argument calls recovered.
+- Kept the 1,519-character always-loaded skill byte-for-byte unchanged to
+  isolate compiler ergonomics.
+- Verification: 284 tests passed, including native output and the prior
+  non-changing heap-parameter clone regression.

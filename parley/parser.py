@@ -308,7 +308,11 @@ class ToAst(Transformer):
         return A.FuncDef(name=str(name), params=params, ret=giving, body=body, **_pos(meta))
 
     def params(self, meta, ch):
-        return [p for p in ch if p is not None]
+        params = [p for p in ch if isinstance(p, A.Param)]
+        if any(str(item) == "and" for item in ch if item is not None):
+            for param in params:
+                param.natural_separator = True
+        return params
 
     def param(self, meta, ch):
         changing, name, ty = ch

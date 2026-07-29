@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.148** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 280 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.149** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 284 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -570,6 +570,12 @@ Update it whenever you finish or start a work item.
   and adding a scalar to `list of text` formats it using interpolation rules.
   All six pilot-011 first sources now type-check unchanged; the 1,519-character
   skill is intentionally unchanged to isolate compiler ergonomics.
+- **v0.3.149 natural helpers:** parameter declarations accept natural `and`
+  separators, and calls flatten `and` expressions only when the callee's arity
+  proves they are arguments. An `and`-separated signature infers `changing`
+  for a list/map parameter directly mutated by its body; comma-separated
+  signatures retain established value semantics. The exact pilot-012 first
+  source now checks unchanged, and the full 284-test suite passes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -647,7 +653,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.148).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.149).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

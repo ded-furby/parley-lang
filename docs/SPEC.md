@@ -47,7 +47,8 @@ parse-relevant highlights:
   argument and field commas with one token of lookahead.
 * **Calls.** Statement calls are bare: `f with a, b`. Expression calls are
   parenthesised: `(f with a, b)`. Zero-parameter functions are called by
-  bare name.
+  bare name. Multi-argument calls may use `and`; an `and` expression is split
+  into arguments only when the named callee's arity proves the split.
 * **repeat counts** accept addition/subtraction directly
   (`repeat n minus 1 times:`); parenthesise expressions containing
   multiplication or other operators to disambiguate the delimiter `times`.
@@ -93,7 +94,10 @@ parse-relevant highlights:
 * **Functions** with `giving T` must give back on every path (P304). A `fail`
   statement is terminal and therefore satisfies a returning path.
   `changing` parameters require a plain variable argument of exactly the
-  parameter's type (P305).
+  parameter's type (P305). Parameter declarations may be comma-separated or
+  `and`-separated. In the natural `and` form, a list/map parameter directly
+  mutated by the body is inferred as `changing`; comma-separated declarations
+  retain value semantics unless `changing` is explicit.
 * **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
   and is a checked runtime operation. `has no value` aliases `is nothing`;

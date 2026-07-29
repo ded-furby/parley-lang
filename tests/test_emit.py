@@ -61,6 +61,19 @@ def test_mutated_heap_param_clones_inside_function():
     assert "changed_size(values.clone())" not in rust
 
 
+def test_natural_and_helper_mutates_list_argument_by_reference():
+    rust = emit_text(
+        "to append_pair with low as number and high as number and parts as list of text:\n"
+        "    add \"{low}-{high}\" to parts\n"
+        "to main:\n"
+        "    let parts be an empty list of text\n"
+        "    append_pair with 1 and 3 and parts\n"
+        "    say parts joined with \",\"\n"
+    )
+    assert "parts: &mut Vec<String>" in rust
+    assert "append_pair(1i64, 3i64, &mut parts)" in rust
+
+
 def test_enum_becomes_match():
     rust = emit_text(
         "a mood is one of happy, grumpy\n"
