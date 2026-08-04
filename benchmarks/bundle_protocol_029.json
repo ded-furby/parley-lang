@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "experiment_id": "029",
+  "title": "Historically grounded project-diagnosis expansion",
+  "description": "Cross-language comparison over eight multi-file regressions, including four synthetic adaptations of independently sourced public issue mechanisms.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_historical_029.json",
+    "task_manifest_sha256": "50e55b985b959c96175632530cbb142b424453b4e815a731d2067a3432895b07",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "8f4a66885f3e0837f1595d72cf38ada5b8112f97",
+    "harness_commit": "9c03ef56a718d0cff9dca6a29492440d77224fb6",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [8],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260821,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_repository_assignments": 144,
+    "sessions_per_language": 6,
+    "repository_assignments_per_language": 48,
+    "editable_seed_files_per_session": 24,
+    "read_only_context_files_per_session": 16,
+    "visible_files_per_session": 40,
+    "read_only_context_chars_per_session": 3614,
+    "read_only_context_lines_per_session": 47,
+    "read_only_context_rough_tokens_per_session": 710,
+    "public_cases_per_language": 48,
+    "hidden_cases_per_language": 192,
+    "exact_hidden_file_cases_per_language": 0,
+    "root_cause_assignments_per_language": 48,
+    "derivation": "6 complete eight-repository bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 8,
+    "correctness": "Parley hidden-repository success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned repository must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned repository must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check repository success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict efficiency/reliability parity."
+  },
+  "maintainability_gate": {
+    "root_cause": "All 48 Parley assignments must modify the task/language defect file frozen in predeclared_analysis.root_cause_files.",
+    "caller_compensation": "A hidden-correct patch that does not modify the predeclared defect file fails root-cause quality and remains fully reported.",
+    "overall_verdict": "A general maintainable-parity pilot requires both strict primary parity and the Parley root-cause condition."
+  },
+  "source_protocol": {
+    "first_shell_command": "./sources",
+    "source_command_count": 1,
+    "later_shell_command": "./check",
+    "editable_files": "Twenty-four language-specific seeded implementation files across eight repositories.",
+    "read_only_files": "Sixteen language-neutral ISSUE.md and tests/regression.txt artifacts, visibly marked read-only and byte-identical across languages.",
+    "public_examples": "Protected by the checker and omitted from every agent prompt; diagnosis comes from source and read-only project evidence.",
+    "protected_files": "Checker, source printer, configuration, prompt, provenance, public/hidden cases, and attempt log are never agent-readable and remain integrity-hashed."
+  },
+  "historical_grounding": [
+    {
+      "task": "config_recovery_project",
+      "source": "https://github.com/openclaw/openclaw/issues/28140",
+      "adapted_mechanism": "unknown configuration input discards recognized valid settings"
+    },
+    {
+      "task": "aliased_identity_cache_project",
+      "source": "https://github.com/apollographql/apollo-client/issues/10599",
+      "adapted_mechanism": "response alias prevents id-based cache normalization"
+    },
+    {
+      "task": "fsm_rollback_project",
+      "source": "https://github.com/vllm-project/vllm/issues/27210",
+      "adapted_mechanism": "rollback rewinds position without clearing termination state"
+    },
+    {
+      "task": "cancellation_lock_project",
+      "source": "https://github.com/vitessio/vitess/issues/17620",
+      "adapted_mechanism": "fresh cancellation context loses lock authority needed for rollback"
+    }
+  ],
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "The first four task objects are exactly preserved from iteration 028; the four additions, independent oracles, source seeds, evidence, hidden cases, provenance, and root-defect mappings were committed before protocol freeze or any measured session.",
+    "Historical grounding applies to bug mechanisms only. The fixtures are synthetic deterministic adaptations and copy no upstream source.",
+    "Read-only context is byte-identical across languages; implementation syntax and ordinary standard-library setup remain language-specific.",
+    "Root-cause location is a predeclared maintainability judgment separate from hidden-output correctness.",
+    "Changed-file count and rough-token edit size are secondary metrics, not substitutes for hidden correctness, the four-condition gate, or root-cause quality."
+  ],
+  "secondary_analysis": [
+    "Report every session, repository outcome, repair, token count, elapsed time, prompt size, editable-source size, read-only-context size, edit size, changed-file count, integrity result, and command-protocol result.",
+    "Classify every first-check and hidden failure by unrelated repository and independent session.",
+    "Report root-cause file modification by language, task, and session; show every caller-side compensation without altering hidden correctness.",
+    "Compare the complete primary medians with repair-free sensitivity only if at least two Parley sessions pass all eight repositories on their first check.",
+    "Inspect recurring diagnosis or language failures only after preserving the full result; a single task, transcript, or session cannot justify a compiler or skill change."
+  ],
+  "feature_boundary": "Parley remains frozen at v0.3.155 with the exact 1,519-character skill. Iteration 029 changes only the preregistered diagnosis corpus and root-cause audit; the language-neutral read-only source protocol is unchanged from iteration 028.",
+  "change_rule": "No syntax, compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or benchmark instruction may change from iteration 028 output unless a signature recurs across unrelated repositories and independent sessions, then passes general usefulness, semantic consistency, and maintainability review.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result without selective reruns. If strict parity and root-cause quality pass, preregister a larger confirmation before claiming parity. If either fails, make no same-corpus syntax or instruction change; only independently recurring general defects may enter separate design review."
+}

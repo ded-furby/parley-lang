@@ -2478,3 +2478,34 @@ maintainability condition. The original four strict conditions remain
 unchanged. Commit and push this corpus before protocol freeze, then preserve
 every session without selective reruns. No compiler, syntax, diagnostic,
 prompt, skill, or instruction-compression change is included.
+
+## Pre-registration for 029 — Historically grounded diagnosis expansion
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `9c03ef56a718d0cff9dca6a29492440d77224fb6`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_historical_029.json`, SHA-256
+  `50e55b985b959c96175632530cbb142b424453b4e815a731d2067a3432895b07`
+- Protocol: `benchmarks/bundle_protocol_029.json`, SHA-256
+  `3c4c4416f8bcac678a1bee3fbe001e87f7188fad80948695f2d19917674f3b25`
+- Matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Seed: `20260821`
+
+The original strict four-condition gate applies at size eight. A separate
+maintainability condition requires 48/48 Parley assignments to modify their
+predeclared seeded defect file. Overall maintainable parity requires both.
+Every session receives 24 editable and 16 read-only files through exactly one
+protected `./sources` command first; only `./check` may follow. Each language
+receives 48 public and 192 hidden judgments.
+
+Run all 18 sessions once and preserve every result without selective reruns.
+Report every caller compensation separately from hidden correctness. If all
+five conditions pass, this remains a six-replicate pilot and requires the
+larger confirmation before a general claim. If any fail, do not tune the corpus
+or change syntax or instructions from same-corpus evidence.

@@ -860,6 +860,16 @@ Update it whenever you finish or start a work item.
   file, and all 48 Parley assignments must modify it as a fifth maintainability
   gate. Commit the corpus, then freeze six size-eight replicates/language with
   v0.3.155 and the unchanged skill. Preserve all output; do not tune from 028.
+- **Historically grounded preregistration (iteration 029):** corpus commit
+  `9c03ef56a718d0cff9dca6a29492440d77224fb6` is pushed. Protocol 029 freezes
+  six complete size-eight replicates per language, 18 fresh sessions, 144
+  assignments, seed `20260821`, v0.3.155, and the unchanged skill. Each session
+  sees 24 editable plus 16 byte-identical read-only files. The strict four
+  parity conditions remain; a fifth condition requires 48/48 Parley patches
+  to touch their predeclared root-defect file. Protocol SHA is
+  `3c4c4416f8bcac678a1bee3fbe001e87f7188fad80948695f2d19917674f3b25`.
+  Run once with no selective reruns. A five-condition pass still
+  requires larger confirmation; failure cannot trigger same-corpus tuning.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
