@@ -2854,3 +2854,94 @@ condition fails, preserve it and make no same-corpus syntax, compiler, prompt,
 skill, task, harness, or metric change. Only semantic failures recurring across
 independent projects may enter separate general-usefulness design review. The
 one instruction-compression experiment remains closed.
+
+## 031 — Deeper projects produce a strict efficiency/reliability win
+
+- Completed: 2026-08-05
+- Compiler: pinned Parley 0.3.155 binary; language unchanged
+- Model: `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0
+- Matrix: four five-module repositories × three languages × six complete
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Raw result: `benchmarks/results/agent_deep_031_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `e6415531460770e6d8c05f45f01aa35628ee41081980fb3bb4e059352c5481b8`
+- Protocol SHA-256:
+  `4ede556b6010d2c011c0f109e83cf9502893536affed10b1e17973a1e2bbf19e`
+- Report: `benchmarks/reports/031-deeper-project-efficiency-win.html`
+- Report SHA-256:
+  `00d7a6c4d20e0b322a1f401cbe1f007eac5b054f0750516869af88c19fa844ef`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_031_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, zero-exit,
+  source-order, checker/context-integrity, command-protocol, and hidden-bundle
+  checks pass; zero timeouts, agent errors, hidden failures, exclusions, or
+  selective reruns
+
+| Language | Hidden | First check | Repairs | Median tokens/repo | Weighted tokens/repo | Clean median tokens/repo | Median seconds/repo | Clean median seconds/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 22/24 | 2 | 15,937.00 | 18,898.17 | 15,922.63 | 7.3906 | 6.9334 |
+| Python | 24/24 | 20/24 | 4 | 23,668.38 | 22,391.21 | 17,512.50 | 9.2024 | 8.5087 |
+| Rust | 24/24 | 20/24 | 4 | 24,475.75 | 22,408.75 | 15,994.00 | 10.2195 | 9.3217 |
+
+The preregistered strict gate passes 4/4. All languages are 100% hidden
+correct. Parley's median tokens are 32.67% below Python and 34.89% below Rust;
+its median elapsed time is 19.69% below Python and 27.68% below Rust; its
+first-check rate is 91.67% versus 83.33% for both baselines. This is the first
+frozen corpus in the study where Parley beats both baselines on every strict
+efficiency/reliability condition.
+
+The result is not a median-only artifact. Dividing total language tokens by all
+24 assignments leaves Parley 15.60% below Python and 15.67% below Rust. Among
+repair-free sessions, Parley uses 15,922.63 median tokens/repository versus
+17,512.50 for Python and 15,994.00 for Rust. Clean elapsed medians also favor
+Parley. Complete token ranges are 15,902.00–25,159.25 for Parley,
+15,463.00–28,158.75 for Python, and 15,914.25–28,973.50 for Rust.
+
+All ten first-check failures occur in the empty-collection configuration task:
+two Parley, four Python, and four Rust sessions. Agents initially preserve
+fallback precedence but classify explicit empty as `list` rather than the
+evidence's distinct `empty` state. All ten correct the root classifier on the
+second check. The other three projects are 54/54 first-check clean across
+languages. This is a shared evidence-interpretation error, not a Parley syntax,
+parser, checker, diagnostic, or runtime failure.
+
+Every one of all 72 assignments modifies the predeclared owning root file.
+However, the separate exact-root maintainability condition finishes 23/24 for
+each language. Rust replicate 2, Python replicate 5, and Parley replicate 6
+also edit the count helper while pursuing the initial zero-length-list theory.
+After checker feedback, each fixes the distinct root classification but leaves
+the count guard. The extra edit is harmless and unreachable under the final
+classification, but the frozen condition requires exactly the root file, so it
+fails. The overall five-condition result is therefore **4/5**, not full
+maintainable parity.
+
+Event accounting matches the repair distribution. Every session starts with
+one `./sources`; eight clean sessions run one `./check`, and ten repaired
+sessions run exactly two. Parley uses 8 completed file-change actions and 26
+agent messages, Python 12/29, and Rust 11/30. All command sequences comply with
+the frozen protocol. Read-only preservation is 72/72 exposures per language.
+
+Median final source is 325.50 rough tokens/repository for Parley, 279.25 for
+Python, and 460.38 for Rust. Median prompt characters are 1,115.50, 694.75, and
+699.75. Parley therefore wins despite more prompt/source context than Python;
+the primary mechanism is fewer repair-heavy sessions, supported by a smaller
+additional clean-session edge. Its source remains substantially more compact
+than Rust.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 36 blocks, five charts, eight metrics, six tables, all 18
+sessions, all ten repair rows, all twelve task/language cuts, and exact root and
+action audits.
+
+**No compiler, syntax, grammar, AST, checker, runtime, diagnostic, prompt,
+skill, task, runner, or metric change follows from iteration 031.** Parley
+stays at v0.3.155. The shared empty-state error is more frequent in both
+baselines and does not justify a language proposal. The one allowed
+instruction-compression experiment remains closed.
+
+Preserve iteration 031 unchanged as a strict 4/4 efficiency/reliability win
+and an overall 4/5 maintainability pilot. Do not claim universal superiority
+from four synthetic projects. Next preregister an independent deeper-project
+confirmation with new semantic mechanisms and the same gates; do not select
+tasks from the iteration-031 failure or tune this corpus.

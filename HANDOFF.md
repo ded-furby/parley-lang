@@ -937,6 +937,20 @@ Update it whenever you finish or start a work item.
   strict four-condition gate remains, plus 24/24 exact Parley root-file fixes.
   Run all cells once with no exclusion or rerun; a failure cannot trigger
   same-corpus language/instruction/task tuning.
+- **Deeper project result (iteration 031):** all 72 assignments are hidden
+  correct. Parley records 15,937.00 median tokens/repo and 7.3906 seconds versus
+  Python's 23,668.38/9.2024 and Rust's 24,475.75/10.2195, with 22/24 first
+  success versus 20/24 for both baselines. Strict efficiency/reliability passes
+  4/4; weighted and repair-free sensitivities also favor Parley. All ten
+  repairs are the same shared empty-state interpretation (Parley 2, Python 4,
+  Rust 4). Every patch touches its frozen root, but one run per language also
+  leaves a harmless count-helper edit, so exact-root quality is 23/24 and the
+  overall five-condition result is 4/5. Preserve raw SHA
+  `e6415531460770e6d8c05f45f01aa35628ee41081980fb3bb4e059352c5481b8`
+  and report SHA
+  `00d7a6c4d20e0b322a1f401cbe1f007eac5b054f0750516869af88c19fa844ef`.
+  No language/instruction change follows. Next use an independent deeper
+  confirmation with new mechanisms and the same gates; do not tune 031.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
