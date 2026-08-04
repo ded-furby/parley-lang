@@ -616,6 +616,14 @@ Update it whenever you finish or start a work item.
   containment aliases. The next compiler work is only the general P901 fix
   for mutation of an accepted range-loop variable; then move to a genuinely
   new broad corpus or model split with the skill unchanged.
+- **New broad-corpus preregistration (iteration 021):** twelve never-before-used
+  tasks and six complete-bundle replicates per language are frozen in
+  `benchmarks/bundle_protocol_021.json`: 18 fresh sessions and 216 judged task
+  assignments. The compiler is v0.3.154, the skill is unchanged, the strict
+  four-condition gate is unchanged, and the stop rule forbids tuning against
+  these tasks after output. Run the frozen matrix, preserve all evidence, then
+  classify failures under the cross-task plus general-usefulness, semantic,
+  and maintenance rule.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

@@ -1346,3 +1346,31 @@ tasks.
 This is a checker-totality repair, not evidence that the failed iteration-020
 parity result changed. Do not rerun that same corpus as an optimization target.
 The next measurement must use a newly frozen broad corpus or model split.
+
+## Pre-registration for 021 — New twelve-task broad corpus
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.154 at
+  `574709bc0e3eeb78326937b67513c667b992d98b`
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Task manifest: `benchmarks/agent_tasks_broad_021.json`
+- Task manifest SHA-256:
+  `45f6387fbe8fef2e3c59b59781b967b81302494b6f09533df81bead27f20f781`
+- Protocol: `benchmarks/bundle_protocol_021.json`
+- Matrix: 12 new tasks × 3 languages × 6 complete-bundle replicates = 18
+  fresh sessions and 216 hidden-judged task assignments
+- Seed: `20260807`
+
+The corpus has zero task overlap with every earlier seed, pilot,
+arithmetic-vocabulary, and broad workload. It spans sets/order, two distinct
+stack problems, flat matrix indexing, two map workflows, search, ASCII text
+transformation, polynomial evaluation, calendar rules, and numeric distance.
+Each language receives the same task statements, public cases, withheld cases,
+session structure, and six order permutations.
+
+The unchanged four-condition gate requires Parley to match the better baseline
+on hidden correctness, median tokens/task, median seconds/task, and first-check
+success. Report and preserve every failure. No syntax may be added from one
+transcript. Cross-task recurrence is only an eligibility signal; any change
+must also be generally useful, semantically consistent, and maintainable. The
+single instruction-compression experiment remains closed.

@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "description": "Frozen out-of-sample corpus for iteration 021. None of these twelve tasks appears in the seed, pilot, arithmetic-vocabulary, or iterations 016–020 broad workload.",
+  "predeclared_analysis": {
+    "role": "Primary broad-corpus comparison after the v0.3.154 checker-totality correction; not a transcript-tuning target.",
+    "matrix": "12 tasks x 3 languages x 6 complete-bundle replicates = 18 fresh sessions and 216 judged task assignments",
+    "seed": 20260807,
+    "primary_outcomes": [
+      "hidden task success rate",
+      "first public-check task success rate",
+      "median reported tokens per assigned task",
+      "median elapsed seconds per assigned task",
+      "repair turns and protocol compliance"
+    ],
+    "reporting": "Preserve every session, source, attempt, hidden judgment, token count, elapsed time, and failure signature.",
+    "change_rule": "Do not add syntax or compiler behavior from one task or transcript. A proposal requires recurrence across unrelated task families plus independent general usefulness, semantic consistency, and maintainability. Checker-totality defects may be fixed as correctness bugs without a token-benefit claim.",
+    "instruction_rule": "Use the proven 1,519-character Parley skill byte-for-byte. The one allowed instruction-compression experiment is closed."
+  },
+  "tasks": [
+    {
+      "id": "sorted_unique_numbers",
+      "title": "Sorted unique numbers",
+      "category": "set and ordering",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N signed whole numbers, one per line. Print each distinct value once in increasing numeric order, joined by commas with no spaces. If N is zero, print one empty line.",
+      "public_cases": [
+        {"stdin": "8\n4\n-1\n4\n2\n-1\n0\n2\n9\n", "stdout": "-1,0,2,4,9\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\n-7\n", "stdout": "-7\n"},
+        {"stdin": "7\n3\n3\n2\n1\n2\n1\n3\n", "stdout": "1,2,3\n"},
+        {"stdin": "6\n-10\n5\n0\n-10\n5\n4\n", "stdout": "-10,0,4,5\n"}
+      ]
+    },
+    {
+      "id": "balanced_brackets",
+      "title": "Balanced brackets",
+      "category": "stack processing",
+      "statement": "Read one input line containing only the six ASCII bracket characters `()[]{}`; the line may be empty. Print `yes` exactly when every opening bracket is closed by the matching type in correct nesting order. Otherwise print `no`.",
+      "public_cases": [
+        {"stdin": "{[()()]}\n", "stdout": "yes\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "\n", "stdout": "yes\n"},
+        {"stdin": "([)]\n", "stdout": "no\n"},
+        {"stdin": "(()\n", "stdout": "no\n"},
+        {"stdin": "[]{}()\n", "stdout": "yes\n"},
+        {"stdin": "}{\n", "stdout": "no\n"}
+      ]
+    },
+    {
+      "id": "matrix_diagonal_difference",
+      "title": "Matrix diagonal difference",
+      "category": "matrix indexing",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N times N signed whole numbers, one per line, in row-major order. Print the absolute difference between the sum of the main diagonal and the sum of the opposite diagonal. If N is zero, print `0`.",
+      "public_cases": [
+        {"stdin": "3\n11\n2\n4\n4\n5\n6\n10\n8\n-12\n", "stdout": "15\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "0\n"},
+        {"stdin": "1\n-7\n", "stdout": "0\n"},
+        {"stdin": "2\n1\n2\n3\n4\n", "stdout": "0\n"},
+        {"stdin": "4\n1\n2\n3\n9\n4\n5\n6\n8\n7\n8\n9\n7\n10\n11\n12\n6\n", "stdout": "12\n"}
+      ]
+    },
+    {
+      "id": "word_frequency_table",
+      "title": "Word frequency table",
+      "category": "map aggregation",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N nonempty lowercase ASCII words, one per line. Count each word and print all distinct words in alphabetical order as `word:count`, joined by commas with no spaces. If N is zero, print one empty line.",
+      "public_cases": [
+        {"stdin": "8\npear\napple\npear\nbanana\napple\npear\nkiwi\nbanana\n", "stdout": "apple:2,banana:2,kiwi:1,pear:3\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\nsolo\n", "stdout": "solo:1\n"},
+        {"stdin": "6\nz\na\nz\nb\na\na\n", "stdout": "a:3,b:1,z:2\n"},
+        {"stdin": "5\nred\nblue\ngreen\nblue\nred\n", "stdout": "blue:2,green:1,red:2\n"}
+      ]
+    },
+    {
+      "id": "postfix_evaluation",
+      "title": "Postfix expression evaluation",
+      "category": "stack arithmetic",
+      "statement": "Read a positive integer N from the first input line, then read exactly N tokens, one per line. Each token is either a signed whole number or one of `+`, `-`, `*`. The tokens form a valid postfix expression. Evaluate it using whole-number arithmetic and print the result. For subtraction, the second-from-top value is the left operand.",
+      "public_cases": [
+        {"stdin": "7\n3\n4\n+\n2\n*\n7\n-\n", "stdout": "7\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "1\n-5\n", "stdout": "-5\n"},
+        {"stdin": "5\n10\n2\n3\n*\n+\n", "stdout": "16\n"},
+        {"stdin": "7\n8\n3\n-\n2\n5\n+\n*\n", "stdout": "35\n"},
+        {"stdin": "9\n5\n1\n2\n+\n4\n*\n+\n3\n-\n", "stdout": "14\n"}
+      ]
+    },
+    {
+      "id": "binary_search_queries",
+      "title": "Sorted-list search queries",
+      "category": "search",
+      "statement": "Read a non-negative integer N, then N distinct signed whole numbers in strictly increasing order, one per line. Next read a non-negative integer Q and then Q query numbers, one per line. For each query print its 1-based position in the sorted values, or `0` if absent. Print the Q answers on one line joined by commas. If Q is zero, print one empty line.",
+      "public_cases": [
+        {"stdin": "5\n2\n5\n9\n12\n20\n6\n9\n2\n20\n7\n12\n-1\n", "stdout": "3,1,5,0,4,0\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n3\n1\n0\n-2\n", "stdout": "0,0,0\n"},
+        {"stdin": "1\n-4\n3\n-4\n0\n-5\n", "stdout": "1,0,0\n"},
+        {"stdin": "4\n-10\n-2\n3\n11\n0\n", "stdout": "\n"},
+        {"stdin": "6\n1\n4\n8\n15\n16\n23\n5\n23\n1\n9\n15\n16\n", "stdout": "6,1,0,4,5\n"}
+      ]
+    },
+    {
+      "id": "caesar_shift",
+      "title": "Caesar letter shift",
+      "category": "text transformation",
+      "statement": "Read an integer K from the first input line, where K is from 0 through 25. Read one lowercase ASCII text line next; it may be empty. Replace every letter with the letter K positions later in the alphabet, wrapping after `z`, and print the result.",
+      "public_cases": [
+        {"stdin": "3\nzebra\n", "stdout": "cheud\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\nhello\n", "stdout": "hello\n"},
+        {"stdin": "25\nabc\n", "stdout": "zab\n"},
+        {"stdin": "1\nxyz\n", "stdout": "yza\n"},
+        {"stdin": "7\n\n", "stdout": "\n"},
+        {"stdin": "13\nparley\n", "stdout": "cneyrl\n"}
+      ]
+    },
+    {
+      "id": "sparse_dot_product",
+      "title": "Sparse vector dot product",
+      "category": "map arithmetic",
+      "statement": "Read a non-negative integer N, then N lines describing the first sparse vector. Each line is `index value`, where index is a non-negative whole number, value is a signed whole number, and indexes are unique within a vector. Then read M and M lines for the second vector in the same format. Print the dot product: sum the products at indexes present in both vectors.",
+      "public_cases": [
+        {"stdin": "3\n1 4\n3 -2\n8 5\n4\n2 7\n3 6\n8 -1\n10 9\n", "stdout": "-17\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n0\n", "stdout": "0\n"},
+        {"stdin": "1\n5 9\n1\n5 -3\n", "stdout": "-27\n"},
+        {"stdin": "2\n1 4\n2 7\n2\n3 9\n4 2\n", "stdout": "0\n"},
+        {"stdin": "4\n0 2\n2 -3\n4 5\n9 1\n3\n0 7\n4 -2\n9 8\n", "stdout": "12\n"}
+      ]
+    },
+    {
+      "id": "polynomial_value",
+      "title": "Polynomial value",
+      "category": "numeric evaluation",
+      "statement": "Read a non-negative degree D from the first input line. Then read exactly D plus 1 signed whole-number coefficients, one per line, from the highest-degree coefficient through the constant coefficient. Finally read a signed whole number X. Evaluate the polynomial at X using whole-number arithmetic and print the result.",
+      "public_cases": [
+        {"stdin": "3\n2\n-6\n2\n-1\n3\n", "stdout": "5\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n7\n100\n", "stdout": "7\n"},
+        {"stdin": "2\n1\n0\n-4\n-3\n", "stdout": "5\n"},
+        {"stdin": "4\n1\n1\n1\n1\n1\n2\n", "stdout": "31\n"},
+        {"stdin": "1\n-5\n8\n6\n", "stdout": "-22\n"}
+      ]
+    },
+    {
+      "id": "inventory_ledger",
+      "title": "Inventory ledger",
+      "category": "stateful aggregation",
+      "statement": "Read a non-negative integer N from the first input line, then read exactly N event lines. Each event is `name delta`, where name is a nonempty lowercase ASCII word and delta is a signed whole number. Start every name at zero and add its deltas. Print every name that appeared, in alphabetical order, as `name:balance`, joined by commas with no spaces. Include zero and negative balances. If N is zero, print one empty line.",
+      "public_cases": [
+        {"stdin": "7\npear 4\napple 3\npear -1\nbanana 5\napple -3\nbanana 2\npear -3\n", "stdout": "apple:0,banana:7,pear:0\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "\n"},
+        {"stdin": "1\nbolt -5\n", "stdout": "bolt:-5\n"},
+        {"stdin": "5\nzinc 2\nalloy 4\nzinc 3\ncopper -1\nalloy 6\n", "stdout": "alloy:10,copper:-1,zinc:5\n"},
+        {"stdin": "4\na 1\nb 2\na -4\nb -2\n", "stdout": "a:-3,b:0\n"}
+      ]
+    },
+    {
+      "id": "gregorian_date_validity",
+      "title": "Gregorian date validity",
+      "category": "rule evaluation",
+      "statement": "Read a positive whole-number year, then a whole-number month, then a whole-number day, one per input line. Print `yes` if they form a valid Gregorian calendar date and `no` otherwise. A leap year is divisible by 400, or divisible by 4 but not by 100. Months outside 1 through 12 are invalid.",
+      "public_cases": [
+        {"stdin": "2024\n2\n29\n", "stdout": "yes\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "1900\n2\n29\n", "stdout": "no\n"},
+        {"stdin": "2000\n2\n29\n", "stdout": "yes\n"},
+        {"stdin": "2023\n4\n31\n", "stdout": "no\n"},
+        {"stdin": "2023\n1\n31\n", "stdout": "yes\n"},
+        {"stdin": "2025\n13\n1\n", "stdout": "no\n"}
+      ]
+    },
+    {
+      "id": "nearest_pair_gap",
+      "title": "Nearest pair gap",
+      "category": "ordering and distance",
+      "statement": "Read an integer N from the first input line, where N is at least 2. Then read exactly N signed whole numbers, one per line. Print the smallest absolute difference between any two distinct input positions. Equal values are allowed and therefore may produce `0`.",
+      "public_cases": [
+        {"stdin": "6\n8\n-3\n14\n2\n9\n20\n", "stdout": "1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin": "2\n-5\n7\n", "stdout": "12\n"},
+        {"stdin": "5\n4\n4\n10\n-2\n8\n", "stdout": "0\n"},
+        {"stdin": "4\n-10\n-3\n5\n20\n", "stdout": "7\n"},
+        {"stdin": "7\n100\n90\n70\n71\n-1\n0\n30\n", "stdout": "1\n"}
+      ]
+    }
+  ]
+}

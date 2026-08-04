@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment_id": "021",
+  "title": "New twelve-task broad-corpus comparison",
+  "description": "Six complete-bundle replicates on twelve tasks never used in the prior seed, pilot, arithmetic-vocabulary, or broad workload, after the general v0.3.154 checker-totality correction.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_broad_021.json",
+    "task_manifest_sha256": "45f6387fbe8fef2e3c59b59781b967b81302494b6f09533df81bead27f20f781",
+    "parley_version": "parley 0.3.154",
+    "compiler_commit": "574709bc0e3eeb78326937b67513c667b992d98b",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [12],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260807,
+    "timeout_seconds": 1200,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_task_solutions": 216,
+    "sessions_per_language": 6,
+    "task_solutions_per_language": 72,
+    "hidden_cases_per_language": 306,
+    "derivation": "6 complete twelve-task bundles x 3 languages"
+  },
+  "corpus_boundary": {
+    "prior_task_overlap": 0,
+    "families": [
+      "set and ordering",
+      "stack processing",
+      "matrix indexing",
+      "map aggregation",
+      "stack arithmetic",
+      "search",
+      "text transformation",
+      "map arithmetic",
+      "numeric evaluation",
+      "stateful aggregation",
+      "rule evaluation",
+      "ordering and distance"
+    ],
+    "purpose": "Estimate broad agent reliability and effort without reusing the eight tasks that informed iterations 016–020."
+  },
+  "primary_gate": {
+    "scale": 12,
+    "correctness": "Parley hidden-task success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned task must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned task must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check task success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict broad-corpus parity."
+  },
+  "secondary_analysis": [
+    "Report every session and all 216 task outcomes, including failures and outliers.",
+    "Report medians, ranges, repair-free sensitivity, first-check task and bundle rates, repairs, prompt size, protocol compliance, and hidden correctness.",
+    "Classify every Parley first-check and hidden failure before considering any language change.",
+    "Separate parser/checker/backend defects, algorithm errors, unfamiliar existing features, and unsupported phrasings.",
+    "Compare with iteration 020 descriptively only because both the corpus and sessions are new."
+  ],
+  "feature_boundary": "The compiler is frozen at v0.3.154. The only change after iteration 020 is selective mutable Rust emission for loop variables the checker already permitted agents to change; there is no new syntax, checker rule, runtime operation, or instruction text.",
+  "change_rule": "Do not add syntax or compiler behavior from one task, transcript, or token gap. Any proposal requires recurrence across unrelated tasks plus independent general usefulness, semantic consistency, and maintainability. Checker-totality defects remain correctness bugs and may be fixed without claiming a benchmark improvement.",
+  "instruction_rule": "The proven 1,519-character Parley skill is injected once per session and remains byte-for-byte unchanged. No further instruction-compression experiment is permitted.",
+  "stop_rule": "Preserve the complete result even if parity fails. Do not tune against these twelve tasks after observing output; the next comparison must use another independently frozen corpus or model split unless a separately justified correctness fix requires exact regression replay."
+}
