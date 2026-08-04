@@ -251,9 +251,11 @@ from pathlib import Path
 config = json.loads(Path(".benchmark_public.json").read_text())
 for task in config["tasks"]:
     repo = Path(task.get("repo", "."))
-    for filename in task.get("editable_files", []):
+    read_only = set(task.get("read_only_files", []))
+    for filename in task.get("visible_files", task.get("editable_files", [])):
         path = repo / filename
-        print(f"===== {task['id']}/{filename} =====")
+        marker = " [read-only]" if filename in read_only else ""
+        print(f"===== {task['id']}/{filename}{marker} =====")
         text = path.read_text(encoding="utf-8")
         print(text, end="" if text.endswith("\n") else "\n")
 '''
@@ -269,11 +271,15 @@ def write_bundle_workspace(
     repository_mode = any(task.get("seed_files") is not None for task in tasks)
     for task in tasks:
         if task.get("seed_files") is not None:
+            editable_files = sorted(task["seed_files"][language])
+            read_only_files = sorted(task.get("context_files", {}).get(language, {}))
             task_configs.append({
                 "id": task["id"],
                 "repo": task["id"],
                 "source": task["entrypoints"][language],
-                "editable_files": sorted(task["seed_files"][language]),
+                "editable_files": editable_files,
+                "read_only_files": read_only_files,
+                "visible_files": sorted([*editable_files, *read_only_files]),
                 "public_cases": task["public_cases"],
             })
         else:
@@ -311,16 +317,26 @@ def write_bundle_workspace(
                 path = repo / filename
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(content, encoding="utf-8")
+            for filename, content in task.get("context_files", {}).get(language, {}).items():
+                path = repo / filename
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
             continue
         seed_sources = task.get("seed_sources")
         if seed_sources is not None:
             (workdir / bundle_source_name(task["id"], language)).write_text(
                 seed_sources[language], encoding="utf-8"
             )
-    return {
+    integrity = {
         name: hashlib.sha256(content.encode()).hexdigest()
         for name, content in files.items()
     }
+    for task in tasks:
+        for filename, content in task.get("context_files", {}).get(language, {}).items():
+            integrity[f"{task['id']}/{filename}"] = hashlib.sha256(
+                content.encode()
+            ).hexdigest()
+    return integrity
 
 
 def render_bundle_prompt(
@@ -331,18 +347,36 @@ def render_bundle_prompt(
     label = {"parley": "Parley", "python": "Python", "rust": "Rust"}[language]
     filenames = [bundle_source_name(task["id"], language) for task in tasks]
     repository_tasks = [task for task in tasks if task.get("seed_files") is not None]
+    has_repository_context = any(task.get("context_files") for task in repository_tasks)
     formatted_names = ", ".join(f"`{name}`" for name in filenames)
     seeded = [task for task in tasks if task.get("seed_sources") is not None]
     unseeded = [task for task in tasks if task.get("seed_sources") is None]
+    inspection_rule = (
+        "For repository tasks, inspect editable code only through `./sources`; "
+        "for inline seeded tasks, the exact starting source is reproduced below."
+    )
+    context_rules: list[str] = []
     if repository_tasks and len(repository_tasks) == len(tasks):
         work_summary = (
             f"Maintain {len(tasks)} independent {label} repositories: "
             + ", ".join(f"`{task['id']}/`" for task in tasks) + "."
         )
-        first_action = (
-            "Your first shell action must be exactly `./sources`; it prints every editable source file. "
-            "Do not perform other reconnaissance."
-        )
+        if has_repository_context:
+            first_action = (
+                "Your first shell action must be exactly `./sources`; it prints editable source and declared read-only project context. "
+                "Do not perform other reconnaissance."
+            )
+            inspection_rule = (
+                "Inspect editable code and declared project context only through `./sources`."
+            )
+            context_rules = [
+                "Files marked `[read-only]` are integrity-checked project evidence; do not modify them."
+            ]
+        else:
+            first_action = (
+                "Your first shell action must be exactly `./sources`; it prints every editable source file. "
+                "Do not perform other reconnaissance."
+            )
         unit_rule = "Each repository is independent and must solve only its named task."
         shell_rule = (
             "The only shell commands permitted are exactly `./sources` once and `./check`."
@@ -389,10 +423,8 @@ def render_bundle_prompt(
         unit_rule,
         "Work only inside the current directory. All information needed is in this prompt.",
         "Do not list, read, or inspect any existing workspace file, including checker/config files.",
-        (
-            "For repository tasks, inspect editable code only through `./sources`; "
-            "for inline seeded tasks, the exact starting source is reproduced below."
-        ),
+        inspection_rule,
+        *context_rules,
         "Do not use the internet or modify checker/config files.",
         first_action,
         shell_rule,
@@ -417,18 +449,19 @@ def render_bundle_prompt(
             task["statement"],
             "",
         ])
-        for case_index, case in enumerate(task["public_cases"], 1):
-            lines.extend([
-                f"Public example {case_index} input:",
-                "```text",
-                case["stdin"].rstrip("\n"),
-                "```",
-                f"Public example {case_index} output:",
-                "```text",
-                case["stdout"].rstrip("\n"),
-                "```",
-                "",
-            ])
+        if task.get("show_public_examples", True):
+            for case_index, case in enumerate(task["public_cases"], 1):
+                lines.extend([
+                    f"Public example {case_index} input:",
+                    "```text",
+                    case["stdin"].rstrip("\n"),
+                    "```",
+                    f"Public example {case_index} output:",
+                    "```text",
+                    case["stdout"].rstrip("\n"),
+                    "```",
+                    "",
+                ])
         if task.get("seed_sources") is not None:
             lines.extend([
                 "Starting source (already present in the target file):",
@@ -562,12 +595,14 @@ def run_bundle_cell(
             repo = workdir / task_id
             source = repo / task["entrypoints"][language]
             seed_files = task["seed_files"][language]
+            declared_context_files = task.get("context_files", {}).get(language, {})
             source_files = {
                 filename: (repo / filename).read_text(encoding="utf-8")
                 if (repo / filename).is_file() else ""
                 for filename in sorted(seed_files)
             }
             seed_source_files = dict(sorted(seed_files.items()))
+            context_source_files = dict(sorted(declared_context_files.items()))
         else:
             source = workdir / bundle_source_name(task_id, language)
             source_files = {
@@ -578,8 +613,10 @@ def run_bundle_cell(
             seed_source_files = {
                 bundle_source_name(task_id, language): seed_text
             } if seed_text else {}
+            context_source_files = {}
         source_text = "\n".join(source_files.values())
         seed_source_text = "\n".join(seed_source_files.values())
+        context_source_text = "\n".join(context_source_files.values())
         source_texts[task_id] = source_text
         seed_source_texts[task_id] = seed_source_text
         hidden = (
@@ -604,6 +641,13 @@ def run_bundle_cell(
             "seed_source_chars": len(seed_source_text),
             "seed_source_lines": len(seed_source_text.splitlines()),
             "seed_source_rough_tokens": len(ROUGH_TOKEN_RE.findall(seed_source_text)),
+            "context_source_files": context_source_files,
+            "context_source_text": context_source_text,
+            "context_source_chars": len(context_source_text),
+            "context_source_lines": len(context_source_text.splitlines()),
+            "context_source_rough_tokens": len(
+                ROUGH_TOKEN_RE.findall(context_source_text)
+            ),
             "source_edit_rough_tokens": sum(
                 rough_token_edit_count(
                     seed_source_files.get(filename, ""), source_files.get(filename, "")
@@ -633,6 +677,15 @@ def run_bundle_cell(
     )
     seed_source_rough_tokens = sum(
         result["seed_source_rough_tokens"] for result in task_results.values()
+    )
+    context_source_chars = sum(
+        result["context_source_chars"] for result in task_results.values()
+    )
+    context_source_lines = sum(
+        result["context_source_lines"] for result in task_results.values()
+    )
+    context_source_rough_tokens = sum(
+        result["context_source_rough_tokens"] for result in task_results.values()
     )
     source_edit_rough_tokens = sum(
         result["source_edit_rough_tokens"] for result in task_results.values()
@@ -686,6 +739,14 @@ def run_bundle_cell(
         "seed_source_rough_tokens": seed_source_rough_tokens,
         "seed_source_rough_tokens_per_task": round(
             seed_source_rough_tokens / task_count, 6
+        ),
+        "context_source_chars": context_source_chars,
+        "context_source_lines": context_source_lines,
+        "context_source_rough_tokens": context_source_rough_tokens,
+        "context_source_chars_per_task": round(context_source_chars / task_count, 6),
+        "context_source_lines_per_task": round(context_source_lines / task_count, 6),
+        "context_source_rough_tokens_per_task": round(
+            context_source_rough_tokens / task_count, 6
         ),
         "source_edit_rough_tokens": source_edit_rough_tokens,
         "source_edit_rough_tokens_per_task": round(

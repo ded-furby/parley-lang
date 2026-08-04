@@ -774,6 +774,109 @@ def test_repository_bundle_prints_sources_and_compiles_python(tmp_path):
     assert "sources" in integrity and "print_sources.py" in integrity
 
 
+def test_repository_context_files_are_visible_read_only_and_integrity_hashed(tmp_path):
+    task = {
+        "id": "context_repo",
+        "title": "Context repository",
+        "statement": "Repair the implementation from the issue and regression evidence.",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "old"\n'},
+            "python": {"main.py": "print(input())\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "context_files": {
+            "parley": {"tests/regression.txt": "input: old\nexpected: new\n"},
+            "python": {"tests/regression.txt": "input: old\nexpected: new\n"},
+            "rust": {"tests/regression.txt": "input: old\nexpected: new\n"},
+        },
+        "public_cases": [{"stdin": "alpha\n", "stdout": "alpha\n"}],
+        "hidden_cases": [{"stdin": "beta\n", "stdout": "beta\n"}],
+    }
+
+    integrity = write_bundle_workspace(tmp_path, [task], "python", "unused")
+    sources = subprocess.run(
+        [str(tmp_path / "sources")], cwd=tmp_path, capture_output=True, text=True, timeout=30
+    )
+    config = json.loads((tmp_path / ".benchmark_public.json").read_text())
+    prompt = render_bundle_prompt([task], "python", "unused")
+
+    assert sources.returncode == 0
+    assert "===== context_repo/main.py =====" in sources.stdout
+    assert "===== context_repo/tests/regression.txt [read-only] =====" in sources.stdout
+    assert config["tasks"][0]["editable_files"] == ["main.py"]
+    assert config["tasks"][0]["read_only_files"] == ["tests/regression.txt"]
+    assert config["tasks"][0]["visible_files"] == ["main.py", "tests/regression.txt"]
+    assert "declared read-only project context" in prompt
+    assert "Files marked `[read-only]`" in prompt
+    context_path = tmp_path / "context_repo" / "tests" / "regression.txt"
+    assert "context_repo/tests/regression.txt" in integrity
+    assert hashlib.sha256(context_path.read_bytes()).hexdigest() == integrity[
+        "context_repo/tests/regression.txt"
+    ]
+    context_path.write_text("tampered\n")
+    assert hashlib.sha256(context_path.read_bytes()).hexdigest() != integrity[
+        "context_repo/tests/regression.txt"
+    ]
+
+
+def test_repository_without_context_preserves_source_output_and_prompt_contract(tmp_path):
+    task = {
+        "id": "plain_repo",
+        "title": "Plain repository",
+        "statement": "Echo input.",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "x"\n'},
+            "python": {"main.py": "print(input())\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "public_cases": [{"stdin": "a\n", "stdout": "a\n"}],
+        "hidden_cases": [{"stdin": "b\n", "stdout": "b\n"}],
+    }
+
+    write_bundle_workspace(tmp_path, [task], "python", "unused")
+    sources = subprocess.run(
+        [str(tmp_path / "sources")], cwd=tmp_path, capture_output=True, text=True, timeout=30
+    )
+    prompt = render_bundle_prompt([task], "python", "unused")
+
+    assert "===== plain_repo/main.py =====" in sources.stdout
+    assert "[editable]" not in sources.stdout
+    assert "[read-only]" not in sources.stdout
+    assert "it prints every editable source file" in prompt
+    assert "Files marked `[read-only]`" not in prompt
+
+
+def test_repository_prompt_can_defer_examples_to_read_only_project_evidence():
+    task = {
+        "id": "diagnostic_repo",
+        "title": "Diagnostic repository",
+        "statement": "Fix the regression described by the project evidence.",
+        "show_public_examples": False,
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "broken"\n'},
+            "python": {"main.py": "print('broken')\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "context_files": {
+            "parley": {"ISSUE.md": "Expected fixed output.\n"},
+            "python": {"ISSUE.md": "Expected fixed output.\n"},
+            "rust": {"ISSUE.md": "Expected fixed output.\n"},
+        },
+        "public_cases": [{"stdin": "secret-public-input\n", "stdout": "fixed\n"}],
+        "hidden_cases": [{"stdin": "hidden\n", "stdout": "fixed\n"}],
+    }
+
+    prompt = render_bundle_prompt([task], "python", "unused")
+
+    assert "secret-public-input" not in prompt
+    assert "Public example" not in prompt
+    assert "Fix the regression described by the project evidence." in prompt
+    assert "declared read-only project context" in prompt
+
+
 def test_repository_prompt_and_command_protocol_are_controlled():
     task = {
         "id": "echo_repo",
@@ -1321,6 +1424,47 @@ def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
     manifest.write_text(json.dumps({"schema_version": 1, "tasks": [task]}))
 
     with pytest.raises(ValueError, match="unsafe repository source path"):
+        load_tasks(manifest)
+
+
+@pytest.mark.parametrize(
+    ("context_files", "message"),
+    [
+        (
+            {
+                "parley": {"main.par": "conflict\n"},
+                "python": {"main.py": "conflict\n"},
+                "rust": {"main.rs": "conflict\n"},
+            },
+            "context files overlap editable files",
+        ),
+        (
+            {
+                "parley": {"../escape.txt": "no\n"},
+                "python": {"../escape.txt": "no\n"},
+                "rust": {"../escape.txt": "no\n"},
+            },
+            "unsafe repository context path",
+        ),
+    ],
+)
+def test_repository_manifest_rejects_unsafe_context_files(tmp_path, context_files, message):
+    manifest = tmp_path / "tasks.json"
+    task = {
+        "id": "unsafe_context_repo",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "x"\n'},
+            "python": {"main.py": "print('x')\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "context_files": context_files,
+        "public_cases": [{"stdin": "", "stdout": ""}],
+        "hidden_cases": [{"stdin": "", "stdout": ""}],
+    }
+    manifest.write_text(json.dumps({"schema_version": 1, "tasks": [task]}))
+
+    with pytest.raises(ValueError, match=message):
         load_tasks(manifest)
 
 

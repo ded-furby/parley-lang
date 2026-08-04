@@ -88,8 +88,14 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
         seen.add(task_id)
         seed_sources = task.get("seed_sources")
         seed_files = task.get("seed_files")
+        context_files = task.get("context_files")
         if seed_sources is not None and seed_files is not None:
             raise ValueError(f"{task_id}: use seed_sources or seed_files, not both")
+        if context_files is not None and seed_files is None:
+            raise ValueError(f"{task_id}: context_files require repository seed_files")
+        show_public_examples = task.get("show_public_examples", True)
+        if not isinstance(show_public_examples, bool):
+            raise ValueError(f"{task_id}: show_public_examples must be yes/no")
         if seed_sources is not None:
             if not isinstance(seed_sources, dict) or set(seed_sources) != set(LANGUAGES):
                 raise ValueError(
@@ -139,6 +145,42 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
                     raise ValueError(
                         f"{task_id}: {language} entrypoint must name a seeded file"
                     )
+            if context_files is not None:
+                if not isinstance(context_files, dict) or set(context_files) != set(LANGUAGES):
+                    raise ValueError(
+                        f"{task_id}: context_files must contain exactly {list(LANGUAGES)}"
+                    )
+                for language in LANGUAGES:
+                    files = context_files[language]
+                    if not isinstance(files, dict) or not files:
+                        raise ValueError(
+                            f"{task_id}: {language} context_files must be non-empty"
+                        )
+                    overlap = set(files) & set(seed_files[language])
+                    if overlap:
+                        raise ValueError(
+                            f"{task_id}: context files overlap editable files: {sorted(overlap)}"
+                        )
+                    for filename, context_text in files.items():
+                        if not isinstance(filename, str) or not isinstance(context_text, str):
+                            raise ValueError(
+                                f"{task_id}: context paths and contents must be strings"
+                            )
+                        candidate = PurePosixPath(filename)
+                        if (
+                            not filename
+                            or candidate.is_absolute()
+                            or ".." in candidate.parts
+                            or any(part in {"", "."} for part in candidate.parts)
+                            or any(part.startswith(".") for part in candidate.parts)
+                        ):
+                            raise ValueError(
+                                f"{task_id}: unsafe repository context path: {filename!r}"
+                            )
+                        if not context_text.strip():
+                            raise ValueError(
+                                f"{task_id}: repository context {filename!r} must be non-empty"
+                            )
         for case_group in ("public_cases", "hidden_cases"):
             cases = task.get(case_group)
             if not isinstance(cases, list) or not cases:

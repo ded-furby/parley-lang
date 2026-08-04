@@ -801,6 +801,15 @@ Update it whenever you finish or start a work item.
   and report 027. Stop scaling the synthetic bundle further; next use real
   repository maintenance episodes, or confirm size-eight only for the narrower
   Rust-parity claim.
+- **Read-only repository evidence harness (iteration 028 preflight):** the
+  bundle harness now supports safe per-language `context_files`, printed by
+  `./sources` with `[read-only]` labels and included in integrity hashes.
+  Context cannot overlap editable files; its characters/lines/rough tokens are
+  recorded separately. Tasks may hide prompt-level public examples so agents
+  diagnose from visible issue/test evidence while protected cases remain
+  frozen. Tasks without context preserve prior prompt and source-output wording.
+  Full suite passes 338/338. This is language-neutral harness work only; commit
+  it before building the 028 project-style regression corpus.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

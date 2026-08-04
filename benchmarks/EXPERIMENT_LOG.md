@@ -2255,3 +2255,35 @@ study should use independently sourced real repository maintenance episodes
 with test changes and dependency navigation. A larger size-eight confirmation
 is justified only if the narrower Rust-parity claim, rather than strict
 Python-and-Rust parity, becomes the decision target.
+
+## Harness preflight for 028 — Read-only repository evidence
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Complete compatibility suite: 338/338 passed in 148.68 seconds
+
+Iteration 027 shows that larger explicit rewrite bundles are not a defensible
+route to token parity. Iteration 028 therefore changes the task shape, not the
+language: agents will diagnose project-style regressions from visible issue and
+test evidence rather than receiving every public input/output pair inline.
+
+The language-neutral harness now accepts per-language `context_files` only for
+repository tasks. `./sources` prints editable files with the historical format
+and labels declared context as `[read-only]`. Context paths use the same safe
+relative-path rules as seeded code, cannot overlap editable files, are written
+inside the task repository, and join checker/source-printer/config files in the
+integrity hash set. The result record measures context characters, lines, and
+rough tokens separately from seed/final/edit source metrics.
+
+Tasks may set `show_public_examples` to false. Their public and hidden cases
+remain frozen in the protected checker, but the prompt supplies only the issue
+statement and directs the agent to inspect declared read-only repository
+evidence. The default remains true, and tasks without context preserve the
+prior source dump and repository prompt wording. Targeted tests cover visible
+context ordering/labels, editability lists, integrity tampering, prompt
+behavior, unsafe/overlapping paths, and backward compatibility.
+
+No compiler, syntax, grammar, AST, checker, runtime, diagnostic, Parley skill,
+or instruction-compression change is included. Commit and push this harness
+checkpoint before authoring and freezing the 028 diagnostic corpus.
