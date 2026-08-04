@@ -1,0 +1,363 @@
+{
+  "schema_version": 1,
+  "description": "Four deeper five-module regressions with equal read-only evidence and explicit root-cause auditing.",
+  "predeclared_analysis": {
+    "experiment_id": "031",
+    "scope": "Independent project episodes adapted from primary issue reports; each has five editable modules and three visibly read-only evidence files per language.",
+    "primary_question": "When dependency navigation and state reconstruction dominate fixed prompt cost, does Parley match or beat both Python and Rust without language or instruction tuning?",
+    "historical_sources": [
+      {
+        "task": "redirect_credential_scope_project",
+        "url": "https://github.com/open-policy-agent/opa/issues/3093",
+        "mechanism": "redirected Proxy-Authorization escaping its hop boundary"
+      },
+      {
+        "task": "empty_collection_config_project",
+        "url": "https://github.com/dotnet/extensions/issues/5858",
+        "mechanism": "empty array collapsed into null/missing configuration state"
+      },
+      {
+        "task": "forwarded_origin_project",
+        "url": "https://github.com/oauth2-proxy/oauth2-proxy/issues/724",
+        "mechanism": "external OAuth redirect origin lost behind a forwarded host"
+      },
+      {
+        "task": "terminal_liveness_project",
+        "url": "https://github.com/openai/codex/issues/12321",
+        "mechanism": "persisted running terminals remain stale after process death"
+      }
+    ],
+    "adaptation_rule": "Mechanisms and dependency shapes are adapted independently; no upstream source code, tests, names, or fixtures are copied.",
+    "root_cause_files": {
+      "redirect_credential_scope_project": {
+        "parley": "credentials.par",
+        "python": "credentials.py",
+        "rust": "credentials.rs"
+      },
+      "empty_collection_config_project": {
+        "parley": "classification.par",
+        "python": "classification.py",
+        "rust": "classification.rs"
+      },
+      "forwarded_origin_project": {
+        "parley": "origin.par",
+        "python": "origin.py",
+        "rust": "origin.rs"
+      },
+      "terminal_liveness_project": {
+        "parley": "liveness.par",
+        "python": "liveness.py",
+        "rust": "liveness.rs"
+      }
+    },
+    "root_cause_gate": "Every Parley assignment must change exactly its predeclared seeded defect file; caller or formatter compensation fails maintainability even if hidden output passes.",
+    "change_rule": "No language change follows one project or efficiency delta. Eligibility requires a semantic failure recurring across independent projects, followed by general usefulness, semantic consistency, maintainability, and full regression coverage.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "tasks": [
+    {
+      "id": "redirect_credential_scope_project",
+      "title": "Repair redirect credential-scope regression",
+      "category": "security policy across redirect layers",
+      "statement": "Fix the redirect credential regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nhttp|api.local|80|https|api.local|443|bearer|proxy\nhttps|api.local|443|http|api.local|80|bearer|none\nhttps|api.local|443|https|cdn.local|443|bearer|proxy\n",
+          "stdout": "target=https://api.local:443|authorization=keep|proxy=strip\ntarget=http://api.local:80|authorization=strip|proxy=absent\ntarget=https://cdn.local:443|authorization=strip|proxy=strip\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nhttps|svc.local|443|https|svc.local|443|bearer|none\n",
+          "stdout": "target=https://svc.local:443|authorization=keep|proxy=absent\n"
+        },
+        {
+          "stdin": "1\nhttp|svc.local|8080|http|svc.local|9090|bearer|proxy\n",
+          "stdout": "target=http://svc.local:9090|authorization=keep|proxy=strip\n"
+        },
+        {
+          "stdin": "1\nhttp|one.local|80|https|two.local|443|bearer|none\n",
+          "stdout": "target=https://two.local:443|authorization=strip|proxy=absent\n"
+        },
+        {
+          "stdin": "1\nhttp|one.local|80|https|two.local|80|none|proxy\n",
+          "stdout": "target=https://two.local:80|authorization=absent|proxy=strip\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "credentials.par": "to authorization_decision with current_scheme as text, current_host as text, current_port as text, next_scheme as text, next_host as text, next_port as text, authorization as text giving text:\n    if authorization is \"none\":\n        give back \"absent\"\n    if current_port is next_port:\n        if current_scheme is \"https\" and next_scheme is \"http\":\n            give back \"strip\"\n        give back \"keep\"\n    give back \"strip\"\n",
+          "formatting.par": "to format_redirect with target as text, authorization as text, proxy as text giving text:\n    give back \"target=\" + target + \"|authorization=\" + authorization + \"|proxy=\" + proxy\n",
+          "main.par": "include \"origin.par\"\ninclude \"credentials.par\"\ninclude \"proxy.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let current_scheme be item 1 of parts\n        let current_host be item 2 of parts\n        let current_port be item 3 of parts\n        let next_scheme be item 4 of parts\n        let next_host be item 5 of parts\n        let next_port be item 6 of parts\n        let authorization be item 7 of parts\n        let proxy be item 8 of parts\n        let target be (redirect_target with next_scheme, next_host, next_port)\n        let auth_result be (authorization_decision with current_scheme, current_host, current_port, next_scheme, next_host, next_port, authorization)\n        let proxy_result be (proxy_decision with proxy)\n        say (format_redirect with target, auth_result, proxy_result)\n",
+          "origin.par": "to redirect_target with scheme as text, host as text, port as text giving text:\n    give back scheme + \"://\" + host + \":\" + port\n",
+          "proxy.par": "to proxy_decision with proxy_authorization as text giving text:\n    if proxy_authorization is \"none\":\n        give back \"absent\"\n    give back \"strip\"\n"
+        },
+        "python": {
+          "credentials.py": "def authorization_decision(current_scheme: str, current_host: str, current_port: str, next_scheme: str, next_host: str, next_port: str, authorization: str) -> str:\n    if authorization == \"none\":\n        return \"absent\"\n    if current_port == next_port:\n        if current_scheme == \"https\" and next_scheme == \"http\":\n            return \"strip\"\n        return \"keep\"\n    return \"strip\"\n",
+          "formatting.py": "def format_redirect(target: str, authorization: str, proxy: str) -> str:\n    return f\"target={target}|authorization={authorization}|proxy={proxy}\"\n",
+          "main.py": "from credentials import authorization_decision\nfrom formatting import format_redirect\nfrom origin import redirect_target\nfrom proxy import proxy_decision\n\ncount = int(input())\nfor _ in range(count):\n    current_scheme, current_host, current_port, next_scheme, next_host, next_port, authorization, proxy = input().split(\"|\")\n    target = redirect_target(next_scheme, next_host, next_port)\n    auth_result = authorization_decision(current_scheme, current_host, current_port, next_scheme, next_host, next_port, authorization)\n    print(format_redirect(target, auth_result, proxy_decision(proxy)))\n",
+          "origin.py": "def redirect_target(scheme: str, host: str, port: str) -> str:\n    return f\"{scheme}://{host}:{port}\"\n",
+          "proxy.py": "def proxy_decision(proxy_authorization: str) -> str:\n    return \"absent\" if proxy_authorization == \"none\" else \"strip\"\n"
+        },
+        "rust": {
+          "credentials.rs": "pub fn authorization_decision(current_scheme: &str, _current_host: &str, current_port: &str, next_scheme: &str, _next_host: &str, next_port: &str, authorization: &str) -> &'static str {\n    if authorization == \"none\" {\n        return \"absent\";\n    }\n    if current_port == next_port {\n        if current_scheme == \"https\" && next_scheme == \"http\" {\n            return \"strip\";\n        }\n        return \"keep\";\n    }\n    \"strip\"\n}\n",
+          "formatting.rs": "pub fn format_redirect(target: &str, authorization: &str, proxy: &str) -> String {\n    format!(\"target={target}|authorization={authorization}|proxy={proxy}\")\n}\n",
+          "main.rs": "mod credentials;\nmod formatting;\nmod origin;\nmod proxy;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let parts: Vec<&str> = line.split('|').collect();\n        let target = origin::redirect_target(parts[3], parts[4], parts[5]);\n        let authorization = credentials::authorization_decision(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);\n        let proxy = proxy::proxy_decision(parts[7]);\n        println!(\"{}\", formatting::format_redirect(&target, authorization, proxy));\n    }\n}\n",
+          "origin.rs": "pub fn redirect_target(scheme: &str, host: &str, port: &str) -> String {\n    format!(\"{scheme}://{host}:{port}\")\n}\n",
+          "proxy.rs": "pub fn proxy_decision(proxy_authorization: &str) -> &'static str {\n    if proxy_authorization == \"none\" { \"absent\" } else { \"strip\" }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Redirect credentials escape or disappear at the wrong boundary\n\nAuthorization may survive a redirect only when the hostname is unchanged and the transition is not an HTTPS-to-HTTP downgrade. A port change on the same host is allowed. Authorization must be stripped for a different host. Proxy-Authorization is hop-specific and must be stripped on every redirect. Missing credentials remain absent.\n",
+          "architecture/flow.md": "# Redirect flow\n\n`main` parses the redirect record. `origin` renders the next target. `credentials` owns end-to-end Authorization scope. `proxy` owns hop-specific Proxy-Authorization. `formatting` owns the stable audit line. Repair the owning policy rather than compensating in the caller or formatter.\n",
+          "tests/regression.txt": "same host http:80 -> https:443 keeps Authorization\nsame host https:443 -> http:80 strips Authorization\ndifferent host on same port strips Authorization\nall redirects strip Proxy-Authorization\n"
+        },
+        "python": {
+          "ISSUE.md": "# Redirect credentials escape or disappear at the wrong boundary\n\nAuthorization may survive a redirect only when the hostname is unchanged and the transition is not an HTTPS-to-HTTP downgrade. A port change on the same host is allowed. Authorization must be stripped for a different host. Proxy-Authorization is hop-specific and must be stripped on every redirect. Missing credentials remain absent.\n",
+          "architecture/flow.md": "# Redirect flow\n\n`main` parses the redirect record. `origin` renders the next target. `credentials` owns end-to-end Authorization scope. `proxy` owns hop-specific Proxy-Authorization. `formatting` owns the stable audit line. Repair the owning policy rather than compensating in the caller or formatter.\n",
+          "tests/regression.txt": "same host http:80 -> https:443 keeps Authorization\nsame host https:443 -> http:80 strips Authorization\ndifferent host on same port strips Authorization\nall redirects strip Proxy-Authorization\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Redirect credentials escape or disappear at the wrong boundary\n\nAuthorization may survive a redirect only when the hostname is unchanged and the transition is not an HTTPS-to-HTTP downgrade. A port change on the same host is allowed. Authorization must be stripped for a different host. Proxy-Authorization is hop-specific and must be stripped on every redirect. Missing credentials remain absent.\n",
+          "architecture/flow.md": "# Redirect flow\n\n`main` parses the redirect record. `origin` renders the next target. `credentials` owns end-to-end Authorization scope. `proxy` owns hop-specific Proxy-Authorization. `formatting` owns the stable audit line. Repair the owning policy rather than compensating in the caller or formatter.\n",
+          "tests/regression.txt": "same host http:80 -> https:443 keeps Authorization\nsame host https:443 -> http:80 strips Authorization\ndifferent host on same port strips Authorization\nall redirects strip Proxy-Authorization\n"
+        }
+      }
+    },
+    {
+      "id": "empty_collection_config_project",
+      "title": "Preserve explicit empty collections through configuration fallback",
+      "category": "configuration value-state preservation",
+      "statement": "Fix the configuration regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "4\nempty|two\nmissing|two\nnull|three\nmissing|missing\n",
+          "stdout": "source=primary|kind=empty|count=0\nsource=fallback|kind=list|count=2\nsource=primary|kind=null|count=0\nsource=default|kind=empty|count=0\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nempty|three\n",
+          "stdout": "source=primary|kind=empty|count=0\n"
+        },
+        {
+          "stdin": "1\nmissing|empty\n",
+          "stdout": "source=fallback|kind=empty|count=0\n"
+        },
+        {
+          "stdin": "1\none|empty\n",
+          "stdout": "source=primary|kind=list|count=1\n"
+        },
+        {
+          "stdin": "1\nnull|empty\n",
+          "stdout": "source=primary|kind=null|count=0\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "classification.par": "to config_kind with token as text giving text:\n    if token is \"missing\":\n        give back \"missing\"\n    if token is \"null\":\n        give back \"null\"\n    if token is \"empty\":\n        give back \"missing\"\n    if token is \"one\" or token is \"two\" or token is \"three\":\n        give back \"list\"\n    give back \"invalid\"\n",
+          "counts.par": "to item_count with token as text, kind as text giving number:\n    if kind is not \"list\":\n        give back 0\n    if token is \"one\":\n        give back 1\n    if token is \"two\":\n        give back 2\n    give back 3\n",
+          "formatting.par": "to format_config with source as text, kind as text, count as number giving text:\n    give back \"source=\" + source + \"|kind=\" + kind + \"|count=\" + count\n",
+          "main.par": "include \"classification.par\"\ninclude \"selection.par\"\ninclude \"counts.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let chosen be (select_config with item 1 of parts, item 2 of parts)\n        let selected be chosen split by \"|\"\n        let source be item 1 of selected\n        let token be item 2 of selected\n        let kind be (config_kind with token)\n        say (format_config with source, kind, (item_count with token, kind))\n",
+          "selection.par": "to select_config with primary as text, fallback as text giving text:\n    if (config_kind with primary) is not \"missing\":\n        give back \"primary|\" + primary\n    if (config_kind with fallback) is not \"missing\":\n        give back \"fallback|\" + fallback\n    give back \"default|empty\"\n"
+        },
+        "python": {
+          "classification.py": "def config_kind(token: str) -> str:\n    if token == \"missing\":\n        return \"missing\"\n    if token == \"null\":\n        return \"null\"\n    if token == \"empty\":\n        return \"missing\"\n    if token in (\"one\", \"two\", \"three\"):\n        return \"list\"\n    return \"invalid\"\n",
+          "counts.py": "def item_count(token: str, kind: str) -> int:\n    if kind != \"list\":\n        return 0\n    return {\"one\": 1, \"two\": 2, \"three\": 3}[token]\n",
+          "formatting.py": "def format_config(source: str, kind: str, count: int) -> str:\n    return f\"source={source}|kind={kind}|count={count}\"\n",
+          "main.py": "from classification import config_kind\nfrom counts import item_count\nfrom formatting import format_config\nfrom selection import select_config\n\ncount = int(input())\nfor _ in range(count):\n    primary, fallback = input().split(\"|\")\n    source, token = select_config(primary, fallback).split(\"|\")\n    kind = config_kind(token)\n    print(format_config(source, kind, item_count(token, kind)))\n",
+          "selection.py": "from classification import config_kind\n\ndef select_config(primary: str, fallback: str) -> str:\n    if config_kind(primary) != \"missing\":\n        return f\"primary|{primary}\"\n    if config_kind(fallback) != \"missing\":\n        return f\"fallback|{fallback}\"\n    return \"default|empty\"\n"
+        },
+        "rust": {
+          "classification.rs": "pub fn config_kind(token: &str) -> &'static str {\n    match token {\n        \"missing\" => \"missing\",\n        \"null\" => \"null\",\n        \"empty\" => \"missing\",\n        \"one\" | \"two\" | \"three\" => \"list\",\n        _ => \"invalid\",\n    }\n}\n",
+          "counts.rs": "pub fn item_count(token: &str, kind: &str) -> i64 {\n    if kind != \"list\" { return 0; }\n    match token { \"one\" => 1, \"two\" => 2, _ => 3 }\n}\n",
+          "formatting.rs": "pub fn format_config(source: &str, kind: &str, count: i64) -> String {\n    format!(\"source={source}|kind={kind}|count={count}\")\n}\n",
+          "main.rs": "mod classification;\nmod counts;\nmod formatting;\nmod selection;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let pair: Vec<&str> = line.split('|').collect();\n        let chosen = selection::select_config(pair[0], pair[1]);\n        let selected: Vec<&str> = chosen.split('|').collect();\n        let kind = classification::config_kind(selected[1]);\n        println!(\"{}\", formatting::format_config(selected[0], kind, counts::item_count(selected[1], kind)));\n    }\n}\n",
+          "selection.rs": "use crate::classification::config_kind;\n\npub fn select_config(primary: &str, fallback: &str) -> String {\n    if config_kind(primary) != \"missing\" { return format!(\"primary|{primary}\"); }\n    if config_kind(fallback) != \"missing\" { return format!(\"fallback|{fallback}\"); }\n    \"default|empty\".to_string()\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Explicit empty collections become missing during configuration binding\n\nThe configuration pipeline must preserve four distinct states: missing, explicit null, explicit empty collection, and populated list. Only missing may fall through to the lower-precedence source. An explicit empty collection blocks fallback and binds as an empty list; null also blocks fallback but remains null.\n",
+          "architecture/flow.md": "# Configuration flow\n\n`classification` assigns the value state. `selection` applies source precedence using that state. `counts` measures populated lists. `formatting` owns the stable output. `main` only orchestrates. Repair the earliest layer that loses the distinction; caller-side special cases are not maintainable.\n",
+          "tests/regression.txt": "primary empty + fallback two -> primary empty count 0\nprimary missing + fallback empty -> fallback empty count 0\nprimary null never falls through\nmissing at both levels -> default empty\n"
+        },
+        "python": {
+          "ISSUE.md": "# Explicit empty collections become missing during configuration binding\n\nThe configuration pipeline must preserve four distinct states: missing, explicit null, explicit empty collection, and populated list. Only missing may fall through to the lower-precedence source. An explicit empty collection blocks fallback and binds as an empty list; null also blocks fallback but remains null.\n",
+          "architecture/flow.md": "# Configuration flow\n\n`classification` assigns the value state. `selection` applies source precedence using that state. `counts` measures populated lists. `formatting` owns the stable output. `main` only orchestrates. Repair the earliest layer that loses the distinction; caller-side special cases are not maintainable.\n",
+          "tests/regression.txt": "primary empty + fallback two -> primary empty count 0\nprimary missing + fallback empty -> fallback empty count 0\nprimary null never falls through\nmissing at both levels -> default empty\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Explicit empty collections become missing during configuration binding\n\nThe configuration pipeline must preserve four distinct states: missing, explicit null, explicit empty collection, and populated list. Only missing may fall through to the lower-precedence source. An explicit empty collection blocks fallback and binds as an empty list; null also blocks fallback but remains null.\n",
+          "architecture/flow.md": "# Configuration flow\n\n`classification` assigns the value state. `selection` applies source precedence using that state. `counts` measures populated lists. `formatting` owns the stable output. `main` only orchestrates. Repair the earliest layer that loses the distinction; caller-side special cases are not maintainable.\n",
+          "tests/regression.txt": "primary empty + fallback two -> primary empty count 0\nprimary missing + fallback empty -> fallback empty count 0\nprimary null never falls through\nmissing at both levels -> default empty\n"
+        }
+      }
+    },
+    {
+      "id": "forwarded_origin_project",
+      "title": "Reconstruct external redirect origin behind a trusted proxy",
+      "category": "trusted boundary and origin reconstruction",
+      "statement": "Fix the external-origin regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nyes|http|oauth.internal|4180|https|login.example.com|443|/callback\nno|http|direct.local|8080|https|spoof.example|443|/login\nyes|http|oauth.internal|4180|https|-|8443|-\n",
+          "stdout": "source=trusted-proxy|location=https://login.example.com:443/callback\nsource=request|location=http://direct.local:8080/login\nsource=trusted-proxy|location=https://oauth.internal:8443/\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nyes|http|backend|80|https|public.example|444|/oauth/start\n",
+          "stdout": "source=trusted-proxy|location=https://public.example:444/oauth/start\n"
+        },
+        {
+          "stdin": "1\nno|https|direct.example|443|http|attacker|80|/safe\n",
+          "stdout": "source=request|location=https://direct.example:443/safe\n"
+        },
+        {
+          "stdin": "1\nyes|http|backend|8080|-|public.example|-|/x\n",
+          "stdout": "source=trusted-proxy|location=http://public.example:8080/x\n"
+        },
+        {
+          "stdin": "1\nyes|http|backend|8080|https|public.example|443|-\n",
+          "stdout": "source=trusted-proxy|location=https://public.example:443/\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_login with source as text, location as text giving text:\n    give back \"source=\" + source + \"|location=\" + location\n",
+          "headers.par": "to selected_header with trusted as text, forwarded as text, original as text giving text:\n    if trusted is \"yes\" and forwarded is not \"-\":\n        give back forwarded\n    give back original\n\nto origin_source with trusted as text giving text:\n    if trusted is \"yes\":\n        give back \"trusted-proxy\"\n    give back \"request\"\n",
+          "main.par": "include \"headers.par\"\ninclude \"origin.par\"\ninclude \"paths.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let origin be (redirect_origin with item 1 of parts, item 2 of parts, item 3 of parts, item 4 of parts, item 5 of parts, item 6 of parts, item 7 of parts)\n        let location be (join_location with origin, item 8 of parts)\n        say (format_login with (origin_source with item 1 of parts), location)\n",
+          "origin.par": "to redirect_origin with trusted as text, request_scheme as text, request_host as text, request_port as text, forwarded_scheme as text, forwarded_host as text, forwarded_port as text giving text:\n    let scheme be (selected_header with trusted, forwarded_scheme, request_scheme)\n    let host be request_host\n    let port be (selected_header with trusted, forwarded_port, request_port)\n    give back scheme + \"://\" + host + \":\" + port\n",
+          "paths.par": "to join_location with origin as text, path as text giving text:\n    if path is \"-\":\n        give back origin + \"/\"\n    give back origin + path\n"
+        },
+        "python": {
+          "formatting.py": "def format_login(source: str, location: str) -> str:\n    return f\"source={source}|location={location}\"\n",
+          "headers.py": "def selected_header(trusted: str, forwarded: str, original: str) -> str:\n    if trusted == \"yes\" and forwarded != \"-\":\n        return forwarded\n    return original\n\ndef origin_source(trusted: str) -> str:\n    return \"trusted-proxy\" if trusted == \"yes\" else \"request\"\n",
+          "main.py": "from formatting import format_login\nfrom headers import origin_source\nfrom origin import redirect_origin\nfrom paths import join_location\n\ncount = int(input())\nfor _ in range(count):\n    parts = input().split(\"|\")\n    origin = redirect_origin(*parts[:7])\n    print(format_login(origin_source(parts[0]), join_location(origin, parts[7])))\n",
+          "origin.py": "from headers import selected_header\n\ndef redirect_origin(trusted: str, request_scheme: str, request_host: str, request_port: str, forwarded_scheme: str, forwarded_host: str, forwarded_port: str) -> str:\n    scheme = selected_header(trusted, forwarded_scheme, request_scheme)\n    host = request_host\n    port = selected_header(trusted, forwarded_port, request_port)\n    return f\"{scheme}://{host}:{port}\"\n",
+          "paths.py": "def join_location(origin: str, path: str) -> str:\n    return origin + (\"/\" if path == \"-\" else path)\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_login(source: &str, location: &str) -> String {\n    format!(\"source={source}|location={location}\")\n}\n",
+          "headers.rs": "pub fn selected_header<'a>(trusted: &str, forwarded: &'a str, original: &'a str) -> &'a str {\n    if trusted == \"yes\" && forwarded != \"-\" { forwarded } else { original }\n}\n\npub fn origin_source(trusted: &str) -> &'static str {\n    if trusted == \"yes\" { \"trusted-proxy\" } else { \"request\" }\n}\n",
+          "main.rs": "mod formatting;\nmod headers;\nmod origin;\nmod paths;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let parts: Vec<&str> = line.split('|').collect();\n        let origin = origin::redirect_origin(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]);\n        let location = paths::join_location(&origin, parts[7]);\n        println!(\"{}\", formatting::format_login(headers::origin_source(parts[0]), &location));\n    }\n}\n",
+          "origin.rs": "use crate::headers::selected_header;\n\npub fn redirect_origin<'a>(trusted: &str, request_scheme: &'a str, request_host: &'a str, request_port: &'a str, forwarded_scheme: &'a str, _forwarded_host: &'a str, forwarded_port: &'a str) -> String {\n    let scheme = selected_header(trusted, forwarded_scheme, request_scheme);\n    let host = request_host;\n    let port = selected_header(trusted, forwarded_port, request_port);\n    format!(\"{scheme}://{host}:{port}\")\n}\n",
+          "paths.rs": "pub fn join_location(origin: &str, path: &str) -> String {\n    if path == \"-\" { format!(\"{origin}/\") } else { format!(\"{origin}{path}\") }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# OAuth redirects point at an internal host behind the gateway\n\nWhen and only when the immediate proxy is trusted, reconstruct the public origin field-by-field from non-missing forwarded scheme, host, and port. A missing forwarded field falls back to the request value. For an untrusted request, ignore every forwarded field. Preserve the callback path.\n",
+          "architecture/flow.md": "# Origin reconstruction flow\n\n`headers` owns trust-aware field selection. `origin` assembles the external origin. `paths` appends the callback path. `formatting` owns the stable audit line. `main` orchestrates the request record. Repair the origin layer; do not hard-code public hosts in the caller.\n",
+          "tests/regression.txt": "trusted proxy uses forwarded host, scheme, and port\nmissing forwarded fields fall back independently\nuntrusted requests ignore all forwarded values\ncallback path and source label remain stable\n"
+        },
+        "python": {
+          "ISSUE.md": "# OAuth redirects point at an internal host behind the gateway\n\nWhen and only when the immediate proxy is trusted, reconstruct the public origin field-by-field from non-missing forwarded scheme, host, and port. A missing forwarded field falls back to the request value. For an untrusted request, ignore every forwarded field. Preserve the callback path.\n",
+          "architecture/flow.md": "# Origin reconstruction flow\n\n`headers` owns trust-aware field selection. `origin` assembles the external origin. `paths` appends the callback path. `formatting` owns the stable audit line. `main` orchestrates the request record. Repair the origin layer; do not hard-code public hosts in the caller.\n",
+          "tests/regression.txt": "trusted proxy uses forwarded host, scheme, and port\nmissing forwarded fields fall back independently\nuntrusted requests ignore all forwarded values\ncallback path and source label remain stable\n"
+        },
+        "rust": {
+          "ISSUE.md": "# OAuth redirects point at an internal host behind the gateway\n\nWhen and only when the immediate proxy is trusted, reconstruct the public origin field-by-field from non-missing forwarded scheme, host, and port. A missing forwarded field falls back to the request value. For an untrusted request, ignore every forwarded field. Preserve the callback path.\n",
+          "architecture/flow.md": "# Origin reconstruction flow\n\n`headers` owns trust-aware field selection. `origin` assembles the external origin. `paths` appends the callback path. `formatting` owns the stable audit line. `main` orchestrates the request record. Repair the origin layer; do not hard-code public hosts in the caller.\n",
+          "tests/regression.txt": "trusted proxy uses forwarded host, scheme, and port\nmissing forwarded fields fall back independently\nuntrusted requests ignore all forwarded values\ncallback path and source label remain stable\n"
+        }
+      }
+    },
+    {
+      "id": "terminal_liveness_project",
+      "title": "Reconcile persisted terminal state with authoritative liveness",
+      "category": "state reconciliation across process lifecycle",
+      "statement": "Fix the terminal-liveness regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "4\nt1|running|no\nt2|running|yes\nt3|finished|yes\nt4|finished|no\n",
+          "stdout": "id=t1|state=stopped|reason=authoritative-dead\nid=t2|state=running|reason=authoritative-live\nid=t3|state=running|reason=authoritative-live\nid=t4|state=stopped|reason=authoritative-dead\nrunning=2|stopped=2\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nold|running|no\n",
+          "stdout": "id=old|state=stopped|reason=authoritative-dead\nrunning=0|stopped=1\n"
+        },
+        {
+          "stdin": "1\nrevived|finished|yes\n",
+          "stdout": "id=revived|state=running|reason=authoritative-live\nrunning=1|stopped=0\n"
+        },
+        {
+          "stdin": "2\na|running|yes\nb|running|no\n",
+          "stdout": "id=a|state=running|reason=authoritative-live\nid=b|state=stopped|reason=authoritative-dead\nrunning=1|stopped=1\n"
+        },
+        {
+          "stdin": "0\n",
+          "stdout": "running=0|stopped=0\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_terminal with id as text, state as text, reason as text giving text:\n    give back \"id=\" + id + \"|state=\" + state + \"|reason=\" + reason\n\nto format_summary with running as number, stopped as number giving text:\n    give back \"running=\" + running + \"|stopped=\" + stopped\n",
+          "liveness.par": "to reconciled_state with persisted as text, live as text giving text:\n    if persisted is \"running\":\n        give back \"running\"\n    if live is \"yes\":\n        give back \"running\"\n    give back \"stopped\"\n",
+          "main.par": "include \"liveness.par\"\ninclude \"reasons.par\"\ninclude \"summary.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let running be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let state be (reconciled_state with item 2 of parts, item 3 of parts)\n        if state is \"running\":\n            set running to running + 1\n        say (format_terminal with item 1 of parts, state, (reconcile_reason with item 3 of parts))\n    say (format_summary with running, (stopped_count with count, running))\n",
+          "reasons.par": "to reconcile_reason with live as text giving text:\n    if live is \"yes\":\n        give back \"authoritative-live\"\n    give back \"authoritative-dead\"\n",
+          "summary.par": "to stopped_count with total as number, running as number giving number:\n    give back total - running\n"
+        },
+        "python": {
+          "formatting.py": "def format_terminal(identifier: str, state: str, reason: str) -> str:\n    return f\"id={identifier}|state={state}|reason={reason}\"\n\ndef format_summary(running: int, stopped: int) -> str:\n    return f\"running={running}|stopped={stopped}\"\n",
+          "liveness.py": "def reconciled_state(persisted: str, live: str) -> str:\n    if persisted == \"running\":\n        return \"running\"\n    if live == \"yes\":\n        return \"running\"\n    return \"stopped\"\n",
+          "main.py": "from formatting import format_summary, format_terminal\nfrom liveness import reconciled_state\nfrom reasons import reconcile_reason\nfrom summary import stopped_count\n\ncount = int(input())\nrunning = 0\nfor _ in range(count):\n    identifier, persisted, live = input().split(\"|\")\n    state = reconciled_state(persisted, live)\n    if state == \"running\":\n        running += 1\n    print(format_terminal(identifier, state, reconcile_reason(live)))\nprint(format_summary(running, stopped_count(count, running)))\n",
+          "reasons.py": "def reconcile_reason(live: str) -> str:\n    return \"authoritative-live\" if live == \"yes\" else \"authoritative-dead\"\n",
+          "summary.py": "def stopped_count(total: int, running: int) -> int:\n    return total - running\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_terminal(identifier: &str, state: &str, reason: &str) -> String {\n    format!(\"id={identifier}|state={state}|reason={reason}\")\n}\n\npub fn format_summary(running: i64, stopped: i64) -> String {\n    format!(\"running={running}|stopped={stopped}\")\n}\n",
+          "liveness.rs": "pub fn reconciled_state(persisted: &str, live: &str) -> &'static str {\n    if persisted == \"running\" {\n        return \"running\";\n    }\n    if live == \"yes\" {\n        return \"running\";\n    }\n    \"stopped\"\n}\n",
+          "main.rs": "mod formatting;\nmod liveness;\nmod reasons;\nmod summary;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: i64 = lines.next().unwrap().parse().unwrap();\n    let mut running = 0;\n    for line in lines.take(count as usize) {\n        let parts: Vec<&str> = line.split('|').collect();\n        let state = liveness::reconciled_state(parts[1], parts[2]);\n        if state == \"running\" { running += 1; }\n        println!(\"{}\", formatting::format_terminal(parts[0], state, reasons::reconcile_reason(parts[2])));\n    }\n    println!(\"{}\", formatting::format_summary(running, summary::stopped_count(count, running)));\n}\n",
+          "reasons.rs": "pub fn reconcile_reason(live: &str) -> &'static str {\n    if live == \"yes\" { \"authoritative-live\" } else { \"authoritative-dead\" }\n}\n",
+          "summary.rs": "pub fn stopped_count(total: i64, running: i64) -> i64 {\n    total - running\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Terminal tracker shows stale running processes after external death\n\nPersisted UI state is a cache, not the authority. During reconciliation, current process liveness determines the displayed state: a live process is running even if the snapshot says finished, and a dead process is stopped even if the snapshot says running. Summary counts must use reconciled state.\n",
+          "architecture/flow.md": "# Reconciliation flow\n\n`liveness` reconciles snapshot state with the authoritative process probe. `reasons` records the evidence source. `summary` derives counts. `formatting` owns stable records. `main` orchestrates. Repair reconciliation, not presentation or summary compensation.\n",
+          "tests/regression.txt": "persisted running + dead probe -> stopped\npersisted finished + live probe -> running\nsummary counts reconciled states\nzero records still emits a zero summary\n"
+        },
+        "python": {
+          "ISSUE.md": "# Terminal tracker shows stale running processes after external death\n\nPersisted UI state is a cache, not the authority. During reconciliation, current process liveness determines the displayed state: a live process is running even if the snapshot says finished, and a dead process is stopped even if the snapshot says running. Summary counts must use reconciled state.\n",
+          "architecture/flow.md": "# Reconciliation flow\n\n`liveness` reconciles snapshot state with the authoritative process probe. `reasons` records the evidence source. `summary` derives counts. `formatting` owns stable records. `main` orchestrates. Repair reconciliation, not presentation or summary compensation.\n",
+          "tests/regression.txt": "persisted running + dead probe -> stopped\npersisted finished + live probe -> running\nsummary counts reconciled states\nzero records still emits a zero summary\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Terminal tracker shows stale running processes after external death\n\nPersisted UI state is a cache, not the authority. During reconciliation, current process liveness determines the displayed state: a live process is running even if the snapshot says finished, and a dead process is stopped even if the snapshot says running. Summary counts must use reconciled state.\n",
+          "architecture/flow.md": "# Reconciliation flow\n\n`liveness` reconciles snapshot state with the authoritative process probe. `reasons` records the evidence source. `summary` derives counts. `formatting` owns stable records. `main` orchestrates. Repair reconciliation, not presentation or summary compensation.\n",
+          "tests/regression.txt": "persisted running + dead probe -> stopped\npersisted finished + live probe -> running\nsummary counts reconciled states\nzero records still emits a zero summary\n"
+        }
+      }
+    }
+  ]
+}

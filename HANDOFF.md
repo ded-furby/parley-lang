@@ -920,6 +920,16 @@ Update it whenever you finish or start a work item.
   No compiler or instruction change follows. Rust parity is confirmed for
   diagnosis bundles around six or more tasks; Python parity is not. Next use
   preregistered deeper project episodes, not same-corpus tuning.
+- **Deeper project corpus checkpoint (iteration 031):** manifest SHA
+  `7f81e6e6f62303d0f83c1e3451a1374c61c2fdf10a35a62fc6c89642178f46b2`
+  freezes four independently sourced five-module tasks over redirect
+  credentials, empty-collection configuration, forwarded OAuth origin, and
+  terminal liveness. Every task/language has three equal read-only evidence
+  files and one predeclared root. All 12 buggy seeds compile and fail at least
+  two case groups; isolated root fixes pass 60/60 cases. Full benchmark tests
+  pass 71/71 with pinned Parley and Cargo on `PATH`. Commit the corpus before
+  protocol 031. Do not change the language/instruction or choose tasks from
+  measured output.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

@@ -2750,3 +2750,64 @@ instruction cost. Do not select Parley-favorable tasks, change instructions,
 or add syntax from token arithmetic. A language proposal remains eligible only
 after a semantic failure recurs across independent projects and the design is
 generally useful, semantically consistent, and maintainable.
+
+## Corpus checkpoint for 031 — Four deeper project episodes
+
+- Frozen: 2026-08-05, before measured output
+- Manifest: `benchmarks/agent_tasks_deep_031.json`
+- Manifest SHA-256:
+  `7f81e6e6f62303d0f83c1e3451a1374c61c2fdf10a35a62fc6c89642178f46b2`
+- Reference validation fixes: `benchmarks/deep_reference_fixes_031.json`
+- Reference SHA-256:
+  `a5b15437f1a15a4c2965644bf73ea1a29ee961b0ccfebc6257671c3439ce6f0c`
+- Source/adaptation record: `benchmarks/DEEP_CORPUS_031.md`
+- Builder/validator: `build_deep_corpus_031.py` and
+  `validate_deep_corpus_031.py`
+
+Four independently sourced mechanisms are adapted into deterministic
+cross-language project episodes without copying upstream code: redirect
+credential scope from OPA issue 3093, empty-array configuration state from
+.NET Extensions issue 5858, forwarded OAuth origin reconstruction from
+oauth2-proxy issue 724, and stale terminal liveness from Codex issue 12321.
+The semantic families are credential boundaries, value-state preservation,
+trusted-origin reconstruction, and lifecycle reconciliation.
+
+Every task/language contains exactly five editable modules and three
+byte-identical visibly read-only files: issue, architecture flow, and
+regression record. Each task hides concrete examples from the prompt and has
+one public multi-case bundle plus four withheld cases. Root-defect files are
+frozen before output. The maintainability gate requires every Parley patch to
+change exactly its owning root file; caller, formatter, or summary compensation
+fails even if output is hidden-correct.
+
+Complete four-task source/evidence size before repair:
+
+| Language | Source chars | Source lines | Rough source tokens | Median rough source tokens/task |
+| --- | ---: | ---: | ---: | ---: |
+| Parley | 6,297 | 162 | 1,306 | 338.0 |
+| Python | 4,877 | 133 | 1,121 | 279.0 |
+| Rust | 6,162 | 183 | 1,847 | 459.5 |
+
+Equal read-only evidence totals 3,454 characters, 48 lines, and 634 rough
+tokens per complete language bundle. Median task evidence is 159.5 rough
+tokens. Versus iteration 029, median Parley editable/evidence tokens increase
+64.9%/72.4%, and editable modules increase from three to five. This is a
+predeclared workload-shape change, not a favorable-result filter.
+
+Pre-output validator results: all 12 buggy seed cells compile; every seed fails
+at least two of five case groups; all 12 isolated reference root-fix cells
+compile and pass; 60/60 reference case groups match exactly. Each reference
+changes only the frozen root, contexts are symmetric, and the production task
+loader accepts the manifest.
+
+The first broad test invocation selected `/opt/homebrew/bin/parley`, whose
+wrapper could not import this checkout, producing six environment-only
+failures. A second diagnostic invocation pinned Parley but omitted Cargo from
+`PATH`, reproducing the same six cells as P902 environment failures. Neither
+changed files or measured anything. The final exact environment placed
+`/private/tmp/parley-024-bin` and `/Users/arjun/.cargo/bin` first and passed the
+complete `tests/test_benchmarks.py` module, 71/71.
+
+No compiler, instruction, runner, grammar, task-selection, or benchmark metric
+change is included. Commit this corpus checkpoint before freezing protocol 031.
+The one instruction-compression experiment remains closed.

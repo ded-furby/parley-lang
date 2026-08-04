@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "description": "Unmeasured reference root fixes used only to validate the frozen iteration-031 corpus before preregistration.",
+  "fixes": {
+    "redirect_credential_scope_project": {
+      "parley": {
+        "credentials.par": "to authorization_decision with current_scheme as text, current_host as text, current_port as text, next_scheme as text, next_host as text, next_port as text, authorization as text giving text:\n    if authorization is \"none\":\n        give back \"absent\"\n    if current_host is next_host:\n        if current_scheme is \"https\" and next_scheme is \"http\":\n            give back \"strip\"\n        give back \"keep\"\n    give back \"strip\"\n"
+      },
+      "python": {
+        "credentials.py": "def authorization_decision(current_scheme: str, current_host: str, current_port: str, next_scheme: str, next_host: str, next_port: str, authorization: str) -> str:\n    if authorization == \"none\":\n        return \"absent\"\n    if current_host == next_host:\n        if current_scheme == \"https\" and next_scheme == \"http\":\n            return \"strip\"\n        return \"keep\"\n    return \"strip\"\n"
+      },
+      "rust": {
+        "credentials.rs": "pub fn authorization_decision(current_scheme: &str, current_host: &str, _current_port: &str, next_scheme: &str, next_host: &str, _next_port: &str, authorization: &str) -> &'static str {\n    if authorization == \"none\" {\n        return \"absent\";\n    }\n    if current_host == next_host {\n        if current_scheme == \"https\" && next_scheme == \"http\" {\n            return \"strip\";\n        }\n        return \"keep\";\n    }\n    \"strip\"\n}\n"
+      }
+    },
+    "empty_collection_config_project": {
+      "parley": {
+        "classification.par": "to config_kind with token as text giving text:\n    if token is \"missing\":\n        give back \"missing\"\n    if token is \"null\":\n        give back \"null\"\n    if token is \"empty\":\n        give back \"empty\"\n    if token is \"one\" or token is \"two\" or token is \"three\":\n        give back \"list\"\n    give back \"invalid\"\n"
+      },
+      "python": {
+        "classification.py": "def config_kind(token: str) -> str:\n    if token == \"missing\":\n        return \"missing\"\n    if token == \"null\":\n        return \"null\"\n    if token == \"empty\":\n        return \"empty\"\n    if token in (\"one\", \"two\", \"three\"):\n        return \"list\"\n    return \"invalid\"\n"
+      },
+      "rust": {
+        "classification.rs": "pub fn config_kind(token: &str) -> &'static str {\n    match token {\n        \"missing\" => \"missing\",\n        \"null\" => \"null\",\n        \"empty\" => \"empty\",\n        \"one\" | \"two\" | \"three\" => \"list\",\n        _ => \"invalid\",\n    }\n}\n"
+      }
+    },
+    "forwarded_origin_project": {
+      "parley": {
+        "origin.par": "to redirect_origin with trusted as text, request_scheme as text, request_host as text, request_port as text, forwarded_scheme as text, forwarded_host as text, forwarded_port as text giving text:\n    let scheme be (selected_header with trusted, forwarded_scheme, request_scheme)\n    let host be (selected_header with trusted, forwarded_host, request_host)\n    let port be (selected_header with trusted, forwarded_port, request_port)\n    give back scheme + \"://\" + host + \":\" + port\n"
+      },
+      "python": {
+        "origin.py": "from headers import selected_header\n\ndef redirect_origin(trusted: str, request_scheme: str, request_host: str, request_port: str, forwarded_scheme: str, forwarded_host: str, forwarded_port: str) -> str:\n    scheme = selected_header(trusted, forwarded_scheme, request_scheme)\n    host = selected_header(trusted, forwarded_host, request_host)\n    port = selected_header(trusted, forwarded_port, request_port)\n    return f\"{scheme}://{host}:{port}\"\n"
+      },
+      "rust": {
+        "origin.rs": "use crate::headers::selected_header;\n\npub fn redirect_origin<'a>(trusted: &str, request_scheme: &'a str, request_host: &'a str, request_port: &'a str, forwarded_scheme: &'a str, forwarded_host: &'a str, forwarded_port: &'a str) -> String {\n    let scheme = selected_header(trusted, forwarded_scheme, request_scheme);\n    let host = selected_header(trusted, forwarded_host, request_host);\n    let port = selected_header(trusted, forwarded_port, request_port);\n    format!(\"{scheme}://{host}:{port}\")\n}\n"
+      }
+    },
+    "terminal_liveness_project": {
+      "parley": {
+        "liveness.par": "to reconciled_state with persisted as text, live as text giving text:\n    if live is \"yes\":\n        give back \"running\"\n    give back \"stopped\"\n"
+      },
+      "python": {
+        "liveness.py": "def reconciled_state(persisted: str, live: str) -> str:\n    if live == \"yes\":\n        return \"running\"\n    return \"stopped\"\n"
+      },
+      "rust": {
+        "liveness.rs": "pub fn reconciled_state(_persisted: &str, live: &str) -> &'static str {\n    if live == \"yes\" {\n        return \"running\";\n    }\n    \"stopped\"\n}\n"
+      }
+    }
+  }
+}
