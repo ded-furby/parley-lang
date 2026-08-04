@@ -641,6 +641,19 @@ Update it whenever you finish or start a work item.
   within this model; do not attribute cross-iteration movement separately to
   contextual `number` or the model, and make no ergonomics change from the
   reused corpus after output.
+- **Independent-model result (iteration 022):** all 216 assignments passed
+  hidden cases and all 18 fresh sessions passed integrity/protocol checks, but
+  strict parity failed 1/4. Parley reached 39/72 first checks, 15 repairs, and
+  13,040.79 median tokens/task versus Python's 72/72, zero, and 4,079.00 and
+  Rust's 64/72, six, and 7,265.04. The contextual-`number` P209 signature was
+  zero, without causal attribution because both model and compiler changed.
+  A redundant literal `key` in map membership recurred 15 times across three
+  tasks and five sessions, but canonical membership already exists and the
+  reused-corpus stop rule prohibits tuning. Preserve raw SHA
+  `8594f5e8cceb31866002f25e7c3a6e49e00dc98124d70a519b37129d846e60ee`
+  and report 022. Make no compiler or skill change; move to previously unseen
+  application-style work and retain the general-usefulness, semantic,
+  maintainability, and independent-new-task gates.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

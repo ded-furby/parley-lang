@@ -1491,3 +1491,71 @@ do not make a counterfactual token claim.
 The strict four-condition gate, skill, prompts, cases, runner, and protocol are
 otherwise unchanged. Preserve every result. No post-output ergonomics change
 may be learned from this reused corpus; future evidence must use new tasks.
+
+## 022 — Independent-model correctness ties; strict parity still fails
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-terra`, medium reasoning
+- Matrix: 12 tasks × 3 languages × 6 complete-bundle replicates = 18 fresh
+  sessions and 216 hidden-judged task assignments
+- Raw result:
+  `benchmarks/results/agent_model_split_022_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `8594f5e8cceb31866002f25e7c3a6e49e00dc98124d70a519b37129d846e60ee`
+- Report: `benchmarks/reports/022-independent-model-parity-failed.html`
+- Report inputs:
+  `benchmarks/reports/022-independent-model-parity-failed.artifact.json`,
+  `.sql`, and `.chart-map.md`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, checker-integrity,
+  and command-protocol checks passed; no timeout, runner error, or nonzero
+  agent exit
+
+| Language | Hidden tasks | First-check tasks | Repairs | Median tokens/task | Median seconds/task |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Parley | 72/72 | 39/72 | 15 | 13,040.79 | 9.5024 |
+| Python | 72/72 | 72/72 | 0 | 4,079.00 | 3.6720 |
+| Rust | 72/72 | 64/72 | 6 | 7,265.04 | 6.2378 |
+
+The strict gate failed 1/4. Correctness passed. Parley missed the token,
+elapsed, and first-check conditions. Its median reported token effort was
+3.20× Python and 1.80× Rust; elapsed time was 2.59× and 1.52× respectively.
+No Parley session was repair-free, so the preregistered clean-session
+sensitivity analysis is unavailable.
+
+The 33 Parley first-task failures classify as follows:
+
+| Signature | Events | Task families | Independent sessions |
+| --- | ---: | ---: | ---: |
+| Redundant literal `key` in map membership | 15 | 3 | 5 |
+| Unwrapped numeric input | 7 | 7 | 1 |
+| Bare `nothing` accumulator | 4 | 1 | 4 |
+| `repeat while` phrasing | 3 | 3 | 1 |
+| Unparenthesized prefix/value phrase | 2 | 2 | 1 |
+| Decimal midpoint used as list position | 1 | 1 | 1 |
+| Incorrect polynomial computation | 1 | 1 | 1 |
+
+The map signature used sources such as `balances contains key name`; canonical
+Parley already writes the same membership operation as `balances contains
+name`. Although the redundant word recurred across three unrelated map tasks
+and five sessions, this exact corpus was reused for the preregistered model
+split. The frozen stop rule therefore forbids a post-output compiler change,
+and duplicating an already complete operator merely to accept these transcripts
+would fail the maintainability gate. `repeat while` is likewise redundant.
+Unwrapped input is one session's habit; bare `nothing` is one task; the rest
+are isolated. **No compiler, grammar, runtime, prompt, or skill change follows
+from iteration 022.**
+
+The contextual-`number` P209 signature is 0/33 after ten events in iteration
+021. This is consistent with v0.3.155, and its ten frozen sources already pass
+50/50 replay cases, but iteration 022 changes both model and compiler and
+cannot attribute performance movement to either. Descriptively, the same model
+also moved Rust from 72/72 first checks and 4,319.75 tokens/task in 021 to
+64/72 and 7,265.04 here, while Python remained 72/72 and about 4.08k.
+
+Preserve 022 unchanged. The next benchmark must use previously unseen,
+application-style work that expands coverage beyond compact stdin/stdout
+algorithms—modules, records, file operations, packaged helpers, and
+multi-function programs—while keeping the proven instruction unchanged.
+Any future compiler proposal still requires recurrence on new unrelated tasks,
+general usefulness, semantic consistency, and maintainability.
