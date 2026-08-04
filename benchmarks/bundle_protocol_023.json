@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "experiment_id": "023",
+  "title": "New application-style broad corpus",
+  "description": "Cross-language comparison on eight previously unused application workflows, including exact filesystem output judgment.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_application_023.json",
+    "task_manifest_sha256": "f64d441628bd21ea8c6b5fbe3dda51f4d5c52f75607cdceed0616b76ad4d6dc4",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "8f4a66885f3e0837f1595d72cf38ada5b8112f97",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [8],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260809,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_task_solutions": 144,
+    "sessions_per_language": 6,
+    "task_solutions_per_language": 48,
+    "public_cases_per_language": 48,
+    "hidden_cases_per_language": 192,
+    "derivation": "6 complete eight-task bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 8,
+    "correctness": "Parley hidden-task success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned task must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned task must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check task success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict application-corpus parity."
+  },
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "All eight task IDs and statements are new relative to iterations 001-022; no output may be used to revise this frozen corpus.",
+    "The file-backed task deletes the expected output before every case and judges exact UTF-8 contents as well as stdout.",
+    "Cross-iteration effort movement is descriptive only because the workload changed from compact algorithms to richer application workflows."
+  ],
+  "secondary_analysis": [
+    "Report all sessions, task outcomes, repairs, tokens, elapsed time, prompt size, source size, integrity, and command-protocol compliance.",
+    "Classify every first-check and hidden failure by task family and independent session.",
+    "Audit whether generated solutions actually exercise file operations on file_backed_notes and whether richer work changes Parley-to-Rust source-size ratios.",
+    "Report repair-free sensitivity if at least two Parley sessions pass all eight tasks on the first check."
+  ],
+  "feature_boundary": "Parley remains frozen at v0.3.155. No compiler, grammar, AST, runtime, skill, prompt, or checker diagnostic changed after iteration 022; only the language-neutral benchmark harness gained exact expected-file judgment.",
+  "change_rule": "No syntax or compiler behavior may be added from one task, transcript, session, or token gap. A proposal requires recurrence across unrelated new tasks and independent sessions, then separate review for general usefulness, semantic consistency, and maintainability. Checker-totality defects remain correctness bugs.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result. If strict parity passes, preregister a larger confirmation before claiming parity. If it fails, make no same-corpus syntax change; only independently recurring general defects may enter separate design review, and subsequent efficiency evidence must use new tasks."
+}

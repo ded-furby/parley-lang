@@ -654,6 +654,16 @@ Update it whenever you finish or start a work item.
   and report 022. Make no compiler or skill change; move to previously unseen
   application-style work and retain the general-usefulness, semantic,
   maintainability, and independent-new-task gates.
+- **Application-corpus preregistration (iteration 023):** eight previously
+  unused application workflows are frozen under `gpt-5.6-sol`, Parley 0.3.155,
+  six complete-bundle replicates per language, seed `20260809`, and the
+  unchanged 1,519-character skill. The general benchmark harness now supports
+  safe relative expected-file contracts; the file-backed task deletes and
+  exactly rejudges its output for each case. All 40 oracles were independently
+  recomputed and the corrected full test command passed 313/313. The task
+  manifest SHA is `f64d441628bd21ea8c6b5fbe3dda51f4d5c52f75607cdceed0616b76ad4d6dc4`;
+  protocol SHA is `0a424ac66bbbc01e6f9020fc643462c3353ac4d69065a500613688ba96c423f8`.
+  Preserve every result; no same-corpus syntax tuning is allowed.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

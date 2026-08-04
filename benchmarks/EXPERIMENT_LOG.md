@@ -1559,3 +1559,44 @@ algorithms—modules, records, file operations, packaged helpers, and
 multi-function programs—while keeping the proven instruction unchanged.
 Any future compiler proposal still requires recurrence on new unrelated tasks,
 general usefulness, semantic consistency, and maintainability.
+
+## Pre-registration for 023 — New application-style broad corpus
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155 at
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_application_023.json`, SHA-256
+  `f64d441628bd21ea8c6b5fbe3dda51f4d5c52f75607cdceed0616b76ad4d6dc4`
+- Protocol: `benchmarks/bundle_protocol_023.json`, SHA-256
+  `0a424ac66bbbc01e6f9020fc643462c3353ac4d69065a500613688ba96c423f8`
+- Matrix: eight tasks × three languages × six complete-bundle replicates =
+  18 fresh sessions and 144 hidden-judged task assignments
+- Seed: `20260809`
+
+The eight IDs and statements are unused in iterations 001-022. The workload
+moves beyond small algorithm exercises into invoice aggregation, mutable ticket
+workflows, configuration overlays, access-policy evaluation, scheduling,
+shipment state transitions, contact merging, and a file-backed notes program.
+Each task combines multiple entities or operations. The file task is materially
+judged: before every case the harness deletes `file_backed_notes.txt`, then
+requires exact UTF-8 contents in addition to exact stdout. Expected-file paths
+are validated as safe relative paths.
+
+All 40 public/hidden oracle cases and expected file contents were independently
+recomputed before freezing. Four targeted harness tests passed. The first full
+suite invocation omitted the repository from subprocess `PYTHONPATH`, producing
+119 identical import-environment failures and 194 passes; the corrected command
+`PYTHONPATH=/Users/arjun/Desktop/parley-lang python3 -m pytest -q` passed all
+313 tests in 101.55 seconds. This operational failure and its correction are
+retained here for history.
+
+The primary gate is the same four-condition within-model comparison used by
+the broad studies: hidden correctness, reported tokens per task, elapsed time
+per task, and first-check task success. Cross-iteration movement is descriptive
+only because the task population changed. Preserve all output. If parity
+passes, require a larger preregistered confirmation. If it fails, do not tune
+syntax on this corpus; only independently recurring defects may enter separate
+general-usefulness, semantic-consistency, and maintainability review.
