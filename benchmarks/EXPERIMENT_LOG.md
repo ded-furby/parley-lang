@@ -2114,3 +2114,42 @@ general claim. The next defensible experiment is a second independent set of
 unrelated repositories and a preregistered size-sixteen pilot under the same
 source protocol. Do not tune any current task. A passing broader pilot still
 requires the planned larger confirmation.
+
+## Design and preflight for 027 — Second independent repository expansion
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Planned matrix: sixteen repositories × three languages × six
+  complete-bundle replicates = 18 fresh sessions and 288 hidden-judged
+  assignments
+- Seed: `20260817`
+- Combined manifest SHA-256:
+  `4d48c171c217cd7be4bc12fb7880c89f0b829470c5e68717fac810f1aace7312`
+- Eight-task additions SHA-256:
+  `804a0d2aa20b7a570e6e1313a1922e707c6519297fe685a367a32c65a8fe6476`
+
+Iteration 027 follows the preserved 026 recommendation without changing or
+tuning any current task. The first eight repository objects are exactly equal
+to the 026 corpus. Eight separately reviewable additions cover shipping
+manifests, role-aware lockouts, configurable sensor bands, normalized tag
+deduplication, overtime payroll, assessment score bands, running-capacity
+batching, and path sanitization. Each remains a two-file maintenance change
+crossing an entrypoint/helper boundary; none derives syntax from a failure
+transcript.
+
+`benchmarks/build_repository_corpus_027.py` reproducibly combines the preserved
+026 manifest and new additions. An independent oracle reproduces all 40 new
+public/hidden contracts. All 24 new language-specific seeded repositories
+compile and pass their two old-contract cases; every unmodified seed compiles
+but fails its new public requirement. Tests prove the first eight combined
+objects are equal to 026, the final eight equal the additions, and all sixteen
+IDs are unique. The complete pre-protocol suite passed 332/332 in 147.11
+seconds.
+
+No compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, source
+protocol, or instruction-compression change is included. Commit and push the
+reviewed corpus before freezing protocol 027. Preserve every later session
+without selective reruns. Even a passing size-sixteen pilot requires the
+planned larger confirmation before a general parity claim.

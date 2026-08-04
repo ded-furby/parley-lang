@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "description": "Eight additional two-file repository tasks for the iteration-027 independent size-sixteen expansion.",
+  "tasks": [
+    {
+      "id": "shipping_manifest_repo",
+      "title": "Extend shipping manifest costing",
+      "category": "manifest parsing and aggregate costing",
+      "statement": "The repository currently costs simple weight records. Extend it to read a non-negative integer N and N lines id|weight|fragile, where weight is a non-negative whole number and fragile is yes or no. Cost is weight times 5 plus 100 when fragile is yes. Put the complete cost rule in the shipping helper and update the entrypoint consistently. Print id:cost=C in input order, then total=T|fragile=F. With N zero, print only the summary.",
+      "seed_cases": [
+        {"stdin":"2\nA|10\nB|2\n","stdout":"A:cost=50\nB:cost=10\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"3\nA|10|no\nB|2|yes\nC|0|yes\n","stdout":"A:cost=50\nB:cost=110\nC:cost=100\ntotal=260|fragile=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"total=0|fragile=0\n"},
+        {"stdin":"2\nx|1|no\ny|1|no\n","stdout":"x:cost=5\ny:cost=5\ntotal=10|fragile=0\n"},
+        {"stdin":"1\nz|20|yes\n","stdout":"z:cost=200\ntotal=200|fragile=1\n"},
+        {"stdin":"3\np|3|yes\nq|4|no\nr|5|yes\n","stdout":"p:cost=115\nq:cost=20\nr:cost=125\ntotal=260|fragile=2\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"shipping.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        let id be item 1 of parts\n        let weight be item 2 of parts as number\n        say id + \":cost=\" + (shipping_cost with weight)\n",
+          "shipping.par": "to shipping_cost with weight as number giving number:\n    give back weight * 5\n"
+        },
+        "python": {
+          "main.py": "from shipping import shipping_cost\n\ncount = int(input())\nfor _ in range(count):\n    item_id, weight = input().split(\"|\")\n    print(f\"{item_id}:cost={shipping_cost(int(weight))}\")\n",
+          "shipping.py": "def shipping_cost(weight: int) -> int:\n    return weight * 5\n"
+        },
+        "rust": {
+          "main.rs": "mod shipping;\n\nuse shipping::shipping_cost;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().split('|');\n        let id = parts.next().unwrap();\n        let weight: i64 = parts.next().unwrap().parse().unwrap();\n        println!(\"{id}:cost={}\", shipping_cost(weight));\n    }\n}\n",
+          "shipping.rs": "pub fn shipping_cost(weight: i64) -> i64 {\n    weight * 5\n}\n"
+        }
+      }
+    },
+    {
+      "id": "account_lockout_repo",
+      "title": "Add role-aware account lockout policy",
+      "category": "access policy and helper-contract change",
+      "statement": "The repository currently classifies attempt counts with one lock threshold. Extend it to read a non-negative integer N and N lines user|attempts|role, where attempts is a non-negative whole number and role is admin or member. Admin locks at 10 or more attempts; every other role locks at 5 or more. Put the role-aware rule in the lockout helper and update the entrypoint consistently. Print user:locked or user:open in input order, then locked=L,open=O. With N zero, print only the counts.",
+      "seed_cases": [
+        {"stdin":"3\n4\n5\n10\n","stdout":"open\nlocked\nlocked\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"4\na|5|member\nb|9|admin\nc|10|admin\nd|0|member\n","stdout":"a:locked\nb:open\nc:locked\nd:open\nlocked=2,open=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"locked=0,open=0\n"},
+        {"stdin":"3\nx|4|member\ny|5|member\nz|9|admin\n","stdout":"x:open\ny:locked\nz:open\nlocked=1,open=2\n"},
+        {"stdin":"2\nroot|10|admin\nguest|10|member\n","stdout":"root:locked\nguest:locked\nlocked=2,open=0\n"},
+        {"stdin":"2\na|5|Admin\nb|9|admin\n","stdout":"a:locked\nb:open\nlocked=1,open=1\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "lockout.par": "to is_locked with attempts as number giving yesno:\n    give back attempts is at least 5\n",
+          "main.par": "include \"lockout.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let attempts_input be ask for a number \"\"\n        let attempts be value of attempts_input\n        if (is_locked with attempts):\n            say \"locked\"\n        otherwise:\n            say \"open\"\n"
+        },
+        "python": {
+          "lockout.py": "def is_locked(attempts: int) -> bool:\n    return attempts >= 5\n",
+          "main.py": "from lockout import is_locked\n\ncount = int(input())\nfor _ in range(count):\n    attempts = int(input())\n    print(\"locked\" if is_locked(attempts) else \"open\")\n"
+        },
+        "rust": {
+          "lockout.rs": "pub fn is_locked(attempts: i64) -> bool {\n    attempts >= 5\n}\n",
+          "main.rs": "mod lockout;\n\nuse lockout::is_locked;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let attempts: i64 = lines.next().unwrap().parse().unwrap();\n        println!(\"{}\", if is_locked(attempts) { \"locked\" } else { \"open\" });\n    }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "sensor_band_repo",
+      "title": "Add configurable sensor bands",
+      "category": "threshold classification and aggregation",
+      "statement": "The repository currently classifies readings against a fixed high threshold. Extend it to read signed whole-number low and high thresholds, a non-negative integer N, then N lines sensor|reading. Classify reading below low as low, above high as high, and both boundary values plus the range between them as normal. Put the complete classification in the sensor helper and update the entrypoint consistently. Print sensor:band in input order, then low=L,normal=N,high=H. With no readings, print only the counts.",
+      "seed_cases": [
+        {"stdin":"3\n100\n101\n0\n","stdout":"normal\nhigh\nnormal\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"10\n20\n5\na|9\nb|10\nc|15\nd|20\ne|21\n","stdout":"a:low\nb:normal\nc:normal\nd:normal\ne:high\nlow=1,normal=3,high=1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n100\n0\n","stdout":"low=0,normal=0,high=0\n"},
+        {"stdin":"-5\n5\n4\na|-6\nb|-5\nc|5\nd|6\n","stdout":"a:low\nb:normal\nc:normal\nd:high\nlow=1,normal=2,high=1\n"},
+        {"stdin":"0\n0\n3\nx|-1\ny|0\nz|1\n","stdout":"x:low\ny:normal\nz:high\nlow=1,normal=1,high=1\n"},
+        {"stdin":"10\n20\n2\nx|20\ny|21\n","stdout":"x:normal\ny:high\nlow=0,normal=1,high=1\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"sensor.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let reading_input be ask for a number \"\"\n        let reading be value of reading_input\n        say (sensor_band with reading)\n",
+          "sensor.par": "to sensor_band with reading as number giving text:\n    if reading is more than 100:\n        give back \"high\"\n    give back \"normal\"\n"
+        },
+        "python": {
+          "main.py": "from sensor import sensor_band\n\ncount = int(input())\nfor _ in range(count):\n    print(sensor_band(int(input())))\n",
+          "sensor.py": "def sensor_band(reading: int) -> str:\n    return \"high\" if reading > 100 else \"normal\"\n"
+        },
+        "rust": {
+          "main.rs": "mod sensor;\n\nuse sensor::sensor_band;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let reading: i64 = lines.next().unwrap().parse().unwrap();\n        println!(\"{}\", sensor_band(reading));\n    }\n}\n",
+          "sensor.rs": "pub fn sensor_band(reading: i64) -> &'static str {\n    if reading > 100 { \"high\" } else { \"normal\" }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "tag_dedup_repo",
+      "title": "Add normalized first-seen tag deduplication",
+      "category": "text normalization and stable uniqueness",
+      "statement": "The repository currently lowercases and prints every tag. Extend it to read a non-negative integer N and N tag lines. Normalize each tag with the existing helper using lowercase. Print only the first occurrence of each normalized tag, preserving first-seen order. Then print unique=U,duplicates=D. Equality is exact after lowercasing; tags may be empty. Keep normalization in the helper and uniqueness/counting in the entrypoint. With N zero, print only the summary.",
+      "seed_cases": [
+        {"stdin":"4\nAlpha\nalpha\nBETA\nbeta\n","stdout":"alpha\nalpha\nbeta\nbeta\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"6\nAlpha\nalpha\nBETA\nbeta\ngamma\nALPHA\n","stdout":"alpha\nbeta\ngamma\nunique=3,duplicates=3\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"unique=0,duplicates=0\n"},
+        {"stdin":"4\na\nA\nb\nB\n","stdout":"a\nb\nunique=2,duplicates=2\n"},
+        {"stdin":"3\nX\nY\nz\n","stdout":"x\ny\nz\nunique=3,duplicates=0\n"},
+        {"stdin":"5\nsame\nSAME\nSame\nsame\nSAmE\n","stdout":"same\nunique=1,duplicates=4\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"tags.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let tag be ask \"\"\n        say (normalize_tag with tag)\n",
+          "tags.par": "to normalize_tag with tag as text giving text:\n    give back lowercase of tag\n"
+        },
+        "python": {
+          "main.py": "from tags import normalize_tag\n\ncount = int(input())\nfor _ in range(count):\n    print(normalize_tag(input()))\n",
+          "tags.py": "def normalize_tag(tag: str) -> str:\n    return tag.lower()\n"
+        },
+        "rust": {
+          "main.rs": "mod tags;\n\nuse tags::normalize_tag;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.split_terminator('\\n');\n    let count: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    for _ in 0..count {\n        println!(\"{}\", normalize_tag(lines.next().unwrap_or(\"\")));\n    }\n}\n",
+          "tags.rs": "pub fn normalize_tag(tag: &str) -> String {\n    tag.to_lowercase()\n}\n"
+        }
+      }
+    },
+    {
+      "id": "timesheet_pay_repo",
+      "title": "Add overtime-aware timesheet payroll",
+      "category": "payroll arithmetic and aggregation",
+      "statement": "The repository currently multiplies one hours/rate pair. Extend it to read a non-negative integer N and N lines employee|hours|rate, where hours and rate are non-negative whole numbers. The first 40 hours pay rate per hour; additional hours pay twice the rate. Put the complete pay rule in the payroll helper and update the entrypoint consistently. Print employee:pay=P in input order, then total=T. With N zero, print only total=0.",
+      "seed_cases": [
+        {"stdin":"40\n10\n","stdout":"pay=400\n"},
+        {"stdin":"0\n99\n","stdout":"pay=0\n"}
+      ],
+      "public_cases": [
+        {"stdin":"3\nA|40|10\nB|45|10\nC|0|20\n","stdout":"A:pay=400\nB:pay=500\nC:pay=0\ntotal=900\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"total=0\n"},
+        {"stdin":"1\nx|41|2\n","stdout":"x:pay=84\ntotal=84\n"},
+        {"stdin":"2\na|39|3\nb|40|1\n","stdout":"a:pay=117\nb:pay=40\ntotal=157\n"},
+        {"stdin":"2\na|50|4\nb|1|100\n","stdout":"a:pay=240\nb:pay=100\ntotal=340\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"payroll.par\"\n\nto main:\n    let hours_input be ask for a number \"\"\n    let rate_input be ask for a number \"\"\n    let hours be value of hours_input\n    let rate be value of rate_input\n    say \"pay=\" + (calculate_pay with hours, rate)\n",
+          "payroll.par": "to calculate_pay with hours as number, rate as number giving number:\n    give back hours * rate\n"
+        },
+        "python": {
+          "main.py": "from payroll import calculate_pay\n\nhours = int(input())\nrate = int(input())\nprint(f\"pay={calculate_pay(hours, rate)}\")\n",
+          "payroll.py": "def calculate_pay(hours: int, rate: int) -> int:\n    return hours * rate\n"
+        },
+        "rust": {
+          "main.rs": "mod payroll;\n\nuse payroll::calculate_pay;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let hours: i64 = lines.next().unwrap().parse().unwrap();\n    let rate: i64 = lines.next().unwrap().parse().unwrap();\n    println!(\"pay={}\", calculate_pay(hours, rate));\n}\n",
+          "payroll.rs": "pub fn calculate_pay(hours: i64, rate: i64) -> i64 {\n    hours * rate\n}\n"
+        }
+      }
+    },
+    {
+      "id": "score_band_repo",
+      "title": "Add configurable assessment score bands",
+      "category": "classification and summary counts",
+      "statement": "The repository currently labels scores against a fixed pass mark. Extend it to read non-negative whole-number pass_mark and excellence_mark, a non-negative integer N, then N lines user|score. Scores at least excellence_mark are excellent; otherwise scores at least pass_mark pass; lower scores retry. Put the ordered classification in the score helper and update the entrypoint consistently. Print user:band in input order, then excellent=E,pass=P,retry=R. With N zero, print only the counts.",
+      "seed_cases": [
+        {"stdin":"3\n49\n50\n100\n","stdout":"retry\npass\npass\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"50\n80\n5\na|49\nb|50\nc|79\nd|80\ne|100\n","stdout":"a:retry\nb:pass\nc:pass\nd:excellent\ne:excellent\nexcellent=2,pass=2,retry=1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"50\n80\n0\n","stdout":"excellent=0,pass=0,retry=0\n"},
+        {"stdin":"0\n100\n2\nx|0\ny|100\n","stdout":"x:pass\ny:excellent\nexcellent=1,pass=1,retry=0\n"},
+        {"stdin":"50\n50\n2\nx|50\ny|49\n","stdout":"x:excellent\ny:retry\nexcellent=1,pass=0,retry=1\n"},
+        {"stdin":"60\n90\n3\na|60\nb|89\nc|90\n","stdout":"a:pass\nb:pass\nc:excellent\nexcellent=1,pass=2,retry=0\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"scores.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let score_input be ask for a number \"\"\n        let score be value of score_input\n        say (score_band with score)\n",
+          "scores.par": "to score_band with score as number giving text:\n    if score is at least 50:\n        give back \"pass\"\n    give back \"retry\"\n"
+        },
+        "python": {
+          "main.py": "from scores import score_band\n\ncount = int(input())\nfor _ in range(count):\n    print(score_band(int(input())))\n",
+          "scores.py": "def score_band(score: int) -> str:\n    return \"pass\" if score >= 50 else \"retry\"\n"
+        },
+        "rust": {
+          "main.rs": "mod scores;\n\nuse scores::score_band;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let score: i64 = lines.next().unwrap().parse().unwrap();\n        println!(\"{}\", score_band(score));\n    }\n}\n",
+          "scores.rs": "pub fn score_band(score: i64) -> &'static str {\n    if score >= 50 { \"pass\" } else { \"retry\" }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "delivery_batch_repo",
+      "title": "Add running-capacity delivery batching",
+      "category": "stateful allocation and helper-contract change",
+      "statement": "The repository currently checks each unit request independently against capacity. Extend it to read non-negative whole-number capacity, a non-negative integer N, then N lines id|units. Process requests in input order. Accept a request when used plus units is at most capacity, then add units to used; otherwise defer it and leave used unchanged. Put the acceptance rule in the batch helper and update the entrypoint consistently. Print id:accept or id:defer, then used=U,deferred=D. With N zero, print only the summary.",
+      "seed_cases": [
+        {"stdin":"5\n3\n4\n6\n0\n","stdout":"accept\ndefer\naccept\n"},
+        {"stdin":"0\n0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"10\n3\nA|4\nB|7\nC|6\n","stdout":"A:accept\nB:defer\nC:accept\nused=10,deferred=1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n0\n","stdout":"used=0,deferred=0\n"},
+        {"stdin":"5\n3\na|5\nb|0\nc|1\n","stdout":"a:accept\nb:accept\nc:defer\nused=5,deferred=1\n"},
+        {"stdin":"3\n2\na|4\nb|3\n","stdout":"a:defer\nb:accept\nused=3,deferred=1\n"},
+        {"stdin":"10\n3\na|6\nb|4\nc|0\n","stdout":"a:accept\nb:accept\nc:accept\nused=10,deferred=0\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "batch.par": "to can_accept with units as number, capacity as number giving yesno:\n    give back units is at most capacity\n",
+          "main.par": "include \"batch.par\"\n\nto main:\n    let capacity_input be ask for a number \"\"\n    let count_input be ask for a number \"\"\n    let capacity be value of capacity_input\n    let count be value of count_input\n    repeat count times:\n        let units_input be ask for a number \"\"\n        let units be value of units_input\n        if (can_accept with units, capacity):\n            say \"accept\"\n        otherwise:\n            say \"defer\"\n"
+        },
+        "python": {
+          "batch.py": "def can_accept(units: int, capacity: int) -> bool:\n    return units <= capacity\n",
+          "main.py": "from batch import can_accept\n\ncapacity = int(input())\ncount = int(input())\nfor _ in range(count):\n    units = int(input())\n    print(\"accept\" if can_accept(units, capacity) else \"defer\")\n"
+        },
+        "rust": {
+          "batch.rs": "pub fn can_accept(units: i64, capacity: i64) -> bool {\n    units <= capacity\n}\n",
+          "main.rs": "mod batch;\n\nuse batch::can_accept;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let capacity: i64 = lines.next().unwrap().parse().unwrap();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let units: i64 = lines.next().unwrap().parse().unwrap();\n        println!(\"{}\", if can_accept(units, capacity) { \"accept\" } else { \"defer\" });\n    }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "path_sanitizer_repo",
+      "title": "Add owner-aware normalized path slugs",
+      "category": "text transformation and aggregate length",
+      "statement": "The repository currently replaces spaces with underscores in bare names. Extend it to read a non-negative integer N and N lines owner|name, where owner has no pipe and name may be empty but has no pipe. The helper must lowercase the name and replace every space with a hyphen. Update the entrypoint to parse records. Print owner:slug in input order, then entries=N,characters=C where C sums slug character lengths. With N zero, print only the summary.",
+      "seed_cases": [
+        {"stdin":"2\nMy File\nAlready\n","stdout":"My_File\nAlready\n"},
+        {"stdin":"0\n","stdout":""}
+      ],
+      "public_cases": [
+        {"stdin":"2\nAlice|My File\nBob|README\n","stdout":"Alice:my-file\nBob:readme\nentries=2,characters=13\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"entries=0,characters=0\n"},
+        {"stdin":"2\nu|A B\nv|c\n","stdout":"u:a-b\nv:c\nentries=2,characters=4\n"},
+        {"stdin":"1\nowner|Already-clean\n","stdout":"owner:already-clean\nentries=1,characters=13\n"},
+        {"stdin":"3\nx|A  B\ny|\nz|Z\n","stdout":"x:a--b\ny:\nz:z\nentries=3,characters=5\n"}
+      ],
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"path_rules.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let name be ask \"\"\n        say (sanitize_name with name)\n",
+          "path_rules.par": "to sanitize_name with name as text giving text:\n    give back name replacing \" \" with \"_\"\n"
+        },
+        "python": {
+          "main.py": "from path_rules import sanitize_name\n\ncount = int(input())\nfor _ in range(count):\n    print(sanitize_name(input()))\n",
+          "path_rules.py": "def sanitize_name(name: str) -> str:\n    return name.replace(\" \", \"_\")\n"
+        },
+        "rust": {
+          "main.rs": "mod path_rules;\n\nuse path_rules::sanitize_name;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.split_terminator('\\n');\n    let count: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    for _ in 0..count {\n        println!(\"{}\", sanitize_name(lines.next().unwrap_or(\"\")));\n    }\n}\n",
+          "path_rules.rs": "pub fn sanitize_name(name: &str) -> String {\n    name.replace(' ', \"_\")\n}\n"
+        }
+      }
+    }
+  ]
+}

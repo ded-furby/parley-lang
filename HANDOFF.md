@@ -768,6 +768,17 @@ Update it whenever you finish or start a work item.
   and report 026. Next add a second independent repository set and preregister
   a size-sixteen pilot under the unchanged protocol; require a larger
   confirmation if that broader pilot passes.
+- **Second repository expansion design (iteration 027):** preserve all eight
+  026 task objects exactly and add shipping-manifest, account-lockout,
+  sensor-band, tag-dedup, timesheet-pay, score-band, delivery-batch, and
+  path-sanitizer repositories. The deterministic sixteen-task manifest has SHA
+  `4d48c171c217cd7be4bc12fb7880c89f0b829470c5e68717fac810f1aace7312`.
+  Independent oracles match all 40 new public/hidden cases; all 24 new
+  language-specific seeds pass their old contracts and compile while failing
+  their new requirements. The complete pre-protocol suite passes 332/332.
+  Commit this corpus before freezing a six-replicate size-sixteen pilot. Keep
+  v0.3.155, the skill, source protocol, and strict gate unchanged; a pass still
+  requires larger confirmation.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

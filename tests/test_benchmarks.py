@@ -1099,6 +1099,181 @@ def test_repositories_026_combines_preserved_and_unrelated_tasks():
     assert combined["predeclared_analysis"]["matrix"].startswith("8 repositories")
 
 
+def _repositories_027_additions_oracle(
+    task_id: str, stdin: str
+) -> tuple[str, dict[str, str]]:
+    lines = iter(stdin.splitlines())
+    if task_id == "shipping_manifest_repo":
+        count = int(next(lines))
+        output = []
+        total = 0
+        fragile_count = 0
+        for _ in range(count):
+            item_id, weight, fragile = next(lines).split("|")
+            cost = int(weight) * 5 + (100 if fragile == "yes" else 0)
+            total += cost
+            fragile_count += fragile == "yes"
+            output.append(f"{item_id}:cost={cost}")
+        output.append(f"total={total}|fragile={fragile_count}")
+        return "\n".join(output) + "\n", {}
+    if task_id == "account_lockout_repo":
+        count = int(next(lines))
+        output = []
+        locked = 0
+        for _ in range(count):
+            user, attempts, role = next(lines).split("|")
+            is_locked = int(attempts) >= (10 if role == "admin" else 5)
+            locked += is_locked
+            output.append(f"{user}:{'locked' if is_locked else 'open'}")
+        output.append(f"locked={locked},open={count - locked}")
+        return "\n".join(output) + "\n", {}
+    if task_id == "sensor_band_repo":
+        low = int(next(lines))
+        high = int(next(lines))
+        count = int(next(lines))
+        output = []
+        counts = {"low": 0, "normal": 0, "high": 0}
+        for _ in range(count):
+            sensor, reading = next(lines).split("|")
+            value = int(reading)
+            band = "low" if value < low else "high" if value > high else "normal"
+            counts[band] += 1
+            output.append(f"{sensor}:{band}")
+        output.append(
+            f"low={counts['low']},normal={counts['normal']},high={counts['high']}"
+        )
+        return "\n".join(output) + "\n", {}
+    if task_id == "tag_dedup_repo":
+        count = int(next(lines))
+        output = []
+        seen = set()
+        duplicates = 0
+        for _ in range(count):
+            tag = next(lines).lower()
+            if tag in seen:
+                duplicates += 1
+            else:
+                seen.add(tag)
+                output.append(tag)
+        output.append(f"unique={len(seen)},duplicates={duplicates}")
+        return "\n".join(output) + "\n", {}
+    if task_id == "timesheet_pay_repo":
+        count = int(next(lines))
+        output = []
+        total = 0
+        for _ in range(count):
+            employee, hours, rate = next(lines).split("|")
+            hours_value = int(hours)
+            rate_value = int(rate)
+            pay = min(hours_value, 40) * rate_value
+            if hours_value > 40:
+                pay += (hours_value - 40) * rate_value * 2
+            total += pay
+            output.append(f"{employee}:pay={pay}")
+        output.append(f"total={total}")
+        return "\n".join(output) + "\n", {}
+    if task_id == "score_band_repo":
+        pass_mark = int(next(lines))
+        excellence_mark = int(next(lines))
+        count = int(next(lines))
+        output = []
+        counts = {"excellent": 0, "pass": 0, "retry": 0}
+        for _ in range(count):
+            user, score = next(lines).split("|")
+            value = int(score)
+            band = (
+                "excellent" if value >= excellence_mark
+                else "pass" if value >= pass_mark
+                else "retry"
+            )
+            counts[band] += 1
+            output.append(f"{user}:{band}")
+        output.append(
+            f"excellent={counts['excellent']},pass={counts['pass']},retry={counts['retry']}"
+        )
+        return "\n".join(output) + "\n", {}
+    if task_id == "delivery_batch_repo":
+        capacity = int(next(lines))
+        count = int(next(lines))
+        output = []
+        used = 0
+        deferred = 0
+        for _ in range(count):
+            item_id, units = next(lines).split("|")
+            units_value = int(units)
+            if used + units_value <= capacity:
+                used += units_value
+                output.append(f"{item_id}:accept")
+            else:
+                deferred += 1
+                output.append(f"{item_id}:defer")
+        output.append(f"used={used},deferred={deferred}")
+        return "\n".join(output) + "\n", {}
+    if task_id == "path_sanitizer_repo":
+        count = int(next(lines))
+        output = []
+        characters = 0
+        for _ in range(count):
+            owner, name = next(lines).split("|", 1)
+            slug = name.lower().replace(" ", "-")
+            characters += len(slug)
+            output.append(f"{owner}:{slug}")
+        output.append(f"entries={count},characters={characters}")
+        return "\n".join(output) + "\n", {}
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_repositories_027_addition_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_additions_027.json")
+
+    for task in tasks:
+        for case in task["public_cases"] + task["hidden_cases"]:
+            stdout, files = _repositories_027_additions_oracle(task["id"], case["stdin"])
+            assert case["stdout"] == stdout
+            assert case.get("files", {}) == files
+
+
+def test_repositories_027_addition_seeds_pass_old_contract_and_fail_new_public(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_additions_027.json")
+    seed_tasks = [{**task, "public_cases": task["seed_cases"]} for task in tasks]
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for language in ("parley", "python", "rust"):
+        seed_dir = tmp_path / f"{language}-027-seed"
+        seed_dir.mkdir()
+        write_bundle_workspace(seed_dir, seed_tasks, language, parley)
+        seed_proc = subprocess.run(
+            [str(seed_dir / "check")], cwd=seed_dir, capture_output=True, text=True, timeout=90
+        )
+        assert seed_proc.returncode == 0, seed_proc.stderr
+
+        new_dir = tmp_path / f"{language}-027-new"
+        new_dir.mkdir()
+        write_bundle_workspace(new_dir, tasks, language, parley)
+        new_proc = subprocess.run(
+            [str(new_dir / "check")], cwd=new_dir, capture_output=True, text=True, timeout=90
+        )
+        assert new_proc.returncode == 1
+        record = json.loads((new_dir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
+
+
+def test_repositories_027_combines_preserved_and_unrelated_tasks():
+    base = json.loads((BENCHMARKS / "agent_tasks_repositories_026.json").read_text())
+    additions = json.loads(
+        (BENCHMARKS / "agent_tasks_repositories_additions_027.json").read_text()
+    )
+    combined = json.loads((BENCHMARKS / "agent_tasks_repositories_027.json").read_text())
+
+    assert len(combined["tasks"]) == 16
+    assert combined["tasks"][:8] == base["tasks"]
+    assert combined["tasks"][8:] == additions["tasks"]
+    assert len({task["id"] for task in combined["tasks"]}) == 16
+    assert combined["predeclared_analysis"]["matrix"].startswith("16 repositories")
+
+
 def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
     manifest = tmp_path / "tasks.json"
     task = {
