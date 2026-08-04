@@ -1079,8 +1079,14 @@ class Emitter:
         self.indent -= 1
         self.out("}")
 
+    def loop_binding(self, name: str, body: list[A.Stmt]) -> str:
+        """Emit a mutable Rust binding exactly when a loop body changes it."""
+        prefix = "mut " if name in self.mutated_names_in_block(body) else ""
+        return prefix + safe(name)
+
     def em_forrange(self, st: A.ForRange):
-        self.out(f"for {safe(st.var)} in ({self.value(st.lo)})..=({self.value(st.hi)}) {{",
+        self.out(f"for {self.loop_binding(st.var, st.body)} in "
+                 f"({self.value(st.lo)})..=({self.value(st.hi)}) {{",
                  st.line)
         self.indent += 1
         self.emit_block(st.body)
@@ -1088,7 +1094,8 @@ class Emitter:
         self.out("}")
 
     def em_foreach(self, st: A.ForEach):
-        self.out(f"for {safe(st.var)} in {self.value(st.iter)} {{", st.line)
+        self.out(f"for {self.loop_binding(st.var, st.body)} in {self.value(st.iter)} {{",
+                 st.line)
         self.indent += 1
         self.emit_block(st.body)
         self.indent -= 1

@@ -63,8 +63,8 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `is 10 to 20:` (range arm, numeric `when`) | `x >= 10 && x <= 20` (inclusive) |
 | `while c:` | `while c { }` |
 | `repeat n times:` / `repeat n - 1 times:` | `for _ in 0..n { }` |
-| `for each x in xs:` | `for x in xs.clone() { }` (iterates a copy) |
-| `for each i from 1 to 10:` | `for i in 1..=10 { }` (inclusive) |
+| `for each x in xs:` | `for x in xs.clone() { }` (iterates a copy; `x` may be changed locally) |
+| `for each i from 1 to 10:` | `for i in 1..=10 { }` (inclusive; `i` may be changed locally) |
 | `stop` / `skip` | `break;` / `continue;`; outside a loop, `stop` leaves `main` |
 | `give back expr` / `return expr` | `return expr;` |
 | `sort xs` | replaces `xs` with a sorted copy |
@@ -78,6 +78,9 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `attempt:` / `if it failed:` | `catch_unwind` — see Errors below |
 | `include "lib.par"` | splices the file before parsing; resolves relative paths, `parley_modules`, then `PARLEY_PATH` |
 | `f with a, b` (statement call) | `f(a, b);` |
+
+Changing a loop variable is local to the current turn. It does not alter the
+source list, the range bounds, or which value the next turn receives.
 
 ## Expressions
 

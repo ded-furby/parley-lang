@@ -3164,6 +3164,20 @@ def test_when_ranges_and_multi_values(workdir):
     assert proc.stdout == "A\nB\ntiny\nother\n"
 
 
+def test_loop_variable_changes_compile_and_stay_iteration_local(workdir):
+    proc = run_program(workdir, "mutable_loop_variables", (
+        "to main:\n"
+        "    for each index from 1 to 2:\n"
+        "        set index to index plus 10\n"
+        "        say index\n"
+        "    let values be a list of 3, 4\n"
+        "    for each value in values:\n"
+        "        set value to value times 2\n"
+        "        say value\n"
+        "    say values\n"))
+    assert proc.stdout == "11\n12\n6\n8\n[3, 4]\n"
+
+
 def test_decimal_when_with_int_arm(workdir):
     proc = run_program(workdir, "decwhen", (
         "to main:\n"

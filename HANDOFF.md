@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.153** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 301 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.154** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 305 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -598,6 +598,14 @@ Update it whenever you finish or start a work item.
   path, including the zero guard and Rust-style negative rule. All five saved
   018 rotation failures pass public and hidden replay; unrelated 019 problems
   remain rejected. The full 301-test suite passes and the skill is unchanged.
+- **v0.3.154 mutable loop bindings:** the Rust emitter now marks range and
+  collection loop variables mutable exactly when their bodies change them.
+  This closes the iteration-020 P901 totality defect without adding syntax;
+  assignment remains local to the current iteration and does not alter the
+  source collection, range bounds, or next value. Checker, emitter, native,
+  docs, and regression coverage are included. The untouched failing 020 source
+  now compiles and passes its public case plus all five hidden cases; the skill
+  remains unchanged.
 - **Size-eight confirmation result (iteration 020):** 30 fresh sessions and
   240 task assignments passed protocol/integrity checks, but the strict gate
   failed 0/4 conditions. Parley reached 79/80 hidden and 74/80 first-check
@@ -736,7 +744,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.153).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.154).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

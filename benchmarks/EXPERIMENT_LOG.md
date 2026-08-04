@@ -1325,3 +1325,24 @@ useful regardless of tokens. Keep the instruction unchanged and perform no
 second compression experiment. After that correctness fix, use a genuinely
 new broad corpus or model split; do not continue tuning against these eight
 tasks.
+
+## Post-020 compiler correction — v0.3.154 mutable loop bindings
+
+- Trigger: iteration-020 P901 after the checker accepted `set index to limit`
+  inside `for each index from 1 to limit:`
+- Design: no grammar, AST, checker, diagnostic, or runtime change
+- Emission: range and collection loop bindings gain Rust `mut` exactly when
+  existing recursive mutation analysis finds that their body changes the loop
+  variable; unchanged bindings remain immutable
+- Semantics: assignment changes only the current iteration value, never the
+  source collection, frozen range bounds, or next iteration value
+- Instruction: unchanged; no compression or syntax addition
+- Verification: 305 tests passed in 94.42 seconds, including checker, emitter,
+  and native range/list mutation regressions
+- Exact replay: the untouched iteration-020 first source that previously
+  raised P901 compiled and produced the expected output for the public case
+  and all five hidden longest-common-prefix cases
+
+This is a checker-totality repair, not evidence that the failed iteration-020
+parity result changed. Do not rerun that same corpus as an optimization target.
+The next measurement must use a newly frozen broad corpus or model split.

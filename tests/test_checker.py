@@ -240,6 +240,19 @@ def test_loop_var_scoped():
     assert "P201" in diag_codes(src)
 
 
+def test_loop_variables_can_be_changed_inside_their_iteration():
+    src = in_main(
+        "for each i from 1 to 2:",
+        "    set i to i plus 10",
+        "    say i",
+        "let values be a list of 3, 4",
+        "for each value in values:",
+        "    set value to value times 2",
+        "    say value",
+    )
+    assert check_text(src) == []
+
+
 # ------------------------------------------------------------------ v0.2: when patterns + function values
 
 RANGE_AND_FUNC_CASES = [

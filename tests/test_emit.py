@@ -127,6 +127,22 @@ def test_contextual_position_identifier_emits_as_an_ordinary_variable():
     assert "parley_item(&(values), position)" in rust
 
 
+def test_changed_loop_variables_emit_mutable_bindings_only_when_needed():
+    rust = emit_text(
+        "to main:\n"
+        "    for each changed_index from 1 to 2:\n"
+        "        set changed_index to changed_index plus 10\n"
+        "    for each stable_index from 1 to 2:\n"
+        "        say stable_index\n"
+        "    let values be a list of 3, 4\n"
+        "    for each changed_value in values:\n"
+        "        set changed_value to changed_value times 2\n"
+    )
+    assert "for mut changed_index in" in rust
+    assert "for stable_index in" in rust
+    assert "for mut changed_value in" in rust
+
+
 def test_modulo_alias_emits_through_existing_guarded_remainder_helper():
     rust = emit_text("to main:\n    say -5 modulo 3\n")
     assert "parley_rem((-(5i64)), 3i64)" in rust

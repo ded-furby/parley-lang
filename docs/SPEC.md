@@ -131,7 +131,9 @@ parse-relevant highlights:
   read-only non-`changing` heap parameters are borrowed and are cloned only if
   the callee stores or mutates its local parameter. The only user-visible
   aliasing is `changing` parameters, which are exclusive mutable borrows for
-  the call.
+  the call. A loop variable may be assigned inside its body; the assignment is
+  local to that iteration and does not change the source collection, range
+  bounds, or next iteration value.
 * **Text joining.** `plus` with text on either side formats the other value
   using the same rules as interpolation and returns text. Adding a non-text
   value to a `list of text` applies the same destination-aware formatting.

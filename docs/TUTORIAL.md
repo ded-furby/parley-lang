@@ -95,6 +95,8 @@ to main:
 ```
 
 `stop` ends a loop early; `skip` jumps to the next turn.
+You may `set` a loop variable inside the loop. That change lasts only for the
+current turn: it does not change the source list or the next range value.
 
 ## 7. Lists
 
