@@ -1600,3 +1600,71 @@ only because the task population changed. Preserve all output. If parity
 passes, require a larger preregistered confirmation. If it fails, do not tune
 syntax on this corpus; only independently recurring defects may enter separate
 general-usefulness, semantic-consistency, and maintainability review.
+
+## 023 — Application correctness ties; strict parity still fails
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-sol`, medium reasoning
+- Matrix: eight tasks × three languages × six complete-bundle replicates =
+  18 fresh sessions and 144 hidden-judged task assignments
+- Raw result:
+  `benchmarks/results/agent_application_023_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `fbe356681089cd59c3616a845adf29a8fbfceee10476fac7312780cc07275342`
+- Report: `benchmarks/reports/023-application-corpus-parity-failed.html`
+- Report inputs:
+  `benchmarks/reports/023-application-corpus-parity-failed.artifact.json`,
+  `.sql`, and `.chart-map.md`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, checker-integrity,
+  and command-protocol checks passed; no timeout, nonzero agent exit, or
+  runner error
+
+| Language | Hidden tasks | First-check tasks | Repairs | Median tokens/task | Median seconds/task | Source tokens/task |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 48/48 | 33/48 | 9 | 13,461.56 | 11.4346 | 206.44 |
+| Python | 48/48 | 48/48 | 0 | 6,242.00 | 6.6633 | 200.25 |
+| Rust | 48/48 | 48/48 | 0 | 6,584.69 | 9.4315 | 365.88 |
+
+The strict gate failed 1/4. Correctness passed; tokens, elapsed, and first
+check failed. Parley used 2.16× Python's and 2.04× Rust's median reported
+tokens per task. It took 1.72× Python's and 1.21× Rust's elapsed time. No
+Parley session was repair-free, so the preregistered clean-session sensitivity
+analysis is unavailable.
+
+Exact file judgment worked as designed. The harness deleted the expected file
+before every case and checked exact UTF-8 contents afterward. Python and Rust
+passed `file_backed_notes` initially in all six sessions. Parley repaired it in
+all six, then passed all 6/6 hidden task judgments and 24/24 hidden file cases.
+Across languages all 72 exact file cases passed.
+
+The 15 Parley first-task failures classify as follows:
+
+| Signature | Events | Task families | Independent sessions |
+| --- | ---: | ---: | ---: |
+| Descending range assumed for ticket ordering | 5 | 1 | 5 |
+| Unparenthesized join plus suffix | 4 | 4 | 1 |
+| Indexed `repeat` form | 3 | 1 | 3 |
+| `newline` pseudo-identifier | 2 | 1 | 2 |
+| Unwrapped read-file maybe | 1 | 1 | 1 |
+
+Five independent sessions assumed `for each priority from 5 to 1` descends,
+but all five events belong to one ordering task. Adding descending-range
+semantics would require a deliberate general design for endpoints and step
+behavior, not adoption from that transcript. Four join failures crossed four
+tasks but came from one session's repeated precedence habit. The remaining
+six failures all belong to the one file task and use either redundant indexed
+repeat syntax, a nonexistent value, or an intentionally unchecked maybe.
+No signature crosses both unrelated tasks and independent sessions. **No
+compiler, grammar, runtime, prompt, or skill change follows from 023.**
+
+Parley source was close to Python-sized and far shorter than Rust: 206.44 rough
+tokens/task versus 200.25 and 365.88. Parley is 43.58% shorter than Rust while
+using more than twice the reported agent tokens. This again locates the gap in
+first-check discoverability and repair context, not emitted source verbosity.
+
+Preserve 023 unchanged. Further work should target general discoverability of
+existing semantics on new tasks or a broader real-repository benchmark, not
+add aliases from these transcripts. Any future compiler change still requires
+new unrelated-task recurrence, general usefulness, semantic consistency, and
+maintainability.

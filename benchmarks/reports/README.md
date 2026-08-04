@@ -28,6 +28,7 @@ transformation, and chart-map notes.
 | 020 | Parley 0.3.153 | The size-eight confirmation reached 79/80 hidden tasks but failed all four strict parity conditions | [HTML](020-size-eight-confirmation-failed.html) |
 | 021 | Parley 0.3.154 | New-corpus correctness tied at 72/72; first-check repairs left agent effort at 2.06× Python | [HTML](021-new-broad-corpus-parity-failed.html) |
 | 022 | Parley 0.3.155 | Independent-model correctness tied, but Parley used 3.20× Python's token effort and passed only 39/72 first checks | [HTML](022-independent-model-parity-failed.html) |
+| 023 | Parley 0.3.155 | Application correctness and exact file output tied; repairs left agent effort above 2× both baselines | [HTML](023-application-corpus-parity-failed.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

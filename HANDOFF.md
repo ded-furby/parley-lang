@@ -664,6 +664,19 @@ Update it whenever you finish or start a work item.
   manifest SHA is `f64d441628bd21ea8c6b5fbe3dda51f4d5c52f75607cdceed0616b76ad4d6dc4`;
   protocol SHA is `0a424ac66bbbc01e6f9020fc643462c3353ac4d69065a500613688ba96c423f8`.
   Preserve every result; no same-corpus syntax tuning is allowed.
+- **Application-corpus result (iteration 023):** all 144 assignments passed
+  hidden cases; all 18 fresh sessions passed integrity/protocol checks; and
+  all 72 exact hidden file judgments matched. Strict parity still failed 1/4.
+  Parley reached 33/48 first checks, nine repairs, and 13,461.56 median
+  tokens/task versus Python's 48/48, zero, and 6,242.00 and Rust's 48/48,
+  zero, and 6,584.69. Parley source was 43.58% shorter than Rust. Five
+  descending-range expectations were one task; four join-precedence failures
+  were one session; six file drafts were one task. No signature crossed both
+  task and session independence, so no compiler or skill change follows.
+  Preserve raw SHA
+  `fbe356681089cd59c3616a845adf29a8fbfceee10476fac7312780cc07275342`
+  and report 023. Move toward general discoverability or real-repository work,
+  not same-corpus aliases.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
