@@ -1465,3 +1465,29 @@ No `repeat while`, postfix `sorted`, insert phrase, multiword function syntax,
 or other iteration-021 draft is accepted. The exact-source replay is a
 regression check, not a revised benchmark result. The next efficiency evidence
 must come from a newly frozen corpus or model split.
+
+## Pre-registration for 022 — Independent-model split
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155 at
+  `5b407e7f1f263db4cc73aa9a77de1c87c2b862e4`
+- Model: `gpt-5.6-terra`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Task manifest: frozen iteration-021 twelve-task corpus, SHA-256
+  `45f6387fbe8fef2e3c59b59781b967b81302494b6f09533df81bead27f20f781`
+- Protocol: `benchmarks/bundle_protocol_022.json`, SHA-256
+  `8aea92b1001a28d1137a2af55af10c2e36ce4baa85e38fb14ba43da92c015edd`
+- Matrix: 12 tasks × 3 languages × 6 complete-bundle replicates = 18 fresh
+  sessions and 216 hidden-judged task assignments
+- Seed: `20260808`
+
+This is the model split explicitly allowed by iteration 021's stop rule. The
+primary result compares Parley, Python, and Rust only within `gpt-5.6-terra`.
+Iteration 021 used both a different model and Parley 0.3.154, so descriptive
+movement across iterations cannot separately identify model or compiler
+effects. Audit disappearance of the frozen contextual-`number` signature, but
+do not make a counterfactual token claim.
+
+The strict four-condition gate, skill, prompts, cases, runner, and protocol are
+otherwise unchanged. Preserve every result. No post-output ergonomics change
+may be learned from this reused corpus; future evidence must use new tasks.

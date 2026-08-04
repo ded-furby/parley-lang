@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "experiment_id": "022",
+  "title": "Independent-model broad-corpus split",
+  "description": "Cross-language comparison with gpt-5.6-terra on the frozen twelve-task iteration-021 corpus after contextual number in Parley 0.3.155.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_broad_021.json",
+    "task_manifest_sha256": "45f6387fbe8fef2e3c59b59781b967b81302494b6f09533df81bead27f20f781",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "5b407e7f1f263db4cc73aa9a77de1c87c2b862e4",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [12],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-terra",
+    "reasoning": "medium",
+    "seed": 20260808,
+    "timeout_seconds": 1200,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_task_solutions": 216,
+    "sessions_per_language": 6,
+    "task_solutions_per_language": 72,
+    "derivation": "6 complete twelve-task bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 12,
+    "correctness": "Parley hidden-task success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned task must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned task must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check task success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict parity under the independent model."
+  },
+  "interpretation_boundary": [
+    "The primary result is the within-model Parley/Python/Rust comparison under gpt-5.6-terra.",
+    "Iteration 021 used gpt-5.6-sol and Parley 0.3.154, so cross-iteration movement cannot be attributed separately to model or compiler.",
+    "The exact corpus reuse is authorized only as the preregistered model split in iteration 021's stop rule; do not tune syntax against it after output.",
+    "Audit whether the ten contextual-number failures disappear, but do not construct a counterfactual token claim from different sessions."
+  ],
+  "secondary_analysis": [
+    "Report all sessions, task outcomes, repairs, prompt and source sizes, tokens, elapsed time, integrity, and protocol compliance.",
+    "Classify every first-check and hidden failure, including recurrence by unrelated task and independence by session.",
+    "Compare failure signatures with iteration 021 descriptively and state that both model and compiler changed.",
+    "Report repair-free sensitivity if at least two Parley sessions pass every task on the first check."
+  ],
+  "feature_boundary": "Parley is frozen at v0.3.155. Relative to iteration 021, only value-level contextual identifier number changed. No grammar operation, AST, runtime, skill, prompt, task, or checker protocol changed.",
+  "change_rule": "No syntax or compiler behavior may be added from one task, transcript, session, or token gap. A proposal requires independent recurrence across unrelated tasks plus general usefulness, semantic consistency, and maintainability. Checker-totality defects remain correctness bugs.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result. After output, do not alter the compiler from this reused corpus unless a newly observed checker-totality defect is independently reproducible; future ergonomics evidence must move to a new corpus."
+}

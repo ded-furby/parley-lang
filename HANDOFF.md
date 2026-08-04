@@ -634,6 +634,13 @@ Update it whenever you finish or start a work item.
   skill unchanged, replay the ten exact sources, and use a new corpus or model
   split rather than tuning these twelve tasks. Reject `repeat while`, postfix
   `sorted`, multiword function declarations, and all isolated forms.
+- **Independent-model preregistration (iteration 022):** the model-split path
+  authorized by 021 is frozen with `gpt-5.6-terra`, Parley 0.3.155, the same
+  validated twelve tasks, and six complete-bundle replicates per language.
+  The skill and four-condition gate are unchanged. Compare languages only
+  within this model; do not attribute cross-iteration movement separately to
+  contextual `number` or the model, and make no ergonomics change from the
+  reused corpus after output.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
