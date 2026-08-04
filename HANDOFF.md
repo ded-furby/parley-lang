@@ -693,6 +693,20 @@ Update it whenever you finish or start a work item.
   against harness/corpus commit `cb4e3d4`; run all 18 sessions once without
   selective reruns. This related-source corpus is strictly a
   maintenance-efficiency test and may not justify compiler or syntax changes.
+- **Seeded-maintenance result (iteration 024):** all 72 assignments passed
+  hidden cases and all 18 fresh sessions passed integrity/protocol checks, but
+  strict parity failed 1/4. Parley reached 17/24 first checks, six repairs, and
+  20,547.88 median tokens/task versus Python's 24/24, zero, and 11,142.88 and
+  Rust's 24/24, zero, and 11,654.50. Every Parley session repaired once. Six
+  invoice failures in six sessions assigned decimal division to a whole-number
+  result, but they remain one task family; one file-read maybe failure was
+  isolated. No language or skill change follows from this related-source
+  corpus. Parley final source was 41.50% shorter than Rust and its edit 23.22%
+  smaller, without lower agent effort. Preserve raw SHA
+  `ca3d24d96ef63242aa35ae8970df617df275d2e3cd552b740c4b15d3f67963e1`
+  and report 024. Next freeze a real multi-file repository-maintenance corpus,
+  with existing/hidden tests and changed-file scope, rather than tuning invoice
+  syntax.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

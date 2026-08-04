@@ -1743,3 +1743,91 @@ real-repository confirmation before any general parity claim. A failure cannot
 trigger a language or instruction change from this related-source corpus; the
 next evidence source must be selected for external validity, not transcript
 syntax.
+
+## 024 — Seeded maintenance correctness ties; strict parity still fails
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-sol`, medium reasoning
+- Matrix: four tasks × three languages × six complete-bundle replicates =
+  18 fresh sessions and 72 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_maintenance_024_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `ca3d24d96ef63242aa35ae8970df617df275d2e3cd552b740c4b15d3f67963e1`
+- Report: `benchmarks/reports/024-seeded-maintenance-parity-failed.html`
+- Report SHA-256:
+  `72e2fb1dec296ece26a45d7a833e9f0938f4b497583a4619816fe9d2b16027a5`
+- Report inputs:
+  `benchmarks/reports/024-seeded-maintenance-parity-failed.artifact.json`,
+  `.sql`, and `.chart-map.md`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, checker-integrity,
+  and command-protocol checks passed; no timeout, nonzero agent exit, or
+  runner error
+
+The first launcher invocation stopped before creating a model session because
+the Homebrew `parley` entry point could not import the checkout under the
+isolated environment (`ModuleNotFoundError`). No raw output file or benchmark
+cell existed. The exact frozen command then used a temporary executable pinned
+to this checkout and Python 3.14. No protocol, task, prompt, harness, result
+cell, or gate changed.
+
+| Language | Hidden tasks | First-check tasks | Repairs | Median tokens/task | Median seconds/task | Seed tokens/task | Final source tokens/task | Edit tokens/task |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 17/24 | 6 | 20,547.88 | 12.6944 | 186.75 | 243.38 | 67.38 |
+| Python | 24/24 | 24/24 | 0 | 11,142.88 | 6.1056 | 167.00 | 206.25 | 40.25 |
+| Rust | 24/24 | 24/24 | 0 | 11,654.50 | 7.2065 | 339.25 | 416.00 | 87.75 |
+
+The strict gate failed 1/4. Correctness passed; tokens, elapsed time, and first
+check failed. Parley used 1.84× Python's and 1.76× Rust's median reported
+tokens per task. It took 2.08× Python's and 1.76× Rust's median elapsed time.
+Every Parley session required exactly one repair and used more tokens than
+every Python or Rust session, so the preregistered repair-free sensitivity is
+unavailable and the aggregate is not driven by one outlier.
+
+Exact two-file judgment worked. The harness removed both expected files before
+every case. Parley passed the notes-index task initially in five of six
+sessions, then passed 6/6 hidden task judgments and 24/24 hidden file cases.
+Python and Rust were first-check clean. Across languages all 72 hidden file
+cases matched stdout and both exact UTF-8 files.
+
+The seven Parley first-task failures classify as follows:
+
+| Signature | Events | Task families | Independent sessions |
+| --- | ---: | ---: | ---: |
+| Whole-number division produced decimal | 6 | 1 | 6 |
+| Unwrapped read-file maybe | 1 | 1 | 1 |
+
+All six invoice drafts assigned `/` or `divided by` to a whole-number
+discount. Parley correctly typed the result as decimal and emitted P301 with a
+direct `rounded`, `floor of`, or `ceiling of` repair hint. Every session used
+`floor of` on the next attempt. Repetition across sessions is strong evidence
+that this one requirement is surprising, but it is still one task family and
+does not settle general whole-number-division syntax or semantics. The file
+draft split a `maybe text` without unwrapping once and repaired with the
+existing `value of` operation.
+
+Source compactness did not predict agent effort. Parley's final source was
+41.50% shorter than Rust and its median edit was 23.22% smaller, yet Parley
+used 76% more reported agent tokens. Relative to Python, Parley's final source
+was 18.00% larger and its edit was 67.39% larger. The measured Parley prompt
+also included the frozen skill. Descriptively, the maintenance token ratio
+narrowed from iteration 023's 2.16× Python and 2.04× Rust to 1.84× and 1.76×,
+but the task count, source context, and unit of work changed, so this is not a
+causal improvement estimate.
+
+The canonical report builder passed validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. A first
+successful build was followed by a report self-audit that added an adjacent
+interpretation paragraph for each secondary chart; the final corrected build
+again passed every stage with 35 rendered blocks, six charts, seven metrics,
+and six tables.
+
+**No compiler, grammar, AST, checker, runtime, diagnostic, prompt, or skill
+change follows from iteration 024.** The corpus deliberately reuses source
+from 023 and cannot count as independent language-design recurrence. Preserve
+024 unchanged. The next defensible evidence is a preregistered real multi-file
+repository-maintenance corpus with existing and hidden tests, equivalent
+seeded repositories, changed-file scope, and patch-size measurement. Reopen a
+language design only after recurrence across unrelated new domains plus
+general-usefulness, semantic-consistency, and maintainability review.
