@@ -314,6 +314,7 @@ the plan:
 - [x] natural `and` helper signatures/calls with inferred list/map mutation — v0.3.149
 - [x] one-shot general agent-instruction compression — v0.3.150
 - [x] evidence-backed rollback to the proven reliability core — v0.3.151
+- [x] contextual `position` identifiers from cross-task evidence — v0.3.152
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -341,7 +342,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-python3 -m pytest # 285 tests; e2e compiles real binaries (needs cargo)
+python3 -m pytest # 294 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

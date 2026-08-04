@@ -116,6 +116,17 @@ def test_text_position_emits_utf8_safe_helper():
     assert "parley_position(&(" in rust
 
 
+def test_contextual_position_identifier_emits_as_an_ordinary_variable():
+    rust = emit_text(
+        "to main:\n"
+        "    let values be a list of 10, 20\n"
+        "    for each position from 1 to length of values:\n"
+        "        say item position of values\n"
+    )
+    assert "for position in" in rust
+    assert "parley_item(&(values), position)" in rust
+
+
 def test_text_count_emits_utf8_safe_helper():
     rust = emit_text('to main:\n    say count of "a" in "banana"\n')
     assert "fn parley_count" in rust

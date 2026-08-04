@@ -40,7 +40,7 @@ class TNothing(A.Type):
 # uniformly refused with a clear message instead.
 RESERVED = {
     "a", "an", "is", "of", "to", "item", "ask", "sorted", "reversed",
-    "trimmed", "rounded", "contains", "replacing", "position", "times", "changing", "plus", "minus",
+    "trimmed", "rounded", "contains", "replacing", "times", "changing", "plus", "minus",
     "yes", "no", "nothing", "not", "and", "or", "say", "let", "be", "set",
     "stop", "skip", "assert", "fail", "add", "remove", "write", "append", "if", "otherwise",
     "when", "while", "repeat", "attempt", "with", "giving", "has", "from",

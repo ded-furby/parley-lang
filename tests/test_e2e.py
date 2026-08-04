@@ -163,6 +163,20 @@ def test_text_toolbox(workdir):
         "the quick fox\nTHE QUICK FOX\n13\ndesserts\nThe Quiet Fox\n5\nnothing\n2\n1\n2\n3\nT\nc\nframed\nyes\n")
 
 
+def test_contextual_position_identifier_runs_beside_search_operator(workdir):
+    src = '''to main:
+    let values be a list of 10, 20, 30
+    let position be 2
+    set item position of values to 25
+    say item position of values
+    remove item position of values
+    say item position of values
+    say position of "b" in "abc"
+'''
+    proc = run_program(workdir, "contextual_position", src)
+    assert proc.stdout == "25\n30\n2\n"
+
+
 def test_math_toolbox(workdir):
     src = '''to main:
     say 2 to the power of 10

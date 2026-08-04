@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.151** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 285 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.152** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 294 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -586,6 +586,12 @@ Update it whenever you finish or start a work item.
   69 Parley repair turns across all three tasks. The exact 1,519-character
   reliability core and the original metered wrapper are restored. No further
   instruction compression is planned; compiler semantics remain frozen.
+- **v0.3.152 contextual `position`:** iteration 017 rejected this common
+  variable name across four unrelated tasks. It is now accepted uniformly,
+  including `item position of values`, while the existing `position of needle
+  in text` operator is preserved. All five untouched failing first sources
+  pass their public and hidden cases, and the full 294-test suite passes. The
+  skill is unchanged and `modulo` was deliberately not added.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -689,7 +695,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.151).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.152).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

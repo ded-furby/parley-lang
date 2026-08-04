@@ -808,6 +808,28 @@ consistency, and maintainability—not improvement on one transcript.
 - Next evidence is distributional: a broader task corpus or the predeclared
   10-replicate-per-cell confirmation, not another three-task tuning pass.
 
+### 2026-08-04 — Parley 0.3.152 contextual `position`
+
+- Iteration 017 found the ordinary name `position` rejected in five
+  first-check events spanning four unrelated tasks. This met the predeclared
+  cross-task rule and independently exposed a vocabulary-design problem: a
+  common domain name was globally reserved only because Parley also has the
+  `position of needle in text` operator.
+- `position` is now a contextual identifier. `item position of values` reads
+  the variable as its index, while `position of "x" in text` retains its
+  search meaning. If a search expression itself is an item index, explicit
+  parentheses resolve the inherent phrase boundary.
+- The implementation factors item-index parsing into one documented grammar
+  rule shared by reads, sets, and removals. It removes the obsolete reserved
+  name and diagnostic special case; it does not add a new operator or weaken
+  checker semantics.
+- All five untouched 017 first-attempt sources that failed on `position` now
+  pass their original public and hidden cases. The full suite passes 294/294,
+  including parser, checker, Rust emission, and native execution coverage.
+- The 1,519-character skill remains byte-for-byte unchanged. Unsupported
+  `modulo` remains unchanged because its evidence is still confined to one
+  task. Iteration 018 must be frozen separately before measuring 0.3.152.
+
 ## 015 — 90-session confirmation: strict parity not met
 
 - Date: 2026-07-29

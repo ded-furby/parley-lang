@@ -27,10 +27,14 @@ For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
 * Multi-word phrases (`is more than`, `a list of`, `to the power of`, …) are
   single lexical tokens, matched with one-or-more spaces between words and a
   word boundary at the end. This is what makes English LALR(1)-parsable.
-* Keyword tokens are matched contextually: a word like `length` may name a
-  variable because `length of` only forms a token where an expression is
-  expected. Words that are complete tokens by themselves (`is`, `of`, `item`,
-  `a`, `sorted`, …) are reserved; the checker rejects them as names (P209).
+* Keyword tokens are matched contextually: words such as `length` and
+  `position` may name variables because `length of` and `position of ... in
+  ...` form operators only in their grammatical contexts. In the inherently
+  ambiguous `item position of values`, `position` is the item index; use
+  parentheses when the index itself is a search expression: `item (position
+  of needle in text) of values`. Words that are complete tokens by themselves
+  (`is`, `of`, `item`, `a`, `sorted`, …) are reserved; the checker rejects
+  them as names (P209).
 * Literals: `INT /\d+/`, `FLOAT /\d+\.\d+/`, strings
   `"(\\.|[^"\\\n])*"` with escapes `\n \t \r \" \\` and `{expr}`
   interpolation (`{{`/`}}` for literal braces).

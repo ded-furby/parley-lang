@@ -10,6 +10,11 @@ A program is records, kinds (enums) and functions at the top level, with
 indentation-based blocks (4 spaces). Execution starts at `to main:`.
 Comments: `note: …` or `# …` to end of line.
 
+Names use letters, digits, and underscores and cannot start with a digit.
+Phrase starters such as `position` are contextual names: `let position be 1`
+and `item position of values` use the variable, while `position of "x" in t`
+is text search. Parenthesize a search used as an item index.
+
 ## Types
 
 | Parley | Rust | notes |

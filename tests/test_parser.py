@@ -112,13 +112,46 @@ def test_text_position_expression_parse():
     assert isinstance(expr.value, A.Str)
 
 
+def test_position_is_contextual_in_loop_and_item_index():
+    prog = parse(
+        "to main:\n"
+        "    let values be a list of 10, 20\n"
+        "    for each position from 1 to length of values:\n"
+        "        say item position of values\n"
+    )
+    loop = prog.funcs[0].body[1]
+    assert isinstance(loop, A.ForRange)
+    assert loop.var == "position"
+    item = loop.body[0].value
+    assert isinstance(item, A.ItemOf)
+    assert isinstance(item.index, A.Var)
+    assert item.index.name == "position"
+
+    mutation_prog = parse(
+        "to main:\n"
+        "    let values be a list of 10, 20\n"
+        "    let position be 2\n"
+        "    set item position of values to 30\n"
+        "    remove item position of values\n"
+    )
+    assert isinstance(mutation_prog.funcs[0].body[2], A.SetItem)
+    assert isinstance(mutation_prog.funcs[0].body[3], A.RemoveItem)
+
+
+def test_parenthesized_position_search_remains_a_valid_item_index():
+    prog = parse(
+        'to main:\n'
+        '    let positions be a list of 7, 8\n'
+        '    say item (position of "b" in "abc") of positions\n'
+    )
+    item = prog.funcs[0].body[1].value
+    assert isinstance(item, A.ItemOf)
+    assert isinstance(item.index, A.PositionOf)
+
+
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
-        (
-            "to main:\n    let position be 1\n    let value be item position of values\n",
-            "'position' is reserved Parley vocabulary",
-        ),
         (
             "to add compact run:\n    say 1\n",
             "Function names are one identifier",

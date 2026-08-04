@@ -112,6 +112,24 @@ def test_clean_program_no_diags():
     assert check_text(src) == []
 
 
+def test_position_is_a_contextual_identifier_without_shadowing_search():
+    mutation_src = in_main(
+        "let values be a list of 10, 20",
+        "let position be 2",
+        "set item position of values to 30",
+        "remove item position of values",
+        'say position of "b" in "abc"',
+    )
+    loop_src = in_main(
+        "let values be a list of 10, 20",
+        "for each position from 1 to length of values:",
+        "    say item position of values",
+        'say position of "b" in "abc"',
+    )
+    assert check_text(mutation_src) == []
+    assert check_text(loop_src) == []
+
+
 def test_compact_range_agent_idioms_are_clean():
     src = (
         "to record_range with low as number, high as number, changing pieces as list of text:\n"

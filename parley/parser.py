@@ -790,11 +790,6 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
         hint = (hint or "") + " Lines that open a block (to/if/while/when/…) end with ':'."
     lines = text.splitlines()
     line = lines[e.line - 1] if 1 <= e.line <= len(lines) else ""
-    if re.search(r"\b(?:let|set|item|for each)\s+position\b|\bitem\s+position\s+of\b", line):
-        hint = (hint or "") + (
-            " 'position' is reserved Parley vocabulary; rename that variable "
-            "everywhere to 'index' or 'cursor'."
-        )
     definition = re.match(r"^\s*to\s+([A-Za-z_]\w*)\s+([A-Za-z_]\w*)", line)
     if definition and definition.group(2) not in {"with", "giving"}:
         hint = (hint or "") + (

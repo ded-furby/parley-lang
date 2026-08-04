@@ -64,7 +64,7 @@ block: _NL _INDENT stmt+ _DEDENT
 let_stmt: "let" NAME "be" closure_lit
         | "let" NAME "be" rhs _NL
 set_stmt: "set" lvalue _TO rhs _NL
-set_item_stmt: "set" _ITEM sum_e _OF lvalue _TO rhs _NL
+set_item_stmt: "set" _ITEM item_index _OF lvalue _TO rhs _NL
 say_stmt: ("say" | "print") expr _NL
 sort_stmt: "sort" NAME _NL
 give_stmt: (_GIVE_BACK | "return") closure_lit
@@ -74,7 +74,7 @@ skip_stmt: "skip" _NL
 assert_stmt: "assert" expr ["," expr] _NL
 fail_stmt: "fail" expr _NL
 add_stmt: "add" expr _TO lvalue _NL
-remove_stmt: "remove" _ITEM sum_e _OF lvalue _NL
+remove_stmt: "remove" _ITEM item_index _OF lvalue _NL
 write_stmt: "write" expr _TO_FILE expr _NL
 append_stmt: "append" expr _TO_FILE expr _NL
 call_stmt: NAME args _NL
@@ -162,9 +162,10 @@ closure_param: NAME "as" type
        | prod_e _MOD pow_e      -> mod_op
 ?pow_e: unary
       | unary _POW unary        -> pow_op
-?unary: _MINUS unary            -> neg
+?unary: _POSITION_OF sum_e "in" unary -> position_of
+      | unary_without_position
+?unary_without_position: _MINUS unary            -> neg
       | _COUNT_OF sum_e "in" unary -> count_of
-      | _POSITION_OF sum_e "in" unary -> position_of
       | _LENGTH_OF unary        -> length_of
       | _SUM_OF unary           -> sum_of
       | _SMALLEST_OF unary      -> smallest_of
@@ -187,12 +188,28 @@ closure_param: NAME "as" type
       | _TRIMMED unary          -> trimmed_of
       | _ROUNDED unary          -> rounded_of
       | _REMAINDER_OF unary _DIV unary -> remainder
-      | _ITEM sum_e _OF unary   -> item_of
+      | _ITEM item_index _OF unary -> item_of
       | _READ_FILE unary        -> read_file
       | _ASK_NUM unary          -> ask_number
       | _ASK unary              -> ask_text
       | _RANDOM_FROM sum_e _TO unary -> random_from
       | postfix_e
+
+// `position of needle in text` and `item position of values` share the
+// words "position of". At the immediate start of an item index, prefer the
+// identifier reading; the search expression remains available in explicit
+// parentheses. This keeps `position` contextual without weakening general
+// arithmetic indexes or relying on a source-specific lexer exception.
+?item_index: item_index_sum
+?item_index_sum: item_index_prod
+               | item_index_sum _PLUS item_index_prod  -> add_op
+               | item_index_sum _MINUS item_index_prod -> sub_op
+?item_index_prod: item_index_pow
+                | item_index_prod _TIMES item_index_pow -> mul_op
+                | item_index_prod _DIV item_index_pow   -> div_op
+                | item_index_prod _MOD item_index_pow   -> mod_op
+?item_index_pow: unary_without_position
+               | unary_without_position _POW unary -> pow_op
 ?postfix_e: atom
           | postfix_e _APOS_S NAME -> field_get
 ?atom: INT                      -> num
