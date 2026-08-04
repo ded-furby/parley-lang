@@ -2184,3 +2184,74 @@ report full per-session/per-repository/token/file evidence. If strict parity
 passes, this remains a six-replicate pilot: preregister the larger confirmation
 before claiming parity. If it fails, do not tune the corpus or change syntax or
 instructions from same-corpus evidence.
+
+## 027 — Perfect Parley reliability; size-sixteen token efficiency regresses
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-sol`, medium reasoning
+- Matrix: sixteen repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 288 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_repositories_027_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `9955e67c36d7d3e3ea236644d731a6e4f9054da801b097cf41a7d64ceb64ce7c`
+- Report: `benchmarks/reports/027-sixteen-repository-scale-regression.html`
+- Report SHA-256:
+  `dd49899d2c066c4556d8734e8a2c99c9533cc00df123db1e38fb0e659297c5d5`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_027_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, source-order,
+  checker-integrity, and command-protocol checks passed; no timeout, nonzero
+  agent exit, or runner error
+
+| Language | Hidden repos | First-check repos | Repairs | Median tokens/repo | Median seconds/repo | Seed tokens/repo | Final source tokens/repo | Edit tokens/repo | Changed files/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 96/96 | 96/96 | 0 | 7,675.56 | 8.0127 | 87.25 | 179.75 | 106.38 | 1.9375 |
+| Python | 96/96 | 95/96 | 1 | 5,046.25 | 5.8393 | 71.94 | 147.91 | 92.22 | 1.9375 |
+| Rust | 96/96 | 96/96 | 0 | 5,650.28 | 8.5897 | 187.25 | 296.50 | 135.31 | 1.9375 |
+
+The strict gate fails 2/4. Parley alone is 96/96 first-check clean, so hidden
+correctness and first-check reliability pass. Its median tokens per repository
+are 52.10% above Python and 35.84% above Rust. Its elapsed time remains 6.72%
+below Rust but 37.22% above Python, so the better-baseline token and elapsed
+conditions fail.
+
+Size sixteen does not preserve iteration 026's Rust token advantage. The
+mechanism is visible in the complete event stream: Parley replicates 2, 5, and
+6 apply all 31 changed files in one file-change action and cluster at
+6,980.81–7,031.13 tokens per repository. Replicates 1, 3, and 4 split the same
+31 files across two file-change actions and cluster at 8,320.00–8,386.06. All
+six run one source command, one successful check, and zero repairs. Even the
+one-action median, 7,000.56, remains about 24% above Rust's primary median and
+39% above Python's, so batching is only a partial explanation.
+
+Python replicate 1 is the only first-check failure: an unexpected indent in
+the ledger entrypoint. It repairs once and passes all hidden cases. No Parley
+parse, type, runtime, hidden, or draft-signature failure occurs across 96
+assignments. **No compiler, syntax, diagnostic, prompt, or skill change follows
+from iteration 027.** Mandating one patch action would alter agent workflow and
+benchmark instructions rather than improve general language semantics.
+
+All 144 hidden exact-file cases pass. Of 288 assignments, 270 change both
+files. All 18 tag-dedup assignments change only the entrypoint in every
+language because the existing helper already provides the required lowercase
+normalization; this is semantically appropriate shared scope, not a shortcut.
+
+Parley final source remains 39.38% shorter than Rust and its edit 21.39%
+smaller, while both are roughly 22% and 15% above Python. This confirms that
+source compactness does not by itself predict reported agent context at large
+bundle size.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 35 rendered blocks, five charts, eight metrics, and six tables;
+artifact headline and language metrics match the raw summary exactly.
+
+Preserve 027 unchanged and stop increasing synthetic bundle size: the
+direction is worse despite perfect Parley reliability. Keep 026 as positive
+size-eight Rust-efficiency evidence without generalizing it. The next useful
+study should use independently sourced real repository maintenance episodes
+with test changes and dependency navigation. A larger size-eight confirmation
+is justified only if the narrower Rust-parity claim, rather than strict
+Python-and-Rust parity, becomes the decision target.

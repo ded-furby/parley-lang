@@ -786,6 +786,21 @@ Update it whenever you finish or start a work item.
   assignments, seed `20260817`. Run once without selective reruns under the
   exact source protocol. Preserve all evidence; do not change the compiler or
   instruction. Even a passing result requires larger confirmation.
+- **Sixteen-repository result (iteration 027):** all 288 assignments pass
+  hidden cases; Parley and Rust are 96/96 first-check clean, while Python is
+  95/96 before one indentation repair. Strict parity fails 2/4. Parley uses
+  7,675.56 median tokens/repo versus Python's 5,046.25 and Rust's 5,650.28;
+  its 8.0127 seconds remains below Rust's 8.5897 but above Python's 5.8393.
+  Three one-edit-action Parley runs cluster near 7.00k while three two-action
+  runs cluster near 8.34k; even the one-action subset remains above both
+  baselines. There is no Parley failure signature and no language/skill change.
+  All 144 exact-file cases pass; 270/288 assignments change two files, while
+  every language correctly leaves the already-sufficient tag helper unchanged.
+  Preserve raw SHA
+  `9955e67c36d7d3e3ea236644d731a6e4f9054da801b097cf41a7d64ceb64ce7c`
+  and report 027. Stop scaling the synthetic bundle further; next use real
+  repository maintenance episodes, or confirm size-eight only for the narrower
+  Rust-parity claim.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
