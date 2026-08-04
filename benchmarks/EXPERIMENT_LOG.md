@@ -1374,3 +1374,69 @@ success. Report and preserve every failure. No syntax may be added from one
 transcript. Cross-task recurrence is only an eligibility signal; any change
 must also be generally useful, semantically consistent, and maintainable. The
 single instruction-compression experiment remains closed.
+
+## 021 — New-corpus correctness ties; strict parity still fails
+
+- Date: 2026-08-05
+- Toolchain: Parley 0.3.154, preregistration commit `bbba5e1`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+- Matrix: 12 new tasks × 3 languages × 6 complete-bundle replicates = 18
+  fresh sessions and 216 task assignments
+- Result JSON SHA-256: `07fe050ef2a9e5c963a1cb6df2d59c5cc582fc7c383143f2e5a337f2f5656c2e`
+- Task manifest SHA-256: `45f6387fbe8fef2e3c59b59781b967b81302494b6f09533df81bead27f20f781`
+- Frozen protocol SHA-256: `e21d1045235b8028d8dd140840af634fd541e6df4717b26bab2d82946d1b13f6`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/021-new-broad-corpus-parity-failed.html`
+
+| Language | Hidden tasks | First-check tasks | Repair turns | Median tokens/task | Median seconds/task | Source tokens/task |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 72/72 | 51/72 | 8 | 8,367.13 | 8.3810 | 134.83 |
+| Python | 72/72 | 72/72 | 0 | 4,057.08 | 4.0737 | 109.50 |
+| Rust | 72/72 | 72/72 | 0 | 4,319.75 | 5.9032 | 211.79 |
+
+### Gate and integrity result
+
+The strict gate passed hidden correctness only: **1/4** conditions. All 216
+final programs passed every hidden case. Parley used 2.06× Python's median
+reported tokens/task and 2.06× its elapsed time, and no Parley bundle passed
+all twelve tasks on the first check. Every Python and Rust bundle did.
+
+All 18 sessions used unique threads and passed checker-integrity and command-
+protocol validation. There were no timeouts, runner errors, nonzero agent
+exits, or hidden failures. Every Parley session repaired; the six token rates
+ranged from 7,490.92 to 12,180.92 per task, so no repair-free sensitivity
+subset exists.
+
+Parley's generated programs remained materially shorter than Rust: 134.83
+versus 211.79 median rough source tokens/task (−36.34%). The agent-effort gap
+therefore cannot be explained by Rust-sized Parley source. Parley's median
+prompt was 737.83 characters/task versus Python's 595.92; the fixed skill is
+unchanged and no compression experiment is permitted.
+
+### Complete first-failure audit
+
+All 21 failed first task checks were compile/check failures; repairs recovered
+72/72 hidden correctness.
+
+| Signature | Events | Unrelated task families | Decision |
+| --- | ---: | ---: | --- |
+| Ordinary identifier `number` rejected by P209 | 10 | 5 | Eligible; passes design review |
+| Multiword function declaration | 3 | 3, all in one session | Reject; canonical snake_case and precise P101 |
+| `repeat while` | 3 | 2 | Reject; duplicates canonical `while` |
+| Postfix `numbers sorted` | 2 | 2 | Reject; duplicates `sorted numbers` and `sort numbers` |
+| Undefined local before declaration | 2 | 1 | Reject; authoring errors |
+| Unparenthesized call with natural `and` | 1 | 1 | Reject; isolated call-shape error |
+
+`number` independently clears the language-design gate. It is an ordinary,
+generally useful name across sorted uniqueness, matrix diagonal difference,
+nearest-pair gap, sorted-list search, and sparse dot product. The parser already
+accepted these identifier positions and the checker deliberately emitted P209.
+Type positions remain unambiguous: `number` still means the built-in type
+there, while identifier positions resolve to the local declaration. The
+maintainable change is therefore to remove only `number` from the unconditional
+reserved-name set, with uniform declaration/loop/parameter/function/call tests.
+
+Preserve 021 unchanged. Implement contextual `number` as a separate compiler
+version, keep the instruction unchanged, and replay all ten exact P209 sources.
+Do not rerun this corpus as a tuning target; the next measurement must be a new
+corpus or model split.
