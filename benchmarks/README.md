@@ -145,6 +145,34 @@ to one task is not a reason to add syntax. Future language changes must be
 useful across unrelated programs and must preserve semantic consistency and
 maintainability.
 
+## Workload-scale bundle benchmark
+
+`bundle_runner.py` measures whether the fixed cost of fresh-session language
+instructions amortizes when one agent session completes several unrelated
+programs. Its complete iteration-017 configuration and parity gate live in
+`bundle_protocol_017.json`; the runner takes model, tasks, bundle sizes,
+replicates, seed, timeout, and concurrency from that file rather than mutable
+command-line flags.
+
+Each replicate assigns the same eight broad tasks exactly once per language at
+bundle sizes 1, 2, 4, and 8. The parent process retains all hidden cases. One
+workspace checker compiles and runs every public program in the bundle, while
+the result preserves task-level source, first-check status, hidden judgments,
+session usage, and protocol integrity.
+
+```bash
+python3 benchmarks/bundle_runner.py \
+  --protocol-file benchmarks/bundle_protocol_017.json \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/results/agent_bundle_017_protocol_v1_v0.3.151.json
+```
+
+Per-task values always divide one session's complete token or elapsed total by
+the number of assigned tasks; session totals remain in the same report. The
+predeclared strict gate applies at bundle size eight and requires Parley to
+match the better baseline on correctness, tokens per task, elapsed time per
+task, and first-check task success.
+
 If an objective hidden-test oracle error is found, saved sources can be
 rejudged without changing or rerunning agent attempts:
 

@@ -917,3 +917,31 @@ does not identify a semantically justified language feature. Keep compiler
 and skill frozen. Any future proposal requires evidence across at least two
 unrelated tasks plus an independent case for general usefulness, semantic
 consistency, and maintainability.
+
+## Pre-registration for 017 — Workload-scale cold-start amortization
+
+- Date frozen: 2026-08-04
+- Compiler: Parley 0.3.151, semantics unchanged from iterations 015–016
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Task population: the eight predeclared broad-corpus tasks from iteration 016
+- Bundle sizes: 1, 2, 4, and 8 tasks per fresh session
+- Matrix: 90 fresh sessions; 192 independently hidden-judged task-solutions
+- Replicates: 2 complete task partitions per bundle size and language
+- Seed: `20260804`
+- Protocol: `benchmarks/bundle_protocol_017.json`
+
+### Primary gate
+
+At bundle size eight, Parley must preserve 100% hidden-task correctness and
+match or beat the better Python/Rust baseline on median reported tokens per
+assigned task, median elapsed seconds per assigned task, and first-check task
+success. All four conditions are required for strict workload parity.
+
+### Interpretation and change rule
+
+This experiment tests whether the fixed cold-start instruction cost amortizes
+on a realistic multi-program workload. Report session totals beside every
+amortized value. Do not compress the instruction core again. Do not change
+syntax or compiler semantics from one workload, task, or transcript; require
+the same issue across at least two unrelated tasks plus an independent case
+for general usefulness, semantic consistency, and maintainability.

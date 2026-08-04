@@ -16,6 +16,13 @@ from benchmarks.agent_runner import (
     render_prompt,
     summarize,
 )
+from benchmarks.bundle_runner import (
+    build_bundle_plan,
+    load_protocol,
+    render_bundle_prompt,
+    summarize_bundle_results,
+    write_bundle_workspace,
+)
 
 BENCHMARKS = REPO / "benchmarks"
 
@@ -348,6 +355,135 @@ def test_broad_agent_tasks_are_predeclared_and_cross_domain():
     for task in tasks:
         assert len(task["public_cases"]) == 1
         assert len(task["hidden_cases"]) >= 4
+
+
+def test_bundle_protocol_predeclares_complete_scale_matrix():
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_017.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(
+        tasks,
+        config["bundle_sizes"],
+        config["replicates"],
+        config["seed"],
+    )
+
+    assert config["bundle_sizes"] == [1, 2, 4, 8]
+    assert config["parley_version"] == "parley 0.3.151"
+    assert config["parley_skill_chars"] == 1_519
+    assert config["parley_skill_sha256"] == hashlib.sha256(
+        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+    ).hexdigest()
+    assert len(plan) == 30
+    assert sum(bundle["bundle_size"] for bundle in plan) == 64
+    for replicate in (1, 2):
+        for size in (1, 2, 4, 8):
+            groups = [
+                bundle for bundle in plan
+                if bundle["replicate"] == replicate and bundle["bundle_size"] == size
+            ]
+            assert len(groups) == 8 // size
+            assert sorted(task_id for bundle in groups for task_id in bundle["task_ids"]) == sorted(
+                task["id"] for task in tasks
+            )
+    assert protocol["matrix"] == {
+        "fresh_sessions": 90,
+        "judged_task_solutions": 192,
+        "sessions_per_language": 30,
+        "task_solutions_per_language": 64,
+        "derivation": "For each replicate and language: 8 one-task + 4 two-task + 2 four-task + 1 eight-task sessions.",
+    }
+    assert "No further instruction-compression" in protocol["instruction_rule"]
+
+
+def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
+    prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")
+
+    assert prompt.count("PARLEY-SKILL-SENTINEL") == 1
+    assert "stable_word_deduplication.par" in prompt
+    assert "run_length_encoding.par" in prompt
+    assert "the only shell command permitted is exactly `./check`" in prompt
+    assert tasks[0]["hidden_cases"][3]["stdin"] not in prompt
+    assert tasks[1]["hidden_cases"][3]["stdin"] not in prompt
+    python = render_bundle_prompt(tasks, "python", "PARLEY-SKILL-SENTINEL")
+    assert "PARLEY-SKILL-SENTINEL" not in python
+
+
+def test_bundle_workspace_checker_compiles_all_python_sources(tmp_path):
+    tasks = [
+        {
+            "id": "echo_one",
+            "public_cases": [{"stdin": "alpha\n", "stdout": "alpha\n"}],
+        },
+        {
+            "id": "echo_two",
+            "public_cases": [{"stdin": "beta\n", "stdout": "beta\n"}],
+        },
+    ]
+    integrity = write_bundle_workspace(tmp_path, tasks, "python", "unused")
+    (tmp_path / "echo_one.py").write_text("print(input())\n")
+    (tmp_path / "echo_two.py").write_text("print(input())\n")
+
+    proc = subprocess.run(
+        [str(tmp_path / "check")],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert proc.returncode == 0, proc.stderr
+    record = json.loads((tmp_path / ".benchmark_attempts.jsonl").read_text())
+    assert record["ok"] is True
+    assert set(record["tasks"]) == {"echo_one", "echo_two"}
+    assert all(record["tasks"][task_id]["ok"] for task_id in record["tasks"])
+    assert all(
+        hashlib.sha256((tmp_path / name).read_bytes()).hexdigest() == digest
+        for name, digest in integrity.items()
+    )
+
+
+def test_bundle_summary_applies_strict_scale_gate():
+    rows = []
+    for language, tokens, elapsed, first in (
+        ("parley", 800, 8, 8),
+        ("python", 880, 10, 7),
+        ("rust", 960, 12, 8),
+    ):
+        rows.append({
+            "bundle_size": 8,
+            "task_count": 8,
+            "language": language,
+            "hidden_task_successes": 8,
+            "hidden_bundle_success": True,
+            "first_public_task_successes": first,
+            "first_bundle_check_success": first == 8,
+            "command_protocol_compliant": True,
+            "repair_turns": 0 if first == 8 else 1,
+            "total_tokens": tokens,
+            "total_tokens_per_task": tokens / 8,
+            "elapsed_seconds": elapsed,
+            "elapsed_seconds_per_task": elapsed / 8,
+            "prompt_chars_per_task": 100,
+            "source_rough_tokens_per_task": 20,
+            "usage": {"input_tokens": tokens - 80, "output_tokens": 80},
+        })
+
+    summary = summarize_bundle_results(rows)
+
+    assert summary["sessions"] == 3
+    assert summary["assigned_tasks"] == 24
+    assert summary["strict_gate"] == {
+        "scale": 8,
+        "passed": True,
+        "conditions": {
+            "correctness": True,
+            "tokens": True,
+            "elapsed": True,
+            "first_check": True,
+        },
+    }
 
 
 def test_agent_prompt_includes_current_skill_only_for_parley():

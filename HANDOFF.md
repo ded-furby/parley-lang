@@ -629,6 +629,14 @@ Update it whenever you finish or start a work item.
   that task leaves a similar 3.81% token gap to Python. No compiler change is
   justified. Require cross-task evidence plus general usefulness, semantic
   consistency, and maintainability for future proposals.
+- **Workload-scale pre-registration (iteration 017):**
+  `benchmarks/bundle_protocol_017.json` freezes a 90-session, 192-solution
+  scale study before any output is observed. The same eight tasks are assigned
+  exactly once per language and replicate at bundle sizes 1, 2, 4, and 8.
+  The size-eight gate requires Parley to match the better baseline on hidden
+  correctness, tokens/task, seconds/task, and first-check task success. The
+  compiler and 1,519-character skill remain frozen, and all decisions/results
+  continue in `benchmarks/EXPERIMENT_LOG.md` plus immutable numbered HTML.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from
