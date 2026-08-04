@@ -2329,3 +2329,34 @@ all 18 sessions once, preserve every result without selective reruns, and
 report diagnosis behavior, complete correctness, first-check repairs, agent
 tokens/time, source/context/edit sizes, changed-file scope, integrity, and
 command protocol. No same-corpus syntax or instruction change is permitted.
+
+## Pre-registration for 028 — Project-style regression diagnosis
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `2cf86bf`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_diagnostic_028.json`, SHA-256
+  `49147f96ce0f50239314719f4fce76bd979bea2829f5eb629d4cdb0c7097013e`
+- Protocol: `benchmarks/bundle_protocol_028.json`, SHA-256
+  `96916b4731801f0758eda1fdc5bd2bd007b7734052bb0a4a4f3d5b1356502af0`
+- Matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260819`
+
+The strict four-condition gate applies at primary scale four. Parley must
+finish 100% hidden-correct, match the better first-check baseline, and use no
+more median reported tokens or elapsed time per repository than the lower
+Python/Rust median. Every session receives twelve editable and eight read-only
+files through exactly one protected `./sources` command first; only `./check`
+may follow. Each language receives 24 public and 96 hidden judgments.
+
+Run all 18 sessions once and preserve every result without selective reruns.
+Report the complete event stream and context/source/edit accounting. If strict
+parity passes, this remains a six-replicate pilot and requires a larger
+confirmation before a general claim. If it fails, do not tune the corpus or
+change syntax or instructions from same-corpus evidence.

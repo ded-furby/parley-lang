@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "experiment_id": "028",
+  "title": "Project-style regression diagnosis",
+  "description": "Cross-language comparison of agents diagnosing and repairing four multi-file regressions from read-only issue and test evidence.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_diagnostic_028.json",
+    "task_manifest_sha256": "49147f96ce0f50239314719f4fce76bd979bea2829f5eb629d4cdb0c7097013e",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "8f4a66885f3e0837f1595d72cf38ada5b8112f97",
+    "harness_commit": "2cf86bf",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [4],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260819,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_repository_assignments": 72,
+    "sessions_per_language": 6,
+    "repository_assignments_per_language": 24,
+    "editable_seed_files_per_session": 12,
+    "read_only_context_files_per_session": 8,
+    "visible_files_per_session": 20,
+    "public_cases_per_language": 24,
+    "hidden_cases_per_language": 96,
+    "exact_hidden_file_cases_per_language": 0,
+    "derivation": "6 complete four-repository bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 4,
+    "correctness": "Parley hidden-repository success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned repository must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned repository must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check repository success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict project-maintenance parity."
+  },
+  "source_protocol": {
+    "first_shell_command": "./sources",
+    "source_command_count": 1,
+    "later_shell_command": "./check",
+    "editable_files": "The twelve language-specific seeded implementation files across four repositories.",
+    "read_only_files": "Eight language-neutral ISSUE.md and tests/regression.txt artifacts, visibly marked read-only and byte-identical across languages.",
+    "public_examples": "Protected by the checker and omitted from every agent prompt; diagnosis comes from source and read-only project evidence.",
+    "protected_files": "Checker, source printer, configuration, prompt, public/hidden cases, and attempt log are never agent-readable and remain integrity-hashed."
+  },
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "The four regression families, source seeds, issue/test evidence, and all public/hidden cases were independently checked and committed before protocol freeze or any measured session.",
+    "Read-only context is byte-identical across languages; implementation syntax and ordinary standard-library setup remain language-specific.",
+    "The protected source-printer output becomes measured agent context through the model session; no source, issue text, test evidence, or public example is duplicated inline in the prompt.",
+    "Changed-file count and rough-token edit size are secondary maintenance metrics, not substitutes for hidden correctness or the four-condition gate.",
+    "This synthetic but diagnosis-shaped corpus is broader evidence than explicit prompt-level rewrites, not a claim about every real repository."
+  ],
+  "secondary_analysis": [
+    "Report every session, repository outcome, repair, token count, elapsed time, prompt size, editable-source size, read-only-context size, edit size, changed-file count, integrity result, and command-protocol result.",
+    "Classify every first-check and hidden failure by unrelated repository and independent session.",
+    "Audit whether agents locate and change the seeded defect rather than editing read-only evidence or unrelated helpers.",
+    "Compare the complete primary medians with repair-free sensitivity only if at least two Parley sessions pass all four repositories on their first check.",
+    "Inspect recurring diagnosis or language failures only after preserving the full result; a single task, transcript, or session cannot justify a compiler or skill change."
+  ],
+  "feature_boundary": "Parley remains frozen at v0.3.155 with the exact 1,519-character skill. Iteration 028 changes only the language-neutral harness capability and preregistered task shape: agents diagnose multi-file regressions from read-only repository evidence instead of explicit prompt examples.",
+  "change_rule": "No syntax, compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or benchmark instruction may change from iteration 027 output unless a signature recurs across unrelated repositories and independent sessions, then passes general usefulness, semantic consistency, and maintainability review.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result without selective reruns. If strict parity passes, preregister a larger confirmation before claiming parity. If it fails, make no same-corpus syntax or instruction change; only independently recurring general defects may enter separate design review."
+}

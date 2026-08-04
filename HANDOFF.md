@@ -823,6 +823,16 @@ Update it whenever you finish or start a work item.
   no measured output or language/skill change resulted. Commit the corpus,
   then freeze and run the six-replicate 18-session protocol once without
   selective reruns or same-corpus optimization.
+- **Project-style diagnostic preregistration (iteration 028):** corpus/harness
+  commit `2cf86bf` is pushed. Protocol 028 freezes four complete regression
+  repositories per session, six replicates per language, 18 fresh sessions,
+  72 assignments, seed `20260819`, v0.3.155, and the unchanged 1,519-character
+  skill. Every session sees 12 editable plus eight byte-identical read-only
+  files through `./sources` exactly once first, then only `./check`; prompt
+  examples stay hidden. Protocol SHA is
+  `96916b4731801f0758eda1fdc5bd2bd007b7734052bb0a4a4f3d5b1356502af0`.
+  Run once without selective reruns. A pass still requires larger confirmation;
+  a failure cannot trigger same-corpus compiler or instruction tuning.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
