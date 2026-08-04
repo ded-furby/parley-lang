@@ -830,6 +830,29 @@ consistency, and maintainability—not improvement on one transcript.
   `modulo` remains unchanged because its evidence is still confined to one
   task. Iteration 018 must be frozen separately before measuring 0.3.152.
 
+### 2026-08-05 — Parley 0.3.153 contextual `modulo`
+
+- Iteration 019's anti-primed first sources independently used infix `modulo`
+  across clock, parity, and weekday task families, satisfying the cross-task
+  evidence rule. The alias is also independently useful as standard arithmetic
+  vocabulary.
+- `_MOD` now accepts the word `modulo` contextually alongside `%`. Both feed
+  the existing `%` binary AST, whole-number checker, guarded `parley_rem`
+  emitter path, and Rust remainder runtime semantics. No new AST node,
+  checker branch, runtime function, or mathematical-modulo behavior was added.
+- `modulo` remains available as an ordinary identifier where an operator is
+  not grammatically expected. Decimal operands still receive P302; a zero
+  divisor still raises the existing English runtime failure. Docs and tests
+  explicitly define the result's sign for negative operands (`-5 modulo 3`
+  is `-2`) and standard multiplicative precedence.
+- All five untouched iteration-018 rotation first sources that began with
+  unsupported `modulo` now pass their original public and hidden cases. The
+  broader 019 replay intentionally still rejects unrelated reserved-name,
+  malformed-phrase, and decimal-division issues rather than weakening them.
+- The full suite passes 301/301 across parser, checker, emitter, diagnostics,
+  benchmark protocols, and native execution. The 1,519-character skill remains
+  byte-for-byte unchanged pending broad confirmation.
+
 ## 015 — 90-session confirmation: strict parity not met
 
 - Date: 2026-07-29

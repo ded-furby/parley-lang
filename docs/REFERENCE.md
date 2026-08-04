@@ -82,7 +82,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 ## Expressions
 
 Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
-`split by`/`joined with`/`replacing … with …` · `plus minus` · `times divided-by %` ·
+`split by`/`joined with`/`replacing … with …` · `plus minus` · `times divided-by % modulo` ·
 `to the power of` · prefix operations · `'s` field access.
 
 | Parley | Rust | type |
@@ -91,6 +91,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `a minus b`, `a times b` | `a - b`, `a * b` | numeric |
 | `a divided by b` | guarded `a / b` | **always decimal**; ÷0 stops the program |
 | `remainder of a divided by b` | guarded `a % b` | number |
+| `a modulo b` / `a % b` | guarded Rust-style remainder | whole numbers; result has the dividend's sign |
 | `a to the power of b` | `a.pow(b)` / `a.powf(b)` | |
 | `x is y` / `x is not y` | `==` / `!=` | yesno |
 | `x has no value` / `x has [a] value` | `x is nothing` / `x is not nothing` | yesno |

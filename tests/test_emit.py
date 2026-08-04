@@ -127,6 +127,12 @@ def test_contextual_position_identifier_emits_as_an_ordinary_variable():
     assert "parley_item(&(values), position)" in rust
 
 
+def test_modulo_alias_emits_through_existing_guarded_remainder_helper():
+    rust = emit_text("to main:\n    say -5 modulo 3\n")
+    assert "parley_rem((-(5i64)), 3i64)" in rust
+    assert rust.count("fn parley_rem(") == 1
+
+
 def test_text_count_emits_utf8_safe_helper():
     rust = emit_text('to main:\n    say count of "a" in "banana"\n')
     assert "fn parley_count" in rust

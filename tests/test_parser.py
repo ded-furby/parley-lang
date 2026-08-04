@@ -112,6 +112,23 @@ def test_text_position_expression_parse():
     assert isinstance(expr.value, A.Str)
 
 
+def test_modulo_is_a_contextual_multiplicative_operator():
+    prog = parse(
+        "to main:\n"
+        "    let modulo be 9\n"
+        "    say modulo\n"
+        "    say 2 plus 10 modulo 4 times 3\n"
+    )
+    assert isinstance(prog.funcs[0].body[1].value, A.Var)
+    expr = prog.funcs[0].body[2].value
+    assert isinstance(expr, A.BinOp)
+    assert expr.op == "+"
+    assert isinstance(expr.right, A.BinOp)
+    assert expr.right.op == "*"
+    assert isinstance(expr.right.left, A.BinOp)
+    assert expr.right.left.op == "%"
+
+
 def test_position_is_contextual_in_loop_and_item_index():
     prog = parse(
         "to main:\n"

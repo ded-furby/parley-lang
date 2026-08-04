@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.152** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 294 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.153** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 301 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -592,6 +592,12 @@ Update it whenever you finish or start a work item.
   in text` operator is preserved. All five untouched failing first sources
   pass their public and hidden cases, and the full 294-test suite passes. The
   skill is unchanged and `modulo` was deliberately not added.
+- **v0.3.153 contextual `modulo`:** iteration 019 supplied anti-primed
+  recurrence across clock, parity, and weekday task families. Infix `a modulo
+  b` now reuses the exact existing whole-number `%` AST/checker/emitter/runtime
+  path, including the zero guard and Rust-style negative rule. All five saved
+  018 rotation failures pass public and hidden replay; unrelated 019 problems
+  remain rejected. The full 301-test suite passes and the skill is unchanged.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
@@ -720,7 +726,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.152).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.153).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

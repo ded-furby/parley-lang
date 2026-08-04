@@ -1004,14 +1004,14 @@ class Checker:
             return lt
         if not (isinstance(lt, _NUMERIC) and isinstance(rt, _NUMERIC)):
             word = {"+": "plus", "-": "minus", "*": "times", "/": "divided by",
-                    "%": "%", "pow": "to the power of"}[e.op]
+                    "%": "whole-number remainder", "pow": "to the power of"}[e.op]
             self.err("P302", f"`{word}` works on numbers, but this is {lt} and {rt}.", e)
             return TErr()
         if e.op == "/":
             return A.TDec()
         if e.op == "%":
             if isinstance(lt, A.TDec) or isinstance(rt, A.TDec):
-                self.err("P302", "`%` works on whole numbers; use decimals with `divided by`.", e)
+                self.err("P302", "`%` and `modulo` work on whole numbers; use decimals with `divided by`.", e)
                 return TErr()
             return A.TNum()
         if isinstance(lt, A.TDec) or isinstance(rt, A.TDec):

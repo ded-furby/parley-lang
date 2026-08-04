@@ -300,7 +300,7 @@ _MAP_FROM.2: /map +from\b/
 _PLUS.2: /plus\b/ | "+"
 _MINUS.2: /minus\b/ | "-"
 _DIV.2: /divided +by\b/ | "/"
-_MOD: "%"
+_MOD.2: /modulo\b/ | "%"
 
 _APOS_S: "'s"
 _LPAR: "("

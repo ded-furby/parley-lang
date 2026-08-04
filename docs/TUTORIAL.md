@@ -55,13 +55,15 @@ to main:
     say 7 plus 3 times 2          # 13 — times binds tighter
     say 10 divided by 4           # 2.5 — division always gives a decimal
     say remainder of 10 divided by 3
+    say 10 modulo 3               # the same guarded whole-number operation
     say 2 to the power of 8
     say square root of 144
     say rounded 2.5
 ```
 
-`+ - * / %` work too. `rounded`, `floor of`, `ceiling of` turn decimals into
-whole numbers.
+`+ - * / %` work too. `modulo` and `%` use Rust-style remainder for negative
+numbers (`-5 modulo 3` is `-2`) and stop cleanly on a zero divisor. `rounded`,
+`floor of`, `ceiling of` turn decimals into whole numbers.
 
 ## 5. Deciding
 

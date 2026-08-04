@@ -68,6 +68,11 @@ parse-relevant highlights:
 * **Types** as in REFERENCE.md. No implicit conversions except
   number → decimal promotion (at assignment, argument, return and mixed
   arithmetic positions). Division always yields decimal.
+* **Whole-number remainder** has three equivalent spellings: `a % b`, `a
+  modulo b`, and `remainder of a divided by b`. All use the same guarded
+  operation and reject a zero divisor at runtime. Negative operands follow
+  Rust remainder semantics: the result has the dividend's sign, so `-5 modulo
+  3` is `-2`. `modulo` has the same precedence as multiplication and division.
 * **Scopes.** One namespace for variables; functions, record names, enum
   names and variants are global. A `let` binds until the end of its block;
   redeclaration and shadowing are errors (P209). `set` requires an existing

@@ -192,6 +192,25 @@ def test_math_toolbox(workdir):
     assert proc.stdout == "1024\n7\n3\n4\n3\n12\n1\n2\n"
 
 
+def test_modulo_alias_precedence_negative_rule_and_zero_guard(workdir):
+    src = '''to main:
+    say 10 modulo 3
+    say 2 plus 10 modulo 4 times 3
+    say -5 modulo 3
+    attempt:
+        say 1 modulo 0
+    if it failed:
+        say the error
+'''
+    proc = run_program(workdir, "modulo_alias", src)
+    assert proc.stdout == (
+        "1\n"
+        "8\n"
+        "-2\n"
+        "Cannot take a remainder after dividing by zero.\n"
+    )
+
+
 def test_maybe_flow(workdir):
     src = '''to main:
     let good be number from "42"

@@ -130,6 +130,13 @@ def test_position_is_a_contextual_identifier_without_shadowing_search():
     assert check_text(loop_src) == []
 
 
+def test_modulo_reuses_whole_number_remainder_types_contextually():
+    assert check_text(in_main("let modulo be 5", "say modulo", "say 10 modulo 3")) == []
+    diags = check_text(in_main("say 10.5 modulo 3"))
+    assert [diag.code for diag in diags] == ["P302"]
+    assert "whole numbers" in (diags[0].message + " " + (diags[0].hint or ""))
+
+
 def test_compact_range_agent_idioms_are_clean():
     src = (
         "to record_range with low as number, high as number, changing pieces as list of text:\n"
