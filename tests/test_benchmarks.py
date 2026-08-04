@@ -1570,6 +1570,176 @@ def test_diagnostic_028_seeds_compile_and_fail_each_public_regression(tmp_path):
         assert expected_context <= set(integrity)
 
 
+def _historical_029_oracle(task_id: str, stdin: str) -> str:
+    lines = iter(stdin.splitlines())
+    if task_id == "config_recovery_project":
+        count = int(next(lines))
+        visibility = "tree"
+        audit = "off"
+        unknown = 0
+        for _ in range(count):
+            key, setting = next(lines).split("|", 1)
+            if key == "visibility":
+                visibility = setting
+            elif key == "audit":
+                audit = setting
+            else:
+                unknown += 1
+        return f"visibility={visibility}|audit={audit}|unknown={unknown}\n"
+    if task_id == "aliased_identity_cache_project":
+        count = int(next(lines))
+        output = []
+        seen = set()
+        duplicates = 0
+        uncached = 0
+        for _ in range(count):
+            kind, source_field, _response_field, value = next(lines).split("|", 3)
+            if source_field != "id":
+                uncached += 1
+                output.append("uncached")
+                continue
+            key = f"{kind}:{value}"
+            if key in seen:
+                duplicates += 1
+                output.append(f"duplicate={key}")
+            else:
+                seen.add(key)
+                output.append(f"stored={key}")
+        output.append(
+            f"entries={len(seen)}|duplicates={duplicates}|uncached={uncached}"
+        )
+        return "\n".join(output) + "\n"
+    if task_id == "fsm_rollback_project":
+        count = int(next(lines))
+        output = []
+        processed = 0
+        terminated = False
+        rejected = 0
+        for _ in range(count):
+            action, token = next(lines).split("|", 1)
+            if action == "accept":
+                if terminated:
+                    rejected += 1
+                    output.append("reject")
+                else:
+                    processed += 1
+                    terminated = token == "stop"
+                    output.append("accept")
+            else:
+                processed = max(processed - 1, 0)
+                if token == "stop":
+                    terminated = False
+                output.append("rollback")
+        state = "yes" if terminated else "no"
+        output.append(
+            f"processed={processed}|terminated={state}|rejected={rejected}"
+        )
+        return "\n".join(output) + "\n"
+    if task_id == "cancellation_lock_project":
+        original_lock = next(lines) == "yes"
+        count = int(next(lines))
+        output = []
+        restored = 0
+        failed = 0
+        for _ in range(count):
+            resource, old_value, new_value = next(lines).split("|", 2)
+            if original_lock:
+                restored += 1
+                output.append(f"{resource}:{old_value}")
+            else:
+                failed += 1
+                output.append(f"{resource}:{new_value}")
+        output.append(f"restored={restored}|failed={failed}")
+        return "\n".join(output) + "\n"
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_historical_029_addition_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_historical_additions_029.json")
+
+    assert len(tasks) == 4
+    for task in tasks:
+        assert len(task["public_cases"]) == 1
+        assert len(task["hidden_cases"]) == 4
+        for case in task["public_cases"] + task["hidden_cases"]:
+            assert case["stdout"] == _historical_029_oracle(
+                task["id"], case["stdin"]
+            )
+            assert case.get("files", {}) == {}
+
+
+def test_historical_029_addition_seeds_compile_and_fail_public_regressions(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_historical_additions_029.json")
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for language in ("parley", "python", "rust"):
+        workdir = tmp_path / f"{language}-029-seed"
+        workdir.mkdir()
+        write_bundle_workspace(workdir, tasks, language, parley)
+        proc = subprocess.run(
+            [str(workdir / "check")],
+            cwd=workdir,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        assert proc.returncode == 1
+        record = json.loads((workdir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
+
+
+def test_historical_029_context_and_provenance_are_language_symmetric():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_historical_additions_029.json")
+    urls = set()
+
+    for task in tasks:
+        assert task["show_public_examples"] is False
+        assert all(
+            len(task["seed_files"][language]) == 3
+            for language in ("parley", "python", "rust")
+        )
+        assert all(
+            len(task["context_files"][language]) == 2
+            for language in ("parley", "python", "rust")
+        )
+        assert task["context_files"]["parley"] == task["context_files"]["python"]
+        assert task["context_files"]["python"] == task["context_files"]["rust"]
+        provenance = task["historical_inspiration"]
+        assert provenance["url"].startswith("https://github.com/")
+        assert provenance["adaptation"] == (
+            "deterministic cross-language fixture; no upstream source copied"
+        )
+        urls.add(provenance["url"])
+    assert len(urls) == 4
+
+    for language in ("parley", "python", "rust"):
+        prompt = render_bundle_prompt(tasks, language, "unchanged Parley skill")
+        assert "Public example" not in prompt
+        for task in tasks:
+            assert task["public_cases"][0]["stdin"] not in prompt
+            assert task["public_cases"][0]["stdout"] not in prompt
+
+
+def test_historical_029_combines_preserved_028_and_new_tasks():
+    base = json.loads((BENCHMARKS / "agent_tasks_diagnostic_028.json").read_text())
+    additions = json.loads(
+        (BENCHMARKS / "agent_tasks_historical_additions_029.json").read_text()
+    )
+    combined = json.loads((BENCHMARKS / "agent_tasks_historical_029.json").read_text())
+
+    assert len(combined["tasks"]) == 8
+    assert combined["tasks"][:4] == base["tasks"]
+    assert combined["tasks"][4:] == additions["tasks"]
+    assert len({task["id"] for task in combined["tasks"]}) == 8
+    roots = combined["predeclared_analysis"]["root_cause_files"]
+    assert set(roots) == {task["id"] for task in combined["tasks"]}
+    for task in combined["tasks"]:
+        for language in ("parley", "python", "rust"):
+            assert roots[task["id"]][language] in task["seed_files"][language]
+
+
 def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
     manifest = tmp_path / "tasks.json"
     task = {

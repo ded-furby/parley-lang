@@ -848,6 +848,18 @@ Update it whenever you finish or start a work item.
   No language/skill change follows. Next use independently sourced project
   regressions with ambiguity, dependency navigation, test changes, and an
   explicit root-cause score; a positive pilot still needs larger confirmation.
+- **Historically grounded expansion (iteration 029 design):** preserve the
+  four 028 task objects exactly and add four deterministic, no-source-copy
+  adaptations of public issue mechanisms: invalid-config fallback, aliased
+  cache identity, FSM termination rollback, and cancellation lock loss. The
+  combined manifest SHA is
+  `50e55b985b959c96175632530cbb142b424453b4e815a731d2067a3432895b07`.
+  Independent oracles match all 20 new cases; all 12 new seeds compile and
+  fail their intended regression; evidence and prompts are symmetric; full
+  suite passes 346/346. Every task/language now has a predeclared root-defect
+  file, and all 48 Parley assignments must modify it as a fifth maintainability
+  gate. Commit the corpus, then freeze six size-eight replicates/language with
+  v0.3.155 and the unchanged skill. Preserve all output; do not tune from 028.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

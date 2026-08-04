@@ -2433,3 +2433,48 @@ Python-and-Rust parity. The next useful corpus should use independently sourced
 project regressions with ambiguous symptoms, dependency navigation, and test
 changes, and should score root-cause repair explicitly. A positive broader
 pilot still requires the planned larger confirmation before a general claim.
+
+## Design and preflight for 029 — Historically grounded diagnosis expansion
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Planned matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Seed: `20260821`
+- Combined manifest SHA-256:
+  `50e55b985b959c96175632530cbb142b424453b4e815a731d2067a3432895b07`
+- Four-task additions SHA-256:
+  `1be89a15b07fb7a0d8c250c1f222701cd5106b369e3b3daf26351e58c1504dfc`
+
+Iteration 029 preserves the four 028 task objects exactly and adds four
+historically grounded synthetic repositories. Their mechanisms come from
+distinct public primary issue reports: valid configuration erased by an
+unknown key (OpenClaw #28140), aliased identity omitted from a normalized
+cache (Apollo Client #10599), rollback rewinding position but not termination
+state (vLLM #27210), and cancellation losing the lock authority required to
+restore state (Vitess #17620). The fixtures copy no upstream source; they adapt
+each mechanism into one deterministic contract shared across languages and
+record provenance outside the agent prompt.
+
+Every new repository has three editable implementation files and two read-only
+issue/test artifacts. Each complete session therefore exposes 24 editable and
+16 read-only files. Read-only evidence totals 3,614 characters and 47 lines per
+language and is byte-identical across languages. Public examples remain
+protected and absent from prompts.
+
+An independent oracle reproduces all 20 new public/hidden cases. All twelve
+new language-specific seeds compile and every unmodified seed fails its one
+new public regression. Tests freeze the provenance, equal context, prompt
+secrecy, exact preservation of the four 028 objects, and one predeclared
+root-defect file for every task/language. The complete pre-protocol suite
+passes 346/346 in 159.21 seconds.
+
+Root-cause quality becomes a fifth frozen condition rather than a descriptive
+afterthought: all 48 Parley assignments must modify their predeclared defect
+file. Caller-side compensation may remain hidden-correct but fails that
+maintainability condition. The original four strict conditions remain
+unchanged. Commit and push this corpus before protocol freeze, then preserve
+every session without selective reruns. No compiler, syntax, diagnostic,
+prompt, skill, or instruction-compression change is included.

@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "description": "Four historically grounded, synthetic project regressions for iteration 029.",
+  "tasks": [
+    {
+      "id": "config_recovery_project",
+      "title": "Preserve valid configuration beside unknown keys",
+      "category": "configuration recovery and security policy",
+      "statement": "Repair the configuration-recovery regression using the read-only issue and regression evidence. Preserve parsing, defaults, warning counts, and output fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "historical_inspiration": {
+        "url": "https://github.com/openclaw/openclaw/issues/28140",
+        "mechanism": "an unknown configuration key causes valid settings to be discarded in favor of defaults",
+        "adaptation": "deterministic cross-language fixture; no upstream source copied"
+      },
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nvisibility|all\nunknown_tool|enabled\naudit|on\n",
+          "stdout": "visibility=all|audit=on|unknown=1\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n",
+          "stdout": "visibility=tree|audit=off|unknown=0\n"
+        },
+        {
+          "stdin": "2\nvisibility|all\naudit|on\n",
+          "stdout": "visibility=all|audit=on|unknown=0\n"
+        },
+        {
+          "stdin": "2\nbad|x\nvisibility|team\n",
+          "stdout": "visibility=team|audit=off|unknown=1\n"
+        },
+        {
+          "stdin": "4\naudit|on\njunk|1\nvisibility|all\nother|2\n",
+          "stdout": "visibility=all|audit=on|unknown=2\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_config with visibility as text, audit as text, unknown as number giving text:\n    give back \"visibility=\" + visibility + \"|audit=\" + audit + \"|unknown=\" + unknown\n",
+          "main.par": "include \"policy.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let visibility be \"tree\"\n    let audit be \"off\"\n    let unknown be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let key be item 1 of parts\n        let setting be item 2 of parts\n        if key is \"visibility\":\n            set visibility to setting\n        otherwise if key is \"audit\":\n            set audit to setting\n        otherwise:\n            set unknown to unknown + 1\n    let final_visibility be (recover_visibility with visibility, unknown)\n    let final_audit be (recover_audit with audit, unknown)\n    say (format_config with final_visibility, final_audit, unknown)\n",
+          "policy.par": "to recover_visibility with visibility as text, unknown as number giving text:\n    if unknown is more than 0:\n        give back \"tree\"\n    give back visibility\n\nto recover_audit with audit as text, unknown as number giving text:\n    if unknown is more than 0:\n        give back \"off\"\n    give back audit\n"
+        },
+        "python": {
+          "formatting.py": "def format_config(visibility: str, audit: str, unknown: int) -> str:\n    return f\"visibility={visibility}|audit={audit}|unknown={unknown}\"\n",
+          "main.py": "from formatting import format_config\nfrom policy import recover_audit, recover_visibility\n\ncount = int(input())\nvisibility = \"tree\"\naudit = \"off\"\nunknown = 0\nfor _ in range(count):\n    key, setting = input().split(\"|\", 1)\n    if key == \"visibility\":\n        visibility = setting\n    elif key == \"audit\":\n        audit = setting\n    else:\n        unknown += 1\nprint(format_config(\n    recover_visibility(visibility, unknown),\n    recover_audit(audit, unknown),\n    unknown,\n))\n",
+          "policy.py": "def recover_visibility(visibility: str, unknown: int) -> str:\n    return \"tree\" if unknown > 0 else visibility\n\ndef recover_audit(audit: str, unknown: int) -> str:\n    return \"off\" if unknown > 0 else audit\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_config(visibility: &str, audit: &str, unknown: i64) -> String {\n    format!(\"visibility={visibility}|audit={audit}|unknown={unknown}\")\n}\n",
+          "main.rs": "mod formatting;\nmod policy;\n\nuse formatting::format_config;\nuse policy::{recover_audit, recover_visibility};\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let mut visibility = \"tree\";\n    let mut audit = \"off\";\n    let mut unknown = 0;\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().splitn(2, '|');\n        let key = parts.next().unwrap();\n        let setting = parts.next().unwrap();\n        match key {\n            \"visibility\" => visibility = setting,\n            \"audit\" => audit = setting,\n            _ => unknown += 1,\n        }\n    }\n    println!(\"{}\", format_config(\n        recover_visibility(visibility, unknown),\n        recover_audit(audit, unknown),\n        unknown,\n    ));\n}\n",
+          "policy.rs": "pub fn recover_visibility(visibility: &str, unknown: i64) -> &str {\n    if unknown > 0 { \"tree\" } else { visibility }\n}\n\npub fn recover_audit(audit: &str, unknown: i64) -> &str {\n    if unknown > 0 { \"off\" } else { audit }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Unknown key erases valid configuration\n\nA forward-compatibility warning should count unknown keys without discarding recognized, valid settings from the same document. Defaults apply only when a recognized setting is absent. The current service reports the warning but silently restores every default.\n",
+          "tests/regression.txt": "visibility=all + unknown key + audit=on -> keep all and on; unknown=1\nunknown key + visibility=team -> keep team and default audit; unknown=1\nempty document -> visibility tree, audit off, unknown=0\n"
+        },
+        "python": {
+          "ISSUE.md": "# Unknown key erases valid configuration\n\nA forward-compatibility warning should count unknown keys without discarding recognized, valid settings from the same document. Defaults apply only when a recognized setting is absent. The current service reports the warning but silently restores every default.\n",
+          "tests/regression.txt": "visibility=all + unknown key + audit=on -> keep all and on; unknown=1\nunknown key + visibility=team -> keep team and default audit; unknown=1\nempty document -> visibility tree, audit off, unknown=0\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Unknown key erases valid configuration\n\nA forward-compatibility warning should count unknown keys without discarding recognized, valid settings from the same document. Defaults apply only when a recognized setting is absent. The current service reports the warning but silently restores every default.\n",
+          "tests/regression.txt": "visibility=all + unknown key + audit=on -> keep all and on; unknown=1\nunknown key + visibility=team -> keep team and default audit; unknown=1\nempty document -> visibility tree, audit off, unknown=0\n"
+        }
+      }
+    },
+    {
+      "id": "aliased_identity_cache_project",
+      "title": "Normalize aliased identity fields into cache keys",
+      "category": "cache identity and response aliasing",
+      "statement": "Repair the cache-identity regression using the read-only issue and regression evidence. Preserve record order, duplicate accounting, and output fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "historical_inspiration": {
+        "url": "https://github.com/apollographql/apollo-client/issues/10599",
+        "mechanism": "an aliased id response field is not normalized into the entity cache identity",
+        "adaptation": "deterministic cross-language fixture; no upstream source copied"
+      },
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nPerson|id|personId|1\nPerson|id|id|2\nPerson|id|personId|1\n",
+          "stdout": "stored=Person:1\nstored=Person:2\nduplicate=Person:1\nentries=2|duplicates=1|uncached=0\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n",
+          "stdout": "entries=0|duplicates=0|uncached=0\n"
+        },
+        {
+          "stdin": "2\nUser|id|id|7\nUser|id|id|8\n",
+          "stdout": "stored=User:7\nstored=User:8\nentries=2|duplicates=0|uncached=0\n"
+        },
+        {
+          "stdin": "2\nUser|name|name|Ada\nUser|id|userId|7\n",
+          "stdout": "uncached\nstored=User:7\nentries=1|duplicates=0|uncached=1\n"
+        },
+        {
+          "stdin": "3\nNode|id|nodeId|4\nNode|id|identifier|4\nNode|id|id|4\n",
+          "stdout": "stored=Node:4\nduplicate=Node:4\nduplicate=Node:4\nentries=1|duplicates=2|uncached=0\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_cache_counts with entries as number, duplicates as number, uncached as number giving text:\n    give back \"entries=\" + entries + \"|duplicates=\" + duplicates + \"|uncached=\" + uncached\n",
+          "identity.par": "to entity_key with kind as text, source_field as text, response_field as text, value as text giving text:\n    if response_field is not \"id\":\n        give back \"\"\n    give back kind + \":\" + value\n",
+          "main.par": "include \"identity.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let seen be an empty list of text\n    let duplicates be 0\n    let uncached be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let key be (entity_key with item 1 of parts, item 2 of parts, item 3 of parts, item 4 of parts)\n        if key is \"\":\n            set uncached to uncached + 1\n            say \"uncached\"\n        otherwise if seen contains key:\n            set duplicates to duplicates + 1\n            say \"duplicate=\" + key\n        otherwise:\n            add key to seen\n            say \"stored=\" + key\n    say (format_cache_counts with length of seen, duplicates, uncached)\n"
+        },
+        "python": {
+          "formatting.py": "def format_cache_counts(entries: int, duplicates: int, uncached: int) -> str:\n    return f\"entries={entries}|duplicates={duplicates}|uncached={uncached}\"\n",
+          "identity.py": "def entity_key(kind: str, source_field: str, response_field: str, value: str) -> str:\n    if response_field != \"id\":\n        return \"\"\n    return f\"{kind}:{value}\"\n",
+          "main.py": "from formatting import format_cache_counts\nfrom identity import entity_key\n\ncount = int(input())\nseen = set()\nduplicates = 0\nuncached = 0\nfor _ in range(count):\n    kind, source_field, response_field, value = input().split(\"|\", 3)\n    key = entity_key(kind, source_field, response_field, value)\n    if not key:\n        uncached += 1\n        print(\"uncached\")\n    elif key in seen:\n        duplicates += 1\n        print(f\"duplicate={key}\")\n    else:\n        seen.add(key)\n        print(f\"stored={key}\")\nprint(format_cache_counts(len(seen), duplicates, uncached))\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_cache_counts(entries: usize, duplicates: usize, uncached: usize) -> String {\n    format!(\"entries={entries}|duplicates={duplicates}|uncached={uncached}\")\n}\n",
+          "identity.rs": "pub fn entity_key(kind: &str, _source_field: &str, response_field: &str, value: &str) -> String {\n    if response_field != \"id\" { return String::new(); }\n    format!(\"{kind}:{value}\")\n}\n",
+          "main.rs": "mod formatting;\nmod identity;\n\nuse formatting::format_cache_counts;\nuse identity::entity_key;\nuse std::collections::HashSet;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let mut seen = HashSet::new();\n    let (mut duplicates, mut uncached) = (0, 0);\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().splitn(4, '|');\n        let key = entity_key(\n            parts.next().unwrap(), parts.next().unwrap(),\n            parts.next().unwrap(), parts.next().unwrap(),\n        );\n        if key.is_empty() {\n            uncached += 1;\n            println!(\"uncached\");\n        } else if seen.contains(&key) {\n            duplicates += 1;\n            println!(\"duplicate={key}\");\n        } else {\n            println!(\"stored={key}\");\n            seen.insert(key);\n        }\n    }\n    println!(\"{}\", format_cache_counts(seen.len(), duplicates, uncached));\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Aliased id is missing from the normalized cache\n\nEntity identity comes from the source field named id, regardless of the response alias chosen by a query. Records whose id is returned as personId or another alias should share the same Kind:value key with an unaliased response. Non-id source fields remain uncacheable.\n",
+          "tests/regression.txt": "Person id returned as personId with value 1 -> stored Person:1\nsame Person id returned under a different alias -> duplicate Person:1\nsource field name with value Ada -> uncached\n"
+        },
+        "python": {
+          "ISSUE.md": "# Aliased id is missing from the normalized cache\n\nEntity identity comes from the source field named id, regardless of the response alias chosen by a query. Records whose id is returned as personId or another alias should share the same Kind:value key with an unaliased response. Non-id source fields remain uncacheable.\n",
+          "tests/regression.txt": "Person id returned as personId with value 1 -> stored Person:1\nsame Person id returned under a different alias -> duplicate Person:1\nsource field name with value Ada -> uncached\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Aliased id is missing from the normalized cache\n\nEntity identity comes from the source field named id, regardless of the response alias chosen by a query. Records whose id is returned as personId or another alias should share the same Kind:value key with an unaliased response. Non-id source fields remain uncacheable.\n",
+          "tests/regression.txt": "Person id returned as personId with value 1 -> stored Person:1\nsame Person id returned under a different alias -> duplicate Person:1\nsource field name with value Ada -> uncached\n"
+        }
+      }
+    },
+    {
+      "id": "fsm_rollback_project",
+      "title": "Restore termination state when rolling back an FSM",
+      "category": "state-machine rollback",
+      "statement": "Repair the matcher rollback regression using the read-only issue and regression evidence. Preserve command parsing, event order, and summary fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "historical_inspiration": {
+        "url": "https://github.com/vllm-project/vllm/issues/27210",
+        "mechanism": "rollback rewinds position but leaves a termination flag set",
+        "adaptation": "deterministic cross-language fixture; no upstream source copied"
+      },
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "4\naccept|word\naccept|stop\nrollback|stop\naccept|word\n",
+          "stdout": "accept\naccept\nrollback\naccept\nprocessed=2|terminated=no|rejected=0\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n",
+          "stdout": "processed=0|terminated=no|rejected=0\n"
+        },
+        {
+          "stdin": "2\naccept|word\naccept|word\n",
+          "stdout": "accept\naccept\nprocessed=2|terminated=no|rejected=0\n"
+        },
+        {
+          "stdin": "3\naccept|stop\naccept|word\nrollback|stop\n",
+          "stdout": "accept\nreject\nrollback\nprocessed=0|terminated=no|rejected=1\n"
+        },
+        {
+          "stdin": "5\naccept|word\naccept|stop\nrollback|stop\naccept|stop\naccept|word\n",
+          "stdout": "accept\naccept\nrollback\naccept\nreject\nprocessed=2|terminated=yes|rejected=1\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_matcher with processed as number, terminated as yesno, rejected as number giving text:\n    give back \"processed=\" + processed + \"|terminated=\" + terminated + \"|rejected=\" + rejected\n",
+          "main.par": "include \"matcher.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let processed be 0\n    let terminated be no\n    let rejected be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let action be item 1 of parts\n        let token be item 2 of parts\n        if action is \"accept\":\n            if (can_accept with terminated):\n                set processed to processed + 1\n                if token is \"stop\":\n                    set terminated to yes\n                say \"accept\"\n            otherwise:\n                set rejected to rejected + 1\n                say \"reject\"\n        otherwise:\n            if processed is more than 0:\n                set processed to processed - 1\n            set terminated to (termination_after_rollback with terminated, token)\n            say \"rollback\"\n    say (format_matcher with processed, terminated, rejected)\n",
+          "matcher.par": "to can_accept with terminated as yesno giving yesno:\n    if terminated:\n        give back no\n    give back yes\n\nto termination_after_rollback with terminated as yesno, removed_token as text giving yesno:\n    give back terminated\n"
+        },
+        "python": {
+          "formatting.py": "def format_matcher(processed: int, terminated: bool, rejected: int) -> str:\n    state = \"yes\" if terminated else \"no\"\n    return f\"processed={processed}|terminated={state}|rejected={rejected}\"\n",
+          "main.py": "from formatting import format_matcher\nfrom matcher import can_accept, termination_after_rollback\n\ncount = int(input())\nprocessed = 0\nterminated = False\nrejected = 0\nfor _ in range(count):\n    action, token = input().split(\"|\", 1)\n    if action == \"accept\":\n        if can_accept(terminated):\n            processed += 1\n            terminated = terminated or token == \"stop\"\n            print(\"accept\")\n        else:\n            rejected += 1\n            print(\"reject\")\n    else:\n        processed = max(processed - 1, 0)\n        terminated = termination_after_rollback(terminated, token)\n        print(\"rollback\")\nprint(format_matcher(processed, terminated, rejected))\n",
+          "matcher.py": "def can_accept(terminated: bool) -> bool:\n    return not terminated\n\ndef termination_after_rollback(terminated: bool, removed_token: str) -> bool:\n    return terminated\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_matcher(processed: i64, terminated: bool, rejected: i64) -> String {\n    let state = if terminated { \"yes\" } else { \"no\" };\n    format!(\"processed={processed}|terminated={state}|rejected={rejected}\")\n}\n",
+          "main.rs": "mod formatting;\nmod matcher;\n\nuse formatting::format_matcher;\nuse matcher::{can_accept, termination_after_rollback};\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let (mut processed, mut rejected) = (0, 0);\n    let mut terminated = false;\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().splitn(2, '|');\n        let action = parts.next().unwrap();\n        let token = parts.next().unwrap();\n        if action == \"accept\" {\n            if can_accept(terminated) {\n                processed += 1;\n                terminated = terminated || token == \"stop\";\n                println!(\"accept\");\n            } else {\n                rejected += 1;\n                println!(\"reject\");\n            }\n        } else {\n            processed = std::cmp::max(processed - 1, 0);\n            terminated = termination_after_rollback(terminated, token);\n            println!(\"rollback\");\n        }\n    }\n    println!(\"{}\", format_matcher(processed, terminated, rejected));\n}\n",
+          "matcher.rs": "pub fn can_accept(terminated: bool) -> bool {\n    !terminated\n}\n\npub fn termination_after_rollback(terminated: bool, _removed_token: &str) -> bool {\n    terminated\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Rollback rewinds position but not termination\n\nAfter a terminating token is removed by rollback, the matcher must become active again. The current position rewinds, yet later valid tokens are rejected because the terminated state survives. Rolling back a non-terminating token does not independently clear a real termination state.\n",
+          "tests/regression.txt": "accept word, accept stop, rollback stop, accept word -> final token accepted; terminated no\naccept stop, accept word -> second token rejected\nremoving stop is the state transition that clears termination\n"
+        },
+        "python": {
+          "ISSUE.md": "# Rollback rewinds position but not termination\n\nAfter a terminating token is removed by rollback, the matcher must become active again. The current position rewinds, yet later valid tokens are rejected because the terminated state survives. Rolling back a non-terminating token does not independently clear a real termination state.\n",
+          "tests/regression.txt": "accept word, accept stop, rollback stop, accept word -> final token accepted; terminated no\naccept stop, accept word -> second token rejected\nremoving stop is the state transition that clears termination\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Rollback rewinds position but not termination\n\nAfter a terminating token is removed by rollback, the matcher must become active again. The current position rewinds, yet later valid tokens are rejected because the terminated state survives. Rolling back a non-terminating token does not independently clear a real termination state.\n",
+          "tests/regression.txt": "accept word, accept stop, rollback stop, accept word -> final token accepted; terminated no\naccept stop, accept word -> second token rejected\nremoving stop is the state transition that clears termination\n"
+        }
+      }
+    },
+    {
+      "id": "cancellation_lock_project",
+      "title": "Retain lock authority during cancellation rollback",
+      "category": "cancellation and rollback authority",
+      "statement": "Repair the cancellation rollback regression using the read-only issue and regression evidence. Preserve change order, lock semantics, and summary fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "historical_inspiration": {
+        "url": "https://github.com/vitessio/vitess/issues/17620",
+        "mechanism": "cancellation creates fresh context and loses lock authority required to restore state",
+        "adaptation": "deterministic cross-language fixture; no upstream source copied"
+      },
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "yes\n3\ncatalog|old|new\nsearch|ready|paused\nbilling|open|closed\n",
+          "stdout": "catalog:old\nsearch:ready\nbilling:open\nrestored=3|failed=0\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "yes\n0\n",
+          "stdout": "restored=0|failed=0\n"
+        },
+        {
+          "stdin": "yes\n2\na|one|two\nb|left|right\n",
+          "stdout": "a:one\nb:left\nrestored=2|failed=0\n"
+        },
+        {
+          "stdin": "no\n1\na|old|new\n",
+          "stdout": "a:new\nrestored=0|failed=1\n"
+        },
+        {
+          "stdin": "no\n2\nx|up|down\ny|hot|cold\n",
+          "stdout": "x:down\ny:cold\nrestored=0|failed=2\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "cancellation.par": "to rollback_has_lock with original_lock as yesno giving yesno:\n    give back no\n",
+          "formatting.par": "to format_rollback with restored as number, failed as number giving text:\n    give back \"restored=\" + restored + \"|failed=\" + failed\n",
+          "main.par": "include \"cancellation.par\"\ninclude \"formatting.par\"\n\nto main:\n    let original_lock be (ask \"\") is \"yes\"\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let restored be 0\n    let failed be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let resource be item 1 of parts\n        let old_value be item 2 of parts\n        let new_value be item 3 of parts\n        if (rollback_has_lock with original_lock):\n            say resource + \":\" + old_value\n            set restored to restored + 1\n        otherwise:\n            say resource + \":\" + new_value\n            set failed to failed + 1\n    say (format_rollback with restored, failed)\n"
+        },
+        "python": {
+          "cancellation.py": "def rollback_has_lock(original_lock: bool) -> bool:\n    return False\n",
+          "formatting.py": "def format_rollback(restored: int, failed: int) -> str:\n    return f\"restored={restored}|failed={failed}\"\n",
+          "main.py": "from cancellation import rollback_has_lock\nfrom formatting import format_rollback\n\noriginal_lock = input() == \"yes\"\ncount = int(input())\nrestored = 0\nfailed = 0\nfor _ in range(count):\n    resource, old_value, new_value = input().split(\"|\", 2)\n    if rollback_has_lock(original_lock):\n        print(f\"{resource}:{old_value}\")\n        restored += 1\n    else:\n        print(f\"{resource}:{new_value}\")\n        failed += 1\nprint(format_rollback(restored, failed))\n"
+        },
+        "rust": {
+          "cancellation.rs": "pub fn rollback_has_lock(_original_lock: bool) -> bool {\n    false\n}\n",
+          "formatting.rs": "pub fn format_rollback(restored: i64, failed: i64) -> String {\n    format!(\"restored={restored}|failed={failed}\")\n}\n",
+          "main.rs": "mod cancellation;\nmod formatting;\n\nuse cancellation::rollback_has_lock;\nuse formatting::format_rollback;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let original_lock = lines.next().unwrap() == \"yes\";\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let (mut restored, mut failed) = (0, 0);\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().splitn(3, '|');\n        let resource = parts.next().unwrap();\n        let old_value = parts.next().unwrap();\n        let new_value = parts.next().unwrap();\n        if rollback_has_lock(original_lock) {\n            println!(\"{resource}:{old_value}\");\n            restored += 1;\n        } else {\n            println!(\"{resource}:{new_value}\");\n            failed += 1;\n        }\n    }\n    println!(\"{}\", format_rollback(restored, failed));\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Cancellation cannot restore state after losing its lock\n\nBest-effort rollback must retain the original operation's lock authority. The current cancellation path creates isolated rollback state, so every restore is rejected even though the original operation still owns the lock. If the original operation truly has no lock, restoration must continue to fail.\n",
+          "tests/regression.txt": "original lock yes -> every changed resource returns to its old value\noriginal lock no -> each resource remains at the new value and counts as failed\nzero resources -> restored=0,failed=0\n"
+        },
+        "python": {
+          "ISSUE.md": "# Cancellation cannot restore state after losing its lock\n\nBest-effort rollback must retain the original operation's lock authority. The current cancellation path creates isolated rollback state, so every restore is rejected even though the original operation still owns the lock. If the original operation truly has no lock, restoration must continue to fail.\n",
+          "tests/regression.txt": "original lock yes -> every changed resource returns to its old value\noriginal lock no -> each resource remains at the new value and counts as failed\nzero resources -> restored=0,failed=0\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Cancellation cannot restore state after losing its lock\n\nBest-effort rollback must retain the original operation's lock authority. The current cancellation path creates isolated rollback state, so every restore is rejected even though the original operation still owns the lock. If the original operation truly has no lock, restoration must continue to fail.\n",
+          "tests/regression.txt": "original lock yes -> every changed resource returns to its old value\noriginal lock no -> each resource remains at the new value and counts as failed\nzero resources -> restored=0,failed=0\n"
+        }
+      }
+    }
+  ]
+}
