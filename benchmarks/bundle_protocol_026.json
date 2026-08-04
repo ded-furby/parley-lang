@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment_id": "026",
+  "title": "Eight-repository maintenance expansion",
+  "description": "Cross-language comparison of agents inspecting and modifying eight two-file repositories under public and hidden tests.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_repositories_026.json",
+    "task_manifest_sha256": "6dadf527fd966c93fcf034074e397c69050f6dfa9ca16e6df722fc796459157f",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "8f4a66885f3e0837f1595d72cf38ada5b8112f97",
+    "harness_commit": "74c0f67c3531719c491da4e7613a5f2c9e8f8e4e",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [8],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260815,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_repository_assignments": 144,
+    "sessions_per_language": 6,
+    "repository_assignments_per_language": 48,
+    "editable_seed_files_per_session": 16,
+    "public_cases_per_language": 48,
+    "hidden_cases_per_language": 192,
+    "exact_hidden_file_cases_per_language": 48,
+    "derivation": "6 complete eight-repository bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 8,
+    "correctness": "Parley hidden-repository success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned repository must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned repository must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check repository success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict repository-maintenance parity."
+  },
+  "source_protocol": {
+    "first_shell_command": "./sources",
+    "source_command_count": 1,
+    "later_shell_command": "./check",
+    "visible_files": "Only the sixteen language-specific editable seed files across the eight repositories.",
+    "protected_files": "Checker, source printer, configuration, prompt, and attempt log are never agent-readable and remain integrity-hashed."
+  },
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "The first four repository objects are exactly preserved from iteration 025; the final four repository IDs, helper boundaries, requirement statements, seed sources, and public/hidden cases are unrelated additions frozen before any iteration-026 session.",
+    "The protected source-printer output becomes measured agent context through the model session; source is not duplicated inline in the prompt.",
+    "Changed-file count and rough-token edit size are secondary maintenance metrics, not substitutes for hidden correctness or the four-condition gate.",
+    "Cross-iteration movement from size four to size eight is descriptive evidence consistent with workload amortization, not causal proof."
+  ],
+  "secondary_analysis": [
+    "Report every session, repository outcome, repair, token count, elapsed time, prompt size, source size, edit size, changed-file count, integrity result, and command-protocol result.",
+    "Classify every first-check and hidden failure by unrelated repository and independent session.",
+    "Audit whether agents changed both entrypoint and helper where the requirement crosses that boundary, without making it a correctness prerequisite beyond tests.",
+    "Report exact filtered-report and priority-digest file judgments and repair-free sensitivity if at least two Parley sessions pass all eight repositories on the first check."
+  ],
+  "feature_boundary": "Parley remains frozen at v0.3.155 with the exact 1,519-character skill. The source protocol and language-neutral harness remain unchanged from iteration 025; only the preregistered corpus expands from four to eight two-file repositories.",
+  "change_rule": "No syntax, compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or benchmark instruction may change from iteration 025 output unless a signature recurs across unrelated new repositories and independent sessions, then passes general usefulness, semantic consistency, and maintainability review.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result without selective reruns. If strict parity passes, preregister a larger confirmation before claiming parity. If it fails, make no same-corpus syntax or instruction change; only independently recurring general defects may enter separate design review."
+}

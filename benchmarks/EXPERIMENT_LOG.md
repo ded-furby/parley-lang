@@ -2013,3 +2013,36 @@ protocol, or instruction-compression change is part of this work. Commit and
 push the reviewed corpus before freezing protocol 026. Preserve every later
 session without selective reruns. A passing pilot still requires a larger
 confirmation before any general parity claim.
+
+## Pre-registration for 026 — Eight-repository expansion
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `74c0f67c3531719c491da4e7613a5f2c9e8f8e4e`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_repositories_026.json`, SHA-256
+  `6dadf527fd966c93fcf034074e397c69050f6dfa9ca16e6df722fc796459157f`
+- Protocol: `benchmarks/bundle_protocol_026.json`, SHA-256
+  `aca80f25160e8b7b0eed88a1ca1ab062ad158c3a86723c7786464e400e953e2a`
+- Matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Seed: `20260815`
+
+The primary scale is eight. The strict gate is unchanged: Parley must preserve
+100% hidden-repository success, match the better baseline's first-check rate,
+and use no more median reported tokens or median elapsed time per repository
+than the lower baseline. Each session exposes sixteen editable source files by
+running `./sources` exactly once as its first shell command; only `./check` may
+follow. There are 48 public, 192 hidden, and 48 exact hidden-file judgments per
+language.
+
+Run the complete 18-session matrix once and preserve every session, including
+infrastructure failures, without selective reruns. Report per-session and
+per-repository evidence, file-scope edits, exact-file results, repairs, and
+integrity/protocol status. If the strict gate passes, preregister a larger
+confirmation before claiming parity. If it fails, do not tune this corpus or
+change syntax/instructions from a same-corpus signature.

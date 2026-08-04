@@ -744,6 +744,16 @@ Update it whenever you finish or start a work item.
   corpus. Keep Parley v0.3.155, the 1,519-character skill, source protocol, and
   four-condition gate unchanged; preserve all output and require a larger
   confirmation if the expansion passes.
+- **Eight-repository expansion preregistration (iteration 026):** the corpus
+  commit `74c0f67c3531719c491da4e7613a5f2c9e8f8e4e` is pushed. Protocol 026 is
+  frozen at SHA
+  `aca80f25160e8b7b0eed88a1ca1ab062ad158c3a86723c7786464e400e953e2a`:
+  six complete size-eight replicates per language, 18 fresh sessions and 144
+  assignments, seed `20260815`. Run it once without selective reruns. Require
+  `./sources` exactly once and first, only `./check` later, and preserve all
+  session/token/file evidence. No compiler or instruction change is allowed
+  from iteration 025 output; a passing expansion requires a larger
+  confirmation before any parity claim.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
