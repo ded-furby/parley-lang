@@ -598,12 +598,16 @@ Update it whenever you finish or start a work item.
   path, including the zero guard and Rust-style negative rule. All five saved
   018 rotation failures pass public and hidden replay; unrelated 019 problems
   remain rejected. The full 301-test suite passes and the skill is unchanged.
-- **Size-eight confirmation preregistration (iteration 020):** ten complete
-  broad-task bundles per language are frozen in `bundle_protocol_020.json`:
-  30 fresh sessions and 240 hidden-judged programs. It concentrates evidence
-  at the scale that failed 017–018, retains the exact four-condition strict
-  gate, freezes the 1,519-character skill, and forbids transcript-driven
-  changes after the result.
+- **Size-eight confirmation result (iteration 020):** 30 fresh sessions and
+  240 task assignments passed protocol/integrity checks, but the strict gate
+  failed 0/4 conditions. Parley reached 79/80 hidden and 74/80 first-check
+  tasks at 8,252.19 tokens/task, versus Python's perfect 80/80 and 5,806.25
+  tokens/task. Five repair-free Parley bundles had a 6,129.88 median—1.37%
+  above Rust and 5.57% above Python—but that post-hoc subset is not parity.
+  Preserve report 020. Reject redundant `repeat while` and one-task
+  containment aliases. The next compiler work is only the general P901 fix
+  for mutation of an accepted range-loop variable; then move to a genuinely
+  new broad corpus or model split with the skill unchanged.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

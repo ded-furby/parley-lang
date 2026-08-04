@@ -1256,3 +1256,72 @@ Implement v0.3.153 with parser/checker/emitter/native and zero-divisor,
 precedence, and negative-number tests. Keep the instruction core unchanged for
 the first confirmation. Replay the saved first sources, then freeze and rerun
 the broad workload before claiming parity.
+
+## Pre-registration for 020 — Size-eight confirmation
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.153 at `736a474c9752050bb82942565ac5bd09cd3662e4`
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Protocol: `benchmarks/bundle_protocol_020.json`
+- Matrix: 10 size-eight replicates × 3 languages = 30 fresh sessions and
+  240 hidden-judged task assignments
+- Seed: `20260805`
+- Preregistration commit: `ead3369`
+
+The exact eight-task workload from iterations 017–018 is retained because it
+was the predeclared confirmation target after the evidence-backed `modulo`
+change. All four strict conditions must independently match the better
+Python/Rust baseline: hidden correctness, median tokens per task, median
+elapsed seconds per task, and first-check task success. The instruction,
+prompts, task order, hidden cases, runner, and checker are frozen before any
+session output.
+
+## 020 — Size-eight confirmation fails all strict parity conditions
+
+- Date: 2026-08-05
+- Toolchain: Parley 0.3.153, preregistration commit `ead3369`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+- Matrix: 10 complete size-eight replicates per language; 30 fresh sessions;
+  240 task assignments
+- Result JSON SHA-256: `842b3408b9220a81e17ccc43a6523bfee20de2b3b8ca62baef3b58b6529d2cdf`
+- Frozen protocol SHA-256: `31da622d09ba6dce88f0a6c8073bd2874ccdbf4451d86c42ac3df84e97f3d327`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/020-size-eight-confirmation-failed.html`
+
+| Language | Hidden tasks | First-check tasks | Repair turns | Median tokens/task | Median seconds/task | Prompt chars/task |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 79/80 | 74/80 | 6 | 8,252.19 | 7.5476 | 867.5 |
+| Python | 80/80 | 80/80 | 0 | 5,806.25 | 4.8133 | 655.625 |
+| Rust | 80/80 | 80/80 | 0 | 6,047.25 | 6.8861 | 658.125 |
+
+### Gate result and sensitivity
+
+All 30 sessions used unique threads, complied with the protocol, and passed
+checker-integrity validation, with no timeouts, runner errors, or nonzero
+agent exits. The strict gate passed **0/4** conditions. Parley reached 98.75%
+hidden correctness and 92.5% first-check correctness, but the baselines were
+perfect. Its median token cost was 1.42× Python's and its median elapsed time
+was 56.8% higher.
+
+Five Parley sessions were repair-free. Their post-hoc median was 6,129.88
+tokens/task and 6.5342 seconds/task, 5.57% above Python's token median and
+1.37% above Rust's. They passed 40/40 first checks and 39/40 hidden tasks; the
+hidden miss was a bounded rotation workaround. This clean subset diagnoses a
+near-baseline regime but does not replace the frozen primary result.
+
+### Failure audit and decision
+
+The `modulo` alias eliminated the repeated rotation parse signature. The six
+remaining first-check failures were: two `repeat while` sources across two
+tasks, two `does not contain` sources in stable deduplication, one `contains
+... is no` source in the same task, and one P901 Rust-backend failure after
+the checker accepted mutation of a range-loop variable.
+
+Do **not** add `repeat while`: it duplicates canonical `while` and would make
+the surface less coherent for the sake of two transcripts. Do not add either
+containment phrasing from one task family. Fix the mutable loop-variable P901
+because checker totality is a language contract and the correction is broadly
+useful regardless of tokens. Keep the instruction unchanged and perform no
+second compression experiment. After that correctness fix, use a genuinely
+new broad corpus or model split; do not continue tuning against these eight
+tasks.
