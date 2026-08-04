@@ -155,6 +155,25 @@ def test_position_is_contextual_in_loop_and_item_index():
     assert isinstance(mutation_prog.funcs[0].body[3], A.RemoveItem)
 
 
+def test_number_is_contextual_in_value_names_and_stays_a_type():
+    prog = parse(
+        "a reading has number as number\n"
+        "to number with value as number giving number:\n"
+        "    give back value\n"
+        "to double with number as number giving number:\n"
+        "    give back number times 2\n"
+        "to main:\n"
+        "    for each number from 1 to 2:\n"
+        "        say number\n"
+    )
+    assert prog.records[0].fields[0][0] == "number"
+    assert isinstance(prog.records[0].fields[0][1], A.TNum)
+    assert prog.funcs[0].name == "number"
+    assert prog.funcs[1].params[0].name == "number"
+    assert isinstance(prog.funcs[1].params[0].type, A.TNum)
+    assert prog.funcs[2].body[0].var == "number"
+
+
 def test_parenthesized_position_search_remains_a_valid_item_index():
     prog = parse(
         'to main:\n'

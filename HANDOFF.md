@@ -22,8 +22,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.154** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 305 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.155** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 309 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -606,6 +606,14 @@ Update it whenever you finish or start a work item.
   docs, and regression coverage are included. The untouched failing 020 source
   now compiles and passes its public case plus all five hidden cases; the skill
   remains unchanged.
+- **v0.3.155 contextual `number`:** iteration 021 produced ten P209 failures
+  across five unrelated task families. `number` is now valid uniformly as a
+  value-level field, function, parameter, variable, or loop binding while
+  remaining the built-in type in type positions and reserved for user-defined
+  record/kind/variant names. No grammar, AST, runtime, or skill change is
+  required; parser, checker, emitter, native, and documentation coverage are
+  included. The 309-test suite passes, and all ten untouched P209 sources now
+  compile and pass their 50 combined public/hidden cases.
 - **Size-eight confirmation result (iteration 020):** 30 fresh sessions and
   240 task assignments passed protocol/integrity checks, but the strict gate
   failed 0/4 conditions. Parley reached 79/80 hidden and 74/80 first-check
@@ -754,7 +762,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.154).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.155).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

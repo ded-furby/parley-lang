@@ -97,6 +97,8 @@ to main:
 `stop` ends a loop early; `skip` jumps to the next turn.
 You may `set` a loop variable inside the loop. That change lasts only for the
 current turn: it does not change the source list or the next range value.
+Type words are contextual in value positions, so `for each number in numbers:`
+uses `number` as the loop variable while `list of number` still names its type.
 
 ## 7. Lists
 

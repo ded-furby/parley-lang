@@ -11,9 +11,12 @@ indentation-based blocks (4 spaces). Execution starts at `to main:`.
 Comments: `note: …` or `# …` to end of line.
 
 Names use letters, digits, and underscores and cannot start with a digit.
-Phrase starters such as `position` are contextual names: `let position be 1`
-and `item position of values` use the variable, while `position of "x" in t`
-is text search. Parenthesize a search used as an item index.
+Phrase and type words may be contextual value names. For example, `let
+position be 1` and `let number be 1` declare variables, while `position of
+"x" in t` is text search and `number as number` names a parameter and then its
+type. `number` remains reserved as a record/kind/variant name because such a
+type could not be referenced unambiguously. Parenthesize a search used as an
+item index.
 
 ## Types
 

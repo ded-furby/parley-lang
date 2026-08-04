@@ -130,6 +130,38 @@ def test_position_is_a_contextual_identifier_without_shadowing_search():
     assert check_text(loop_src) == []
 
 
+def test_number_is_a_contextual_value_identifier_but_not_a_type_name():
+    value_src = (
+        "a reading has number as number\n"
+        "to double with number as number giving number:\n"
+        "    give back number times 2\n"
+        "to local_value giving number:\n"
+        "    let number be 7\n"
+        "    give back number\n"
+        "to main:\n"
+        "    let item_value be a reading with number 3\n"
+        "    say item_value's number\n"
+        "    say (double with 4)\n"
+        "    for each number from 1 to 2:\n"
+        "        say number\n"
+    )
+    function_src = (
+        "to number with value as number giving number:\n"
+        "    give back value\n"
+        "to main:\n"
+        "    say (number with 9)\n"
+    )
+    assert check_text(value_src) == []
+    assert check_text(function_src) == []
+
+    record_src = "a number has value as number\nto main:\n    say 1\n"
+    kind_src = "a number is one of present\nto main:\n    say 1\n"
+    variant_src = "a state is one of number\nto main:\n    say 1\n"
+    assert "P209" in diag_codes(record_src)
+    assert "P209" in diag_codes(kind_src)
+    assert "P209" in diag_codes(variant_src)
+
+
 def test_modulo_reuses_whole_number_remainder_types_contextually():
     assert check_text(in_main("let modulo be 5", "say modulo", "say 10 modulo 3")) == []
     diags = check_text(in_main("say 10.5 modulo 3"))

@@ -177,6 +177,36 @@ def test_contextual_position_identifier_runs_beside_search_operator(workdir):
     assert proc.stdout == "25\n30\n2\n"
 
 
+def test_contextual_number_names_run_beside_number_types(workdir):
+    src = '''a reading has number as number
+
+to double with number as number giving number:
+    give back number times 2
+
+to local_value giving number:
+    let number be 7
+    give back number
+
+to main:
+    let reading_value be a reading with number 3
+    say reading_value's number
+    say (double with 4)
+    say local_value
+    for each number from 1 to 2:
+        say number
+'''
+    proc = run_program(workdir, "contextual_number", src)
+    assert proc.stdout == "3\n8\n7\n1\n2\n"
+
+    function_proc = run_program(workdir, "contextual_number_function", '''to number with value as number giving number:
+    give back value
+
+to main:
+    say (number with 9)
+''')
+    assert function_proc.stdout == "9\n"
+
+
 def test_math_toolbox(workdir):
     src = '''to main:
     say 2 to the power of 10

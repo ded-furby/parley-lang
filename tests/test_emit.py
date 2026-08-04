@@ -127,6 +127,31 @@ def test_contextual_position_identifier_emits_as_an_ordinary_variable():
     assert "parley_item(&(values), position)" in rust
 
 
+def test_contextual_number_names_emit_without_changing_number_types():
+    rust = emit_text(
+        "a reading has number as number\n"
+        "to double with number as number giving number:\n"
+        "    give back number times 2\n"
+        "to main:\n"
+        "    let reading_value be a reading with number 3\n"
+        "    say reading_value's number\n"
+        "    for each number from 1 to 2:\n"
+        "        say (double with number)\n"
+    )
+    assert "number: i64" in rust
+    assert "fn double(number: i64) -> i64" in rust
+    assert "for number in" in rust
+
+    function_rust = emit_text(
+        "to number with value as number giving number:\n"
+        "    give back value\n"
+        "to main:\n"
+        "    say (number with 9)\n"
+    )
+    assert "fn number(value: i64) -> i64" in function_rust
+    assert "number(9i64)" in function_rust
+
+
 def test_changed_loop_variables_emit_mutable_bindings_only_when_needed():
     rust = emit_text(
         "to main:\n"

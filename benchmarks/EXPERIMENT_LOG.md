@@ -1440,3 +1440,28 @@ Preserve 021 unchanged. Implement contextual `number` as a separate compiler
 version, keep the instruction unchanged, and replay all ten exact P209 sources.
 Do not rerun this corpus as a tuning target; the next measurement must be a new
 corpus or model split.
+
+## Post-021 compiler change — v0.3.155 contextual `number`
+
+- Evidence: 10 P209 events across five unrelated iteration-021 task families
+- General scope: value-level field, function, parameter, variable, and loop
+  binding names
+- Semantic boundary: built-in `number` type syntax is unchanged; user-defined
+  record, kind, and variant names `number` remain rejected because such a type
+  could not be referenced unambiguously
+- Implementation: the contextual lexer and grammar already distinguish the
+  observed positions; the checker now permits `number` only for the five
+  value-name categories
+- Pipeline: parser, checker, Rust emitter, native execution, reference,
+  tutorial, and specification coverage
+- Verification: 309 tests passed in 97.13 seconds; strengthened emitter/native
+  callable-name checks also passed
+- Frozen-source replay: all 10 untouched P209 sources compiled and passed all
+  50 combined public and hidden cases under v0.3.155
+- Instruction: byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+
+No `repeat while`, postfix `sorted`, insert phrase, multiword function syntax,
+or other iteration-021 draft is accepted. The exact-source replay is a
+regression check, not a revised benchmark result. The next efficiency evidence
+must come from a newly frozen corpus or model split.

@@ -48,6 +48,14 @@ RESERVED = {
     "list", "map", "function", "taking", "the", "some",
 }
 
+# Type words remain reserved as type/kind/variant names, where they would make
+# the declared type impossible to reference. `number` is nevertheless a common
+# value-level name, and the contextual lexer already distinguishes identifier
+# positions from the built-in type position in `number as number`.
+CONTEXTUAL_NAME_KINDS = {
+    "number": {"field", "function", "parameter", "variable", "loop variable"},
+}
+
 _NUMERIC = (A.TNum, A.TDec)
 _ORDERED = (A.TNum, A.TDec, A.TText)
 
@@ -84,7 +92,8 @@ class Checker:
             hint=hint, replacement=replacement))
 
     def check_name_ok(self, name: str, node, what: str) -> bool:
-        if name in RESERVED:
+        contextual_kinds = CONTEXTUAL_NAME_KINDS.get(name, set())
+        if name in RESERVED and what not in contextual_kinds:
             self.err("P209",
                      f'"{name}" is part of Parley\'s own vocabulary, so it cannot name a {what}.',
                      node,
