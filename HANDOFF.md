@@ -886,6 +886,24 @@ Update it whenever you finish or start a work item.
   No language/skill change follows. Size-eight Rust parity is now replicated;
   Python-and-Rust parity is not. Next either confirm the Rust claim over 90
   sessions or use genuinely deeper project episodes for the strict claim.
+- **Post-029 causal audit:** every language/session uses four messages, one
+  completed file-change action, one source dump, and one check. Parley prompt
+  and editable source are 5,860 and 7,978 characters/session versus Python's
+  4,173 and 5,718–5,743; equal read-only context is 3,622. Its output tokens
+  are slightly lower, so the remaining Python gap is input context/source, not
+  repair or action variance. Repeated safe numeric-input unwrapping is
+  semantically intentional and does not justify syntax. Next freeze a
+  90-session size 1/2/4/8 curve on exact corpus 029 before deciding whether
+  deeper repositories can move the strict gate.
+- **Ninety-session scale preregistration (iteration 030):** protocol SHA
+  `1eae4604ea8a9c0a4fbce404e1f177af74a06afbf8a93409781c1961a6e09b9f`
+  freezes exact corpus 029 at sizes 1/2/4/8, two complete replicates, seed
+  `20260823`: 90 fresh sessions and 192 assignments. Every task appears twice
+  per language/scale; size eight remains the directional primary gate, and all
+  64 Parley assignments must touch their frozen root file. Commit the protocol
+  before output, then run every cell once. Report reciprocal-size token fits
+  descriptively; do not treat two size-eight cells as confirmation or tune any
+  task/language/instruction from the result.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

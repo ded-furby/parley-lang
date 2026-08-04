@@ -2581,3 +2581,61 @@ mechanisms, perfect first-check reliability, and explicit root-cause quality.
 Python-and-Rust parity is still unconfirmed. A 90-session confirmation is
 defensible for the narrower Rust claim; the strict claim needs genuinely deeper
 project episodes rather than same-corpus language or instruction tuning.
+
+## Causal audit after 029 — The remaining gap is input context, not repairs
+
+The complete iteration-029 event streams make workflow counts exactly equal.
+Every language/session emits four agent messages, one completed file-change
+action, one `./sources`, and one `./check`; all checks pass. Parley does not
+spend an extra turn reasoning, editing, compiling, or repairing.
+
+Per session, the Parley prompt is 5,860 characters versus Python's 4,173 and
+Rust's 4,193. Editable source is 7,978 characters for Parley versus 5,718–5,743
+for Python and 9,137–9,189 for Rust. Read-only context is identical at 3,622
+metered characters. Parley output tokens are slightly lower than Python, while
+its median input tokens are 377.19 higher per repository. The token gap is
+therefore an input-context/source effect under an identical action graph.
+
+The most visually repetitive Parley input idiom is safe numeric input: nine
+sites bind `ask for a number`, then explicitly extract `value of` the optional
+result. That is deliberate semantics, not a defect: invalid input remains
+representable and existing non-benchmark examples check `nothing` before
+unwrapping. Collapsing the pair would either weaken error handling or add a
+benchmark-shaped convenience. No compiler or syntax design review is opened.
+
+Before authoring deeper repositories—which could amplify the observed source
+character difference—freeze a balanced workload-scale curve on the exact 029
+corpus. Size 1/2/4/8 with two complete replicates produces 90 fresh sessions,
+balances every task twice per language/scale, and directly tests whether the
+Python gap falls as fixed session context amortizes.
+
+## Pre-registration for 030 — Ninety-session diagnosis scaling curve
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen task/harness/report checkpoint:
+  `59ff991d3d924ffbd2c295b5df0e01a5c3735142`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: exact iteration-029 corpus, SHA-256
+  `50e55b985b959c96175632530cbb142b424453b4e815a731d2067a3432895b07`
+- Protocol: `benchmarks/bundle_protocol_030.json`, SHA-256
+  `1eae4604ea8a9c0a4fbce404e1f177af74a06afbf8a93409781c1961a6e09b9f`
+- Matrix: sizes 1/2/4/8 × three languages × two complete replicates = 90
+  fresh sessions and 192 hidden-judged assignments
+- Seed: `20260823`
+
+Each task appears exactly twice per language at every scale. Per-language
+session counts are 16/8/4/2 for sizes 1/2/4/8, while each scale contains 16
+balanced repository assignments. The primary directional gate remains size
+eight; all 64 Parley assignments must also modify their frozen root-defect
+file.
+
+Report the complete distributions and a descriptive reciprocal-size fit for
+tokens per repository. A falling absolute Parley/Python gap supports fixed
+session overhead; a stable or growing gap supports source/workflow cost. The
+fit is not causal, and two size-eight replicates are not a confirmation. Run
+all 90 cells once with no exclusions or selective reruns. No compiler, task,
+skill, harness, or instruction change is included.

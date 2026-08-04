@@ -770,6 +770,54 @@ def test_bundle_protocol_029_freezes_historical_diagnostic_matrix():
     assert "without selective reruns" in protocol["stop_rule"]
 
 
+def test_bundle_protocol_030_freezes_ninety_session_scale_curve():
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_030.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(
+        tasks, config["bundle_sizes"], config["replicates"], config["seed"]
+    )
+
+    assert protocol["experiment_id"] == "030"
+    assert config["parley_version"] == "parley 0.3.155"
+    assert config["harness_commit"] == "59ff991d3d924ffbd2c295b5df0e01a5c3735142"
+    assert config["task_manifest_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "agent_tasks_historical_029.json").read_bytes()
+    ).hexdigest()
+    assert config["parley_skill_sha256"] == hashlib.sha256(
+        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+    ).hexdigest()
+    assert config["bundle_sizes"] == [1, 2, 4, 8]
+    assert config["replicates"] == 2
+    assert len(plan) == 30
+    assert sum(bundle["bundle_size"] for bundle in plan) == 64
+    counts = {
+        size: sum(bundle["bundle_size"] == size for bundle in plan)
+        for size in config["bundle_sizes"]
+    }
+    assert counts == {1: 16, 2: 8, 4: 4, 8: 2}
+    for size in config["bundle_sizes"]:
+        exposures = [
+            task_id
+            for bundle in plan
+            if bundle["bundle_size"] == size
+            for task_id in bundle["task_ids"]
+        ]
+        assert len(exposures) == 16
+        assert all(exposures.count(task["id"]) == 2 for task in tasks)
+    assert protocol["matrix"]["fresh_sessions"] == 90
+    assert protocol["matrix"]["judged_repository_assignments"] == 192
+    assert protocol["matrix"]["repository_assignments_per_language"] == 64
+    assert protocol["matrix"]["root_cause_assignments_per_language"] == 64
+    assert protocol["primary_gate"]["scale"] == 8
+    assert "two replicates" in protocol["primary_gate"]["verdict"]
+    assert protocol["source_protocol"]["first_shell_command"] == "./sources"
+    assert "one allowed instruction-compression experiment is closed" in protocol[
+        "instruction_rule"
+    ]
+    assert "without selective reruns" in protocol["stop_rule"]
+
+
 def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
     prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")
