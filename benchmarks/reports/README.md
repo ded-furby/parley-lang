@@ -24,6 +24,7 @@ transformation, and chart-map notes.
 | 016 | Parley 0.3.151 | Broad out-of-sample correctness held; a 3.88% token gap and rotation repairs remained | [HTML](016-broad-corpus-diagnostic.html) |
 | 017 | Parley 0.3.151 | Cold-start cost amortized, but repaired size-eight bundles missed strict parity | [HTML](017-workload-scale-parity-failed.html) |
 | 018 | Parley 0.3.152 | Contextual `position` removed its cross-task failures; rotation repairs still blocked parity | [HTML](018-contextual-identifier-replication-failed.html) |
+| 019 | Parley 0.3.152 | Anti-primed `modulo` use recurred across three task families; alias eligibility gate passed | [HTML](019-arithmetic-vocabulary-gate-passed.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

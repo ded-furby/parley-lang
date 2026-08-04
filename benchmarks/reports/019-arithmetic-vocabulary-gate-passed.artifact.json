@@ -1,0 +1,279 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Parley Arithmetic Vocabulary Diagnostic — Iteration 019",
+    "description": "Preregistered 36-session anti-primed study of natural arithmetic spelling across six unrelated task families.",
+    "generatedAt": "2026-08-04T15:04:00Z",
+    "cards": [
+      {"id": "sessions_card", "description": "Fresh sessions across six tasks, three languages, and two replicates.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Fresh sessions", "field": "sessions", "format": "number"}]},
+      {"id": "families_card", "description": "Unrelated task families whose first-check Parley source used modulo.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Modulo families", "field": "modulo_families", "format": "number"}]},
+      {"id": "uses_card", "description": "First-check Parley sessions independently using modulo without prompt priming.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Modulo sessions", "field": "modulo_sessions", "format": "number"}]},
+      {"id": "gate_card", "description": "Predeclared recurrence gate: at least two unrelated task families.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Evidence gate", "field": "evidence_gate_passed", "format": "number", "unit": "passed"}]},
+      {"id": "hidden_card", "description": "Parley final programs passing all hidden cases.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Parley hidden", "field": "parley_hidden", "format": "number", "unit": "of 12"}]},
+      {"id": "repairs_card", "description": "Additional public-check turns across the twelve Parley sessions.", "dataset": "headline", "sourceId": "vocabulary_results", "metrics": [{"label": "Parley repairs", "field": "parley_repairs", "format": "number"}]}
+    ],
+    "charts": [
+      {
+        "id": "spelling_chart",
+        "title": "First-check Parley arithmetic spellings",
+        "subtitle": "Twelve untouched first-check sources; agent-visible text contained no candidate spelling.",
+        "intent": "comparison",
+        "question": "Which arithmetic forms did agents independently choose?",
+        "rationale": "A horizontal bar ranks categorical spelling frequency and keeps the family counts in tooltips.",
+        "comparisonContext": {"unit": "first-check sessions", "grain": "spelling classification", "denominator": "12 Parley sessions", "semanticFamily": "natural vocabulary"},
+        "type": "horizontalBar",
+        "dataset": "spelling_summary",
+        "sourceId": "vocabulary_results",
+        "encodings": {
+          "x": {"field": "spelling", "type": "nominal", "label": "First-source spelling"},
+          "y": {"field": "sessions", "type": "quantitative", "label": "Sessions", "format": "number"},
+          "tooltip": [
+            {"field": "task_families", "type": "quantitative", "label": "Task families", "format": "number"},
+            {"field": "repair_turns", "type": "quantitative", "label": "Repair turns", "format": "number"}
+          ]
+        },
+        "xAxisTitle": "Spelling",
+        "yAxisTitle": "First-check sessions",
+        "valueFormat": "number",
+        "layout": "full"
+      },
+      {
+        "id": "reliability_chart",
+        "title": "First-check success by language",
+        "subtitle": "Twelve fresh sessions per language on the same six tasks.",
+        "intent": "comparison",
+        "question": "Was the unsupported vocabulary operationally material?",
+        "rationale": "A simple category bar compares the common twelve-session denominator.",
+        "comparisonContext": {"unit": "share of sessions", "grain": "language", "denominator": "12 sessions per language", "semanticFamily": "first-check reliability"},
+        "type": "bar",
+        "dataset": "language_summary",
+        "sourceId": "vocabulary_results",
+        "encodings": {
+          "x": {"field": "language", "type": "nominal", "label": "Language"},
+          "y": {"field": "first_success_rate", "type": "quantitative", "label": "First-check success", "format": "percent"},
+          "color": {"field": "language", "type": "nominal", "label": "Language"}
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "First-check success rate",
+        "valueFormat": "percent",
+        "layout": "full"
+      },
+      {
+        "id": "token_chart",
+        "title": "Median reported tokens per session",
+        "subtitle": "Diagnostic workload only; repair burden, not a general language ranking.",
+        "intent": "comparison",
+        "question": "How much effort accompanied the vocabulary failures?",
+        "rationale": "Category bars show the magnitude of repair-loop cost while the report limits interpretation to this corpus.",
+        "comparisonContext": {"unit": "reported tokens per session", "grain": "language median", "denominator": "12 sessions per language", "semanticFamily": "agent effort"},
+        "type": "bar",
+        "dataset": "language_summary",
+        "sourceId": "vocabulary_results",
+        "encodings": {
+          "x": {"field": "language", "type": "nominal", "label": "Language"},
+          "y": {"field": "median_tokens", "type": "quantitative", "label": "Median tokens", "format": "compact"},
+          "color": {"field": "language", "type": "nominal", "label": "Language"},
+          "tooltip": [{"field": "median_checks", "type": "quantitative", "label": "Median checks", "format": "number"}]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median reported tokens",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "repair_chart",
+        "title": "Parley repair turns by task family",
+        "subtitle": "Two sessions per family; zero means both first-check sources passed.",
+        "intent": "comparison",
+        "question": "Which domains generated the repair burden?",
+        "rationale": "A ranked horizontal bar exposes concentration without implying a continuous trend.",
+        "comparisonContext": {"unit": "repair turns", "grain": "task family over two sessions", "denominator": "two Parley sessions", "semanticFamily": "repair concentration"},
+        "type": "horizontalBar",
+        "dataset": "parley_task_diagnostic",
+        "sourceId": "vocabulary_results",
+        "encodings": {
+          "x": {"field": "task", "type": "nominal", "label": "Task family"},
+          "y": {"field": "repair_turns", "type": "quantitative", "label": "Repair turns", "format": "number"},
+          "tooltip": [
+            {"field": "first_successes", "type": "quantitative", "label": "First successes", "format": "number"},
+            {"field": "first_spellings", "type": "nominal", "label": "First spellings"}
+          ]
+        },
+        "xAxisTitle": "Task family",
+        "yAxisTitle": "Repair turns",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "first_source_table",
+        "title": "Every Parley first-source classification",
+        "subtitle": "Primary evidence unit: source captured by the first public check.",
+        "dataset": "parley_first_sources",
+        "sourceId": "vocabulary_results",
+        "defaultSort": {"field": "task", "direction": "asc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "task", "label": "Task", "type": "text"},
+          {"field": "replicate", "label": "Rep", "format": "number"},
+          {"field": "spelling", "label": "First spelling", "type": "text"},
+          {"field": "first_success", "label": "First pass", "format": "number"},
+          {"field": "hidden_success", "label": "Hidden pass", "format": "number"},
+          {"field": "repair_turns", "label": "Repairs", "format": "number"},
+          {"field": "total_tokens", "label": "Tokens", "format": "compact"},
+          {"field": "elapsed_seconds", "label": "Seconds", "format": "number"}
+        ]
+      },
+      {
+        "id": "task_language_table",
+        "title": "Complete task-language result",
+        "subtitle": "Two fresh sessions in every task-language cell.",
+        "dataset": "task_summary",
+        "sourceId": "vocabulary_results",
+        "defaultSort": {"field": "task", "direction": "asc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "task", "label": "Task", "type": "text"},
+          {"field": "language", "label": "Language", "type": "text"},
+          {"field": "runs", "label": "Runs", "format": "number"},
+          {"field": "first_successes", "label": "First successes", "format": "number"},
+          {"field": "hidden_successes", "label": "Hidden successes", "format": "number"},
+          {"field": "median_tokens", "label": "Median tokens", "format": "compact"}
+        ]
+      },
+      {
+        "id": "language_table",
+        "title": "Language-level diagnostic summary",
+        "subtitle": "This small arithmetic corpus is diagnostic, not a broad language ranking.",
+        "dataset": "language_summary",
+        "sourceId": "vocabulary_results",
+        "defaultSort": {"field": "language", "direction": "asc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "language", "label": "Language", "type": "text"},
+          {"field": "runs", "label": "Runs", "format": "number"},
+          {"field": "first_success_rate", "label": "First check", "format": "percent"},
+          {"field": "hidden_success_rate", "label": "Hidden", "format": "percent"},
+          {"field": "median_checks", "label": "Median checks", "format": "number"},
+          {"field": "median_tokens", "label": "Median tokens", "format": "compact"},
+          {"field": "median_seconds", "label": "Median seconds", "format": "number"}
+        ]
+      }
+    ],
+    "sources": [{"id": "vocabulary_results", "label": "Frozen arithmetic-vocabulary results", "path": "019-arithmetic-vocabulary-gate-passed.sql"}],
+    "blocks": [
+      {"id": "title", "type": "markdown", "layout": "full", "body": "# Parley Arithmetic Vocabulary Diagnostic — Iteration 019"},
+      {"id": "summary", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Technical summary\n\n**The preregistered vocabulary evidence gate passed.** Without any candidate spelling in agent-visible text, the untouched first-check Parley sources used `modulo` in **five sessions across three unrelated task families**: clock arithmetic, parity classification, and calendar arithmetic. The gate required at least two families. Parley passed only 5/12 first checks and 11/12 hidden judgments, with 26 repairs, showing that the gap is operationally material. This makes one alias eligible for semantic review; it does not automatically authorize adoption."},
+      {"id": "metrics", "type": "metric-strip", "layout": "full", "cardIds": ["sessions_card", "families_card", "uses_card", "gate_card", "hidden_card", "repairs_card"]},
+      {"id": "scope", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Scope and evidence definition\n\nSix new tasks cover number classification, clocks, checksums, cyclic indexing, calendars, and divisibility. Each language received two fresh sessions per task. The primary unit is an **unrelated Parley task family** whose source saved at the first `./check` contains the standalone word `modulo`. Titles, statements, examples, prompts, and the unchanged skill contained none of `modulo`, `remainder`, `percent`, or `%`."},
+      {"id": "spelling_text", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Natural vocabulary recurs across domains\n\nBoth clock sources, both parity sources, and one weekday source independently chose `a modulo b`; all five failed their first parse and accumulated **21 repair turns**. The correct existing `remainder of a divided by b` form appeared in three sessions across divisibility and checksum tasks. One checksum source tried the malformed `total remainder 10`; three sessions avoided a direct operator through loops or subtraction."},
+      {"id": "spelling_chart_block", "type": "chart", "chartId": "spelling_chart", "layout": "full"},
+      {"id": "spelling_note", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "The result is stronger than rotation repetition: recurrence now spans time arithmetic, parity classification, and calendar arithmetic under anti-primed wording. It also coexists with successful use of the established phrase, so the design question is whether one concise infix alias can map to exactly the same integer operation."},
+      {"id": "reliability_text", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Reliability and correctness\n\nPython and Rust passed 12/12 first checks and hidden judgments. Parley passed 5/12 first checks and 11/12 hidden judgments. Its median check count was 2.5 versus 1.0 for both baselines. The failed hidden weekday program subtracted seven only seven times, so a 100-day shift incorrectly produced 55; this is a bounded-workaround failure, not a checker error."},
+      {"id": "reliability_chart_block", "type": "chart", "chartId": "reliability_chart", "layout": "full"},
+      {"id": "token_text", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Repair burden is material on this diagnostic\n\nParley's median session used 84.55k reported tokens and 33.27 seconds versus Python's 39.29k/14.44s and Rust's 39.65k/17.89s. Parity was the largest failure family at twelve repairs and 224.37k median tokens; clock arithmetic added six repairs. These values describe this deliberately arithmetic-heavy corpus and are not a general language ranking."},
+      {"id": "token_chart_block", "type": "chart", "chartId": "token_chart", "layout": "full"},
+      {"id": "repair_text", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Cross-task pattern, not one transcript\n\nFour distinct families required repair: parity, clock, checksum, and weekday. Divisibility had one unrelated P209 reserved-name repair, while cyclic indexing was clean through a subtraction-based solution. The primary `modulo` signature itself occurs in three families, clearing the frozen cross-task threshold."},
+      {"id": "repair_chart_block", "type": "chart", "chartId": "repair_chart", "layout": "full"},
+      {"id": "first_sources", "type": "table", "tableId": "first_source_table", "layout": "full"},
+      {"id": "task_language", "type": "table", "tableId": "task_language_table", "layout": "full"},
+      {"id": "language_summary_block", "type": "table", "tableId": "language_table", "layout": "full"},
+      {"id": "methodology", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Frozen methodology\n\n- **Matrix:** 36 fresh sessions, six tasks, three languages, two replicates, seed `20260805`.\n- **Toolchain:** Parley 0.3.152, `gpt-5.6-sol` medium, Codex CLI 0.146.0.\n- **Instruction:** unchanged 1,519-character skill, SHA `6ca098e4…`; no further compression.\n- **Protocol:** no workspace inspection; first action writes the solution; exact `./check` only; hidden cases withheld.\n- **Integrity:** 36 unique thread IDs, 36/36 checker integrity and protocol compliance, no timeouts, runner errors, or nonzero agent exits."},
+      {"id": "semantic_review", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Semantic and maintenance review required\n\nAn eligible alias must not invent a benchmark-only operation. Parley already has whole-number `%` and `remainder of a divided by b`, both guarded against zero and emitted through the same Rust remainder helper. A maintainable proposal is therefore only the infix spelling `a modulo b` mapped to that existing AST/checker/emitter path. The documentation must explicitly define negative-number behavior; no separate mathematical modulo semantics may be smuggled in under the same word."},
+      {"id": "limitations", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Limitations and uncertainty\n\nThis corpus intentionally concentrates on arithmetic behavior, so its token medians do not estimate broad programming efficiency. Two replicates per family are enough for recurrence evidence but not a stable failure-rate estimate. Task families share a need for periodic arithmetic even though their domains differ. Only one model and one English prompt style are tested. The anti-priming assertion covers saved agent-visible inputs in this harness, not every association learned during model training."},
+      {"id": "next_steps", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Recommended next step\n\n1. Preserve iteration 019 unchanged.\n2. Accept that the cross-task eligibility gate passed; do not claim the performance goal has passed.\n3. Implement exactly one maintainable lexical alias, `a modulo b`, for the existing whole-number remainder operation—no new AST node or runtime semantics.\n4. Add parser, checker, emitter, zero-divisor, precedence, negative-number, and native execution tests plus precise docs. Keep the skill unchanged for the first confirmation.\n5. Replay all seven untouched first sources whose arithmetic spelling failed or repaired, then rerun the broad size-eight workload as a separately frozen confirmation."},
+      {"id": "questions", "type": "markdown", "layout": "full", "sourceId": "vocabulary_results", "body": "## Further questions\n\n- Does the alias eliminate the five modulo P101 failures without changing `%` or `remainder of` behavior?\n- Does precise negative-number documentation prevent semantic ambiguity?\n- After the alias, do both broad size-eight bundles become repair-free and approach the clean 3–5% gap rather than the repaired 2.55× gap?"}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-04T15:04:00Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [{"sessions": 36, "parley_hidden": 11, "parley_first": 5, "modulo_sessions": 5, "modulo_families": 3, "evidence_gate_passed": 1, "parley_repairs": 26}],
+      "language_summary": [
+        {"language": "Parley", "runs": 12, "hidden_successes": 11, "hidden_success_rate": 0.9167, "first_successes": 5, "first_success_rate": 0.4167, "protocol_rate": 1.0, "median_checks": 2.5, "median_tokens": 84553.5, "median_seconds": 33.2747},
+        {"language": "Python", "runs": 12, "hidden_successes": 12, "hidden_success_rate": 1.0, "first_successes": 12, "first_success_rate": 1.0, "protocol_rate": 1.0, "median_checks": 1.0, "median_tokens": 39285.0, "median_seconds": 14.436},
+        {"language": "Rust", "runs": 12, "hidden_successes": 12, "hidden_success_rate": 1.0, "first_successes": 12, "first_success_rate": 1.0, "protocol_rate": 1.0, "median_checks": 1.0, "median_tokens": 39646.5, "median_seconds": 17.8915}
+      ],
+      "spelling_summary": [
+        {"spelling": "modulo", "sessions": 5, "task_families": 3, "first_successes": 0, "hidden_successes": 5, "repair_turns": 21},
+        {"spelling": "canonical remainder phrase", "sessions": 3, "task_families": 2, "first_successes": 2, "hidden_successes": 3, "repair_turns": 1},
+        {"spelling": "no direct operator spelling", "sessions": 3, "task_families": 2, "first_successes": 3, "hidden_successes": 2, "repair_turns": 0},
+        {"spelling": "malformed remainder phrase", "sessions": 1, "task_families": 1, "first_successes": 0, "hidden_successes": 1, "repair_turns": 4}
+      ],
+      "parley_first_sources": [
+        {"task_id": "clock_advance", "task": "clock advance", "replicate": 1, "first_success": 0, "hidden_success": 1, "repair_turns": 4, "total_tokens": 163474, "elapsed_seconds": 78.0333, "spelling": "modulo"},
+        {"task_id": "clock_advance", "task": "clock advance", "replicate": 2, "first_success": 0, "hidden_success": 1, "repair_turns": 2, "total_tokens": 99580, "elapsed_seconds": 39.2201, "spelling": "modulo"},
+        {"task_id": "cyclic_position", "task": "cyclic position", "replicate": 1, "first_success": 1, "hidden_success": 1, "repair_turns": 0, "total_tokens": 41331, "elapsed_seconds": 21.3592, "spelling": "no direct operator spelling"},
+        {"task_id": "cyclic_position", "task": "cyclic position", "replicate": 2, "first_success": 1, "hidden_success": 1, "repair_turns": 0, "total_tokens": 41151, "elapsed_seconds": 20.2721, "spelling": "no direct operator spelling"},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "replicate": 1, "first_success": 1, "hidden_success": 1, "repair_turns": 0, "total_tokens": 41373, "elapsed_seconds": 19.4151, "spelling": "canonical remainder phrase"},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "replicate": 2, "first_success": 0, "hidden_success": 1, "repair_turns": 1, "total_tokens": 69527, "elapsed_seconds": 27.3292, "spelling": "canonical remainder phrase"},
+        {"task_id": "parity_label", "task": "parity label", "replicate": 1, "first_success": 0, "hidden_success": 1, "repair_turns": 8, "total_tokens": 288659, "elapsed_seconds": 104.0918, "spelling": "modulo"},
+        {"task_id": "parity_label", "task": "parity label", "replicate": 2, "first_success": 0, "hidden_success": 1, "repair_turns": 4, "total_tokens": 160078, "elapsed_seconds": 51.4115, "spelling": "modulo"},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "replicate": 1, "first_success": 0, "hidden_success": 1, "repair_turns": 4, "total_tokens": 157088, "elapsed_seconds": 48.3776, "spelling": "malformed remainder phrase"},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "replicate": 2, "first_success": 1, "hidden_success": 1, "repair_turns": 0, "total_tokens": 41089, "elapsed_seconds": 20.7842, "spelling": "canonical remainder phrase"},
+        {"task_id": "weekday_shift", "task": "weekday shift", "replicate": 1, "first_success": 1, "hidden_success": 0, "repair_turns": 0, "total_tokens": 40839, "elapsed_seconds": 15.9444, "spelling": "no direct operator spelling"},
+        {"task_id": "weekday_shift", "task": "weekday shift", "replicate": 2, "first_success": 0, "hidden_success": 1, "repair_turns": 3, "total_tokens": 128017, "elapsed_seconds": 47.5382, "spelling": "modulo"}
+      ],
+      "parley_task_diagnostic": [
+        {"task_id": "clock_advance", "task": "clock advance", "sessions": 2, "first_successes": 0, "hidden_successes": 2, "repair_turns": 6, "mean_tokens": 131527.0, "first_spellings": "modulo; modulo"},
+        {"task_id": "cyclic_position", "task": "cyclic position", "sessions": 2, "first_successes": 2, "hidden_successes": 2, "repair_turns": 0, "mean_tokens": 41241.0, "first_spellings": "no direct operator spelling; no direct operator spelling"},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "sessions": 2, "first_successes": 1, "hidden_successes": 2, "repair_turns": 1, "mean_tokens": 55450.0, "first_spellings": "canonical remainder phrase; canonical remainder phrase"},
+        {"task_id": "parity_label", "task": "parity label", "sessions": 2, "first_successes": 0, "hidden_successes": 2, "repair_turns": 12, "mean_tokens": 224368.5, "first_spellings": "modulo; modulo"},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "sessions": 2, "first_successes": 1, "hidden_successes": 2, "repair_turns": 4, "mean_tokens": 99088.5, "first_spellings": "malformed remainder phrase; canonical remainder phrase"},
+        {"task_id": "weekday_shift", "task": "weekday shift", "sessions": 2, "first_successes": 1, "hidden_successes": 1, "repair_turns": 3, "mean_tokens": 84428.0, "first_spellings": "no direct operator spelling; modulo"}
+      ],
+      "task_summary": [
+        {"task_id": "clock_advance", "task": "clock advance", "language": "Parley", "runs": 2, "hidden_successes": 2, "first_successes": 0, "median_tokens": 131527.0},
+        {"task_id": "clock_advance", "task": "clock advance", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39389.0},
+        {"task_id": "clock_advance", "task": "clock advance", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39646.5},
+        {"task_id": "cyclic_position", "task": "cyclic position", "language": "Parley", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 41241.0},
+        {"task_id": "cyclic_position", "task": "cyclic position", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39270.5},
+        {"task_id": "cyclic_position", "task": "cyclic position", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 40012.5},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "language": "Parley", "runs": 2, "hidden_successes": 2, "first_successes": 1, "median_tokens": 55450.0},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39619.0},
+        {"task_id": "evenly_divisible_count", "task": "evenly divisible count", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39885.0},
+        {"task_id": "parity_label", "task": "parity label", "language": "Parley", "runs": 2, "hidden_successes": 2, "first_successes": 0, "median_tokens": 224368.5},
+        {"task_id": "parity_label", "task": "parity label", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39016.5},
+        {"task_id": "parity_label", "task": "parity label", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39322.0},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "language": "Parley", "runs": 2, "hidden_successes": 2, "first_successes": 1, "median_tokens": 99088.5},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39365.5},
+        {"task_id": "sum_check_digit", "task": "sum check digit", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39744.5},
+        {"task_id": "weekday_shift", "task": "weekday shift", "language": "Parley", "runs": 2, "hidden_successes": 1, "first_successes": 1, "median_tokens": 84428.0},
+        {"task_id": "weekday_shift", "task": "weekday shift", "language": "Python", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39201.5},
+        {"task_id": "weekday_shift", "task": "weekday shift", "language": "Rust", "runs": 2, "hidden_successes": 2, "first_successes": 2, "median_tokens": 39529.0}
+      ]
+    }
+  },
+  "sources": [{
+    "id": "vocabulary_results",
+    "label": "Frozen arithmetic-vocabulary results",
+    "path": "019-arithmetic-vocabulary-gate-passed.sql",
+    "query": {
+      "engine": "SQLite JSON1",
+      "query": "sqlite3 ':memory:' < benchmarks/reports/019-arithmetic-vocabulary-gate-passed.sql",
+      "description": "Reproducible classification of every preserved first-check source and task-language result.",
+      "executed_at": "2026-08-04T15:04:00Z",
+      "language": "SQL",
+      "metric_definitions": [
+        "First-source spelling: classification of the source captured by the first public check.",
+        "Task family recurrence: count of distinct task ids whose first source contains a spelling.",
+        "Repair turns: public check attempts after the first.",
+        "Hidden success: final source passes every withheld case."
+      ]
+    }
+  }],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "019-arithmetic-vocabulary-gate-passed.artifact.json",
+    "snapshotPath": "agent_vocabulary_019_protocol_v1_v0.3.152.json",
+    "originUrl": "artifact://parley-arithmetic-vocabulary-019"
+  }
+}

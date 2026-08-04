@@ -661,6 +661,15 @@ Update it whenever you finish or start a work item.
   families must independently use `modulo` in their first-check source before
   an alias is even eligible; eligibility still requires semantic consistency,
   maintainability, full tests, and broad confirmation.
+- **Arithmetic-vocabulary result (iteration 019):** the eligibility gate
+  passed without spelling priming: five first-check sources across clock,
+  parity, and weekday task families independently used `modulo`. Parley
+  finished 5/12 first-check and 11/12 hidden with 26 repairs; Python and Rust
+  were 12/12 on both. The only eligible design is a maintainable infix alias
+  for the existing guarded whole-number remainder path, with explicit
+  Rust-style negative semantics. Preserve report 019, implement/test v0.3.153
+  without changing the skill, replay saved failures, then freeze broad
+  confirmation before any parity claim.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

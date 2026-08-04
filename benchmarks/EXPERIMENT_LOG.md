@@ -1139,3 +1139,65 @@ existing integer remainder operation, one maintainable canonical meaning,
 full pipeline coverage, and a subsequent broad-workload confirmation. Report
 all 36 sessions, including every spelling, failure, repair, hidden judgment,
 token count, and elapsed time.
+
+## 019 — Arithmetic vocabulary gate passes across three families
+
+- Date: 2026-08-05
+- Toolchain: Parley 0.3.152, preregistration commit
+  `18d513933e855057f46ee3ce8a283eab1f658352`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+- Matrix: 6 tasks × 3 languages × 2 replicates = 36 fresh sessions
+- Result JSON SHA-256: `641a9af72b5d995662b1b6efe7ec5c595c4bfac4da6569a90f2d1873256aeafe`
+- Task manifest SHA-256: `35edff11458c985c05c092d02560ffe1d4a1777c2f34012d1c85142dfd2eb348`
+- Frozen protocol SHA-256: `49132da0f7c183844b9789be915b69d3a95433391a202e3247056f72278fb018`
+- Report: `benchmarks/reports/019-arithmetic-vocabulary-gate-passed.html`
+
+| Language | Hidden success | First public pass | Protocol compliant | Median tokens | Median seconds | Median checks |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 11/12 | 5/12 | 12/12 | 84,553.5 | 33.2747 | 2.5 |
+| Python | 12/12 | 12/12 | 12/12 | 39,285.0 | 14.4360 | 1.0 |
+| Rust | 12/12 | 12/12 | 12/12 | 39,646.5 | 17.8915 | 1.0 |
+
+### Primary evidence gate
+
+The untouched first-check Parley source used standalone `modulo` in five
+sessions across **three unrelated task families**: both clock sessions, both
+parity sessions, and one weekday session. No agent-visible title, statement,
+case, prompt, or skill text contained candidate arithmetic spellings. The
+predeclared threshold was at least two task families, so the eligibility gate
+**passes**.
+
+The established `remainder of a divided by b` phrase appeared in three first
+sources across divisibility and checksum tasks; two passed immediately, while
+one failed only because it declared reserved variable `number`. One checksum
+source used malformed `total remainder 10`. Three sources used subtraction or
+loops instead of a direct operator.
+
+### Correctness and burden
+
+All 36 sessions preserved checker integrity and protocol compliance with 36
+unique threads, no timeouts, and no agent failures. Parley accumulated 26
+repair turns. Its one hidden failure was a first-check-clean weekday program
+that subtracted seven exactly seven times; the 100-day hidden case produced 55
+instead of 6. That bounded workaround is a real algorithmic failure and stays
+in the result.
+
+### Semantic and maintenance decision
+
+One alias is now eligible and independently justified:
+
+- **General usefulness:** anti-primed recurrence spans clocks, parity, and
+  calendars, beyond rotation.
+- **Semantic consistency:** Parley already has whole-number `%` and
+  `remainder of a divided by b`, both emitted through the guarded
+  `parley_rem` runtime helper. `a modulo b` must map to exactly that behavior.
+- **Maintainability:** add one lexical spelling to the existing multiplicative
+  operator; do not create a new AST node, checker path, or runtime operation.
+- **Precision:** document and test that negative operands follow the existing
+  Rust-style remainder rule (result has the dividend's sign), avoiding an
+  undeclared Euclidean-modulo semantic change.
+
+Implement v0.3.153 with parser/checker/emitter/native and zero-divisor,
+precedence, and negative-number tests. Keep the instruction core unchanged for
+the first confirmation. Replay the saved first sources, then freeze and rerun
+the broad workload before claiming parity.
