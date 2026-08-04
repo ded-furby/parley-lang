@@ -599,6 +599,34 @@ def test_bundle_protocol_024_freezes_seeded_maintenance_matrix():
     assert "without selective reruns" in protocol["stop_rule"]
 
 
+def test_bundle_protocol_025_freezes_repository_matrix():
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_025.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(tasks, config["bundle_sizes"], config["replicates"], config["seed"])
+
+    assert protocol["experiment_id"] == "025"
+    assert config["parley_version"] == "parley 0.3.155"
+    assert config["harness_commit"] == "814a05b63a9bdd9e8f3d9e5ff85cb016a3f1531d"
+    assert config["task_manifest_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "agent_tasks_repositories_025.json").read_bytes()
+    ).hexdigest()
+    assert config["parley_skill_sha256"] == hashlib.sha256(
+        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+    ).hexdigest()
+    assert config["bundle_sizes"] == [4]
+    assert config["replicates"] == 6
+    assert len(plan) == 6
+    assert sum(bundle["bundle_size"] for bundle in plan) == 24
+    assert protocol["matrix"]["fresh_sessions"] == 18
+    assert protocol["matrix"]["judged_repository_assignments"] == 72
+    assert protocol["matrix"]["editable_seed_files_per_session"] == 8
+    assert protocol["source_protocol"]["first_shell_command"] == "./sources"
+    assert protocol["source_protocol"]["source_command_count"] == 1
+    assert "one allowed instruction-compression experiment is closed" in protocol["instruction_rule"]
+    assert "without selective reruns" in protocol["stop_rule"]
+
+
 def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
     prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")

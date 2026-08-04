@@ -716,8 +716,10 @@ Update it whenever you finish or start a work item.
   size, and changed-file count. All 12 repositories pass their frozen old
   contracts and fail each new public requirement unmodified; an independent
   oracle matches all 20 new public/hidden contracts. The full suite passes
-  324/324. Commit this harness/corpus checkpoint, then preregister and run 025
-  with Parley v0.3.155 and the unchanged skill. Do not learn syntax from 024.
+  324/324. Harness/corpus commit `814a05b` is pushed. Protocol 025 is frozen at
+  SHA `26f51b2c2753e1b9661296d77e42d80a5e9c099fc40df0e1f63fd6b4ecf57364`;
+  run all 18 sessions once with Parley v0.3.155 and the unchanged skill. Do not
+  learn syntax from 024 or selectively rerun 025 cells.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

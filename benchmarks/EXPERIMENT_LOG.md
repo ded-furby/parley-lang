@@ -1870,3 +1870,35 @@ rejected. Targeted repository tests and the complete corrected suite passed;
 No compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or
 instruction-compression change is part of this work. Preserve the harness and
 corpus in a commit, then freeze protocol 025 before any model session.
+
+## Pre-registration for 025 — Multi-file repository maintenance
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `814a05b63a9bdd9e8f3d9e5ff85cb016a3f1531d`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_repositories_025.json`, SHA-256
+  `36d5a42d46e35921decd9d2c4af6c5fc9cbaf1f8301cc29922f4bdb522425e95`
+- Protocol: `benchmarks/bundle_protocol_025.json`, SHA-256
+  `26f51b2c2753e1b9661296d77e42d80a5e9c099fc40df0e1f63fd6b4ecf57364`
+- Matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260813`
+
+The strict four-condition gate remains hidden correctness, reported tokens per
+repository, elapsed time per repository, and first-check repository success.
+Each session must run `./sources` exactly once as its first shell command; only
+`./check` may follow. Source-printer output is therefore measured model context
+without inline prompt duplication. The four repositories expose eight editable
+files per session. Changed-file count, seed/final rough tokens, and edit rough
+tokens are frozen secondary maintenance measures.
+
+Preserve every session without selective reruns. If parity passes, require a
+larger confirmation. If it fails, no same-corpus syntax or instruction change
+is allowed. Only recurrence across unrelated new repositories and independent
+sessions may enter separate general-usefulness, semantic-consistency, and
+maintainability review.
