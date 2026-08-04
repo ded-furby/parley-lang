@@ -779,6 +779,13 @@ Update it whenever you finish or start a work item.
   Commit this corpus before freezing a six-replicate size-sixteen pilot. Keep
   v0.3.155, the skill, source protocol, and strict gate unchanged; a pass still
   requires larger confirmation.
+- **Sixteen-repository preregistration (iteration 027):** the corpus commit
+  `6d10ee11961f6bffc9f6208e763637ed8c3e5b1c` is pushed. Protocol 027 is frozen
+  at SHA `c9d06a379af53a86bb80fb30797f3421c0b3f9c103a93438496aa9f0463893b4`:
+  six complete size-sixteen replicates per language, 18 fresh sessions and 288
+  assignments, seed `20260817`. Run once without selective reruns under the
+  exact source protocol. Preserve all evidence; do not change the compiler or
+  instruction. Even a passing result requires larger confirmation.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

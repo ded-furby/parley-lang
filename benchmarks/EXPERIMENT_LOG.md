@@ -2153,3 +2153,34 @@ protocol, or instruction-compression change is included. Commit and push the
 reviewed corpus before freezing protocol 027. Preserve every later session
 without selective reruns. Even a passing size-sixteen pilot requires the
 planned larger confirmation before a general parity claim.
+
+## Pre-registration for 027 — Sixteen-repository expansion
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `6d10ee11961f6bffc9f6208e763637ed8c3e5b1c`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_repositories_027.json`, SHA-256
+  `4d48c171c217cd7be4bc12fb7880c89f0b829470c5e68717fac810f1aace7312`
+- Protocol: `benchmarks/bundle_protocol_027.json`, SHA-256
+  `c9d06a379af53a86bb80fb30797f3421c0b3f9c103a93438496aa9f0463893b4`
+- Matrix: sixteen repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 288 hidden-judged assignments
+- Seed: `20260817`
+
+The strict four-condition gate is unchanged at primary scale sixteen. Parley
+must finish 100% hidden-correct, match the better first-check baseline, and use
+no more median reported tokens or elapsed time per repository than the lower
+Python/Rust median. Each session exposes thirty-two editable files through one
+protected `./sources` command first; only `./check` may follow. Each language
+receives 96 public, 384 hidden, and 48 exact hidden-file judgments.
+
+Run all 18 sessions once, preserve every result without selective reruns, and
+report full per-session/per-repository/token/file evidence. If strict parity
+passes, this remains a six-replicate pilot: preregister the larger confirmation
+before claiming parity. If it fails, do not tune the corpus or change syntax or
+instructions from same-corpus evidence.
