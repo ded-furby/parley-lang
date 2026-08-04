@@ -1,0 +1,1573 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Project Diagnosis Near-Parity \u2014 Iteration 028",
+    "description": "Preregistered 18-session comparison of multi-file regression diagnosis from read-only project evidence.",
+    "generatedAt": "2026-08-04T19:13:00Z",
+    "cards": [
+      {
+        "id": "sessions_card",
+        "description": "Fresh complete-bundle sessions across three languages.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Fresh sessions",
+            "field": "sessions",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "hidden_card",
+        "description": "Final repositories passing every withheld case.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Hidden success",
+            "field": "hidden_successes",
+            "format": "number",
+            "unit": "of 72"
+          }
+        ]
+      },
+      {
+        "id": "first_card",
+        "description": "Repositories passing the untouched first public check.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "First-check success",
+            "field": "first_successes",
+            "format": "number",
+            "unit": "of 72"
+          }
+        ]
+      },
+      {
+        "id": "repair_card",
+        "description": "Additional public-check turns across all sessions.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Repairs",
+            "field": "repairs",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "gate_card",
+        "description": "Strict parity conditions passed out of four.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Gate conditions",
+            "field": "gate_conditions_passed",
+            "format": "number",
+            "unit": "of 4"
+          }
+        ]
+      },
+      {
+        "id": "files_card",
+        "description": "Every assignment changes exactly one editable source file.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Changed files",
+            "field": "changed_files_task",
+            "format": "number",
+            "unit": "per repo"
+          }
+        ]
+      },
+      {
+        "id": "token_gap_card",
+        "description": "Parley median reported tokens per repository relative to Rust.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Token gap vs Rust",
+            "field": "token_gap_rust_percent",
+            "format": "number",
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "id": "elapsed_gap_card",
+        "description": "Parley median elapsed time per repository relative to Rust; negative is faster.",
+        "dataset": "headline",
+        "sourceId": "repository_results",
+        "metrics": [
+          {
+            "label": "Elapsed delta vs Rust",
+            "field": "elapsed_gap_rust_percent",
+            "format": "number",
+            "unit": "%"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "token_chart",
+        "title": "Median reported tokens per assigned repository",
+        "subtitle": "All runs are repair-free; Parley is 1.48% above Rust and 4.38% above Python.",
+        "intent": "comparison",
+        "question": "How close is Parley to baseline agent effort?",
+        "rationale": "The common per-repository denominator gives the primary token comparison.",
+        "comparisonContext": {
+          "unit": "reported tokens per repository",
+          "grain": "language median",
+          "denominator": "six sessions per language",
+          "semanticFamily": "agent effort"
+        },
+        "type": "bar",
+        "dataset": "language_summary",
+        "sourceId": "repository_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_tokens_task",
+            "type": "quantitative",
+            "label": "Tokens per repository",
+            "format": "compact"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median reported tokens per repository",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "session_chart",
+        "title": "Tokens per repository in every fresh session",
+        "subtitle": "All eighteen repair-free sessions are shown; distributions are tight within language.",
+        "intent": "comparison",
+        "question": "Is the near-parity median robust across sessions?",
+        "rationale": "All values expose the stable between-language gap without excluding any run.",
+        "comparisonContext": {
+          "unit": "reported tokens per repository",
+          "grain": "language-replicate session",
+          "denominator": "four repositories per session",
+          "semanticFamily": "session effort"
+        },
+        "type": "bar",
+        "dataset": "session_detail",
+        "sourceId": "repository_results",
+        "encodings": {
+          "x": {
+            "field": "replicate",
+            "type": "nominal",
+            "label": "Replicate"
+          },
+          "y": {
+            "field": "tokens_task",
+            "type": "quantitative",
+            "label": "Tokens per repository",
+            "format": "compact"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "tooltip": [
+            {
+              "field": "input_tokens_task",
+              "type": "quantitative",
+              "label": "Input tokens",
+              "format": "compact"
+            },
+            {
+              "field": "output_tokens_task",
+              "type": "quantitative",
+              "label": "Output tokens",
+              "format": "compact"
+            }
+          ]
+        },
+        "xAxisTitle": "Replicate",
+        "yAxisTitle": "Reported tokens per repository",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "elapsed_chart",
+        "title": "Median elapsed seconds per assigned repository",
+        "subtitle": "Parley is 0.85% faster than Rust and 6.62% slower than Python.",
+        "intent": "comparison",
+        "question": "Did Parley match baseline elapsed time?",
+        "rationale": "Elapsed time is a separate frozen gate condition and needs its own comparison.",
+        "comparisonContext": {
+          "unit": "seconds per repository",
+          "grain": "language median",
+          "denominator": "six sessions per language",
+          "semanticFamily": "elapsed effort"
+        },
+        "type": "bar",
+        "dataset": "language_summary",
+        "sourceId": "repository_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_seconds_task",
+            "type": "quantitative",
+            "label": "Seconds per repository",
+            "format": "number"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median seconds per repository",
+        "valueFormat": "number",
+        "layout": "full"
+      },
+      {
+        "id": "source_stage_chart",
+        "title": "Seed and final editable-source size",
+        "subtitle": "Median rough lexical tokens per assigned repository.",
+        "intent": "comparison",
+        "question": "How compact are the inspected and final repositories?",
+        "rationale": "Grouped seed/final bars distinguish existing context from completed source.",
+        "comparisonContext": {
+          "unit": "rough source tokens per repository",
+          "grain": "language-stage median",
+          "denominator": "four repositories per session",
+          "semanticFamily": "source size"
+        },
+        "type": "bar",
+        "dataset": "source_stage",
+        "sourceId": "repository_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "rough_tokens_task",
+            "type": "quantitative",
+            "label": "Rough source tokens per repository",
+            "format": "number"
+          },
+          "color": {
+            "field": "stage",
+            "type": "nominal",
+            "label": "Stage"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Rough source tokens per repository",
+        "valueFormat": "number",
+        "layout": "full"
+      },
+      {
+        "id": "edit_chart",
+        "title": "Median cross-file edit size",
+        "subtitle": "Inserted plus deleted rough tokens per repository; one file changed per assignment.",
+        "intent": "comparison",
+        "question": "How large were the repository patches?",
+        "rationale": "Edit size separates maintenance change volume from total final source size.",
+        "comparisonContext": {
+          "unit": "inserted plus deleted rough tokens per repository",
+          "grain": "language median",
+          "denominator": "six sessions per language",
+          "semanticFamily": "edit size"
+        },
+        "type": "bar",
+        "dataset": "language_summary",
+        "sourceId": "repository_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "edit_tokens_task",
+            "type": "quantitative",
+            "label": "Edited rough tokens per repository",
+            "format": "number"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Edited rough tokens per repository",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "language_table",
+        "title": "Language-level repository result",
+        "subtitle": "Primary frozen comparison over all 72 assignments.",
+        "dataset": "language_summary",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "repair_turns",
+            "label": "Repairs",
+            "format": "number"
+          },
+          {
+            "field": "median_tokens_task",
+            "label": "Tokens/repo",
+            "format": "compact"
+          },
+          {
+            "field": "median_seconds_task",
+            "label": "Seconds/repo",
+            "format": "number"
+          },
+          {
+            "field": "source_tokens_task",
+            "label": "Final source",
+            "format": "number"
+          },
+          {
+            "field": "context_tokens_task",
+            "label": "Read-only context",
+            "format": "number"
+          },
+          {
+            "field": "edit_tokens_task",
+            "label": "Edit size",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "repository_table",
+        "title": "Repository-level maintenance audit",
+        "subtitle": "Six appearances per language/repository; twelve aggregate rows.",
+        "dataset": "repository_detail",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "repository",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "repository",
+            "label": "Repository change",
+            "type": "text"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "final_tokens",
+            "label": "Final source",
+            "format": "number"
+          },
+          {
+            "field": "edit_tokens",
+            "label": "Edit size",
+            "format": "number"
+          },
+          {
+            "field": "changed_files",
+            "label": "Files",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "file_table",
+        "title": "Root-cause and read-only evidence audit",
+        "subtitle": "Primary correctness is test-based; this secondary audit distinguishes defect repair from caller compensation.",
+        "dataset": "root_cause_audit",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "root_cause_repairs",
+            "label": "Root fixes (of 24)",
+            "format": "number"
+          },
+          {
+            "field": "compensating_repairs",
+            "label": "Compensating",
+            "format": "number"
+          },
+          {
+            "field": "read_only_files_preserved",
+            "label": "Read-only preserved",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "command_table",
+        "title": "Controlled source-inspection audit",
+        "subtitle": "Every session ran one protected source dump first, one successful check second, and preserved all integrity hashes.",
+        "dataset": "command_audit",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "sources_first",
+            "label": "Sources first",
+            "format": "number"
+          },
+          {
+            "field": "one_sources",
+            "label": "Exactly one",
+            "format": "number"
+          },
+          {
+            "field": "protocol_ok",
+            "label": "Protocol",
+            "format": "number"
+          },
+          {
+            "field": "integrity_ok",
+            "label": "Integrity",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "session_table",
+        "title": "Complete session audit",
+        "subtitle": "Eighteen unique threads; every row is first-check clean and retained.",
+        "dataset": "session_detail",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "replicate",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "replicate",
+            "label": "Rep",
+            "format": "number"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "checks",
+            "label": "Checks",
+            "format": "number"
+          },
+          {
+            "field": "tokens_task",
+            "label": "Tokens/repo",
+            "format": "compact"
+          },
+          {
+            "field": "seconds_task",
+            "label": "Seconds/repo",
+            "format": "number"
+          },
+          {
+            "field": "changed_files_task",
+            "label": "Files/repo",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "failure_table",
+        "title": "Compensating-fix detail",
+        "subtitle": "Two hidden-correct Rust patches special-case callers instead of correcting the seeded helper defect.",
+        "dataset": "compensating_detail",
+        "sourceId": "repository_results",
+        "defaultSort": {
+          "field": "repository",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "replicate",
+            "label": "Rep",
+            "format": "number"
+          },
+          {
+            "field": "repository",
+            "label": "Repository",
+            "type": "text"
+          },
+          {
+            "field": "changed_file",
+            "label": "Changed",
+            "type": "text"
+          },
+          {
+            "field": "defect_file",
+            "label": "Root defect",
+            "type": "text"
+          },
+          {
+            "field": "assessment",
+            "label": "Assessment",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "repository_results",
+        "label": "Frozen iteration 025 repository results",
+        "path": "025-repository-maintenance-near-parity.sql"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Project Diagnosis Near-Parity \u2014 Iteration 028"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Technical summary\n\n**Project-style diagnosis removes every reliability gap and brings Parley close to Rust, but strict better-baseline parity remains unconfirmed.** All 72 assignments pass their first check and all hidden cases with zero repairs. Parley uses 15.02k median reported tokens per repository versus Python's 14.39k and Rust's 14.80k, while its 7.01-second median is faster than Rust's 7.07 seconds but slower than Python's 6.57. The frozen strict gate finishes 2/4."
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## What this benchmark measures\n\nEach fresh session diagnoses four unrelated regressions from twelve editable implementation files plus eight visibly read-only issue/test artifacts. Public examples stay inside the protected checker and are omitted from the prompt. Agents run `./sources` exactly once first, modify the repository, then run only `./check`. **First success** means all four repositories pass that first bundle check; **hidden success** requires four withheld cases per repository."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions_card",
+          "hidden_card",
+          "first_card",
+          "repair_card",
+          "gate_card",
+          "files_card",
+          "token_gap_card",
+          "elapsed_gap_card"
+        ]
+      },
+      {
+        "id": "reliability",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Diagnosis is uniformly reliable\n\nParley, Python, and Rust each pass 24/24 repository assignments on the first check and 24/24 under hidden judgment. Every session uses one check, so there are no repair turns, compile failures, or same-corpus failure signatures to optimize against. Correctness and first-check gate conditions pass exactly."
+      },
+      {
+        "id": "language_table_block",
+        "type": "table",
+        "tableId": "language_table",
+        "layout": "full"
+      },
+      {
+        "id": "tokens",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Parley comes within 1.48% of Rust token effort\n\nParley's 15.02k median tokens per repository is **1.48% above Rust** and **4.38% above Python**. This is much tighter than iteration 027's large explicit-rewrite bundle, but the preregistered token condition compares against the lower baseline\u2014Python\u2014and therefore fails. No run is excluded and repairs cannot explain the gap."
+      },
+      {
+        "id": "token_chart_block",
+        "type": "chart",
+        "chartId": "token_chart",
+        "layout": "full"
+      },
+      {
+        "id": "session_note",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "All six per-language token values form narrow clusters: Parley 14,996.75\u201315,109.50, Python 14,378.00\u201314,468.25, and Rust 14,786.50\u201314,828.25 tokens/repository. The result is not driven by a repair or one extreme session."
+      },
+      {
+        "id": "session_chart_block",
+        "type": "chart",
+        "chartId": "session_chart",
+        "layout": "full"
+      },
+      {
+        "id": "elapsed",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Elapsed time narrowly beats Rust\n\nParley's median 7.0073 seconds per repository is **0.85% faster than Rust's 7.0672** and 6.62% slower than Python's 6.5723. The frozen elapsed condition compares against faster Python and fails, while the narrower Rust comparison is positive."
+      },
+      {
+        "id": "elapsed_chart_block",
+        "type": "chart",
+        "chartId": "elapsed_chart",
+        "layout": "full"
+      },
+      {
+        "id": "context",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Evidence is controlled and equal\n\nEvery language receives exactly 1,531 characters, 27 lines, and 321 rough tokens of read-only context per session\u201480.25 rough tokens per repository. Context contents are byte-identical across languages. The prompt itself is 1,090.75 characters/repository for Parley versus 670.00 for Python and 675.00 for Rust because the unchanged 1,519-character Parley skill is injected once per session."
+      },
+      {
+        "id": "source",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Parley source stays far shorter than Rust\n\nMedian final editable source is 168 rough tokens/repository for Parley, 147 for Python, and 283.5 for Rust. Parley is **40.74% shorter than Rust** but 14.29% larger than Python. Median edits are 8, 6, and 7.25 rough tokens, respectively; source compactness again does not translate one-for-one into reported agent tokens."
+      },
+      {
+        "id": "source_stage_chart_block",
+        "type": "chart",
+        "chartId": "source_stage_chart",
+        "layout": "full"
+      },
+      {
+        "id": "edit_chart_block",
+        "type": "chart",
+        "chartId": "edit_chart",
+        "layout": "full"
+      },
+      {
+        "id": "repository_table_block",
+        "type": "table",
+        "tableId": "repository_table",
+        "layout": "full"
+      },
+      {
+        "id": "root_cause",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Root-cause location is perfect for Parley and Python\n\nParley and Python modify the seeded defect file in all 24 assignments. Rust does so in 22/24. Rust replicate 6 instead special-cases subtotal 2000 and high-after-hours behavior in the two callers, leaving `pricing.rs` and `routing.rs` wrong for other callers. Both compensations pass all frozen hidden cases, so primary correctness remains 100%; the distinction is a preregistered secondary maintainability audit, not a retroactive gate."
+      },
+      {
+        "id": "file_table_block",
+        "type": "table",
+        "tableId": "file_table",
+        "layout": "full"
+      },
+      {
+        "id": "compensating_table_block",
+        "type": "table",
+        "tableId": "failure_table",
+        "layout": "full"
+      },
+      {
+        "id": "integrity",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Read-only evidence and command boundaries hold\n\nAll 144 read-only file exposures\u201448 per language\u2014remain unchanged under integrity hashing. Every session runs exactly `/bin/zsh -lc ./sources` first and `/bin/zsh -lc ./check` second. All 18 agent exits are zero; there are no timeouts, runner errors, command violations, or integrity failures."
+      },
+      {
+        "id": "command_table_block",
+        "type": "table",
+        "tableId": "command_table",
+        "layout": "full"
+      },
+      {
+        "id": "boundary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## No compiler or instruction change follows\n\nEvery Parley session diagnoses and repairs all four regressions immediately. The residual token/time gaps are not tied to a syntax, semantic, diagnostic, or runtime failure, and the only lower-quality patch behavior appears in Rust. Parley therefore remains frozen at v0.3.155; the 1,519-character skill remains byte-for-byte unchanged; the single allowed instruction-compression experiment remains closed."
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Frozen method and integrity\n\n- **Matrix:** 18 fresh sessions, four repositories, three languages, six complete-bundle replicates, seed `20260819`.\n- **Toolchain:** pinned Parley 0.3.155 binary, frozen corpus commit `2cf86bf`, protocol commit `3fe4712`, `gpt-5.6-sol` medium, Codex CLI 0.146.0.\n- **Instruction:** unchanged 1,519-character skill, SHA `6ca098e4\u2026`; no further compression experiment.\n- **Source protocol:** one protected `./sources` first, then one `./check`; 12 editable plus eight read-only files/session.\n- **Integrity:** 18 unique threads and 18/18 fresh-session, command, checker, and context-integrity passes.\n- **Hashes:** task manifest `49147f96\u2026`; protocol `96916b47\u2026`; raw result `a11d59d3\u2026`."
+      },
+      {
+        "id": "session_table_block",
+        "type": "table",
+        "tableId": "session_table",
+        "layout": "full"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Limits and robustness\n\nThese are synthetic three-file repositories with explicit issue/test evidence, not mature projects with history, dependency graphs, test authoring, ambiguous symptoms, services, concurrency, or incomplete specifications. Six replicates establish a directional median. Reported tokens include model context across tool turns; source/context/edit tokens are lexical. Hidden cases cover the documented policies but cannot prove that every caller sees a root-cause fix, which is why patch-location quality is reported separately."
+      },
+      {
+        "id": "decision",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "diagnostic_results",
+        "body": "## Recommended next step\n\n1. Preserve iteration 028 unchanged as a clean 2/4 result: perfect Parley reliability, near-Rust tokens, and Rust-beating elapsed time, but not better-baseline parity.\n2. Make no compiler, syntax, diagnostic, prompt, or skill change from this corpus.\n3. Stop scaling explicit synthetic rewrites; the diagnosis-shaped protocol is the more useful direction.\n4. Build the next corpus from independently sourced project regressions with ambiguous symptoms, dependency navigation, and test changes, and score root-cause repair explicitly.\n5. If that broader pilot is positive, preregister the planned larger confirmation before claiming Python-and-Rust parity."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Does Parley's near-Rust efficiency persist when agents must infer the failing path across dependencies?\n- Can root-cause repair quality predict maintainability better than hidden output alone?\n- How much of the remaining Python gap is fixed Parley skill context versus model workflow?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-04T19:13:00Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "sessions": 18,
+          "assignments": 72,
+          "hidden_successes": 72,
+          "first_successes": 72,
+          "repairs": 0,
+          "gate_conditions_passed": 2,
+          "changed_files_task": 1,
+          "exact_file_cases": 0,
+          "token_gap_python_percent": 4.38,
+          "token_gap_rust_percent": 1.48,
+          "elapsed_gap_python_percent": 6.62,
+          "elapsed_gap_rust_percent": -0.85,
+          "source_gap_rust_percent": -40.74
+        }
+      ],
+      "language_summary": [
+        {
+          "language": "Parley",
+          "sessions": 6,
+          "assigned_tasks": 24,
+          "hidden_successes": 24,
+          "hidden_rate": 1.0,
+          "first_successes": 24,
+          "first_rate": 1.0,
+          "repair_turns": 0,
+          "median_tokens_task": 15020.875,
+          "weighted_tokens_task": 15030.2083,
+          "median_input_tokens_task": 14820.25,
+          "median_output_tokens_task": 198.375,
+          "median_seconds_task": 7.0073,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "language": "Python",
+          "sessions": 6,
+          "assigned_tasks": 24,
+          "hidden_successes": 24,
+          "hidden_rate": 1.0,
+          "first_successes": 24,
+          "first_rate": 1.0,
+          "repair_turns": 0,
+          "median_tokens_task": 14390.75,
+          "weighted_tokens_task": 14402.5833,
+          "median_input_tokens_task": 14201.875,
+          "median_output_tokens_task": 189.5,
+          "median_seconds_task": 6.5723,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "language": "Rust",
+          "sessions": 6,
+          "assigned_tasks": 24,
+          "hidden_successes": 24,
+          "hidden_rate": 1.0,
+          "first_successes": 24,
+          "first_rate": 1.0,
+          "repair_turns": 0,
+          "median_tokens_task": 14801.625,
+          "weighted_tokens_task": 14805.2083,
+          "median_input_tokens_task": 14576.25,
+          "median_output_tokens_task": 226.0,
+          "median_seconds_task": 7.0672,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        }
+      ],
+      "session_detail": [
+        {
+          "replicate": 1,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 15018.75,
+          "input_tokens_task": 14816.25,
+          "output_tokens_task": 202.5,
+          "seconds_task": 7.273875,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 1,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14468.25,
+          "input_tokens_task": 14258.25,
+          "output_tokens_task": 210.0,
+          "seconds_task": 6.2655,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.25,
+          "edit_tokens_task": 6.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 1,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14828.25,
+          "input_tokens_task": 14590.25,
+          "output_tokens_task": 238.0,
+          "seconds_task": 7.22025,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 2,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 15023.0,
+          "input_tokens_task": 14827.25,
+          "output_tokens_task": 195.75,
+          "seconds_task": 7.192675,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 2,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14386.25,
+          "input_tokens_task": 14201.25,
+          "output_tokens_task": 185.0,
+          "seconds_task": 6.721875,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 2,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14786.5,
+          "input_tokens_task": 14565.25,
+          "output_tokens_task": 221.25,
+          "seconds_task": 7.35655,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 3,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 15109.5,
+          "input_tokens_task": 14919.25,
+          "output_tokens_task": 190.25,
+          "seconds_task": 6.29885,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 3,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14378.0,
+          "input_tokens_task": 14194.0,
+          "output_tokens_task": 184.0,
+          "seconds_task": 5.920175,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 3,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14808.25,
+          "input_tokens_task": 14587.75,
+          "output_tokens_task": 220.5,
+          "seconds_task": 6.914175,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 4,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14996.75,
+          "input_tokens_task": 14805.0,
+          "output_tokens_task": 191.75,
+          "seconds_task": 7.026175,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 4,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14401.5,
+          "input_tokens_task": 14209.0,
+          "output_tokens_task": 192.5,
+          "seconds_task": 6.51615,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 4,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14795.0,
+          "input_tokens_task": 14568.0,
+          "output_tokens_task": 227.0,
+          "seconds_task": 6.891,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 5,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 15003.5,
+          "input_tokens_task": 14802.5,
+          "output_tokens_task": 201.0,
+          "seconds_task": 6.566,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 5,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14390.0,
+          "input_tokens_task": 14202.5,
+          "output_tokens_task": 187.5,
+          "seconds_task": 8.790825,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 5,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14793.0,
+          "input_tokens_task": 14568.0,
+          "output_tokens_task": 225.0,
+          "seconds_task": 6.693375,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 283.5,
+          "edit_tokens_task": 7.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 6,
+          "language": "Parley",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 15029.75,
+          "input_tokens_task": 14824.25,
+          "output_tokens_task": 205.5,
+          "seconds_task": 6.98845,
+          "prompt_chars_task": 1090.75,
+          "seed_tokens_task": 165.0,
+          "source_tokens_task": 168.0,
+          "edit_tokens_task": 8.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 6,
+          "language": "Python",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14391.5,
+          "input_tokens_task": 14200.0,
+          "output_tokens_task": 191.5,
+          "seconds_task": 6.6284,
+          "prompt_chars_task": 670.0,
+          "seed_tokens_task": 144.5,
+          "source_tokens_task": 147.0,
+          "edit_tokens_task": 6.0,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        },
+        {
+          "replicate": 6,
+          "language": "Rust",
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repair_turns": 0,
+          "tokens_task": 14820.25,
+          "input_tokens_task": 14584.5,
+          "output_tokens_task": 235.75,
+          "seconds_task": 7.567975,
+          "prompt_chars_task": 675.0,
+          "seed_tokens_task": 280.75,
+          "source_tokens_task": 292.5,
+          "edit_tokens_task": 17.25,
+          "changed_files_task": 1.0,
+          "integrity_ok": 1,
+          "protocol_ok": 1,
+          "context_tokens_task": 80.25,
+          "context_chars_task": 382.75
+        }
+      ],
+      "repository_detail": [
+        {
+          "language": "Parley",
+          "repository_id": "after_hours_routing_project",
+          "repository": "Repair after-hours routing regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 222.0,
+          "final_tokens": 234.0,
+          "edit_tokens": 12.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Python",
+          "repository_id": "after_hours_routing_project",
+          "repository": "Repair after-hours routing regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 196.0,
+          "final_tokens": 206.17,
+          "edit_tokens": 10.17,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Rust",
+          "repository_id": "after_hours_routing_project",
+          "repository": "Repair after-hours routing regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 346.0,
+          "final_tokens": 357.0,
+          "edit_tokens": 14.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Parley",
+          "repository_id": "capacity_state_project",
+          "repository": "Repair deferred-capacity state regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 188.0,
+          "final_tokens": 188.0,
+          "edit_tokens": 12.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Python",
+          "repository_id": "capacity_state_project",
+          "repository": "Repair deferred-capacity state regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 164.0,
+          "final_tokens": 164.0,
+          "edit_tokens": 8.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Rust",
+          "repository_id": "capacity_state_project",
+          "repository": "Repair deferred-capacity state regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 327.0,
+          "final_tokens": 327.0,
+          "edit_tokens": 10.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Parley",
+          "repository_id": "invoice_boundary_project",
+          "repository": "Repair invoice discount boundary regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 118.0,
+          "final_tokens": 118.0,
+          "edit_tokens": 4.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Python",
+          "repository_id": "invoice_boundary_project",
+          "repository": "Repair invoice discount boundary regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 95.0,
+          "final_tokens": 95.0,
+          "edit_tokens": 2.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Rust",
+          "repository_id": "invoice_boundary_project",
+          "repository": "Repair invoice discount boundary regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 182.0,
+          "final_tokens": 184.0,
+          "edit_tokens": 3.67,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Parley",
+          "repository_id": "normalized_tag_project",
+          "repository": "Repair normalized tag identity regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 132.0,
+          "final_tokens": 132.0,
+          "edit_tokens": 4.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Python",
+          "repository_id": "normalized_tag_project",
+          "repository": "Repair normalized tag identity regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 123.0,
+          "final_tokens": 123.0,
+          "edit_tokens": 4.0,
+          "changed_files": 1.0
+        },
+        {
+          "language": "Rust",
+          "repository_id": "normalized_tag_project",
+          "repository": "Repair normalized tag identity regression",
+          "appearances": 6,
+          "first_successes": 6,
+          "hidden_successes": 6,
+          "seed_tokens": 268.0,
+          "final_tokens": 272.0,
+          "edit_tokens": 8.0,
+          "changed_files": 1.0
+        }
+      ],
+      "command_audit": [
+        {
+          "language": "Parley",
+          "sessions": 6,
+          "sources_first": 6,
+          "one_sources": 6,
+          "protocol_ok": 6,
+          "integrity_ok": 6
+        },
+        {
+          "language": "Python",
+          "sessions": 6,
+          "sources_first": 6,
+          "one_sources": 6,
+          "protocol_ok": 6,
+          "integrity_ok": 6
+        },
+        {
+          "language": "Rust",
+          "sessions": 6,
+          "sources_first": 6,
+          "one_sources": 6,
+          "protocol_ok": 6,
+          "integrity_ok": 6
+        }
+      ],
+      "source_stage": [
+        {
+          "language": "Parley",
+          "stage": "Seed",
+          "rough_tokens_task": 165.0
+        },
+        {
+          "language": "Python",
+          "stage": "Seed",
+          "rough_tokens_task": 144.5
+        },
+        {
+          "language": "Rust",
+          "stage": "Seed",
+          "rough_tokens_task": 280.75
+        },
+        {
+          "language": "Parley",
+          "stage": "Final",
+          "rough_tokens_task": 168.0
+        },
+        {
+          "language": "Python",
+          "stage": "Final",
+          "rough_tokens_task": 147.0
+        },
+        {
+          "language": "Rust",
+          "stage": "Final",
+          "rough_tokens_task": 283.5
+        }
+      ],
+      "root_cause_audit": [
+        {
+          "language": "Parley",
+          "assignments": 24,
+          "root_cause_repairs": 24,
+          "root_cause_rate": 1.0,
+          "compensating_repairs": 0,
+          "read_only_files_preserved": 48
+        },
+        {
+          "language": "Python",
+          "assignments": 24,
+          "root_cause_repairs": 24,
+          "root_cause_rate": 1.0,
+          "compensating_repairs": 0,
+          "read_only_files_preserved": 48
+        },
+        {
+          "language": "Rust",
+          "assignments": 24,
+          "root_cause_repairs": 22,
+          "root_cause_rate": 0.9167,
+          "compensating_repairs": 2,
+          "read_only_files_preserved": 48
+        }
+      ],
+      "compensating_detail": [
+        {
+          "language": "Rust",
+          "replicate": 6,
+          "repository": "Repair after-hours routing regression",
+          "changed_file": "main.rs",
+          "defect_file": "routing.rs",
+          "assessment": "Caller-side compensation; hidden-correct, root defect remains"
+        },
+        {
+          "language": "Rust",
+          "replicate": 6,
+          "repository": "Repair invoice discount boundary regression",
+          "changed_file": "main.rs",
+          "defect_file": "pricing.rs",
+          "assessment": "Caller-side compensation; hidden-correct, root defect remains"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "diagnostic_results",
+      "label": "Frozen iteration 028 project-diagnosis results",
+      "path": "028-project-diagnosis-near-parity.sql",
+      "query": {
+        "engine": "SQLite JSON1",
+        "query": "sqlite3 ':memory:' < benchmarks/reports/028-project-diagnosis-near-parity.sql",
+        "description": "Reproducible aggregation of all eighteen sessions, seventy-two repository judgments, context/source/edit metrics, command integrity, and root-cause patch locations.",
+        "executed_at": "2026-08-04T19:13:00Z",
+        "language": "SQL",
+        "metric_definitions": [
+          "First success: repository passes in the first public bundle check.",
+          "Hidden success: final repository passes every withheld stdout case.",
+          "Tokens per repository: reported session input plus output tokens divided by four assignments.",
+          "Context rough tokens: lexical tokens in visible read-only issue/test artifacts.",
+          "Root-cause repair: the final patch changes the seeded defect file, independent of hidden correctness.",
+          "Controlled inspection: exactly one ./sources command first, followed only by ./check."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "028-project-diagnosis-near-parity.artifact.json",
+    "snapshotPath": "agent_diagnostic_028_protocol_v1_v0.3.155.json",
+    "originUrl": "artifact://parley-project-diagnosis-028"
+  }
+}

@@ -2360,3 +2360,76 @@ Report the complete event stream and context/source/edit accounting. If strict
 parity passes, this remains a six-replicate pilot and requires a larger
 confirmation before a general claim. If it fails, do not tune the corpus or
 change syntax or instructions from same-corpus evidence.
+
+## 028 — Project diagnosis reaches clean near-Rust efficiency
+
+- Completed: 2026-08-05
+- Compiler: pinned Parley 0.3.155 binary; language unchanged
+- Model: `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0
+- Matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_diagnostic_028_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `a11d59d33756b13a4f27efb04389840b8de997991d6dd1031964846b271568ee`
+- Report: `benchmarks/reports/028-project-diagnosis-near-parity.html`
+- Report SHA-256:
+  `9eb3a59c3b75e7ec95ed1dbcc590337c774e8b76932137c386570161b3ca4c65`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_028_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, source-order,
+  checker/context-integrity, and command-protocol checks passed; no timeout,
+  nonzero agent exit, runner error, or selective rerun
+
+| Language | Hidden repos | First-check repos | Repairs | Median tokens/repo | Median seconds/repo | Context tokens/repo | Final source tokens/repo | Edit tokens/repo | Changed files/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 24/24 | 0 | 15,020.88 | 7.0073 | 80.25 | 168.00 | 8.00 | 1.00 |
+| Python | 24/24 | 24/24 | 0 | 14,390.75 | 6.5723 | 80.25 | 147.00 | 6.00 | 1.00 |
+| Rust | 24/24 | 24/24 | 0 | 14,801.63 | 7.0672 | 80.25 | 283.50 | 7.25 | 1.00 |
+
+The strict better-baseline gate fails 2/4. All three languages are 24/24 on
+the first check and hidden cases, so correctness and first-check conditions
+pass. Parley is 1.48% above Rust and 4.38% above Python in median reported
+tokens per repository. Its median elapsed time is 0.85% below Rust but 6.62%
+above Python. Token and elapsed conditions compare against lower Python and
+therefore fail.
+
+The result is unusually stable: every completed session uses one source dump,
+one successful check, and zero repairs. Per-repository token ranges are
+14,996.75–15,109.50 for Parley, 14,378.00–14,468.25 for Python, and
+14,786.50–14,828.25 for Rust. There is no failure outlier or repair loop to
+remove. Parley final source remains 40.74% shorter than Rust and 14.29% larger
+than Python; compact source again does not predict model-token effort directly.
+
+Every language receives exactly 1,531 characters, 27 lines, and 321 rough
+tokens of read-only evidence per session. All 144 context-file exposures
+remain integrity-clean. Prompt-level public examples remain withheld. The
+Parley prompt is 1,090.75 characters per repository versus 670.00 for Python
+and 675.00 for Rust because the unchanged skill is included once per session.
+
+The preregistered secondary patch-location audit finds that Parley and Python
+change the seeded defect file in all 24 assignments. Rust does so in 22/24.
+Rust replicate 6 instead adds caller-side special cases for invoice subtotal
+2000 and high-severity after-hours routing, leaving `pricing.rs` and
+`routing.rs` incorrect for other callers. Both patches pass every frozen
+hidden case, so primary correctness remains 100%; the report labels them as
+maintainability-relevant compensations rather than retroactively changing the
+gate.
+
+There is no Parley syntax, compiler, diagnostic, semantic, runtime, or draft
+failure across the 24 assignments. **No compiler, prompt, or skill change
+follows from iteration 028.** The residual gap is model context/workflow, not
+evidence for narrow syntax. The one allowed instruction-compression experiment
+remains closed.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 35 blocks, five charts, eight metrics, and six tables; artifact
+headline/language metrics match the raw summary exactly.
+
+Preserve 028 unchanged. It is strong evidence of perfect Parley diagnosis and
+near-Rust efficiency under equal project evidence, but it is not strict
+Python-and-Rust parity. The next useful corpus should use independently sourced
+project regressions with ambiguous symptoms, dependency navigation, and test
+changes, and should score root-cause repair explicitly. A positive broader
+pilot still requires the planned larger confirmation before a general claim.

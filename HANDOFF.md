@@ -833,6 +833,21 @@ Update it whenever you finish or start a work item.
   `96916b4731801f0758eda1fdc5bd2bd007b7734052bb0a4a4f3d5b1356502af0`.
   Run once without selective reruns. A pass still requires larger confirmation;
   a failure cannot trigger same-corpus compiler or instruction tuning.
+- **Project-style diagnostic result (iteration 028):** all 72 assignments pass
+  their first check and hidden cases with zero repairs; every session preserves
+  source order, command protocol, checker/context integrity, and read-only
+  evidence. Strict parity is 2/4. Parley uses 15,020.88 median tokens/repo and
+  7.0073 seconds versus Python's 14,390.75/6.5723 and Rust's
+  14,801.63/7.0672: Parley is only 1.48% above Rust tokens and 0.85% faster,
+  but remains 4.38% above Python tokens and 6.62% slower. Parley and Python
+  change the seeded root-defect file 24/24 times; Rust is 22/24 because one
+  session adds two caller-side compensations. Preserve raw SHA
+  `a11d59d33756b13a4f27efb04389840b8de997991d6dd1031964846b271568ee`
+  and report 028 SHA
+  `9eb3a59c3b75e7ec95ed1dbcc590337c774e8b76932137c386570161b3ca4c65`.
+  No language/skill change follows. Next use independently sourced project
+  regressions with ambiguity, dependency navigation, test changes, and an
+  explicit root-cause score; a positive pilot still needs larger confirmation.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
