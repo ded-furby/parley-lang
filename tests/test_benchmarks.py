@@ -357,6 +357,48 @@ def test_broad_agent_tasks_are_predeclared_and_cross_domain():
         assert len(task["hidden_cases"]) >= 4
 
 
+def test_arithmetic_vocabulary_corpus_is_independent_and_unprimed():
+    path = BENCHMARKS / "agent_tasks_arithmetic_vocabulary.json"
+    manifest = json.loads(path.read_text())
+    tasks = load_tasks(path)
+    prior_ids = {
+        task["id"]
+        for filename in ("tasks.json", "agent_tasks.json", "agent_tasks_broad.json")
+        for task in json.loads((BENCHMARKS / filename).read_text())["tasks"]
+    }
+
+    assert len(tasks) == 6
+    assert len({task["category"] for task in tasks}) == 6
+    assert not ({task["id"] for task in tasks} & prior_ids)
+    assert manifest["predeclared_analysis"]["matrix"] == (
+        "6 tasks x 3 languages x 2 replicates = 36 fresh sessions"
+    )
+    forbidden = ("modulo", "remainder", "percent", "%")
+    visible = " ".join(
+        [task["title"] + " " + task["statement"] for task in tasks]
+        + [case["stdin"] + case["stdout"] for task in tasks
+           for group in ("public_cases", "hidden_cases") for case in task[group]]
+    ).lower()
+    assert all(word not in visible for word in forbidden)
+    assert all(len(task["hidden_cases"]) == 4 for task in tasks)
+
+
+def test_vocabulary_protocol_019_freezes_evidence_gate():
+    protocol = json.loads((BENCHMARKS / "vocabulary_protocol_019.json").read_text())
+    config = protocol["frozen_config"]
+
+    assert protocol["experiment_id"] == "019"
+    assert config["parley_version"] == "parley 0.3.152"
+    assert config["compiler_commit"] == "de63314467b3738988a4b64ef986de297f5d1e58"
+    assert config["languages"] == ["parley", "python", "rust"]
+    assert config["replicates"] == 2
+    assert config["seed"] == 20260805
+    assert protocol["matrix"]["fresh_sessions"] == 36
+    assert "At least two unrelated task families" in protocol["primary_analysis"]["evidence_gate"]
+    assert "general usefulness" in protocol["primary_analysis"]["eligibility_is_not_adoption"].lower()
+    assert "No further instruction-compression" in protocol["instruction_rule"]
+
+
 def test_bundle_protocol_predeclares_complete_scale_matrix():
     protocol = load_protocol(BENCHMARKS / "bundle_protocol_017.json")
     config = protocol["frozen_config"]

@@ -654,6 +654,13 @@ Update it whenever you finish or start a work item.
   `modulo` in rotation; the other was a one-task `does` phrasing error. Make no
   compiler change yet. Preserve report 018, keep the skill frozen, and next
   test natural remainder vocabulary across unrelated arithmetic task families.
+- **Arithmetic-vocabulary preregistration (iteration 019):** six new,
+  independently worded task families and a 36-session three-language matrix
+  are frozen in `benchmarks/vocabulary_protocol_019.json`. Agent-visible text
+  avoids all candidate operator spellings. At least two unrelated Parley task
+  families must independently use `modulo` in their first-check source before
+  an alias is even eligible; eligibility still requires semantic consistency,
+  maintainability, full tests, and broad confirmation.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "description": "Predeclared independent arithmetic-vocabulary corpus. Task statements require recurring arithmetic behavior but deliberately avoid naming or showing any operator spelling.",
+  "predeclared_analysis": {
+    "role": "Language-design diagnostic evidence, not a compiler tuning target or standalone language ranking.",
+    "matrix": "6 tasks x 3 languages x 2 replicates = 36 fresh sessions",
+    "seed": 20260805,
+    "primary_outcome": "Number of unrelated Parley task families whose first source independently uses the standalone word modulo.",
+    "secondary_outcomes": [
+      "first public check success",
+      "hidden success",
+      "repair turns",
+      "first-source arithmetic spelling",
+      "reported tokens and elapsed seconds by language"
+    ],
+    "evidence_gate": "A modulo alias may be proposed only if first-source use recurs in at least two unrelated task families and the alias independently satisfies general usefulness, semantic consistency with existing remainder behavior, and maintainability.",
+    "reporting": "Preserve all 36 sessions and report every task-language cell, spelling choice, failure, and hidden judgment.",
+    "anti_priming": "No task statement, title, case, or protocol text shown to agents contains modulo, remainder, percent, or a percent symbol."
+  },
+  "tasks": [
+    {
+      "id": "parity_label",
+      "title": "Parity label",
+      "category": "number classification",
+      "statement": "Read one non-negative whole number. Print `even` when it can be split into pairs with nothing left over; otherwise print `odd`.",
+      "public_cases": [{"stdin": "7\n", "stdout": "odd\n"}],
+      "hidden_cases": [
+        {"stdin": "0\n", "stdout": "even\n"},
+        {"stdin": "2\n", "stdout": "even\n"},
+        {"stdin": "999\n", "stdout": "odd\n"},
+        {"stdin": "100000\n", "stdout": "even\n"}
+      ]
+    },
+    {
+      "id": "clock_advance",
+      "title": "Clock advance",
+      "category": "time arithmetic",
+      "statement": "Read an hour from 0 through 23, a minute from 0 through 59, and a non-negative number of minutes to advance, one value per line. Print the resulting hour, one space, and the resulting minute. The clock continues from 23 back to 0 and from minute 59 back to 0.",
+      "public_cases": [{"stdin": "23\n50\n25\n", "stdout": "0 15\n"}],
+      "hidden_cases": [
+        {"stdin": "0\n0\n0\n", "stdout": "0 0\n"},
+        {"stdin": "10\n30\n35\n", "stdout": "11 5\n"},
+        {"stdin": "22\n0\n180\n", "stdout": "1 0\n"},
+        {"stdin": "5\n59\n1441\n", "stdout": "6 0\n"}
+      ]
+    },
+    {
+      "id": "sum_check_digit",
+      "title": "Sum check digit",
+      "category": "checksum arithmetic",
+      "statement": "Read a positive whole number N, then read exactly N non-negative whole numbers, one per line. Add the N values and print only the final decimal digit of the total.",
+      "public_cases": [{"stdin": "4\n12\n8\n35\n9\n", "stdout": "4\n"}],
+      "hidden_cases": [
+        {"stdin": "1\n0\n", "stdout": "0\n"},
+        {"stdin": "2\n99\n2\n", "stdout": "1\n"},
+        {"stdin": "5\n7\n7\n7\n7\n7\n", "stdout": "5\n"},
+        {"stdin": "3\n1000\n250\n63\n", "stdout": "3\n"}
+      ]
+    },
+    {
+      "id": "cyclic_position",
+      "title": "Cyclic position",
+      "category": "cyclic indexing",
+      "statement": "Read a positive whole number N, a current position from 1 through N, and a non-negative number of forward steps, one value per line. Positions form a circle: after N comes 1. Print the position reached after exactly that many steps; zero steps leaves the current position unchanged.",
+      "public_cases": [{"stdin": "5\n4\n3\n", "stdout": "2\n"}],
+      "hidden_cases": [
+        {"stdin": "1\n1\n99\n", "stdout": "1\n"},
+        {"stdin": "4\n1\n0\n", "stdout": "1\n"},
+        {"stdin": "4\n4\n1\n", "stdout": "1\n"},
+        {"stdin": "7\n6\n15\n", "stdout": "7\n"}
+      ]
+    },
+    {
+      "id": "weekday_shift",
+      "title": "Weekday shift",
+      "category": "calendar arithmetic",
+      "statement": "Weekdays are numbered 0 for Monday through 6 for Sunday. Read a starting weekday number and a non-negative number of days to move forward, one per line. Print the resulting weekday number, continuing from Sunday back to Monday as needed.",
+      "public_cases": [{"stdin": "5\n3\n", "stdout": "1\n"}],
+      "hidden_cases": [
+        {"stdin": "0\n0\n", "stdout": "0\n"},
+        {"stdin": "6\n1\n", "stdout": "0\n"},
+        {"stdin": "2\n14\n", "stdout": "2\n"},
+        {"stdin": "4\n100\n", "stdout": "6\n"}
+      ]
+    },
+    {
+      "id": "evenly_divisible_count",
+      "title": "Evenly divisible count",
+      "category": "stream divisibility",
+      "statement": "Read a positive whole number N and a positive whole number D, then read exactly N non-negative whole numbers, one per line. Print how many of the N values can be divided by D with nothing left over.",
+      "public_cases": [{"stdin": "6\n3\n3\n4\n6\n8\n9\n10\n", "stdout": "3\n"}],
+      "hidden_cases": [
+        {"stdin": "1\n1\n0\n", "stdout": "1\n"},
+        {"stdin": "4\n5\n1\n2\n3\n4\n", "stdout": "0\n"},
+        {"stdin": "5\n2\n2\n4\n5\n8\n11\n", "stdout": "3\n"},
+        {"stdin": "3\n10\n100\n101\n1000\n", "stdout": "2\n"}
+      ]
+    }
+  ]
+}

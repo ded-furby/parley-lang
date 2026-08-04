@@ -1112,3 +1112,30 @@ arithmetic-vocabulary corpus spanning unrelated parity, wraparound, clock,
 checksum, and cyclic-index problems without suggesting an operator spelling.
 Only cross-task recurrence plus an independent semantic/maintenance case can
 justify an alias for the remainder operation. Keep the skill unchanged.
+
+## Pre-registration for 019 — Independent arithmetic vocabulary
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.152, semantics unchanged after iteration 018
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Task manifest: `benchmarks/agent_tasks_arithmetic_vocabulary.json`
+- Protocol: `benchmarks/vocabulary_protocol_019.json`
+- Matrix: 6 unrelated tasks × 3 languages × 2 replicates = 36 fresh sessions
+- Domains: number classification, time arithmetic, checksum arithmetic,
+  cyclic indexing, calendar arithmetic, and stream divisibility
+- Seed: `20260805`
+
+### Anti-priming and primary evidence gate
+
+No agent-visible task title, statement, example, prompt, or skill text names
+or shows `modulo`, `remainder`, `percent`, or `%`. The primary unit is an
+unrelated Parley task family whose source at the **first public check** uses
+the standalone word `modulo`. At least two task families must independently
+do so before an alias proposal is eligible.
+
+Eligibility is not adoption. A compiler change would still require an
+independent case for general usefulness, exact semantic consistency with the
+existing integer remainder operation, one maintainable canonical meaning,
+full pipeline coverage, and a subsequent broad-workload confirmation. Report
+all 36 sessions, including every spelling, failure, repair, hidden judgment,
+token count, and elapsed time.

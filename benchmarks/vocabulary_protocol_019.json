@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "experiment_id": "019",
+  "title": "Independent arithmetic-vocabulary diagnostic",
+  "description": "Fresh-context diagnostic of natural arithmetic spelling across six unrelated task families, frozen before any output is observed.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_arithmetic_vocabulary.json",
+    "parley_version": "parley 0.3.152",
+    "compiler_commit": "de63314467b3738988a4b64ef986de297f5d1e58",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "languages": ["parley", "python", "rust"],
+    "replicates": 2,
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260805,
+    "timeout_seconds": 960,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 36,
+    "sessions_per_language": 12,
+    "sessions_per_task": 6,
+    "derivation": "6 tasks x 3 languages x 2 replicates"
+  },
+  "primary_analysis": {
+    "unit": "unrelated Parley task family",
+    "measurement": "Standalone word modulo present in the source saved at the first public check.",
+    "evidence_gate": "At least two unrelated task families must independently use modulo before any alias proposal is eligible.",
+    "eligibility_is_not_adoption": "Even if recurrence passes, a compiler change still requires general usefulness, semantic consistency with existing integer remainder behavior, a single canonical meaning, maintainability, and full pipeline tests."
+  },
+  "anti_priming": "Agent-visible titles, statements, cases, prompts, and the unchanged Parley skill do not contain modulo, remainder, percent, or a percent symbol.",
+  "reporting_rule": "Report every session, task-language cell, first-source spelling, repair, diagnostic, hidden judgment, token count, and elapsed time. Do not convert this diagnostic into a broad language ranking.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged. No further instruction-compression experiment is permitted."
+}
