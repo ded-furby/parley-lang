@@ -1026,3 +1026,32 @@ and allowing it contextually can preserve the existing `position of ... in
 general compiler change. Do not add `modulo` from this evidence: it remains
 confined to one task. Keep the 1,519-character instruction core frozen, then
 rerun the same workload under a separately preserved iteration 018 protocol.
+
+## Pre-registration for 018 — Contextual-identifier replication
+
+- Date frozen: 2026-08-04
+- Compiler: Parley 0.3.152, commit
+  `b94964ab64d85e099bf65f23280331cd3398af01`
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Protocol: `benchmarks/bundle_protocol_018.json`
+- Matrix: exact iteration-017 replication—bundle sizes 1, 2, 4, and 8;
+  90 fresh sessions; 192 hidden-judged task-solutions; seed `20260804`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+
+### Frozen difference and gate
+
+The only compiler difference from iteration 017 is the generally useful,
+cross-task-supported contextual interpretation of the existing word
+`position`. Unsupported `modulo` is intentionally unchanged. The task
+population, deterministic partitions, prompts, skill, runner behavior,
+replicate count, three languages, and four-part size-eight strict parity gate
+are unchanged. All four conditions—hidden correctness, tokens/task,
+seconds/task, and first-check task success—must pass.
+
+### Analysis rule
+
+Preserve all results, including stochastic baseline movement and failures.
+Compare the complete scale curve with iteration 017, but do not attribute
+Python/Rust movement to the Parley compiler. Make no further compiler change
+unless the new evidence again crosses unrelated tasks and independently meets
+general usefulness, semantic consistency, and maintainability.

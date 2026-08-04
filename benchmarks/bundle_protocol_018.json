@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment_id": "018",
+  "title": "Contextual-identifier workload replication",
+  "description": "Exact replication of iteration 017 after the one cross-task, independently justified compiler change: position is now a contextual identifier. The task population, partitions, instruction core, agent, and strict parity gate remain unchanged.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_broad.json",
+    "parley_version": "parley 0.3.152",
+    "compiler_commit": "b94964ab64d85e099bf65f23280331cd3398af01",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [1, 2, 4, 8],
+    "replicates": 2,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260804,
+    "timeout_seconds": 960,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 90,
+    "judged_task_solutions": 192,
+    "sessions_per_language": 30,
+    "task_solutions_per_language": 64,
+    "derivation": "For each replicate and language: 8 one-task + 4 two-task + 2 four-task + 1 eight-task sessions."
+  },
+  "primary_gate": {
+    "scale": 8,
+    "correctness": "Parley hidden-task success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned task must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned task must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check task success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict workload parity."
+  },
+  "secondary_analysis": [
+    "Report the full scale curve at bundle sizes 1, 2, 4, and 8.",
+    "Report both session totals and per-assigned-task values; never present amortized values without their denominator.",
+    "Report bundle success, hidden-task success, first-check bundle success, first-check task success, repairs, protocol compliance, prompt size, input/output tokens, and elapsed time.",
+    "Preserve every failed or timed-out session and every task-level hidden judgment.",
+    "Compare iteration 018 against iteration 017, but do not attribute stochastic baseline movement to the compiler change."
+  ],
+  "change_rule": "Do not change syntax or compiler semantics from one workload, task, or transcript. A future proposal requires a recurring issue across at least two unrelated tasks plus an independent case for general usefulness, semantic consistency, and maintainability.",
+  "instruction_rule": "The proven 1,519-character Parley skill is injected once per session and remains byte-for-byte unchanged. No further instruction-compression experiment is permitted.",
+  "feature_boundary": "The only compiler difference from iteration 017 is contextual use of the existing word position. Unsupported modulo is intentionally unchanged."
+}

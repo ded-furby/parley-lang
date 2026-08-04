@@ -396,6 +396,41 @@ def test_bundle_protocol_predeclares_complete_scale_matrix():
     assert "No further instruction-compression" in protocol["instruction_rule"]
 
 
+def test_bundle_protocol_018_is_an_exact_matrix_replication():
+    prior = load_protocol(BENCHMARKS / "bundle_protocol_017.json")
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_018.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(
+        tasks,
+        config["bundle_sizes"],
+        config["replicates"],
+        config["seed"],
+    )
+
+    assert protocol["experiment_id"] == "018"
+    assert config["parley_version"] == "parley 0.3.152"
+    assert config["compiler_commit"] == "b94964ab64d85e099bf65f23280331cd3398af01"
+    for frozen_field in (
+        "tasks_file", "parley_skill_sha256", "parley_skill_chars",
+        "bundle_sizes", "replicates", "languages", "model", "reasoning",
+        "seed", "timeout_seconds", "max_workers",
+    ):
+        assert config[frozen_field] == prior["frozen_config"][frozen_field]
+    assert protocol["matrix"] == prior["matrix"]
+    assert protocol["primary_gate"] == prior["primary_gate"]
+    assert [bundle["task_ids"] for bundle in plan] == [
+        bundle["task_ids"] for bundle in build_bundle_plan(
+            tasks,
+            prior["frozen_config"]["bundle_sizes"],
+            prior["frozen_config"]["replicates"],
+            prior["frozen_config"]["seed"],
+        )
+    ]
+    assert "Unsupported modulo is intentionally unchanged" in protocol["feature_boundary"]
+    assert "No further instruction-compression" in protocol["instruction_rule"]
+
+
 def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
     prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")
