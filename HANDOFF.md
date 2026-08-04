@@ -754,6 +754,20 @@ Update it whenever you finish or start a work item.
   session/token/file evidence. No compiler or instruction change is allowed
   from iteration 025 output; a passing expansion requires a larger
   confirmation before any parity claim.
+- **Eight-repository expansion result (iteration 026):** all 144 assignments
+  pass hidden cases, all 144 hidden exact-file judgments match, all sessions
+  preserve source-order/integrity/protocol rules, and every assignment changes
+  both files. Parley reaches 8,945.13 median tokens/repo and 9.5669 seconds,
+  beating Rust's 9,079.38 and 10.4539 by 1.48% and 8.48%, respectively. Strict
+  parity still fails 1/4 because Python is lower (8,394.69 tokens, 7.6526
+  seconds) and one Parley session first-checks 6/8 before one repair; Parley is
+  46/48 first-check overall versus 48/48 for both baselines. Its two failures
+  use `repetition count` in analogous file workflows within the same session,
+  so they do not justify a language/skill change. Preserve raw SHA
+  `e071acdf35461f28a6cad5fb927a237a5d075156c231068e5102c7705637c55d`
+  and report 026. Next add a second independent repository set and preregister
+  a size-sixteen pilot under the unchanged protocol; require a larger
+  confirmation if that broader pilot passes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

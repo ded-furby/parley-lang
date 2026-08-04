@@ -2046,3 +2046,71 @@ per-repository evidence, file-scope edits, exact-file results, repairs, and
 integrity/protocol status. If the strict gate passes, preregister a larger
 confirmation before claiming parity. If it fails, do not tune this corpus or
 change syntax/instructions from a same-corpus signature.
+
+## 026 — Rust efficiency parity reached; strict best-baseline gate fails
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-sol`, medium reasoning
+- Matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_repositories_026_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `e071acdf35461f28a6cad5fb927a237a5d075156c231068e5102c7705637c55d`
+- Report: `benchmarks/reports/026-eight-repository-expansion-failed.html`
+- Report SHA-256:
+  `1944cce88cda70e28d12d1942c2b06d587b6a0bbe42b9289441b9dacb0da9232`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_026_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, source-order,
+  checker-integrity, and command-protocol checks passed; no timeout, nonzero
+  agent exit, or runner error
+
+| Language | Hidden repos | First-check repos | Repairs | Median tokens/repo | Median seconds/repo | Seed tokens/repo | Final source tokens/repo | Edit tokens/repo | Changed files/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 48/48 | 46/48 | 1 | 8,945.13 | 9.5669 | 100.38 | 191.06 | 107.81 | 2.00 |
+| Python | 48/48 | 48/48 | 0 | 8,394.69 | 7.6526 | 86.00 | 161.19 | 90.44 | 2.00 |
+| Rust | 48/48 | 48/48 | 0 | 9,079.38 | 10.4539 | 207.50 | 308.31 | 137.56 | 2.00 |
+
+Parley now **beats Rust on both efficiency conditions**: 1.48% fewer median
+reported tokens per repository and 8.48% lower median elapsed time. That
+reverses iteration 025's 1.28% token and 2.90% elapsed deficits under a corpus
+expanded with four unrelated repositories frozen before output. It remains
+6.56% above Python in tokens and 25.02% above Python in elapsed time.
+
+The strict better-baseline gate therefore fails 1/4. All 144 assignments pass
+hidden cases, but Parley first-checks 46/48 versus both baselines' 48/48; token
+and elapsed gates compare against lower Python and also fail. Five repair-free
+Parley sessions cluster between 8,908.25 and 8,979.63 tokens per repository.
+Their preregistered sensitivity median is 8,928.88, still 1.66% below Rust and
+6.36% above Python. One repaired run reaches 14,192.75 and lifts Parley's
+weighted mean to 9,814.42.
+
+The repaired session used unsupported `repetition count` in both exact-file
+workflows. Both programs failed P101 at `count`, then passed after adding an
+explicit one-based counter. These are two analogous tasks in one session, not
+independent cross-domain/session recurrence; the other five Parley sessions
+avoid the phrase. **No compiler, syntax, diagnostic, prompt, or skill change
+follows from iteration 026.**
+
+All 144 hidden exact-file cases pass: 48 per language across filtered-report
+and priority-digest workflows. All 144 assignments change both files. Every
+session runs `/bin/zsh -lc ./sources` exactly once first, followed only by one
+or two `/bin/zsh -lc ./check` commands. The 1,519-character skill and Parley
+v0.3.155 are unchanged.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 35 rendered blocks, five charts, eight metrics, and six tables;
+artifact headline and language metrics match the raw summary exactly. An
+in-app-browser attempt to navigate automatically from report 016 to the local
+`file://` output was blocked by the browser URL policy and was not bypassed;
+the existing user tab was left untouched.
+
+Preserve 026 unchanged. It is positive evidence that Parley can beat Rust on
+repository-shaped agent effort, but it is not Python-and-Rust parity and not a
+general claim. The next defensible experiment is a second independent set of
+unrelated repositories and a preregistered size-sixteen pilot under the same
+source protocol. Do not tune any current task. A passing broader pilot still
+requires the planned larger confirmation.

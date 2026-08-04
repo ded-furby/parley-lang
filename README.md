@@ -98,7 +98,10 @@ For the research harness, run `parley benchmark prompt --task hello --language
 parley` to render a language-neutral agent prompt, `parley benchmark measure
 --format json` from a source checkout to produce the Parley/Python/Rust
 seed-corpus metrics, and `parley benchmark summarize --log runs.jsonl --format
-json` to review recorded agent attempts.
+json` to review recorded agent attempts. The latest preserved broad result is
+the self-contained [iteration 026 repository report](benchmarks/reports/026-eight-repository-expansion-failed.html):
+Parley beats Rust on median agent tokens and elapsed time across eight
+repositories, while the stricter Python-and-Rust gate remains unconfirmed.
 
 For editor integration, start the stdio language server from your editor:
 
