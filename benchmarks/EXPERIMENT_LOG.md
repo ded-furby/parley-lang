@@ -1975,3 +1975,41 @@ unrelated repositories under the same source protocol, skill, model, and gate.
 That tests whether general workload amortization closes the remaining 1.28%
 Rust token gap without tuning the current tasks. If it passes, run the planned
 larger confirmation before claiming general parity.
+
+## Design and preflight for 026 — Eight-repository expansion
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Planned matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Seed: `20260815`
+- Combined manifest SHA-256:
+  `6dadf527fd966c93fcf034074e397c69050f6dfa9ca16e6df722fc796459157f`
+- Four-task additions SHA-256:
+  `972730ddc781dfad2d589737c6ba0577d2482dbdb0c454a2c0151ad18d028c91`
+
+Iteration 026 is the prerecommended independent scale expansion, not a replay
+or repair of 025. The first four repository objects are preserved exactly from
+025. Four unrelated two-file repositories add support-SLA policy, feature
+rollout eligibility, tolerance-aware ledger reconciliation, and exact
+priority-filtered file output. Their requirements cross entrypoint/helper
+boundaries but introduce no Parley-specific vocabulary or transcript-derived
+syntax.
+
+The corpus is reproducibly assembled by
+`benchmarks/build_repository_corpus_026.py` from the preserved 025 manifest and
+the separately reviewable 026 additions. An independent oracle reproduces all
+20 new public/hidden stdout and exact-file contracts. All 12 new
+language-specific seeded repositories compile and pass their old contracts;
+every unmodified seed compiles but fails its new public requirement. Tests
+also prove that the combined manifest contains eight unique task IDs, with the
+first four task objects equal to 025 and the final four equal to the additions.
+The complete pre-protocol suite passed 328/328 in 124.13 seconds.
+
+No compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, source
+protocol, or instruction-compression change is part of this work. Commit and
+push the reviewed corpus before freezing protocol 026. Preserve every later
+session without selective reruns. A passing pilot still requires a larger
+confirmation before any general parity claim.

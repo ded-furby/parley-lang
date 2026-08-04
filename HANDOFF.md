@@ -733,6 +733,17 @@ Update it whenever you finish or start a work item.
   and report 025. Next add four unrelated repositories and preregister a
   size-eight workload under the exact same source protocol to test fixed-context
   amortization; require a larger confirmation if it passes.
+- **Eight-repository expansion design (iteration 026):** preserve the four 025
+  repository objects exactly and add support-SLA, feature-rollout, ledger, and
+  exact priority-digest repositories. The deterministic combined manifest has
+  SHA `6dadf527fd966c93fcf034074e397c69050f6dfa9ca16e6df722fc796459157f`.
+  Independent oracles match all 20 new public/hidden contracts; all 12 new
+  language-specific seeds pass their old contracts and compile while failing
+  their new public requirements. The complete pre-protocol suite passes
+  328/328. Freeze a six-replicate size-eight matrix only after committing this
+  corpus. Keep Parley v0.3.155, the 1,519-character skill, source protocol, and
+  four-condition gate unchanged; preserve all output and require a larger
+  confirmation if the expansion passes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

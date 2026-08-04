@@ -953,6 +953,122 @@ def test_repositories_025_seeds_pass_old_contract_and_fail_every_new_public_case
         assert not any(result["ok"] for result in record["tasks"].values())
 
 
+def _repositories_026_additions_oracle(
+    task_id: str, stdin: str
+) -> tuple[str, dict[str, str]]:
+    lines = iter(stdin.splitlines())
+    if task_id == "support_sla_repo":
+        priority = next(lines)
+        tier = next(lines)
+        after_hours = next(lines)
+        minutes = {"normal": 480, "high": 120, "critical": 30}[priority]
+        if tier == "premium":
+            minutes = max(minutes - 30, 15)
+        if after_hours == "yes":
+            minutes += 60
+        return f"due_minutes={minutes}|tier={tier}\n", {}
+    if task_id == "feature_rollout_repo":
+        decisions = []
+        allowed = 0
+        count = int(next(lines))
+        for _ in range(count):
+            user, plan, country = next(lines).split("|")
+            eligible = plan == "enterprise" or (plan == "pro" and country != "blocked")
+            decision = "allow" if eligible else "deny"
+            allowed += eligible
+            decisions.append(f"{user}:{decision}")
+        decisions.append(f"allowed={allowed},denied={count - allowed}")
+        return "\n".join(decisions) + "\n", {}
+    if task_id == "ledger_reconciliation_repo":
+        tolerance = int(next(lines))
+        count = int(next(lines))
+        output = []
+        matched = 0
+        variance = 0
+        for _ in range(count):
+            entry_id, expected, actual = next(lines).split("|")
+            difference = abs(int(expected) - int(actual))
+            variance += difference
+            if difference <= tolerance:
+                matched += 1
+                output.append(f"{entry_id}:match")
+            else:
+                output.append(f"{entry_id}:diff={difference}")
+        output.append(
+            f"matched={matched},unmatched={count - matched},variance={variance}"
+        )
+        return "\n".join(output) + "\n", {}
+    if task_id == "priority_digest_repo":
+        title = next(lines)
+        count = int(next(lines))
+        minimum = int(next(lines))
+        accepted = []
+        for index in range(1, count + 1):
+            priority, text = next(lines).split("|", 1)
+            if int(priority) >= minimum:
+                accepted.append((index, int(priority), text))
+        contents = title + "\n" + "".join(
+            f"{index}|{priority}|{text}\n"
+            for index, priority, text in accepted
+        )
+        return (
+            f"saved={len(accepted)}|skipped={count - len(accepted)}|characters={sum(len(text) for _, _, text in accepted)}\n",
+            {"priority_digest.txt": contents},
+        )
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_repositories_026_addition_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_additions_026.json")
+
+    for task in tasks:
+        for case in task["public_cases"] + task["hidden_cases"]:
+            stdout, files = _repositories_026_additions_oracle(task["id"], case["stdin"])
+            assert case["stdout"] == stdout
+            assert case.get("files", {}) == files
+
+
+def test_repositories_026_addition_seeds_pass_old_contract_and_fail_new_public(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_additions_026.json")
+    seed_tasks = [{**task, "public_cases": task["seed_cases"]} for task in tasks]
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for language in ("parley", "python", "rust"):
+        seed_dir = tmp_path / f"{language}-026-seed"
+        seed_dir.mkdir()
+        write_bundle_workspace(seed_dir, seed_tasks, language, parley)
+        seed_proc = subprocess.run(
+            [str(seed_dir / "check")], cwd=seed_dir, capture_output=True, text=True, timeout=60
+        )
+        assert seed_proc.returncode == 0, seed_proc.stderr
+
+        new_dir = tmp_path / f"{language}-026-new"
+        new_dir.mkdir()
+        write_bundle_workspace(new_dir, tasks, language, parley)
+        new_proc = subprocess.run(
+            [str(new_dir / "check")], cwd=new_dir, capture_output=True, text=True, timeout=60
+        )
+        assert new_proc.returncode == 1
+        record = json.loads((new_dir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
+
+
+def test_repositories_026_combines_preserved_and_unrelated_tasks():
+    base = json.loads((BENCHMARKS / "agent_tasks_repositories_025.json").read_text())
+    additions = json.loads(
+        (BENCHMARKS / "agent_tasks_repositories_additions_026.json").read_text()
+    )
+    combined = json.loads((BENCHMARKS / "agent_tasks_repositories_026.json").read_text())
+
+    assert len(combined["tasks"]) == 8
+    assert combined["tasks"][:4] == base["tasks"]
+    assert combined["tasks"][4:] == additions["tasks"]
+    assert len({task["id"] for task in combined["tasks"]}) == 8
+    assert combined["predeclared_analysis"]["matrix"].startswith("8 repositories")
+
+
 def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
     manifest = tmp_path / "tasks.json"
     task = {

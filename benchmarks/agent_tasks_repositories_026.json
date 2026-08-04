@@ -1,0 +1,529 @@
+{
+  "schema_version": 1,
+  "description": "Eight two-file repository-maintenance tasks for an independently expanded size-eight comparison under the iteration-025 source protocol.",
+  "predeclared_analysis": {
+    "experiment_id": "026",
+    "matrix": "8 repositories x 3 languages x 6 complete-bundle replicates = 18 fresh sessions and 144 hidden-judged assignments",
+    "seed": 20260815,
+    "scope": "Repository-shaped maintenance under the unchanged protected ./sources-then-./check protocol. The first four repositories are preserved exactly from 025 and the final four are unrelated additions.",
+    "primary_question": "Does fixed-context amortization across eight repositories close the remaining Parley efficiency gap while preserving hidden correctness and first-check reliability against Python and Rust?",
+    "change_rule": "Preserve all output. No language change may follow one repository, transcript, session, or token gap. Proposals require recurrence across unrelated new repositories and independent sessions, then general usefulness, semantic consistency, and maintainability.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "tasks": [
+    {
+      "id": "delivery_quote_repo",
+      "title": "Extend a delivery quote repository",
+      "category": "pricing and helper-contract change",
+      "statement": "The repository currently calculates a basic delivery quote. Extend it to read four lines: non-negative whole-number distance_km, base_cents, per_km_cents, and service, where service is standard or express. Quote is base plus distance times per-km, plus 300 cents for express, plus 500 cents when distance is more than 100 km. Update the entrypoint and pricing helper consistently. Print quote=Q|service=S.",
+      "seed_cases": [
+        {
+          "stdin": "12\n500\n25\n",
+          "stdout": "quote=800\n"
+        },
+        {
+          "stdin": "0\n900\n4\n",
+          "stdout": "quote=900\n"
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "120\n1000\n20\nexpress\n",
+          "stdout": "quote=4200|service=express\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n500\n10\nstandard\n",
+          "stdout": "quote=500|service=standard\n"
+        },
+        {
+          "stdin": "100\n100\n5\nstandard\n",
+          "stdout": "quote=600|service=standard\n"
+        },
+        {
+          "stdin": "101\n0\n1\nstandard\n",
+          "stdout": "quote=601|service=standard\n"
+        },
+        {
+          "stdin": "10\n200\n3\nexpress\n",
+          "stdout": "quote=530|service=express\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"pricing.par\"\n\nto main:\n    let distance_input be ask for a number \"\"\n    let base_input be ask for a number \"\"\n    let per_km_input be ask for a number \"\"\n    let distance be value of distance_input\n    let base be value of base_input\n    let per_km be value of per_km_input\n    let amount be (delivery_quote with distance, base, per_km)\n    say \"quote=\" + amount\n",
+          "pricing.par": "to delivery_quote with distance as number, base as number, per_km as number giving number:\n    give back base + (distance * per_km)\n"
+        },
+        "python": {
+          "main.py": "from pricing import delivery_quote\n\ndistance = int(input())\nbase = int(input())\nper_km = int(input())\namount = delivery_quote(distance, base, per_km)\nprint(f\"quote={amount}\")\n",
+          "pricing.py": "def delivery_quote(distance: int, base: int, per_km: int) -> int:\n    return base + distance * per_km\n"
+        },
+        "rust": {
+          "main.rs": "mod pricing;\n\nuse pricing::delivery_quote;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let distance: i64 = lines.next().unwrap().parse().unwrap();\n    let base: i64 = lines.next().unwrap().parse().unwrap();\n    let per_km: i64 = lines.next().unwrap().parse().unwrap();\n    let amount = delivery_quote(distance, base, per_km);\n    println!(\"quote={amount}\");\n}\n",
+          "pricing.rs": "pub fn delivery_quote(distance: i64, base: i64, per_km: i64) -> i64 {\n    base + distance * per_km\n}\n"
+        }
+      }
+    },
+    {
+      "id": "inventory_reservation_repo",
+      "title": "Add reservation-aware inventory allocation",
+      "category": "inventory and helper-contract change",
+      "statement": "The repository currently allocates demand from stock. Extend it to read four lines: non-negative whole-number stock, demand, reserved, and mode, where mode is normal or urgent. For urgent mode, all stock is available. For normal mode, available stock is stock minus reserved but never below zero. Fulfilled is the smaller of demand and available, backorder is demand minus fulfilled, and remaining is available minus fulfilled. Put availability policy in the existing inventory helper and update the entrypoint consistently. Print fulfilled=F|backorder=B|remaining=R.",
+      "seed_cases": [
+        {
+          "stdin": "10\n7\n",
+          "stdout": "fulfilled=7|backorder=0|remaining=3\n"
+        },
+        {
+          "stdin": "2\n5\n",
+          "stdout": "fulfilled=2|backorder=3|remaining=0\n"
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "10\n8\n4\nnormal\n",
+          "stdout": "fulfilled=6|backorder=2|remaining=0\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "10\n8\n4\nurgent\n",
+          "stdout": "fulfilled=8|backorder=0|remaining=2\n"
+        },
+        {
+          "stdin": "3\n1\n5\nnormal\n",
+          "stdout": "fulfilled=0|backorder=1|remaining=0\n"
+        },
+        {
+          "stdin": "5\n0\n2\nnormal\n",
+          "stdout": "fulfilled=0|backorder=0|remaining=3\n"
+        },
+        {
+          "stdin": "2\n5\n0\nnormal\n",
+          "stdout": "fulfilled=2|backorder=3|remaining=0\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"inventory.par\"\n\nto main:\n    let stock_input be ask for a number \"\"\n    let demand_input be ask for a number \"\"\n    let stock be value of stock_input\n    let demand be value of demand_input\n    let available be (available_stock with stock)\n    let fulfilled be demand\n    if fulfilled is more than available:\n        set fulfilled to available\n    let backorder be demand - fulfilled\n    let remaining be available - fulfilled\n    say \"fulfilled=\" + fulfilled + \"|backorder=\" + backorder + \"|remaining=\" + remaining\n",
+          "inventory.par": "to available_stock with stock as number giving number:\n    give back stock\n"
+        },
+        "python": {
+          "inventory.py": "def available_stock(stock: int) -> int:\n    return stock\n",
+          "main.py": "from inventory import available_stock\n\nstock = int(input())\ndemand = int(input())\navailable = available_stock(stock)\nfulfilled = min(demand, available)\nbackorder = demand - fulfilled\nremaining = available - fulfilled\nprint(f\"fulfilled={fulfilled}|backorder={backorder}|remaining={remaining}\")\n"
+        },
+        "rust": {
+          "inventory.rs": "pub fn available_stock(stock: i64) -> i64 {\n    stock\n}\n",
+          "main.rs": "mod inventory;\n\nuse inventory::available_stock;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let stock: i64 = lines.next().unwrap().parse().unwrap();\n    let demand: i64 = lines.next().unwrap().parse().unwrap();\n    let available = available_stock(stock);\n    let fulfilled = demand.min(available);\n    let backorder = demand - fulfilled;\n    let remaining = available - fulfilled;\n    println!(\"fulfilled={fulfilled}|backorder={backorder}|remaining={remaining}\");\n}\n"
+        }
+      }
+    },
+    {
+      "id": "incident_routing_repo",
+      "title": "Extend incident routing across parser and helper",
+      "category": "routing and helper-contract change",
+      "statement": "The repository currently routes simple severity lines. Extend it to read a non-negative integer N and then N lines team|severity|after_hours, where severity is low, high, or critical and after_hours is yes or no. Route low to email; route high to pager after hours and chat otherwise; route critical to pager. Update the routing helper to accept the needed fields and the entrypoint to parse them. Print team:channel for each incident in input order, then email=E,chat=C,pager=P. With N zero, print only the counts.",
+      "seed_cases": [
+        {
+          "stdin": "3\nlow\nhigh\nlow\n",
+          "stdout": "email\npager\nemail\n"
+        },
+        {
+          "stdin": "0\n",
+          "stdout": ""
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "4\nops|high|no\nops|high|yes\nweb|low|yes\ndb|critical|no\n",
+          "stdout": "ops:chat\nops:pager\nweb:email\ndb:pager\nemail=1,chat=1,pager=2\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n",
+          "stdout": "email=0,chat=0,pager=0\n"
+        },
+        {
+          "stdin": "3\na|low|no\nb|high|no\nc|critical|yes\n",
+          "stdout": "a:email\nb:chat\nc:pager\nemail=1,chat=1,pager=1\n"
+        },
+        {
+          "stdin": "2\nnight|high|yes\nday|high|no\n",
+          "stdout": "night:pager\nday:chat\nemail=0,chat=1,pager=1\n"
+        },
+        {
+          "stdin": "3\nx|critical|no\ny|critical|yes\nz|low|yes\n",
+          "stdout": "x:pager\ny:pager\nz:email\nemail=1,chat=0,pager=2\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"routing.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let severity be ask \"\"\n        say (channel_for with severity)\n",
+          "routing.par": "to channel_for with severity as text giving text:\n    if severity is \"low\":\n        give back \"email\"\n    give back \"pager\"\n"
+        },
+        "python": {
+          "main.py": "from routing import channel_for\n\ncount = int(input())\nfor _ in range(count):\n    severity = input()\n    print(channel_for(severity))\n",
+          "routing.py": "def channel_for(severity: str) -> str:\n    if severity == \"low\":\n        return \"email\"\n    return \"pager\"\n"
+        },
+        "rust": {
+          "main.rs": "mod routing;\n\nuse routing::channel_for;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let severity = lines.next().unwrap();\n        println!(\"{}\", channel_for(severity));\n    }\n}\n",
+          "routing.rs": "pub fn channel_for(severity: &str) -> &'static str {\n    if severity == \"low\" {\n        \"email\"\n    } else {\n        \"pager\"\n    }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "filtered_report_repo",
+      "title": "Add filtered exact-file reporting",
+      "category": "file workflow and helper-boundary change",
+      "statement": "The repository currently writes every report entry. Extend it to read a title, non-negative integer N, non-negative whole-number min_length, then exactly N entry lines which may be empty. Keep parsing and file output in the entrypoint. Add the inclusion rule to the existing report_rules helper: include entries whose character length is at least min_length. Overwrite filtered_report.txt with the title and then one line original_1_based_index|entry for each included entry, all followed by newlines. Print saved=A|skipped=S|characters=C, where characters sums included entry lengths. The checker verifies stdout and the exact file.",
+      "seed_cases": [
+        {
+          "stdin": "Old\n2\none\ntwo two\n",
+          "stdout": "saved=2|characters=10\n",
+          "files": {
+            "filtered_report.txt": "Old\n1|one\n2|two two\n"
+          }
+        },
+        {
+          "stdin": "None\n0\n",
+          "stdout": "saved=0|characters=0\n",
+          "files": {
+            "filtered_report.txt": "None\n"
+          }
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "Project\n4\n4\none\nfour\n\nseven!!\n",
+          "stdout": "saved=2|skipped=2|characters=11\n",
+          "files": {
+            "filtered_report.txt": "Project\n2|four\n4|seven!!\n"
+          }
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "Empty\n0\n1\n",
+          "stdout": "saved=0|skipped=0|characters=0\n",
+          "files": {
+            "filtered_report.txt": "Empty\n"
+          }
+        },
+        {
+          "stdin": "Zero\n2\n0\n\na\n",
+          "stdout": "saved=2|skipped=0|characters=1\n",
+          "files": {
+            "filtered_report.txt": "Zero\n1|\n2|a\n"
+          }
+        },
+        {
+          "stdin": "Exact\n3\n5\nfour\nfives\nlonger\n",
+          "stdout": "saved=2|skipped=1|characters=11\n",
+          "files": {
+            "filtered_report.txt": "Exact\n2|fives\n3|longer\n"
+          }
+        },
+        {
+          "stdin": "Reject\n3\n10\na\nbb\nccc\n",
+          "stdout": "saved=0|skipped=3|characters=0\n",
+          "files": {
+            "filtered_report.txt": "Reject\n"
+          }
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"report_rules.par\"\n\nto main:\n    let title be ask \"\"\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let entries be an empty list of text\n    let characters be 0\n    repeat count times:\n        let entry be ask \"\"\n        add entry to entries\n        set characters to characters + (length of entry)\n    write title + \"\\n\" to file \"filtered_report.txt\"\n    for each index from 1 to count:\n        append (format_entry with index, item index of entries) + \"\\n\" to file \"filtered_report.txt\"\n    say \"saved=\" + count + \"|characters=\" + characters\n",
+          "report_rules.par": "to format_entry with index as number, entry as text giving text:\n    give back index + \"|\" + entry\n"
+        },
+        "python": {
+          "main.py": "from pathlib import Path\nfrom report_rules import format_entry\n\ntitle = input()\ncount = int(input())\nentries = [input() for _ in range(count)]\ncontents = title + \"\\n\" + \"\".join(\n    format_entry(index, entry) + \"\\n\"\n    for index, entry in enumerate(entries, 1)\n)\nPath(\"filtered_report.txt\").write_text(contents, encoding=\"utf-8\")\nprint(f\"saved={count}|characters={sum(map(len, entries))}\")\n",
+          "report_rules.py": "def format_entry(index: int, entry: str) -> str:\n    return f\"{index}|{entry}\"\n"
+        },
+        "rust": {
+          "main.rs": "mod report_rules;\n\nuse report_rules::format_entry;\nuse std::fs;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.split_terminator('\\n');\n    let title = lines.next().unwrap_or(\"\");\n    let count: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    let entries: Vec<&str> = (0..count).map(|_| lines.next().unwrap_or(\"\")).collect();\n    let mut contents = format!(\"{title}\\n\");\n    for (offset, entry) in entries.iter().enumerate() {\n        contents.push_str(&format_entry(offset + 1, entry));\n        contents.push('\\n');\n    }\n    fs::write(\"filtered_report.txt\", contents).unwrap();\n    let characters: usize = entries.iter().map(|entry| entry.chars().count()).sum();\n    println!(\"saved={}|characters={characters}\", entries.len());\n}\n",
+          "report_rules.rs": "pub fn format_entry(index: usize, entry: &str) -> String {\n    format!(\"{index}|{entry}\")\n}\n"
+        }
+      }
+    },
+    {
+      "id": "support_sla_repo",
+      "title": "Extend support SLA policy",
+      "category": "policy arithmetic and helper-contract change",
+      "statement": "The repository currently maps a priority to a response deadline. Extend it to read three lines: priority (normal, high, or critical), tier (standard or premium), and after_hours (yes or no). Base minutes are 480 for normal, 120 for high, and 30 for critical. Premium subtracts 30 minutes but the result may not fall below 15. After-hours adds 60 minutes after the premium adjustment. Put the complete policy in the SLA helper and update the entrypoint consistently. Print due_minutes=N|tier=T.",
+      "seed_cases": [
+        {
+          "stdin": "high\n",
+          "stdout": "due_minutes=120\n"
+        },
+        {
+          "stdin": "normal\n",
+          "stdout": "due_minutes=480\n"
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "high\npremium\nyes\n",
+          "stdout": "due_minutes=150|tier=premium\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "critical\npremium\nno\n",
+          "stdout": "due_minutes=15|tier=premium\n"
+        },
+        {
+          "stdin": "normal\nstandard\nyes\n",
+          "stdout": "due_minutes=540|tier=standard\n"
+        },
+        {
+          "stdin": "high\nstandard\nno\n",
+          "stdout": "due_minutes=120|tier=standard\n"
+        },
+        {
+          "stdin": "critical\nstandard\nyes\n",
+          "stdout": "due_minutes=90|tier=standard\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"sla.par\"\n\nto main:\n    let priority be ask \"\"\n    let minutes be (due_minutes with priority)\n    say \"due_minutes=\" + minutes\n",
+          "sla.par": "to due_minutes with priority as text giving number:\n    if priority is \"high\":\n        give back 120\n    if priority is \"critical\":\n        give back 30\n    give back 480\n"
+        },
+        "python": {
+          "main.py": "from sla import due_minutes\n\npriority = input()\nprint(f\"due_minutes={due_minutes(priority)}\")\n",
+          "sla.py": "def due_minutes(priority: str) -> int:\n    if priority == \"high\":\n        return 120\n    if priority == \"critical\":\n        return 30\n    return 480\n"
+        },
+        "rust": {
+          "main.rs": "mod sla;\n\nuse sla::due_minutes;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let priority = input.lines().next().unwrap_or(\"\");\n    println!(\"due_minutes={}\", due_minutes(priority));\n}\n",
+          "sla.rs": "pub fn due_minutes(priority: &str) -> i64 {\n    match priority {\n        \"high\" => 120,\n        \"critical\" => 30,\n        _ => 480,\n    }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "feature_rollout_repo",
+      "title": "Add user-aware feature rollout rules",
+      "category": "eligibility and helper-contract change",
+      "statement": "The repository currently evaluates simple plan names. Extend it to read a non-negative integer N and N lines user|plan|country. A user is allowed when plan is enterprise, or when plan is pro and country is not blocked. Free and every other plan are denied. Update the rollout helper to accept plan and country and the entrypoint to parse user records. Print user:allow or user:deny in input order, then allowed=A,denied=D. With N zero, print only the counts.",
+      "seed_cases": [
+        {
+          "stdin": "3\npro\nfree\npro\n",
+          "stdout": "allow\ndeny\nallow\n"
+        },
+        {
+          "stdin": "0\n",
+          "stdout": ""
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "4\nada|pro|au\nben|pro|blocked\ncy|enterprise|blocked\ndan|free|au\n",
+          "stdout": "ada:allow\nben:deny\ncy:allow\ndan:deny\nallowed=2,denied=2\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n",
+          "stdout": "allowed=0,denied=0\n"
+        },
+        {
+          "stdin": "3\na|enterprise|blocked\nb|pro|nz\nc|free|nz\n",
+          "stdout": "a:allow\nb:allow\nc:deny\nallowed=2,denied=1\n"
+        },
+        {
+          "stdin": "2\nx|pro|blocked\ny|pro|BLOCKED\n",
+          "stdout": "x:deny\ny:allow\nallowed=1,denied=1\n"
+        },
+        {
+          "stdin": "3\nu|basic|au\nv|enterprise|au\nw|free|blocked\n",
+          "stdout": "u:deny\nv:allow\nw:deny\nallowed=1,denied=2\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "main.par": "include \"rollout.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let plan be ask \"\"\n        if (is_eligible with plan):\n            say \"allow\"\n        otherwise:\n            say \"deny\"\n",
+          "rollout.par": "to is_eligible with plan as text giving yesno:\n    give back plan is \"pro\"\n"
+        },
+        "python": {
+          "main.py": "from rollout import is_eligible\n\ncount = int(input())\nfor _ in range(count):\n    plan = input()\n    print(\"allow\" if is_eligible(plan) else \"deny\")\n",
+          "rollout.py": "def is_eligible(plan: str) -> bool:\n    return plan == \"pro\"\n"
+        },
+        "rust": {
+          "main.rs": "mod rollout;\n\nuse rollout::is_eligible;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let plan = lines.next().unwrap();\n        println!(\"{}\", if is_eligible(plan) { \"allow\" } else { \"deny\" });\n    }\n}\n",
+          "rollout.rs": "pub fn is_eligible(plan: &str) -> bool {\n    plan == \"pro\"\n}\n"
+        }
+      }
+    },
+    {
+      "id": "ledger_reconciliation_repo",
+      "title": "Add tolerance-aware ledger reconciliation",
+      "category": "numeric audit and helper-boundary change",
+      "statement": "The repository currently prints absolute differences. Extend it to read a non-negative whole-number tolerance, a non-negative integer N, then N lines id|expected|actual with whole-number amounts. Keep absolute difference in the ledger helper and add a helper predicate for whether the difference is at most tolerance. Print id:match when within tolerance, otherwise id:diff=D. After all rows print matched=M,unmatched=U,variance=V, where variance is the sum of every absolute difference. Update the entrypoint and helper consistently.",
+      "seed_cases": [
+        {
+          "stdin": "2\n10|13\n20|15\n",
+          "stdout": "difference=3\ndifference=5\n"
+        },
+        {
+          "stdin": "0\n",
+          "stdout": ""
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "5\n3\nA|100|103\nB|50|60\nC|20|15\n",
+          "stdout": "A:match\nB:diff=10\nC:match\nmatched=2,unmatched=1,variance=18\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "0\n0\n",
+          "stdout": "matched=0,unmatched=0,variance=0\n"
+        },
+        {
+          "stdin": "0\n2\nX|1|1\nY|2|3\n",
+          "stdout": "X:match\nY:diff=1\nmatched=1,unmatched=1,variance=1\n"
+        },
+        {
+          "stdin": "10\n3\na|0|10\nb|20|11\nc|5|30\n",
+          "stdout": "a:match\nb:match\nc:diff=25\nmatched=2,unmatched=1,variance=44\n"
+        },
+        {
+          "stdin": "2\n2\nq|100|97\nr|5|7\n",
+          "stdout": "q:diff=3\nr:match\nmatched=1,unmatched=1,variance=5\n"
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "ledger.par": "to absolute_difference with expected as number, actual as number giving number:\n    if expected is at least actual:\n        give back expected - actual\n    give back actual - expected\n",
+          "main.par": "include \"ledger.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        let expected be item 1 of parts as number\n        let actual be item 2 of parts as number\n        say \"difference=\" + (absolute_difference with expected, actual)\n"
+        },
+        "python": {
+          "ledger.py": "def absolute_difference(expected: int, actual: int) -> int:\n    return abs(expected - actual)\n",
+          "main.py": "from ledger import absolute_difference\n\ncount = int(input())\nfor _ in range(count):\n    expected, actual = map(int, input().split(\"|\"))\n    print(f\"difference={absolute_difference(expected, actual)}\")\n"
+        },
+        "rust": {
+          "ledger.rs": "pub fn absolute_difference(expected: i64, actual: i64) -> i64 {\n    (expected - actual).abs()\n}\n",
+          "main.rs": "mod ledger;\n\nuse ledger::absolute_difference;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().split('|');\n        let expected: i64 = parts.next().unwrap().parse().unwrap();\n        let actual: i64 = parts.next().unwrap().parse().unwrap();\n        println!(\"difference={}\", absolute_difference(expected, actual));\n    }\n}\n"
+        }
+      }
+    },
+    {
+      "id": "priority_digest_repo",
+      "title": "Add priority-filtered exact digest output",
+      "category": "file workflow and helper-boundary change",
+      "statement": "The repository currently writes every digest message. Extend it to read a title, non-negative integer N, non-negative whole-number min_priority, then N lines priority|text where priority is a whole number and text may be empty. Keep parsing/file output in the entrypoint. Add priority inclusion and formatting to the existing digest_rules helper. Overwrite priority_digest.txt with the title and then original_1_based_index|priority|text for each message whose priority is at least min_priority, all followed by newlines. Print saved=A|skipped=S|characters=C, summing included text lengths. The checker verifies stdout and the exact file.",
+      "seed_cases": [
+        {
+          "stdin": "Old\n2\nlow\nurgent\n",
+          "stdout": "saved=2|characters=9\n",
+          "files": {
+            "priority_digest.txt": "Old\n1|low\n2|urgent\n"
+          }
+        },
+        {
+          "stdin": "None\n0\n",
+          "stdout": "saved=0|characters=0\n",
+          "files": {
+            "priority_digest.txt": "None\n"
+          }
+        }
+      ],
+      "public_cases": [
+        {
+          "stdin": "Alerts\n4\n3\n1|low\n5|urgent\n3|warn\n2|minor\n",
+          "stdout": "saved=2|skipped=2|characters=10\n",
+          "files": {
+            "priority_digest.txt": "Alerts\n2|5|urgent\n3|3|warn\n"
+          }
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "Empty\n0\n1\n",
+          "stdout": "saved=0|skipped=0|characters=0\n",
+          "files": {
+            "priority_digest.txt": "Empty\n"
+          }
+        },
+        {
+          "stdin": "All\n2\n0\n0|\n1|a\n",
+          "stdout": "saved=2|skipped=0|characters=1\n",
+          "files": {
+            "priority_digest.txt": "All\n1|0|\n2|1|a\n"
+          }
+        },
+        {
+          "stdin": "Exact\n3\n5\n4|four\n5|five\n8|eight\n",
+          "stdout": "saved=2|skipped=1|characters=9\n",
+          "files": {
+            "priority_digest.txt": "Exact\n2|5|five\n3|8|eight\n"
+          }
+        },
+        {
+          "stdin": "Reject\n3\n10\n1|a\n2|bb\n3|ccc\n",
+          "stdout": "saved=0|skipped=3|characters=0\n",
+          "files": {
+            "priority_digest.txt": "Reject\n"
+          }
+        }
+      ],
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "seed_files": {
+        "parley": {
+          "digest_rules.par": "to format_message with index as number, message as text giving text:\n    give back index + \"|\" + message\n",
+          "main.par": "include \"digest_rules.par\"\n\nto main:\n    let title be ask \"\"\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let messages be an empty list of text\n    let characters be 0\n    repeat count times:\n        let message be ask \"\"\n        add message to messages\n        set characters to characters + (length of message)\n    write title + \"\\n\" to file \"priority_digest.txt\"\n    for each index from 1 to count:\n        append (format_message with index, item index of messages) + \"\\n\" to file \"priority_digest.txt\"\n    say \"saved=\" + count + \"|characters=\" + characters\n"
+        },
+        "python": {
+          "digest_rules.py": "def format_message(index: int, message: str) -> str:\n    return f\"{index}|{message}\"\n",
+          "main.py": "from pathlib import Path\nfrom digest_rules import format_message\n\ntitle = input()\ncount = int(input())\nmessages = [input() for _ in range(count)]\ncontents = title + \"\\n\" + \"\".join(\n    format_message(index, message) + \"\\n\"\n    for index, message in enumerate(messages, 1)\n)\nPath(\"priority_digest.txt\").write_text(contents, encoding=\"utf-8\")\nprint(f\"saved={count}|characters={sum(map(len, messages))}\")\n"
+        },
+        "rust": {
+          "digest_rules.rs": "pub fn format_message(index: usize, message: &str) -> String {\n    format!(\"{index}|{message}\")\n}\n",
+          "main.rs": "mod digest_rules;\n\nuse digest_rules::format_message;\nuse std::fs;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.split_terminator('\\n');\n    let title = lines.next().unwrap_or(\"\");\n    let count: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    let messages: Vec<&str> = (0..count).map(|_| lines.next().unwrap_or(\"\")).collect();\n    let mut contents = format!(\"{title}\\n\");\n    for (offset, message) in messages.iter().enumerate() {\n        contents.push_str(&format_message(offset + 1, message));\n        contents.push('\\n');\n    }\n    std::fs::write(\"priority_digest.txt\", contents).unwrap();\n    let characters: usize = messages.iter().map(|message| message.chars().count()).sum();\n    println!(\"saved={}|characters={characters}\", messages.len());\n}\n"
+        }
+      }
+    }
+  ]
+}
