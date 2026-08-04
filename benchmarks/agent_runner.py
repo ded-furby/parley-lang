@@ -86,6 +86,17 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
         if not isinstance(task_id, str) or not task_id or task_id in seen:
             raise ValueError(f"invalid or duplicate task id: {task_id!r}")
         seen.add(task_id)
+        seed_sources = task.get("seed_sources")
+        if seed_sources is not None:
+            if not isinstance(seed_sources, dict) or set(seed_sources) != set(LANGUAGES):
+                raise ValueError(
+                    f"{task_id}: seed_sources must contain exactly {list(LANGUAGES)}"
+                )
+            for language, source_text in seed_sources.items():
+                if not isinstance(source_text, str) or not source_text.strip():
+                    raise ValueError(
+                        f"{task_id}: seed source for {language} must be non-empty text"
+                    )
         for case_group in ("public_cases", "hidden_cases"):
             cases = task.get(case_group)
             if not isinstance(cases, list) or not cases:

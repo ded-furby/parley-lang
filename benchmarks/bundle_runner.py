@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import difflib
 import hashlib
 import json
 import os
@@ -266,6 +267,12 @@ def write_bundle_workspace(
         path.write_text(content, encoding="utf-8")
         if name in {"check", "check_public.py"}:
             path.chmod(0o755)
+    for task in tasks:
+        seed_sources = task.get("seed_sources")
+        if seed_sources is not None:
+            (workdir / bundle_source_name(task["id"], language)).write_text(
+                seed_sources[language], encoding="utf-8"
+            )
     return {
         name: hashlib.sha256(content.encode()).hexdigest()
         for name, content in files.items()
@@ -280,14 +287,41 @@ def render_bundle_prompt(
     label = {"parley": "Parley", "python": "Python", "rust": "Rust"}[language]
     filenames = [bundle_source_name(task["id"], language) for task in tasks]
     formatted_names = ", ".join(f"`{name}`" for name in filenames)
+    seeded = [task for task in tasks if task.get("seed_sources") is not None]
+    unseeded = [task for task in tasks if task.get("seed_sources") is None]
+    if seeded and not unseeded:
+        work_summary = (
+            f"Update {len(tasks)} independent {label} programs in place: {formatted_names}."
+        )
+        first_action = (
+            "Your first tool action must edit one or more listed solution files. "
+            "Do not perform reconnaissance first."
+        )
+    elif unseeded and not seeded:
+        work_summary = (
+            f"Implement {len(tasks)} independent tasks in {label} by creating: {formatted_names}."
+        )
+        first_action = (
+            "Your first tool action must create one or more listed solution files. "
+            "Do not perform reconnaissance first."
+        )
+    else:
+        work_summary = (
+            f"Complete {len(tasks)} independent {label} tasks in these files: {formatted_names}."
+        )
+        first_action = (
+            "Your first tool action must create or edit one or more listed solution files. "
+            "Do not perform reconnaissance first."
+        )
     lines = [
         "You are participating in a controlled coding benchmark in a fresh workspace.",
-        f"Implement {len(tasks)} independent tasks in {label} by creating: {formatted_names}.",
+        work_summary,
         "Each file is a separate program and must solve only its named task.",
         "Work only inside the current directory. All information needed is in this prompt.",
         "Do not list, read, or inspect any existing workspace file, including checker/config files.",
+        "For seeded tasks, the exact starting source is reproduced below; modify that file without reading it from the workspace.",
         "Do not use the internet or modify checker/config files.",
-        "Your first tool action must create one or more listed solution files. Do not perform reconnaissance first.",
+        first_action,
         "After creating or editing solutions, the only shell command permitted is exactly `./check`.",
         "Do not invoke a global language command.",
         "Create every listed solution, then run `./check`. If it fails, use its feedback to repair",
@@ -317,6 +351,14 @@ def render_bundle_prompt(
                 "```",
                 "",
             ])
+        if task.get("seed_sources") is not None:
+            lines.extend([
+                "Starting source (already present in the target file):",
+                f"```{language}",
+                task["seed_sources"][language].rstrip("\n"),
+                "```",
+                "",
+            ])
     if language == "parley":
         lines.extend([
             "# Parley language instructions",
@@ -339,6 +381,18 @@ def render_bundle_prompt(
             "",
         ])
     return "\n".join(lines).rstrip() + "\n"
+
+
+def rough_token_edit_count(before: str, after: str) -> int:
+    """Count inserted and deleted rough tokens in a seed-to-final edit."""
+    before_tokens = ROUGH_TOKEN_RE.findall(before)
+    after_tokens = ROUGH_TOKEN_RE.findall(after)
+    matcher = difflib.SequenceMatcher(a=before_tokens, b=after_tokens, autojunk=False)
+    return sum(
+        (i2 - i1) + (j2 - j1)
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes()
+        if tag != "equal"
+    )
 
 
 def run_bundle_cell(
@@ -420,11 +474,14 @@ def run_bundle_cell(
 
     task_results = {}
     source_texts = {}
+    seed_source_texts = {}
     for task in tasks:
         task_id = task["id"]
         source = workdir / bundle_source_name(task_id, language)
         source_text = source.read_text(encoding="utf-8") if source.is_file() else ""
+        seed_source_text = task.get("seed_sources", {}).get(language, "")
         source_texts[task_id] = source_text
+        seed_source_texts[task_id] = seed_source_text
         hidden = (
             judge(language, source, task["hidden_cases"], parley_command)
             if source.is_file()
@@ -437,6 +494,11 @@ def run_bundle_cell(
             "source_chars": len(source_text),
             "source_lines": len(source_text.splitlines()),
             "source_rough_tokens": len(ROUGH_TOKEN_RE.findall(source_text)),
+            "seed_source_text": seed_source_text,
+            "seed_source_chars": len(seed_source_text),
+            "seed_source_lines": len(seed_source_text.splitlines()),
+            "seed_source_rough_tokens": len(ROUGH_TOKEN_RE.findall(seed_source_text)),
+            "source_edit_rough_tokens": rough_token_edit_count(seed_source_text, source_text),
             "first_public_check_success": bool(first_tasks.get(task_id, {}).get("ok")),
             "final_public_check_success": bool(final_tasks.get(task_id, {}).get("ok")),
             "hidden_success": bool(hidden["ok"]),
@@ -453,6 +515,12 @@ def run_bundle_cell(
     source_lines = sum(result["source_lines"] for result in task_results.values())
     source_rough_tokens = sum(
         result["source_rough_tokens"] for result in task_results.values()
+    )
+    seed_source_rough_tokens = sum(
+        result["seed_source_rough_tokens"] for result in task_results.values()
+    )
+    source_edit_rough_tokens = sum(
+        result["source_edit_rough_tokens"] for result in task_results.values()
     )
     return {
         "schema_version": 1,
@@ -492,12 +560,21 @@ def run_bundle_cell(
         "prompt_chars": len(prompt),
         "prompt_chars_per_task": round(len(prompt) / task_count, 6),
         "source_texts": source_texts,
+        "seed_source_texts": seed_source_texts,
         "source_chars": source_chars,
         "source_lines": source_lines,
         "source_rough_tokens": source_rough_tokens,
         "source_chars_per_task": round(source_chars / task_count, 6),
         "source_lines_per_task": round(source_lines / task_count, 6),
         "source_rough_tokens_per_task": round(source_rough_tokens / task_count, 6),
+        "seed_source_rough_tokens": seed_source_rough_tokens,
+        "seed_source_rough_tokens_per_task": round(
+            seed_source_rough_tokens / task_count, 6
+        ),
+        "source_edit_rough_tokens": source_edit_rough_tokens,
+        "source_edit_rough_tokens_per_task": round(
+            source_edit_rough_tokens / task_count, 6
+        ),
         "task_results": task_results,
         "public_attempts": attempts,
         "agent_messages": parsed["agent_messages"],
@@ -565,6 +642,12 @@ def summarize_bundle_results(results: list[dict[str, Any]]) -> dict[str, Any]:
                 "median_elapsed_seconds_per_task": round(_median(rows, "elapsed_seconds_per_task"), 4),
                 "median_prompt_chars_per_task": _median(rows, "prompt_chars_per_task"),
                 "median_source_rough_tokens_per_task": _median(rows, "source_rough_tokens_per_task"),
+                "median_seed_source_rough_tokens_per_task": _median(
+                    rows, "seed_source_rough_tokens_per_task"
+                ),
+                "median_source_edit_rough_tokens_per_task": _median(
+                    rows, "source_edit_rough_tokens_per_task"
+                ),
             })
 
     primary_scale = max(scales) if scales else None

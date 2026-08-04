@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "description": "Four seeded maintenance tasks that extend hidden-correct application programs from iteration 023 across aggregation, wildcard policy matching, state transitions, and exact filesystem output.",
+  "predeclared_analysis": {
+    "experiment_id": "024",
+    "matrix": "4 tasks x 3 languages x 6 complete-bundle replicates = 18 fresh sessions and 72 hidden-judged assignments",
+    "seed": 20260811,
+    "scope": "Maintenance rather than cold-start generation. Each target file already contains a language-specific hidden-correct solution from iteration 023, reproduced exactly in the prompt. Every requirement extension and every public/hidden oracle is new in iteration 024.",
+    "primary_question": "Does Parley match Python and Rust on final correctness, first-check reliability, reported agent tokens, and elapsed time when agents modify compact existing programs instead of generating applications from scratch?",
+    "change_rule": "Preserve all output. This related-source maintenance corpus cannot justify syntax or compiler changes. Any future proposal still requires recurrence across unrelated new tasks and independent sessions, plus general usefulness, semantic consistency, and maintainability.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "seed_provenance": {
+    "result": "benchmarks/results/agent_application_023_protocol_v1_v0.3.155.json",
+    "selection": "For each task and language, the shortest hidden-correct final solution by rough-token count was selected before iteration 024 was run.",
+    "boundary": "Seeds are reused solely to change the work mode from generation to maintenance; 024 is not independent evidence for language-feature recurrence."
+  },
+  "tasks": [
+    {
+      "id": "invoice_net_extension",
+      "title": "Add invoice discount and net total",
+      "category": "business aggregation maintenance",
+      "statement": "Maintain the existing invoice rollup program. Read a customer name, then a non-negative integer N, then exactly N item lines category|quantity|unit_price_cents. Compute the subtotal and category totals as before. The discount is subtotal divided by 10 using whole-number division when subtotal is at least 2000 cents, otherwise zero. Net is subtotal minus discount. Print customer|subtotal|category:amount,...|discount:D|net:N, with categories in increasing order. If there are no categories, the category field is empty.",
+      "public_cases": [
+        {"stdin":"Acme\n4\noffice|2|150\nfood|3|200\noffice|1|500\ntravel|1|1250\n","stdout":"Acme|2650|food:600,office:800,travel:1250|discount=265|net=2385\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"Zero\n0\n","stdout":"Zero|0||discount=0|net=0\n"},
+        {"stdin":"Solo\n1\ngear|5|99\n","stdout":"Solo|495|gear:495|discount=0|net=495\n"},
+        {"stdin":"Edge\n2\nb|1|1000\na|2|500\n","stdout":"Edge|2000|a:1000,b:1000|discount=200|net=1800\n"},
+        {"stdin":"Below\n2\nz|1|999\na|2|500\n","stdout":"Below|1999|a:1000,z:999|discount=0|net=1999\n"}
+      ],
+      "seed_source_provenance": {"parley_replicate":3,"python_replicate":5,"rust_replicate":1,"source_task":"invoice_rollup"},
+      "seed_sources": {
+        "parley": "to main:\n    let customer be ask \"\"\n    let item_input be ask for a number \"\"\n    let item_count be value of item_input\n    let totals be a map from text to number\n    let subtotal be 0\n    repeat item_count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        let category be item 1 of parts\n        let quantity be item 2 of parts as number\n        let price be item 3 of parts as number\n        let amount be quantity * price\n        set subtotal to subtotal + amount\n        if totals contains category:\n            set item category of totals to item category of totals + amount\n        otherwise:\n            set item category of totals to amount\n    let output be an empty list of text\n    let categories be keys of totals\n    for each category in categories:\n        add category + \":\" + item category of totals to output\n    say customer + \"|\" + subtotal + \"|\" + (output joined with \",\")\n",
+        "python": "customer = input()\nitem_count = int(input())\ncategory_totals = {}\nsubtotal = 0\n\nfor _ in range(item_count):\n    category, quantity_text, price_text = input().split(\"|\", 2)\n    amount = int(quantity_text) * int(price_text)\n    subtotal += amount\n    category_totals[category] = category_totals.get(category, 0) + amount\n\ncategories = \",\".join(\n    f\"{category}:{category_totals[category]}\" for category in sorted(category_totals)\n)\nprint(f\"{customer}|{subtotal}|{categories}\")\n",
+        "rust": "use std::collections::BTreeMap;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let customer = lines.next().unwrap_or(\"\");\n    let n: usize = lines.next().unwrap().parse().unwrap();\n    let mut categories: BTreeMap<String, u128> = BTreeMap::new();\n    let mut subtotal: u128 = 0;\n    for _ in 0..n {\n        let parts: Vec<&str> = lines.next().unwrap().split('|').collect();\n        let quantity: u128 = parts[1].parse().unwrap();\n        let price: u128 = parts[2].parse().unwrap();\n        let amount = quantity * price;\n        subtotal += amount;\n        *categories.entry(parts[0].to_string()).or_default() += amount;\n    }\n    let totals = categories.iter().map(|(category, amount)| format!(\"{category}:{amount}\")).collect::<Vec<_>>().join(\",\");\n    println!(\"{customer}|{subtotal}|{totals}\");\n}\n"
+      }
+    },
+    {
+      "id": "wildcard_policy_extension",
+      "title": "Add wildcard access policies",
+      "category": "policy evaluation maintenance",
+      "statement": "Maintain the existing access-policy audit program. Read N policy lines role|resource|action, then M request lines user|role|resource|action. In any policy component, * matches every value; other text matches exactly and comparisons remain case-sensitive. A request is allowed when at least one policy matches all three request components. Print user:allow or user:deny in request order, then allowed=X,denied=Y. With zero requests, print only the summary.",
+      "public_cases": [
+        {"stdin":"3\nadmin|*|view\n*|article|edit\nauditor|report|*\n4\nada|admin|report|view\nben|reader|article|edit\ncy|auditor|report|export\ndan|guest|article|view\n","stdout":"ada:allow\nben:allow\ncy:allow\ndan:deny\nallowed=3,denied=1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n0\n","stdout":"allowed=0,denied=0\n"},
+        {"stdin":"1\n*|*|*\n2\nu1|guest|site|deploy\nu2|owner|report|view\n","stdout":"u1:allow\nu2:allow\nallowed=2,denied=0\n"},
+        {"stdin":"2\nowner|site|*\n*|report|view\n3\na|owner|site|deploy\nb|Owner|site|deploy\nc|reader|report|view\n","stdout":"a:allow\nb:deny\nc:allow\nallowed=2,denied=1\n"},
+        {"stdin":"3\nr|x|read\nr|*|write\n*|y|read\n4\na|r|x|read\nb|r|z|write\nc|q|y|read\nd|q|x|read\n","stdout":"a:allow\nb:allow\nc:allow\nd:deny\nallowed=3,denied=1\n"}
+      ],
+      "seed_source_provenance": {"parley_replicate":2,"python_replicate":5,"rust_replicate":1,"source_task":"access_policy_audit"},
+      "seed_sources": {
+        "parley": "to main:\n    let policies be a map from text to number\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let line be ask \"\"\n        set item line of policies to 1\n    let request_input be ask for a number \"\"\n    let request_count be value of request_input\n    let allowed be 0\n    let denied be 0\n    repeat request_count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        let user be item 1 of parts\n        remove item 1 of parts\n        let policy be parts joined with \"|\"\n        if policies contains policy:\n            say user + \":allow\"\n            set allowed to allowed + 1\n        otherwise:\n            say user + \":deny\"\n            set denied to denied + 1\n    say \"allowed=\" + allowed + \",denied=\" + denied\n",
+        "python": "policy_count = int(input())\npolicies = set()\nfor _ in range(policy_count):\n    role, resource, action = input().split(\"|\", 2)\n    policies.add((role, resource, action))\n\nrequest_count = int(input())\nallowed = 0\ndenied = 0\nfor _ in range(request_count):\n    user, role, resource, action = input().split(\"|\", 3)\n    if (role, resource, action) in policies:\n        allowed += 1\n        print(f\"{user}:allow\")\n    else:\n        denied += 1\n        print(f\"{user}:deny\")\n\nprint(f\"allowed={allowed},denied={denied}\")\n",
+        "rust": "use std::collections::HashSet;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let n: usize = lines.next().unwrap().parse().unwrap();\n    let mut policies = HashSet::new();\n    for _ in 0..n {\n        policies.insert(lines.next().unwrap().to_string());\n    }\n    let m: usize = lines.next().unwrap().parse().unwrap();\n    let mut allowed = 0;\n    let mut denied = 0;\n    for _ in 0..m {\n        let line = lines.next().unwrap();\n        let (user, policy) = line.split_once('|').unwrap();\n        if policies.contains(policy) {\n            allowed += 1;\n            println!(\"{user}:allow\");\n        } else {\n            denied += 1;\n            println!(\"{user}:deny\");\n        }\n    }\n    println!(\"allowed={allowed},denied={denied}\");\n}\n"
+      }
+    },
+    {
+      "id": "shipment_cancellation_extension",
+      "title": "Add shipment cancellation",
+      "category": "state-machine maintenance",
+      "statement": "Maintain the existing shipment-state program. Initial states may be created, packed, shipped, delivered, or cancelled. Events may use pack, ship, deliver, or cancel. Keep the existing forward transitions. In addition, cancel moves created or packed to cancelled. Every event for an unknown ID and every other transition is invalid, increments the invalid counter, and changes nothing. Print shipments in increasing ID order as id:state joined by commas, followed by |invalid=K.",
+      "public_cases": [
+        {"stdin":"3\nS2|packed\nS1|created\nS3|shipped\n6\nS1|cancel\nS2|ship\nS2|cancel\nS3|deliver\nS3|cancel\nX|cancel\n","stdout":"S1:cancelled,S2:shipped,S3:delivered|invalid=3\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n2\nX|cancel\nY|ship\n","stdout":"|invalid=2\n"},
+        {"stdin":"1\nA|created\n2\nA|cancel\nA|pack\n","stdout":"A:cancelled|invalid=1\n"},
+        {"stdin":"2\nB|packed\nA|created\n4\nB|cancel\nA|pack\nA|ship\nA|deliver\n","stdout":"A:delivered,B:cancelled|invalid=0\n"},
+        {"stdin":"3\nZ|cancelled\nY|delivered\nX|shipped\n3\nZ|cancel\nY|cancel\nX|deliver\n","stdout":"X:delivered,Y:delivered,Z:cancelled|invalid=2\n"}
+      ],
+      "seed_source_provenance": {"parley_replicate":5,"python_replicate":5,"rust_replicate":3,"source_task":"shipment_state"},
+      "seed_sources": {
+        "parley": "to main:\n    let shipment_count_input be ask for a number \"\"\n    let shipment_count be value of shipment_count_input\n    let states be a map from text to text\n    repeat shipment_count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        set item (item 1 of parts) of states to item 2 of parts\n    let event_count_input be ask for a number \"\"\n    let event_count be value of event_count_input\n    let invalid be 0\n    repeat event_count times:\n        let line be ask \"\"\n        let parts be line split by \"|\"\n        let shipment_id be item 1 of parts\n        let action be item 2 of parts\n        if states contains shipment_id:\n            let state be item shipment_id of states\n            if state is \"created\" and action is \"pack\":\n                set item shipment_id of states to \"packed\"\n            otherwise if state is \"packed\" and action is \"ship\":\n                set item shipment_id of states to \"shipped\"\n            otherwise if state is \"shipped\" and action is \"deliver\":\n                set item shipment_id of states to \"delivered\"\n            otherwise:\n                set invalid to invalid + 1\n        otherwise:\n            set invalid to invalid + 1\n    let results be an empty list of text\n    let shipment_ids be keys of states\n    for each shipment_id in shipment_ids:\n        add shipment_id + \":\" + item shipment_id of states to results\n    say (results joined with \",\") + \"|invalid=\" + (invalid as text)\n",
+        "python": "count = int(input())\nshipments = {}\nfor _ in range(count):\n    shipment_id, state = input().split(\"|\", 1)\n    shipments[shipment_id] = state\n\ntransitions = {\n    (\"created\", \"pack\"): \"packed\",\n    (\"packed\", \"ship\"): \"shipped\",\n    (\"shipped\", \"deliver\"): \"delivered\",\n}\ninvalid = 0\nevent_count = int(input())\nfor _ in range(event_count):\n    shipment_id, action = input().split(\"|\", 1)\n    if shipment_id not in shipments:\n        invalid += 1\n        continue\n    next_state = transitions.get((shipments[shipment_id], action))\n    if next_state is None:\n        invalid += 1\n    else:\n        shipments[shipment_id] = next_state\n\nsummary = \",\".join(\n    f\"{shipment_id}:{shipments[shipment_id]}\" for shipment_id in sorted(shipments)\n)\nprint(f\"{summary}|invalid={invalid}\")\n",
+        "rust": "use std::collections::BTreeMap;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let n: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    let mut shipments = BTreeMap::new();\n\n    for _ in 0..n {\n        let (id, state) = lines.next().unwrap().split_once('|').unwrap();\n        shipments.insert(id.to_string(), state.to_string());\n    }\n\n    let m: usize = lines.next().unwrap_or(\"0\").parse().unwrap();\n    let mut invalid = 0;\n    for _ in 0..m {\n        let (id, action) = lines.next().unwrap().split_once('|').unwrap();\n        if let Some(state) = shipments.get_mut(id) {\n            let next = match (state.as_str(), action) {\n                (\"created\", \"pack\") => Some(\"packed\"),\n                (\"packed\", \"ship\") => Some(\"shipped\"),\n                (\"shipped\", \"deliver\") => Some(\"delivered\"),\n                _ => None,\n            };\n            if let Some(next_state) = next {\n                *state = next_state.to_string();\n            } else {\n                invalid += 1;\n            }\n        } else {\n            invalid += 1;\n        }\n    }\n\n    let states = shipments\n        .iter()\n        .map(|(id, state)| format!(\"{id}:{state}\"))\n        .collect::<Vec<_>>()\n        .join(\",\");\n    println!(\"{states}|invalid={invalid}\");\n}\n"
+      }
+    },
+    {
+      "id": "notes_index_extension",
+      "title": "Add an index file to saved notes",
+      "category": "filesystem maintenance",
+      "statement": "Maintain the existing file-backed notes program. Continue to overwrite file_backed_notes.txt with the title and every note line, each followed by a newline, and read that file back before summarizing. Also overwrite file_backed_notes_index.txt with one line for each non-empty saved note in original order, formatted 1-based-index|note followed by a newline. The index file must exist and be empty when every note is empty or N is zero. Print the existing title|N|nonempty|characters summary. The checker verifies stdout and both exact UTF-8 files.",
+      "public_cases": [
+        {"stdin":"Project\n3\nfirst\n\nthird note\n","stdout":"Project|3|2|15\n","files":{"file_backed_notes.txt":"Project\nfirst\n\nthird note\n","file_backed_notes_index.txt":"1|first\n3|third note\n"}}
+      ],
+      "hidden_cases": [
+        {"stdin":"Empty\n0\n","stdout":"Empty|0|0|0\n","files":{"file_backed_notes.txt":"Empty\n","file_backed_notes_index.txt":""}},
+        {"stdin":"Solo\n1\nhello world\n","stdout":"Solo|1|1|11\n","files":{"file_backed_notes.txt":"Solo\nhello world\n","file_backed_notes_index.txt":"1|hello world\n"}},
+        {"stdin":"Spaces\n3\na b\ncd\n\n","stdout":"Spaces|3|2|5\n","files":{"file_backed_notes.txt":"Spaces\na b\ncd\n\n","file_backed_notes_index.txt":"1|a b\n2|cd\n"}},
+        {"stdin":"Log\n4\none\ntwo two\nthree\nfour!\n","stdout":"Log|4|4|20\n","files":{"file_backed_notes.txt":"Log\none\ntwo two\nthree\nfour!\n","file_backed_notes_index.txt":"1|one\n2|two two\n3|three\n4|four!\n"}}
+      ],
+      "seed_source_provenance": {"parley_replicate":4,"python_replicate":5,"rust_replicate":6,"source_task":"file_backed_notes"},
+      "seed_sources": {
+        "parley": "to main:\n    let title be ask \"\"\n    let notes be an empty list of text\n    let nonempty be 0\n    let characters be 0\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let note be ask \"\"\n        add note to notes\n        if length of note is more than 0:\n            set nonempty to nonempty + 1\n        set characters to characters + (length of note)\n    write title + \"\\n\" to file \"file_backed_notes.txt\"\n    let note_index be 1\n    repeat count times:\n        append (item note_index of notes) + \"\\n\" to file \"file_backed_notes.txt\"\n        set note_index to note_index + 1\n    let saved be read file \"file_backed_notes.txt\"\n    say title + \"|\" + count + \"|\" + nonempty + \"|\" + characters\n",
+        "python": "title = input()\ncount = int(input())\nnotes = [input() for _ in range(count)]\n\nwith open(\"file_backed_notes.txt\", \"w\", encoding=\"utf-8\", newline=\"\") as notes_file:\n    notes_file.write(title + \"\\n\")\n    for note in notes:\n        notes_file.write(note + \"\\n\")\n\nwith open(\"file_backed_notes.txt\", \"r\", encoding=\"utf-8\", newline=\"\") as notes_file:\n    stored_lines = notes_file.read().splitlines()\n\nstored_title = stored_lines[0]\nstored_notes = stored_lines[1:]\nnonempty = sum(bool(note) for note in stored_notes)\ncharacters = sum(len(note) for note in stored_notes)\nprint(f\"{stored_title}|{count}|{nonempty}|{characters}\")\n",
+        "rust": "use std::fs;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let title = lines.next().unwrap_or(\"\");\n    let n: usize = lines.next().unwrap_or(\"0\").trim().parse().unwrap();\n    let notes: Vec<&str> = (0..n).map(|_| lines.next().unwrap_or(\"\")).collect();\n    let mut contents = String::new();\n    contents.push_str(title);\n    contents.push('\\n');\n    for note in notes {\n        contents.push_str(note);\n        contents.push('\\n');\n    }\n    fs::write(\"file_backed_notes.txt\", contents).unwrap();\n    let saved = fs::read_to_string(\"file_backed_notes.txt\").unwrap();\n    let mut saved_lines = saved.lines();\n    let saved_title = saved_lines.next().unwrap_or(\"\");\n    let saved_notes: Vec<&str> = saved_lines.take(n).collect();\n    let nonempty = saved_notes.iter().filter(|note| !note.is_empty()).count();\n    let characters: usize = saved_notes.iter().map(|note| note.len()).sum();\n    println!(\"{}|{}|{}|{}\", saved_title, n, nonempty, characters);\n}\n"
+      }
+    }
+  ]
+}

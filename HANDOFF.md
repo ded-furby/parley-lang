@@ -677,6 +677,19 @@ Update it whenever you finish or start a work item.
   `fbe356681089cd59c3616a845adf29a8fbfceee10476fac7312780cc07275342`
   and report 023. Move toward general discoverability or real-repository work,
   not same-corpus aliases.
+- **Seeded-maintenance design (iteration 024):** the next test changes work
+  mode rather than language semantics. Four language-specific, hidden-correct
+  application solutions preserved from raw iteration 023 are reproduced in
+  each prompt and written to the fresh workspace; agents must edit them in
+  place to add new aggregation, wildcard-policy, cancellation, and exact-file
+  behavior. Six complete-bundle replicates per language produce 18 sessions
+  and 72 hidden-judged assignments. All 12 seeds match raw 023 byte-for-byte,
+  compile under the current toolchain, and fail the new public requirements;
+  an independent oracle matches all 20 new public/hidden contracts. The
+  backward-compatible harness records seed size and rough-token edit size.
+  Benchmark tests pass 41/41 and the full suite passes 318/318. Preregister
+  protocol 024 before running. This related-source corpus is strictly a
+  maintenance-efficiency test and may not justify compiler or syntax changes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

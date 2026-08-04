@@ -1668,3 +1668,46 @@ existing semantics on new tasks or a broader real-repository benchmark, not
 add aliases from these transcripts. Any future compiler change still requires
 new unrelated-task recurrence, general usefulness, semantic consistency, and
 maintainability.
+
+## Design and preflight for 024 — Seeded maintenance corpus
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged from iteration 023
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Work mode: modify four existing programs in place rather than generate them
+  from empty files
+- Planned matrix: four tasks × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260811`
+
+Iteration 023 tied final correctness while Parley source was 43.58% shorter
+than Rust and only 3.09% longer than Python, yet Parley used more than twice
+their reported agent tokens. Iteration 024 therefore changes the unit of work,
+not the language: an agent receives an already correct application program and
+must implement a new requirement. The four maintenance families add an invoice
+discount/net total, wildcard policy matching, shipment cancellation, and a
+second exact notes index file.
+
+Every seed is the shortest hidden-correct iteration-023 final source for its
+language/task by rough-token count. Provenance records the exact source task and
+replicate. A preflight test confirms all 12 seed strings are byte-identical to
+the preserved raw 023 result and were hidden-correct there. Under v0.3.155 all
+12 compile, while all four seeds per language fail their new public case as
+intended. A separate Python oracle recomputes all 20 new public/hidden stdout
+and file contracts exactly.
+
+The general benchmark harness now accepts optional `seed_sources`, writes them
+outside the protected checker-integrity set, reproduces them in the prompt,
+requires editing as the first action, and records seed size plus a deterministic
+rough-token edit count. Cold-start manifests and prompts remain backward
+compatible. The benchmark module passed 41/41 tests, and the corrected full
+suite command `PYTHONPATH=/Users/arjun/Desktop/parley-lang python3 -m pytest -q`
+passed 318/318 in 102.74 seconds.
+
+This related-source corpus is a performance-methodology test, not independent
+language-design evidence. No syntax, compiler, grammar, AST, checker, runtime,
+prompt skill, or diagnostic is changed. No 024 transcript may justify a
+language change; future proposals still need recurrence across unrelated new
+tasks and independent sessions, then general-usefulness, semantic-consistency,
+and maintainability review.

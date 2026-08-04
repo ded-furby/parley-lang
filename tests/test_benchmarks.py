@@ -21,6 +21,7 @@ from benchmarks.bundle_runner import (
     build_bundle_plan,
     load_protocol,
     render_bundle_prompt,
+    rough_token_edit_count,
     summarize_bundle_results,
     write_bundle_workspace,
 )
@@ -581,6 +582,162 @@ def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     assert tasks[1]["hidden_cases"][3]["stdin"] not in prompt
     python = render_bundle_prompt(tasks, "python", "PARLEY-SKILL-SENTINEL")
     assert "PARLEY-SKILL-SENTINEL" not in python
+
+
+def test_bundle_prompt_embeds_seed_and_requires_edit_first():
+    task = {
+        "id": "maintain_echo",
+        "title": "Maintain echo",
+        "statement": "Print the input with a suffix.",
+        "public_cases": [{"stdin": "a\n", "stdout": "a!\n"}],
+        "hidden_cases": [{"stdin": "b\n", "stdout": "b!\n"}],
+        "seed_sources": {
+            "parley": 'to main:\n    say ask ""\n',
+            "python": "print(input())\n",
+            "rust": "fn main() {}\n",
+        },
+    }
+
+    prompt = render_bundle_prompt([task], "python", "unused")
+
+    assert "Update 1 independent Python programs in place" in prompt
+    assert "first tool action must edit" in prompt
+    assert "print(input())" in prompt
+    assert task["hidden_cases"][0]["stdin"] not in prompt
+
+
+def test_seeded_bundle_workspace_and_edit_metric(tmp_path):
+    tasks = [{
+        "id": "maintain_echo",
+        "public_cases": [{"stdin": "alpha\n", "stdout": "alpha\n"}],
+        "seed_sources": {
+            "parley": 'to main:\n    say ask ""\n',
+            "python": "print(input())\n",
+            "rust": "fn main() {}\n",
+        },
+    }]
+
+    integrity = write_bundle_workspace(tmp_path, tasks, "python", "unused")
+
+    assert (tmp_path / "maintain_echo.py").read_text() == "print(input())\n"
+    assert "maintain_echo.py" not in integrity
+    assert rough_token_edit_count("print(input())\n", "print(input() + '!')\n") > 0
+
+
+def _maintenance_024_oracle(task_id: str, stdin: str) -> tuple[str, dict[str, str]]:
+    lines = iter(stdin.splitlines())
+    if task_id == "invoice_net_extension":
+        customer = next(lines)
+        totals = {}
+        subtotal = 0
+        for _ in range(int(next(lines))):
+            category, quantity, price = next(lines).split("|")
+            amount = int(quantity) * int(price)
+            subtotal += amount
+            totals[category] = totals.get(category, 0) + amount
+        categories = ",".join(f"{key}:{totals[key]}" for key in sorted(totals))
+        discount = subtotal // 10 if subtotal >= 2000 else 0
+        return (
+            f"{customer}|{subtotal}|{categories}|discount={discount}|net={subtotal - discount}\n",
+            {},
+        )
+    if task_id == "wildcard_policy_extension":
+        policies = [tuple(next(lines).split("|")) for _ in range(int(next(lines)))]
+        decisions = []
+        allowed = 0
+        denied = 0
+        for _ in range(int(next(lines))):
+            user, *request = next(lines).split("|")
+            matched = any(
+                all(policy == "*" or policy == value for policy, value in zip(rule, request))
+                for rule in policies
+            )
+            decisions.append(f"{user}:{'allow' if matched else 'deny'}")
+            allowed += int(matched)
+            denied += int(not matched)
+        decisions.append(f"allowed={allowed},denied={denied}")
+        return "\n".join(decisions) + "\n", {}
+    if task_id == "shipment_cancellation_extension":
+        states = {}
+        for _ in range(int(next(lines))):
+            shipment_id, state = next(lines).split("|")
+            states[shipment_id] = state
+        transitions = {
+            ("created", "pack"): "packed",
+            ("packed", "ship"): "shipped",
+            ("shipped", "deliver"): "delivered",
+            ("created", "cancel"): "cancelled",
+            ("packed", "cancel"): "cancelled",
+        }
+        invalid = 0
+        for _ in range(int(next(lines))):
+            shipment_id, action = next(lines).split("|")
+            next_state = transitions.get((states.get(shipment_id), action))
+            if next_state is None:
+                invalid += 1
+            else:
+                states[shipment_id] = next_state
+        summary = ",".join(f"{key}:{states[key]}" for key in sorted(states))
+        return f"{summary}|invalid={invalid}\n", {}
+    if task_id == "notes_index_extension":
+        title = next(lines)
+        notes = [next(lines) for _ in range(int(next(lines)))]
+        note_file = title + "\n" + "".join(note + "\n" for note in notes)
+        index_file = "".join(
+            f"{index}|{note}\n"
+            for index, note in enumerate(notes, 1)
+            if note
+        )
+        stdout = f"{title}|{len(notes)}|{sum(bool(note) for note in notes)}|{sum(map(len, notes))}\n"
+        return stdout, {
+            "file_backed_notes.txt": note_file,
+            "file_backed_notes_index.txt": index_file,
+        }
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_maintenance_024_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_maintenance_024.json")
+
+    for task in tasks:
+        for case in task["public_cases"] + task["hidden_cases"]:
+            stdout, files = _maintenance_024_oracle(task["id"], case["stdin"])
+            assert case["stdout"] == stdout
+            assert case.get("files", {}) == files
+
+
+def test_maintenance_024_seeds_are_preserved_023_hidden_correct_sources(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_maintenance_024.json")
+    prior = json.loads(
+        (BENCHMARKS / "results" / "agent_application_023_protocol_v1_v0.3.155.json")
+        .read_text()
+    )
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for task in tasks:
+        provenance = task["seed_source_provenance"]
+        for language in ("parley", "python", "rust"):
+            replicate = provenance[f"{language}_replicate"]
+            row = next(
+                row for row in prior["results"]
+                if row["language"] == language and row["replicate"] == replicate
+            )
+            prior_task = row["task_results"][provenance["source_task"]]
+            assert prior_task["hidden_success"] is True
+            assert task["seed_sources"][language] == prior_task["source_text"]
+
+    for language in ("parley", "python", "rust"):
+        workdir = tmp_path / language
+        workdir.mkdir()
+        write_bundle_workspace(workdir, tasks, language, parley)
+        proc = subprocess.run(
+            [str(workdir / "check")], cwd=workdir, capture_output=True, text=True, timeout=60
+        )
+        assert proc.returncode == 1
+        record = json.loads((workdir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
 
 
 def test_bundle_workspace_checker_compiles_all_python_sources(tmp_path):
