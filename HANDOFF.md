@@ -687,8 +687,11 @@ Update it whenever you finish or start a work item.
   compile under the current toolchain, and fail the new public requirements;
   an independent oracle matches all 20 new public/hidden contracts. The
   backward-compatible harness records seed size and rough-token edit size.
-  Benchmark tests pass 41/41 and the full suite passes 318/318. Preregister
-  protocol 024 before running. This related-source corpus is strictly a
+  Benchmark tests pass 42/42 and the pre-protocol full suite passes 318/318. Preregister
+  protocol 024 before running. Protocol 024 is now frozen at SHA
+  `d69506b3b7c3c50707534ddecc6ff1fcba8cf3a9651b53c93356dd652a929b93`
+  against harness/corpus commit `cb4e3d4`; run all 18 sessions once without
+  selective reruns. This related-source corpus is strictly a
   maintenance-efficiency test and may not justify compiler or syntax changes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.

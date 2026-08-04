@@ -1711,3 +1711,35 @@ prompt skill, or diagnostic is changed. No 024 transcript may justify a
 language change; future proposals still need recurrence across unrelated new
 tasks and independent sessions, then general-usefulness, semantic-consistency,
 and maintainability review.
+
+## Pre-registration for 024 — Seeded application maintenance
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Frozen harness/corpus commit:
+  `cb4e3d4b5f3dd1a7ffc788622d93dcb5e1fffee8`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Task manifest: `benchmarks/agent_tasks_maintenance_024.json`, SHA-256
+  `2d6b248f11781ca6d2039e5fdf5023ce43a679fd92c733fed0e6ce15cedddbc0`
+- Protocol: `benchmarks/bundle_protocol_024.json`, SHA-256
+  `d69506b3b7c3c50707534ddecc6ff1fcba8cf3a9651b53c93356dd652a929b93`
+- Matrix: four tasks × three languages × six complete-bundle replicates =
+  18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260811`
+
+The same strict four-condition gate is frozen at bundle size four: hidden
+correctness, reported tokens per assigned task, elapsed time per assigned task,
+and first-check task success. Each agent sees the exact language-specific seed
+in both its measured prompt and workspace. The runner records prompt effort,
+seed/final source size, and deterministic inserted/deleted rough-token edit
+size. Expected output files are removed independently before each public and
+hidden case and compared byte-for-byte as UTF-8 text.
+
+Preserve every session without selective reruns. A pass requires a broader
+real-repository confirmation before any general parity claim. A failure cannot
+trigger a language or instruction change from this related-source corpus; the
+next evidence source must be selected for external validity, not transcript
+syntax.

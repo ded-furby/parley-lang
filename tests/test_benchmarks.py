@@ -570,6 +570,35 @@ def test_bundle_protocol_023_freezes_new_application_matrix():
     assert "no same-corpus syntax change" in protocol["stop_rule"]
 
 
+def test_bundle_protocol_024_freezes_seeded_maintenance_matrix():
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_024.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(tasks, config["bundle_sizes"], config["replicates"], config["seed"])
+
+    assert protocol["experiment_id"] == "024"
+    assert config["parley_version"] == "parley 0.3.155"
+    assert config["harness_commit"] == "cb4e3d4b5f3dd1a7ffc788622d93dcb5e1fffee8"
+    assert config["task_manifest_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "agent_tasks_maintenance_024.json").read_bytes()
+    ).hexdigest()
+    assert config["parley_skill_sha256"] == hashlib.sha256(
+        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+    ).hexdigest()
+    assert config["bundle_sizes"] == [4]
+    assert config["replicates"] == 6
+    assert len(plan) == 6
+    assert sum(bundle["bundle_size"] for bundle in plan) == 24
+    assert protocol["matrix"]["fresh_sessions"] == 18
+    assert protocol["matrix"]["judged_task_solutions"] == 72
+    assert any(
+        "cannot count as independent language-feature recurrence" in boundary
+        for boundary in protocol["interpretation_boundary"]
+    )
+    assert "one allowed instruction-compression experiment is closed" in protocol["instruction_rule"]
+    assert "without selective reruns" in protocol["stop_rule"]
+
+
 def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
     prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")

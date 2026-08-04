@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "experiment_id": "024",
+  "title": "Seeded application maintenance corpus",
+  "description": "Cross-language comparison of agents modifying four existing hidden-correct programs to satisfy new application requirements.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_maintenance_024.json",
+    "task_manifest_sha256": "2d6b248f11781ca6d2039e5fdf5023ce43a679fd92c733fed0e6ce15cedddbc0",
+    "parley_version": "parley 0.3.155",
+    "compiler_commit": "8f4a66885f3e0837f1595d72cf38ada5b8112f97",
+    "harness_commit": "cb4e3d4b5f3dd1a7ffc788622d93dcb5e1fffee8",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [4],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 20260811,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_task_solutions": 72,
+    "sessions_per_language": 6,
+    "task_solutions_per_language": 24,
+    "public_cases_per_language": 24,
+    "hidden_cases_per_language": 96,
+    "exact_hidden_file_cases_per_language": 24,
+    "derivation": "6 complete four-task maintenance bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 4,
+    "correctness": "Parley hidden-task success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned task must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned task must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check task success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict maintenance-corpus parity."
+  },
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "The four requirement extensions and their public/hidden cases are new, but the seed programs are preserved hidden-correct outputs from iteration 023.",
+    "This related-source design measures maintenance work and cannot count as independent language-feature recurrence.",
+    "Every agent receives the exact starting source in its measured prompt and workspace; final and seed source sizes plus deterministic rough-token edit counts are recorded.",
+    "Cross-iteration movement is descriptive only because the unit of work changed from cold-start generation to seeded maintenance."
+  ],
+  "secondary_analysis": [
+    "Report every session, task outcome, repair, token count, elapsed time, prompt size, seed/final source size, edit size, integrity result, and command-protocol result.",
+    "Classify every first-check and hidden failure by maintenance family and independent session.",
+    "Compare Parley seed, final, and edit size with Python and Rust to test whether compact source materially helps maintenance.",
+    "Report repair-free sensitivity if at least two Parley sessions pass all four tasks on the first check."
+  ],
+  "feature_boundary": "Parley remains frozen at v0.3.155 with the exact 1,519-character skill. Only the language-neutral benchmark harness gained optional seed-source presentation and edit-size measurement; cold-start behavior remains backward compatible.",
+  "change_rule": "No syntax, compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or benchmark instruction may change from iteration 024 output. This related-source corpus cannot satisfy independent recurrence. Future proposals require unrelated new tasks and independent sessions, then general usefulness, semantic consistency, and maintainability review.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result without selective reruns. If strict parity passes, preregister a broader real-repository confirmation before claiming general parity. If it fails, make no same-corpus language or instruction change; choose the next evidence source by external validity rather than transcript syntax."
+}
