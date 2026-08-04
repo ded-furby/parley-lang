@@ -30,6 +30,7 @@ transformation, and chart-map notes.
 | 022 | Parley 0.3.155 | Independent-model correctness tied, but Parley used 3.20× Python's token effort and passed only 39/72 first checks | [HTML](022-independent-model-parity-failed.html) |
 | 023 | Parley 0.3.155 | Application correctness and exact file output tied; repairs left agent effort above 2× both baselines | [HTML](023-application-corpus-parity-failed.html) |
 | 024 | Parley 0.3.155 | Seeded maintenance correctness tied; one repair in every Parley session left effort at 1.84× Python | [HTML](024-seeded-maintenance-parity-failed.html) |
+| 025 | Parley 0.3.155 | Multi-file maintenance reached perfect first-check reliability and came within 1.28% of Rust's token effort | [HTML](025-repository-maintenance-near-parity.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

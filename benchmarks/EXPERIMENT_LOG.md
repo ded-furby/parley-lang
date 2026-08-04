@@ -1902,3 +1902,76 @@ larger confirmation. If it fails, no same-corpus syntax or instruction change
 is allowed. Only recurrence across unrelated new repositories and independent
 sessions may enter separate general-usefulness, semantic-consistency, and
 maintainability review.
+
+## 025 — Perfect repository reliability; strict efficiency parity narrowly fails
+
+- Completed: 2026-08-05
+- Compiler: Parley 0.3.155
+- Model: `gpt-5.6-sol`, medium reasoning
+- Matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_repositories_025_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `bfbbbe59624696ed722b7928a8bd5e3fd4334229d529aa691f2061e7e61a923d`
+- Report: `benchmarks/reports/025-repository-maintenance-near-parity.html`
+- Report SHA-256:
+  `591e495fd6d33af2b781f527613aca90352f029a1f8011428337ddabdebc327c`
+- Report inputs:
+  `benchmarks/reports/025-repository-maintenance-near-parity.artifact.json`,
+  `.sql`, and `.chart-map.md`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, source-order,
+  checker-integrity, and command-protocol checks passed; no timeout, nonzero
+  agent exit, or runner error
+
+| Language | Hidden repos | First-check repos | Repairs | Median tokens/repo | Median seconds/repo | Seed tokens/repo | Final source tokens/repo | Edit tokens/repo | Changed files/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 24/24 | 0 | 15,812.00 | 13.5096 | 105.50 | 186.25 | 92.25 | 2.00 |
+| Python | 24/24 | 24/24 | 0 | 14,932.25 | 10.2835 | 89.00 | 155.25 | 74.75 | 2.00 |
+| Rust | 24/24 | 24/24 | 0 | 15,611.63 | 13.1285 | 211.25 | 307.75 | 124.00 | 2.00 |
+
+The strict gate failed 2/4. Correctness and first-check reliability passed;
+tokens and elapsed time failed. Parley is 5.89% above Python and only **1.28%
+above Rust** in median reported tokens per repository. It is 31.37% above
+Python and **2.90% above Rust** in median elapsed time. All six Parley sessions
+are repair-free, so the preregistered clean-session sensitivity is the entire
+primary sample rather than a selected subset.
+
+The source protocol worked exactly. All 18 sessions ran `./sources` once as
+their first shell command and then one successful `./check`. The source
+printer exposed only the eight editable seed files. Every one of the 72
+repository assignments changed both its entrypoint and helper; checker and
+source-printer hashes held. The filtered-report repository passed on the first
+check in all 18 sessions, and all 72 hidden file cases matched exact UTF-8
+output.
+
+There are no first-check failures, hidden failures, diagnostics, or failure
+signatures to classify. **No compiler, syntax, diagnostic, prompt, or skill
+change follows from iteration 025.** The reliability improvement comes from
+consistent existing patterns across a helper boundary, not a new alias.
+
+Four Parley sessions cluster tightly between 15,762.25 and 15,823.25 reported
+tokens per repository, near all six Rust runs. Replicates 2 and 5 use 20,656.00
+and 19,761.00 without extra commands or repairs, lifting Parley's weighted mean
+to 17,261.13. The median near-parity result is therefore supported by most
+sessions, while clean-session context variance remains material. Parley's
+median input tokens are 1.48% above Rust and its output tokens 6.14% below;
+combined total still misses by 1.28%.
+
+Parley final source is 39.48% shorter than Rust and its median edit is 25.60%
+smaller. Relative to Python, Parley final source is 19.97% larger and its edit
+is 23.41% larger. The unchanged skill makes Parley's agent prompt about 416
+characters per repository larger than Rust's, consistent with—but not causal
+proof of—the remaining fixed-context gap.
+
+The canonical report builder passed validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 33 rendered blocks, five charts, eight metrics, and five
+tables; artifact metrics match the raw summary exactly.
+
+Preserve 025 unchanged as the strongest broad result so far. The next
+defensible experiment is a size-eight repository workload with four additional
+unrelated repositories under the same source protocol, skill, model, and gate.
+That tests whether general workload amortization closes the remaining 1.28%
+Rust token gap without tuning the current tasks. If it passes, run the planned
+larger confirmation before claiming general parity.

@@ -720,6 +720,19 @@ Update it whenever you finish or start a work item.
   SHA `26f51b2c2753e1b9661296d77e42d80a5e9c099fc40df0e1f63fd6b4ecf57364`;
   run all 18 sessions once with Parley v0.3.155 and the unchanged skill. Do not
   learn syntax from 024 or selectively rerun 025 cells.
+- **Repository-maintenance result (iteration 025):** all 72 assignments passed
+  hidden tests and the first public check with zero repairs. All 18 sessions
+  ran one protected `./sources` command first, then one successful `./check`;
+  every repository changed both files and all 72 hidden file cases matched.
+  Strict parity improved to 2/4: Parley used 15,812.00 median tokens/repo and
+  13.5096 seconds versus Python's 14,932.25 and 10.2835 and Rust's 15,611.63
+  and 13.1285. The remaining gaps to Rust are only 1.28% tokens and 2.90%
+  elapsed. There are no failure signatures and no language/skill change.
+  Preserve raw SHA
+  `bfbbbe59624696ed722b7928a8bd5e3fd4334229d529aa691f2061e7e61a923d`
+  and report 025. Next add four unrelated repositories and preregister a
+  size-eight workload under the exact same source protocol to test fixed-context
+  amortization; require a larger confirmation if it passes.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
