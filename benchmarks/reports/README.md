@@ -21,8 +21,12 @@ transformation, and chart-map notes.
 | 013 | Parley 0.3.149 | Parley reached 6/6 first-pass; fixed context left a 4.55% token gap | [HTML](013-reliability-restored-context-gap.html) |
 | 014 | Parley 0.3.150 | One-shot instruction compression regressed every task family and was rejected | [HTML](014-overcompression-rejected.html) |
 | 015 | Parley 0.3.151 | 90-session confirmation preserved correctness but did not meet strict parity | [HTML](015-confirmation-strict-parity-not-met.html) |
+| 016 | Parley 0.3.151 | Broad out-of-sample correctness held; a 3.88% token gap and rotation repairs remained | [HTML](016-broad-corpus-diagnostic.html) |
+| 017 | Parley 0.3.151 | Cold-start cost amortized, but repaired size-eight bundles missed strict parity | [HTML](017-workload-scale-parity-failed.html) |
+| 018 | Parley 0.3.152 | Contextual `position` removed its cross-task failures; rotation repairs still blocked parity | [HTML](018-contextual-identifier-replication-failed.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under
-`benchmarks/results/` and is intentionally ignored because it contains large
-agent transcripts; each log entry records its SHA-256.
+`benchmarks/results/`; completed numbered studies force-add their exact raw
+JSON snapshots so later reports can be reproduced, and each log entry records
+the snapshot SHA-256.

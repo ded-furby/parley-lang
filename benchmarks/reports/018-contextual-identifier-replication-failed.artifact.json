@@ -1,0 +1,325 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Parley Workload Replication — Iteration 018",
+    "description": "Exact 90-session replication after the contextual position identifier change in Parley 0.3.152.",
+    "generatedAt": "2026-08-04T14:50:00Z",
+    "cards": [
+      {"id": "sessions_card", "description": "Unique fresh Codex sessions in the exact iteration-017 matrix replication.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Fresh sessions", "field": "sessions", "format": "number"}]},
+      {"id": "solutions_card", "description": "Programs independently judged on withheld cases.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Judged solutions", "field": "assigned_tasks", "format": "number"}]},
+      {"id": "correctness_card", "description": "Final programs passing every hidden case.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Hidden success", "field": "hidden_success_rate", "format": "percent"}]},
+      {"id": "gate_card", "description": "Passed conditions out of correctness, tokens, elapsed time, and first-check reliability.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Gate conditions passed", "field": "gate_conditions_passed", "format": "number", "unit": "of 4"}]},
+      {"id": "multiple_card", "description": "Parley size-eight tokens/task divided by Python's median.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Size-8 token multiple", "field": "size8_token_multiple", "format": "number", "unit": "× Python"}]},
+      {"id": "change_card", "description": "Change in Parley size-eight tokens/task from iteration 017.", "dataset": "headline", "sourceId": "replication_results", "metrics": [{"label": "Size-8 change", "field": "size8_change_percent", "format": "number", "unit": "%"}]}
+    ],
+    "charts": [
+      {
+        "id": "token_scale",
+        "title": "Iteration 018 median tokens per assigned task",
+        "subtitle": "Four discrete workload sizes; full session tokens divided by assigned programs.",
+        "intent": "comparison",
+        "question": "Does Parley reach token parity after the contextual identifier change?",
+        "rationale": "Grouped bars compare the same three languages under the four frozen workload conditions.",
+        "comparisonContext": {"unit": "reported tokens per assigned task", "grain": "median session ratio per size-language cell", "denominator": "tasks assigned to the session", "semanticFamily": "agent effort"},
+        "type": "bar",
+        "dataset": "scale_summary",
+        "sourceId": "replication_results",
+        "encodings": {
+          "x": {"field": "bundle_label", "type": "ordinal", "label": "Tasks per session"},
+          "y": {"field": "median_tokens_task", "type": "quantitative", "label": "Median tokens per task", "format": "compact"},
+          "color": {"field": "language", "type": "nominal", "label": "Language"},
+          "tooltip": [
+            {"field": "median_tokens_session", "type": "quantitative", "label": "Median session tokens", "format": "compact"},
+            {"field": "repair_turns", "type": "quantitative", "label": "Repair turns", "format": "number"}
+          ]
+        },
+        "xAxisTitle": "Tasks per fresh session",
+        "yAxisTitle": "Median reported tokens per task",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "iteration_delta",
+        "title": "Parley before and after contextual position",
+        "subtitle": "Exact task partitions and workload sizes; separate fresh sessions in iterations 017 and 018.",
+        "intent": "comparison",
+        "question": "Where did Parley efficiency change after v0.3.152?",
+        "rationale": "Grouped bars distinguish the large repaired size-eight improvement from small stochastic movement at clean scales.",
+        "comparisonContext": {"unit": "reported tokens per assigned task", "grain": "Parley median per iteration and workload size", "denominator": "tasks assigned to the session", "semanticFamily": "replication delta"},
+        "type": "bar",
+        "dataset": "parley_iteration_compare",
+        "sourceId": "replication_results",
+        "encodings": {
+          "x": {"field": "bundle_label", "type": "ordinal", "label": "Tasks per session"},
+          "y": {"field": "median_tokens_task", "type": "quantitative", "label": "Parley median tokens per task", "format": "compact"},
+          "color": {"field": "iteration", "type": "nominal", "label": "Iteration"},
+          "tooltip": [
+            {"field": "first_task_rate", "type": "quantitative", "label": "First-check task success", "format": "percent"},
+            {"field": "repair_turns", "type": "quantitative", "label": "Repair turns", "format": "number"}
+          ]
+        },
+        "xAxisTitle": "Tasks per fresh session",
+        "yAxisTitle": "Parley median tokens per task",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "first_check_scale",
+        "title": "Iteration 018 first-check task success",
+        "subtitle": "Programs already correct when each bundle first invoked ./check.",
+        "intent": "comparison",
+        "question": "Did Parley match baseline first-attempt reliability?",
+        "rationale": "Grouped rate bars preserve the common sixteen-task denominator at every size-language cell.",
+        "comparisonContext": {"unit": "share of assigned tasks", "grain": "size-language cell", "denominator": "16 task assignments", "semanticFamily": "first-check reliability"},
+        "type": "bar",
+        "dataset": "scale_summary",
+        "sourceId": "replication_results",
+        "encodings": {
+          "x": {"field": "bundle_label", "type": "ordinal", "label": "Tasks per session"},
+          "y": {"field": "first_public_task_success_rate", "type": "quantitative", "label": "First-check success", "format": "percent"},
+          "color": {"field": "language", "type": "nominal", "label": "Language"}
+        },
+        "xAxisTitle": "Tasks per fresh session",
+        "yAxisTitle": "First-check task success rate",
+        "valueFormat": "percent",
+        "layout": "full"
+      },
+      {
+        "id": "elapsed_scale",
+        "title": "Iteration 018 elapsed seconds per assigned task",
+        "subtitle": "End-to-end fresh-session wall time divided by assigned programs.",
+        "intent": "comparison",
+        "question": "Did workload time reach the lower baseline?",
+        "rationale": "Grouped bars show the exact discrete comparison in the strict gate.",
+        "comparisonContext": {"unit": "seconds per assigned task", "grain": "median session ratio per size-language cell", "denominator": "tasks assigned to the session", "semanticFamily": "elapsed time"},
+        "type": "bar",
+        "dataset": "scale_summary",
+        "sourceId": "replication_results",
+        "encodings": {
+          "x": {"field": "bundle_label", "type": "ordinal", "label": "Tasks per session"},
+          "y": {"field": "median_seconds_task", "type": "quantitative", "label": "Median seconds per task", "format": "number", "unit": "s"},
+          "color": {"field": "language", "type": "nominal", "label": "Language"}
+        },
+        "xAxisTitle": "Tasks per fresh session",
+        "yAxisTitle": "Median elapsed seconds per task",
+        "valueFormat": "number",
+        "unit": "s",
+        "layout": "full"
+      },
+      {
+        "id": "task_failures",
+        "title": "Remaining Parley first-check failures by task",
+        "subtitle": "Eight appearances per task across the four workload sizes.",
+        "intent": "comparison",
+        "question": "Are remaining failures distributed across unrelated tasks?",
+        "rationale": "A ranked horizontal bar makes failure concentration visible without implying a trend.",
+        "comparisonContext": {"unit": "failed first checks", "grain": "task over eight Parley appearances", "denominator": "eight appearances", "semanticFamily": "failure concentration"},
+        "type": "horizontalBar",
+        "dataset": "parley_task_reliability",
+        "sourceId": "replication_results",
+        "encodings": {
+          "x": {"field": "task", "type": "nominal", "label": "Task"},
+          "y": {"field": "first_failures", "type": "quantitative", "label": "First-check failures", "format": "number"},
+          "tooltip": [
+            {"field": "first_successes", "type": "quantitative", "label": "First successes", "format": "number"},
+            {"field": "hidden_successes", "type": "quantitative", "label": "Hidden successes", "format": "number"}
+          ]
+        },
+        "xAxisTitle": "Task",
+        "yAxisTitle": "First-check failures",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "scale_detail",
+        "title": "Complete iteration 018 scale detail",
+        "subtitle": "Every size-language cell contains sixteen task assignments.",
+        "dataset": "scale_summary",
+        "sourceId": "replication_results",
+        "defaultSort": {"field": "bundle_size", "direction": "asc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "bundle_size", "label": "Tasks/session", "format": "number"},
+          {"field": "language", "label": "Language", "type": "text"},
+          {"field": "sessions", "label": "Sessions", "format": "number"},
+          {"field": "hidden_task_success_rate", "label": "Hidden", "format": "percent"},
+          {"field": "first_public_task_success_rate", "label": "First-check", "format": "percent"},
+          {"field": "repair_turns", "label": "Repairs", "format": "number"},
+          {"field": "median_tokens_session", "label": "Session tokens", "format": "compact"},
+          {"field": "median_tokens_task", "label": "Tokens/task", "format": "compact"},
+          {"field": "weighted_tokens_task", "label": "Weighted tokens/task", "format": "compact"},
+          {"field": "median_seconds_task", "label": "Sec/task", "format": "number"}
+        ]
+      },
+      {
+        "id": "task_detail",
+        "title": "Parley task reliability",
+        "subtitle": "All final programs passed hidden cases; first-check failures show repair concentration.",
+        "dataset": "parley_task_reliability",
+        "sourceId": "replication_results",
+        "defaultSort": {"field": "first_failures", "direction": "desc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "task", "label": "Task", "type": "text"},
+          {"field": "appearances", "label": "Appearances", "format": "number"},
+          {"field": "first_successes", "label": "First successes", "format": "number"},
+          {"field": "first_failures", "label": "First failures", "format": "number"},
+          {"field": "hidden_successes", "label": "Hidden successes", "format": "number"}
+        ]
+      },
+      {
+        "id": "signature_detail",
+        "title": "First-check failure signatures",
+        "subtitle": "Classified from the saved initial P101 diagnostics only.",
+        "dataset": "failure_signatures",
+        "sourceId": "replication_results",
+        "defaultSort": {"field": "failure_events", "direction": "desc"},
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "signature", "label": "Signature", "type": "text"},
+          {"field": "failure_events", "label": "Events", "format": "number"},
+          {"field": "affected_tasks", "label": "Affected tasks", "format": "number"}
+        ]
+      },
+      {
+        "id": "clean_detail",
+        "title": "Repair-free sensitivity",
+        "subtitle": "Median values among sessions with zero repair turns; no clean Parley size-eight session exists.",
+        "dataset": "clean_sensitivity",
+        "sourceId": "replication_results",
+        "defaultSort": {"field": "bundle_size", "direction": "asc"},
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {"field": "bundle_size", "label": "Tasks/session", "format": "number"},
+          {"field": "language", "label": "Language", "type": "text"},
+          {"field": "clean_sessions", "label": "Clean sessions", "format": "number"},
+          {"field": "median_tokens_task", "label": "Median tokens/task", "format": "compact"},
+          {"field": "median_seconds_task", "label": "Median sec/task", "format": "number"}
+        ]
+      }
+    ],
+    "sources": [
+      {"id": "replication_results", "label": "Frozen iteration 017–018 replication results", "path": "018-contextual-identifier-replication-failed.sql"}
+    ],
+    "blocks": [
+      {"id": "title", "type": "markdown", "layout": "full", "body": "# Parley Workload Replication — Iteration 018"},
+      {"id": "summary", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Technical summary\n\n**The contextual `position` change worked, but strict parity still failed.** All **192 task-solutions** in **90 fresh sessions** passed hidden cases with perfect protocol and checker integrity. The prior `position` failure family fell from five events across four tasks to zero. At size eight, Parley improved from 19.27k to **14.85k tokens/task** (−22.94%) and from 11/16 to **13/16 first-check tasks**, but still used **2.55× Python's tokens**, took 2.15× its time, and had no first-check-clean bundle. Only correctness passed the four-condition gate."},
+      {"id": "headline_metrics", "type": "metric-strip", "layout": "full", "cardIds": ["sessions_card", "solutions_card", "correctness_card", "gate_card", "multiple_card", "change_card"]},
+      {"id": "scope", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Scope and metric definitions\n\nIteration 018 exactly repeats iteration 017's eight tasks, partitions, bundle sizes, model, skill, seed, and three-language matrix. The sole compiler difference is Parley 0.3.152's contextual `position`. **Tokens/task** and **seconds/task** divide a complete fresh-session total by its assigned programs; each size-language cell contains sixteen assignments. **First-check success** means the program passed inside the first bundle-wide `./check`; **hidden success** is final withheld-case correctness."},
+      {"id": "token_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Current token efficiency\n\nParley's median gap to Python was 3.72%, 4.43%, and 5.45% at sizes one, two, and four. Those clean-scale medians are competitive but not equal. At size eight both Parley sessions repaired, producing **14.85k tokens/task** versus Python's 5.82k and Rust's 6.04k."},
+      {"id": "token_chart", "type": "chart", "chartId": "token_scale", "layout": "full"},
+      {"id": "token_note", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "Complete size-eight session medians were 118.83k tokens for Parley, 46.54k for Python, and 48.30k for Rust. The denominator is identical—eight tasks per session—so the gap is genuine repair-loop effort, not a reporting artifact."},
+      {"id": "delta_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Replication delta\n\nThe change had the intended targeted effect: all four task families previously blocked by `position` reached 8/8 first-check success. Parley size-eight tokens/task fell **22.94%**, repairs fell from six to four, and first-check task success rose from 68.75% to 81.25%. Size-one through size-four medians moved only +1.4% to +1.5%, consistent with normal fresh-session variation rather than a broad token shortcut."},
+      {"id": "delta_chart", "type": "chart", "chartId": "iteration_delta", "layout": "full"},
+      {"id": "delta_note", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "This before/after comparison supports elimination of a specific repair source; it does not identify a deterministic causal token saving because the sessions are fresh stochastic runs. The exact source replay is stronger for semantic correctness: all five untouched 017 `position` failures passed their original public and hidden cases under 0.3.152."},
+      {"id": "reliability_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Reliability remains the blocking mechanism\n\nParley passed 15/16, 15/16, 15/16, and 13/16 tasks on the first check as workload size increased. Python had one single-task repair; Rust had none. Across Parley's six first-check task failures, rotation accounted for five and stable deduplication for one."},
+      {"id": "reliability_chart", "type": "chart", "chartId": "first_check_scale", "layout": "full"},
+      {"id": "task_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Remaining failures do not cross the change threshold\n\nAll five rotation failures began with unsupported `modulo`; follow-up repairs tried `mod` or invalid `div` phrasing, producing fifteen failed public-check task events before convergence. This repeated across sessions but remained **one task family**. The single `does` phrasing failure also affected one task. Under the frozen rule, neither justifies a compiler change yet."},
+      {"id": "task_chart", "type": "chart", "chartId": "task_failures", "layout": "full"},
+      {"id": "task_table", "type": "table", "tableId": "task_detail", "layout": "full"},
+      {"id": "signature_table", "type": "table", "tableId": "signature_detail", "layout": "full"},
+      {"id": "time_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Elapsed efficiency improved but missed parity\n\nAt size eight Parley improved from 13.41 to **10.91 seconds/task**, yet Python finished at 5.07 and Rust at 6.96. The elapsed condition fails independently of token accounting. At size four Parley was faster than Rust but remained 20.1% slower than Python."},
+      {"id": "time_chart", "type": "chart", "chartId": "elapsed_scale", "layout": "full"},
+      {"id": "scale_table", "type": "table", "tableId": "scale_detail", "layout": "full"},
+      {"id": "clean_text", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Repair-free sensitivity\n\nAmong clean sessions, Parley medians were 41.37k, 21.30k, and 11.22k tokens/task at sizes one, two, and four. Their gaps to clean Python were 3.68%, 4.11%, and 5.17%. No clean Parley size-eight session exists, so the experiment still cannot estimate clean parity at its primary scale."},
+      {"id": "clean_table", "type": "table", "tableId": "clean_detail", "layout": "full"},
+      {"id": "methodology", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Frozen methodology\n\n- **Matrix:** 90 fresh sessions, 192 hidden-judged assignments, bundle sizes 1/2/4/8, two complete partitions per language.\n- **Toolchain:** Parley 0.3.152 at compiler commit `b94964a`; `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0.\n- **Instruction:** unchanged 1,519-character skill, SHA `6ca098e4…`; no second compression experiment.\n- **Protocol:** first action creates solutions, no workspace reconnaissance, exact `./check` command only, hidden cases retained by the parent runner.\n- **Integrity:** 90 unique thread IDs, 90/90 checker integrity, 90/90 protocol compliance, no timeouts, runner failures, or nonzero agent exits."},
+      {"id": "limitations", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Limitations and uncertainty\n\nOnly two sessions represent each language at size eight, so its bundle rate is coarse. Reusing the same tasks isolates the compiler change but does not broaden external validity. Fresh model runs are stochastic, and per-task division cannot allocate causal effort within a bundle. One model, one agent harness, and one English task style are tested. The clean sensitivity excludes failures and is therefore descriptive, not a replacement for the preregistered full-sample gate."},
+      {"id": "next_steps", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Recommended next step\n\n1. Preserve iteration 018 unchanged; do not claim parity.\n2. Make no compiler change from this result alone.\n3. Pre-register a small independent arithmetic-vocabulary corpus containing unrelated parity, wraparound, clock, checksum, and cyclic-index tasks without suggesting any operator spelling.\n4. Measure whether agents independently choose `modulo` across at least two task families.\n5. Only if that cross-task evidence appears, evaluate one maintainable alias for the existing remainder semantics, test it across the compiler pipeline, and rerun the broad workload. Otherwise keep the language unchanged."},
+      {"id": "questions", "type": "markdown", "layout": "full", "sourceId": "replication_results", "body": "## Further questions\n\n- Is `modulo` genuinely natural Parley vocabulary across unrelated arithmetic domains, or an artifact of rotation wording?\n- Can a repair-free size-eight Parley sample close the remaining fixed 3–5% clean-run token gap?\n- Does the same reliability pattern hold for another model and a genuinely new task population?"}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-04T14:50:00Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [{"sessions": 90, "assigned_tasks": 192, "hidden_success_rate": 1.0, "gate_conditions_passed": 1, "parley_repairs": 15, "size8_token_multiple": 2.55, "size8_change_percent": -22.94}],
+      "scale_summary": [
+        {"bundle_size": 1, "bundle_label": "Size 1", "language": "Parley", "sessions": 16, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 0.9375, "first_bundle_check_success_rate": 0.9375, "protocol_rate": 1.0, "repair_turns": 5, "median_tokens_session": 41394.5, "median_tokens_task": 41394.5, "weighted_tokens_task": 50977.375, "median_seconds_task": 18.8773, "median_prompt_chars_task": 3246.0},
+        {"bundle_size": 1, "bundle_label": "Size 1", "language": "Python", "sessions": 16, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 0.9375, "first_bundle_check_success_rate": 0.9375, "protocol_rate": 1.0, "repair_turns": 1, "median_tokens_session": 39911.0, "median_tokens_task": 39911.0, "weighted_tokens_task": 41667.5625, "median_seconds_task": 16.9915, "median_prompt_chars_task": 1565.0},
+        {"bundle_size": 1, "bundle_label": "Size 1", "language": "Rust", "sessions": 16, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 40170.0, "median_tokens_task": 40170.0, "weighted_tokens_task": 40228.8125, "median_seconds_task": 21.7918, "median_prompt_chars_task": 1585.0},
+        {"bundle_size": 2, "bundle_label": "Size 2", "language": "Parley", "sessions": 8, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 0.9375, "first_bundle_check_success_rate": 0.875, "protocol_rate": 1.0, "repair_turns": 2, "median_tokens_session": 42723.5, "median_tokens_task": 21361.75, "weighted_tokens_task": 25024.4375, "median_seconds_task": 12.3799, "median_prompt_chars_task": 1881.75},
+        {"bundle_size": 2, "bundle_label": "Size 2", "language": "Python", "sessions": 8, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 40911.5, "median_tokens_task": 20455.75, "weighted_tokens_task": 20452.4375, "median_seconds_task": 10.5582, "median_prompt_chars_task": 1040.25},
+        {"bundle_size": 2, "bundle_label": "Size 2", "language": "Rust", "sessions": 8, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 41372.5, "median_tokens_task": 20686.25, "weighted_tokens_task": 20688.375, "median_seconds_task": 11.7004, "median_prompt_chars_task": 1050.25},
+        {"bundle_size": 4, "bundle_label": "Size 4", "language": "Parley", "sessions": 4, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 0.9375, "first_bundle_check_success_rate": 0.75, "protocol_rate": 1.0, "repair_turns": 4, "median_tokens_session": 44983.0, "median_tokens_task": 11245.75, "weighted_tokens_task": 19295.4375, "median_seconds_task": 8.5983, "median_prompt_chars_task": 1210.25},
+        {"bundle_size": 4, "bundle_label": "Size 4", "language": "Python", "sessions": 4, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 42657.5, "median_tokens_task": 10664.375, "weighted_tokens_task": 10677.625, "median_seconds_task": 7.1571, "median_prompt_chars_task": 788.5},
+        {"bundle_size": 4, "bundle_label": "Size 4", "language": "Rust", "sessions": 4, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 43872.0, "median_tokens_task": 10968.0, "weighted_tokens_task": 10958.875, "median_seconds_task": 9.152, "median_prompt_chars_task": 793.5},
+        {"bundle_size": 8, "bundle_label": "Size 8", "language": "Parley", "sessions": 2, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 0.8125, "first_bundle_check_success_rate": 0.0, "protocol_rate": 1.0, "repair_turns": 4, "median_tokens_session": 118826.5, "median_tokens_task": 14853.3125, "weighted_tokens_task": 14853.3125, "median_seconds_task": 10.9088, "median_prompt_chars_task": 867.5},
+        {"bundle_size": 8, "bundle_label": "Size 8", "language": "Python", "sessions": 2, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 46540.5, "median_tokens_task": 5817.5625, "weighted_tokens_task": 5817.5625, "median_seconds_task": 5.0686, "median_prompt_chars_task": 655.625},
+        {"bundle_size": 8, "bundle_label": "Size 8", "language": "Rust", "sessions": 2, "assigned_tasks": 16, "hidden_task_success_rate": 1.0, "first_public_task_success_rate": 1.0, "first_bundle_check_success_rate": 1.0, "protocol_rate": 1.0, "repair_turns": 0, "median_tokens_session": 48304.0, "median_tokens_task": 6038.0, "weighted_tokens_task": 6038.0, "median_seconds_task": 6.9591, "median_prompt_chars_task": 658.125}
+      ],
+      "parley_iteration_compare": [
+        {"bundle_size": 1, "bundle_label": "Size 1", "iteration": "017 / v0.3.151", "median_tokens_task": 40793.5, "first_task_rate": 0.8125, "repair_turns": 7},
+        {"bundle_size": 2, "bundle_label": "Size 2", "iteration": "017 / v0.3.151", "median_tokens_task": 21065.75, "first_task_rate": 0.9375, "repair_turns": 1},
+        {"bundle_size": 4, "bundle_label": "Size 4", "iteration": "017 / v0.3.151", "median_tokens_task": 11076.125, "first_task_rate": 0.9375, "repair_turns": 2},
+        {"bundle_size": 8, "bundle_label": "Size 8", "iteration": "017 / v0.3.151", "median_tokens_task": 19273.875, "first_task_rate": 0.6875, "repair_turns": 6},
+        {"bundle_size": 1, "bundle_label": "Size 1", "iteration": "018 / v0.3.152", "median_tokens_task": 41394.5, "first_task_rate": 0.9375, "repair_turns": 5},
+        {"bundle_size": 2, "bundle_label": "Size 2", "iteration": "018 / v0.3.152", "median_tokens_task": 21361.75, "first_task_rate": 0.9375, "repair_turns": 2},
+        {"bundle_size": 4, "bundle_label": "Size 4", "iteration": "018 / v0.3.152", "median_tokens_task": 11245.75, "first_task_rate": 0.9375, "repair_turns": 4},
+        {"bundle_size": 8, "bundle_label": "Size 8", "iteration": "018 / v0.3.152", "median_tokens_task": 14853.3125, "first_task_rate": 0.8125, "repair_turns": 4}
+      ],
+      "parley_task_reliability": [
+        {"task_id": "rotate_words_left", "task": "rotate words left", "appearances": 8, "first_successes": 3, "first_failures": 5, "hidden_successes": 8},
+        {"task_id": "stable_word_deduplication", "task": "stable word deduplication", "appearances": 8, "first_successes": 7, "first_failures": 1, "hidden_successes": 8},
+        {"task_id": "longest_common_prefix", "task": "longest common prefix", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8},
+        {"task_id": "longest_rising_run", "task": "longest rising run", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8},
+        {"task_id": "merge_sorted_intervals", "task": "merge sorted intervals", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8},
+        {"task_id": "moving_window_sums", "task": "moving window sums", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8},
+        {"task_id": "plurality_winner", "task": "plurality winner", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8},
+        {"task_id": "run_length_encoding", "task": "run length encoding", "appearances": 8, "first_successes": 8, "first_failures": 0, "hidden_successes": 8}
+      ],
+      "failure_signatures": [
+        {"signature": "Unsupported modulo spelling", "failure_events": 5, "affected_tasks": 1},
+        {"signature": "Unsupported does phrasing", "failure_events": 1, "affected_tasks": 1}
+      ],
+      "clean_sensitivity": [
+        {"bundle_size": 1, "language": "Parley", "clean_sessions": 15, "median_tokens_task": 41372.0, "median_seconds_task": 18.5733},
+        {"bundle_size": 1, "language": "Python", "clean_sessions": 15, "median_tokens_task": 39904.0, "median_seconds_task": 16.8649},
+        {"bundle_size": 1, "language": "Rust", "clean_sessions": 16, "median_tokens_task": 40170.0, "median_seconds_task": 21.7918},
+        {"bundle_size": 2, "language": "Parley", "clean_sessions": 7, "median_tokens_task": 21296.0, "median_seconds_task": 12.1364},
+        {"bundle_size": 2, "language": "Python", "clean_sessions": 8, "median_tokens_task": 20455.75, "median_seconds_task": 10.5582},
+        {"bundle_size": 2, "language": "Rust", "clean_sessions": 8, "median_tokens_task": 20686.25, "median_seconds_task": 11.7004},
+        {"bundle_size": 4, "language": "Parley", "clean_sessions": 3, "median_tokens_task": 11216.0, "median_seconds_task": 8.2479},
+        {"bundle_size": 4, "language": "Python", "clean_sessions": 4, "median_tokens_task": 10664.375, "median_seconds_task": 7.1571},
+        {"bundle_size": 4, "language": "Rust", "clean_sessions": 4, "median_tokens_task": 10968.0, "median_seconds_task": 9.152},
+        {"bundle_size": 8, "language": "Python", "clean_sessions": 2, "median_tokens_task": 5817.5625, "median_seconds_task": 5.0686},
+        {"bundle_size": 8, "language": "Rust", "clean_sessions": 2, "median_tokens_task": 6038.0, "median_seconds_task": 6.9591}
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "replication_results",
+      "label": "Frozen iteration 017–018 replication results",
+      "path": "018-contextual-identifier-replication-failed.sql",
+      "query": {
+        "engine": "SQLite JSON1",
+        "query": "sqlite3 ':memory:' < benchmarks/reports/018-contextual-identifier-replication-failed.sql",
+        "description": "Reproducible transformation over both preserved workload result files, with iteration 018 as the primary dataset.",
+        "executed_at": "2026-08-04T14:50:00Z",
+        "language": "SQL",
+        "metric_definitions": [
+          "Tokens per task: complete session input plus output tokens divided by assigned task count.",
+          "Elapsed seconds per task: complete session wall time divided by assigned task count.",
+          "First-check task success: task program passes inside the first bundle-wide ./check invocation.",
+          "Repair-free sensitivity: sessions with repair_turns equal to zero; descriptive only."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "018-contextual-identifier-replication-failed.artifact.json",
+    "snapshotPath": "agent_bundle_018_protocol_v1_v0.3.152.json",
+    "originUrl": "artifact://parley-workload-replication-018"
+  }
+}

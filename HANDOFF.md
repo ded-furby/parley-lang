@@ -645,11 +645,15 @@ Update it whenever you finish or start a work item.
   The only justified compiler candidate is contextual `position`; preserve
   `benchmarks/reports/017-workload-scale-parity-failed.html`, keep the
   1,519-character skill frozen, and rerun the same workload as iteration 018.
-- **Contextual-identifier replication (iteration 018):**
-  `benchmarks/bundle_protocol_018.json` freezes an exact 90-session replication
-  before output is observed. The only compiler difference is 0.3.152's
-  contextual `position`; the skill, task partitions, agent, and four-part
-  size-eight parity gate are unchanged, and `modulo` remains unsupported.
+- **Contextual-identifier replication result (iteration 018):** all 192 task
+  solutions passed hidden cases and all 90 sessions preserved integrity and
+  protocol compliance. The prior `position` failure family fell from five
+  events across four tasks to zero. Size-eight Parley improved 22.94% to
+  14,853.31 tokens/task and 13/16 first-check tasks, but remained 2.55× Python
+  and failed three gate conditions. Five of six first-check failures were
+  `modulo` in rotation; the other was a one-task `does` phrasing error. Make no
+  compiler change yet. Preserve report 018, keep the skill frozen, and next
+  test natural remainder vocabulary across unrelated arithmetic task families.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

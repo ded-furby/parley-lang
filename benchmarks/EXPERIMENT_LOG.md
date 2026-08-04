@@ -1055,3 +1055,60 @@ Compare the complete scale curve with iteration 017, but do not attribute
 Python/Rust movement to the Parley compiler. Make no further compiler change
 unless the new evidence again crosses unrelated tasks and independently meets
 general usefulness, semantic consistency, and maintainability.
+
+## 018 — Contextual identifier works; strict parity still fails
+
+- Date: 2026-08-04
+- Toolchain: Parley 0.3.152, preregistration commit
+  `7b1c441e13c754af7dee68678bcbb8dc8bce2f63`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+- Matrix: exact 017 replication—90 fresh sessions; 192 hidden-judged tasks
+- Result JSON SHA-256: `67b2afcba283539c033efe630022bb994cf0e73a7e73aad4023d484059f709d8`
+- Frozen protocol SHA-256: `bd79ecf56c2559b34bcaf9e78de7d0e999c9c932ef677863f3600c443711050d`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/018-contextual-identifier-replication-failed.html`
+
+| Bundle size | Language | Hidden tasks | First-check tasks | Median tokens/task | Median seconds/task | Repair turns |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | Parley | 16/16 | 15/16 | 41,394.50 | 18.8773 | 5 |
+| 1 | Python | 16/16 | 15/16 | 39,911.00 | 16.9915 | 1 |
+| 1 | Rust | 16/16 | 16/16 | 40,170.00 | 21.7918 | 0 |
+| 2 | Parley | 16/16 | 15/16 | 21,361.75 | 12.3799 | 2 |
+| 2 | Python | 16/16 | 16/16 | 20,455.75 | 10.5582 | 0 |
+| 2 | Rust | 16/16 | 16/16 | 20,686.25 | 11.7004 | 0 |
+| 4 | Parley | 16/16 | 15/16 | 11,245.75 | 8.5983 | 4 |
+| 4 | Python | 16/16 | 16/16 | 10,664.38 | 7.1571 | 0 |
+| 4 | Rust | 16/16 | 16/16 | 10,968.00 | 9.1520 | 0 |
+| 8 | Parley | 16/16 | 13/16 | 14,853.31 | 10.9088 | 4 |
+| 8 | Python | 16/16 | 16/16 | 5,817.56 | 5.0686 | 0 |
+| 8 | Rust | 16/16 | 16/16 | 6,038.00 | 6.9591 | 0 |
+
+### Gate and replication result
+
+All 192 task-solutions passed hidden cases; all 90 sessions preserved checker
+integrity and protocol compliance, with 90 unique threads, no timeouts, and no
+agent failures. The size-eight strict gate again passed correctness only.
+Parley improved from 19,273.88 to 14,853.31 median tokens/task (−22.94%) and
+from 11/16 to 13/16 first-check tasks, but still used 2.55× Python's tokens
+and 2.15× its elapsed time.
+
+The exact `position` failure family fell from five events across four tasks to
+zero; every previously affected task reached 8/8 first-check success. This
+confirms the general compiler change solved the evidenced problem. All five
+untouched 017 first sources also pass their original public and hidden cases
+under 0.3.152.
+
+### Remaining failure audit and decision
+
+Five of six Parley first-check task failures were rotation programs using
+unsupported `modulo`; the sixth was a one-off `does` phrasing failure in
+stable deduplication. Rotation then accumulated further `mod`/invalid `div`
+repair attempts, for fifteen failed public-check task events overall. Neither
+initial signature affects two unrelated tasks, so make **no compiler change**
+from 018.
+
+The next justified experiment is a separately preregistered, independent
+arithmetic-vocabulary corpus spanning unrelated parity, wraparound, clock,
+checksum, and cyclic-index problems without suggesting an operator spelling.
+Only cross-task recurrence plus an independent semantic/maintenance case can
+justify an alias for the remainder operation. Keep the skill unchanged.
