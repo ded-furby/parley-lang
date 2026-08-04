@@ -2509,3 +2509,75 @@ Report every caller compensation separately from hidden correctness. If all
 five conditions pass, this remains a six-replicate pilot and requires the
 larger confirmation before a general claim. If any fail, do not tune the corpus
 or change syntax or instructions from same-corpus evidence.
+
+## 029 — Historically grounded diagnosis confirms Rust parity
+
+- Completed: 2026-08-05
+- Compiler: pinned Parley 0.3.155 binary; language unchanged
+- Model: `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0
+- Matrix: eight repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 144 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_historical_029_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `dd4fd41e8967c0b3f25e0957cd1b1793e79fb78fda65653fe63a9bacf8bcdc65`
+- Report: `benchmarks/reports/029-historical-diagnosis-rust-parity.html`
+- Report SHA-256:
+  `aef4caaf828caf4ff8c7083b96b6960bc460cc221cfea0cb372eea3093e6712b`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_029_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, source-order,
+  checker/context-integrity, and command-protocol checks passed; no timeout,
+  nonzero agent exit, runner error, or selective rerun
+
+| Language | Hidden repos | First-check repos | Root fixes | Repairs | Median tokens/repo | Median seconds/repo | Context tokens/repo | Final source tokens/repo | Edit tokens/repo |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 48/48 | 48/48 | 48/48 | 0 | 8,408.56 | 4.5455 | 88.75 | 191.63 | 8.75 |
+| Python | 48/48 | 48/48 | 48/48 | 0 | 8,034.69 | 3.9298 | 88.75 | 169.25 | 6.25 |
+| Rust | 48/48 | 48/48 | 48/48 | 0 | 8,489.06 | 5.0027 | 88.75 | 322.25 | 9.50 |
+
+The strict better-baseline gate again finishes 2/4, and the separate
+root-cause condition passes. All 144 assignments pass the first check and
+hidden cases; every one changes exactly its predeclared root-defect file.
+Parley uses 0.95% fewer median tokens and 9.14% less elapsed time than Rust,
+replicating the size-eight Rust advantage from iteration 026 on a stronger
+diagnosis-shaped corpus. It remains 4.65% above Python tokens and 15.67% above
+Python elapsed time, so the lower-baseline token and time conditions fail.
+Overall, three of the five declared conditions pass.
+
+All language distributions are tight and repair-free. Per-repository token
+ranges are 8,345.50–8,427.38 for Parley, 8,008.13–8,066.00 for Python, and
+8,452.25–8,538.63 for Rust. There is no outlier, exclusion, or repair loop
+behind the result. Parley produces one identical final solution per task across
+all replicates; Python and Rust each produce one extra formatting-equivalent
+variant in one task. All variants modify the same predeclared defect file.
+
+Every language receives 710 rough tokens of read-only evidence per session.
+The protocol records 3,614 characters and 47 lines by summing raw file
+contents; the runner reports 3,622 and 55 after inserting eight join newlines
+while constructing task-level context text. This bookkeeping distinction is
+identical across languages, changes no file or judgment, and is preserved here
+rather than silently rewriting the frozen protocol.
+
+Median final Parley source is 40.53% shorter than Rust and 13.22% larger than
+Python. Its edit is 7.89% smaller than Rust and 40.00% larger than Python.
+Every assignment changes one root file, so these differences are not a patch
+scope artifact.
+
+There is no Parley parse, type, runtime, hidden, diagnosis, root-location, or
+draft failure across 48 assignments. **No compiler, syntax, diagnostic, prompt,
+or skill change follows from iteration 029.** The residual Python gap does not
+justify narrow syntax, and the one allowed instruction-compression experiment
+remains closed.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 35 blocks, five charts, eight metrics, and six tables; artifact
+headline, language metrics, and root-cause totals match the raw record exactly.
+
+Preserve 029 unchanged. Size-eight Rust efficiency parity now has two positive
+iterations, with 029 supplying the cleaner evidence: historically grounded
+mechanisms, perfect first-check reliability, and explicit root-cause quality.
+Python-and-Rust parity is still unconfirmed. A 90-session confirmation is
+defensible for the narrower Rust claim; the strict claim needs genuinely deeper
+project episodes rather than same-corpus language or instruction tuning.

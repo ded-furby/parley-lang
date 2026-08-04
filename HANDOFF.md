@@ -870,6 +870,22 @@ Update it whenever you finish or start a work item.
   `3c4c4416f8bcac678a1bee3fbe001e87f7188fad80948695f2d19917674f3b25`.
   Run once with no selective reruns. A five-condition pass still
   requires larger confirmation; failure cannot trigger same-corpus tuning.
+- **Historically grounded result (iteration 029):** all 144 assignments pass
+  first check, hidden cases, and root-defect location with zero repairs. Every
+  session preserves source order, command protocol, and checker/context
+  integrity. Parley uses 8,408.56 median tokens/repo and 4.5455 seconds versus
+  Python's 8,034.69/3.9298 and Rust's 8,489.06/5.0027. It beats Rust by 0.95%
+  tokens and 9.14% elapsed but remains 4.65%/15.67% above Python, so primary
+  strict parity is 2/4 and overall five-condition status is 3/5. Disclose that
+  protocol context characters/lines sum raw files (3,614/47), while the runner
+  meters join newlines too (3,622/55); rough tokens remain 710 and symmetry is
+  unaffected. Preserve raw SHA
+  `dd4fd41e8967c0b3f25e0957cd1b1793e79fb78fda65653fe63a9bacf8bcdc65`
+  and report SHA
+  `aef4caaf828caf4ff8c7083b96b6960bc460cc221cfea0cb372eea3093e6712b`.
+  No language/skill change follows. Size-eight Rust parity is now replicated;
+  Python-and-Rust parity is not. Next either confirm the Rust claim over 90
+  sessions or use genuinely deeper project episodes for the strict claim.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,
