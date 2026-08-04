@@ -707,6 +707,17 @@ Update it whenever you finish or start a work item.
   and report 024. Next freeze a real multi-file repository-maintenance corpus,
   with existing/hidden tests and changed-file scope, rather than tuning invoice
   syntax.
+- **Repository-maintenance design (iteration 025):** four new two-file
+  repositories cover delivery pricing, inventory reservation, incident
+  routing, and exact filtered-file reporting. Each session must run the
+  protected `./sources` command once as its first shell action; it prints only
+  the eight editable files, and every later shell command must be `./check`.
+  The backward-compatible harness records seed/final files, rough-token edit
+  size, and changed-file count. All 12 repositories pass their frozen old
+  contracts and fail each new public requirement unmodified; an independent
+  oracle matches all 20 new public/hidden contracts. The full suite passes
+  324/324. Commit this harness/corpus checkpoint, then preregister and run 025
+  with Parley v0.3.155 and the unchanged skill. Do not learn syntax from 024.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

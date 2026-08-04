@@ -1831,3 +1831,42 @@ repository-maintenance corpus with existing and hidden tests, equivalent
 seeded repositories, changed-file scope, and patch-size measurement. Reopen a
 language design only after recurrence across unrelated new domains plus
 general-usefulness, semantic-consistency, and maintainability review.
+
+## Design and preflight for 025 — Multi-file repository maintenance
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged
+- Planned matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260813`
+
+Iteration 024 showed that inline seeded source narrowed the descriptive token
+ratio but left every Parley session repairing. Iteration 025 increases external
+validity without mining its transcripts: each task is a new two-file repository
+whose requirement crosses an entrypoint/helper boundary. The domains are
+delivery pricing, inventory reservation, incident routing, and filtered exact
+file reporting. None reuses 024 source or changes Parley semantics.
+
+The language-neutral harness now supports safe relative `seed_files` and one
+declared entrypoint per language. A protected `./sources` command prints only
+the eight editable source files in the session. The first shell command must be
+exactly `./sources`, exactly once; afterward the only shell command is
+`./check`. Checker, source-printer, and configuration hashes remain protected.
+This allows controlled repository inspection while preventing arbitrary
+reconnaissance. The runner records all seed/final files, rough-token edit size,
+and changed-file count. Existing cold-start and inline-seed protocols retain
+their exact `./check`-only prompt sentence and behavior.
+
+All 12 language-specific repositories compile and pass two frozen seed cases
+per task (24 seed cases per language). Every unmodified seed compiles but fails
+its new public case. An independent Python oracle reproduces all 20 new
+public/hidden stdout and expected-file contracts. Unsafe repository paths are
+rejected. Targeted repository tests and the complete corrected suite passed;
+`PYTHONPATH=/Users/arjun/Desktop/parley-lang python3 -m pytest -q` finished
+324/324 in 112.02 seconds.
+
+No compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or
+instruction-compression change is part of this work. Preserve the harness and
+corpus in a commit, then freeze protocol 025 before any model session.

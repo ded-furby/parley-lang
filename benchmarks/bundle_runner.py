@@ -142,10 +142,14 @@ sources = {}
 
 for task in config["tasks"]:
     task_id = task["id"]
-    source = Path(task["source"])
+    repo = Path(task.get("repo", "."))
+    source = repo / task["source"]
     binary = Path(f".benchmark_public_{task_id}").resolve()
     if source.is_file():
-        sources[task_id] = source.read_text()
+        sources[task_id] = {
+            filename: (repo / filename).read_text()
+            for filename in task.get("editable_files", [task["source"]])
+        }
     else:
         sources[task_id] = ""
         task_results[task_id] = {
@@ -159,20 +163,20 @@ for task in config["tasks"]:
         continue
 
     if language == "parley":
-        compile_command = [config["parley_command"], "build", source.name, "-o", str(binary)]
+        compile_command = [config["parley_command"], "build", task["source"], "-o", str(binary)]
     elif language == "python":
-        compile_command = [sys.executable, "-m", "py_compile", source.name]
+        compile_command = [sys.executable, "-m", "py_compile", task["source"]]
     else:
-        compile_command = ["rustc", "--edition=2021", source.name, "-O", "-o", str(binary)]
+        compile_command = ["rustc", "--edition=2021", task["source"], "-O", "-o", str(binary)]
 
-    compiled = subprocess.run(compile_command, capture_output=True, text=True, timeout=120)
+    compiled = subprocess.run(compile_command, cwd=repo, capture_output=True, text=True, timeout=120)
     case_results = []
     if compiled.returncode == 0:
         run_command = [sys.executable, source.name] if language == "python" else [str(binary)]
         for case_index, case in enumerate(task["public_cases"], 1):
             expected_files = case.get("files", {})
             for filename in expected_files:
-                output_path = Path(filename)
+                output_path = repo / filename
                 if output_path.is_file() or output_path.is_symlink():
                     output_path.unlink()
             proc = subprocess.run(
@@ -181,9 +185,10 @@ for task in config["tasks"]:
                 capture_output=True,
                 text=True,
                 timeout=10,
+                cwd=repo,
             )
             actual_files = {
-                filename: Path(filename).read_text(encoding="utf-8") if Path(filename).is_file() else None
+                filename: (repo / filename).read_text(encoding="utf-8") if (repo / filename).is_file() else None
                 for filename in expected_files
             }
             files_ok = all(actual_files[name] == content for name, content in expected_files.items())
@@ -239,35 +244,74 @@ raise SystemExit(0 if ok else 1)
 '''
 
 
+BUNDLE_SOURCE_SCRIPT = r'''#!/usr/bin/env python3
+import json
+from pathlib import Path
+
+config = json.loads(Path(".benchmark_public.json").read_text())
+for task in config["tasks"]:
+    repo = Path(task.get("repo", "."))
+    for filename in task.get("editable_files", []):
+        path = repo / filename
+        print(f"===== {task['id']}/{filename} =====")
+        text = path.read_text(encoding="utf-8")
+        print(text, end="" if text.endswith("\n") else "\n")
+'''
+
+
 def write_bundle_workspace(
     workdir: Path,
     tasks: list[dict[str, Any]],
     language: str,
     parley_command: str,
 ) -> dict[str, str]:
+    task_configs = []
+    repository_mode = any(task.get("seed_files") is not None for task in tasks)
+    for task in tasks:
+        if task.get("seed_files") is not None:
+            task_configs.append({
+                "id": task["id"],
+                "repo": task["id"],
+                "source": task["entrypoints"][language],
+                "editable_files": sorted(task["seed_files"][language]),
+                "public_cases": task["public_cases"],
+            })
+        else:
+            task_configs.append({
+                "id": task["id"],
+                "repo": ".",
+                "source": bundle_source_name(task["id"], language),
+                "editable_files": [bundle_source_name(task["id"], language)],
+                "public_cases": task["public_cases"],
+            })
     config = {
         "language": language,
         "parley_command": parley_command,
-        "tasks": [
-            {
-                "id": task["id"],
-                "source": bundle_source_name(task["id"], language),
-                "public_cases": task["public_cases"],
-            }
-            for task in tasks
-        ],
+        "tasks": task_configs,
     }
     files = {
         ".benchmark_public.json": json.dumps(config, indent=2) + "\n",
         "check_public.py": BUNDLE_CHECK_SCRIPT,
         "check": "#!/bin/sh\nexec python3 check_public.py\n",
     }
+    if repository_mode:
+        files.update({
+            "print_sources.py": BUNDLE_SOURCE_SCRIPT,
+            "sources": "#!/bin/sh\nexec python3 print_sources.py\n",
+        })
     for name, content in files.items():
         path = workdir / name
         path.write_text(content, encoding="utf-8")
-        if name in {"check", "check_public.py"}:
+        if name in {"check", "check_public.py", "sources", "print_sources.py"}:
             path.chmod(0o755)
     for task in tasks:
+        if task.get("seed_files") is not None:
+            repo = workdir / task["id"]
+            for filename, content in task["seed_files"][language].items():
+                path = repo / filename
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content, encoding="utf-8")
+            continue
         seed_sources = task.get("seed_sources")
         if seed_sources is not None:
             (workdir / bundle_source_name(task["id"], language)).write_text(
@@ -286,16 +330,34 @@ def render_bundle_prompt(
 ) -> str:
     label = {"parley": "Parley", "python": "Python", "rust": "Rust"}[language]
     filenames = [bundle_source_name(task["id"], language) for task in tasks]
+    repository_tasks = [task for task in tasks if task.get("seed_files") is not None]
     formatted_names = ", ".join(f"`{name}`" for name in filenames)
     seeded = [task for task in tasks if task.get("seed_sources") is not None]
     unseeded = [task for task in tasks if task.get("seed_sources") is None]
-    if seeded and not unseeded:
+    if repository_tasks and len(repository_tasks) == len(tasks):
+        work_summary = (
+            f"Maintain {len(tasks)} independent {label} repositories: "
+            + ", ".join(f"`{task['id']}/`" for task in tasks) + "."
+        )
+        first_action = (
+            "Your first shell action must be exactly `./sources`; it prints every editable source file. "
+            "Do not perform other reconnaissance."
+        )
+        unit_rule = "Each repository is independent and must solve only its named task."
+        shell_rule = (
+            "The only shell commands permitted are exactly `./sources` once and `./check`."
+        )
+    elif seeded and not unseeded:
         work_summary = (
             f"Update {len(tasks)} independent {label} programs in place: {formatted_names}."
         )
         first_action = (
             "Your first tool action must edit one or more listed solution files. "
             "Do not perform reconnaissance first."
+        )
+        unit_rule = "Each file is a separate program and must solve only its named task."
+        shell_rule = (
+            "After creating or editing solutions, the only shell command permitted is exactly `./check`."
         )
     elif unseeded and not seeded:
         work_summary = (
@@ -305,6 +367,10 @@ def render_bundle_prompt(
             "Your first tool action must create one or more listed solution files. "
             "Do not perform reconnaissance first."
         )
+        unit_rule = "Each file is a separate program and must solve only its named task."
+        shell_rule = (
+            "After creating or editing solutions, the only shell command permitted is exactly `./check`."
+        )
     else:
         work_summary = (
             f"Complete {len(tasks)} independent {label} tasks in these files: {formatted_names}."
@@ -313,18 +379,25 @@ def render_bundle_prompt(
             "Your first tool action must create or edit one or more listed solution files. "
             "Do not perform reconnaissance first."
         )
+        unit_rule = "Each file is a separate program and must solve only its named task."
+        shell_rule = (
+            "After creating or editing solutions, the only shell command permitted is exactly `./check`."
+        )
     lines = [
         "You are participating in a controlled coding benchmark in a fresh workspace.",
         work_summary,
-        "Each file is a separate program and must solve only its named task.",
+        unit_rule,
         "Work only inside the current directory. All information needed is in this prompt.",
         "Do not list, read, or inspect any existing workspace file, including checker/config files.",
-        "For seeded tasks, the exact starting source is reproduced below; modify that file without reading it from the workspace.",
+        (
+            "For repository tasks, inspect editable code only through `./sources`; "
+            "for inline seeded tasks, the exact starting source is reproduced below."
+        ),
         "Do not use the internet or modify checker/config files.",
         first_action,
-        "After creating or editing solutions, the only shell command permitted is exactly `./check`.",
+        shell_rule,
         "Do not invoke a global language command.",
-        "Create every listed solution, then run `./check`. If it fails, use its feedback to repair",
+        "Complete every listed task, then run `./check`. If it fails, use its feedback to repair",
         "the failing program or programs and run `./check` again. Continue until every public",
         "check passes or you cannot make progress.",
         "The final answer should briefly state whether the complete public bundle passed.",
@@ -334,7 +407,12 @@ def render_bundle_prompt(
         lines.extend([
             f"# Task {task_index}: {task['title']}",
             "",
-            f"Target file: `{bundle_source_name(task['id'], language)}`",
+            (
+                f"Repository: `{task['id']}/`; entrypoint: "
+                f"`{task['id']}/{task['entrypoints'][language]}`"
+                if task.get("seed_files") is not None
+                else f"Target file: `{bundle_source_name(task['id'], language)}`"
+            ),
             "",
             task["statement"],
             "",
@@ -462,7 +540,10 @@ def run_bundle_cell(
     elapsed = round(time.perf_counter() - started, 4)
 
     parsed = parse_codex_events(stdout)
-    compliance = command_protocol(parsed["command_events"])
+    repository_mode = all(task.get("seed_files") is not None for task in tasks)
+    compliance = command_protocol(
+        parsed["command_events"], allow_sources=repository_mode
+    )
     attempts = read_attempts(workdir / CHECK_LOG)
     first_tasks = attempts[0].get("tasks", {}) if attempts else {}
     final_tasks = attempts[-1].get("tasks", {}) if attempts else {}
@@ -477,9 +558,28 @@ def run_bundle_cell(
     seed_source_texts = {}
     for task in tasks:
         task_id = task["id"]
-        source = workdir / bundle_source_name(task_id, language)
-        source_text = source.read_text(encoding="utf-8") if source.is_file() else ""
-        seed_source_text = task.get("seed_sources", {}).get(language, "")
+        if task.get("seed_files") is not None:
+            repo = workdir / task_id
+            source = repo / task["entrypoints"][language]
+            seed_files = task["seed_files"][language]
+            source_files = {
+                filename: (repo / filename).read_text(encoding="utf-8")
+                if (repo / filename).is_file() else ""
+                for filename in sorted(seed_files)
+            }
+            seed_source_files = dict(sorted(seed_files.items()))
+        else:
+            source = workdir / bundle_source_name(task_id, language)
+            source_files = {
+                bundle_source_name(task_id, language):
+                source.read_text(encoding="utf-8") if source.is_file() else ""
+            }
+            seed_text = task.get("seed_sources", {}).get(language, "")
+            seed_source_files = {
+                bundle_source_name(task_id, language): seed_text
+            } if seed_text else {}
+        source_text = "\n".join(source_files.values())
+        seed_source_text = "\n".join(seed_source_files.values())
         source_texts[task_id] = source_text
         seed_source_texts[task_id] = seed_source_text
         hidden = (
@@ -489,16 +589,31 @@ def run_bundle_cell(
         )
         task_results[task_id] = {
             "task_title": task["title"],
-            "source_name": bundle_source_name(task_id, language),
+            "source_name": (
+                f"{task_id}/{task['entrypoints'][language]}"
+                if task.get("seed_files") is not None
+                else bundle_source_name(task_id, language)
+            ),
             "source_text": source_text,
+            "source_files": source_files,
             "source_chars": len(source_text),
             "source_lines": len(source_text.splitlines()),
             "source_rough_tokens": len(ROUGH_TOKEN_RE.findall(source_text)),
             "seed_source_text": seed_source_text,
+            "seed_source_files": seed_source_files,
             "seed_source_chars": len(seed_source_text),
             "seed_source_lines": len(seed_source_text.splitlines()),
             "seed_source_rough_tokens": len(ROUGH_TOKEN_RE.findall(seed_source_text)),
-            "source_edit_rough_tokens": rough_token_edit_count(seed_source_text, source_text),
+            "source_edit_rough_tokens": sum(
+                rough_token_edit_count(
+                    seed_source_files.get(filename, ""), source_files.get(filename, "")
+                )
+                for filename in set(seed_source_files) | set(source_files)
+            ),
+            "changed_files": sorted(
+                filename for filename in set(seed_source_files) | set(source_files)
+                if seed_source_files.get(filename, "") != source_files.get(filename, "")
+            ),
             "first_public_check_success": bool(first_tasks.get(task_id, {}).get("ok")),
             "final_public_check_success": bool(final_tasks.get(task_id, {}).get("ok")),
             "hidden_success": bool(hidden["ok"]),
@@ -522,6 +637,7 @@ def run_bundle_cell(
     source_edit_rough_tokens = sum(
         result["source_edit_rough_tokens"] for result in task_results.values()
     )
+    changed_files = sum(len(result["changed_files"]) for result in task_results.values())
     return {
         "schema_version": 1,
         "recorded_at": utc_now(),
@@ -575,6 +691,8 @@ def run_bundle_cell(
         "source_edit_rough_tokens_per_task": round(
             source_edit_rough_tokens / task_count, 6
         ),
+        "changed_files": changed_files,
+        "changed_files_per_task": round(changed_files / task_count, 6),
         "task_results": task_results,
         "public_attempts": attempts,
         "agent_messages": parsed["agent_messages"],
@@ -648,6 +766,7 @@ def summarize_bundle_results(results: list[dict[str, Any]]) -> dict[str, Any]:
                 "median_source_edit_rough_tokens_per_task": _median(
                     rows, "source_edit_rough_tokens_per_task"
                 ),
+                "median_changed_files_per_task": _median(rows, "changed_files_per_task"),
             })
 
     primary_scale = max(scales) if scales else None

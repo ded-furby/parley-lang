@@ -653,6 +653,65 @@ def test_seeded_bundle_workspace_and_edit_metric(tmp_path):
     assert rough_token_edit_count("print(input())\n", "print(input() + '!')\n") > 0
 
 
+def test_repository_bundle_prints_sources_and_compiles_python(tmp_path):
+    tasks = [{
+        "id": "echo_repo",
+        "title": "Echo repository",
+        "statement": "Print the helper result.",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "x"\n', "helper.par": 'to helper giving text:\n    give back "x"\n'},
+            "python": {"main.py": "from helper import value\nprint(value(input()))\n", "helper.py": "def value(text):\n    return text\n"},
+            "rust": {"main.rs": "fn main() {}\n", "helper.rs": "pub fn value() {}\n"},
+        },
+        "public_cases": [{"stdin": "alpha\n", "stdout": "alpha\n"}],
+        "hidden_cases": [{"stdin": "beta\n", "stdout": "beta\n"}],
+    }]
+
+    integrity = write_bundle_workspace(tmp_path, tasks, "python", "unused")
+    sources = subprocess.run(
+        [str(tmp_path / "sources")], cwd=tmp_path, capture_output=True, text=True, timeout=30
+    )
+    checked = subprocess.run(
+        [str(tmp_path / "check")], cwd=tmp_path, capture_output=True, text=True, timeout=30
+    )
+
+    assert sources.returncode == 0
+    assert "===== echo_repo/helper.py =====" in sources.stdout
+    assert "===== echo_repo/main.py =====" in sources.stdout
+    assert ".benchmark_public.json" not in sources.stdout
+    assert checked.returncode == 0, checked.stderr
+    assert "echo_repo/main.py" not in integrity
+    assert "sources" in integrity and "print_sources.py" in integrity
+
+
+def test_repository_prompt_and_command_protocol_are_controlled():
+    task = {
+        "id": "echo_repo",
+        "title": "Echo repository",
+        "statement": "Print the helper result.",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": 'to main:\n    say "x"\n'},
+            "python": {"main.py": "print(input())\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "public_cases": [{"stdin": "a\n", "stdout": "a\n"}],
+        "hidden_cases": [{"stdin": "b\n", "stdout": "b\n"}],
+    }
+    prompt = render_bundle_prompt([task], "python", "unused")
+    events = [
+        {"command": "/bin/zsh -lc ./sources"},
+        {"command": "/bin/zsh -lc ./check"},
+    ]
+
+    assert "Maintain 1 independent Python repositories" in prompt
+    assert "first shell action must be exactly `./sources`" in prompt
+    assert "Repository: `echo_repo/`; entrypoint: `echo_repo/main.py`" in prompt
+    assert command_protocol(events, allow_sources=True)["compliant"] is True
+    assert command_protocol(list(reversed(events)), allow_sources=True)["compliant"] is False
+
+
 def _maintenance_024_oracle(task_id: str, stdin: str) -> tuple[str, dict[str, str]]:
     lines = iter(stdin.splitlines())
     if task_id == "invoice_net_extension":
@@ -767,6 +826,122 @@ def test_maintenance_024_seeds_are_preserved_023_hidden_correct_sources(tmp_path
         record = json.loads((workdir / ".benchmark_attempts.jsonl").read_text())
         assert all(result["compile_ok"] for result in record["tasks"].values())
         assert not any(result["ok"] for result in record["tasks"].values())
+
+
+def _repositories_025_oracle(task_id: str, stdin: str) -> tuple[str, dict[str, str]]:
+    lines = iter(stdin.splitlines())
+    if task_id == "delivery_quote_repo":
+        distance = int(next(lines))
+        base = int(next(lines))
+        per_km = int(next(lines))
+        service = next(lines)
+        quote = base + distance * per_km
+        if service == "express":
+            quote += 300
+        if distance > 100:
+            quote += 500
+        return f"quote={quote}|service={service}\n", {}
+    if task_id == "inventory_reservation_repo":
+        stock = int(next(lines))
+        demand = int(next(lines))
+        reserved = int(next(lines))
+        mode = next(lines)
+        available = stock if mode == "urgent" else max(stock - reserved, 0)
+        fulfilled = min(demand, available)
+        return (
+            f"fulfilled={fulfilled}|backorder={demand - fulfilled}|remaining={available - fulfilled}\n",
+            {},
+        )
+    if task_id == "incident_routing_repo":
+        decisions = []
+        counts = {"email": 0, "chat": 0, "pager": 0}
+        for _ in range(int(next(lines))):
+            team, severity, after_hours = next(lines).split("|")
+            if severity == "low":
+                channel = "email"
+            elif severity == "high" and after_hours == "no":
+                channel = "chat"
+            else:
+                channel = "pager"
+            counts[channel] += 1
+            decisions.append(f"{team}:{channel}")
+        decisions.append(
+            f"email={counts['email']},chat={counts['chat']},pager={counts['pager']}"
+        )
+        return "\n".join(decisions) + "\n", {}
+    if task_id == "filtered_report_repo":
+        title = next(lines)
+        count = int(next(lines))
+        minimum = int(next(lines))
+        entries = [next(lines) for _ in range(count)]
+        accepted = [
+            (index, entry) for index, entry in enumerate(entries, 1)
+            if len(entry) >= minimum
+        ]
+        contents = title + "\n" + "".join(
+            f"{index}|{entry}\n" for index, entry in accepted
+        )
+        return (
+            f"saved={len(accepted)}|skipped={count - len(accepted)}|characters={sum(len(entry) for _, entry in accepted)}\n",
+            {"filtered_report.txt": contents},
+        )
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_repositories_025_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_025.json")
+
+    for task in tasks:
+        for case in task["public_cases"] + task["hidden_cases"]:
+            stdout, files = _repositories_025_oracle(task["id"], case["stdin"])
+            assert case["stdout"] == stdout
+            assert case.get("files", {}) == files
+
+
+def test_repositories_025_seeds_pass_old_contract_and_fail_every_new_public_case(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_repositories_025.json")
+    seed_tasks = [{**task, "public_cases": task["seed_cases"]} for task in tasks]
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for language in ("parley", "python", "rust"):
+        seed_dir = tmp_path / f"{language}-seed"
+        seed_dir.mkdir()
+        write_bundle_workspace(seed_dir, seed_tasks, language, parley)
+        seed_proc = subprocess.run(
+            [str(seed_dir / "check")], cwd=seed_dir, capture_output=True, text=True, timeout=60
+        )
+        assert seed_proc.returncode == 0, seed_proc.stderr
+
+        new_dir = tmp_path / f"{language}-new"
+        new_dir.mkdir()
+        write_bundle_workspace(new_dir, tasks, language, parley)
+        new_proc = subprocess.run(
+            [str(new_dir / "check")], cwd=new_dir, capture_output=True, text=True, timeout=60
+        )
+        assert new_proc.returncode == 1
+        record = json.loads((new_dir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
+
+
+def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
+    manifest = tmp_path / "tasks.json"
+    task = {
+        "id": "unsafe_repo",
+        "entrypoints": {"parley": "main.par", "python": "main.py", "rust": "main.rs"},
+        "seed_files": {
+            "parley": {"main.par": "to main:\n    say 1\n"},
+            "python": {"main.py": "print(1)\n", "../escape.py": "print(2)\n"},
+            "rust": {"main.rs": "fn main() {}\n"},
+        },
+        "public_cases": [{"stdin": "", "stdout": ""}],
+        "hidden_cases": [{"stdin": "", "stdout": ""}],
+    }
+    manifest.write_text(json.dumps({"schema_version": 1, "tasks": [task]}))
+
+    with pytest.raises(ValueError, match="unsafe repository source path"):
+        load_tasks(manifest)
 
 
 def test_bundle_workspace_checker_compiles_all_python_sources(tmp_path):

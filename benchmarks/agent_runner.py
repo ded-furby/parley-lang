@@ -87,6 +87,9 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
             raise ValueError(f"invalid or duplicate task id: {task_id!r}")
         seen.add(task_id)
         seed_sources = task.get("seed_sources")
+        seed_files = task.get("seed_files")
+        if seed_sources is not None and seed_files is not None:
+            raise ValueError(f"{task_id}: use seed_sources or seed_files, not both")
         if seed_sources is not None:
             if not isinstance(seed_sources, dict) or set(seed_sources) != set(LANGUAGES):
                 raise ValueError(
@@ -96,6 +99,45 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
                 if not isinstance(source_text, str) or not source_text.strip():
                     raise ValueError(
                         f"{task_id}: seed source for {language} must be non-empty text"
+                    )
+        if seed_files is not None:
+            entrypoints = task.get("entrypoints")
+            if not isinstance(seed_files, dict) or set(seed_files) != set(LANGUAGES):
+                raise ValueError(
+                    f"{task_id}: seed_files must contain exactly {list(LANGUAGES)}"
+                )
+            if not isinstance(entrypoints, dict) or set(entrypoints) != set(LANGUAGES):
+                raise ValueError(
+                    f"{task_id}: entrypoints must contain exactly {list(LANGUAGES)}"
+                )
+            for language in LANGUAGES:
+                files = seed_files[language]
+                if not isinstance(files, dict) or not files:
+                    raise ValueError(f"{task_id}: {language} seed_files must be non-empty")
+                for filename, source_text in files.items():
+                    if not isinstance(filename, str) or not isinstance(source_text, str):
+                        raise ValueError(
+                            f"{task_id}: repository paths and contents must be strings"
+                        )
+                    candidate = PurePosixPath(filename)
+                    if (
+                        not filename
+                        or candidate.is_absolute()
+                        or ".." in candidate.parts
+                        or any(part in {"", "."} for part in candidate.parts)
+                        or any(part.startswith(".") for part in candidate.parts)
+                    ):
+                        raise ValueError(
+                            f"{task_id}: unsafe repository source path: {filename!r}"
+                        )
+                    if not source_text.strip():
+                        raise ValueError(
+                            f"{task_id}: repository source {filename!r} must be non-empty"
+                        )
+                entrypoint = entrypoints[language]
+                if not isinstance(entrypoint, str) or entrypoint not in files:
+                    raise ValueError(
+                        f"{task_id}: {language} entrypoint must name a seeded file"
                     )
         for case_group in ("public_cases", "hidden_cases"):
             cases = task.get(case_group)
@@ -467,12 +509,35 @@ def parse_codex_events(stdout: str) -> dict[str, Any]:
 _ALLOWED_CHECK_COMMAND = re.compile(
     r"^(?:/bin/(?:zsh|sh)\s+-lc\s+)?[\"']?\./check[\"']?$"
 )
+_ALLOWED_SOURCES_COMMAND = re.compile(
+    r"^(?:/bin/(?:zsh|sh)\s+-lc\s+)?[\"']?\./sources[\"']?$"
+)
 
 
-def command_protocol(command_events: list[dict[str, Any]]) -> dict[str, Any]:
+def command_protocol(
+    command_events: list[dict[str, Any]], *, allow_sources: bool = False
+) -> dict[str, Any]:
     """Require shell activity to be exactly the supplied public checker."""
     commands = [str(event.get("command", "")).strip() for event in command_events]
-    violations = [command for command in commands if not _ALLOWED_CHECK_COMMAND.fullmatch(command)]
+    allowed = [_ALLOWED_CHECK_COMMAND]
+    if allow_sources:
+        allowed.append(_ALLOWED_SOURCES_COMMAND)
+    violations = [
+        command for command in commands
+        if not any(pattern.fullmatch(command) for pattern in allowed)
+    ]
+    if allow_sources:
+        source_commands = [
+            command for command in commands if _ALLOWED_SOURCES_COMMAND.fullmatch(command)
+        ]
+        if len(source_commands) != 1:
+            violations.append(
+                f"expected exactly one ./sources command, observed {len(source_commands)}"
+            )
+        if commands and not _ALLOWED_SOURCES_COMMAND.fullmatch(commands[0]):
+            violations.append("first shell command was not ./sources")
+        if not any(_ALLOWED_CHECK_COMMAND.fullmatch(command) for command in commands):
+            violations.append("no ./check command observed")
     return {
         "compliant": bool(commands) and not violations,
         "commands": commands,
