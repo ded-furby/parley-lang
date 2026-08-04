@@ -930,6 +930,13 @@ Update it whenever you finish or start a work item.
   pass 71/71 with pinned Parley and Cargo on `PATH`. Commit the corpus before
   protocol 031. Do not change the language/instruction or choose tasks from
   measured output.
+- **Deeper project preregistration (iteration 031):** protocol SHA
+  `4ede556b6010d2c011c0f109e83cf9502893536affed10b1e17973a1e2bbf19e`
+  freezes six complete four-task bundles per language: 18 fresh sessions and
+  72 assignments, seed `20260825`, v0.3.155, and the unchanged skill. The
+  strict four-condition gate remains, plus 24/24 exact Parley root-file fixes.
+  Run all cells once with no exclusion or rerun; a failure cannot trigger
+  same-corpus language/instruction/task tuning.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

@@ -2811,3 +2811,46 @@ complete `tests/test_benchmarks.py` module, 71/71.
 No compiler, instruction, runner, grammar, task-selection, or benchmark metric
 change is included. Commit this corpus checkpoint before freezing protocol 031.
 The one instruction-compression experiment remains closed.
+
+## Pre-registration for 031 — Deeper multi-file project diagnosis
+
+- Date frozen: 2026-08-05
+- Compiler: Parley 0.3.155; last language change commit
+  `8f4a66885f3e0837f1595d72cf38ada5b8112f97`
+- Corpus checkpoint: `f836fce`
+- Task manifest SHA-256:
+  `7f81e6e6f62303d0f83c1e3451a1374c61c2fdf10a35a62fc6c89642178f46b2`
+- Model: `gpt-5.6-sol`, medium reasoning
+- Instruction: unchanged 1,519-character core, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Protocol: `benchmarks/bundle_protocol_031.json`, SHA-256
+  `4ede556b6010d2c011c0f109e83cf9502893536affed10b1e17973a1e2bbf19e`
+- Matrix: four-task complete bundles × three languages × six replicates = 18
+  fresh sessions and 72 hidden-judged assignments
+- Seed: `20260825`
+
+Every replicate contains all four tasks exactly once; order is frozen by the
+seed. Each language receives 24 repository assignments, 120 editable-file
+exposures, and 72 visibly read-only file exposures. A full session contains 20
+editable modules and 12 read-only evidence files. Raw context files sum 3,446
+characters/40 lines; the runner's task-level joins record 3,454/48. Rough
+context tokens remain 634 under either bookkeeping view.
+
+The strict size-four gate is unchanged: 100% hidden correctness no lower than
+either baseline; median reported tokens/repository no higher than the lower
+baseline; median elapsed seconds/repository no higher than the lower baseline;
+and first-check success no lower than the higher baseline. All four conditions
+must pass. A fifth maintainability condition requires all 24 Parley assignments
+to change exactly their frozen root-defect file.
+
+Run every cell once with `gpt-5.6-sol` medium and max concurrency three. Report
+every result, event shape, repair, token/time distribution, source/context/edit
+metric, changed file, integrity judgment, root-location result, and task-level
+cut. No cell may be rerun or excluded. Do not pool the gate with iteration 030.
+
+If all five conditions pass, preserve the result as a six-replicate deeper-task
+pilot and preregister independent confirmation before a general claim. If any
+condition fails, preserve it and make no same-corpus syntax, compiler, prompt,
+skill, task, harness, or metric change. Only semantic failures recurring across
+independent projects may enter separate general-usefulness design review. The
+one instruction-compression experiment remains closed.
