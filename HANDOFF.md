@@ -18,7 +18,7 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-07-29)
+## Where things stand (2026-08-04)
 
 ### Done and verified
 
@@ -629,14 +629,16 @@ Update it whenever you finish or start a work item.
   that task leaves a similar 3.81% token gap to Python. No compiler change is
   justified. Require cross-task evidence plus general usefulness, semantic
   consistency, and maintainability for future proposals.
-- **Workload-scale pre-registration (iteration 017):**
-  `benchmarks/bundle_protocol_017.json` freezes a 90-session, 192-solution
-  scale study before any output is observed. The same eight tasks are assigned
-  exactly once per language and replicate at bundle sizes 1, 2, 4, and 8.
-  The size-eight gate requires Parley to match the better baseline on hidden
-  correctness, tokens/task, seconds/task, and first-check task success. The
-  compiler and 1,519-character skill remain frozen, and all decisions/results
-  continue in `benchmarks/EXPERIMENT_LOG.md` plus immutable numbered HTML.
+- **Workload-scale result (iteration 017):** all 192 task-solutions across 90
+  fresh sessions passed hidden cases, checker integrity, and protocol checks.
+  Fixed prompt overhead amortized as intended, but repair loops made size-eight
+  Parley consume 19,273.88 median tokens/task versus Python's 5,716.75 (3.37×),
+  so the strict gate failed tokens, time, and first-check reliability. A
+  cross-task audit found ordinary identifier `position` rejected in four
+  unrelated tasks, while unsupported `modulo` remained confined to rotation.
+  The only justified compiler candidate is contextual `position`; preserve
+  `benchmarks/reports/017-workload-scale-parity-failed.html`, keep the
+  1,519-character skill frozen, and rerun the same workload as iteration 018.
 - Repo: https://github.com/ded-furby/parley-lang (GitHub account
   `ded-furby`). It is public as of 2026-06-18. Live website:
   https://ded-furby.github.io/parley-lang/ served by GitHub Pages from

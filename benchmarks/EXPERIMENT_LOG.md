@@ -945,3 +945,62 @@ amortized value. Do not compress the instruction core again. Do not change
 syntax or compiler semantics from one workload, task, or transcript; require
 the same issue across at least two unrelated tasks plus an independent case
 for general usefulness, semantic consistency, and maintainability.
+
+## 017 — Workload scale: amortization works, strict parity fails
+
+- Date: 2026-08-04
+- Toolchain: Parley 0.3.151, preregistration commit
+  `2d0a4360f32126324e14155b5f641d7ec5c5fbc5`
+- Agent: `gpt-5.6-sol`, medium reasoning, Codex CLI 0.146.0
+- Matrix: bundle sizes 1, 2, 4, and 8; 90 fresh sessions; 192 independently
+  judged task-solutions
+- Result JSON SHA-256: `309022cb61a1cc208586c42ecf411227a537781a1ee3f6896b94815b5db2804d`
+- Frozen protocol SHA-256: `d7768b0d7aef0f0f04606429fbe3a322f9f321dace4048eba4a4cf342622fca1`
+- Parley skill SHA-256: `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Report: `benchmarks/reports/017-workload-scale-parity-failed.html`
+
+| Bundle size | Language | Hidden tasks | First-check tasks | Median tokens/task | Median seconds/task | Repair turns |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | Parley | 16/16 | 13/16 | 40,793.50 | 19.8440 | 7 |
+| 1 | Python | 16/16 | 16/16 | 39,278.00 | 17.5571 | 0 |
+| 1 | Rust | 16/16 | 16/16 | 39,546.50 | 19.9184 | 0 |
+| 2 | Parley | 16/16 | 15/16 | 21,065.75 | 12.9838 | 1 |
+| 2 | Python | 16/16 | 16/16 | 20,120.25 | 10.7401 | 0 |
+| 2 | Rust | 16/16 | 16/16 | 20,374.25 | 12.6012 | 0 |
+| 4 | Parley | 16/16 | 15/16 | 11,076.13 | 9.1367 | 2 |
+| 4 | Python | 16/16 | 16/16 | 10,555.00 | 6.5878 | 0 |
+| 4 | Rust | 16/16 | 16/16 | 10,783.88 | 9.2004 | 0 |
+| 8 | Parley | 16/16 | 11/16 | 19,273.88 | 13.4129 | 6 |
+| 8 | Python | 16/16 | 16/16 | 5,716.75 | 4.6577 | 0 |
+| 8 | Rust | 16/16 | 16/16 | 5,965.38 | 6.8335 | 0 |
+
+### Gate result
+
+All 192 task-solutions passed hidden cases, and all 90 sessions preserved
+checker integrity and protocol compliance. The size-eight strict gate
+nevertheless **failed three of four conditions**: correctness passed, while
+Parley missed tokens/task, seconds/task, and first-check task success. Its
+19,273.88 median tokens/task were 3.37× Python's 5,716.75.
+
+### Mechanism and cross-task audit
+
+The intended fixed-cost amortization did occur: Parley's prompt-character gap
+to Python fell from 1,681 per task at size one to 211.88 at size eight, and
+clean-session token use fell through size four. Repairs then dominated the
+size-eight result; neither Parley session was repair-free.
+
+Every language passed every hidden task. Parley's ten first-check task
+failures were compile-time P101 diagnostics. Five failure events used
+`position` as an ordinary variable across four unrelated tasks; five used the
+unsupported word `modulo`, all in word rotation alone. Rotation finished 2/8
+on its first check, while the next weakest task finished 6/8.
+
+### Decision
+
+The recurring `position` collision satisfies the predeclared cross-task rule
+and has an independent language-design case: position is a common identifier,
+and allowing it contextually can preserve the existing `position of ... in
+...` operator without adding a new concept. Implement and test that one
+general compiler change. Do not add `modulo` from this evidence: it remains
+confined to one task. Keep the 1,519-character instruction core frozen, then
+rerun the same workload under a separately preserved iteration 018 protocol.
