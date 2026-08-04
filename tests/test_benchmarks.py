@@ -14,6 +14,7 @@ from benchmarks.agent_runner import (
     load_tasks,
     rejudge_report,
     render_prompt,
+    run_cases,
     summarize,
 )
 from benchmarks.bundle_runner import (
@@ -383,6 +384,44 @@ def test_arithmetic_vocabulary_corpus_is_independent_and_unprimed():
     assert all(len(task["hidden_cases"]) == 4 for task in tasks)
 
 
+def test_application_corpus_is_new_cross_domain_and_has_real_file_judgment():
+    path = BENCHMARKS / "agent_tasks_application_023.json"
+    manifest = json.loads(path.read_text())
+    tasks = load_tasks(path)
+    prior_ids = {
+        task["id"]
+        for filename in (
+            "tasks.json",
+            "agent_tasks.json",
+            "agent_tasks_broad.json",
+            "agent_tasks_arithmetic_vocabulary.json",
+            "agent_tasks_broad_021.json",
+        )
+        for task in json.loads((BENCHMARKS / filename).read_text())["tasks"]
+    }
+
+    assert len(tasks) == 8
+    assert len({task["category"] for task in tasks}) == 8
+    assert not ({task["id"] for task in tasks} & prior_ids)
+    assert all(len(task["public_cases"]) == 1 for task in tasks)
+    assert all(len(task["hidden_cases"]) == 4 for task in tasks)
+    file_task = next(task for task in tasks if task["id"] == "file_backed_notes")
+    assert all(
+        set(case["files"]) == {"file_backed_notes.txt"}
+        for group in ("public_cases", "hidden_cases")
+        for case in file_task[group]
+    )
+    analysis = manifest["predeclared_analysis"]
+    assert analysis["matrix"] == (
+        "8 tasks x 3 languages x 6 complete-bundle replicates = "
+        "18 fresh sessions and 144 hidden-judged assignments"
+    )
+    assert analysis["seed"] == 20260809
+    assert "one allowed instruction-compression experiment remains closed" in (
+        analysis["instruction_rule"]
+    )
+
+
 def test_vocabulary_protocol_019_freezes_evidence_gate():
     protocol = json.loads((BENCHMARKS / "vocabulary_protocol_019.json").read_text())
     config = protocol["frozen_config"]
@@ -550,6 +589,71 @@ def test_bundle_workspace_checker_compiles_all_python_sources(tmp_path):
         hashlib.sha256((tmp_path / name).read_bytes()).hexdigest() == digest
         for name, digest in integrity.items()
     )
+
+
+def test_task_manifest_expected_files_are_path_safe(tmp_path):
+    manifest = tmp_path / "tasks.json"
+    payload = {
+        "schema_version": 1,
+        "tasks": [{
+            "id": "unsafe_file",
+            "public_cases": [{"stdin": "", "stdout": "", "files": {"../escape.txt": "no"}}],
+            "hidden_cases": [{"stdin": "", "stdout": ""}],
+        }],
+    }
+    manifest.write_text(json.dumps(payload))
+
+    with pytest.raises(ValueError, match="unsafe expected file path"):
+        load_tasks(manifest)
+
+
+def test_case_judgment_requires_exact_expected_file_and_cleans_previous_case(tmp_path):
+    source = tmp_path / "writer.py"
+    source.write_text(
+        "from pathlib import Path\n"
+        "value = input()\n"
+        "if value != 'skip':\n"
+        "    Path('result.txt').write_text(value + '\\n')\n"
+        "print(value)\n"
+    )
+    cases = [
+        {"stdin": "first\n", "stdout": "first\n", "files": {"result.txt": "first\n"}},
+        {"stdin": "skip\n", "stdout": "skip\n", "files": {"result.txt": "first\n"}},
+    ]
+
+    results = run_cases("python", source, tmp_path / "unused", cases)
+
+    assert results[0]["ok"] is True
+    assert results[0]["actual_files"] == {"result.txt": "first\n"}
+    assert results[1]["ok"] is False
+    assert results[1]["actual_files"] == {"result.txt": None}
+
+
+def test_bundle_workspace_checker_enforces_expected_files(tmp_path):
+    tasks = [{
+        "id": "write_note",
+        "public_cases": [{
+            "stdin": "hello\n",
+            "stdout": "saved\n",
+            "files": {"note.txt": "hello\n"},
+        }],
+    }]
+    write_bundle_workspace(tmp_path, tasks, "python", "unused")
+    (tmp_path / "write_note.py").write_text(
+        "from pathlib import Path\n"
+        "Path('note.txt').write_text(input() + '\\n')\n"
+        "print('saved')\n"
+    )
+
+    proc = subprocess.run(
+        [str(tmp_path / "check")], cwd=tmp_path, capture_output=True, text=True, timeout=30
+    )
+
+    assert proc.returncode == 0, proc.stderr
+    record = json.loads((tmp_path / ".benchmark_attempts.jsonl").read_text())
+    case = record["tasks"]["write_note"]["cases"][0]
+    assert case["expected_files"] == {"note.txt": "hello\n"}
+    assert case["actual_files"] == {"note.txt": "hello\n"}
 
 
 def test_bundle_summary_applies_strict_scale_gate():

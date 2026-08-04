@@ -169,6 +169,11 @@ for task in config["tasks"]:
     if compiled.returncode == 0:
         run_command = [sys.executable, source.name] if language == "python" else [str(binary)]
         for case_index, case in enumerate(task["public_cases"], 1):
+            expected_files = case.get("files", {})
+            for filename in expected_files:
+                output_path = Path(filename)
+                if output_path.is_file() or output_path.is_symlink():
+                    output_path.unlink()
             proc = subprocess.run(
                 run_command,
                 input=case["stdin"],
@@ -176,12 +181,19 @@ for task in config["tasks"]:
                 text=True,
                 timeout=10,
             )
+            actual_files = {
+                filename: Path(filename).read_text(encoding="utf-8") if Path(filename).is_file() else None
+                for filename in expected_files
+            }
+            files_ok = all(actual_files[name] == content for name, content in expected_files.items())
             case_results.append({
                 "case": case_index,
-                "ok": proc.returncode == 0 and proc.stdout == case["stdout"],
+                "ok": proc.returncode == 0 and proc.stdout == case["stdout"] and files_ok,
                 "returncode": proc.returncode,
                 "expected_stdout": case["stdout"],
                 "actual_stdout": proc.stdout,
+                "expected_files": expected_files,
+                "actual_files": actual_files,
                 "stderr": proc.stderr,
             })
     task_results[task_id] = {
@@ -214,6 +226,11 @@ for task_id, result in task_results.items():
         if not case["ok"]:
             print(f"case {case['case']} expected {case['expected_stdout']!r}", file=sys.stderr)
             print(f"case {case['case']} actual   {case['actual_stdout']!r}", file=sys.stderr)
+            for filename, expected in case.get("expected_files", {}).items():
+                actual = case.get("actual_files", {}).get(filename)
+                if actual != expected:
+                    print(f"case {case['case']} file {filename} expected {expected!r}", file=sys.stderr)
+                    print(f"case {case['case']} file {filename} actual   {actual!r}", file=sys.stderr)
             if case["stderr"]:
                 print(case["stderr"], end="", file=sys.stderr)
 

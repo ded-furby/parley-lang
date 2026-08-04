@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "description": "Eight previously unused application-style tasks spanning structured business data, state transitions, policy evaluation, scheduling, configuration, and verified file output.",
+  "predeclared_analysis": {
+    "experiment_id": "023",
+    "matrix": "8 tasks x 3 languages x 6 complete-bundle replicates = 18 fresh sessions and 144 hidden-judged assignments",
+    "seed": 20260809,
+    "scope": "Richer one-file applications with multiple input entities and operations; one task requires exact filesystem output. No task id or statement appeared in iterations 001-022.",
+    "primary_question": "Does Parley match Python and Rust on final correctness, first-check reliability, reported agent tokens, and elapsed time when programs express application workflows rather than narrow algorithm exercises?",
+    "change_rule": "Preserve all output. No language change may follow one task, transcript, session, or token gap. Proposals require independent recurrence across unrelated new tasks, general usefulness, semantic consistency, and maintainability.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "tasks": [
+    {
+      "id": "invoice_rollup",
+      "title": "Invoice rollup",
+      "category": "business aggregation",
+      "statement": "Read a customer name, then a non-negative integer N, then exactly N invoice item lines in the form category|quantity|unit_price_cents. Category is non-empty text without |, quantity and unit price are non-negative whole numbers. Each line amount is quantity times unit price. Print customer|subtotal|category:amount,... where subtotal is the sum of all line amounts and category totals are joined by commas in increasing category order. If there are no categories, the final field after the second | is empty.",
+      "public_cases": [
+        {"stdin":"Acme\n4\noffice|2|150\nfood|3|200\noffice|1|500\ntravel|1|1250\n","stdout":"Acme|2650|food:600,office:800,travel:1250\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"Zero\n0\n","stdout":"Zero|0|\n"},
+        {"stdin":"Solo\n1\ngear|5|99\n","stdout":"Solo|495|gear:495\n"},
+        {"stdin":"Cafe\n5\ndrink|2|250\nfood|1|900\ndrink|1|175\nother|3|100\nfood|2|450\n","stdout":"Cafe|2775|drink:675,food:1800,other:300\n"},
+        {"stdin":"Mixed\n4\nz|0|999\na|2|10\nz|3|7\na|1|5\n","stdout":"Mixed|46|a:25,z:21\n"}
+      ]
+    },
+    {
+      "id": "ticket_workflow",
+      "title": "Support ticket workflow",
+      "category": "mutable workflow",
+      "statement": "Read a non-negative integer N, then N ticket lines id|priority|state. IDs are unique non-empty text, priority is 1 through 5, and state is open or closed. Then read a non-negative integer M and M command lines id|action. For a known ID, close sets state closed, reopen sets state open, and escalate increases priority by one but never above 5. Commands for unknown IDs are ignored. Print only open tickets as id:priority joined by commas, ordered by decreasing priority and then increasing ID for ties. Print one empty line when no ticket is open.",
+      "public_cases": [
+        {"stdin":"3\nT3|2|open\nT1|5|closed\nT2|3|open\n4\nT1|reopen\nT2|escalate\nT3|close\nT9|reopen\n","stdout":"T1:5,T2:4\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n2\nX|close\nY|escalate\n","stdout":"\n"},
+        {"stdin":"1\nA|1|open\n5\nA|escalate\nA|escalate\nA|escalate\nA|escalate\nA|escalate\n","stdout":"A:5\n"},
+        {"stdin":"4\nB|2|open\nA|2|open\nC|5|closed\nD|1|open\n4\nC|reopen\nA|close\nD|escalate\nD|escalate\n","stdout":"C:5,D:3,B:2\n"},
+        {"stdin":"2\nX2|4|closed\nX1|3|open\n3\nX1|close\nX2|escalate\nX2|close\n","stdout":"\n"}
+      ]
+    },
+    {
+      "id": "configuration_overlay",
+      "title": "Configuration overlay",
+      "category": "configuration management",
+      "statement": "Read a non-negative integer N and then N base lines key=value. Read a non-negative integer M and then M overlay lines key=value. Keys are non-empty text without = and values are text without newlines. Later base lines replace earlier base values. Apply overlay lines in order: value DELETE removes the key if present; any other value inserts or replaces it. Print the final entries as key=value joined by semicolons in increasing key order, or one empty line when no entries remain.",
+      "public_cases": [
+        {"stdin":"3\ntheme=light\ntimeout=30\nregion=us\n3\ntimeout=45\ntheme=DELETE\nretries=3\n","stdout":"region=us;retries=3;timeout=45\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n0\n","stdout":"\n"},
+        {"stdin":"1\na=1\n1\na=DELETE\n","stdout":"\n"},
+        {"stdin":"3\nn=1\nn=2\nm=x\n2\nz=9\nm=y\n","stdout":"m=y;n=2;z=9\n"},
+        {"stdin":"2\nb=two\na=one\n3\nc=three\nx=DELETE\na=final\n","stdout":"a=final;b=two;c=three\n"}
+      ]
+    },
+    {
+      "id": "access_policy_audit",
+      "title": "Access policy audit",
+      "category": "policy evaluation",
+      "statement": "Read a non-negative integer N and N allowed-policy lines role|resource|action. Then read a non-negative integer M and M request lines user|role|resource|action. A request is allowed only when its role, resource, and action exactly match at least one policy. For each request, print user:allow or user:deny in input order. After all requests print allowed=X,denied=Y. With zero requests, print only the summary line.",
+      "public_cases": [
+        {"stdin":"3\nadmin|report|view\neditor|article|edit\nreader|article|view\n4\nada|admin|report|view\nben|reader|article|edit\ncy|editor|article|edit\ndan|guest|article|view\n","stdout":"ada:allow\nben:deny\ncy:allow\ndan:deny\nallowed=2,denied=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n0\n","stdout":"allowed=0,denied=0\n"},
+        {"stdin":"1\nowner|site|deploy\n3\nu1|owner|site|deploy\nu2|owner|site|view\nu3|Owner|site|deploy\n","stdout":"u1:allow\nu2:deny\nu3:deny\nallowed=1,denied=2\n"},
+        {"stdin":"3\nr|x|read\nr|x|read\nr|y|write\n4\na|r|x|read\nb|r|y|write\nc|r|y|read\nd|q|x|read\n","stdout":"a:allow\nb:allow\nc:deny\nd:deny\nallowed=2,denied=2\n"},
+        {"stdin":"2\nanalyst|sales|view\nanalyst|costs|view\n2\nlee|analyst|costs|view\nkim|analyst|sales|view\n","stdout":"lee:allow\nkim:allow\nallowed=2,denied=0\n"}
+      ]
+    },
+    {
+      "id": "meeting_schedule",
+      "title": "Meeting room schedule",
+      "category": "scheduling",
+      "statement": "Read a non-negative integer N and N booking lines room|start|end|title. Room and title are non-empty text without |; start and end are whole minutes with start less than end. Process bookings in input order. Accept a booking when it does not overlap any previously accepted booking in the same room; touching endpoints do not overlap. Reject it otherwise. Print accepted titles in input order joined by commas, then |rejected=R. When no title is accepted, the text before | is empty.",
+      "public_cases": [
+        {"stdin":"5\nA|60|120|Standup\nA|90|100|Clash\nB|90|110|Design\nA|120|180|Planning\nB|100|130|Review\n","stdout":"Standup,Design,Planning|rejected=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"|rejected=0\n"},
+        {"stdin":"3\nR|0|10|One\nR|10|20|Two\nR|20|30|Three\n","stdout":"One,Two,Three|rejected=0\n"},
+        {"stdin":"4\nA|0|10|one\nA|5|15|two\nA|10|20|three\nA|15|18|four\n","stdout":"one,three|rejected=2\n"},
+        {"stdin":"4\nA|5|25|alpha\nB|10|20|beta\nA|0|5|gamma\nB|20|30|delta\n","stdout":"alpha,beta,gamma,delta|rejected=0\n"}
+      ]
+    },
+    {
+      "id": "shipment_state",
+      "title": "Shipment state transitions",
+      "category": "state machine",
+      "statement": "Read a non-negative integer N and N shipment lines id|state, where IDs are unique and state is created, packed, shipped, or delivered. Then read a non-negative integer M and M event lines id|action, where action is pack, ship, or deliver. The only valid transitions are created with pack to packed, packed with ship to shipped, and shipped with deliver to delivered. Every event for an unknown ID or invalid transition increments an invalid counter and changes nothing. Print all shipments in increasing ID order as id:state joined by commas, followed by |invalid=K. With no shipments the text before | is empty.",
+      "public_cases": [
+        {"stdin":"3\nS2|packed\nS1|created\nS3|delivered\n5\nS1|pack\nS2|ship\nS1|ship\nS3|deliver\nX|pack\n","stdout":"S1:shipped,S2:shipped,S3:delivered|invalid=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n2\nX|pack\nY|ship\n","stdout":"|invalid=2\n"},
+        {"stdin":"1\nA|created\n3\nA|pack\nA|ship\nA|deliver\n","stdout":"A:delivered|invalid=0\n"},
+        {"stdin":"2\nB|packed\nA|created\n4\nA|ship\nB|deliver\nB|ship\nB|deliver\n","stdout":"A:created,B:delivered|invalid=2\n"},
+        {"stdin":"2\nZ|shipped\nY|delivered\n3\nZ|deliver\nZ|deliver\nY|pack\n","stdout":"Y:delivered,Z:delivered|invalid=2\n"}
+      ]
+    },
+    {
+      "id": "contact_merge",
+      "title": "Contact directory merge",
+      "category": "record deduplication",
+      "statement": "Read a non-negative integer N and N contact lines email|name|city. Email is a non-empty unique key format without |; name and city are non-empty text without |. When an email appears again, the later name and city replace the earlier values. Print the final contacts in increasing email order as email:name@city joined by commas, followed by |unique=U. With no contacts the text before | is empty.",
+      "public_cases": [
+        {"stdin":"4\nb@x|Bea|Perth\na@x|Ari|Sydney\nb@x|Beatrice|Melbourne\nc@x|Cam|Perth\n","stdout":"a@x:Ari@Sydney,b@x:Beatrice@Melbourne,c@x:Cam@Perth|unique=3\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"|unique=0\n"},
+        {"stdin":"1\nz@z|Zed|Darwin\n","stdout":"z@z:Zed@Darwin|unique=1\n"},
+        {"stdin":"3\na@x|A|One\na@x|AA|Two\na@x|AAA|Three\n","stdout":"a@x:AAA@Three|unique=1\n"},
+        {"stdin":"4\nc@x|C|Cairns\na@x|A|Adelaide\nd@x|D|Darwin\nb@x|B|Brisbane\n","stdout":"a@x:A@Adelaide,b@x:B@Brisbane,c@x:C@Cairns,d@x:D@Darwin|unique=4\n"}
+      ]
+    },
+    {
+      "id": "file_backed_notes",
+      "title": "File-backed notes",
+      "category": "filesystem workflow",
+      "statement": "Read a title line, then a non-negative integer N, then exactly N note lines (which may be empty). Overwrite a file named file_backed_notes.txt with the title and note lines, each followed by a newline. Read that file back before producing the summary. Print title|N|nonempty|characters, where nonempty counts note lines whose length is greater than zero and characters is the sum of note-line lengths, excluding newline separators. The checker verifies both stdout and the exact file contents for every case.",
+      "public_cases": [
+        {"stdin":"Project\n3\nfirst\n\nthird note\n","stdout":"Project|3|2|15\n","files":{"file_backed_notes.txt":"Project\nfirst\n\nthird note\n"}}
+      ],
+      "hidden_cases": [
+        {"stdin":"Empty\n0\n","stdout":"Empty|0|0|0\n","files":{"file_backed_notes.txt":"Empty\n"}},
+        {"stdin":"Solo\n1\nhello world\n","stdout":"Solo|1|1|11\n","files":{"file_backed_notes.txt":"Solo\nhello world\n"}},
+        {"stdin":"Spaces\n3\na b\ncd\n\n","stdout":"Spaces|3|2|5\n","files":{"file_backed_notes.txt":"Spaces\na b\ncd\n\n"}},
+        {"stdin":"Log\n4\none\ntwo two\nthree\nfour!\n","stdout":"Log|4|4|20\n","files":{"file_backed_notes.txt":"Log\none\ntwo two\nthree\nfour!\n"}}
+      ]
+    }
+  ]
+}

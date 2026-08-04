@@ -23,7 +23,7 @@ import sys
 import tempfile
 import time
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -93,6 +93,22 @@ def load_tasks(path: Path) -> list[dict[str, Any]]:
             for case in cases:
                 if not isinstance(case.get("stdin"), str) or not isinstance(case.get("stdout"), str):
                     raise ValueError(f"{task_id}: every case needs string stdin/stdout")
+                expected_files = case.get("files", {})
+                if not isinstance(expected_files, dict):
+                    raise ValueError(f"{task_id}: case files must be a path-to-text object")
+                for filename, content in expected_files.items():
+                    if not isinstance(filename, str) or not isinstance(content, str):
+                        raise ValueError(f"{task_id}: expected file paths and contents must be strings")
+                    candidate = PurePosixPath(filename)
+                    if (
+                        not filename
+                        or candidate.is_absolute()
+                        or ".." in candidate.parts
+                        or any(part in {"", "."} for part in candidate.parts)
+                        or candidate.parts[0].startswith(".")
+                        or candidate.parts[0] in {"check", "check_public.py", "prompt.md"}
+                    ):
+                        raise ValueError(f"{task_id}: unsafe expected file path: {filename!r}")
     return tasks
 
 
@@ -150,6 +166,11 @@ def run_cases(
     command = [sys.executable, source.name] if language == "python" else [str(binary)]
     results = []
     for index, case in enumerate(cases, 1):
+        expected_files = case.get("files", {})
+        for filename in expected_files:
+            output_path = source.parent / filename
+            if output_path.is_file() or output_path.is_symlink():
+                output_path.unlink()
         started = time.perf_counter()
         try:
             proc = subprocess.run(
@@ -160,12 +181,23 @@ def run_cases(
                 text=True,
                 timeout=timeout,
             )
+            actual_files = {
+                filename: (
+                    (source.parent / filename).read_text(encoding="utf-8")
+                    if (source.parent / filename).is_file()
+                    else None
+                )
+                for filename in expected_files
+            }
+            files_ok = all(actual_files[name] == content for name, content in expected_files.items())
             result = {
                 "case": index,
-                "ok": proc.returncode == 0 and proc.stdout == case["stdout"],
+                "ok": proc.returncode == 0 and proc.stdout == case["stdout"] and files_ok,
                 "returncode": proc.returncode,
                 "expected_stdout": case["stdout"],
                 "actual_stdout": proc.stdout,
+                "expected_files": expected_files,
+                "actual_files": actual_files,
                 "stderr": proc.stderr,
                 "elapsed_seconds": round(time.perf_counter() - started, 4),
             }
@@ -176,6 +208,8 @@ def run_cases(
                 "returncode": None,
                 "expected_stdout": case["stdout"],
                 "actual_stdout": "",
+                "expected_files": expected_files,
+                "actual_files": {},
                 "stderr": str(exc),
                 "elapsed_seconds": round(time.perf_counter() - started, 4),
             }
@@ -232,6 +266,11 @@ case_results = []
 if compiled.returncode == 0:
     run_command = [sys.executable, source.name] if language == "python" else [str(binary)]
     for index, case in enumerate(config["public_cases"], 1):
+        expected_files = case.get("files", {})
+        for filename in expected_files:
+            output_path = Path(filename)
+            if output_path.is_file() or output_path.is_symlink():
+                output_path.unlink()
         proc = subprocess.run(
             run_command,
             input=case["stdin"],
@@ -239,12 +278,19 @@ if compiled.returncode == 0:
             text=True,
             timeout=10,
         )
+        actual_files = {
+            filename: Path(filename).read_text(encoding="utf-8") if Path(filename).is_file() else None
+            for filename in expected_files
+        }
+        files_ok = all(actual_files[name] == content for name, content in expected_files.items())
         case_results.append({
             "case": index,
-            "ok": proc.returncode == 0 and proc.stdout == case["stdout"],
+            "ok": proc.returncode == 0 and proc.stdout == case["stdout"] and files_ok,
             "returncode": proc.returncode,
             "expected_stdout": case["stdout"],
             "actual_stdout": proc.stdout,
+            "expected_files": expected_files,
+            "actual_files": actual_files,
             "stderr": proc.stderr,
         })
 
@@ -271,6 +317,11 @@ for case in case_results:
         print(f"public case {case['case']} failed", file=sys.stderr)
         print(f"expected stdout: {case['expected_stdout']!r}", file=sys.stderr)
         print(f"actual stdout:   {case['actual_stdout']!r}", file=sys.stderr)
+        for filename, expected in case.get("expected_files", {}).items():
+            actual = case.get("actual_files", {}).get(filename)
+            if actual != expected:
+                print(f"expected file {filename}: {expected!r}", file=sys.stderr)
+                print(f"actual file {filename}:   {actual!r}", file=sys.stderr)
         if case["stderr"]:
             print(f"stderr: {case['stderr']}", file=sys.stderr)
 if ok:
