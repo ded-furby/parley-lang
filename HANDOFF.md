@@ -904,6 +904,22 @@ Update it whenever you finish or start a work item.
   before output, then run every cell once. Report reciprocal-size token fits
   descriptively; do not treat two size-eight cells as confirmation or tune any
   task/language/instruction from the result.
+- **Ninety-session scaling result (iteration 030):** all 90 fresh sessions and
+  192 assignments pass first check, hidden cases, root-defect location,
+  integrity, and command protocol with zero repairs. Size-eight Parley records
+  8,344.00 tokens/repo and 4.5740 seconds versus Python's 8,059.56/4.0855 and
+  Rust's 8,508.31/5.1263. It beats Rust by 1.93% tokens and 10.77% elapsed but
+  trails Python by 3.53%/11.96%, so the strict gate is 2/4 and root quality is
+  64/64. A reciprocal-size fit (R² > 0.99999 for all languages) estimates the
+  Parley/Python gap as +2,009.535 fixed tokens/session plus +74.358 residual
+  tokens/task; versus Rust it is +1,677.022 fixed and −287.745 residual, with a
+  descriptive crossover near 5.83 tasks/session. Preserve raw SHA
+  `ab49ad72652fc686e703aef2b7f5f9bd691d217ce4455237598bcca5d0b07adc`
+  and report SHA
+  `7f03cdc214a302e3b3236433111c4e579fc90f25cc80faa856c3fbd3dfc2e9bd`.
+  No compiler or instruction change follows. Rust parity is confirmed for
+  diagnosis bundles around six or more tasks; Python parity is not. Next use
+  preregistered deeper project episodes, not same-corpus tuning.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

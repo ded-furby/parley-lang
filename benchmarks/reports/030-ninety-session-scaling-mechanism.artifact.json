@@ -1,0 +1,4026 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Ninety-Session Scaling Mechanism \u2014 Iteration 030",
+    "description": "Preregistered size 1/2/4/8 diagnosis scaling curve over 90 fresh sessions.",
+    "generatedAt": "2026-08-04T20:01:25Z",
+    "cards": [
+      {
+        "id": "sessions_card",
+        "description": "Every planned fresh session, retained once.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Fresh sessions",
+            "field": "sessions",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "hidden_card",
+        "description": "Assignments passing every withheld case.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Hidden success",
+            "field": "hidden_successes",
+            "format": "number",
+            "unit": "of 192"
+          }
+        ]
+      },
+      {
+        "id": "first_card",
+        "description": "Assignments passing the untouched first check.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "First-check success",
+            "field": "first_successes",
+            "format": "number",
+            "unit": "of 192"
+          }
+        ]
+      },
+      {
+        "id": "repair_card",
+        "description": "Additional public-check turns across all sessions.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Repairs",
+            "field": "repairs",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "gate_card",
+        "description": "Strict size-eight parity conditions passed.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Gate conditions",
+            "field": "gate_conditions_passed",
+            "format": "number",
+            "unit": "of 4"
+          }
+        ]
+      },
+      {
+        "id": "root_card",
+        "description": "Parley assignments modifying the frozen root-defect file.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Parley root fixes",
+            "field": "parley_root_fixes",
+            "format": "number",
+            "unit": "of 64"
+          }
+        ]
+      },
+      {
+        "id": "python_gap_card",
+        "description": "Size-eight Parley token delta relative to Python.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Token delta vs Python",
+            "field": "token_gap_python_percent",
+            "format": "number",
+            "unit": "%",
+            "signed": true
+          }
+        ]
+      },
+      {
+        "id": "rust_gap_card",
+        "description": "Size-eight Parley token delta relative to Rust; negative is lower.",
+        "dataset": "headline",
+        "sourceId": "scaling_results",
+        "metrics": [
+          {
+            "label": "Token delta vs Rust",
+            "field": "token_gap_rust_percent",
+            "format": "number",
+            "unit": "%",
+            "signed": true
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "scale_chart",
+        "title": "Token effort across workload sizes",
+        "subtitle": "Median reported tokens per assigned repository at each frozen bundle size.",
+        "intent": "comparison",
+        "question": "How does task bundling change reported agent effort?",
+        "rationale": "Grouped scale bars expose the steep amortization curve while preserving all language medians.",
+        "comparisonContext": {
+          "unit": "reported tokens per repository",
+          "grain": "language-size median",
+          "denominator": "two complete task appearances per language/scale",
+          "semanticFamily": "token effort across workload sizes"
+        },
+        "type": "bar",
+        "dataset": "scale_summary",
+        "sourceId": "scaling_results",
+        "encodings": {
+          "x": {
+            "field": "bundle_size",
+            "type": "nominal",
+            "label": "Repositories per session"
+          },
+          "y": {
+            "field": "median_tokens_task",
+            "type": "quantitative",
+            "label": "Tokens per repository",
+            "format": "compact"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Repositories per session",
+        "yAxisTitle": "Tokens per repository",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "gap_chart",
+        "title": "Parley token gap at each workload size",
+        "subtitle": "Positive values mean Parley uses more tokens; negative values mean Parley uses fewer.",
+        "intent": "comparison",
+        "question": "Does the absolute baseline gap shrink with bundling?",
+        "rationale": "Direct deltas reveal fixed overhead more clearly than the common steep scale curve.",
+        "comparisonContext": {
+          "unit": "reported token delta per repository",
+          "grain": "baseline-size comparison",
+          "denominator": "same frozen assignments at each scale",
+          "semanticFamily": "parley token gap at each workload size"
+        },
+        "type": "bar",
+        "dataset": "gap_by_scale",
+        "sourceId": "scaling_results",
+        "encodings": {
+          "x": {
+            "field": "bundle_size",
+            "type": "nominal",
+            "label": "Repositories per session"
+          },
+          "y": {
+            "field": "token_gap",
+            "type": "quantitative",
+            "label": "Parley minus baseline tokens",
+            "format": "compact"
+          },
+          "color": {
+            "field": "baseline",
+            "type": "nominal",
+            "label": "Baseline"
+          }
+        },
+        "xAxisTitle": "Repositories per session",
+        "yAxisTitle": "Parley minus baseline tokens",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "fit_chart",
+        "title": "Estimated token-gap components",
+        "subtitle": "Descriptive fit: median tokens/task = residual task cost + fixed session cost / bundle size.",
+        "intent": "comparison",
+        "question": "Which fitted component explains the remaining gap?",
+        "rationale": "The two-component delta separates amortizable session context from the residual per-task estimate.",
+        "comparisonContext": {
+          "unit": "estimated reported-token delta",
+          "grain": "baseline-fit component",
+          "denominator": "four observed workload sizes",
+          "semanticFamily": "estimated token-gap components"
+        },
+        "type": "bar",
+        "dataset": "fit_gap",
+        "sourceId": "scaling_results",
+        "encodings": {
+          "x": {
+            "field": "baseline",
+            "type": "nominal",
+            "label": "Baseline"
+          },
+          "y": {
+            "field": "token_gap",
+            "type": "quantitative",
+            "label": "Parley minus baseline tokens",
+            "format": "compact"
+          },
+          "color": {
+            "field": "component",
+            "type": "nominal",
+            "label": "Component"
+          }
+        },
+        "xAxisTitle": "Baseline",
+        "yAxisTitle": "Parley minus baseline tokens",
+        "valueFormat": "compact",
+        "layout": "full"
+      },
+      {
+        "id": "elapsed_chart",
+        "title": "Elapsed effort across workload sizes",
+        "subtitle": "Median seconds per assigned repository; all sessions are repair-free.",
+        "intent": "comparison",
+        "question": "Does bundling also amortize wall-clock effort?",
+        "rationale": "Elapsed medians test whether the token mechanism is reflected in actual session time.",
+        "comparisonContext": {
+          "unit": "seconds per repository",
+          "grain": "language-size median",
+          "denominator": "two complete task appearances per language/scale",
+          "semanticFamily": "elapsed effort across workload sizes"
+        },
+        "type": "bar",
+        "dataset": "scale_summary",
+        "sourceId": "scaling_results",
+        "encodings": {
+          "x": {
+            "field": "bundle_size",
+            "type": "nominal",
+            "label": "Repositories per session"
+          },
+          "y": {
+            "field": "median_seconds_task",
+            "type": "quantitative",
+            "label": "Seconds per repository",
+            "format": "number"
+          },
+          "color": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          }
+        },
+        "xAxisTitle": "Repositories per session",
+        "yAxisTitle": "Seconds per repository",
+        "valueFormat": "number",
+        "layout": "full"
+      },
+      {
+        "id": "source_chart",
+        "title": "Seed and final editable source at size eight",
+        "subtitle": "Median rough lexical tokens per assigned repository.",
+        "intent": "comparison",
+        "question": "How compact is the code the agent reads and leaves behind?",
+        "rationale": "Seed/final bars isolate editable source size from fixed instruction and tool context.",
+        "comparisonContext": {
+          "unit": "rough source tokens per repository",
+          "grain": "language-stage median",
+          "denominator": "two size-eight sessions per language",
+          "semanticFamily": "seed and final editable source at size eight"
+        },
+        "type": "bar",
+        "dataset": "source_stage",
+        "sourceId": "scaling_results",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "rough_tokens_task",
+            "type": "quantitative",
+            "label": "Rough source tokens per repository",
+            "format": "number"
+          },
+          "color": {
+            "field": "stage",
+            "type": "nominal",
+            "label": "Stage"
+          }
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Rough source tokens per repository",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "scale_table",
+        "title": "Complete scale summary",
+        "subtitle": "All twelve language-size cells; no exclusions or reruns.",
+        "dataset": "scale_summary",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "bundle_size_number",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "bundle_size_number",
+            "label": "Size",
+            "format": "number"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "assignments",
+            "label": "Assignments",
+            "format": "number"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "repairs",
+            "label": "Repairs",
+            "format": "number"
+          },
+          {
+            "field": "median_tokens_task",
+            "label": "Tokens/repo",
+            "format": "number"
+          },
+          {
+            "field": "median_seconds_task",
+            "label": "Seconds/repo",
+            "format": "number"
+          },
+          {
+            "field": "prompt_chars_task",
+            "label": "Prompt chars/repo",
+            "format": "number"
+          },
+          {
+            "field": "source_tokens_task",
+            "label": "Final source",
+            "format": "number"
+          },
+          {
+            "field": "edit_tokens_task",
+            "label": "Edit size",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "fit_table",
+        "title": "Reciprocal-size fit",
+        "subtitle": "Ordinary least squares over four language medians; descriptive, not causal.",
+        "dataset": "fit_summary",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "residual_task_tokens",
+            "label": "Residual task",
+            "format": "number"
+          },
+          {
+            "field": "fixed_session_tokens",
+            "label": "Fixed session",
+            "format": "number"
+          },
+          {
+            "field": "r_squared",
+            "label": "R\u00b2",
+            "format": "number"
+          },
+          {
+            "field": "size8_observed",
+            "label": "Size-8 observed",
+            "format": "number"
+          },
+          {
+            "field": "size8_fitted",
+            "label": "Size-8 fitted",
+            "format": "number"
+          },
+          {
+            "field": "size8_residual",
+            "label": "Residual",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "root_table",
+        "title": "Root-cause and patch-scope audit",
+        "subtitle": "Every assignment changes exactly one predeclared root-defect file.",
+        "dataset": "root_audit",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "assignments",
+            "label": "Assignments",
+            "format": "number"
+          },
+          {
+            "field": "root_fixes",
+            "label": "Root fixes",
+            "format": "number"
+          },
+          {
+            "field": "one_file_fixes",
+            "label": "One-file fixes",
+            "format": "number"
+          },
+          {
+            "field": "final_variants",
+            "label": "Final variants",
+            "format": "number"
+          },
+          {
+            "field": "read_only_preserved",
+            "label": "Read-only preserved",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "command_table",
+        "title": "Fresh-session and action-graph audit",
+        "subtitle": "Protected source dump, one file-change action, then one successful check.",
+        "dataset": "command_audit",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "fresh",
+            "label": "Fresh",
+            "format": "number"
+          },
+          {
+            "field": "sources_first",
+            "label": "Sources \u2192 check",
+            "format": "number"
+          },
+          {
+            "field": "one_check",
+            "label": "One check",
+            "format": "number"
+          },
+          {
+            "field": "protocol_ok",
+            "label": "Protocol",
+            "format": "number"
+          },
+          {
+            "field": "integrity_ok",
+            "label": "Integrity",
+            "format": "number"
+          },
+          {
+            "field": "zero_exit",
+            "label": "Zero exit",
+            "format": "number"
+          },
+          {
+            "field": "file_change_actions",
+            "label": "File changes",
+            "format": "number"
+          },
+          {
+            "field": "three_messages",
+            "label": "3 messages",
+            "format": "number"
+          },
+          {
+            "field": "four_messages",
+            "label": "4 messages",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "task_table",
+        "title": "Task-level balance and correctness",
+        "subtitle": "Every task appears twice per language at every scale; all 96 rows are retained.",
+        "dataset": "task_detail",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "bundle_size",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "bundle_size",
+            "label": "Size",
+            "format": "number"
+          },
+          {
+            "field": "repository",
+            "label": "Repository change",
+            "type": "text"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "appearances",
+            "label": "Appearances",
+            "format": "number"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "root_fixes",
+            "label": "Root fixes",
+            "format": "number"
+          },
+          {
+            "field": "final_tokens",
+            "label": "Final source",
+            "format": "number"
+          },
+          {
+            "field": "edit_tokens",
+            "label": "Edit size",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "session_table",
+        "title": "Complete 90-session audit",
+        "subtitle": "Every unique thread, token count, timing, check, and patch-scope row.",
+        "dataset": "session_detail",
+        "sourceId": "scaling_results",
+        "defaultSort": {
+          "field": "bundle_size",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "bundle_size",
+            "label": "Size",
+            "format": "number"
+          },
+          {
+            "field": "bundle",
+            "label": "Bundle",
+            "type": "text"
+          },
+          {
+            "field": "replicate",
+            "label": "Rep",
+            "format": "number"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "tasks",
+            "label": "Tasks",
+            "format": "number"
+          },
+          {
+            "field": "first_successes",
+            "label": "First",
+            "format": "number"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "checks",
+            "label": "Checks",
+            "format": "number"
+          },
+          {
+            "field": "repairs",
+            "label": "Repairs",
+            "format": "number"
+          },
+          {
+            "field": "tokens_task",
+            "label": "Tokens/repo",
+            "format": "number"
+          },
+          {
+            "field": "seconds_task",
+            "label": "Seconds/repo",
+            "format": "number"
+          },
+          {
+            "field": "changed_files_task",
+            "label": "Files/repo",
+            "format": "number"
+          },
+          {
+            "field": "thread",
+            "label": "Thread",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "scaling_results",
+        "label": "Frozen iteration 030 scaling results",
+        "path": "030-ninety-session-scaling-mechanism.sql"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Ninety-Session Scaling Mechanism \u2014 Iteration 030"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Technical summary\n\n**The confirmation is clean and explains the benchmark mechanism.** All 90 fresh sessions and 192 assignments pass first check, hidden judgment, command protocol, and integrity with zero repairs. At size eight, Parley uses **8,344.00 tokens/repository**, 3.53% above Python's 8,059.56 and 1.93% below Rust's 8,508.31. It takes 4.5740 seconds/repository versus Python's 4.0855 and Rust's 5.1263. The strict better-baseline gate remains 2/4; the separate 64/64 Parley root-cause condition passes.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## What this confirmation measures\n\nThe exact iteration-029 corpus is replayed at bundle sizes 1, 2, 4, and 8. Every task appears exactly twice per language at every scale. Per-language session counts are 16, 8, 4, and 2, giving 90 fresh sessions and 192 independently hidden-judged repository assignments. The compiler, task files, runner, model, and 1,519-character instruction are frozen before output.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions_card",
+          "hidden_card",
+          "first_card",
+          "repair_card",
+          "gate_card",
+          "root_card",
+          "python_gap_card",
+          "rust_gap_card"
+        ]
+      },
+      {
+        "id": "reliability",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Correctness and diagnosis quality are perfect\n\nEvery assignment passes the untouched first public check and all hidden cases. Each patch changes exactly one file, and all 192 patches touch the predeclared root-defect location. There is no repair turn, timeout, nonzero agent exit, runner error, protocol violation, integrity failure, excluded row, or selective rerun.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "scale_table_block",
+        "type": "table",
+        "tableId": "scale_table",
+        "layout": "full"
+      },
+      {
+        "id": "scale_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Bundling amortizes the dominant cost\n\nTokens per repository fall by roughly 85% from size one to size eight for every language because instruction, model, and tool-session context is paid once per bundle. The curves are almost parallel: Parley moves from 55.30k to 8.34k, Python from 53.24k to 8.06k, and Rust from 53.94k to 8.51k. Read each group at a common bundle size; comparisons across sizes describe amortization, not easier tasks.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "scale_chart_block",
+        "type": "chart",
+        "chartId": "scale_chart",
+        "layout": "full"
+      },
+      {
+        "id": "gap_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## The Python gap shrinks in absolute terms but does not cross\n\nParley minus Python falls from 2,058 tokens/repository at size one to 284 at size eight, yet the percentage stays near 3.5\u20134.1%. Against Rust, the absolute gap falls from +1,354 to \u2212164 and crosses between sizes four and eight. This is strong evidence that fixed Parley session context explains the Rust crossover; it does not establish Python parity.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "gap_chart_block",
+        "type": "chart",
+        "chartId": "gap_chart",
+        "layout": "full"
+      },
+      {
+        "id": "fit_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## The reciprocal-size fit separates fixed and residual cost\n\nFor each language, ordinary least squares fits `tokens/task = residual task cost + fixed session cost / bundle size` with R\u00b2 above 0.99999. Relative to Python, Parley carries an estimated **2,009.53 extra fixed tokens/session** and **74.36 extra tokens/task**; both terms are positive, so this fit predicts no crossover. Relative to Rust, Parley carries 1,677.02 extra fixed tokens/session but saves 287.74 tokens/task, implying a descriptive crossover near 5.83 tasks/session. The fit summarizes four aggregate medians and is not a causal model.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "fit_chart_block",
+        "type": "chart",
+        "chartId": "fit_chart",
+        "layout": "full"
+      },
+      {
+        "id": "fit_table_block",
+        "type": "table",
+        "tableId": "fit_table",
+        "layout": "full"
+      },
+      {
+        "id": "elapsed_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Elapsed time tells the same directional story\n\nAt size eight, Parley's 4.5740 seconds/repository is **10.78% faster than Rust** and 11.96% slower than Python. All timing cells are repair-free, so the result is not caused by additional compile/check loops. Two size-eight sessions per language are enough for the preregistered directional curve, not a population timing claim.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "elapsed_chart_block",
+        "type": "chart",
+        "chartId": "elapsed_chart",
+        "layout": "full"
+      },
+      {
+        "id": "source_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Source size explains the non-amortizing remainder\n\nAt size eight, median final editable source is 191.63 rough tokens/repository for Parley, 169.44 for Python, and 322.25 for Rust. Equal read-only context is 88.75 rough tokens/repository. The manifest's eight raw context files total 3,614 characters/47 lines; the runner records 3,622/55 after inserting one join newline per task. That disclosed bookkeeping difference is identical across languages and changes no file, prompt evidence, or judgment. Parley is substantially more compact than Rust but modestly larger than Python, matching the signs of the fitted residual task costs. This is a language/readability tradeoff in the current corpus, not a recurring semantic failure.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "source_chart_block",
+        "type": "chart",
+        "chartId": "source_chart",
+        "layout": "full"
+      },
+      {
+        "id": "root_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Root-cause quality survives all four scales\n\nParley, Python, and Rust each modify the frozen root-defect file in 64/64 assignments, always with one changed file. Across all scales, Parley has eight distinct final task solutions, Python nine, and Rust ten; the additional baseline variants are formatting-equivalent. All 384 read-only issue/test exposures remain preserved.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "root_table_block",
+        "type": "table",
+        "tableId": "root_table",
+        "layout": "full"
+      },
+      {
+        "id": "action_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## The action graph is controlled\n\nEvery session runs exactly `/bin/zsh -lc ./sources`, performs one file-change action, then runs exactly `/bin/zsh -lc ./check`. Seventy-five sessions contain four agent messages and fifteen contain three; the shorter shape only omits the message between file completion and the check. The optional-message split is Parley 8/22, Python 4/26, and Rust 3/27 for three/four messages. No language performs an extra command, edit action, check, or repair, so message phrasing\u2014not workflow depth\u2014is the only event-shape variation.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "command_table_block",
+        "type": "table",
+        "tableId": "command_table",
+        "layout": "full"
+      },
+      {
+        "id": "task_read",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Every task is balanced at every scale\n\nThe task table retains all 96 language-size-task aggregates. Each row has two appearances, two first-check passes, two hidden passes, and two root fixes. This balance prevents one mechanism, language, or bundle partition from receiving more measured work.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "task_table_block",
+        "type": "table",
+        "tableId": "task_table",
+        "layout": "full"
+      },
+      {
+        "id": "replication",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Size-eight direction replicates iteration 029\n\nIteration 029 reported Parley/Python/Rust medians of 8,408.56/8,034.69/8,489.06 tokens and 4.5455/3.9298/5.0027 seconds per repository. The independent size-eight cells here report 8,344.00/8,059.56/8,508.31 and 4.5740/4.0855/5.1263. Both iterations place Parley between Python and Rust on tokens and elapsed time; neither supports Python-and-Rust parity.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "integrity",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## All raw evidence is retained\n\nThe complete session table exposes every unique thread, cell, check count, token total, elapsed time, and changed-file rate. Ninety of ninety sessions are fresh, exit zero, preserve checker/context hashes, obey the command boundary, pass the first check, and pass hidden judgment. Raw JSON remains the authority for prompts, event streams, final source, hidden-case outputs, and per-session usage.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "session_table_block",
+        "type": "table",
+        "tableId": "session_table",
+        "layout": "full"
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Frozen method and integrity\n\n- **Matrix:** sizes 1/2/4/8 \u00d7 three languages \u00d7 two complete task appearances = 90 sessions and 192 assignments; seed `20260823`.\n- **Toolchain:** pinned Parley 0.3.155, `gpt-5.6-sol` medium, Codex CLI 0.146.0.\n- **Corpus:** exact iteration-029 task manifest, SHA `50e55b98\u2026`; corpus checkpoint `59ff991\u2026`.\n- **Protocol:** committed before output at `8b9f7e0`; SHA `1eae4604\u2026`.\n- **Instruction:** unchanged 1,519-character skill, SHA `6ca098e4\u2026`; the one allowed compression experiment remains closed.\n- **Result:** raw SHA `ab49ad72\u2026`; every planned cell ran once and is retained.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Limits and robustness\n\nThe task mechanisms are historically grounded, but the cross-language fixtures are synthetic, deterministic, and small. They do not reproduce mature dependency graphs, repository history, services, concurrency, or ambiguous multi-cause failures. Reported tokens include full model context over tool turns; source/context/edit tokens are lexical estimates. The reciprocal fit has only four scale medians and should be read as a compact description, not causal identification or asymptotic truth.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "boundary",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## No compiler or instruction change follows\n\nParley records zero parse, type, runtime, hidden, diagnosis, root-location, or draft failures across 64 assignments. The remaining Python gap is mostly fixed session context plus a modest source-size remainder\u2014not a repeated language defect. Adding syntax to shave benchmark tokens would violate the general-usefulness boundary. Parley stays at v0.3.155, and the instruction stays byte-for-byte frozen.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "decision",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Decision and next experiment\n\n1. Preserve iteration 030 unchanged as a clean 90-session mechanism result: strict parity 2/4, root-cause condition passed.\n2. Treat Rust efficiency parity as confirmed for diagnosis bundles of roughly six or more independent tasks; do not claim Python parity.\n3. Make no syntax, compiler, diagnostic, prompt, or skill change from this evidence.\n4. Move to genuinely deeper project episodes where dependency navigation, state reconstruction, and multi-file reasoning dominate fixed instruction cost.\n5. Predeclare those episodes and root-cause criteria before output; accept any future language change only if failures recur across independent projects and the design is generally useful, semantically consistent, and maintainable.",
+        "sourceId": "scaling_results"
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Does Parley's lower residual cost than Rust persist when one project contains deeper dependency navigation rather than eight independent fixtures?\n- Can mature project episodes erase the small Python residual without changing instructions or selecting Parley-favorable tasks?\n- Which failure mechanisms, if any, recur broadly enough to justify a language design review?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-04T20:01:25Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "sessions": 90,
+          "assignments": 192,
+          "hidden_successes": 192,
+          "first_successes": 192,
+          "repairs": 0,
+          "gate_conditions_passed": 2,
+          "parley_root_fixes": 64,
+          "token_gap_python_percent": 3.53,
+          "token_gap_rust_percent": -1.93,
+          "elapsed_gap_python_percent": 11.96,
+          "elapsed_gap_rust_percent": -10.77
+        }
+      ],
+      "scale_summary": [
+        {
+          "bundle_size": "1",
+          "bundle_size_number": 1,
+          "language": "Parley",
+          "sessions": 16,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 55295.0,
+          "weighted_tokens_task": 55300.8125,
+          "median_input_tokens_task": 54868.0,
+          "median_output_tokens_task": 447.0,
+          "median_seconds_task": 19.084,
+          "prompt_chars_task": 3295.5,
+          "source_tokens_task": 199.5,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 7.0
+        },
+        {
+          "bundle_size": "1",
+          "bundle_size_number": 1,
+          "language": "Python",
+          "sessions": 16,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 53237.0,
+          "weighted_tokens_task": 53287.75,
+          "median_input_tokens_task": 52811.0,
+          "median_output_tokens_task": 438.5,
+          "median_seconds_task": 17.6683,
+          "prompt_chars_task": 1615.5,
+          "source_tokens_task": 170.5,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 5.0
+        },
+        {
+          "bundle_size": "1",
+          "bundle_size_number": 1,
+          "language": "Rust",
+          "sessions": 16,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 53940.5,
+          "weighted_tokens_task": 53891.8125,
+          "median_input_tokens_task": 53406.0,
+          "median_output_tokens_task": 507.5,
+          "median_seconds_task": 19.7229,
+          "prompt_chars_task": 1635.5,
+          "source_tokens_task": 327.5,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 9.0
+        },
+        {
+          "bundle_size": "2",
+          "bundle_size_number": 2,
+          "language": "Parley",
+          "sessions": 8,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 28580.5,
+          "weighted_tokens_task": 28578.1875,
+          "median_input_tokens_task": 28277.5,
+          "median_output_tokens_task": 296.75,
+          "median_seconds_task": 12.1825,
+          "prompt_chars_task": 1827.5,
+          "source_tokens_task": 190.75,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 7.0
+        },
+        {
+          "bundle_size": "2",
+          "bundle_size_number": 2,
+          "language": "Python",
+          "sessions": 8,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 27444.25,
+          "weighted_tokens_task": 27514.375,
+          "median_input_tokens_task": 27167.25,
+          "median_output_tokens_task": 281.0,
+          "median_seconds_task": 11.1763,
+          "prompt_chars_task": 987.0,
+          "source_tokens_task": 170.5,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 5.75
+        },
+        {
+          "bundle_size": "2",
+          "bundle_size_number": 2,
+          "language": "Rust",
+          "sessions": 8,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 27968.5,
+          "weighted_tokens_task": 27980.875,
+          "median_input_tokens_task": 27640.0,
+          "median_output_tokens_task": 328.5,
+          "median_seconds_task": 11.5781,
+          "prompt_chars_task": 997.0,
+          "source_tokens_task": 330.5,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 7.0
+        },
+        {
+          "bundle_size": "4",
+          "bundle_size_number": 4,
+          "language": "Parley",
+          "sessions": 4,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 15165.875,
+          "weighted_tokens_task": 15161.25,
+          "median_input_tokens_task": 14968.75,
+          "median_output_tokens_task": 199.25,
+          "median_seconds_task": 7.0637,
+          "prompt_chars_task": 1098.625,
+          "source_tokens_task": 191.625,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 8.75
+        },
+        {
+          "bundle_size": "4",
+          "bundle_size_number": 4,
+          "language": "Python",
+          "sessions": 4,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 14579.25,
+          "weighted_tokens_task": 14551.25,
+          "median_input_tokens_task": 14374.375,
+          "median_output_tokens_task": 200.5,
+          "median_seconds_task": 6.6412,
+          "prompt_chars_task": 677.875,
+          "source_tokens_task": 169.625,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 6.625
+        },
+        {
+          "bundle_size": "4",
+          "bundle_size_number": 4,
+          "language": "Rust",
+          "sessions": 4,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 14974.625,
+          "weighted_tokens_task": 14989.4375,
+          "median_input_tokens_task": 14743.875,
+          "median_output_tokens_task": 234.75,
+          "median_seconds_task": 7.142,
+          "prompt_chars_task": 682.875,
+          "source_tokens_task": 322.25,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 9.5
+        },
+        {
+          "bundle_size": "8",
+          "bundle_size_number": 8,
+          "language": "Parley",
+          "sessions": 2,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 8344.0,
+          "weighted_tokens_task": 8344.0,
+          "median_input_tokens_task": 8235.3125,
+          "median_output_tokens_task": 108.6875,
+          "median_seconds_task": 4.574,
+          "prompt_chars_task": 732.5,
+          "source_tokens_task": 191.625,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 8.75
+        },
+        {
+          "bundle_size": "8",
+          "bundle_size_number": 8,
+          "language": "Python",
+          "sessions": 2,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 8059.5625,
+          "weighted_tokens_task": 8059.5625,
+          "median_input_tokens_task": 7914.0625,
+          "median_output_tokens_task": 145.5,
+          "median_seconds_task": 4.0855,
+          "prompt_chars_task": 521.625,
+          "source_tokens_task": 169.4375,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 6.4375
+        },
+        {
+          "bundle_size": "8",
+          "bundle_size_number": 8,
+          "language": "Rust",
+          "sessions": 2,
+          "assignments": 16,
+          "hidden_successes": 16,
+          "first_successes": 16,
+          "repairs": 0,
+          "median_tokens_task": 8508.3125,
+          "weighted_tokens_task": 8508.3125,
+          "median_input_tokens_task": 8321.5625,
+          "median_output_tokens_task": 186.75,
+          "median_seconds_task": 5.1263,
+          "prompt_chars_task": 524.125,
+          "source_tokens_task": 322.25,
+          "context_tokens_task": 0,
+          "edit_tokens_task": 9.5
+        }
+      ],
+      "gap_by_scale": [
+        {
+          "bundle_size": "1",
+          "bundle_size_number": 1,
+          "baseline": "Python",
+          "token_gap": 2058.0,
+          "token_gap_percent": 3.8657,
+          "elapsed_gap": 1.4157,
+          "elapsed_gap_percent": 8.0127
+        },
+        {
+          "bundle_size": "1",
+          "bundle_size_number": 1,
+          "baseline": "Rust",
+          "token_gap": 1354.5,
+          "token_gap_percent": 2.5111,
+          "elapsed_gap": -0.6389,
+          "elapsed_gap_percent": -3.2394
+        },
+        {
+          "bundle_size": "2",
+          "bundle_size_number": 2,
+          "baseline": "Python",
+          "token_gap": 1136.25,
+          "token_gap_percent": 4.1402,
+          "elapsed_gap": 1.0062,
+          "elapsed_gap_percent": 9.003
+        },
+        {
+          "bundle_size": "2",
+          "bundle_size_number": 2,
+          "baseline": "Rust",
+          "token_gap": 612.0,
+          "token_gap_percent": 2.1882,
+          "elapsed_gap": 0.6044,
+          "elapsed_gap_percent": 5.2202
+        },
+        {
+          "bundle_size": "4",
+          "bundle_size_number": 4,
+          "baseline": "Python",
+          "token_gap": 586.625,
+          "token_gap_percent": 4.0237,
+          "elapsed_gap": 0.4225,
+          "elapsed_gap_percent": 6.3618
+        },
+        {
+          "bundle_size": "4",
+          "bundle_size_number": 4,
+          "baseline": "Rust",
+          "token_gap": 191.25,
+          "token_gap_percent": 1.2772,
+          "elapsed_gap": -0.0783,
+          "elapsed_gap_percent": -1.0963
+        },
+        {
+          "bundle_size": "8",
+          "bundle_size_number": 8,
+          "baseline": "Python",
+          "token_gap": 284.4375,
+          "token_gap_percent": 3.5292,
+          "elapsed_gap": 0.4885,
+          "elapsed_gap_percent": 11.9569
+        },
+        {
+          "bundle_size": "8",
+          "bundle_size_number": 8,
+          "baseline": "Rust",
+          "token_gap": -164.3125,
+          "token_gap_percent": -1.9312,
+          "elapsed_gap": -0.5523,
+          "elapsed_gap_percent": -10.7739
+        }
+      ],
+      "fit_summary": [
+        {
+          "language": "Parley",
+          "residual_task_tokens": 1716.44,
+          "fixed_session_tokens": 53610.461,
+          "r_squared": 0.99999062,
+          "size8_observed": 8344.0,
+          "size8_fitted": 8417.7478,
+          "size8_residual": -73.7478
+        },
+        {
+          "language": "Python",
+          "residual_task_tokens": 1642.082,
+          "fixed_session_tokens": 51600.926,
+          "r_squared": 0.99999794,
+          "size8_observed": 8059.5625,
+          "size8_fitted": 8092.1973,
+          "size8_residual": -32.6348
+        },
+        {
+          "language": "Rust",
+          "residual_task_tokens": 2004.185,
+          "fixed_session_tokens": 51933.439,
+          "r_squared": 0.99999972,
+          "size8_observed": 8508.3125,
+          "size8_fitted": 8495.8647,
+          "size8_residual": 12.4478
+        }
+      ],
+      "fit_gap": [
+        {
+          "baseline": "Python",
+          "component": "Fixed session",
+          "token_gap": 2009.535
+        },
+        {
+          "baseline": "Python",
+          "component": "Residual per task",
+          "token_gap": 74.358
+        },
+        {
+          "baseline": "Rust",
+          "component": "Fixed session",
+          "token_gap": 1677.022
+        },
+        {
+          "baseline": "Rust",
+          "component": "Residual per task",
+          "token_gap": -287.745
+        }
+      ],
+      "session_detail": [
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55485.0,
+          "input_tokens_task": 55029.0,
+          "output_tokens_task": 456.0,
+          "seconds_task": 20.234,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-5c8b-71b3-99fa-ecbcae60344e"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53587.0,
+          "input_tokens_task": 53124.0,
+          "output_tokens_task": 463.0,
+          "seconds_task": 18.7276,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-5f57-78f0-929b-d5d9fa5b5060"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54130.0,
+          "input_tokens_task": 53631.0,
+          "output_tokens_task": 499.0,
+          "seconds_task": 22.7473,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-ae32-7540-97b7-d3feee0dc8ea"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55538.0,
+          "input_tokens_task": 55085.0,
+          "output_tokens_task": 453.0,
+          "seconds_task": 18.9796,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-778a-7162-8363-f912c8386c47"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53554.0,
+          "input_tokens_task": 53098.0,
+          "output_tokens_task": 456.0,
+          "seconds_task": 18.3975,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-720d-7f91-a575-c306ec39fc72"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54262.0,
+          "input_tokens_task": 53723.0,
+          "output_tokens_task": 539.0,
+          "seconds_task": 20.8777,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-cb57-7332-bb4e-26c2fb5457fc"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55259.0,
+          "input_tokens_task": 54846.0,
+          "output_tokens_task": 413.0,
+          "seconds_task": 19.1027,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-de19-7310-96b8-7f2242777791"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53225.0,
+          "input_tokens_task": 52812.0,
+          "output_tokens_task": 413.0,
+          "seconds_task": 21.7712,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-ef8d-77d1-befd-94a02d735c25"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53986.0,
+          "input_tokens_task": 53455.0,
+          "output_tokens_task": 531.0,
+          "seconds_task": 18.3,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-c3d4-7490-9d37-ddb29d59fcb1"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55554.0,
+          "input_tokens_task": 55165.0,
+          "output_tokens_task": 389.0,
+          "seconds_task": 22.744,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-0abe-7b12-8084-9c380e38323a"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53191.0,
+          "input_tokens_task": 52796.0,
+          "output_tokens_task": 395.0,
+          "seconds_task": 22.5435,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-a43a-7d90-a089-9a8bdee020b8"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53613.0,
+          "input_tokens_task": 53194.0,
+          "output_tokens_task": 419.0,
+          "seconds_task": 18.1273,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-7c6d-7192-8491-adf202efa555"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55231.0,
+          "input_tokens_task": 54771.0,
+          "output_tokens_task": 460.0,
+          "seconds_task": 31.9731,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-6a1b-7492-8dc5-9826b49eda3c"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53205.0,
+          "input_tokens_task": 52753.0,
+          "output_tokens_task": 452.0,
+          "seconds_task": 16.7574,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-4132-7351-95fc-177ad5c2cc57"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54316.0,
+          "input_tokens_task": 53786.0,
+          "output_tokens_task": 530.0,
+          "seconds_task": 18.9262,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-6ffc-7641-8156-8f153a174d5b"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54852.0,
+          "input_tokens_task": 54451.0,
+          "output_tokens_task": 401.0,
+          "seconds_task": 19.1827,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-1cb7-7eb0-ae5c-ba6f8751cb3e"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 52836.0,
+          "input_tokens_task": 52491.0,
+          "output_tokens_task": 345.0,
+          "seconds_task": 16.8471,
+          "changed_files_task": 1.0,
+          "thread": "019fce52-b767-73f2-8164-9f3bd7c38e65"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53576.0,
+          "input_tokens_task": 53091.0,
+          "output_tokens_task": 485.0,
+          "seconds_task": 18.9327,
+          "changed_files_task": 1.0,
+          "thread": "019fce5d-1f89-7f31-af33-0f9bc1f618dc"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55498.0,
+          "input_tokens_task": 55044.0,
+          "output_tokens_task": 454.0,
+          "seconds_task": 17.5043,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-2b3f-7d02-aca2-4499ef6b3c42"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53604.0,
+          "input_tokens_task": 53100.0,
+          "output_tokens_task": 504.0,
+          "seconds_task": 21.448,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-047c-73b3-bfe5-fe0578c8bc88"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54213.0,
+          "input_tokens_task": 53652.0,
+          "output_tokens_task": 561.0,
+          "seconds_task": 26.2903,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-16fd-78e1-a19a-72500030299d"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54918.0,
+          "input_tokens_task": 54502.0,
+          "output_tokens_task": 416.0,
+          "seconds_task": 17.5178,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-3595-71a3-8051-d12e66272760"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 52966.0,
+          "input_tokens_task": 52569.0,
+          "output_tokens_task": 397.0,
+          "seconds_task": 17.4966,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-d7db-7311-b91a-2daa5dadd4ae"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53596.0,
+          "input_tokens_task": 53097.0,
+          "output_tokens_task": 499.0,
+          "seconds_task": 23.0869,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-3eab-7a93-b8f5-2b3794d22cc0"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54965.0,
+          "input_tokens_task": 54550.0,
+          "output_tokens_task": 415.0,
+          "seconds_task": 17.8518,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-8345-7100-b81e-e1cad4802718"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53082.0,
+          "input_tokens_task": 52648.0,
+          "output_tokens_task": 434.0,
+          "seconds_task": 16.6375,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-c43a-7d82-9703-1e516ea4539f"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b1",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53641.0,
+          "input_tokens_task": 53139.0,
+          "output_tokens_task": 502.0,
+          "seconds_task": 21.6643,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-0c7a-7d33-8e6f-e21b3aaff05e"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55210.0,
+          "input_tokens_task": 54736.0,
+          "output_tokens_task": 474.0,
+          "seconds_task": 18.332,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-1353-7982-ae49-4e500a8f7a17"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53249.0,
+          "input_tokens_task": 52810.0,
+          "output_tokens_task": 439.0,
+          "seconds_task": 17.6675,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-f8ce-7393-a7d4-40d0a5b2ddab"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b2",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53895.0,
+          "input_tokens_task": 53357.0,
+          "output_tokens_task": 538.0,
+          "seconds_task": 32.7402,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-bd17-7782-9cab-5562f4eaf9a4"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54911.0,
+          "input_tokens_task": 54494.0,
+          "output_tokens_task": 417.0,
+          "seconds_task": 18.9642,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-76c0-7271-8f36-e9c6dbe59a04"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53013.0,
+          "input_tokens_task": 52593.0,
+          "output_tokens_task": 420.0,
+          "seconds_task": 17.669,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-65bc-75d2-803a-935bb33d7d69"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b3",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53172.0,
+          "input_tokens_task": 52783.0,
+          "output_tokens_task": 389.0,
+          "seconds_task": 16.0068,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-219d-7532-b8ce-c2f9e6d3e1fe"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55517.0,
+          "input_tokens_task": 55059.0,
+          "output_tokens_task": 458.0,
+          "seconds_task": 20.8285,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-e167-71e0-a45d-f9ed8c2b3f85"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53577.0,
+          "input_tokens_task": 53124.0,
+          "output_tokens_task": 453.0,
+          "seconds_task": 19.9837,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-65b5-7ae2-889d-1339311e07c2"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b4",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54164.0,
+          "input_tokens_task": 53642.0,
+          "output_tokens_task": 522.0,
+          "seconds_task": 19.4742,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-ab4a-7c33-8db8-7726e8ec5035"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55331.0,
+          "input_tokens_task": 54890.0,
+          "output_tokens_task": 441.0,
+          "seconds_task": 17.5769,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-c2b8-7fe2-89fa-161b19cca21f"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53275.0,
+          "input_tokens_task": 52837.0,
+          "output_tokens_task": 438.0,
+          "seconds_task": 16.3669,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-280f-7ac2-b747-8df6c92a0671"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b5",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53868.0,
+          "input_tokens_task": 53355.0,
+          "output_tokens_task": 513.0,
+          "seconds_task": 19.9717,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-2435-76a1-bd9e-17ae8dd13cbd"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55708.0,
+          "input_tokens_task": 55191.0,
+          "output_tokens_task": 517.0,
+          "seconds_task": 25.3327,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-7bd9-7380-8f88-b6bc0ba1d7b1"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53575.0,
+          "input_tokens_task": 53126.0,
+          "output_tokens_task": 449.0,
+          "seconds_task": 15.4283,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-689f-7742-9aac-52b9ce5ef6c1"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b6",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54058.0,
+          "input_tokens_task": 53575.0,
+          "output_tokens_task": 483.0,
+          "seconds_task": 17.9627,
+          "changed_files_task": 1.0,
+          "thread": "019fce52-f94b-79f2-bf3f-c0b135699210"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55760.0,
+          "input_tokens_task": 55225.0,
+          "output_tokens_task": 535.0,
+          "seconds_task": 25.2477,
+          "changed_files_task": 1.0,
+          "thread": "019fce5d-4542-7fc3-827f-b795de51547b"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53480.0,
+          "input_tokens_task": 53031.0,
+          "output_tokens_task": 449.0,
+          "seconds_task": 20.4327,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-632f-7c21-8bd7-ed4e83e467f4"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b7",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 54227.0,
+          "input_tokens_task": 53658.0,
+          "output_tokens_task": 569.0,
+          "seconds_task": 18.7692,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-a348-78a1-a3a7-0a5ea1ebec87"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 55076.0,
+          "input_tokens_task": 54687.0,
+          "output_tokens_task": 389.0,
+          "seconds_task": 19.0652,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-5656-7c31-bd9b-7401b92154d7"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53185.0,
+          "input_tokens_task": 52778.0,
+          "output_tokens_task": 407.0,
+          "seconds_task": 17.6197,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-58e4-7b40-a976-ed1b610bd2ad"
+        },
+        {
+          "bundle_size": 1,
+          "bundle": "s1-b8",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 1,
+          "hidden_successes": 1,
+          "first_successes": 1,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 53552.0,
+          "input_tokens_task": 53168.0,
+          "output_tokens_task": 384.0,
+          "seconds_task": 20.2708,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-737c-77a0-9fc0-4fbdb5bc0487"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28775.0,
+          "input_tokens_task": 28476.5,
+          "output_tokens_task": 298.5,
+          "seconds_task": 12.1468,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-0d7f-7501-8734-5b8b179f8865"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27785.0,
+          "input_tokens_task": 27451.0,
+          "output_tokens_task": 334.0,
+          "seconds_task": 10.9002,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-62b8-7bd1-baff-bd84ddcbdaf8"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28297.5,
+          "input_tokens_task": 27924.5,
+          "output_tokens_task": 373.0,
+          "seconds_task": 12.2997,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-c176-7372-a368-4920583b4ab5"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28413.0,
+          "input_tokens_task": 28163.0,
+          "output_tokens_task": 250.0,
+          "seconds_task": 11.0102,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-edc5-7f61-999e-95a7d6310bcb"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27406.5,
+          "input_tokens_task": 27126.0,
+          "output_tokens_task": 280.5,
+          "seconds_task": 14.8728,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-e992-7140-8542-cfa472f884f7"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27870.0,
+          "input_tokens_task": 27554.0,
+          "output_tokens_task": 316.0,
+          "seconds_task": 10.8684,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-1db4-7c60-a542-b959c600beb4"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28157.5,
+          "input_tokens_task": 27913.0,
+          "output_tokens_task": 244.5,
+          "seconds_task": 10.8217,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-fcea-7123-b500-96aee0a1076b"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27229.5,
+          "input_tokens_task": 26954.0,
+          "output_tokens_task": 275.5,
+          "seconds_task": 8.9204,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-5d54-75c2-bfdb-8ed2cf0bf21a"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27650.0,
+          "input_tokens_task": 27336.5,
+          "output_tokens_task": 313.5,
+          "seconds_task": 11.8366,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-ba90-7261-99f7-34581b0c4c70"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28931.5,
+          "input_tokens_task": 28635.5,
+          "output_tokens_task": 296.0,
+          "seconds_task": 12.2182,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-a8bf-7da0-ad12-29ae0c68437e"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27801.0,
+          "input_tokens_task": 27519.0,
+          "output_tokens_task": 282.0,
+          "seconds_task": 10.0367,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-3e70-7b61-ac2f-8a5199e18a9f"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28150.0,
+          "input_tokens_task": 27797.5,
+          "output_tokens_task": 352.5,
+          "seconds_task": 11.7271,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-7f1e-7d00-8d36-6c7b9ef6394e"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28552.5,
+          "input_tokens_task": 28255.0,
+          "output_tokens_task": 297.5,
+          "seconds_task": 11.0968,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-6159-70b0-8161-2b2174ac9050"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27443.5,
+          "input_tokens_task": 27171.0,
+          "output_tokens_task": 272.5,
+          "seconds_task": 11.4523,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-1cd8-74c2-be8d-b196444785e2"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b1",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27999.5,
+          "input_tokens_task": 27667.0,
+          "output_tokens_task": 332.5,
+          "seconds_task": 11.429,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-1e19-7ab1-bfef-5da183c67829"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28705.5,
+          "input_tokens_task": 28387.0,
+          "output_tokens_task": 318.5,
+          "seconds_task": 12.4561,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-44e3-7a13-932c-126c2fab05ee"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27565.0,
+          "input_tokens_task": 27266.5,
+          "output_tokens_task": 298.5,
+          "seconds_task": 12.8926,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-1ff4-7ae3-971a-be879229210b"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b2",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28114.5,
+          "input_tokens_task": 27754.0,
+          "output_tokens_task": 360.5,
+          "seconds_task": 11.3743,
+          "changed_files_task": 1.0,
+          "thread": "019fce55-c4c4-7be0-b2e5-b369dcc49c48"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28608.5,
+          "input_tokens_task": 28300.0,
+          "output_tokens_task": 308.5,
+          "seconds_task": 12.5052,
+          "changed_files_task": 1.0,
+          "thread": "019fce57-71c5-7e11-9cb8-22d987b2b63e"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27439.5,
+          "input_tokens_task": 27163.0,
+          "output_tokens_task": 276.5,
+          "seconds_task": 9.5424,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-16e9-7251-8cfa-392718da3d15"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b3",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27828.0,
+          "input_tokens_task": 27530.0,
+          "output_tokens_task": 298.0,
+          "seconds_task": 10.6098,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-1abe-7100-82c9-270e61111c07"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 28482.0,
+          "input_tokens_task": 28221.0,
+          "output_tokens_task": 261.0,
+          "seconds_task": 12.5418,
+          "changed_files_task": 1.0,
+          "thread": "019fce52-b767-79d1-9fe5-f0d33b5d88df"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27445.0,
+          "input_tokens_task": 27163.5,
+          "output_tokens_task": 281.5,
+          "seconds_task": 12.2616,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-8e1c-7e22-b3d2-9a30303dabd0"
+        },
+        {
+          "bundle_size": 2,
+          "bundle": "s2-b4",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 2,
+          "hidden_successes": 2,
+          "first_successes": 2,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 27937.5,
+          "input_tokens_task": 27613.0,
+          "output_tokens_task": 324.5,
+          "seconds_task": 12.812,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-abd1-7d21-9065-efd818720f24"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 15323.25,
+          "input_tokens_task": 15119.0,
+          "output_tokens_task": 204.25,
+          "seconds_task": 7.0141,
+          "changed_files_task": 1.0,
+          "thread": "019fce53-33e7-7270-84f3-1a5ee8ec6dd1"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14677.75,
+          "input_tokens_task": 14479.5,
+          "output_tokens_task": 198.25,
+          "seconds_task": 6.641,
+          "changed_files_task": 1.0,
+          "thread": "019fce5d-0675-7b41-a906-e48f49c684ec"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 15209.5,
+          "input_tokens_task": 14961.75,
+          "output_tokens_task": 247.75,
+          "seconds_task": 7.9295,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-9e5c-7683-a14c-5aae488ad17b"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14990.0,
+          "input_tokens_task": 14795.75,
+          "output_tokens_task": 194.25,
+          "seconds_task": 7.1132,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-48bf-7aa1-aff6-39bdbde7be6e"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14368.75,
+          "input_tokens_task": 14187.5,
+          "output_tokens_task": 181.25,
+          "seconds_task": 6.6414,
+          "changed_files_task": 1.0,
+          "thread": "019fce5b-9ab5-7851-945e-61b58d47a21c"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14799.0,
+          "input_tokens_task": 14572.25,
+          "output_tokens_task": 226.75,
+          "seconds_task": 6.986,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-05e9-7ae2-a6bb-1a6cd8c6f0c3"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 15210.75,
+          "input_tokens_task": 15036.0,
+          "output_tokens_task": 174.75,
+          "seconds_task": 6.6598,
+          "changed_files_task": 1.0,
+          "thread": "019fce5d-6a9f-73a0-bd5c-68d64bfe133b"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14667.75,
+          "input_tokens_task": 14465.0,
+          "output_tokens_task": 202.75,
+          "seconds_task": 6.1412,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-b46b-7291-8ece-c163c4732081"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b1",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 15140.0,
+          "input_tokens_task": 14897.25,
+          "output_tokens_task": 242.75,
+          "seconds_task": 7.2979,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-8e0a-7451-af1d-f27a56320395"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 15121.0,
+          "input_tokens_task": 14901.5,
+          "output_tokens_task": 219.5,
+          "seconds_task": 7.9319,
+          "changed_files_task": 1.0,
+          "thread": "019fce5c-0857-7c62-8480-a0ad3ec9f1cb"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14490.75,
+          "input_tokens_task": 14283.75,
+          "output_tokens_task": 207.0,
+          "seconds_task": 6.8162,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-bb28-7152-80c9-f4158594e186"
+        },
+        {
+          "bundle_size": 4,
+          "bundle": "s4-b2",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 4,
+          "hidden_successes": 4,
+          "first_successes": 4,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 14809.25,
+          "input_tokens_task": 14590.5,
+          "output_tokens_task": 218.75,
+          "seconds_task": 6.7848,
+          "changed_files_task": 1.0,
+          "thread": "019fce54-ab61-7f83-9152-aff99ed9a546"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 1,
+          "language": "Parley",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8361.25,
+          "input_tokens_task": 8248.375,
+          "output_tokens_task": 112.875,
+          "seconds_task": 3.9736,
+          "changed_files_task": 1.0,
+          "thread": "019fce56-8603-7593-87d5-6f5d46976566"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 1,
+          "language": "Python",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8038.125,
+          "input_tokens_task": 7900.0,
+          "output_tokens_task": 138.125,
+          "seconds_task": 3.8526,
+          "changed_files_task": 1.0,
+          "thread": "019fce52-b767-7af1-9afd-243fa9dca2cf"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 1,
+          "language": "Rust",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8467.5,
+          "input_tokens_task": 8293.5,
+          "output_tokens_task": 174.0,
+          "seconds_task": 5.005,
+          "changed_files_task": 1.0,
+          "thread": "019fce59-7802-7b41-a223-7465a96df766"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 2,
+          "language": "Parley",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8326.75,
+          "input_tokens_task": 8222.25,
+          "output_tokens_task": 104.5,
+          "seconds_task": 5.1744,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-a5cf-7951-9c57-1d02d447fd63"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 2,
+          "language": "Python",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8081.0,
+          "input_tokens_task": 7928.125,
+          "output_tokens_task": 152.875,
+          "seconds_task": 4.3183,
+          "changed_files_task": 1.0,
+          "thread": "019fce5a-b941-75f3-9d5f-b74648c93769"
+        },
+        {
+          "bundle_size": 8,
+          "bundle": "s8-b1",
+          "replicate": 2,
+          "language": "Rust",
+          "tasks": 8,
+          "hidden_successes": 8,
+          "first_successes": 8,
+          "checks": 1,
+          "repairs": 0,
+          "tokens_task": 8549.125,
+          "input_tokens_task": 8349.625,
+          "output_tokens_task": 199.5,
+          "seconds_task": 5.2476,
+          "changed_files_task": 1.0,
+          "thread": "019fce58-b3a3-7051-92da-9a4a0ebcbf3f"
+        }
+      ],
+      "root_audit": [
+        {
+          "language": "Parley",
+          "sessions": 30,
+          "assignments": 64,
+          "root_fixes": 64,
+          "one_file_fixes": 64,
+          "final_variants": 8,
+          "read_only_preserved": 128
+        },
+        {
+          "language": "Python",
+          "sessions": 30,
+          "assignments": 64,
+          "root_fixes": 64,
+          "one_file_fixes": 64,
+          "final_variants": 9,
+          "read_only_preserved": 128
+        },
+        {
+          "language": "Rust",
+          "sessions": 30,
+          "assignments": 64,
+          "root_fixes": 64,
+          "one_file_fixes": 64,
+          "final_variants": 10,
+          "read_only_preserved": 128
+        }
+      ],
+      "command_audit": [
+        {
+          "language": "Parley",
+          "sessions": 30,
+          "fresh": 30,
+          "sources_first": 30,
+          "one_check": 30,
+          "protocol_ok": 30,
+          "integrity_ok": 30,
+          "zero_exit": 30,
+          "file_change_actions": 30,
+          "three_messages": 8,
+          "four_messages": 22
+        },
+        {
+          "language": "Python",
+          "sessions": 30,
+          "fresh": 30,
+          "sources_first": 30,
+          "one_check": 30,
+          "protocol_ok": 30,
+          "integrity_ok": 30,
+          "zero_exit": 30,
+          "file_change_actions": 30,
+          "three_messages": 4,
+          "four_messages": 26
+        },
+        {
+          "language": "Rust",
+          "sessions": 30,
+          "fresh": 30,
+          "sources_first": 30,
+          "one_check": 30,
+          "protocol_ok": 30,
+          "integrity_ok": 30,
+          "zero_exit": 30,
+          "file_change_actions": 30,
+          "three_messages": 3,
+          "four_messages": 27
+        }
+      ],
+      "task_detail": [
+        {
+          "bundle_size": 1,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 118.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair after-hours routing regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 234.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 132.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 188.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 211.0,
+          "edit_tokens": 24.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 232.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 244.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 174.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 95.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair after-hours routing regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 206.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 123.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 164.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 177.0,
+          "edit_tokens": 16.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 218.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 221.5,
+          "edit_tokens": 7.5
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 151.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 182.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair after-hours routing regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 353.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 268.0,
+          "edit_tokens": 20.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 327.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 328.0,
+          "edit_tokens": 28.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 408.0,
+          "edit_tokens": 6.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 394.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 1,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 314.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 118.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair after-hours routing regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 234.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 132.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 188.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 211.0,
+          "edit_tokens": 24.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 232.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 244.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 174.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 95.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair after-hours routing regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 206.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 123.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 164.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 177.0,
+          "edit_tokens": 16.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 218.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 223.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 151.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 182.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair after-hours routing regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 353.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 272.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 327.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 328.0,
+          "edit_tokens": 28.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 408.0,
+          "edit_tokens": 6.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 394.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 2,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 314.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 118.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair after-hours routing regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 234.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 132.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 188.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 211.0,
+          "edit_tokens": 24.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 232.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 244.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 174.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 95.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair after-hours routing regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 206.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 123.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 164.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 177.0,
+          "edit_tokens": 16.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 218.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 221.5,
+          "edit_tokens": 7.5
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 151.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 182.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair after-hours routing regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 353.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 272.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 327.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 328.0,
+          "edit_tokens": 28.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 408.0,
+          "edit_tokens": 6.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 394.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 4,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 314.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 118.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair after-hours routing regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 234.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 132.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 188.0,
+          "edit_tokens": 12.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 211.0,
+          "edit_tokens": 24.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 232.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 244.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Parley",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 174.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 95.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair after-hours routing regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 206.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 123.0,
+          "edit_tokens": 4.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 164.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 177.0,
+          "edit_tokens": 16.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 218.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 221.5,
+          "edit_tokens": 7.5
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Python",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 151.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair invoice discount boundary regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 182.0,
+          "edit_tokens": 2.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair after-hours routing regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 353.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair normalized tag identity regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 272.0,
+          "edit_tokens": 8.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Repair deferred-capacity state regression",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 327.0,
+          "edit_tokens": 10.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Preserve valid configuration beside unknown keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 328.0,
+          "edit_tokens": 28.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Normalize aliased identity fields into cache keys",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 408.0,
+          "edit_tokens": 6.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Restore termination state when rolling back an FSM",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 394.0,
+          "edit_tokens": 9.0
+        },
+        {
+          "bundle_size": 8,
+          "repository": "Retain lock authority during cancellation rollback",
+          "language": "Rust",
+          "appearances": 2,
+          "first_successes": 2,
+          "hidden_successes": 2,
+          "root_fixes": 2,
+          "final_tokens": 314.0,
+          "edit_tokens": 4.0
+        }
+      ],
+      "source_stage": [
+        {
+          "language": "Parley",
+          "stage": "Seed",
+          "rough_tokens_task": 191.875
+        },
+        {
+          "language": "Parley",
+          "stage": "Final",
+          "rough_tokens_task": 191.625
+        },
+        {
+          "language": "Python",
+          "stage": "Seed",
+          "rough_tokens_task": 169.25
+        },
+        {
+          "language": "Python",
+          "stage": "Final",
+          "rough_tokens_task": 169.4375
+        },
+        {
+          "language": "Rust",
+          "stage": "Seed",
+          "rough_tokens_task": 323.0
+        },
+        {
+          "language": "Rust",
+          "stage": "Final",
+          "rough_tokens_task": 322.25
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "scaling_results",
+      "label": "Frozen iteration 030 ninety-session scaling results",
+      "path": "030-ninety-session-scaling-mechanism.sql",
+      "query": {
+        "engine": "SQLite JSON1 + Python statistics",
+        "query": "python3 benchmarks/reports/build_030_report.py && sqlite3 ':memory:' < benchmarks/reports/030-ninety-session-scaling-mechanism.sql",
+        "description": "Reproducible aggregation of all 90 sessions, 192 hidden judgments, four workload sizes, reciprocal-size fits, event-order integrity, and frozen root-cause locations.",
+        "executed_at": "2026-08-04T20:01:25Z",
+        "language": "SQL / Python",
+        "metric_definitions": [
+          "Tokens per repository: reported session input plus output tokens divided by assigned repositories.",
+          "First success: repository passes in its untouched first public bundle check.",
+          "Hidden success: final repository passes every withheld stdout case.",
+          "Root-cause repair: final patch modifies the defect file frozen before measured output.",
+          "Fixed session fit: OLS slope for median tokens/repository against reciprocal bundle size.",
+          "Residual task fit: OLS intercept for median tokens/repository against reciprocal bundle size."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "030-ninety-session-scaling-mechanism.artifact.json",
+    "snapshotPath": "agent_scaling_030_protocol_v1_v0.3.155.json",
+    "originUrl": "artifact://parley-scaling-mechanism-030"
+  }
+}

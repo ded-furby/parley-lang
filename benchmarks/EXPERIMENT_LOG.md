@@ -2639,3 +2639,114 @@ session overhead; a stable or growing gap supports source/workflow cost. The
 fit is not causal, and two size-eight replicates are not a confirmation. Run
 all 90 cells once with no exclusions or selective reruns. No compiler, task,
 skill, harness, or instruction change is included.
+
+## 030 — Ninety-session scaling curve isolates fixed session overhead
+
+- Completed: 2026-08-05
+- Compiler: pinned Parley 0.3.155 binary; language unchanged
+- Model: `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0
+- Matrix: sizes 1/2/4/8 × three languages × two complete task appearances =
+  90 fresh sessions and 192 hidden-judged assignments
+- Raw result:
+  `benchmarks/results/agent_scaling_030_protocol_v1_v0.3.155.json`
+- Raw SHA-256:
+  `ab49ad72652fc686e703aef2b7f5f9bd691d217ce4455237598bcca5d0b07adc`
+- Protocol SHA-256:
+  `1eae4604ea8a9c0a4fbce404e1f177af74a06afbf8a93409781c1961a6e09b9f`
+- Report: `benchmarks/reports/030-ninety-session-scaling-mechanism.html`
+- Report SHA-256:
+  `7f03cdc214a302e3b3236433111c4e579fc90f25cc80faa856c3fbd3dfc2e9bd`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_030_report.py`
+- Integrity: 90 unique thread IDs; 90/90 fresh-session, zero-exit,
+  source-order, checker/context-integrity, command-protocol, first-check, and
+  hidden-bundle checks pass; zero timeouts, repairs, errors, exclusions, or
+  selective reruns
+
+| Size | Language | Sessions | Assignments | First | Hidden | Repairs | Median tokens/repo | Median seconds/repo |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | Parley | 16 | 16 | 16 | 16 | 0 | 55,295.00 | 19.0840 |
+| 1 | Python | 16 | 16 | 16 | 16 | 0 | 53,237.00 | 17.6683 |
+| 1 | Rust | 16 | 16 | 16 | 16 | 0 | 53,940.50 | 19.7229 |
+| 2 | Parley | 8 | 16 | 16 | 16 | 0 | 28,580.50 | 12.1825 |
+| 2 | Python | 8 | 16 | 16 | 16 | 0 | 27,444.25 | 11.1763 |
+| 2 | Rust | 8 | 16 | 16 | 16 | 0 | 27,968.50 | 11.5781 |
+| 4 | Parley | 4 | 16 | 16 | 16 | 0 | 15,165.88 | 7.0637 |
+| 4 | Python | 4 | 16 | 16 | 16 | 0 | 14,579.25 | 6.6412 |
+| 4 | Rust | 4 | 16 | 16 | 16 | 0 | 14,974.63 | 7.1420 |
+| 8 | Parley | 2 | 16 | 16 | 16 | 0 | 8,344.00 | 4.5740 |
+| 8 | Python | 2 | 16 | 16 | 16 | 0 | 8,059.56 | 4.0855 |
+| 8 | Rust | 2 | 16 | 16 | 16 | 0 | 8,508.31 | 5.1263 |
+
+At size eight, Parley is 3.53% above Python and 1.93% below Rust on reported
+tokens. It is 11.96% slower than Python and 10.77% faster than Rust. The strict
+better-baseline gate therefore finishes 2/4: correctness and first-check pass;
+tokens and elapsed fail against Python. The separate maintainability condition
+passes: all 64 Parley assignments modify their predeclared root-defect file.
+Python and Rust also score 64/64; every one of all 192 assignments changes
+exactly one root file.
+
+The absolute Parley/Python token gap per repository is 2,058.00, 1,136.25,
+586.63, and 284.44 at sizes 1/2/4/8. The relative gap remains 3.87%, 4.14%,
+4.02%, and 3.53%. The Parley/Rust absolute gap is +1,354.50, +612.00,
++191.25, then −164.31; relative gaps are +2.51%, +2.19%, +1.28%, and −1.93%.
+Thus Parley crosses Rust between sizes four and eight, while the Python gap
+amortizes in absolute terms without crossing.
+
+The preregistered descriptive fit is
+`median tokens/task = residual task tokens + fixed session tokens / size`:
+
+| Language | Residual task tokens | Fixed session tokens | R² |
+| --- | ---: | ---: | ---: |
+| Parley | 1,716.440 | 53,610.461 | 0.99999062 |
+| Python | 1,642.082 | 51,600.926 | 0.99999794 |
+| Rust | 2,004.185 | 51,933.439 | 0.99999972 |
+
+Relative to Python, the fit assigns Parley +2,009.535 fixed tokens/session and
++74.358 residual tokens/task, so it predicts no positive-size crossover.
+Relative to Rust, Parley has +1,677.022 fixed tokens/session but −287.745
+residual tokens/task, giving a descriptive crossover at 5.83 tasks/session.
+This four-point fit describes the measured mechanism; it is not causal or an
+asymptotic population estimate.
+
+The action audit finds one exact command sequence in all 90 sessions:
+`./sources`, one completed file-change action, then `./check`. All sessions use
+one check and no repair. Seventy-five sessions contain four agent messages and
+fifteen contain three. The three/four split is 8/22 for Parley, 4/26 for
+Python, and 3/27 for Rust; the shorter shape omits only an optional progress
+message and adds no command, edit, check, or repair.
+
+At size eight, median final source is 191.625 rough tokens/repository for
+Parley, 169.438 for Python, and 322.250 for Rust. Median prompt characters are
+732.500, 521.625, and 524.125. Median input tokens are 8,235.313, 7,914.063,
+and 8,321.563, while output tokens are 108.688, 145.500, and 186.750. Equal
+read-only context is 88.75 rough tokens/repository. The task manifest's raw
+files total 3,614 characters/47 lines for a full bundle; the runner records
+3,622/55 after adding one join newline per task. This disclosed bookkeeping
+difference is equal across languages and affects no evidence or judgment.
+
+Iteration 029's independent size-eight medians were Parley/Python/Rust
+8,408.56/8,034.69/8,489.06 tokens and 4.5455/3.9298/5.0027 seconds per
+repository. Iteration 030 reports 8,344.00/8,059.56/8,508.31 and
+4.5740/4.0855/5.1263. Both place Parley between Python and Rust on tokens and
+elapsed time.
+
+There is no Parley parse, type, runtime, hidden, diagnosis, root-location, or
+draft failure across 64 assignments. The remaining Python gap is mostly fixed
+session context plus a modest source-size residual—not a repeated language
+defect. **No compiler, syntax, diagnostic, prompt, task, harness, or skill
+change follows from iteration 030.** The instruction remains byte-for-byte
+frozen, and the one allowed instruction-compression experiment remains closed.
+
+The canonical report builder passes validation, packaging, source-dialog
+interaction, and responsive browser checks at 1440 and 390 pixels. The final
+reader contains 38 blocks, five charts, eight metrics, six tables, all 90
+session rows, all 96 task/scale/language aggregates, and a reproducible SQL
+view. Preserve report 030 and its raw result unchanged.
+
+Next, move to preregistered deeper project episodes where dependency
+navigation, state reconstruction, and multi-file reasoning dominate fixed
+instruction cost. Do not select Parley-favorable tasks, change instructions,
+or add syntax from token arithmetic. A language proposal remains eligible only
+after a semantic failure recurs across independent projects and the design is
+generally useful, semantically consistent, and maintainable.
