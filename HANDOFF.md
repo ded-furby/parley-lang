@@ -810,6 +810,19 @@ Update it whenever you finish or start a work item.
   frozen. Tasks without context preserve prior prompt and source-output wording.
   Full suite passes 338/338. This is language-neutral harness work only; commit
   it before building the 028 project-style regression corpus.
+- **Project-style diagnostic corpus (iteration 028 design):** four unrelated
+  regressions cover an invoice boundary, after-hours routing, normalized tag
+  identity, and deferred-capacity state. Every language receives three
+  editable files plus the same two read-only issue/test artifacts; public
+  examples are protected but omitted from the prompt. Independent oracles
+  match all 20 cases, all 12 seeds compile, and every seed fails its intended
+  regression. Manifest SHA is
+  `49147f96ce0f50239314719f4fce76bd979bea2829f5eb629d4cdb0c7097013e`;
+  the full suite passes 341/341. One pre-freeze seed transcription used
+  unsupported `div` and was corrected to established Parley division syntax;
+  no measured output or language/skill change resulted. Commit the corpus,
+  then freeze and run the six-replicate 18-session protocol once without
+  selective reruns or same-corpus optimization.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

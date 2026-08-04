@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "description": "Four project-style regression repairs with three editable implementation files and integrity-protected issue/test evidence.",
+  "predeclared_analysis": {
+    "experiment_id": "028",
+    "matrix": "4 diagnostic repositories x 3 languages x 6 complete-bundle replicates = 18 fresh sessions and 72 hidden-judged assignments",
+    "seed": 20260819,
+    "scope": "Diagnosis-first repository maintenance. Public examples are omitted from prompts; agents inspect editable source plus read-only issue and regression evidence through one protected ./sources command.",
+    "primary_question": "Does Parley match Python and Rust when maintenance requires locating a seeded regression from project evidence rather than implementing an explicit prompt-level I/O contract?",
+    "change_rule": "Preserve all output. No language change follows one repository, transcript, session, or token gap. Proposals require recurrence across unrelated projects and independent sessions, then general usefulness, semantic consistency, and maintainability.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "tasks": [
+    {
+      "id": "invoice_boundary_project",
+      "title": "Repair invoice discount boundary regression",
+      "category": "boundary-policy regression",
+      "statement": "Fix the reported invoice regression using the read-only issue and regression evidence. Preserve the repository's existing input and output format. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "public_cases": [
+        {"stdin":"2000\n","stdout":"subtotal=2000|discount=200|net=1800\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"1999\n","stdout":"subtotal=1999|discount=0|net=1999\n"},
+        {"stdin":"2001\n","stdout":"subtotal=2001|discount=200|net=1801\n"},
+        {"stdin":"0\n","stdout":"subtotal=0|discount=0|net=0\n"},
+        {"stdin":"10000\n","stdout":"subtotal=10000|discount=1000|net=9000\n"}
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_invoice with subtotal as number, discount as number giving text:\n    let net be subtotal - discount\n    give back \"subtotal=\" + subtotal + \"|discount=\" + discount + \"|net=\" + net\n",
+          "main.par": "include \"pricing.par\"\ninclude \"formatting.par\"\n\nto main:\n    let subtotal_input be ask for a number \"\"\n    let subtotal be value of subtotal_input\n    let discount be (invoice_discount with subtotal)\n    say (format_invoice with subtotal, discount)\n",
+          "pricing.par": "to invoice_discount with subtotal as number giving number:\n    if subtotal is more than 2000:\n        give back floor of (subtotal divided by 10)\n    give back 0\n"
+        },
+        "python": {
+          "formatting.py": "def format_invoice(subtotal: int, discount: int) -> str:\n    net = subtotal - discount\n    return f\"subtotal={subtotal}|discount={discount}|net={net}\"\n",
+          "main.py": "from formatting import format_invoice\nfrom pricing import invoice_discount\n\nsubtotal = int(input())\ndiscount = invoice_discount(subtotal)\nprint(format_invoice(subtotal, discount))\n",
+          "pricing.py": "def invoice_discount(subtotal: int) -> int:\n    if subtotal > 2000:\n        return subtotal // 10\n    return 0\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_invoice(subtotal: i64, discount: i64) -> String {\n    let net = subtotal - discount;\n    format!(\"subtotal={subtotal}|discount={discount}|net={net}\")\n}\n",
+          "main.rs": "mod formatting;\nmod pricing;\n\nuse formatting::format_invoice;\nuse pricing::invoice_discount;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let subtotal: i64 = input.trim().parse().unwrap();\n    let discount = invoice_discount(subtotal);\n    println!(\"{}\", format_invoice(subtotal, discount));\n}\n",
+          "pricing.rs": "pub fn invoice_discount(subtotal: i64) -> i64 {\n    if subtotal > 2000 { subtotal / 10 } else { 0 }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {"ISSUE.md":"# Invoice boundary regression\n\nA subtotal of exactly 2000 cents no longer receives the established ten-percent whole-number discount. Values below 2000 receive no discount. Values at or above 2000 receive subtotal divided by 10. Preserve the existing output fields and order.\n","tests/regression.txt":"1999 -> subtotal=1999|discount=0|net=1999\n2000 -> subtotal=2000|discount=200|net=1800\n2001 -> subtotal=2001|discount=200|net=1801\n"},
+        "python": {"ISSUE.md":"# Invoice boundary regression\n\nA subtotal of exactly 2000 cents no longer receives the established ten-percent whole-number discount. Values below 2000 receive no discount. Values at or above 2000 receive subtotal divided by 10. Preserve the existing output fields and order.\n","tests/regression.txt":"1999 -> subtotal=1999|discount=0|net=1999\n2000 -> subtotal=2000|discount=200|net=1800\n2001 -> subtotal=2001|discount=200|net=1801\n"},
+        "rust": {"ISSUE.md":"# Invoice boundary regression\n\nA subtotal of exactly 2000 cents no longer receives the established ten-percent whole-number discount. Values below 2000 receive no discount. Values at or above 2000 receive subtotal divided by 10. Preserve the existing output fields and order.\n","tests/regression.txt":"1999 -> subtotal=1999|discount=0|net=1999\n2000 -> subtotal=2000|discount=200|net=1800\n2001 -> subtotal=2001|discount=200|net=1801\n"}
+      }
+    },
+    {
+      "id": "after_hours_routing_project",
+      "title": "Repair after-hours routing regression",
+      "category": "policy-routing regression",
+      "statement": "Fix the reported incident-routing regression using the read-only issue and regression evidence. Preserve existing parsing, output order, and summary fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "public_cases": [
+        {"stdin":"3\nops|high|yes\nweb|low|yes\ndb|critical|no\n","stdout":"ops:pager\nweb:email\ndb:pager\nemail=1,chat=0,pager=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"email=0,chat=0,pager=0\n"},
+        {"stdin":"2\na|high|no\nb|high|yes\n","stdout":"a:chat\nb:pager\nemail=0,chat=1,pager=1\n"},
+        {"stdin":"3\na|low|no\nb|critical|yes\nc|low|yes\n","stdout":"a:email\nb:pager\nc:email\nemail=2,chat=0,pager=1\n"},
+        {"stdin":"1\nnight|high|yes\n","stdout":"night:pager\nemail=0,chat=0,pager=1\n"}
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_counts with email as number, chat as number, pager as number giving text:\n    give back \"email=\" + email + \",chat=\" + chat + \",pager=\" + pager\n",
+          "main.par": "include \"routing.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let email be 0\n    let chat be 0\n    let pager be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let team be item 1 of parts\n        let channel be (channel_for with item 2 of parts, item 3 of parts)\n        say team + \":\" + channel\n        if channel is \"email\":\n            set email to email + 1\n        if channel is \"chat\":\n            set chat to chat + 1\n        if channel is \"pager\":\n            set pager to pager + 1\n    say (format_counts with email, chat, pager)\n",
+          "routing.par": "to channel_for with severity as text, after_hours as text giving text:\n    if severity is \"low\":\n        give back \"email\"\n    if severity is \"high\":\n        give back \"chat\"\n    give back \"pager\"\n"
+        },
+        "python": {
+          "formatting.py": "def format_counts(email: int, chat: int, pager: int) -> str:\n    return f\"email={email},chat={chat},pager={pager}\"\n",
+          "main.py": "from formatting import format_counts\nfrom routing import channel_for\n\ncount = int(input())\ncounts = {\"email\": 0, \"chat\": 0, \"pager\": 0}\nfor _ in range(count):\n    team, severity, after_hours = input().split(\"|\")\n    channel = channel_for(severity, after_hours)\n    counts[channel] += 1\n    print(f\"{team}:{channel}\")\nprint(format_counts(counts[\"email\"], counts[\"chat\"], counts[\"pager\"]))\n",
+          "routing.py": "def channel_for(severity: str, after_hours: str) -> str:\n    if severity == \"low\":\n        return \"email\"\n    if severity == \"high\":\n        return \"chat\"\n    return \"pager\"\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_counts(email: i64, chat: i64, pager: i64) -> String {\n    format!(\"email={email},chat={chat},pager={pager}\")\n}\n",
+          "main.rs": "mod formatting;\nmod routing;\n\nuse formatting::format_counts;\nuse routing::channel_for;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let (mut email, mut chat, mut pager) = (0, 0, 0);\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().split('|');\n        let team = parts.next().unwrap();\n        let channel = channel_for(parts.next().unwrap(), parts.next().unwrap());\n        match channel { \"email\" => email += 1, \"chat\" => chat += 1, _ => pager += 1 }\n        println!(\"{team}:{channel}\");\n    }\n    println!(\"{}\", format_counts(email, chat, pager));\n}\n",
+          "routing.rs": "pub fn channel_for(severity: &str, _after_hours: &str) -> &'static str {\n    if severity == \"low\" { \"email\" } else if severity == \"high\" { \"chat\" } else { \"pager\" }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {"ISSUE.md":"# After-hours escalation regression\n\nHigh-severity incidents must route to pager when after_hours is yes and to chat otherwise. Low remains email; critical remains pager. A recent policy refactor ignored after_hours for high incidents. Preserve output order and counts.\n","tests/regression.txt":"high|no -> chat\nhigh|yes -> pager\nlow|yes -> email\ncritical|no -> pager\n"},
+        "python": {"ISSUE.md":"# After-hours escalation regression\n\nHigh-severity incidents must route to pager when after_hours is yes and to chat otherwise. Low remains email; critical remains pager. A recent policy refactor ignored after_hours for high incidents. Preserve output order and counts.\n","tests/regression.txt":"high|no -> chat\nhigh|yes -> pager\nlow|yes -> email\ncritical|no -> pager\n"},
+        "rust": {"ISSUE.md":"# After-hours escalation regression\n\nHigh-severity incidents must route to pager when after_hours is yes and to chat otherwise. Low remains email; critical remains pager. A recent policy refactor ignored after_hours for high incidents. Preserve output order and counts.\n","tests/regression.txt":"high|no -> chat\nhigh|yes -> pager\nlow|yes -> email\ncritical|no -> pager\n"}
+      }
+    },
+    {
+      "id": "normalized_tag_project",
+      "title": "Repair normalized tag identity regression",
+      "category": "normalized-identity regression",
+      "statement": "Fix the reported tag-identity regression using the read-only issue and regression evidence. Preserve first-seen output order and the existing summary. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "public_cases": [
+        {"stdin":"4\nAlpha\nalpha\nBETA\nbeta\n","stdout":"alpha\nbeta\nunique=2,duplicates=2\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n","stdout":"unique=0,duplicates=0\n"},
+        {"stdin":"3\nX\nY\nz\n","stdout":"x\ny\nz\nunique=3,duplicates=0\n"},
+        {"stdin":"5\nsame\nSAME\nSame\nsame\nSAmE\n","stdout":"same\nunique=1,duplicates=4\n"},
+        {"stdin":"4\na\nA\nb\nB\n","stdout":"a\nb\nunique=2,duplicates=2\n"}
+      ],
+      "seed_files": {
+        "parley": {
+          "formatting.par": "to format_tag_counts with unique_count as number, duplicates as number giving text:\n    give back \"unique=\" + unique_count + \",duplicates=\" + duplicates\n",
+          "main.par": "include \"normalization.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    let seen be an empty list of text\n    let duplicates be 0\n    repeat count times:\n        let tag be ask \"\"\n        let normalized be (normalize_tag with tag)\n        if seen contains tag:\n            set duplicates to duplicates + 1\n        otherwise:\n            add tag to seen\n            say normalized\n    say (format_tag_counts with length of seen, duplicates)\n",
+          "normalization.par": "to normalize_tag with tag as text giving text:\n    give back lowercase of tag\n"
+        },
+        "python": {
+          "formatting.py": "def format_tag_counts(unique_count: int, duplicates: int) -> str:\n    return f\"unique={unique_count},duplicates={duplicates}\"\n",
+          "main.py": "from formatting import format_tag_counts\nfrom normalization import normalize_tag\n\ncount = int(input())\nseen = set()\nduplicates = 0\nfor _ in range(count):\n    tag = input()\n    normalized = normalize_tag(tag)\n    if tag in seen:\n        duplicates += 1\n    else:\n        seen.add(tag)\n        print(normalized)\nprint(format_tag_counts(len(seen), duplicates))\n",
+          "normalization.py": "def normalize_tag(tag: str) -> str:\n    return tag.lower()\n"
+        },
+        "rust": {
+          "formatting.rs": "pub fn format_tag_counts(unique_count: usize, duplicates: usize) -> String {\n    format!(\"unique={unique_count},duplicates={duplicates}\")\n}\n",
+          "main.rs": "mod formatting;\nmod normalization;\n\nuse formatting::format_tag_counts;\nuse normalization::normalize_tag;\nuse std::collections::HashSet;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let mut seen = HashSet::new();\n    let mut duplicates = 0;\n    for _ in 0..count {\n        let tag = lines.next().unwrap().to_string();\n        let normalized = normalize_tag(&tag);\n        if seen.contains(&tag) { duplicates += 1; } else { seen.insert(tag); println!(\"{normalized}\"); }\n    }\n    println!(\"{}\", format_tag_counts(seen.len(), duplicates));\n}\n",
+          "normalization.rs": "pub fn normalize_tag(tag: &str) -> String {\n    tag.to_lowercase()\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {"ISSUE.md":"# Normalized tag identity regression\n\nTag identity is defined after lowercase normalization. First-seen order is preserved, and later case variants count as duplicates. The displayed tag is normalized. A regression compares raw input while displaying normalized output.\n","tests/regression.txt":"Alpha, alpha -> output alpha once; unique=1,duplicates=1\nBETA, beta, Beta -> output beta once; unique=1,duplicates=2\n"},
+        "python": {"ISSUE.md":"# Normalized tag identity regression\n\nTag identity is defined after lowercase normalization. First-seen order is preserved, and later case variants count as duplicates. The displayed tag is normalized. A regression compares raw input while displaying normalized output.\n","tests/regression.txt":"Alpha, alpha -> output alpha once; unique=1,duplicates=1\nBETA, beta, Beta -> output beta once; unique=1,duplicates=2\n"},
+        "rust": {"ISSUE.md":"# Normalized tag identity regression\n\nTag identity is defined after lowercase normalization. First-seen order is preserved, and later case variants count as duplicates. The displayed tag is normalized. A regression compares raw input while displaying normalized output.\n","tests/regression.txt":"Alpha, alpha -> output alpha once; unique=1,duplicates=1\nBETA, beta, Beta -> output beta once; unique=1,duplicates=2\n"}
+      }
+    },
+    {
+      "id": "capacity_state_project",
+      "title": "Repair deferred-capacity state regression",
+      "category": "state-transition regression",
+      "statement": "Fix the reported delivery-capacity regression using the read-only issue and regression evidence. Preserve request order and summary fields. Do not modify files marked read-only.",
+      "show_public_examples": false,
+      "entrypoints": {"parley":"main.par","python":"main.py","rust":"main.rs"},
+      "public_cases": [
+        {"stdin":"10\n3\nA|6\nB|6\nC|4\n","stdout":"A:accept\nB:defer\nC:accept\nused=10,deferred=1\n"}
+      ],
+      "hidden_cases": [
+        {"stdin":"0\n0\n","stdout":"used=0,deferred=0\n"},
+        {"stdin":"5\n3\na|5\nb|1\nc|0\n","stdout":"a:accept\nb:defer\nc:accept\nused=5,deferred=1\n"},
+        {"stdin":"3\n2\na|4\nb|3\n","stdout":"a:defer\nb:accept\nused=3,deferred=1\n"},
+        {"stdin":"10\n3\na|6\nb|4\nc|0\n","stdout":"a:accept\nb:accept\nc:accept\nused=10,deferred=0\n"}
+      ],
+      "seed_files": {
+        "parley": {
+          "allocation.par": "to can_accept with used as number, units as number, capacity as number giving yesno:\n    give back used + units is at most capacity\n",
+          "formatting.par": "to format_capacity with used as number, deferred as number giving text:\n    give back \"used=\" + used + \",deferred=\" + deferred\n",
+          "main.par": "include \"allocation.par\"\ninclude \"formatting.par\"\n\nto main:\n    let capacity_input be ask for a number \"\"\n    let count_input be ask for a number \"\"\n    let capacity be value of capacity_input\n    let count be value of count_input\n    let used be 0\n    let deferred be 0\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let id be item 1 of parts\n        let units be item 2 of parts as number\n        if (can_accept with used, units, capacity):\n            say id + \":accept\"\n        otherwise:\n            say id + \":defer\"\n            set deferred to deferred + 1\n        set used to used + units\n    say (format_capacity with used, deferred)\n"
+        },
+        "python": {
+          "allocation.py": "def can_accept(used: int, units: int, capacity: int) -> bool:\n    return used + units <= capacity\n",
+          "formatting.py": "def format_capacity(used: int, deferred: int) -> str:\n    return f\"used={used},deferred={deferred}\"\n",
+          "main.py": "from allocation import can_accept\nfrom formatting import format_capacity\n\ncapacity = int(input())\ncount = int(input())\nused = 0\ndeferred = 0\nfor _ in range(count):\n    item_id, units_text = input().split(\"|\")\n    units = int(units_text)\n    if can_accept(used, units, capacity):\n        print(f\"{item_id}:accept\")\n    else:\n        print(f\"{item_id}:defer\")\n        deferred += 1\n    used += units\nprint(format_capacity(used, deferred))\n"
+        },
+        "rust": {
+          "allocation.rs": "pub fn can_accept(used: i64, units: i64, capacity: i64) -> bool {\n    used + units <= capacity\n}\n",
+          "formatting.rs": "pub fn format_capacity(used: i64, deferred: i64) -> String {\n    format!(\"used={used},deferred={deferred}\")\n}\n",
+          "main.rs": "mod allocation;\nmod formatting;\n\nuse allocation::can_accept;\nuse formatting::format_capacity;\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let capacity: i64 = lines.next().unwrap().parse().unwrap();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    let (mut used, mut deferred) = (0, 0);\n    for _ in 0..count {\n        let mut parts = lines.next().unwrap().split('|');\n        let id = parts.next().unwrap();\n        let units: i64 = parts.next().unwrap().parse().unwrap();\n        if can_accept(used, units, capacity) { println!(\"{id}:accept\"); } else { println!(\"{id}:defer\"); deferred += 1; }\n        used += units;\n    }\n    println!(\"{}\", format_capacity(used, deferred));\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {"ISSUE.md":"# Deferred request corrupts capacity state\n\nOnly accepted units consume capacity. Deferred requests increment deferred but must leave used unchanged so later smaller requests can still fit. A regression updates used after every request. Preserve input order and summary fields.\n","tests/regression.txt":"capacity 10: accept 6, defer 6, accept 4 -> used=10,deferred=1\ncapacity 3: defer 4, accept 3 -> used=3,deferred=1\n"},
+        "python": {"ISSUE.md":"# Deferred request corrupts capacity state\n\nOnly accepted units consume capacity. Deferred requests increment deferred but must leave used unchanged so later smaller requests can still fit. A regression updates used after every request. Preserve input order and summary fields.\n","tests/regression.txt":"capacity 10: accept 6, defer 6, accept 4 -> used=10,deferred=1\ncapacity 3: defer 4, accept 3 -> used=3,deferred=1\n"},
+        "rust": {"ISSUE.md":"# Deferred request corrupts capacity state\n\nOnly accepted units consume capacity. Deferred requests increment deferred but must leave used unchanged so later smaller requests can still fit. A regression updates used after every request. Preserve input order and summary fields.\n","tests/regression.txt":"capacity 10: accept 6, defer 6, accept 4 -> used=10,deferred=1\ncapacity 3: defer 4, accept 3 -> used=3,deferred=1\n"}
+      }
+    }
+  ]
+}

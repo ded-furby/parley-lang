@@ -1408,6 +1408,128 @@ def test_repositories_027_combines_preserved_and_unrelated_tasks():
     assert combined["predeclared_analysis"]["matrix"].startswith("16 repositories")
 
 
+def _diagnostic_028_oracle(task_id: str, stdin: str) -> str:
+    lines = iter(stdin.splitlines())
+    if task_id == "invoice_boundary_project":
+        subtotal = int(next(lines))
+        discount = subtotal // 10 if subtotal >= 2000 else 0
+        return f"subtotal={subtotal}|discount={discount}|net={subtotal - discount}\n"
+    if task_id == "after_hours_routing_project":
+        count = int(next(lines))
+        output = []
+        counts = {"email": 0, "chat": 0, "pager": 0}
+        for _ in range(count):
+            team, severity, after_hours = next(lines).split("|")
+            channel = (
+                "email" if severity == "low"
+                else "pager" if severity == "critical" or after_hours == "yes"
+                else "chat"
+            )
+            counts[channel] += 1
+            output.append(f"{team}:{channel}")
+        output.append(
+            f"email={counts['email']},chat={counts['chat']},pager={counts['pager']}"
+        )
+        return "\n".join(output) + "\n"
+    if task_id == "normalized_tag_project":
+        count = int(next(lines))
+        output = []
+        seen = set()
+        duplicates = 0
+        for _ in range(count):
+            tag = next(lines).lower()
+            if tag in seen:
+                duplicates += 1
+            else:
+                seen.add(tag)
+                output.append(tag)
+        output.append(f"unique={len(seen)},duplicates={duplicates}")
+        return "\n".join(output) + "\n"
+    if task_id == "capacity_state_project":
+        capacity = int(next(lines))
+        count = int(next(lines))
+        output = []
+        used = 0
+        deferred = 0
+        for _ in range(count):
+            item_id, units_text = next(lines).split("|")
+            units = int(units_text)
+            if used + units <= capacity:
+                used += units
+                output.append(f"{item_id}:accept")
+            else:
+                deferred += 1
+                output.append(f"{item_id}:defer")
+        output.append(f"used={used},deferred={deferred}")
+        return "\n".join(output) + "\n"
+    raise AssertionError(f"unknown task {task_id}")
+
+
+def test_diagnostic_028_cases_match_independent_oracle():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_diagnostic_028.json")
+
+    assert len(tasks) == 4
+    for task in tasks:
+        assert len(task["public_cases"]) == 1
+        assert len(task["hidden_cases"]) == 4
+        for case in task["public_cases"] + task["hidden_cases"]:
+            assert case["stdout"] == _diagnostic_028_oracle(task["id"], case["stdin"])
+            assert case.get("files", {}) == {}
+
+
+def test_diagnostic_028_context_and_prompt_are_language_symmetric():
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_diagnostic_028.json")
+
+    for task in tasks:
+        assert task["show_public_examples"] is False
+        assert all(
+            len(task["seed_files"][language]) == 3
+            for language in ("parley", "python", "rust")
+        )
+        assert all(
+            len(task["context_files"][language]) == 2
+            for language in ("parley", "python", "rust")
+        )
+        assert task["context_files"]["parley"] == task["context_files"]["python"]
+        assert task["context_files"]["python"] == task["context_files"]["rust"]
+
+    for language in ("parley", "python", "rust"):
+        prompt = render_bundle_prompt(tasks, language, "unchanged Parley skill")
+        assert "Public example" not in prompt
+        for task in tasks:
+            for case in task["public_cases"]:
+                assert case["stdin"] not in prompt
+                assert case["stdout"] not in prompt
+
+
+def test_diagnostic_028_seeds_compile_and_fail_each_public_regression(tmp_path):
+    tasks = load_tasks(BENCHMARKS / "agent_tasks_diagnostic_028.json")
+    parley = shutil.which("parley")
+    assert parley is not None
+
+    for language in ("parley", "python", "rust"):
+        workdir = tmp_path / f"{language}-028-seed"
+        workdir.mkdir()
+        integrity = write_bundle_workspace(workdir, tasks, language, parley)
+        proc = subprocess.run(
+            [str(workdir / "check")],
+            cwd=workdir,
+            capture_output=True,
+            text=True,
+            timeout=90,
+        )
+        assert proc.returncode == 1
+        record = json.loads((workdir / ".benchmark_attempts.jsonl").read_text())
+        assert all(result["compile_ok"] for result in record["tasks"].values())
+        assert not any(result["ok"] for result in record["tasks"].values())
+        expected_context = {
+            f"{task['id']}/{filename}"
+            for task in tasks
+            for filename in task["context_files"][language]
+        }
+        assert expected_context <= set(integrity)
+
+
 def test_repository_manifest_rejects_unsafe_seed_file_path(tmp_path):
     manifest = tmp_path / "tasks.json"
     task = {

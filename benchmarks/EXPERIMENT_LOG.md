@@ -2287,3 +2287,45 @@ behavior, unsafe/overlapping paths, and backward compatibility.
 No compiler, syntax, grammar, AST, checker, runtime, diagnostic, Parley skill,
 or instruction-compression change is included. Commit and push this harness
 checkpoint before authoring and freezing the 028 diagnostic corpus.
+
+## Design and preflight for 028 — Project-style regression diagnosis
+
+- Prepared: 2026-08-05
+- Compiler: Parley 0.3.155, unchanged
+- Model planned: `gpt-5.6-sol`, medium reasoning
+- Instruction: proven 1,519-character core, byte-for-byte unchanged, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Planned matrix: four repositories × three languages × six complete-bundle
+  replicates = 18 fresh sessions and 72 hidden-judged assignments
+- Seed: `20260819`
+- Manifest: `benchmarks/agent_tasks_diagnostic_028.json`, SHA-256
+  `49147f96ce0f50239314719f4fce76bd979bea2829f5eb629d4cdb0c7097013e`
+
+The corpus changes task shape after iteration 027 instead of increasing the
+synthetic rewrite bundle again. Its unrelated regression families are an
+invoice boundary, after-hours routing, normalized identity, and state updates
+after deferred capacity requests. Every repository has three editable files
+and two read-only artifacts (`ISSUE.md` and `tests/regression.txt`). The
+read-only contents are byte-identical across Parley, Python, and Rust, and
+prompt-level public examples are disabled.
+
+An independent oracle matches all 20 public/hidden cases. All 12
+language-specific seeds compile, while every seeded repository fails its one
+intended public regression before agent work. Tests also freeze task/file/case
+counts, language-symmetric evidence, prompt omission, and integrity coverage
+for all context files. The complete pre-protocol suite passes 341/341 in
+155.87 seconds.
+
+During fixture authoring, the first local Parley preflight exposed unsupported
+`subtotal div 10`; it was corrected to the already-supported whole-number
+expression `floor of (subtotal divided by 10)` before the corpus was frozen.
+This was a seed transcription correction, produced no measured session, and
+does not change the language, skill, or task semantics. The subsequent
+preflight compiled all twelve seeds and observed exactly four failing
+regressions per language.
+
+Commit and push this reviewed corpus before freezing protocol 028. Then run
+all 18 sessions once, preserve every result without selective reruns, and
+report diagnosis behavior, complete correctness, first-check repairs, agent
+tokens/time, source/context/edit sizes, changed-file scope, integrity, and
+command protocol. No same-corpus syntax or instruction change is permitted.
