@@ -598,6 +598,12 @@ Update it whenever you finish or start a work item.
   path, including the zero guard and Rust-style negative rule. All five saved
   018 rotation failures pass public and hidden replay; unrelated 019 problems
   remain rejected. The full 301-test suite passes and the skill is unchanged.
+- **Size-eight confirmation preregistration (iteration 020):** ten complete
+  broad-task bundles per language are frozen in `bundle_protocol_020.json`:
+  30 fresh sessions and 240 hidden-judged programs. It concentrates evidence
+  at the scale that failed 017–018, retains the exact four-condition strict
+  gate, freezes the 1,519-character skill, and forbids transcript-driven
+  changes after the result.
 - **Claude Code skill** in `skill/parley/` — kept in sync with the
   language; update it whenever syntax changes.
 - **Landing page** in `site/` — self-contained static site (index.html,

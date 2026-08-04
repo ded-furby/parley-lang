@@ -473,6 +473,37 @@ def test_bundle_protocol_018_is_an_exact_matrix_replication():
     assert "No further instruction-compression" in protocol["instruction_rule"]
 
 
+def test_bundle_protocol_020_concentrates_ten_replicates_at_size_eight():
+    protocol = load_protocol(BENCHMARKS / "bundle_protocol_020.json")
+    config = protocol["frozen_config"]
+    tasks = load_tasks(REPO / config["tasks_file"])
+    plan = build_bundle_plan(
+        tasks,
+        config["bundle_sizes"],
+        config["replicates"],
+        config["seed"],
+    )
+
+    assert protocol["experiment_id"] == "020"
+    assert config["parley_version"] == "parley 0.3.153"
+    assert config["compiler_commit"] == "736a474c9752050bb82942565ac5bd09cd3662e4"
+    assert config["bundle_sizes"] == [8]
+    assert config["replicates"] == 10
+    assert len(plan) == 10
+    assert sum(bundle["bundle_size"] for bundle in plan) == 80
+    assert all(bundle["bundle_size"] == 8 for bundle in plan)
+    assert all(sorted(bundle["task_ids"]) == sorted(task["id"] for task in tasks) for bundle in plan)
+    assert protocol["matrix"] == {
+        "fresh_sessions": 30,
+        "judged_task_solutions": 240,
+        "sessions_per_language": 10,
+        "task_solutions_per_language": 80,
+        "derivation": "10 complete eight-task bundles x 3 languages",
+    }
+    assert protocol["primary_gate"]["scale"] == 8
+    assert "No further instruction-compression" in protocol["instruction_rule"]
+
+
 def test_bundle_prompt_injects_skill_once_and_never_hidden_cases():
     tasks = load_tasks(BENCHMARKS / "agent_tasks_broad.json")[:2]
     prompt = render_bundle_prompt(tasks, "parley", "PARLEY-SKILL-SENTINEL")

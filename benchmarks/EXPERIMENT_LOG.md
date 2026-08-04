@@ -853,6 +853,38 @@ consistency, and maintainability—not improvement on one transcript.
   benchmark protocols, and native execution. The 1,519-character skill remains
   byte-for-byte unchanged pending broad confirmation.
 
+## Pre-registration for 020 — Ten-replicate size-eight confirmation
+
+- Date frozen: 2026-08-06
+- Compiler: Parley 0.3.153, commit
+  `736a474c9752050bb82942565ac5bd09cd3662e4`
+- Instruction core: proven 1,519-character core, byte-for-byte unchanged
+- Task population: the eight broad-corpus tasks from iterations 016–018
+- Workload size: all eight programs in every fresh session
+- Matrix: 10 complete bundles × 3 languages = 30 fresh sessions and 240
+  hidden-judged task-solutions
+- Seed: `20260806`
+- Protocol: `benchmarks/bundle_protocol_020.json`
+
+### Why this confirmation is concentrated
+
+Iterations 017 and 018 already measured the complete size 1/2/4/8 curve. The
+unresolved claim is specifically size-eight parity, previously represented by
+only two sessions per language. Iteration 020 spends the same 30-session
+per-language budget on ten complete size-eight replicates, strengthening the
+primary comparison while avoiding 60 more small-scale sessions that cannot
+answer the blocking question.
+
+### Frozen gate and decision rule
+
+Parley must preserve 100% hidden-task correctness and match or beat the better
+Python/Rust baseline on median reported tokens/task, median elapsed
+seconds/task, and first-check task success. All four conditions are required.
+Report repair-free sensitivity and every failure signature. Do not respond to
+a residual token gap with syntax: any later proposal again needs recurrence
+across unrelated tasks plus independent general usefulness, semantic
+consistency, and maintainability. No instruction compression is permitted.
+
 ## 015 — 90-session confirmation: strict parity not met
 
 - Date: 2026-07-29
