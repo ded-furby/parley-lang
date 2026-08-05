@@ -156,3 +156,21 @@ The flagship proof is [`examples/release-radar`](../examples/release-radar):
 the same Parley readiness function runs locally through WASM and inside a typed
 native JSON handler. Future additions should come from recurring application
 needs in this product and unrelated adopters—not from benchmark transcripts.
+
+## Frozen product comparison
+
+[Iteration 035](../benchmarks/reports/035-release-radar-fullstack-compactness-proof.html)
+freezes Release Radar before implementing idiomatic FastAPI/Pydantic,
+Hono/Zod, and Axum/Serde baselines. All four implementations pass 14 HTTP
+cases plus a real Chrome flow. Parley's counted application surface is 684
+`o200k_base` tokens versus Python's 1,147, TypeScript's 1,366, and Rust's
+1,949, and `cl100k_base` preserves the ordering. The full 3/3 compactness gate
+passes. Local build, startup, sequential request, and deploy-size measurements
+are reported descriptively because the stacks do not produce equivalent
+artifacts or use equivalent runtimes.
+
+That result supports one claim: Parley expresses this correct native-plus-WASM
+product with less authored application source than the three frozen baselines.
+It does not establish mature-framework parity, universal performance, or lower
+fresh-agent session tokens. Those require unseen products and separately
+preregistered agent studies.

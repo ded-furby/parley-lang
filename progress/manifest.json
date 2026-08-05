@@ -408,6 +408,18 @@
       "sha256": "85f9cca1344359728ab8cc71014108ae3d3e659d1116c6d2d6475abe24bfddd5",
       "source": "benchmarks/reports/034-verified-toon-context-efficiency-win.html",
       "archive": "progress/reports/034-verified-toon-context-efficiency-win.html"
+    },
+    {
+      "number": 35,
+      "file": "035-release-radar-fullstack-compactness-proof.html",
+      "title": "Release Radar Full-Stack Compactness Proof \u2014 Iteration 035",
+      "label": "Release Radar Fullstack Compactness Proof",
+      "stage": "Repository scale",
+      "signal": "evidence",
+      "bytes": 631015,
+      "sha256": "bcf6fd01630ccb190118d27664af3988b5d00854c8bc9c2b367b2f4826781d93",
+      "source": "benchmarks/reports/035-release-radar-fullstack-compactness-proof.html",
+      "archive": "progress/reports/035-release-radar-fullstack-compactness-proof.html"
     }
   ],
   "product_records": [

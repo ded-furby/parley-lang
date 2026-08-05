@@ -107,6 +107,22 @@ Update it whenever you finish or start a work item.
   covers two model IDs plus selected record-heavy inputs, so claim an adaptive
   input win only—not universal TOON, output-format, elapsed, or language
   superiority.
+- **Iteration 035 Release Radar comparison:** product commit `e5470b6` froze
+  Parley v0.4.0 before the task; protocol revision 2 is preserved at `01bc7c3`
+  with its one transparent pre-measurement 415-code correction; Python,
+  TypeScript, Rust, and the harness were committed at `fa15f1e` before timing.
+  All four implementations pass 14/14 HTTP cases and one real Chrome flow,
+  giving 60/60 checks. Parley uses 684 o200k authored tokens versus Python
+  1,147, TypeScript 1,366, and Rust 1,949: 40.3662% below the nearest baseline,
+  with the same cl100k rank. Its one readiness rule powers native and WASM
+  output. Median local sequential rate is 9,312 req/s versus Rust 9,893,
+  TypeScript 5,447, and Python 3,664; timing is descriptive only. The frozen
+  compactness proof passes 3/3. Preserve raw SHA
+  `e12345fbf7dcc103d93a6895080579253cd4b75cfc417a49204ff15429356925`
+  and report SHA
+  `bcf6fd01630ccb190118d27664af3988b5d00854c8bc9c2b367b2f4826781d93`.
+  This is one product-level source result, not a fresh-agent token result or a
+  universal language claim. Next preregister unseen full-stack agent tasks.
 - **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` preserves
   the v0.3.158 finding that JSON/CSV values *inside Parley workflows* remain
   low-pressure. The v0.3.159 platform CLI layer does not manufacture evidence
@@ -142,11 +158,11 @@ Update it whenever you finish or start a work item.
   This clean negative confirmation changes no compiler, syntax, prompt,
   instruction, runner, task, or metric; continue product adoption work.
 - **Committed progress archive:** `progress/index.html` is a responsive,
-  searchable visual timeline over all 32 preserved benchmark HTML reports.
-  `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
-  all 32 copies verify byte-for-byte, including explicitly preserved report
-  013. Refresh it with `python3 scripts/sync_progress_reports.py` after a new
-  report is added.
+  searchable visual timeline over all 35 preserved benchmark HTML reports and
+  two product records. `progress/manifest.json` records source/archive paths,
+  sizes, and SHA-256; all 35 benchmark copies verify byte-for-byte, including
+  explicitly preserved report 013. Refresh it with
+  `python3 scripts/sync_progress_reports.py` after a new report is added.
 - **v0.2 features just added:** richer `when` patterns (multi-value arms
   `is 1, 2 or 3:`, inclusive numeric ranges `is 10 to 20:`, new P312) and
   first-class function values (`the function f`, type
@@ -1155,32 +1171,23 @@ Update it whenever you finish or start a work item.
 
 ### Blocked (needs Arjun, not an agent)
 
-- **CI push.** The commit "Add CI workflow" is kept as the LOCAL TIP of
-  main, deliberately unpushed: the gh OAuth token lacks the `workflow`
-  scope, and any push containing that commit is rejected. Fix:
-  `gh auth refresh -h github.com -s workflow`, then `git push`.
-  Attempted again on 2026-06-18; GitHub required device-code browser auth,
-  so the token still only has `gist`, `read:org`, and `repo`.
-  If you commit new work, commit it, then rebase it BELOW the CI commit
-  (or cherry-pick the CI commit back on top) and push with
-  `git push origin HEAD~1:main` so the CI commit stays the unpushed tip.
 - **PyPI.** The name `parley-lang` is unverified/unpublished. The documented
   install path uses `pip install git+https://github.com/ded-furby/parley-lang`,
   which works before a PyPI release.
 
 ### Next work (in suggested order)
 
-1. **Independent full-stack comparison.** Freeze the Release Radar task and
-   measurement protocol before implementing Python, TypeScript, and Rust
-   references. Compare correctness, source/context size, build artifact, build
-   time, and agent performance without tuning the Parley compiler from output.
-2. **Independent adoption evidence.** Record first-run/edit friction with
+1. **Unseen full-stack agent study.** Freeze several new implementation and
+   maintenance tasks before any fresh session. Compare exact behavior,
+   first-check success, repairs, total session tokens, elapsed time, and
+   maintainability across Parley, Python, TypeScript, and Rust. Do not reuse or
+   tune from Release Radar/report 035.
+2. **Production web hardening.** Dogfood concurrency, graceful shutdown,
+   reverse-proxy semantics, structured observability, and sustained load before
+   calling the generated HTTP server production-ready. Add browser strings,
+   records, or async behavior only when unrelated products need them.
+3. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-3. **Agent-data evaluation.** Freeze a shape-diverse JSON corpus and real
-   tokenizers, publish lossless compression measurements, then run blinded
-   repeated comprehension/coding tasks. Keep model output in JSON and include
-   all parse/repair tokens; static savings alone are not an agent-performance
-   result.
 4. **Real Release Steward operation.** Use the installed workflow on each
    actual release candidate and preserve its report. Promote structured values
    inside programs only if friction recurs across maintained products.

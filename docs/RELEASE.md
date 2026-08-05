@@ -164,5 +164,9 @@ python3 -m twine check dist/*
 - `parley web check examples/release-radar --json` reports two typed routes and
   one deterministic browser export; a full build emits the native server,
   strict JSON contract, `.wasm`, JavaScript loader, and TypeScript declarations.
+- Iteration 035's frozen Parley/Python/TypeScript/Rust Release Radar matrix
+  passes 60/60 HTTP/browser checks; the exact raw result, protocol amendment,
+  dependency locks, source hashes, and responsive portable report are
+  committed before any general compactness or performance claim is repeated.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.

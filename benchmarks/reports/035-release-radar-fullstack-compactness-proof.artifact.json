@@ -1,0 +1,941 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Release Radar Full-Stack Compactness Proof — Iteration 035",
+    "description": "Preregistered product-level Parley, Python, TypeScript, and Rust comparison.",
+    "generatedAt": "2026-08-05T06:16:46.495593Z",
+    "cards": [
+      {
+        "id": "behavior_card",
+        "description": "All four language arms pass every HTTP and browser case.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "behavior_checks",
+            "label": "Behavior checks",
+            "format": "number",
+            "unit": "of 60"
+          }
+        ],
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "token_card",
+        "description": "Primary o200k authored-source measure.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "parley_tokens",
+            "label": "Parley source",
+            "format": "number",
+            "unit": "tokens"
+          }
+        ],
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "saving_card",
+        "description": "Parley versus Python, the smallest correct baseline.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "closest_baseline_savings",
+            "label": "Closest-baseline reduction",
+            "format": "number",
+            "unit": "%"
+          }
+        ],
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "load_card",
+        "description": "Median of five sequential localhost rounds.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "parley_requests_per_second",
+            "label": "Parley local rate",
+            "format": "number",
+            "unit": "req/s"
+          }
+        ],
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "gate_card",
+        "description": "Correctness, compactness, and native/browser reuse.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "gate_conditions",
+            "label": "Frozen conditions",
+            "format": "number",
+            "unit": "of 3"
+          }
+        ],
+        "sourceId": "fullstack_evidence_035"
+      }
+    ],
+    "charts": [
+      {
+        "id": "token_chart",
+        "title": "Application-authored tokens by language",
+        "subtitle": "o200k_base tokens over preregistered source and configuration files; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "comparison",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "authored_tokens",
+            "type": "quantitative",
+            "label": "Authored tokens",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "cl100k_tokens",
+              "type": "quantitative",
+              "label": "cl100k tokens"
+            },
+            {
+              "field": "bytes",
+              "type": "quantitative",
+              "label": "UTF-8 bytes"
+            },
+            {
+              "field": "lines",
+              "type": "quantitative",
+              "label": "Physical lines"
+            },
+            {
+              "field": "correctness",
+              "type": "text",
+              "label": "Correctness"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "o200k_base tokens",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "question": "Which fully correct implementation has the smallest author-owned application surface?",
+        "rationale": "A sorted single-measure bar chart exposes the compactness ranking without adding an artificial series or trend.",
+        "comparisonContext": {
+          "unit": "o200k_base tokens",
+          "grain": "language implementation",
+          "denominator": "all preregistered authored app/config files; shared UI and generated/dependency code excluded",
+          "semanticFamily": "application-source compactness"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "load_chart",
+        "title": "Sequential local request rate by language",
+        "subtitle": "Median of five rounds; 500 correct POSTs after 25 warmups, concurrency one; higher is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "performance",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "requests_per_second",
+            "type": "quantitative",
+            "label": "Requests per second",
+            "format": "compact"
+          },
+          "tooltip": [
+            {
+              "field": "load_min_rps",
+              "type": "quantitative",
+              "label": "Minimum round"
+            },
+            {
+              "field": "load_max_rps",
+              "type": "quantitative",
+              "label": "Maximum round"
+            },
+            {
+              "field": "startup_median_ms",
+              "type": "quantitative",
+              "label": "Median startup ms"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Requests per second",
+        "valueFormat": "compact",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "question": "Does the compact generated Parley server remain locally competitive on the frozen route?",
+        "rationale": "A single-measure category comparison makes the descriptive throughput ordering explicit while preserving exact ranges in the adjacent table.",
+        "comparisonContext": {
+          "unit": "correct responses per second",
+          "grain": "language median",
+          "denominator": "five 500-request sequential rounds per language",
+          "semanticFamily": "localhost HTTP microbenchmark"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "gate_table",
+        "title": "Frozen compactness proof gate",
+        "subtitle": "All three conditions must pass; runtime cannot rescue a failed behavior or source result.",
+        "dataset": "gates",
+        "columns": [
+          {
+            "field": "condition",
+            "label": "Condition",
+            "type": "text"
+          },
+          {
+            "field": "threshold",
+            "label": "Frozen threshold",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "result",
+            "label": "Result",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "condition",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "comparison_table",
+        "title": "Source and browser-target comparison",
+        "subtitle": "All four implementations pass 15/15; the percentage is Parley's reduction versus that row.",
+        "dataset": "comparison",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "correctness",
+            "label": "Correct",
+            "type": "text"
+          },
+          {
+            "field": "authored_tokens",
+            "label": "o200k",
+            "format": "number"
+          },
+          {
+            "field": "cl100k_tokens",
+            "label": "cl100k",
+            "format": "number"
+          },
+          {
+            "field": "bytes",
+            "label": "Bytes",
+            "format": "number"
+          },
+          {
+            "field": "lines",
+            "label": "Lines",
+            "format": "number"
+          },
+          {
+            "field": "parley_savings_percent",
+            "label": "Parley saves %",
+            "format": "number"
+          },
+          {
+            "field": "browser_target",
+            "label": "Browser target",
+            "type": "text"
+          },
+          {
+            "field": "single_rule",
+            "label": "One rule",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "authored_tokens",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "performance_table",
+        "title": "Complete descriptive runtime/build summary",
+        "subtitle": "Five clean builds, five startups, and five 500-request rounds per language on one Apple Silicon machine.",
+        "dataset": "performance",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "build_median_seconds",
+            "label": "Build median s",
+            "format": "number"
+          },
+          {
+            "field": "build_min_seconds",
+            "label": "Build min s",
+            "format": "number"
+          },
+          {
+            "field": "build_max_seconds",
+            "label": "Build max s",
+            "format": "number"
+          },
+          {
+            "field": "startup_median_ms",
+            "label": "Startup ms",
+            "format": "number"
+          },
+          {
+            "field": "requests_per_second",
+            "label": "Median req/s",
+            "format": "number"
+          },
+          {
+            "field": "load_min_rps",
+            "label": "Min req/s",
+            "format": "number"
+          },
+          {
+            "field": "load_max_rps",
+            "label": "Max req/s",
+            "format": "number"
+          },
+          {
+            "field": "owned_output_bytes",
+            "label": "Owned output B",
+            "format": "number"
+          },
+          {
+            "field": "deploy_closure_bytes",
+            "label": "Deploy closure B",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "requests_per_second",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "correctness_table",
+        "title": "Four-language behavior audit",
+        "subtitle": "Fourteen HTTP cases plus one real browser flow per implementation.",
+        "dataset": "correctness",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "http_cases",
+            "label": "HTTP",
+            "format": "number"
+          },
+          {
+            "field": "browser_cases",
+            "label": "Browser",
+            "format": "number"
+          },
+          {
+            "field": "passed",
+            "label": "Passed",
+            "format": "number"
+          },
+          {
+            "field": "total",
+            "label": "Total",
+            "format": "number"
+          },
+          {
+            "field": "console_errors",
+            "label": "Console errors",
+            "format": "number"
+          },
+          {
+            "field": "result",
+            "label": "Result",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035"
+      },
+      {
+        "id": "file_table",
+        "title": "Per-file tokenizer and hash audit",
+        "subtitle": "Every counted file is listed; lockfiles, generated output, shared UI, dependencies, and harness files are excluded.",
+        "dataset": "source_files",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "file",
+            "label": "Counted file",
+            "type": "text"
+          },
+          {
+            "field": "o200k_tokens",
+            "label": "o200k",
+            "format": "number"
+          },
+          {
+            "field": "cl100k_tokens",
+            "label": "cl100k",
+            "format": "number"
+          },
+          {
+            "field": "bytes",
+            "label": "Bytes",
+            "format": "number"
+          },
+          {
+            "field": "lines",
+            "label": "Lines",
+            "format": "number"
+          },
+          {
+            "field": "sha256",
+            "label": "SHA-256",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035"
+      }
+    ],
+    "sources": [
+      {
+        "id": "fullstack_evidence_035",
+        "label": "Frozen iteration 035 protocol and complete four-language result",
+        "path": "fullstack_035_v0.4.0.json"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Release Radar Full-Stack Compactness Proof — Iteration 035"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## Technical summary\n\n**Parley passes the frozen Release Radar full-stack compactness proof.** Parley, Python, TypeScript, and Rust each pass **15/15** exact HTTP/browser cases. Parley uses **684 o200k application-authored tokens**, **40.3662% fewer than Python's 1,147**, the smallest correct baseline; TypeScript uses 1,366 and Rust 1,949. The cl100k sensitivity keeps the same order. One checked Parley `readiness_score` definition powers both the native API and browser WASM. The complete gate therefore passes **3/3**. This proves a compactness win for one bounded full-stack product—not that Parley is generally best, and not yet that fresh agents spend fewer session tokens."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "behavior_card",
+          "token_card",
+          "saving_card",
+          "load_card",
+          "gate_card"
+        ]
+      },
+      {
+        "id": "behavior",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## All four stacks reproduce the complete behavior\n\nEach server returns the same five successful assessment/status cases, rejects malformed, unknown, missing, mistyped, and wrong-media JSON as frozen, serves the shared UI safely, and rejects encoded traversal. Real Chrome then loads each browser scorer, computes 100 locally, receives 100 from the backend, renders the Ready verdict, and shows three passing gates with zero console errors. Correctness does not trade off against compactness."
+      },
+      {
+        "id": "gate_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "gate_table"
+      },
+      {
+        "id": "correctness_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "correctness_table"
+      },
+      {
+        "id": "compactness",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## Parley is 40.37% smaller than the nearest correct baseline\n\nThe primary o200k count is **684 Parley tokens versus 1,147 Python, 1,366 TypeScript, and 1,949 Rust**. Parley is therefore 40.3662% below Python, 49.9268% below TypeScript, and 64.9051% below Rust. The independent cl100k count is 680, 1,140, 1,360, and 1,919 respectively, so tokenizer choice does not reverse the ranking. This is an amortized application-surface result: language/runtime/framework implementation source is excluded for every arm."
+      },
+      {
+        "id": "token_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "token_chart"
+      },
+      {
+        "id": "comparison_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "comparison_table"
+      },
+      {
+        "id": "files",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## The counting boundary is fully inspectable\n\nParley counts `main.par` and `parley.web.json`. Python counts its API, handwritten browser supplement, and dependency declaration. TypeScript counts both TypeScript modules, package manifest, and compiler configuration. Rust counts both Rust modules and Cargo manifest; its browser loader is embedded in counted Rust source. Every included file's exact bytes, lines, two tokenizer counts, and SHA-256 appear below."
+      },
+      {
+        "id": "file_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "file_table"
+      },
+      {
+        "id": "runtime",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## The compact Parley server is locally competitive, not universally faster\n\nParley sustains a **9,312 req/s median**, 5.8681% below Rust's 9,893 but 70.9723% above TypeScript's 5,447 and 154.1748% above Python's 3,664 on this single-threaded localhost test. Parley starts in 16.116 ms, close to Rust's 15.552 ms. Its 8.760-second median clean native-plus-WASM build is 55.6065% below Rust's 19.732 seconds but much slower than Python bytecode or TypeScript transpilation. These execution/build differences are descriptive because the stacks have different concurrency and deployment models."
+      },
+      {
+        "id": "load_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "load_chart"
+      },
+      {
+        "id": "performance_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "performance_table"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## Scope and metric definitions\n\nThe population is one release-readiness product with two typed JSON routes, strict failure handling, static assets, and a five-argument browser scoring rule. **Behavior** is 14 frozen HTTP cases plus one real Chrome flow per language. **Authored tokens** are the per-file tiktoken 0.13.0 o200k counts summed over preregistered language-owned application/configuration files. The shared 15,190-byte UI, generated output, dependency source, lockfiles, runtimes, compiler internals, and harness are excluded. Timing uses five deterministically rotated rounds on one Apple Silicon machine."
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Product, protocol, baselines, and measurement were frozen in that order\n\nProduct commit `e5470b6` froze Parley v0.4.0 before comparison work. Protocol commit `bafeca5` preregistered the task; revision-2 commit `01bc7c3` transparently corrected one pre-measurement 415 error-code transcription after a stopped smoke and changed nothing else. Baseline/harness commit `fa15f1e` passed 60/60 checks and was pushed before the full run. The measured worktree was clean. Dependency downloads were excluded; source files, locks, protocol, cases, raw result, and report transformations remain preserved with hashes."
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_evidence_035",
+        "body": "## Limits: one application, source tokens—not agent sessions\n\nThis is one intentionally useful but narrow application, not a representative sample of every backend/frontend task. Framework selection affects baseline size. Counting application source excludes ecosystem implementation cost for every language and therefore cannot compare total engineering complexity. Source tokenizer counts measure representation compactness; they do **not** measure how many Codex tokens a fresh agent needs to build or maintain the app. The local sequential new-connection microbenchmark has five rounds but no independent machines, concurrency sweep, TLS, reverse proxy, database, sustained load, or confidence claim. Python bytecode, TypeScript transpilation, and native compilation are not equivalent build products; artifact closure sizes are likewise descriptive."
+      },
+      {
+        "id": "decision",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Next: expose v0.4.0, then test unseen agent work\n\n1. Ship the typed web/WASM surface as an experimental v0.4.0 preview and dogfood Release Radar for real Parley releases.\n2. Freeze a new set of unseen full-stack implementation and maintenance tasks, then run fresh Codex sessions across all four languages; measure exact behavior, repair rate, session tokens, elapsed time, and maintainability.\n3. Add browser strings, records, and asynchronous HTTP only when Release Radar or another real product needs them; do not tune syntax from this report.\n4. Harden the native server with production evidence—concurrency, graceful shutdown, proxy semantics, observability, and sustained-load tests—before making deployment-performance claims.\n5. Recruit external builders and preserve their failures as product evidence; adoption needs tooling, packages, debugging, and trust, not one benchmark win."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Does the 40.37% authored-token advantage persist across unseen CRUD, authentication, streaming, database, and browser-state products?\n- Do fresh agents spend fewer full-session tokens with Parley once exploration, repairs, and framework discovery are included?\n- Which missing browser or server capability recurs across independent product attempts strongly enough to justify a general language change?\n- How do all four servers behave under sustained concurrency, TLS termination, proxy headers, slow clients, and larger typed payloads?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-05T06:16:46.495593Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "behavior_checks": 60,
+          "parley_tokens": 684,
+          "closest_baseline_savings": 40.3662,
+          "parley_requests_per_second": 9312.259,
+          "gate_conditions": 3
+        }
+      ],
+      "comparison": [
+        {
+          "language": "Parley",
+          "authored_tokens": 684,
+          "cl100k_tokens": 680,
+          "bytes": 2865,
+          "lines": 70,
+          "parley_savings_percent": 0.0,
+          "correctness": "15/15",
+          "browser_target": "WebAssembly",
+          "single_rule": "yes"
+        },
+        {
+          "language": "Python",
+          "authored_tokens": 1147,
+          "cl100k_tokens": 1140,
+          "bytes": 4741,
+          "lines": 155,
+          "parley_savings_percent": 40.3662,
+          "correctness": "15/15",
+          "browser_target": "handwritten JavaScript supplement",
+          "single_rule": "no"
+        },
+        {
+          "language": "TypeScript",
+          "authored_tokens": 1366,
+          "cl100k_tokens": 1360,
+          "bytes": 5266,
+          "lines": 171,
+          "parley_savings_percent": 49.9268,
+          "correctness": "15/15",
+          "browser_target": "generated JavaScript",
+          "single_rule": "yes"
+        },
+        {
+          "language": "Rust",
+          "authored_tokens": 1949,
+          "cl100k_tokens": 1919,
+          "bytes": 7891,
+          "lines": 260,
+          "parley_savings_percent": 64.9051,
+          "correctness": "15/15",
+          "browser_target": "WebAssembly",
+          "single_rule": "yes"
+        }
+      ],
+      "performance": [
+        {
+          "language": "Parley",
+          "build_median_seconds": 8.759663,
+          "build_min_seconds": 3.914767,
+          "build_max_seconds": 13.283247,
+          "startup_median_ms": 16.116,
+          "startup_min_ms": 15.281,
+          "startup_max_ms": 17.015,
+          "requests_per_second": 9312.259,
+          "load_min_rps": 7828.253,
+          "load_max_rps": 9639.468,
+          "owned_output_bytes": 512546,
+          "deploy_closure_bytes": 512546
+        },
+        {
+          "language": "Python",
+          "build_median_seconds": 0.14065,
+          "build_min_seconds": 0.129258,
+          "build_max_seconds": 0.172306,
+          "startup_median_ms": 211.522,
+          "startup_min_ms": 165.931,
+          "startup_max_ms": 249.088,
+          "requests_per_second": 3663.723,
+          "load_min_rps": 3547.591,
+          "load_max_rps": 3859.208,
+          "owned_output_bytes": 1408293,
+          "deploy_closure_bytes": 28472934
+        },
+        {
+          "language": "TypeScript",
+          "build_median_seconds": 0.097065,
+          "build_min_seconds": 0.059289,
+          "build_max_seconds": 0.107107,
+          "startup_median_ms": 98.887,
+          "startup_min_ms": 68.328,
+          "startup_max_ms": 112.193,
+          "requests_per_second": 5446.648,
+          "load_min_rps": 5384.846,
+          "load_max_rps": 6045.894,
+          "owned_output_bytes": 4279,
+          "deploy_closure_bytes": 33590984
+        },
+        {
+          "language": "Rust",
+          "build_median_seconds": 19.731845,
+          "build_min_seconds": 17.892208,
+          "build_max_seconds": 31.568023,
+          "startup_median_ms": 15.552,
+          "startup_min_ms": 14.425,
+          "startup_max_ms": 19.665,
+          "requests_per_second": 9892.779,
+          "load_min_rps": 9688.475,
+          "load_max_rps": 10234.725,
+          "owned_output_bytes": 1988475,
+          "deploy_closure_bytes": 1988475
+        }
+      ],
+      "correctness": [
+        {
+          "language": "Parley",
+          "http_cases": 14,
+          "browser_cases": 1,
+          "passed": 15,
+          "total": 15,
+          "console_errors": 0,
+          "result": "PASS"
+        },
+        {
+          "language": "Python",
+          "http_cases": 14,
+          "browser_cases": 1,
+          "passed": 15,
+          "total": 15,
+          "console_errors": 0,
+          "result": "PASS"
+        },
+        {
+          "language": "TypeScript",
+          "http_cases": 14,
+          "browser_cases": 1,
+          "passed": 15,
+          "total": 15,
+          "console_errors": 0,
+          "result": "PASS"
+        },
+        {
+          "language": "Rust",
+          "http_cases": 14,
+          "browser_cases": 1,
+          "passed": 15,
+          "total": 15,
+          "console_errors": 0,
+          "result": "PASS"
+        }
+      ],
+      "source_files": [
+        {
+          "language": "Parley",
+          "file": "examples/release-radar/main.par",
+          "o200k_tokens": 510,
+          "cl100k_tokens": 506,
+          "bytes": 2328,
+          "lines": 39,
+          "sha256": "2d0cae40e8dac218cb5f35acb2f8f274919d796d797629accf759099f2781468"
+        },
+        {
+          "language": "Parley",
+          "file": "examples/release-radar/parley.web.json",
+          "o200k_tokens": 174,
+          "cl100k_tokens": 174,
+          "bytes": 537,
+          "lines": 31,
+          "sha256": "91f88cd41a5dff875f7f7ba9ec6e9c8f3f2f5c9e8c08225620cc6de9695104eb"
+        },
+        {
+          "language": "Python",
+          "file": "benchmarks/fullstack_035/python/app.py",
+          "o200k_tokens": 1007,
+          "cl100k_tokens": 1001,
+          "bytes": 4276,
+          "lines": 135,
+          "sha256": "8104cd66e7a9e24d26345b0150b756cf8bc517bf50027577bbaff4474be119af"
+        },
+        {
+          "language": "Python",
+          "file": "benchmarks/fullstack_035/python/browser.js",
+          "o200k_tokens": 112,
+          "cl100k_tokens": 111,
+          "bytes": 415,
+          "lines": 17,
+          "sha256": "bcc9f950932f618d7bdc3cd3b882a8e6cb011bb904fbeaa6d0392c8c127c0746"
+        },
+        {
+          "language": "Python",
+          "file": "benchmarks/fullstack_035/python/requirements.txt",
+          "o200k_tokens": 28,
+          "cl100k_tokens": 28,
+          "bytes": 50,
+          "lines": 3,
+          "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+        },
+        {
+          "language": "TypeScript",
+          "file": "benchmarks/fullstack_035/typescript/src/scoring.ts",
+          "o200k_tokens": 461,
+          "cl100k_tokens": 458,
+          "bytes": 2009,
+          "lines": 67,
+          "sha256": "e4d537417e66a50afa555570e278afe9b024aa35978d97124a917d34a277fc8d"
+        },
+        {
+          "language": "TypeScript",
+          "file": "benchmarks/fullstack_035/typescript/src/server.ts",
+          "o200k_tokens": 675,
+          "cl100k_tokens": 672,
+          "bytes": 2577,
+          "lines": 72,
+          "sha256": "d39eb92f9a0a23693450a93615e7e77a026a0d2d7e547d6416622ba2a7373ccb"
+        },
+        {
+          "language": "TypeScript",
+          "file": "benchmarks/fullstack_035/typescript/package.json",
+          "o200k_tokens": 137,
+          "cl100k_tokens": 137,
+          "bytes": 366,
+          "lines": 18,
+          "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+        },
+        {
+          "language": "TypeScript",
+          "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+          "o200k_tokens": 93,
+          "cl100k_tokens": 93,
+          "bytes": 314,
+          "lines": 14,
+          "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+        },
+        {
+          "language": "Rust",
+          "file": "benchmarks/fullstack_035/rust/src/lib.rs",
+          "o200k_tokens": 571,
+          "cl100k_tokens": 567,
+          "bytes": 2450,
+          "lines": 95,
+          "sha256": "edf1eefff51eec6b3fcf2b05fa69e5d35ae91583a785220d6a832dd3e5a81f2a"
+        },
+        {
+          "language": "Rust",
+          "file": "benchmarks/fullstack_035/rust/src/main.rs",
+          "o200k_tokens": 1232,
+          "cl100k_tokens": 1208,
+          "bytes": 5024,
+          "lines": 149,
+          "sha256": "1c5fe1b84506256cd91eb74da94427263bc4d4daa46efec91325b403e590861c"
+        },
+        {
+          "language": "Rust",
+          "file": "benchmarks/fullstack_035/rust/Cargo.toml",
+          "o200k_tokens": 146,
+          "cl100k_tokens": 144,
+          "bytes": 417,
+          "lines": 16,
+          "sha256": "d81e244bf5600fcf29d7b047eff4acc0ae5bd0772cbfd5b7086a0e08caf94b1f"
+        }
+      ],
+      "gates": [
+        {
+          "condition": "Complete behavior",
+          "threshold": "All four languages pass all 15 frozen cases",
+          "observed": "60/60 checks; 4/4 real browser flows",
+          "result": "PASS"
+        },
+        {
+          "condition": "Primary compactness",
+          "threshold": "Parley o200k tokens ≤ the smallest correct baseline",
+          "observed": "684 vs Python 1,147",
+          "result": "PASS"
+        },
+        {
+          "condition": "Cross-target reuse",
+          "threshold": "One Parley readiness_score source for native + browser",
+          "observed": "One checked definition compiled to native + WASM",
+          "result": "PASS"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "fullstack_evidence_035",
+      "label": "Frozen iteration 035 protocol and complete four-language result",
+      "path": "fullstack_035_v0.4.0.json",
+      "query": {
+        "engine": "Python 3.14, tiktoken 0.13.0, Playwright 1.58.0, SQLite audit",
+        "query": "python3 benchmarks/run_fullstack_035.py --output benchmarks/results/fullstack_035_v0.4.0.json && python3 benchmarks/reports/build_035_report.py",
+        "sql": "WITH raw AS (SELECT json(readfile('benchmarks/results/fullstack_035_v0.4.0.json')) AS body) SELECT language, json_extract(body, '$.source.' || language || '.totals.o200k_base') AS authored_tokens FROM raw, (SELECT 'parley' language UNION ALL SELECT 'python' UNION ALL SELECT 'typescript' UNION ALL SELECT 'rust');",
+        "description": "The revision-2 frozen protocol, exact 14-HTTP-plus-browser case matrix, per-file tokenizer counts and hashes, five clean-build rounds, five startup rounds, five 500-request load rounds, artifact sizes, and complete browser/server judgments.",
+        "executed_at": "2026-08-05T06:16:46.495593Z",
+        "language": "Python and SQLite",
+        "filters": [
+          "Frozen Parley product commit e5470b6 and amended protocol commit 01bc7c3.",
+          "Four correct implementations committed at fa15f1e before measurement.",
+          "Shared index.html, style.css, and app.js excluded from authored source and artifact closure.",
+          "Dependency downloads excluded; five clean output builds with warm dependency caches.",
+          "Load: 25 warmups then 500 sequential POST requests per language per round, five rounds, concurrency one."
+        ],
+        "metric_definitions": [
+          "Complete behavior: 14 frozen HTTP cases plus one real headless-Chrome form flow per language.",
+          "Authored tokens: tiktoken 0.13.0 o200k_base count for each preregistered UTF-8 application source/configuration file, summed per language.",
+          "Parley savings: 100 × (1 - Parley authored tokens / comparison-language authored tokens).",
+          "Clean build: wall time after deleting only the language's explicit build output; dependency caches remain warm.",
+          "Startup: monotonic time from process spawn until the first exact status-endpoint response.",
+          "Sequential request rate: 500 correct ready-case POST responses divided by elapsed seconds, after 25 warmups, concurrency one.",
+          "Deploy closure: language-owned runnable output plus production dependencies, excluding the byte-identical shared UI."
+        ],
+        "tables_used": [
+          "benchmarks/results/fullstack_035_v0.4.0.json",
+          "benchmarks/fullstack_035_protocol.json",
+          "benchmarks/fullstack_035_cases.json"
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "035-release-radar-fullstack-compactness-proof.artifact.json",
+    "snapshotPath": "fullstack_035_v0.4.0.json",
+    "originUrl": "artifact://parley-fullstack-035"
+  }
+}

@@ -3237,3 +3237,72 @@ round-trip verification and measured savings. Make no same-corpus profile,
 prompt, model, task, or threshold change. Replicate with external models and
 longer real repositories before broad claims, and continue evaluating Parley
 source-language capability separately from context encoding.
+
+## 035 — Release Radar full-stack compactness proof
+
+- Completed: 2026-08-05
+- Frozen Parley product commit: `e5470b6`
+- Initial protocol commit: `bafeca5`
+- Amended protocol commit: `01bc7c3`
+- Baseline and harness commit before measurement: `fa15f1e`
+- Parley version: 0.4.0
+- Protocol: `benchmarks/fullstack_035_protocol.json`
+- Protocol SHA-256:
+  `5e6c25908b323498b89f5ff5a2b489256a7332b1fc79fd9cb3ddd5d1abd0cfb6`
+- Cases: `benchmarks/fullstack_035_cases.json`
+- Cases SHA-256:
+  `ed1b8ffb9d568e366b3c99104df9f492f79da9eefcaae272f910c2b20628bdbe`
+- Raw result: `benchmarks/results/fullstack_035_v0.4.0.json`
+- Raw SHA-256:
+  `e12345fbf7dcc103d93a6895080579253cd4b75cfc417a49204ff15429356925`
+- Report: `benchmarks/reports/035-release-radar-fullstack-compactness-proof.html`
+- Report SHA-256:
+  `bcf6fd01630ccb190118d27664af3988b5d00854c8bc9c2b367b2f4826781d93`
+- Canonical artifact SHA-256:
+  `dd263d2a183cde0737209edc497de4db1662e9a2894eb356d8e3412ff5bc78e2`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_035_report.py`
+
+The first smoke was stopped and produced no result file after Parley returned
+its already-frozen 415 code `json_content_type_required` while the case manifest
+had assumed `unsupported_media_type`; TypeScript then could not resolve packages
+from a temporary output directory. `FULLSTACK_035_AMENDMENT.md` preserves that
+event. Protocol revision 2 changes only the wrong-media expected code, before a
+complete four-language correctness result, source verdict, or timing run. No
+Parley code, successful value, status, metric, or gate changed. All baselines
+were aligned to the actual frozen product code, passed 60/60 behavior checks,
+and were committed and pushed before measurement.
+
+The complete revision-2 run passes the three-part gate **3/3**. Every language
+passes 14/14 HTTP cases and one real Chrome flow with zero console errors.
+Parley uses 684 `o200k_base` authored tokens versus Python's 1,147,
+TypeScript's 1,366, and Rust's 1,949. Parley is 40.3662% below Python, the
+smallest correct baseline; `cl100k_base` preserves the same 680/1,140/1,360/
+1,919 ordering. Parley, TypeScript, and Rust reuse one author-owned scoring
+rule across server and browser; Python needs a separately counted JavaScript
+supplement. Parley therefore passes complete behavior, primary compactness,
+and native/browser rule reuse.
+
+| Language | Correct | o200k | cl100k | Build median | Startup median | Median req/s | Deploy closure |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 15/15 | 684 | 680 | 8.7597 s | 16.116 ms | 9,312 | 512,546 B |
+| Python | 15/15 | 1,147 | 1,140 | 0.1407 s | 211.522 ms | 3,664 | 28,472,934 B |
+| TypeScript | 15/15 | 1,366 | 1,360 | 0.0971 s | 98.887 ms | 5,447 | 33,590,984 B |
+| Rust | 15/15 | 1,949 | 1,919 | 19.7318 s | 15.552 ms | 9,893 | 1,988,475 B |
+
+Build, startup, sequential request rate, and deploy closure are descriptive:
+the stacks have different build products, runtimes, concurrency architectures,
+and deployment models. The five-round localhost load test places Parley 5.8681%
+below Rust and above TypeScript/Python, but it is not a production-performance
+claim. The canonical report passes validation, packaging, keyboard source
+interaction, and responsive Chromium checks at 1,440 and 390 pixels; it contains
+23 blocks, two charts, five metrics, five tables, every gate, every counted file,
+and exact build/start/load ranges.
+
+**Bound the claim:** this is a product-level application-source compactness win
+for one useful full-stack contract. It is not evidence that Parley is universally
+best or that a fresh coding agent spends fewer session tokens. Make no
+same-corpus compiler, syntax, instruction, task, or metric change. The next
+experiment must freeze unseen full-stack implementation and maintenance tasks,
+then measure fresh-agent correctness, first-check rate, repairs, session tokens,
+elapsed time, and maintainability across all four languages.

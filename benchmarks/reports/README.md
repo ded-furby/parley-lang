@@ -31,6 +31,16 @@ transformation, and chart-map notes.
 | 023 | Parley 0.3.155 | Application correctness and exact file output tied; repairs left agent effort above 2× both baselines | [HTML](023-application-corpus-parity-failed.html) |
 | 024 | Parley 0.3.155 | Seeded maintenance correctness tied; one repair in every Parley session left effort at 1.84× Python | [HTML](024-seeded-maintenance-parity-failed.html) |
 | 025 | Parley 0.3.155 | Multi-file maintenance reached perfect first-check reliability and came within 1.28% of Rust's token effort | [HTML](025-repository-maintenance-near-parity.html) |
+| 026 | Parley 0.3.155 | Eight-repository expansion preserved Rust-level efficiency but missed Python and the strict gate | [HTML](026-eight-repository-expansion-failed.html) |
+| 027 | Parley 0.3.155 | Sixteen-repository scaling regressed through context growth and did not justify language tuning | [HTML](027-sixteen-repository-scale-regression.html) |
+| 028 | Parley 0.3.155 | Project diagnosis restored near parity with exact root-cause evidence | [HTML](028-project-diagnosis-near-parity.html) |
+| 029 | Parley 0.3.155 | Historically grounded diagnosis reproduced Rust parity while still trailing Python | [HTML](029-historical-diagnosis-rust-parity.html) |
+| 030 | Parley 0.3.155 | Ninety sessions isolated a real amortization crossover near six diagnosis tasks | [HTML](030-ninety-session-scaling-mechanism.html) |
+| 031 | Parley 0.3.155 | Deeper projects passed the four-part efficiency/reliability gate; exact-root quality was 23/24 | [HTML](031-deeper-project-efficiency-win.html) |
+| 032 | Parley 0.3.158 | Independent confirmation preserved perfect reliability but missed strict token/time parity | [HTML](032-independent-confirmation-strict-parity-not-met.html) |
+| 033 | Parley 0.3.159 | Adaptive agent-data packing was lossless but missed the frozen 5% aggregate gate | [HTML](033-adaptive-agent-data-gate-not-met.html) |
+| 034 | Parley 0.3.159 | Paired 90-session confirmation saved tokens in all 45 pairs without accuracy loss | [HTML](034-verified-toon-context-efficiency-win.html) |
+| 035 | Parley 0.4.0 | Release Radar passed 60/60 cross-language checks and used 40.37% fewer authored tokens than the nearest baseline | [HTML](035-release-radar-fullstack-compactness-proof.html) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

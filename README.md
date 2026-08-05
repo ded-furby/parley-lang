@@ -147,6 +147,16 @@ serves `.wasm` with the streaming MIME type. The present HTTP/1.1 and scalar
 WASM limits are explicit in [`docs/WEB.md`](docs/WEB.md); this is a foundation,
 not yet a claim of mature-framework parity.
 
+The preregistered [four-language Release Radar
+comparison](benchmarks/reports/035-release-radar-fullstack-compactness-proof.html)
+then reproduced all 14 HTTP cases and a real browser flow in Parley, Python,
+TypeScript, and Rust: **60/60 checks passed**. Parley's counted application
+surface is **684 o200k tokens**, 40.37% below Python (the smallest correct
+baseline), 49.93% below TypeScript, and 64.91% below Rust; `cl100k_base` keeps
+the same ordering. Parley also reuses one checked scoring definition across
+native code and WASM. This proves compactness for this bounded product—not
+general language superiority or lower fresh-agent session tokens.
+
 ## The agent loop
 
 ```bash

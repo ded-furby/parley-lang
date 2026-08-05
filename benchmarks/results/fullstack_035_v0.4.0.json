@@ -1,0 +1,1310 @@
+{
+  "schema_version": 1,
+  "experiment_id": "035",
+  "protocol": "benchmarks/fullstack_035_protocol.json",
+  "protocol_sha256": "5e6c25908b323498b89f5ff5a2b489256a7332b1fc79fd9cb3ddd5d1abd0cfb6",
+  "cases_sha256": "ed1b8ffb9d568e366b3c99104df9f492f79da9eefcaae272f910c2b20628bdbe",
+  "protocol_commit": "01bc7c3",
+  "frozen_product_commit": "e5470b6",
+  "measurement_commit": "fa15f1e64dd5647823af7c674d736c9fe5b111aa",
+  "dirty_paths_before_run": [],
+  "environment": {
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.14.6",
+    "node": "v22.22.2",
+    "typescript": "Version 7.0.2",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+    "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+    "tiktoken": "0.13.0",
+    "playwright": "1.58.0",
+    "seed": 350260805
+  },
+  "source": {
+    "parley": {
+      "totals": {
+        "bytes": 2865,
+        "lines": 70,
+        "o200k_base": 684,
+        "cl100k_base": 680,
+        "rough": 583
+      },
+      "files": [
+        {
+          "path": "examples/release-radar/main.par",
+          "sha256": "2d0cae40e8dac218cb5f35acb2f8f274919d796d797629accf759099f2781468",
+          "bytes": 2328,
+          "lines": 39,
+          "o200k_base": 510,
+          "cl100k_base": 506,
+          "rough": 420
+        },
+        {
+          "path": "examples/release-radar/parley.web.json",
+          "sha256": "91f88cd41a5dff875f7f7ba9ec6e9c8f3f2f5c9e8c08225620cc6de9695104eb",
+          "bytes": 537,
+          "lines": 31,
+          "o200k_base": 174,
+          "cl100k_base": 174,
+          "rough": 163
+        }
+      ]
+    },
+    "python": {
+      "totals": {
+        "bytes": 4741,
+        "lines": 155,
+        "o200k_base": 1147,
+        "cl100k_base": 1140,
+        "rough": 1098
+      },
+      "files": [
+        {
+          "path": "benchmarks/fullstack_035/python/app.py",
+          "sha256": "8104cd66e7a9e24d26345b0150b756cf8bc517bf50027577bbaff4474be119af",
+          "bytes": 4276,
+          "lines": 135,
+          "o200k_base": 1007,
+          "cl100k_base": 1001,
+          "rough": 983
+        },
+        {
+          "path": "benchmarks/fullstack_035/python/browser.js",
+          "sha256": "bcc9f950932f618d7bdc3cd3b882a8e6cb011bb904fbeaa6d0392c8c127c0746",
+          "bytes": 415,
+          "lines": 17,
+          "o200k_base": 112,
+          "cl100k_base": 111,
+          "rough": 91
+        },
+        {
+          "path": "benchmarks/fullstack_035/python/requirements.txt",
+          "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2",
+          "bytes": 50,
+          "lines": 3,
+          "o200k_base": 28,
+          "cl100k_base": 28,
+          "rough": 24
+        }
+      ]
+    },
+    "typescript": {
+      "totals": {
+        "bytes": 5266,
+        "lines": 171,
+        "o200k_base": 1366,
+        "cl100k_base": 1360,
+        "rough": 1440
+      },
+      "files": [
+        {
+          "path": "benchmarks/fullstack_035/typescript/src/scoring.ts",
+          "sha256": "e4d537417e66a50afa555570e278afe9b024aa35978d97124a917d34a277fc8d",
+          "bytes": 2009,
+          "lines": 67,
+          "o200k_base": 461,
+          "cl100k_base": 458,
+          "rough": 421
+        },
+        {
+          "path": "benchmarks/fullstack_035/typescript/src/server.ts",
+          "sha256": "d39eb92f9a0a23693450a93615e7e77a026a0d2d7e547d6416622ba2a7373ccb",
+          "bytes": 2577,
+          "lines": 72,
+          "o200k_base": 675,
+          "cl100k_base": 672,
+          "rough": 788
+        },
+        {
+          "path": "benchmarks/fullstack_035/typescript/package.json",
+          "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a",
+          "bytes": 366,
+          "lines": 18,
+          "o200k_base": 137,
+          "cl100k_base": 137,
+          "rough": 143
+        },
+        {
+          "path": "benchmarks/fullstack_035/typescript/tsconfig.json",
+          "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1",
+          "bytes": 314,
+          "lines": 14,
+          "o200k_base": 93,
+          "cl100k_base": 93,
+          "rough": 88
+        }
+      ]
+    },
+    "rust": {
+      "totals": {
+        "bytes": 7891,
+        "lines": 260,
+        "o200k_base": 1949,
+        "cl100k_base": 1919,
+        "rough": 1925
+      },
+      "files": [
+        {
+          "path": "benchmarks/fullstack_035/rust/src/lib.rs",
+          "sha256": "edf1eefff51eec6b3fcf2b05fa69e5d35ae91583a785220d6a832dd3e5a81f2a",
+          "bytes": 2450,
+          "lines": 95,
+          "o200k_base": 571,
+          "cl100k_base": 567,
+          "rough": 491
+        },
+        {
+          "path": "benchmarks/fullstack_035/rust/src/main.rs",
+          "sha256": "1c5fe1b84506256cd91eb74da94427263bc4d4daa46efec91325b403e590861c",
+          "bytes": 5024,
+          "lines": 149,
+          "o200k_base": 1232,
+          "cl100k_base": 1208,
+          "rough": 1270
+        },
+        {
+          "path": "benchmarks/fullstack_035/rust/Cargo.toml",
+          "sha256": "d81e244bf5600fcf29d7b047eff4acc0ae5bd0772cbfd5b7086a0e08caf94b1f",
+          "bytes": 417,
+          "lines": 16,
+          "o200k_base": 146,
+          "cl100k_base": 144,
+          "rough": 164
+        }
+      ]
+    }
+  },
+  "build": {
+    "parley": {
+      "values": [
+        6.174205,
+        8.759663,
+        11.035035,
+        13.283247,
+        3.914767
+      ],
+      "median": 8.759663,
+      "min": 3.914767,
+      "max": 13.283247
+    },
+    "python": {
+      "values": [
+        0.152604,
+        0.14065,
+        0.129258,
+        0.172306,
+        0.138872
+      ],
+      "median": 0.14065,
+      "min": 0.129258,
+      "max": 0.172306
+    },
+    "typescript": {
+      "values": [
+        0.097065,
+        0.097501,
+        0.059289,
+        0.107107,
+        0.094255
+      ],
+      "median": 0.097065,
+      "min": 0.059289,
+      "max": 0.107107
+    },
+    "rust": {
+      "values": [
+        31.568023,
+        17.892208,
+        19.731845,
+        20.711306,
+        19.300712
+      ],
+      "median": 19.731845,
+      "min": 17.892208,
+      "max": 31.568023
+    }
+  },
+  "build_orders": [
+    [
+      "parley",
+      "rust",
+      "python",
+      "typescript"
+    ],
+    [
+      "parley",
+      "rust",
+      "typescript",
+      "python"
+    ],
+    [
+      "python",
+      "typescript",
+      "parley",
+      "rust"
+    ],
+    [
+      "rust",
+      "typescript",
+      "python",
+      "parley"
+    ],
+    [
+      "rust",
+      "parley",
+      "python",
+      "typescript"
+    ]
+  ],
+  "correctness": {
+    "parley": {
+      "passed": 15,
+      "total": 15,
+      "all_pass": true,
+      "startup_seconds_for_correctness_run": 0.127242,
+      "http": [
+        {
+          "id": "status",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "a98d88adfd179ebf7c1eb0e1c74074e87edc5bc630ed0b78ae4a33ca5b278b07",
+          "body_bytes": 125,
+          "json": {
+            "service": "Release Radar",
+            "milestone": "typed-http-json-plus-browser-wasm",
+            "typed_routes": 2,
+            "browser_exports": 1,
+            "ready": true
+          },
+          "pass": true
+        },
+        {
+          "id": "ready",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "5845139bed6451cee8e7355b4a0d7d29af6c7feb695fd95a0af5061a8cdbdc60",
+          "body_bytes": 116,
+          "json": {
+            "version": "0.4.0",
+            "ready": true,
+            "score": 100,
+            "verdict": "Ready — every declared release gate passed.",
+            "blockers": []
+          },
+          "pass": true
+        },
+        {
+          "id": "tests_blocked",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "909898048c349266493713a6b2805d7413e8e8e1a926fcc5bcd9c3a45332c71f",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc1",
+            "ready": false,
+            "score": 40,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The test suite is not fully passing."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "checklist_blocked",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "fb3249e7f2ae52016337856c68c08b214cd66be323ca481cf73da0a6685ce336",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc2",
+            "ready": false,
+            "score": 70,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The release checklist is incomplete."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "package_blocked",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "ef12db264179e9feb632e7809739112b665695450cc344e70737c20f486d8ef6",
+          "body_bytes": 162,
+          "json": {
+            "version": "0.4.0-rc3",
+            "ready": false,
+            "score": 90,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "no_evidence",
+          "status": 200,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "d7535ea81f699410f261de756f3112e2f5ea3998afa9ada1745ae63c459ca4b2",
+          "body_bytes": 220,
+          "json": {
+            "version": "dev",
+            "ready": false,
+            "score": 0,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "No test run was supplied.",
+              "No release checklist was supplied.",
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "malformed_json",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "e51ef0bf83d5c5dd192568b47eb4c95080f85bcf0b1e8f446e7daf9d12a9a9c2",
+          "body_bytes": 81,
+          "json": {
+            "detail": "EOF while parsing a value at line 1 column 11",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "unknown_field",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "c4bf8d166fae78f5e02b7a7e57d6fe838dc123ede2f7f877e6d7e63e6bd5b0b0",
+          "body_bytes": 189,
+          "json": {
+            "detail": "unknown field `typo`, expected one of `version`, `tests_passed`, `tests_total`, `checklist_done`, `checklist_total`, `package_ready` at line 1 column 124",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_field",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "f81287e2ca4121eaebfab67bb3a2906ac03989bf7186a08a09ddd0f141be3653",
+          "body_bytes": 85,
+          "json": {
+            "detail": "missing field `package_ready` at line 1 column 97",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_field_type",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "168b70cd49dc7f09637016718772f01ca61a51c6d788eb4ac01a16093ed0be9c",
+          "body_bytes": 98,
+          "json": {
+            "detail": "invalid type: string \"394\", expected i64 at line 1 column 39",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_media_type",
+          "status": 415,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "830888f1389707d09433863d9a6d1480b69b5de09a7bd7754d44e6a7be250344",
+          "body_bytes": 95,
+          "json": {
+            "detail": "typed request bodies require application/json",
+            "error": "json_content_type_required"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_route",
+          "status": 404,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "ce7fcb15009e9996af2e5498353f14d79352b81edc75ef4e577220afbaf39b60",
+          "body_bytes": 70,
+          "json": {
+            "detail": "no typed route or static file matched",
+            "error": "not_found"
+          },
+          "pass": true
+        },
+        {
+          "id": "static_index",
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "body_sha256": "14d4f5d082155d7e13539b02646d5fffc8f53beae3f82b13c9aa7ffa77adc9b9",
+          "body_bytes": 4822,
+          "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <meta name=\"color-scheme\" content=\"dark\">\n  <title>Release Radar · Parley</title>\n  <meta name=\"descri",
+          "pass": true
+        },
+        {
+          "id": "static_traversal",
+          "status": 404,
+          "content_type": "application/json; charset=utf-8",
+          "body_sha256": "ce7fcb15009e9996af2e5498353f14d79352b81edc75ef4e577220afbaf39b60",
+          "body_bytes": 70,
+          "json": {
+            "detail": "no typed route or static file matched",
+            "error": "not_found"
+          },
+          "pass": true
+        }
+      ],
+      "browser": {
+        "local_score": "100",
+        "confirmed_score": "100",
+        "verdict": "0.4.0: Ready — every declared release gate passed.",
+        "gate_states": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "runtime_proof": "WASM ready · native API ready",
+        "console_errors": [],
+        "pass": true,
+        "screenshot": "/private/tmp/parley-fullstack-035/parley-browser.png"
+      }
+    },
+    "python": {
+      "passed": 15,
+      "total": 15,
+      "all_pass": true,
+      "startup_seconds_for_correctness_run": 0.212933,
+      "http": [
+        {
+          "id": "status",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "a98d88adfd179ebf7c1eb0e1c74074e87edc5bc630ed0b78ae4a33ca5b278b07",
+          "body_bytes": 125,
+          "json": {
+            "service": "Release Radar",
+            "milestone": "typed-http-json-plus-browser-wasm",
+            "typed_routes": 2,
+            "browser_exports": 1,
+            "ready": true
+          },
+          "pass": true
+        },
+        {
+          "id": "ready",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "5845139bed6451cee8e7355b4a0d7d29af6c7feb695fd95a0af5061a8cdbdc60",
+          "body_bytes": 116,
+          "json": {
+            "version": "0.4.0",
+            "ready": true,
+            "score": 100,
+            "verdict": "Ready — every declared release gate passed.",
+            "blockers": []
+          },
+          "pass": true
+        },
+        {
+          "id": "tests_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "909898048c349266493713a6b2805d7413e8e8e1a926fcc5bcd9c3a45332c71f",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc1",
+            "ready": false,
+            "score": 40,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The test suite is not fully passing."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "checklist_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "fb3249e7f2ae52016337856c68c08b214cd66be323ca481cf73da0a6685ce336",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc2",
+            "ready": false,
+            "score": 70,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The release checklist is incomplete."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "package_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "ef12db264179e9feb632e7809739112b665695450cc344e70737c20f486d8ef6",
+          "body_bytes": 162,
+          "json": {
+            "version": "0.4.0-rc3",
+            "ready": false,
+            "score": 90,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "no_evidence",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "d7535ea81f699410f261de756f3112e2f5ea3998afa9ada1745ae63c459ca4b2",
+          "body_bytes": 220,
+          "json": {
+            "version": "dev",
+            "ready": false,
+            "score": 0,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "No test run was supplied.",
+              "No release checklist was supplied.",
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "malformed_json",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "de68cb7b66612bce9abc2a9846104d55a9fb12530d006484ba3679d8097a0cfc",
+          "body_bytes": 79,
+          "json": {
+            "error": "invalid_json",
+            "detail": "Expecting value: line 1 column 12 (char 11)"
+          },
+          "pass": true
+        },
+        {
+          "id": "unknown_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "9c3400e7b650062caa255edca6d8c50ad888094eaa3d60f2c8bbb2c37cfb1357",
+          "body_bytes": 255,
+          "json": {
+            "error": "invalid_json",
+            "detail": "1 validation error for ReleaseInput\ntypo\n  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "187193bce0da95894e0412d1f9b3925192e6f85d8cb397af449789eecd0fce69",
+          "body_bytes": 280,
+          "json": {
+            "error": "invalid_json",
+            "detail": "1 validation error for ReleaseInput\npackage_ready\n  Field required [type=missing, input_value={'version': '0.4.0', 'tes..., 'checklist_total': 12}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_field_type",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "531b29b2b4ac1f9ed9d416408d5137268e785963fb9ff9da5c5cde5ba5a4a611",
+          "body_bytes": 250,
+          "json": {
+            "error": "invalid_json",
+            "detail": "1 validation error for ReleaseInput\ntests_passed\n  Input should be a valid integer [type=int_type, input_value='394', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_media_type",
+          "status": 415,
+          "content_type": "application/json",
+          "body_sha256": "66bdcadc01273c666787cb0ab745f7cfc0b95a96008ef710ef8b9106f0202f33",
+          "body_bytes": 75,
+          "json": {
+            "error": "json_content_type_required",
+            "detail": "expected application/json"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_route",
+          "status": 404,
+          "content_type": "application/json",
+          "body_sha256": "ab8b5f695cc9c2bae8866796581834fa1253253821ff4711b6fb9b56a6445d6c",
+          "body_bytes": 58,
+          "json": {
+            "error": "not_found",
+            "detail": "no API route /api/missing"
+          },
+          "pass": true
+        },
+        {
+          "id": "static_index",
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "body_sha256": "14d4f5d082155d7e13539b02646d5fffc8f53beae3f82b13c9aa7ffa77adc9b9",
+          "body_bytes": 4822,
+          "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <meta name=\"color-scheme\" content=\"dark\">\n  <title>Release Radar · Parley</title>\n  <meta name=\"descri",
+          "pass": true
+        },
+        {
+          "id": "static_traversal",
+          "status": 404,
+          "content_type": "application/json",
+          "body_sha256": "37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d",
+          "body_bytes": 22,
+          "json": {
+            "detail": "Not Found"
+          },
+          "pass": true
+        }
+      ],
+      "browser": {
+        "local_score": "100",
+        "confirmed_score": "100",
+        "verdict": "0.4.0: Ready — every declared release gate passed.",
+        "gate_states": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "runtime_proof": "WASM ready · native API ready",
+        "console_errors": [],
+        "pass": true,
+        "screenshot": "/private/tmp/parley-fullstack-035/python-browser.png"
+      }
+    },
+    "typescript": {
+      "passed": 15,
+      "total": 15,
+      "all_pass": true,
+      "startup_seconds_for_correctness_run": 0.11248,
+      "http": [
+        {
+          "id": "status",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "a98d88adfd179ebf7c1eb0e1c74074e87edc5bc630ed0b78ae4a33ca5b278b07",
+          "body_bytes": 125,
+          "json": {
+            "service": "Release Radar",
+            "milestone": "typed-http-json-plus-browser-wasm",
+            "typed_routes": 2,
+            "browser_exports": 1,
+            "ready": true
+          },
+          "pass": true
+        },
+        {
+          "id": "ready",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "5845139bed6451cee8e7355b4a0d7d29af6c7feb695fd95a0af5061a8cdbdc60",
+          "body_bytes": 116,
+          "json": {
+            "version": "0.4.0",
+            "ready": true,
+            "score": 100,
+            "verdict": "Ready — every declared release gate passed.",
+            "blockers": []
+          },
+          "pass": true
+        },
+        {
+          "id": "tests_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "909898048c349266493713a6b2805d7413e8e8e1a926fcc5bcd9c3a45332c71f",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc1",
+            "ready": false,
+            "score": 40,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The test suite is not fully passing."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "checklist_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "fb3249e7f2ae52016337856c68c08b214cd66be323ca481cf73da0a6685ce336",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc2",
+            "ready": false,
+            "score": 70,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The release checklist is incomplete."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "package_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "ef12db264179e9feb632e7809739112b665695450cc344e70737c20f486d8ef6",
+          "body_bytes": 162,
+          "json": {
+            "version": "0.4.0-rc3",
+            "ready": false,
+            "score": 90,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "no_evidence",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "d7535ea81f699410f261de756f3112e2f5ea3998afa9ada1745ae63c459ca4b2",
+          "body_bytes": 220,
+          "json": {
+            "version": "dev",
+            "ready": false,
+            "score": 0,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "No test run was supplied.",
+              "No release checklist was supplied.",
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "malformed_json",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "4b228b6c1c1e0ed45f9737d08d438018dac7bba96faca410af753adb9f3177bc",
+          "body_bytes": 77,
+          "json": {
+            "error": "invalid_json",
+            "detail": "SyntaxError: Unexpected end of JSON input"
+          },
+          "pass": true
+        },
+        {
+          "id": "unknown_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "cb1607468f0f262a9425fcc9ef8ad0a68dcd68ddad1332db37e8ec10f0b7ef34",
+          "body_bytes": 201,
+          "json": {
+            "error": "invalid_json",
+            "detail": "[\n  {\n    \"code\": \"unrecognized_keys\",\n    \"keys\": [\n      \"typo\"\n    ],\n    \"path\": [],\n    \"message\": \"Unrecognized key: \\\"typo\\\"\"\n  }\n]"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "aa9f7e7c949e45196d1b58c0e53a69cb43376403cdc92151c4317bfac916b192",
+          "body_bytes": 239,
+          "json": {
+            "error": "invalid_json",
+            "detail": "[\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"package_ready\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received undefined\"\n  }\n]"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_field_type",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "93dc1f9b5279cf7835c68616adac6e6a672032307025d91cecae926ecaf6d161",
+          "body_bytes": 233,
+          "json": {
+            "error": "invalid_json",
+            "detail": "[\n  {\n    \"expected\": \"number\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"tests_passed\"\n    ],\n    \"message\": \"Invalid input: expected number, received string\"\n  }\n]"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_media_type",
+          "status": 415,
+          "content_type": "application/json",
+          "body_sha256": "66bdcadc01273c666787cb0ab745f7cfc0b95a96008ef710ef8b9106f0202f33",
+          "body_bytes": 75,
+          "json": {
+            "error": "json_content_type_required",
+            "detail": "expected application/json"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_route",
+          "status": 404,
+          "content_type": "application/json",
+          "body_sha256": "ab8b5f695cc9c2bae8866796581834fa1253253821ff4711b6fb9b56a6445d6c",
+          "body_bytes": 58,
+          "json": {
+            "error": "not_found",
+            "detail": "no API route /api/missing"
+          },
+          "pass": true
+        },
+        {
+          "id": "static_index",
+          "status": 200,
+          "content_type": "text/html; charset=utf-8",
+          "body_sha256": "14d4f5d082155d7e13539b02646d5fffc8f53beae3f82b13c9aa7ffa77adc9b9",
+          "body_bytes": 4822,
+          "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <meta name=\"color-scheme\" content=\"dark\">\n  <title>Release Radar · Parley</title>\n  <meta name=\"descri",
+          "pass": true
+        },
+        {
+          "id": "static_traversal",
+          "status": 404,
+          "content_type": "text/plain; charset=UTF-8",
+          "body_sha256": "7d04f7431bbfa41a04bcc7e6b98b9de0d919756c4c671c5785c99fff45f16402",
+          "body_bytes": 13,
+          "text": "404 Not Found",
+          "pass": true
+        }
+      ],
+      "browser": {
+        "local_score": "100",
+        "confirmed_score": "100",
+        "verdict": "0.4.0: Ready — every declared release gate passed.",
+        "gate_states": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "runtime_proof": "WASM ready · native API ready",
+        "console_errors": [],
+        "pass": true,
+        "screenshot": "/private/tmp/parley-fullstack-035/typescript-browser.png"
+      }
+    },
+    "rust": {
+      "passed": 15,
+      "total": 15,
+      "all_pass": true,
+      "startup_seconds_for_correctness_run": 0.135253,
+      "http": [
+        {
+          "id": "status",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "5035f40c726726ccff3355ef213e45d0053763fc2f9550d79036ee43fddcc7c3",
+          "body_bytes": 125,
+          "json": {
+            "browser_exports": 1,
+            "milestone": "typed-http-json-plus-browser-wasm",
+            "ready": true,
+            "service": "Release Radar",
+            "typed_routes": 2
+          },
+          "pass": true
+        },
+        {
+          "id": "ready",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "5845139bed6451cee8e7355b4a0d7d29af6c7feb695fd95a0af5061a8cdbdc60",
+          "body_bytes": 116,
+          "json": {
+            "version": "0.4.0",
+            "ready": true,
+            "score": 100,
+            "verdict": "Ready — every declared release gate passed.",
+            "blockers": []
+          },
+          "pass": true
+        },
+        {
+          "id": "tests_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "909898048c349266493713a6b2805d7413e8e8e1a926fcc5bcd9c3a45332c71f",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc1",
+            "ready": false,
+            "score": 40,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The test suite is not fully passing."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "checklist_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "fb3249e7f2ae52016337856c68c08b214cd66be323ca481cf73da0a6685ce336",
+          "body_bytes": 164,
+          "json": {
+            "version": "0.4.0-rc2",
+            "ready": false,
+            "score": 70,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The release checklist is incomplete."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "package_blocked",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "ef12db264179e9feb632e7809739112b665695450cc344e70737c20f486d8ef6",
+          "body_bytes": 162,
+          "json": {
+            "version": "0.4.0-rc3",
+            "ready": false,
+            "score": 90,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "no_evidence",
+          "status": 200,
+          "content_type": "application/json",
+          "body_sha256": "d7535ea81f699410f261de756f3112e2f5ea3998afa9ada1745ae63c459ca4b2",
+          "body_bytes": 220,
+          "json": {
+            "version": "dev",
+            "ready": false,
+            "score": 0,
+            "verdict": "Blocked — resolve the remaining release evidence.",
+            "blockers": [
+              "No test run was supplied.",
+              "No release checklist was supplied.",
+              "The package artifact is not ready."
+            ]
+          },
+          "pass": true
+        },
+        {
+          "id": "malformed_json",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "e51ef0bf83d5c5dd192568b47eb4c95080f85bcf0b1e8f446e7daf9d12a9a9c2",
+          "body_bytes": 81,
+          "json": {
+            "detail": "EOF while parsing a value at line 1 column 11",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "unknown_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "c4bf8d166fae78f5e02b7a7e57d6fe838dc123ede2f7f877e6d7e63e6bd5b0b0",
+          "body_bytes": 189,
+          "json": {
+            "detail": "unknown field `typo`, expected one of `version`, `tests_passed`, `tests_total`, `checklist_done`, `checklist_total`, `package_ready` at line 1 column 124",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_field",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "f81287e2ca4121eaebfab67bb3a2906ac03989bf7186a08a09ddd0f141be3653",
+          "body_bytes": 85,
+          "json": {
+            "detail": "missing field `package_ready` at line 1 column 97",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_field_type",
+          "status": 400,
+          "content_type": "application/json",
+          "body_sha256": "168b70cd49dc7f09637016718772f01ca61a51c6d788eb4ac01a16093ed0be9c",
+          "body_bytes": 98,
+          "json": {
+            "detail": "invalid type: string \"394\", expected i64 at line 1 column 39",
+            "error": "invalid_json"
+          },
+          "pass": true
+        },
+        {
+          "id": "wrong_media_type",
+          "status": 415,
+          "content_type": "application/json",
+          "body_sha256": "3541de3f70ed1a78c40545fde07e62dee21b14d0397ea10dd22efe6a1bba1cf7",
+          "body_bytes": 75,
+          "json": {
+            "detail": "expected application/json",
+            "error": "json_content_type_required"
+          },
+          "pass": true
+        },
+        {
+          "id": "missing_route",
+          "status": 404,
+          "content_type": "application/json",
+          "body_sha256": "2a85a36a7dc946db562acfbfde0b11838d1f331ee94f1d98ed710d331ec03c47",
+          "body_bytes": 58,
+          "json": {
+            "detail": "no API route /api/missing",
+            "error": "not_found"
+          },
+          "pass": true
+        },
+        {
+          "id": "static_index",
+          "status": 200,
+          "content_type": "text/html",
+          "body_sha256": "14d4f5d082155d7e13539b02646d5fffc8f53beae3f82b13c9aa7ffa77adc9b9",
+          "body_bytes": 4822,
+          "text": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <meta name=\"color-scheme\" content=\"dark\">\n  <title>Release Radar · Parley</title>\n  <meta name=\"descri",
+          "pass": true
+        },
+        {
+          "id": "static_traversal",
+          "status": 404,
+          "content_type": "",
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "body_bytes": 0,
+          "text": "",
+          "pass": true
+        }
+      ],
+      "browser": {
+        "local_score": "100",
+        "confirmed_score": "100",
+        "verdict": "0.4.0: Ready — every declared release gate passed.",
+        "gate_states": [
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "runtime_proof": "WASM ready · native API ready",
+        "console_errors": [],
+        "pass": true,
+        "screenshot": "/private/tmp/parley-fullstack-035/rust-browser.png"
+      }
+    }
+  },
+  "cross_target_reuse": {
+    "parley": {
+      "single_authored_rule": true,
+      "browser_target": "WebAssembly"
+    },
+    "python": {
+      "single_authored_rule": false,
+      "browser_target": "handwritten JavaScript supplement"
+    },
+    "typescript": {
+      "single_authored_rule": true,
+      "browser_target": "generated JavaScript"
+    },
+    "rust": {
+      "single_authored_rule": true,
+      "browser_target": "WebAssembly"
+    }
+  },
+  "scope_note": "Source tokens measure application compactness, not coding-agent session usage. Timing is a local descriptive microbenchmark.",
+  "startup": {
+    "parley": {
+      "values": [
+        0.016116,
+        0.015521,
+        0.015281,
+        0.017015,
+        0.016323
+      ],
+      "median": 0.016116,
+      "min": 0.015281,
+      "max": 0.017015
+    },
+    "python": {
+      "values": [
+        0.165931,
+        0.176804,
+        0.216844,
+        0.249088,
+        0.211522
+      ],
+      "median": 0.211522,
+      "min": 0.165931,
+      "max": 0.249088
+    },
+    "typescript": {
+      "values": [
+        0.098887,
+        0.068328,
+        0.097664,
+        0.10176,
+        0.112193
+      ],
+      "median": 0.098887,
+      "min": 0.068328,
+      "max": 0.112193
+    },
+    "rust": {
+      "values": [
+        0.014425,
+        0.015552,
+        0.015239,
+        0.019665,
+        0.018115
+      ],
+      "median": 0.015552,
+      "min": 0.014425,
+      "max": 0.019665
+    }
+  },
+  "load": {
+    "parley": {
+      "rounds": [
+        {
+          "seconds": 0.063376,
+          "requests_per_second": 7889.443
+        },
+        {
+          "seconds": 0.052352,
+          "requests_per_second": 9550.764
+        },
+        {
+          "seconds": 0.05187,
+          "requests_per_second": 9639.468
+        },
+        {
+          "seconds": 0.063871,
+          "requests_per_second": 7828.253
+        },
+        {
+          "seconds": 0.053693,
+          "requests_per_second": 9312.259
+        }
+      ],
+      "median_requests_per_second": 9312.259
+    },
+    "python": {
+      "rounds": [
+        {
+          "seconds": 0.12956,
+          "requests_per_second": 3859.208
+        },
+        {
+          "seconds": 0.131281,
+          "requests_per_second": 3808.633
+        },
+        {
+          "seconds": 0.140941,
+          "requests_per_second": 3547.591
+        },
+        {
+          "seconds": 0.136473,
+          "requests_per_second": 3663.723
+        },
+        {
+          "seconds": 0.1387,
+          "requests_per_second": 3604.891
+        }
+      ],
+      "median_requests_per_second": 3663.723
+    },
+    "typescript": {
+      "rounds": [
+        {
+          "seconds": 0.0918,
+          "requests_per_second": 5446.648
+        },
+        {
+          "seconds": 0.086082,
+          "requests_per_second": 5808.404
+        },
+        {
+          "seconds": 0.09222,
+          "requests_per_second": 5421.798
+        },
+        {
+          "seconds": 0.082701,
+          "requests_per_second": 6045.894
+        },
+        {
+          "seconds": 0.092853,
+          "requests_per_second": 5384.846
+        }
+      ],
+      "median_requests_per_second": 5446.648
+    },
+    "rust": {
+      "rounds": [
+        {
+          "seconds": 0.050542,
+          "requests_per_second": 9892.779
+        },
+        {
+          "seconds": 0.048853,
+          "requests_per_second": 10234.725
+        },
+        {
+          "seconds": 0.049936,
+          "requests_per_second": 10012.774
+        },
+        {
+          "seconds": 0.050699,
+          "requests_per_second": 9862.16
+        },
+        {
+          "seconds": 0.051608,
+          "requests_per_second": 9688.475
+        }
+      ],
+      "median_requests_per_second": 9892.779
+    }
+  },
+  "artifacts": {
+    "parley": {
+      "owned_output_bytes": 512546,
+      "deploy_closure_bytes": 512546
+    },
+    "python": {
+      "owned_output_bytes": 1408293,
+      "deploy_closure_bytes": 28472934
+    },
+    "typescript": {
+      "owned_output_bytes": 4279,
+      "deploy_closure_bytes": 33590984
+    },
+    "rust": {
+      "owned_output_bytes": 1988475,
+      "deploy_closure_bytes": 1988475
+    },
+    "shared_static_bytes_excluded": 15190
+  },
+  "gates": {
+    "all_languages_correct": true,
+    "parley_primary_compactness": true,
+    "parley_cross_target_reuse": true,
+    "overall_fullstack_compactness_proof": true
+  }
+}
