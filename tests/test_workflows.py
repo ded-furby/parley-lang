@@ -280,12 +280,46 @@ def test_workflow_test_reports_exact_output_difference(tmp_path):
     assert "+first useful line" in proc.stdout
 
 
-def test_release_steward_catalog_fixtures_pass(tmp_path):
-    steward = REPO / "workflows" / "catalog" / "release-steward"
+def test_every_catalog_workflow_fixture_passes(tmp_path):
+    catalog = REPO / "parley" / "workflows" / "catalog"
+    for name in ("release-steward", "log-summary", "checklist-report"):
+        proc = run_cli(["workflow", "test", str(catalog / name)], cwd=tmp_path)
+        assert proc.returncode == 0, proc.stderr
 
-    proc = run_cli(["workflow", "test", str(steward)], cwd=tmp_path)
+    assert "PASS ready release" in run_cli(
+        ["workflow", "test", str(catalog / "release-steward")],
+        cwd=tmp_path,
+    ).stdout
 
-    assert proc.returncode == 0, proc.stderr
-    assert "PASS ready release" in proc.stdout
-    assert "PASS blocked release" in proc.stdout
-    assert "All 2 workflow fixtures passed." in proc.stdout
+
+def test_catalog_workflows_install_test_and_verify(tmp_path):
+    names = ("release-steward", "log-summary", "checklist-report")
+    for name in names:
+        installed = run_cli(["workflow", "install", name], cwd=tmp_path)
+        assert installed.returncode == 0, installed.stderr
+        assert f"Installed workflow {name} 1.0.0" in installed.stdout
+        assert (tmp_path / "parley_workflows" / name / "workflow.json").is_file()
+
+        tested = run_cli(["workflow", "test", name], cwd=tmp_path)
+        assert tested.returncode == 0, tested.stderr
+
+    lock = json.loads((tmp_path / "parley.workflows.lock.json").read_text())
+    assert lock["schema_version"] == 1
+    assert set(lock["workflows"]) == set(names)
+    for metadata in lock["workflows"].values():
+        assert metadata["version"] == "1.0.0"
+        assert len(metadata["sha256"]) == 64
+
+    verified = run_cli(["workflow", "verify"], cwd=tmp_path)
+    assert verified.returncode == 0, verified.stderr
+    assert "Verified 3 installed workflows." in verified.stdout
+
+    refused = run_cli(["workflow", "install", "release-steward"], cwd=tmp_path)
+    assert refused.returncode == 1
+    assert "already installed" in refused.stderr
+
+    main = tmp_path / "parley_workflows" / "log-summary" / "main.par"
+    main.write_text(main.read_text() + "\nnote: local drift\n")
+    drift = run_cli(["workflow", "verify"], cwd=tmp_path)
+    assert drift.returncode == 1
+    assert "log-summary: checksum mismatch" in drift.stderr

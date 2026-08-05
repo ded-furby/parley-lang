@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "name": "log-summary",
+  "version": "1.0.0",
+  "description": "Summarize log levels and error lines as Markdown.",
+  "entrypoint": "main.par",
+  "inputs": [
+    {
+      "name": "source",
+      "description": "Plain-text application or service log"
+    }
+  ],
+  "tests": [
+    {
+      "name": "mixed log levels",
+      "inputs": {
+        "source": "tests/sample/input.txt"
+      },
+      "expected_output": "tests/sample/expected.md"
+    }
+  ]
+}

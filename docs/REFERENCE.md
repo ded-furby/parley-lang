@@ -217,13 +217,21 @@ machine-readable report with an `ok` field and one entry per check.
 `parley workflow list` prints the bundled file-workflow starters. Create one
 with `parley workflow new name --template clean-text` (or `log-summary` /
 `checklist-report`). The generated directory contains `workflow.json`, a
-normal `main.par`, and sample `input.txt`.
+normal `main.par`, sample `input.txt`, and an exact-output fixture under
+`tests/sample/`.
 
-Run it with `parley workflow run name --input input.txt --output output.txt`.
-The input must exist, the output directory must exist, and an existing output
-requires explicit `--force`. The runner rejects any output that resolves to the
-input, including hard links. A schema-1 `workflow.json` may select a relative
-entrypoint that stays inside the workflow directory.
+Test it with `parley workflow test name`. Run schema-2 workflows with one
+`--input NAME=PATH` per declared input; arguments may be in any order, while
+the program receives paths in manifest order. Every input must exist, the
+output directory must exist, and an existing output requires explicit
+`--force`. The runner rejects any output that resolves to any input, including
+hard links. Schema-1 workflows retain their single bare `--input PATH` form.
+
+`parley workflow install release-steward` installs a first-party product from
+the wheel-bundled catalog; `log-summary` and `checklist-report` are also
+available. Installed readable source lives in `parley_workflows/`, with version
+and whole-tree SHA-256 metadata in `parley.workflows.lock.json`. `parley
+workflow verify` reports missing or changed installed files.
 
 `include "std/workflow"` supplies `workflow_read_required_text`,
 `workflow_normalized_lines`, containing/starting line filters and counts,

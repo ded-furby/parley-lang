@@ -17,6 +17,8 @@
   parley workflow new name        create a workflow from a starter
   parley workflow run name        safely run a file-to-file workflow
   parley workflow test name       run deterministic workflow fixtures
+  parley workflow install name    install a checksummed workflow product
+  parley workflow verify          verify installed workflow checksums
   parley benchmark measure        measure the seed research corpus
   parley benchmark prompt         render language-neutral benchmark prompts
 """
@@ -46,6 +48,7 @@ from .diagnostics import Diagnostic, ParleyError, explain, render_human, render_
 from .emit_rust import emit_program
 from .parser import SourceMap, parse_program
 from .workflows import WORKFLOW_TEMPLATES
+from .workflows.catalog import WORKFLOW_CATALOG
 
 CARGO_TOML = """\
 [package]
@@ -81,6 +84,7 @@ PACKAGE_VERSION_RE = re.compile(
 SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 SIGNATURE_RE = re.compile(r"^hmac-sha256:[0-9a-fA-F]{64}$")
 DEFAULT_REGISTRY = "parley.registry.json"
+WORKFLOW_LOCK_FILE = "parley.workflows.lock.json"
 
 
 # ------------------------------------------------------------------ pipeline
@@ -245,6 +249,18 @@ def cmd_workflow_list(args) -> int:
     print("Parley workflow starters")
     for name, metadata in WORKFLOW_TEMPLATES.items():
         print(f"{name:18} {metadata['description']}")
+    print("\nFirst-party workflow catalog")
+    for name, description in WORKFLOW_CATALOG.items():
+        print(f"{name:18} {description}")
+    try:
+        lock = _read_workflow_lock()
+    except OSError as exc:
+        print(f"workflow error: {exc}", file=sys.stderr)
+        return 1
+    if lock["workflows"]:
+        print("\nInstalled workflows")
+        for name, metadata in sorted(lock["workflows"].items()):
+            print(f"{name:18} {metadata['version']}  {metadata['path']}")
     return 0
 
 
@@ -306,6 +322,10 @@ def cmd_workflow_new(args) -> int:
 
 def _read_workflow(target: str) -> tuple[Path, Path, dict]:
     path = Path(target)
+    if not path.exists() and PACKAGE_NAME_RE.fullmatch(target):
+        installed = Path("parley_workflows") / target
+        if installed.exists():
+            path = installed
     manifest = {"schema_version": 1, "entrypoint": path.name}
     root = path.parent
     if path.is_dir():
@@ -540,6 +560,174 @@ def cmd_workflow_test(args) -> int:
         print(f"{failures} of {total} workflow fixtures failed", file=sys.stderr)
         return 1
     print(f"All {total} workflow fixtures passed.")
+    return 0
+
+
+def _workflow_lock_path() -> Path:
+    return Path(WORKFLOW_LOCK_FILE)
+
+
+def _read_workflow_lock() -> dict:
+    path = _workflow_lock_path()
+    if not path.exists():
+        return {"schema_version": 1, "workflows": {}}
+    try:
+        data = json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise OSError(f"invalid {WORKFLOW_LOCK_FILE}: {exc.msg}") from exc
+    if data.get("schema_version") != 1 or not isinstance(data.get("workflows"), dict):
+        raise OSError(
+            f"{WORKFLOW_LOCK_FILE} must use schema_version 1 with a workflows object")
+    return data
+
+
+def _write_workflow_lock(data: dict) -> None:
+    _workflow_lock_path().write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+
+
+def _catalog_workflow_path(name: str) -> Path:
+    if name not in WORKFLOW_CATALOG:
+        raise OSError(
+            f"'{name}' is not in the first-party catalog; provide a local source path")
+    return Path(str(resources.files("parley.workflows.catalog").joinpath(name)))
+
+
+def _validate_workflow_product(source: Path, expected_name: str) -> tuple[dict, str]:
+    if not source.is_dir():
+        raise OSError(f"workflow source must be a directory: {source}")
+    entrypoint, root, manifest = _read_workflow(str(source))
+    if manifest.get("schema_version") != 2:
+        raise OSError("installable workflows must use schema_version 2")
+    name = manifest.get("name")
+    if name != expected_name:
+        raise OSError(
+            f"workflow manifest name is '{name}', expected '{expected_name}'")
+    version = manifest.get("version")
+    if not isinstance(version, str):
+        raise OSError("installable workflows need a semantic version")
+    _validate_package_version(version, context="workflow ")
+    description = manifest.get("description")
+    if not isinstance(description, str) or not description.strip():
+        raise OSError("installable workflows need a description")
+    names = _workflow_input_names(manifest)
+    tests = manifest.get("tests")
+    if not isinstance(tests, list) or not tests:
+        raise OSError("installable workflows need at least one test fixture")
+    for index, case in enumerate(tests, start=1):
+        if not isinstance(case, dict):
+            raise OSError(f"workflow test fixture {index} must be an object")
+        case_name = case.get("name")
+        if not isinstance(case_name, str) or not case_name.strip():
+            raise OSError(f"workflow test fixture {index} needs a name")
+        raw_inputs = case.get("inputs")
+        if not isinstance(raw_inputs, dict):
+            raise OSError(f"test fixture '{case_name}' needs an inputs object")
+        if set(raw_inputs) != set(names):
+            raise OSError(
+                f"test fixture '{case_name}' inputs must exactly match the manifest")
+        for input_name in names:
+            _workflow_fixture(
+                root,
+                raw_inputs[input_name],
+                f"test fixture '{case_name}' input '{input_name}'",
+            )
+        _workflow_fixture(
+            root,
+            case.get("expected_output"),
+            f"test fixture '{case_name}' expected_output",
+        )
+    try:
+        rust, _, _ = compile_source(str(entrypoint))
+    except ParleyError as exc:
+        diag = exc.diagnostics[0]
+        raise OSError(
+            f"workflow source does not check: {diag.code} {diag.message}") from exc
+    if not rust:
+        raise OSError("workflow source did not compile")
+    return manifest, _package_sha256(source)
+
+
+def _install_workflow_tree(source: Path, target: Path, force: bool) -> None:
+    if source.resolve() == target.resolve():
+        raise OSError("workflow source and install target must be different directories")
+    if target.exists() and not force:
+        raise OSError(f"workflow is already installed: {target}; pass --force to replace it")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(
+            prefix=".parley-workflow-install-", dir=target.parent) as tmp:
+        staging = Path(tmp) / "staging"
+        shutil.copytree(source, staging)
+        backup = Path(tmp) / "previous"
+        if target.exists():
+            target.rename(backup)
+        try:
+            staging.rename(target)
+        except OSError:
+            if backup.exists() and not target.exists():
+                backup.rename(target)
+            raise
+
+
+def cmd_workflow_install(args) -> int:
+    try:
+        _validate_package_name(args.name)
+        source = Path(args.source).resolve() if args.source else _catalog_workflow_path(args.name)
+        manifest, sha256 = _validate_workflow_product(source, args.name)
+        target = Path("parley_workflows") / args.name
+        _install_workflow_tree(source, target, args.force)
+        installed_sha256 = _package_sha256(target)
+        if installed_sha256 != sha256:
+            raise OSError(f"installed workflow checksum mismatch for {args.name}")
+        lock = _read_workflow_lock()
+        lock["workflows"][args.name] = {
+            "version": manifest["version"],
+            "source": args.source or f"catalog:{args.name}",
+            "path": target.as_posix(),
+            "sha256": sha256,
+        }
+        _write_workflow_lock(lock)
+    except OSError as exc:
+        print(f"workflow error: {exc}", file=sys.stderr)
+        return 1
+    print(
+        f"Installed workflow {args.name} {manifest['version']} to {target.as_posix()}\n"
+        f"Test it: parley workflow test {args.name}")
+    return 0
+
+
+def cmd_workflow_verify(args) -> int:
+    try:
+        lock = _read_workflow_lock()
+        failures: list[str] = []
+        for name, metadata in sorted(lock["workflows"].items()):
+            if not isinstance(metadata, dict):
+                failures.append(f"{name}: invalid lock metadata")
+                continue
+            target = Path("parley_workflows") / name
+            if metadata.get("path") != target.as_posix():
+                failures.append(f"{name}: lock path must be {target.as_posix()}")
+                continue
+            expected = metadata.get("sha256")
+            if not isinstance(expected, str) or not SHA256_RE.fullmatch(expected):
+                failures.append(f"{name}: invalid sha256 in {WORKFLOW_LOCK_FILE}")
+                continue
+            if not target.is_dir():
+                failures.append(f"{name}: installed directory is missing")
+                continue
+            actual = _package_sha256(target)
+            if actual != expected:
+                failures.append(
+                    f"{name}: checksum mismatch; expected {expected}, got {actual}")
+                continue
+            print(f"OK {name} {metadata.get('version', '')} {actual}")
+        if failures:
+            for failure in failures:
+                print(f"workflow error: {failure}", file=sys.stderr)
+            return 1
+    except OSError as exc:
+        print(f"workflow error: {exc}", file=sys.stderr)
+        return 1
+    print(f"Verified {len(lock['workflows'])} installed workflows.")
     return 0
 
 
@@ -1229,6 +1417,20 @@ def main(argv: list[str] | None = None) -> int:
         "test", help="run exact-output fixtures declared by a workflow")
     workflow_test.add_argument("workflow", help="schema-2 workflow directory")
     workflow_test.set_defaults(fn=cmd_workflow_test)
+    workflow_install = workflow_sub.add_parser(
+        "install", help="install a checksummed workflow product")
+    workflow_install.add_argument("name", help="workflow product name")
+    workflow_install.add_argument(
+        "source",
+        nargs="?",
+        help="local workflow directory (omit for the first-party catalog)",
+    )
+    workflow_install.add_argument(
+        "--force", action="store_true", help="replace an installed workflow")
+    workflow_install.set_defaults(fn=cmd_workflow_install)
+    workflow_verify = workflow_sub.add_parser(
+        "verify", help=f"verify installed workflows against {WORKFLOW_LOCK_FILE}")
+    workflow_verify.set_defaults(fn=cmd_workflow_verify)
 
     p = sub.add_parser("package", help="manage local Parley packages")
     package_sub = p.add_subparsers(dest="package_cmd", required=True)

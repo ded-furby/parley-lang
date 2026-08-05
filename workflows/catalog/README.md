@@ -7,9 +7,13 @@ scaffolds; entries here are maintained automation products.
 
 ## Products
 
-- [`release-steward`](release-steward/) combines test results, release
+- [`release-steward`](../../parley/workflows/catalog/release-steward/) combines test results, release
   metadata, a checklist, and package information into one Markdown decision.
+- [`log-summary`](../../parley/workflows/catalog/log-summary/) turns service
+  logs into compact Markdown evidence for incident and release review.
+- [`checklist-report`](../../parley/workflows/catalog/checklist-report/)
+  summarizes checklist completion while preserving every open item.
 
-Release Steward is currently dogfooded in its `dogfood/` directory. Installation
-and checksum verification are the next platform checkpoint; no entry should be
-called installable until that path is tested end to end.
+Release Steward is dogfooded in its `dogfood/` directory. All three products
+ship in the Python wheel and install with `parley workflow install NAME`.
+`parley workflow verify` checks their whole-tree SHA-256 lock records.

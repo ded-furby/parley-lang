@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "name": "checklist-report",
+  "version": "1.0.0",
+  "description": "Summarize completed and open Markdown checklist items.",
+  "entrypoint": "main.par",
+  "inputs": [
+    {
+      "name": "source",
+      "description": "Markdown checklist"
+    }
+  ],
+  "tests": [
+    {
+      "name": "release checklist",
+      "inputs": {
+        "source": "tests/sample/input.md"
+      },
+      "expected_output": "tests/sample/expected.md"
+    }
+  ]
+}

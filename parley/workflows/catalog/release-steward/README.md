@@ -5,8 +5,9 @@ deterministic Markdown release-readiness report. It is Parley's flagship
 multi-input workflow and is dogfooded on this repository.
 
 ```bash
-parley workflow test workflows/catalog/release-steward
-parley workflow run workflows/catalog/release-steward \
+parley workflow install release-steward
+parley workflow test release-steward
+parley workflow run release-steward \
   --input test_results=tests.txt \
   --input release_metadata=release.txt \
   --input checklist=checklist.md \

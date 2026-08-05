@@ -157,5 +157,7 @@ python3 -m twine check dist/*
   non-semantic versions.
 - The hosted registry URL serves JSON with license, maintainer, SHA-256
   metadata, and the listed package source files.
+- A clean wheel can install, fixture-test, and checksum-verify Release Steward,
+  Log Summary, and Checklist Report using only `parley workflow` commands.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.

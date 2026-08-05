@@ -718,19 +718,33 @@ Use a starter when the program is a deterministic file-to-file automation:
 parley workflow list
 parley workflow new my-cleaner --template clean-text
 parley check my-cleaner/main.par --json
+parley workflow test my-cleaner
 parley workflow run my-cleaner \
-  --input my-cleaner/input.txt \
+  --input source=my-cleaner/input.txt \
   --output cleaned.txt
 ```
 
 Edit `main.par` exactly like any other Parley program. It includes
-`std/workflow`, reads the two paths supplied by the safe runner, transforms the
-input, and writes the output. The runner refuses to replace `cleaned.txt`
-unless you pass `--force`, and it will never replace the input itself.
+`std/workflow`, reads the paths supplied by the safe runner in manifest order,
+transforms the input, and writes the output. The generated schema-2 manifest
+declares named inputs and an exact-output sample fixture. The runner refuses to
+replace `cleaned.txt` unless you pass `--force`, and it will never replace an
+input itself.
 
 Other starters are `log-summary` and `checklist-report`. Their output is
 Markdown, making them useful as small building blocks for release notes,
 operations reports, and repository maintenance.
+
+Install a maintained workflow product directly from the wheel-bundled catalog:
+
+```bash
+parley workflow install release-steward
+parley workflow test release-steward
+parley workflow verify
+```
+
+Installed source and fixtures live under `parley_workflows/`; their semantic
+versions and whole-tree SHA-256 values live in `parley.workflows.lock.json`.
 
 ## That's the whole language
 

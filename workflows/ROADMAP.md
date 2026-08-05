@@ -23,16 +23,24 @@ to prove that outside a benchmark harness.
   protection across every named input.
 - schema-1 run compatibility and generated fixtures for every starter.
 
+## Shipped in v0.3.158
+
+- Release Steward combines named test, metadata, checklist, and package inputs
+  into one Markdown `READY` or `BLOCKED` decision.
+- repository dogfood evidence records a truthful blocked release and the exact
+  open checklist items.
+- three wheel-bundled products install by catalog name into readable local
+  source, with semantic versions and whole-tree SHA-256 lock records.
+- `parley workflow verify` detects missing or modified installed products.
+
 ## Next product loop
 
-1. Build and dogfood Release Steward on this repository using test results,
-   release metadata, a checklist, and package information.
-2. Record where users edit generated source, where they get stuck, and how long
+1. Record where users edit installed source, where they get stuck, and how long
    the first successful run takes.
-3. Add a helper or platform capability only when it recurs across unrelated
+2. Add a helper or platform capability only when it recurs across unrelated
    workflows and has a coherent safety model.
-4. Package three useful workflows so they can be installed, inspected, tested,
-   and rerun deterministically.
+3. Seek independent maintainers before calling the first-party catalog an
+   ecosystem.
 
 Near-term candidates are structured JSON/CSV input, explicit directory
 enumeration, and HTTP requests. None should become syntax merely because one

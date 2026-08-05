@@ -41,6 +41,22 @@ path last. Missing, duplicate, and unknown input names fail before compilation.
 - `log-summary` counts `ERROR`, `WARN`, and `INFO` rows and produces Markdown.
 - `checklist-report` summarizes open and completed Markdown checklist items.
 
+## Install a maintained workflow
+
+```bash
+parley workflow install release-steward
+parley workflow install log-summary
+parley workflow install checklist-report
+parley workflow verify
+```
+
+The three first-party products ship inside the Python wheel. Installation
+copies readable source and fixtures into `parley_workflows/` and records the
+semantic version, source, path, and whole-tree SHA-256 in
+`parley.workflows.lock.json`. Run or test an installed workflow by name. An
+existing install is preserved unless `--force` is explicit, and `verify`
+reports missing or locally changed files.
+
 ## Product rule
 
 New workflow helpers must solve a repeated real task, compose with existing

@@ -1,0 +1,19 @@
+include "std/workflow"
+
+note: log-summary — turn a plain-text log into a Markdown summary
+
+to main:
+    let input_path be ask "Input file: "
+    let output_path be ask "Output file: "
+    let source be (workflow_read_required_text with input_path)
+    let error_lines be (workflow_lines_containing with source, "ERROR")
+    let error_count be length of error_lines
+    let warning_count be (workflow_count_lines_containing with source, "WARN")
+    let info_count be (workflow_count_lines_containing with source, "INFO")
+    let report be "# Log summary\n\n- Errors: {error_count}\n- Warnings: {warning_count}\n- Info: {info_count}"
+    if error_count is more than 0:
+        let error_report be (workflow_markdown_bullets with error_lines)
+        set report to "{report}\n\n## Error lines\n\n{error_report}"
+    set report to "{report}\n"
+    workflow_write_output with output_path, report
+    say "workflow complete: wrote log summary to {output_path}"

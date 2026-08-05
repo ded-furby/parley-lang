@@ -82,6 +82,8 @@ modify, and Rust can compile to a native binary.
 
 ```bash
 parley workflow list
+parley workflow install release-steward
+parley workflow test release-steward
 parley workflow new release-report --template checklist-report
 parley workflow test release-report
 parley workflow run release-report \
@@ -89,13 +91,17 @@ parley workflow run release-report \
   --output report.md
 ```
 
-The bundled starters clean text, summarize logs, and turn Markdown checklists
-into status reports. Every starter is ordinary `main.par` source and can use
+The wheel-bundled catalog installs Release Steward, Log Summary, and Checklist
+Report with semantic versions and whole-tree SHA-256 lock records. Release
+Steward combines test results, release metadata, a checklist, and package
+information into one readiness decision, and is dogfooded on this repository.
+Every workflow is ordinary `main.par` source and can use
 `include "std/workflow"` for reusable file, matching, normalization, and report
 helpers. Schema-2 manifests declare ordered named inputs and exact-output test
 fixtures. The runner requires every input, refuses to overwrite output unless
 `--force` is explicit, and never permits an input and output to be the same
-file. See [`workflows/`](workflows) for the product contract and roadmap.
+file. `parley workflow verify` detects local changes to installed products. See
+[`workflows/`](workflows) for the product contract and roadmap.
 
 ## The agent loop
 
@@ -165,8 +171,8 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package review`, and optional HMAC-SHA256 release signatures, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
-safe workflow scaffolding, fixture testing, and named-input execution with
-`parley workflow list/new/test/run` ·
+safe workflow scaffolding, fixture testing, named-input execution, checksummed
+catalog installation, and drift verification with `parley workflow` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots, math constants, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations, decimal closeness, hypotenuse, point-distance helpers, sign-copy checks, and angle conversions · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
@@ -356,6 +362,7 @@ the plan:
 - [x] contextual value identifier `number` from five unrelated task families — v0.3.155
 - [x] safe workflow library, starters, and file-to-file runner — v0.3.156
 - [x] workflow fixtures and schema-2 named inputs — v0.3.157
+- [x] Release Steward and checksummed three-product workflow catalog — v0.3.158
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -383,7 +390,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-python3 -m pytest # 358 tests; e2e compiles real binaries (needs cargo)
+python3 -m pytest # 360 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

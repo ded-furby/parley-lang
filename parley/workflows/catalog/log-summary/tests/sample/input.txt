@@ -1,0 +1,4 @@
+INFO service started
+WARN cache is cold
+ERROR could not reach upstream
+INFO retry succeeded
