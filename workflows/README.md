@@ -9,13 +9,31 @@ agent to modify, and compiled to native binaries through Rust.
 ```bash
 parley workflow list
 parley workflow new my-cleaner --template clean-text
-parley workflow run my-cleaner --input my-cleaner/input.txt --output result.txt
+parley workflow test my-cleaner
+parley workflow run my-cleaner \
+  --input source=my-cleaner/input.txt \
+  --output result.txt
 ```
 
-The runner validates the input, refuses to replace an existing output unless
-`--force` is explicit, and never allows the output to be the input file. Every
-starter is normal Parley source in `main.par`; use `parley check` while editing
-it and include `std/workflow` for the reusable helpers.
+The schema-2 manifest declares ordered named inputs and exact-output fixtures.
+`parley workflow test` compiles once, runs each case into an isolated temporary
+output, and compares bytes exactly. The runner validates every named input,
+refuses to replace an existing output unless `--force` is explicit, and never
+allows the output to be any input file. Schema-1 single-input workflows remain
+compatible. Every starter is normal Parley source in `main.par`; use `parley
+check` while editing it and include `std/workflow` for reusable helpers.
+
+Multiple inputs repeat `--input NAME=PATH`; their CLI order does not matter:
+
+```bash
+parley workflow run release-steward \
+  --input package_info=package.txt \
+  --input test_results=tests.txt \
+  --output readiness.md
+```
+
+The program receives paths in the manifest's declared order, with the output
+path last. Missing, duplicate, and unknown input names fail before compilation.
 
 ## Included starters
 
@@ -28,4 +46,3 @@ it and include `std/workflow` for the reusable helpers.
 New workflow helpers must solve a repeated real task, compose with existing
 functions, and preserve deterministic behavior. A helper should not be added
 only because one benchmark transcript happened to use it.
-

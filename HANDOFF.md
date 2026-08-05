@@ -25,8 +25,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.156** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 355 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.157** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 358 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -41,6 +41,12 @@ Update it whenever you finish or start a work item.
   10/10, the full suite passes 355/355, and a built v0.3.156 wheel contains all
   three templates plus `std/workflow`. Product history and adoption gates live
   in `workflows/`; future helpers require recurring real-workflow evidence.
+- **v0.3.157 repeatable workflow contracts:** new scaffolds use schema-2
+  manifests with ordered named inputs and exact-output fixture cases. `parley
+  workflow test` compiles once and checks every fixture in an isolated output
+  directory. Runs reject missing, duplicate, and unknown input names and guard
+  every input against output identity; schema-1 workflows remain compatible.
+  Focused tests pass 10/10 and the full suite passes 358/358.
 - **Committed progress archive:** `progress/index.html` is a responsive,
   searchable visual timeline over all 31 preserved benchmark HTML reports.
   `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
@@ -1070,16 +1076,18 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Dogfood Parley Workflows.** Use the shipped starters on real repository
-   and operations tasks; record time-to-first-run and actual edits. Add JSON,
-   CSV, directory, or HTTP capability only after it recurs across unrelated
-   workflows with a coherent deterministic and safety contract. The concrete
-   adoption gates are in `workflows/ROADMAP.md`.
-2. **Independent deeper-project confirmation.** Report 031 passed the four
+1. **Build and dogfood Release Steward.** Give it named test-result, release
+   metadata, checklist, and package-information inputs and make it produce one
+   Markdown readiness report on this repository.
+2. **Package three useful workflows.** Make them installable, inspectable,
+   fixture-tested, and checksum-verifiable before claiming a catalog.
+3. **Capability evidence gate.** Add JSON/CSV only if the product work reveals
+   the need repeatedly; otherwise record the deferral. Do not add narrow syntax.
+4. **Independent deeper-project confirmation.** Report 031 passed the four
    efficiency/reliability conditions but exact-root quality was 23/24. Freeze
    new mechanisms and projects before measuring; do not tune from 031 or add
    transcript-specific syntax. Preserve outputs in the progress archive.
-3. **Package publishing workflow** — checksum installs, publish-entry
+5. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
@@ -1100,7 +1108,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.156).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.157).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

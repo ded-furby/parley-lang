@@ -16,6 +16,7 @@
   parley workflow list            list bundled workflow starters
   parley workflow new name        create a workflow from a starter
   parley workflow run name        safely run a file-to-file workflow
+  parley workflow test name       run deterministic workflow fixtures
   parley benchmark measure        measure the seed research corpus
   parley benchmark prompt         render language-neutral benchmark prompts
 """
@@ -23,6 +24,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import hmac
 import importlib.util
@@ -269,24 +271,45 @@ def cmd_workflow_new(args) -> int:
     root.mkdir(parents=True)
     (root / "main.par").write_text(source)
     (root / "input.txt").write_text(template["sample"])
+    fixture_root = root / "tests" / "sample"
+    fixture_root.mkdir(parents=True)
+    (fixture_root / "input.txt").write_text(template["sample"])
+    (fixture_root / "expected.txt").write_text(template["expected"])
     (root / "workflow.json").write_text(json.dumps({
-        "schema_version": 1,
+        "schema_version": 2,
         "name": root.name,
         "template": args.template,
         "entrypoint": "main.par",
+        "inputs": [
+            {
+                "name": "source",
+                "description": "Text file to process",
+            },
+        ],
+        "tests": [
+            {
+                "name": "sample",
+                "inputs": {"source": "tests/sample/input.txt"},
+                "expected_output": "tests/sample/expected.txt",
+            },
+        ],
     }, indent=2) + "\n")
     print(
         f"Created {root.as_posix()}/ from the {args.template} starter.\n"
         f"Check it: parley check {root.as_posix()}/main.par\n"
+        f"Test it:  parley workflow test {root.as_posix()}\n"
         f"Run it:   parley workflow run {root.as_posix()} "
-        f"--input {root.as_posix()}/input.txt --output output.txt"
+        f"--input source={root.as_posix()}/input.txt --output output.txt"
     )
     return 0
 
 
-def _workflow_entrypoint(target: str) -> Path:
+def _read_workflow(target: str) -> tuple[Path, Path, dict]:
     path = Path(target)
+    manifest = {"schema_version": 1, "entrypoint": path.name}
+    root = path.parent
     if path.is_dir():
+        root = path
         manifest_path = path / "workflow.json"
         entrypoint = "main.par"
         if manifest_path.is_file():
@@ -294,8 +317,8 @@ def _workflow_entrypoint(target: str) -> Path:
                 manifest = json.loads(manifest_path.read_text())
             except json.JSONDecodeError as exc:
                 raise OSError(f"invalid workflow.json: {exc.msg}") from exc
-            if manifest.get("schema_version") != 1:
-                raise OSError("workflow.json must use schema_version 1")
+            if manifest.get("schema_version") not in {1, 2}:
+                raise OSError("workflow.json must use schema_version 1 or 2")
             entrypoint = manifest.get("entrypoint", "main.par")
             if not isinstance(entrypoint, str) or not entrypoint.strip():
                 raise OSError("workflow.json entrypoint must be a file name")
@@ -305,28 +328,106 @@ def _workflow_entrypoint(target: str) -> Path:
         path = path / entrypoint
     if not path.is_file():
         raise OSError(f"workflow entrypoint does not exist: {path.as_posix()}")
-    return path
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise OSError("workflow.json entrypoint must stay inside the workflow")
+    return path, root, manifest
+
+
+def _workflow_input_names(manifest: dict) -> list[str]:
+    if manifest.get("schema_version") == 1:
+        return ["input"]
+    inputs = manifest.get("inputs")
+    if not isinstance(inputs, list) or not inputs:
+        raise OSError("schema-2 workflow.json needs a non-empty inputs list")
+    names: list[str] = []
+    for item in inputs:
+        if not isinstance(item, dict):
+            raise OSError("workflow.json inputs must be objects")
+        name = item.get("name")
+        if not isinstance(name, str) or not PACKAGE_NAME_RE.fullmatch(name):
+            raise OSError(
+                "workflow input names may only contain letters, numbers, dashes, "
+                "underscores, and dots")
+        if name in names:
+            raise OSError(f"workflow input name is duplicated: {name}")
+        description = item.get("description")
+        if description is not None and not isinstance(description, str):
+            raise OSError(f"workflow input description must be text: {name}")
+        names.append(name)
+    return names
+
+
+def _workflow_inputs(raw_inputs: list[str], names: list[str], schema_version: int) -> list[Path]:
+    if schema_version == 1:
+        if len(raw_inputs) != 1:
+            raise OSError("schema-1 workflows need exactly one --input PATH")
+        raw = raw_inputs[0]
+        if raw.startswith("input="):
+            raw = raw.split("=", 1)[1]
+        values = {"input": raw}
+    else:
+        values: dict[str, str] = {}
+        for raw in raw_inputs:
+            if "=" not in raw:
+                raise OSError("schema-2 workflow inputs use --input NAME=PATH")
+            name, value = raw.split("=", 1)
+            if name not in names:
+                raise OSError(f"unknown workflow input: {name}")
+            if name in values:
+                raise OSError(f"workflow input was provided twice: {name}")
+            if not value:
+                raise OSError(f"workflow input path is empty: {name}")
+            values[name] = value
+        missing = [name for name in names if name not in values]
+        if missing:
+            raise OSError("missing workflow inputs: " + ", ".join(missing))
+
+    paths: list[Path] = []
+    for name in names:
+        value = values[name]
+        path = Path(value).resolve()
+        if "\n" in str(path):
+            raise OSError("workflow paths cannot contain newlines")
+        if not path.is_file():
+            raise OSError(f"input file does not exist: {value}")
+        paths.append(path)
+    return paths
+
+
+def _validate_workflow_output(input_paths: list[Path], raw_output: str, force: bool) -> Path:
+    output_path = Path(raw_output).resolve()
+    if "\n" in str(output_path):
+        raise OSError("workflow paths cannot contain newlines")
+    for input_path in input_paths:
+        same_existing_file = output_path.exists() and os.path.samefile(input_path, output_path)
+        if input_path == output_path or same_existing_file:
+            raise OSError("workflow inputs and output must be different files")
+    if not output_path.parent.is_dir():
+        raise OSError(f"output directory does not exist: {output_path.parent}")
+    if output_path.exists() and not output_path.is_file():
+        raise OSError(f"output path is not a file: {raw_output}")
+    if output_path.exists() and not force:
+        raise OSError(f"output already exists: {raw_output}; pass --force to replace it")
+    return output_path
+
+
+def _run_workflow_binary(binary: Path, input_paths: list[Path], output_path: Path,
+                         capture_output: bool = False) -> subprocess.CompletedProcess:
+    stdin = "".join(f"{path}\n" for path in [*input_paths, output_path])
+    return subprocess.run(
+        [str(binary)],
+        input=stdin,
+        text=True,
+        capture_output=capture_output,
+    )
 
 
 def cmd_workflow_run(args) -> int:
     try:
-        entrypoint = _workflow_entrypoint(args.workflow)
-        input_path = Path(args.input).resolve()
-        output_path = Path(args.output).resolve()
-        if "\n" in str(input_path) or "\n" in str(output_path):
-            raise OSError("workflow paths cannot contain newlines")
-        if not input_path.is_file():
-            raise OSError(f"input file does not exist: {args.input}")
-        same_existing_file = output_path.exists() and os.path.samefile(input_path, output_path)
-        if input_path == output_path or same_existing_file:
-            raise OSError("workflow input and output must be different files")
-        if not output_path.parent.is_dir():
-            raise OSError(f"output directory does not exist: {output_path.parent}")
-        if output_path.exists() and not output_path.is_file():
-            raise OSError(f"output path is not a file: {args.output}")
-        if output_path.exists() and not args.force:
-            raise OSError(
-                f"output already exists: {args.output}; pass --force to replace it")
+        entrypoint, _, manifest = _read_workflow(args.workflow)
+        names = _workflow_input_names(manifest)
+        input_paths = _workflow_inputs(args.input, names, manifest["schema_version"])
+        output_path = _validate_workflow_output(input_paths, args.output, args.force)
         rust, linemap, srcmap = compile_source(str(entrypoint))
         binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
     except OSError as exc:
@@ -335,12 +436,111 @@ def cmd_workflow_run(args) -> int:
     except ParleyError as exc:
         return _fail(exc, None)
 
-    proc = subprocess.run(
-        [str(binary)],
-        input=f"{input_path}\n{output_path}\n",
-        text=True,
-    )
+    proc = _run_workflow_binary(binary, input_paths, output_path)
     return proc.returncode if proc.returncode >= 0 else 1
+
+
+def _workflow_fixture(root: Path, raw_path: object, label: str) -> Path:
+    if not isinstance(raw_path, str) or not raw_path:
+        raise OSError(f"{label} must be a relative file path")
+    path = Path(raw_path)
+    if path.is_absolute() or ".." in path.parts:
+        raise OSError(f"{label} must stay inside the workflow")
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise OSError(f"{label} must stay inside the workflow")
+    if not resolved.is_file():
+        raise OSError(f"{label} does not exist: {raw_path}")
+    return resolved
+
+
+def cmd_workflow_test(args) -> int:
+    try:
+        entrypoint, root, manifest = _read_workflow(args.workflow)
+        names = _workflow_input_names(manifest)
+        if manifest.get("schema_version") != 2:
+            raise OSError("workflow tests require a schema-2 workflow.json")
+        tests = manifest.get("tests")
+        if not isinstance(tests, list) or not tests:
+            raise OSError("workflow.json needs at least one test fixture")
+        rust, linemap, srcmap = compile_source(str(entrypoint))
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
+    except OSError as exc:
+        print(f"workflow error: {exc}", file=sys.stderr)
+        return 1
+    except ParleyError as exc:
+        return _fail(exc, None)
+
+    failures = 0
+    print(f"Testing workflow {manifest.get('name', root.name)}")
+    with tempfile.TemporaryDirectory(prefix="parley-workflow-test-") as tmp:
+        for index, case in enumerate(tests, start=1):
+            try:
+                if not isinstance(case, dict):
+                    raise OSError("workflow test fixtures must be objects")
+                case_name = case.get("name")
+                if not isinstance(case_name, str) or not case_name.strip():
+                    raise OSError(f"test fixture {index} needs a name")
+                raw_inputs = case.get("inputs")
+                if not isinstance(raw_inputs, dict):
+                    raise OSError(f"test fixture '{case_name}' needs an inputs object")
+                unknown = sorted(set(raw_inputs) - set(names))
+                missing = [name for name in names if name not in raw_inputs]
+                if unknown:
+                    raise OSError(
+                        f"test fixture '{case_name}' has unknown inputs: {', '.join(unknown)}")
+                if missing:
+                    raise OSError(
+                        f"test fixture '{case_name}' is missing inputs: {', '.join(missing)}")
+                input_paths = [
+                    _workflow_fixture(
+                        root,
+                        raw_inputs[name],
+                        f"test fixture '{case_name}' input '{name}'",
+                    )
+                    for name in names
+                ]
+                expected = _workflow_fixture(
+                    root,
+                    case.get("expected_output"),
+                    f"test fixture '{case_name}' expected_output",
+                )
+                output = Path(tmp) / f"case-{index}.out"
+                proc = _run_workflow_binary(binary, input_paths, output, capture_output=True)
+                if proc.returncode != 0:
+                    failures += 1
+                    print(f"FAIL {case_name}: workflow exited with {proc.returncode}")
+                    if proc.stderr:
+                        print(proc.stderr.rstrip())
+                    continue
+                actual_bytes = output.read_bytes() if output.is_file() else b""
+                expected_bytes = expected.read_bytes()
+                if actual_bytes != expected_bytes:
+                    failures += 1
+                    print(f"FAIL {case_name}: output differs")
+                    expected_text = expected_bytes.decode(
+                        "utf-8", errors="replace").splitlines(keepends=True)
+                    actual_text = actual_bytes.decode(
+                        "utf-8", errors="replace").splitlines(keepends=True)
+                    diff = difflib.unified_diff(
+                        expected_text,
+                        actual_text,
+                        fromfile=case.get("expected_output", "expected"),
+                        tofile="actual",
+                    )
+                    sys.stdout.writelines(diff)
+                    continue
+                print(f"PASS {case_name}")
+            except OSError as exc:
+                failures += 1
+                print(f"FAIL fixture {index}: {exc}")
+
+    total = len(tests)
+    if failures:
+        print(f"{failures} of {total} workflow fixtures failed", file=sys.stderr)
+        return 1
+    print(f"All {total} workflow fixtures passed.")
+    return 0
 
 
 def _doctor_checks() -> list[dict]:
@@ -1015,11 +1215,20 @@ def main(argv: list[str] | None = None) -> int:
     workflow_run = workflow_sub.add_parser(
         "run", help="compile and safely run a file-to-file workflow")
     workflow_run.add_argument("workflow", help="workflow directory or .par entrypoint")
-    workflow_run.add_argument("--input", required=True, help="existing input file")
+    workflow_run.add_argument(
+        "--input",
+        action="append",
+        required=True,
+        help="existing input file; schema 2 uses NAME=PATH and may repeat",
+    )
     workflow_run.add_argument("--output", required=True, help="output file to create")
     workflow_run.add_argument(
         "--force", action="store_true", help="replace an existing output file")
     workflow_run.set_defaults(fn=cmd_workflow_run)
+    workflow_test = workflow_sub.add_parser(
+        "test", help="run exact-output fixtures declared by a workflow")
+    workflow_test.add_argument("workflow", help="schema-2 workflow directory")
+    workflow_test.set_defaults(fn=cmd_workflow_test)
 
     p = sub.add_parser("package", help="manage local Parley packages")
     package_sub = p.add_subparsers(dest="package_cmd", required=True)

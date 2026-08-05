@@ -15,15 +15,24 @@ to prove that outside a benchmark harness.
 - overwrite protection, input/output identity protection, schema-1 workflow
   manifests, native end-to-end tests, and wheel resource verification.
 
+## Shipped in v0.3.157
+
+- `parley workflow test` with isolated, exact-output fixture comparison.
+- schema-2 manifests with ordered named inputs and declared test cases.
+- validation for missing, duplicate, and unknown inputs, plus output identity
+  protection across every named input.
+- schema-1 run compatibility and generated fixtures for every starter.
+
 ## Next product loop
 
-1. Dogfood the three starters on real repository and operations work.
+1. Build and dogfood Release Steward on this repository using test results,
+   release metadata, a checklist, and package information.
 2. Record where users edit generated source, where they get stuck, and how long
    the first successful run takes.
 3. Add a helper or platform capability only when it recurs across unrelated
    workflows and has a coherent safety model.
-4. Publish a small community workflow catalog after at least three independent
-   workflows can be installed, inspected, and rerun deterministically.
+4. Package three useful workflows so they can be installed, inspected, tested,
+   and rerun deterministically.
 
 Near-term candidates are structured JSON/CSV input, explicit directory
 enumeration, and HTTP requests. None should become syntax merely because one
