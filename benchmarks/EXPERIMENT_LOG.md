@@ -3009,3 +3009,76 @@ This confirmation follows product work but includes no language, compiler,
 skill, instruction, runner, or metric tuning. The four mechanisms are new and
 were frozen in the preceding commit. Whether the result passes or fails, make
 no same-corpus change. The instruction-compression experiment remains closed.
+
+## 032 — Independent reliability confirmation; strict parity not met
+
+- Completed: 2026-08-05, once, with no reruns or excluded cells
+- Product/compiler checkpoint: Parley 0.3.158 at `cb7820a`
+- Corpus checkpoint: `d435ecd`
+- Protocol checkpoint: `0919607`
+- Raw result: `benchmarks/results/agent_deep_confirmation_032_protocol_v1_v0.3.158.json`
+- Raw SHA-256:
+  `0600ca9e65c3413387641b3c227db27f6c212e00d9b56802cd1111769610b4f5`
+- Protocol SHA-256:
+  `d702c3401af57092196e9056ef51057b63700a70fa56212511c2927a758e588c`
+- Report: `benchmarks/reports/032-independent-confirmation-strict-parity-not-met.html`
+- Report SHA-256:
+  `5c309fa0a2c9a81281a90e9b921600c67b46fc2f3b59f38daac3d48369ce75db`
+- Canonical artifact SHA-256:
+  `cd515abda9f6c78973e88846392da13831cb1c9306a8427c6bc58974c7dd95df`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_032_report.py`
+- Integrity: 18 unique thread IDs; 18/18 fresh-session, zero-exit,
+  source-order, checker/context-integrity, command-protocol, first-check, and
+  hidden-bundle checks pass; zero timeouts, agent errors, repairs, exclusions,
+  or selective reruns
+
+| Language | Hidden | First check | Repairs | Median tokens/repo | Weighted tokens/repo | Median seconds/repo | Exact root |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 24/24 | 0 | 15,704.50 | 15,702.25 | 8.4545 | 24/24 |
+| Python | 24/24 | 24/24 | 0 | 15,033.00 | 15,034.63 | 7.5247 | 24/24 |
+| Rust | 24/24 | 24/24 | 0 | 15,451.38 | 15,451.67 | 9.3756 | 24/24 |
+
+The preregistered strict efficiency/reliability gate finishes **2/4**.
+Correctness and first-check reliability pass because every language is 24/24
+on both. Token parity fails: Parley is 4.47% above Python and 1.64% above Rust.
+Elapsed parity also fails because the frozen threshold is the faster baseline:
+Parley is 12.36% slower than Python, although it is 9.82% faster than Rust.
+The separate Parley exact-root condition passes 24/24, making the complete
+five-condition result **3/5**.
+
+This is not an outlier or repair artifact. All sessions require one check and
+zero repairs. Per-repository token ranges are 15,658.25–15,751.75 for Parley,
+15,000.00–15,085.50 for Python, and 15,431.50–15,474.75 for Rust; the three
+bands do not overlap. Weighted all-session values preserve the same ordering.
+Elapsed ranges overlap, so the six timing replicates support the frozen median
+decision but not a universal runtime ranking.
+
+Every one of the 72 assignments changes exactly its predeclared owning defect
+file. Quoted environment normalization, Retry-After precedence, raw webhook
+verification, and stable pagination are each 18/18 first-check and hidden
+correct across languages. All 216 read-only evidence-file exposures are
+preserved. Parley and Python produce one final variant per task; Rust produces
+two equivalent variants in two tasks.
+
+Median final editable source is 271.75 rough tokens/repository for Parley,
+226.75 for Python, and 376.00 for Rust. Median prompt text is 1,111 characters
+per Parley repository versus 690.25 for Python and 695.25 for Rust because the
+unchanged Parley skill is injected once per session. The complete result does
+not causally separate instruction overhead from source representation.
+
+The canonical portable report passes validation, packaging, source-dialog
+interaction, and responsive Chromium checks at 1,440 and 390 pixels. It
+contains 35 blocks, four charts, eleven metrics, six tables, every session,
+all twelve task/language cuts, the five-condition gate audit, and complete
+root/action evidence.
+
+**No compiler, syntax, grammar, AST, checker, runtime, diagnostic, prompt,
+skill, instruction, task, runner, or metric change follows from iteration
+032.** Preserve report 031 as its own strict win and report 032 as the clean
+independent non-confirmation. The repeated strength is product-grade
+reliability and exact-root diagnosis, not universal token superiority. Next
+collect real Release Steward adoption evidence; consider JSON only if
+structured-input friction recurs across unrelated maintained workflows. Any
+future benchmark should use a mature repository or real release operation and
+must be preregistered independently of reports 031 and 032.

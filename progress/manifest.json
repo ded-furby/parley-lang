@@ -372,6 +372,18 @@
       "sha256": "00d7a6c4d20e0b322a1f401cbe1f007eac5b054f0750516869af88c19fa844ef",
       "source": "benchmarks/reports/031-deeper-project-efficiency-win.html",
       "archive": "progress/reports/031-deeper-project-efficiency-win.html"
+    },
+    {
+      "number": 32,
+      "file": "032-independent-confirmation-strict-parity-not-met.html",
+      "title": "Independent Confirmation: Reliability Holds, Strict Parity Does Not \u2014 Iteration 032",
+      "label": "Independent Confirmation Strict Parity Not Met",
+      "stage": "Repository scale",
+      "signal": "learning",
+      "bytes": 855109,
+      "sha256": "5c309fa0a2c9a81281a90e9b921600c67b46fc2f3b59f38daac3d48369ce75db",
+      "source": "benchmarks/reports/032-independent-confirmation-strict-parity-not-met.html",
+      "archive": "progress/reports/032-independent-confirmation-strict-parity-not-met.html"
     }
   ],
   "product_records": [

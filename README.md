@@ -135,8 +135,14 @@ more diagnosis tasks per session, while still trailing Python. The independent
 then passed all four predeclared efficiency/reliability conditions: Parley used
 15,937 median tokens per repository and 7.3906 seconds versus Python's
 23,668.38/9.2024 and Rust's 24,475.75/10.2195. Exact-root patch quality was
-23/24, so this is strong evidence to build on—not a claim that the language is
-finished. Browse the complete, checksum-backed visual history in
+23/24. The independently sourced
+[confirmation](benchmarks/reports/032-independent-confirmation-strict-parity-not-met.html)
+then reproduced perfect reliability and improved Parley to 24/24 exact-root
+patches, but did not reproduce strict efficiency parity: the frozen gate was
+2/4, with Parley 4.47% above Python and 1.64% above Rust on median tokens. That
+is strong, honest evidence to build on—not a claim that the language is
+finished or a reason to tune syntax to one corpus. Browse the complete,
+checksum-backed visual history in
 [`progress/index.html`](progress/index.html).
 
 For editor integration, start the stdio language server from your editor:
@@ -390,7 +396,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-python3 -m pytest # 360 tests; e2e compiles real binaries (needs cargo)
+python3 -m pytest # 362 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

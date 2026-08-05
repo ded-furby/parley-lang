@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3 / toolchain v0.3.158** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 360 tests, including e2e tests that
+  → cargo). The latest local suite has 362 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -69,18 +69,33 @@ Update it whenever you finish or start a work item.
   `49df28a27ce00ac58d898a386fcee1cae46fd15fd02c38ec82272b39a326bb1f`;
   isolated root fixes pass 60/60 cross-language case groups. The corpus is
   independent of report 031 outcomes and changes no compiler, skill,
-  instruction, runner, or metric. Commit this checkpoint before protocol 032.
+  instruction, runner, or metric. Corpus commit `d435ecd` precedes protocol
+  commit `0919607` and every measured session.
 - **Iteration 032 preregistration:** protocol SHA
   `d702c3401af57092196e9056ef51057b63700a70fa56212511c2927a758e588c`
   freezes six complete four-project bundles per language: 18 fresh sessions,
   72 assignments, seed `320260805`, Parley v0.3.158, and the unchanged
   1,519-character skill. The strict 4-part efficiency/reliability gate and
-  24/24 exact-root condition are unchanged from 031. Run all cells once with
-  no exclusions or reruns; no outcome may trigger same-corpus tuning.
+  24/24 exact-root condition are unchanged from 031. All cells were run once
+  with no exclusions or reruns; no outcome triggered same-corpus tuning.
+- **Independent deeper-project result (iteration 032):** all 18 fresh sessions
+  and 72 assignments pass first check, hidden judgment, command protocol, and
+  integrity with zero repairs. Parley records 15,704.50 median tokens/repo and
+  8.4545 seconds versus Python's 15,033.00/7.5247 and Rust's
+  15,451.38/9.3756. The frozen primary gate is 2/4: correctness and first-check
+  pass; tokens and faster-baseline elapsed fail. Parley trails Python by 4.47%
+  tokens and 12.36% elapsed, trails Rust by 1.64% tokens, and beats Rust by
+  9.82% elapsed. Exact-root maintainability improves to 24/24, so the overall
+  five-condition result is 3/5. Preserve raw SHA
+  `0600ca9e65c3413387641b3c227db27f6c212e00d9b56802cd1111769610b4f5`
+  and report SHA
+  `5c309fa0a2c9a81281a90e9b921600c67b46fc2f3b59f38daac3d48369ce75db`.
+  This clean negative confirmation changes no compiler, syntax, prompt,
+  instruction, runner, task, or metric; continue product adoption work.
 - **Committed progress archive:** `progress/index.html` is a responsive,
-  searchable visual timeline over all 31 preserved benchmark HTML reports.
+  searchable visual timeline over all 32 preserved benchmark HTML reports.
   `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
-  all 31 copies verify byte-for-byte, including explicitly preserved report
+  all 32 copies verify byte-for-byte, including explicitly preserved report
   013. Refresh it with `python3 scripts/sync_progress_reports.py` after a new
   report is added.
 - **v0.2 features just added:** richer `when` patterns (multi-value arms
@@ -1106,13 +1121,15 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Independent deeper-project confirmation.** Report 031 passed the four
-   efficiency/reliability conditions but exact-root quality was 23/24. Freeze
-   new mechanisms and projects before measuring; do not tune from 031 or add
-   transcript-specific syntax. Preserve outputs in the progress archive.
-2. **Independent adoption evidence.** Record first-run/edit friction with
+1. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-3. **Package publishing workflow** — checksum installs, publish-entry
+2. **Real Release Steward operation.** Use the installed workflow on each
+   actual release candidate, preserve its report, and promote JSON only if
+   structured-input friction recurs across at least two maintained products.
+3. **Mature-repository validation.** If another benchmark is justified, use a
+   real repository or release operation with history and dependency search;
+   preregister it and do not tune from reports 031 or 032.
+4. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
