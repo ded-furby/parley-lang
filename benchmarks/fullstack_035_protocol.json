@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "experiment_id": "035",
+  "title": "Frozen Release Radar full-stack implementation comparison",
+  "description": "A product-level comparison of the same typed HTTP/JSON service and browser scoring flow in Parley, Python, TypeScript, and Rust, preregistered after Parley v0.4.0 product work and before any baseline implementation or measurement.",
+  "frozen_product": {
+    "parley_version": "parley 0.4.0",
+    "compiler_commit": "e5470b6f844f1586a7aedef814e20c39ce9746c6",
+    "dogfood_project": "examples/release-radar",
+    "cases_file": "benchmarks/fullstack_035_cases.json",
+    "cases_sha256": "dbed22ea140c09d65bd85f9959143c0b95fd1724cf79fbea07657e1660285a52",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_bytes": 1519,
+    "protocol_commit": "recorded in the raw result after this file is committed"
+  },
+  "languages": {
+    "parley": {
+      "version": "0.4.0",
+      "web_stack": "Parley generated native HTTP/JSON runtime plus generated browser WASM bindings",
+      "dependency_versions": ["serde 1.0.229", "serde_json 1.0.151"]
+    },
+    "python": {
+      "version": "3.14.6",
+      "web_stack": "FastAPI 0.141.1, Uvicorn 0.52.1, Pydantic 2.13.4",
+      "dependency_versions": ["fastapi 0.141.1", "uvicorn 0.52.1", "pydantic 2.13.4"]
+    },
+    "typescript": {
+      "version": "7.0.2",
+      "runtime": "Node.js 22.22.2",
+      "web_stack": "Hono 4.13.0, @hono/node-server 2.1.0, @hono/zod-validator 0.9.0, Zod 4.4.3",
+      "dependency_versions": ["typescript 7.0.2", "hono 4.13.0", "@hono/node-server 2.1.0", "@hono/zod-validator 0.9.0", "zod 4.4.3"]
+    },
+    "rust": {
+      "version": "rustc 1.94.0",
+      "web_stack": "Axum 0.8.9, Tokio 1.53.1, Tower HTTP 0.7.0, Serde 1.0.229, serde_json 1.0.151, raw scalar WASM ABI",
+      "dependency_versions": ["axum 0.8.9", "tokio 1.53.1", "tower-http 0.7.0", "serde 1.0.229", "serde_json 1.0.151"]
+    }
+  },
+  "functional_contract": {
+    "http_cases": 14,
+    "browser_cases": 1,
+    "requirements": [
+      "Expose GET /api/status and POST /api/assess with the exact semantic JSON results in the frozen case file.",
+      "Reject malformed JSON, unknown fields, missing fields, wrong field types, and wrong media types with the frozen statuses and stable error codes.",
+      "Serve the byte-identical Release Radar HTML, CSS, and application JavaScript from examples/release-radar/public; these shared assets are excluded from authored-source counts.",
+      "Expose a browser module at /parley.js whose loadParley function returns readiness_score with the same five scalar inputs and result as the backend rule.",
+      "Complete the frozen form flow in real headless Chromium with local score 100, backend score 100, a Ready verdict, and three passing gates.",
+      "Use the same 16,384-byte request-body limit and bind only to 127.0.0.1 on a harness-selected port."
+    ]
+  },
+  "authored_source_protocol": {
+    "primary_tokenizer": "tiktoken 0.13.0 o200k_base",
+    "sensitivity_tokenizer": "tiktoken 0.13.0 cl100k_base",
+    "audit_tokenizer": "rough-regex-v1",
+    "counting_rule": "Tokenize each included UTF-8 file independently and sum exact per-file token counts. Count comments, whitespace-sensitive syntax, manifests, dependency declarations, and compiler configuration. Also report exact bytes and physical lines.",
+    "included": {
+      "parley": ["examples/release-radar/main.par", "examples/release-radar/parley.web.json"],
+      "python": ["all handwritten .py and .js files in benchmarks/fullstack_035/python", "requirements.txt"],
+      "typescript": ["all handwritten .ts files in benchmarks/fullstack_035/typescript", "package.json", "tsconfig.json"],
+      "rust": ["all handwritten .rs files in benchmarks/fullstack_035/rust", "Cargo.toml"]
+    },
+    "excluded": [
+      "The byte-identical shared index.html, style.css, and app.js.",
+      "README files, the benchmark protocol, cases, harness, and report builder.",
+      "Generated JavaScript, type declarations, WebAssembly, native binaries, lockfiles, dependency code, caches, and build directories.",
+      "The Parley compiler/runtime implementation, Python interpreter and packages, Node runtime and packages, Rust toolchain and crates: these are ecosystem infrastructure rather than application-authored source."
+    ],
+    "source_boundary_note": "Application-source compactness is an amortized language/tooling measure. It does not count the implementation cost of any language runtime or library and therefore cannot establish total ecosystem complexity."
+  },
+  "measurement_protocol": {
+    "environment": "One Apple Silicon development machine; exact OS, hardware, tool versions, dependency locks, commit IDs, and hashes are recorded in the raw result.",
+    "dependency_setup": "Resolve and install the pinned stacks before timed measurements. Dependency download time is excluded and dependency locks are preserved as evidence.",
+    "correctness": "Run every frozen HTTP case once per implementation, then one real Chromium flow. Preserve all failures; no selective reruns enter the verdict.",
+    "clean_build": "Five release/production builds per language after deleting only that implementation's explicit build output. Dependency caches remain warm. Rotate language order deterministically with seed 350260805.",
+    "startup": "Start each built implementation five times on a fresh harness-selected localhost port and measure monotonic time until GET /api/status first succeeds. Rotate language order with the same seed.",
+    "sequential_load": "For each of five rotated rounds, send 25 warmups followed by 500 sequential ready POST requests over new HTTP/1.1 client requests at concurrency one. Report every round and the median requests/second; this is a local microbenchmark, not a universal throughput claim.",
+    "artifact_size": "Report app-owned build output bytes and full deploy-closure bytes separately, excluding the shared static assets. Because deployment models differ, artifact size is descriptive only.",
+    "browser_target": "Record whether browser scoring is WebAssembly or JavaScript and whether the server and browser reuse one author-owned scoring definition. Functional browser behavior, not target technology, is the correctness gate."
+  },
+  "gates": {
+    "correctness": "All 15 frozen cases must pass for Parley and every baseline; otherwise no compactness or performance ranking is promoted as a win.",
+    "primary_compactness": "Among fully correct implementations, Parley must have no more o200k_base authored-source tokens than the lowest Python, TypeScript, or Rust baseline.",
+    "tokenizer_sensitivity": "The authored-source rank must not reverse under cl100k_base. This supports tokenizer robustness but is not an extra gate.",
+    "cross_target_reuse": "Parley must use one author-owned readiness_score definition for native backend and browser output. Report the same property independently for every baseline.",
+    "overall_verdict": "A Release Radar full-stack compactness proof requires complete correctness, the primary compactness gate, and Parley cross-target reuse. Runtime/build results remain descriptive and cannot rescue a failed correctness or compactness gate."
+  },
+  "interpretation_boundary": [
+    "This experiment tests one real, narrow full-stack product contract. It cannot establish that Parley is the best general-purpose language.",
+    "Authored-source tokenizer counts are a reproducible compactness proxy, not measured Codex session usage. A separate fresh-agent implementation/maintenance study is required to claim lower agent task tokens.",
+    "Frameworks are allowed because idiomatic users rely on ecosystems. Their application configuration is counted; dependency source is not, exactly as Parley's compiler implementation is not charged to its application.",
+    "Python may use a counted JavaScript browser supplement because CPython has no native browser target in this protocol. TypeScript may emit JavaScript; Rust and Parley may emit WebAssembly.",
+    "Different concurrency architectures and deployment closures make build, startup, throughput, and artifact comparisons informative rather than universal.",
+    "No compiler, grammar, checker, emitter, runtime, diagnostic, skill, task, case, metric, or gate may be changed after seeing baseline code or results."
+  ],
+  "change_rule": "Parley remains frozen at commit e5470b6 for experiment 035. Preserve every result. Any future language change needs independent product evidence and must be judged by general usefulness, semantic consistency, and maintainability rather than this report's token count.",
+  "stop_rule": "Publish the complete four-language result whether positive, mixed, or negative. Do not tune and rerun this corpus. The next evidence step, if warranted, is a separately preregistered fresh-agent study over unseen full-stack tasks."
+}

@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "experiment_id": "035",
+  "service": "release-radar",
+  "http_cases": [
+    {
+      "id": "status",
+      "method": "GET",
+      "path": "/api/status",
+      "expected_status": 200,
+      "expected_json": {
+        "service": "Release Radar",
+        "milestone": "typed-http-json-plus-browser-wasm",
+        "typed_routes": 2,
+        "browser_exports": 1,
+        "ready": true
+      }
+    },
+    {
+      "id": "ready",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0",
+        "tests_passed": 394,
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12,
+        "package_ready": true
+      },
+      "expected_status": 200,
+      "expected_json": {
+        "version": "0.4.0",
+        "ready": true,
+        "score": 100,
+        "verdict": "Ready — every declared release gate passed.",
+        "blockers": []
+      }
+    },
+    {
+      "id": "tests_blocked",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0-rc1",
+        "tests_passed": 393,
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12,
+        "package_ready": true
+      },
+      "expected_status": 200,
+      "expected_json": {
+        "version": "0.4.0-rc1",
+        "ready": false,
+        "score": 40,
+        "verdict": "Blocked — resolve the remaining release evidence.",
+        "blockers": ["The test suite is not fully passing."]
+      }
+    },
+    {
+      "id": "checklist_blocked",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0-rc2",
+        "tests_passed": 394,
+        "tests_total": 394,
+        "checklist_done": 10,
+        "checklist_total": 12,
+        "package_ready": true
+      },
+      "expected_status": 200,
+      "expected_json": {
+        "version": "0.4.0-rc2",
+        "ready": false,
+        "score": 70,
+        "verdict": "Blocked — resolve the remaining release evidence.",
+        "blockers": ["The release checklist is incomplete."]
+      }
+    },
+    {
+      "id": "package_blocked",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0-rc3",
+        "tests_passed": 394,
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12,
+        "package_ready": false
+      },
+      "expected_status": 200,
+      "expected_json": {
+        "version": "0.4.0-rc3",
+        "ready": false,
+        "score": 90,
+        "verdict": "Blocked — resolve the remaining release evidence.",
+        "blockers": ["The package artifact is not ready."]
+      }
+    },
+    {
+      "id": "no_evidence",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "dev",
+        "tests_passed": 0,
+        "tests_total": 0,
+        "checklist_done": 0,
+        "checklist_total": 0,
+        "package_ready": false
+      },
+      "expected_status": 200,
+      "expected_json": {
+        "version": "dev",
+        "ready": false,
+        "score": 0,
+        "verdict": "Blocked — resolve the remaining release evidence.",
+        "blockers": [
+          "No test run was supplied.",
+          "No release checklist was supplied.",
+          "The package artifact is not ready."
+        ]
+      }
+    },
+    {
+      "id": "malformed_json",
+      "method": "POST",
+      "path": "/api/assess",
+      "raw_body": "{\"version\":",
+      "content_type": "application/json",
+      "expected_status": 400,
+      "expected_error": "invalid_json"
+    },
+    {
+      "id": "unknown_field",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0",
+        "tests_passed": 394,
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12,
+        "package_ready": true,
+        "typo": true
+      },
+      "expected_status": 400,
+      "expected_error": "invalid_json"
+    },
+    {
+      "id": "missing_field",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0",
+        "tests_passed": 394,
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12
+      },
+      "expected_status": 400,
+      "expected_error": "invalid_json"
+    },
+    {
+      "id": "wrong_field_type",
+      "method": "POST",
+      "path": "/api/assess",
+      "json": {
+        "version": "0.4.0",
+        "tests_passed": "394",
+        "tests_total": 394,
+        "checklist_done": 12,
+        "checklist_total": 12,
+        "package_ready": true
+      },
+      "expected_status": 400,
+      "expected_error": "invalid_json"
+    },
+    {
+      "id": "wrong_media_type",
+      "method": "POST",
+      "path": "/api/assess",
+      "raw_body": "{}",
+      "content_type": "text/plain",
+      "expected_status": 415,
+      "expected_error": "unsupported_media_type"
+    },
+    {
+      "id": "missing_route",
+      "method": "GET",
+      "path": "/api/missing",
+      "expected_status": 404,
+      "expected_error": "not_found"
+    },
+    {
+      "id": "static_index",
+      "method": "GET",
+      "path": "/",
+      "expected_status": 200,
+      "expected_content_type_prefix": "text/html",
+      "expected_body_contains": "Release Radar"
+    },
+    {
+      "id": "static_traversal",
+      "method": "GET",
+      "path": "/..%2Fmain.par",
+      "expected_status": 404
+    }
+  ],
+  "browser_case": {
+    "viewport": {"width": 1440, "height": 1000},
+    "inputs": {
+      "version": "0.4.0",
+      "tests_passed": 394,
+      "tests_total": 394,
+      "checklist_done": 12,
+      "checklist_total": 12,
+      "package_ready": true
+    },
+    "expected_local_score": "100",
+    "expected_confirmed_score": "100",
+    "expected_verdict_contains": "Ready",
+    "expected_gate_states": ["pass", "pass", "pass"]
+  },
+  "load_case": {
+    "warmup_requests": 25,
+    "measured_requests_per_round": 500,
+    "rounds": 5,
+    "concurrency": 1,
+    "request_case": "ready"
+  }
+}
