@@ -47,6 +47,10 @@ enumeration, and HTTP requests. None should become syntax merely because one
 benchmark or starter wants it; each needs a general API, deterministic tests,
 clear failure behavior, and a maintainable implementation.
 
+The v0.3.158 review in [`CAPABILITY_EVIDENCE.md`](CAPABILITY_EVIDENCE.md)
+deferred JSON and CSV: only one of three products needed flat key-value reads,
+and zero needed CSV. Reconsider only after the documented recurrence gate.
+
 ## Adoption gates
 
 - A new user can scaffold, check, and run a workflow in under ten minutes.

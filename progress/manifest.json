@@ -373,5 +373,14 @@
       "source": "benchmarks/reports/031-deeper-project-efficiency-win.html",
       "archive": "progress/reports/031-deeper-project-efficiency-win.html"
     }
+  ],
+  "product_records": [
+    {
+      "file": "001-release-steward-workflow-catalog.html",
+      "title": "Release Steward and Workflow Catalog \u2014 Product Record 001",
+      "bytes": 9325,
+      "sha256": "774e85249166cebab09592603c03a7ee798a3c5d192c6bfda7ac4f6e4ece5e89",
+      "path": "progress/product/001-release-steward-workflow-catalog.html"
+    }
   ]
 }

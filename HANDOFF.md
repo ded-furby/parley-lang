@@ -57,6 +57,11 @@ Update it whenever you finish or start a work item.
   versions and whole-tree SHA-256; `parley workflow verify` detects drift. A
   fresh-wheel smoke installed all three and verified all checksums; the full
   suite passes 360/360.
+- **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` records the
+  v0.3.158 review. JSON is a low-pressure need in one of three products and CSV
+  in zero, so both are deliberately deferred. No compiler, skill, or benchmark
+  instruction changed. Reconsider only when two unrelated maintained workflows
+  need genuinely structured values or repeated typed records.
 - **Committed progress archive:** `progress/index.html` is a responsive,
   searchable visual timeline over all 31 preserved benchmark HTML reports.
   `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
@@ -1086,15 +1091,13 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Capability evidence gate.** Add JSON/CSV only if the product work reveals
-   the need repeatedly; otherwise record the deferral. Do not add narrow syntax.
-2. **Independent deeper-project confirmation.** Report 031 passed the four
+1. **Independent deeper-project confirmation.** Report 031 passed the four
    efficiency/reliability conditions but exact-root quality was 23/24. Freeze
    new mechanisms and projects before measuring; do not tune from 031 or add
    transcript-specific syntax. Preserve outputs in the progress archive.
-3. **Independent adoption evidence.** Record first-run/edit friction with
+2. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-4. **Package publishing workflow** — checksum installs, publish-entry
+3. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
