@@ -1,0 +1,57 @@
+include "std/workflow"
+
+note: Release Steward — combine release evidence into one readiness decision
+
+to release_value with source as text, key as text giving text:
+    let prefix be "{key}="
+    for each line in (split_lines with source):
+        let clean_line be trimmed line
+        if clean_line starts with prefix:
+            give back trimmed (without_prefix with clean_line, prefix)
+    fail "release evidence is missing {key}"
+
+to main:
+    let test_results_path be ask "Test results: "
+    let release_metadata_path be ask "Release metadata: "
+    let checklist_path be ask "Release checklist: "
+    let package_info_path be ask "Package information: "
+    let output_path be ask "Output report: "
+
+    let test_results be (workflow_read_required_text with test_results_path)
+    let release_metadata be (workflow_read_required_text with release_metadata_path)
+    let checklist be (workflow_read_required_text with checklist_path)
+    let package_info be (workflow_read_required_text with package_info_path)
+
+    let test_status be (release_value with test_results, "status")
+    let test_count be (release_value with test_results, "tests")
+    let failure_count be (release_value with test_results, "failures")
+    let version be (release_value with release_metadata, "version")
+    let branch be (release_value with release_metadata, "branch")
+    let commit be (release_value with release_metadata, "commit")
+    let wheel_status be (release_value with package_info, "wheel")
+    let registry_status be (release_value with package_info, "registry")
+    let workflow_count be (release_value with package_info, "workflows")
+    let open_lines be (workflow_lines_containing with checklist, "- [ ]")
+    let open_count be length of open_lines
+    let done_count be (workflow_count_lines_containing with checklist, "- [x]")
+
+    let tests_result be "BLOCKED"
+    if test_status is "passed" and failure_count is "0":
+        set tests_result to "PASS"
+    let checklist_result be "BLOCKED"
+    if open_count is 0:
+        set checklist_result to "PASS"
+    let package_result be "BLOCKED"
+    if wheel_status is "present" and registry_status is "valid":
+        set package_result to "PASS"
+    let decision be "BLOCKED"
+    if tests_result is "PASS" and checklist_result is "PASS" and package_result is "PASS":
+        set decision to "READY"
+
+    let report be "# Release readiness\n\n**Decision: {decision}**\n\n## Release\n\n- Version: {version}\n- Branch: {branch}\n- Commit: {commit}\n\n## Evidence\n\n| Check | Result | Detail |\n|---|---|---|\n| Tests | {tests_result} | {test_count} tests; {failure_count} failures |\n| Checklist | {checklist_result} | {done_count} complete; {open_count} open |\n| Package | {package_result} | wheel {wheel_status}; registry {registry_status}; {workflow_count} workflows |"
+    if open_count is more than 0:
+        let open_report be (workflow_markdown_bullets with open_lines)
+        set report to "{report}\n\n## Open checklist items\n\n{open_report}"
+    set report to "{report}\n"
+    workflow_write_output with output_path, report
+    say "release steward: {decision} — wrote {output_path}"

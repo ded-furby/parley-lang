@@ -1,6 +1,6 @@
 import json
 
-from conftest import run_cli
+from conftest import REPO, run_cli
 
 
 def test_workflow_list_shows_bundled_starters(tmp_path):
@@ -278,3 +278,14 @@ def test_workflow_test_reports_exact_output_difference(tmp_path):
     assert "FAIL sample: output differs" in proc.stdout
     assert "--- tests/sample/expected.txt" in proc.stdout
     assert "+first useful line" in proc.stdout
+
+
+def test_release_steward_catalog_fixtures_pass(tmp_path):
+    steward = REPO / "workflows" / "catalog" / "release-steward"
+
+    proc = run_cli(["workflow", "test", str(steward)], cwd=tmp_path)
+
+    assert proc.returncode == 0, proc.stderr
+    assert "PASS ready release" in proc.stdout
+    assert "PASS blocked release" in proc.stdout
+    assert "All 2 workflow fixtures passed." in proc.stdout

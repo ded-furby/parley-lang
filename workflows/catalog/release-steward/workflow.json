@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "name": "release-steward",
+  "version": "1.0.0",
+  "description": "Combine tests, release metadata, a checklist, and package evidence into one Markdown readiness report.",
+  "entrypoint": "main.par",
+  "inputs": [
+    {
+      "name": "test_results",
+      "description": "Key-value test status, count, and failures"
+    },
+    {
+      "name": "release_metadata",
+      "description": "Key-value version, branch, and commit"
+    },
+    {
+      "name": "checklist",
+      "description": "Markdown release checklist"
+    },
+    {
+      "name": "package_info",
+      "description": "Key-value wheel, registry, and workflow status"
+    }
+  ],
+  "tests": [
+    {
+      "name": "ready release",
+      "inputs": {
+        "test_results": "tests/ready/test-results.txt",
+        "release_metadata": "tests/ready/release-metadata.txt",
+        "checklist": "tests/ready/checklist.md",
+        "package_info": "tests/ready/package-info.txt"
+      },
+      "expected_output": "tests/ready/expected.md"
+    },
+    {
+      "name": "blocked release",
+      "inputs": {
+        "test_results": "tests/blocked/test-results.txt",
+        "release_metadata": "tests/blocked/release-metadata.txt",
+        "checklist": "tests/blocked/checklist.md",
+        "package_info": "tests/blocked/package-info.txt"
+      },
+      "expected_output": "tests/blocked/expected.md"
+    }
+  ]
+}
