@@ -1,0 +1,18 @@
+{
+  "service": {
+    "name": "release-steward",
+    "environment": "production",
+    "runtime": {
+      "language": "parley",
+      "target": "native",
+      "features": ["checks", "metadata", "checklist", "packages"]
+    },
+    "limits": {
+      "maximum_input_bytes": 1048576,
+      "timeout_seconds": 30,
+      "allow_network": false
+    }
+  },
+  "owners": ["release", "compiler", "documentation"],
+  "required_checks": ["unit", "fixtures", "registry", "dogfood"]
+}

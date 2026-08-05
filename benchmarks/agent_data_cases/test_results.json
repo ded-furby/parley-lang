@@ -1,0 +1,16 @@
+{
+  "repository": "parley-lang",
+  "commit": "frozen-before-measurement",
+  "results": [
+    {"suite": "parser", "passed": 72, "failed": 0, "seconds": 0.18},
+    {"suite": "checker", "passed": 94, "failed": 0, "seconds": 0.24},
+    {"suite": "emitter", "passed": 51, "failed": 0, "seconds": 0.31},
+    {"suite": "diagnostics", "passed": 37, "failed": 0, "seconds": 0.09},
+    {"suite": "stdlib", "passed": 46, "failed": 0, "seconds": 0.17},
+    {"suite": "workflows", "passed": 24, "failed": 0, "seconds": 0.86},
+    {"suite": "packages", "passed": 18, "failed": 0, "seconds": 0.42},
+    {"suite": "agent_data", "passed": 19, "failed": 0, "seconds": 0.66},
+    {"suite": "language_server", "passed": 11, "failed": 0, "seconds": 0.12},
+    {"suite": "examples", "passed": 11, "failed": 0, "seconds": 1.84}
+  ]
+}

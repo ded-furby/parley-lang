@@ -25,8 +25,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.158** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 362 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.159** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has more than 360 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -57,11 +57,19 @@ Update it whenever you finish or start a work item.
   versions and whole-tree SHA-256; `parley workflow verify` detects drift. A
   fresh-wheel smoke installed all three and verified all checksums; the full
   suite passes 360/360.
-- **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` records the
-  v0.3.158 review. JSON is a low-pressure need in one of three products and CSV
-  in zero, so both are deliberately deferred. No compiler, skill, or benchmark
-  instruction changed. Reconsider only when two unrelated maintained workflows
-  need genuinely structured values or repeated typed records.
+- **v0.3.159 verified agent-context packing:** `parley data compare/pack/check/
+  unpack` keeps strict JSON as the semantic contract and uses a conservative
+  TOON 4.1 subset only after exact round-trip verification and a strictly lower
+  measured token count. Automatic mode falls back to compact JSON for mixed,
+  nested, non-uniform, or unhelpful shapes. Output replacement is opt-in and an
+  optional report preserves the input/output SHA-256, tokenizer, candidate
+  sizes, selection reason, and delivered format. The implementation adds no
+  runtime dependency and no language syntax. Design and claim boundaries are
+  in `docs/AGENT_DATA.md`; focused tests pass 19/19.
+- **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` preserves
+  the v0.3.158 finding that JSON/CSV values *inside Parley workflows* remain
+  low-pressure. The v0.3.159 platform CLI layer does not manufacture evidence
+  for language syntax or a workflow parser. CSV remains fully deferred.
 - **Independent deeper corpus checkpoint (iteration 032):** four new
   five-module projects cover quoted environment normalization, Retry-After
   precedence, raw webhook-body verification, and stable pagination ordering.
@@ -1123,13 +1131,18 @@ Update it whenever you finish or start a work item.
 
 1. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-2. **Real Release Steward operation.** Use the installed workflow on each
-   actual release candidate, preserve its report, and promote JSON only if
-   structured-input friction recurs across at least two maintained products.
-3. **Mature-repository validation.** If another benchmark is justified, use a
+2. **Agent-data evaluation.** Freeze a shape-diverse JSON corpus and real
+   tokenizers, publish lossless compression measurements, then run blinded
+   repeated comprehension/coding tasks. Keep model output in JSON and include
+   all parse/repair tokens; static savings alone are not an agent-performance
+   result.
+3. **Real Release Steward operation.** Use the installed workflow on each
+   actual release candidate and preserve its report. Promote structured values
+   inside programs only if friction recurs across maintained products.
+4. **Mature-repository validation.** If another language benchmark is justified, use a
    real repository or release operation with history and dependency search;
    preregister it and do not tune from reports 031 or 032.
-4. **Package publishing workflow** — checksum installs, publish-entry
+5. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
@@ -1150,7 +1163,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.158).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.159).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

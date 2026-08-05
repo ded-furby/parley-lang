@@ -1,0 +1,13 @@
+{
+  "matrix": [
+    ["language", "correct", "tokens"],
+    ["parley", true, 15704.5],
+    ["python", true, 15033],
+    ["rust", true, 15451.375]
+  ],
+  "notes": [
+    "Reliability repeated across all assignments.",
+    {"gate": "strict efficiency", "passed": false},
+    ["Do not tune syntax", "Use external projects next"]
+  ]
+}

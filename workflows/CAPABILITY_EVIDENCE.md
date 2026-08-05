@@ -4,6 +4,29 @@ This record decides whether product work has earned a new general capability.
 It exists to prevent benchmark transcripts or one-off implementations from
 driving Parley's syntax and standard library.
 
+## 2026-08-05 — v0.3.159 agent-data boundary
+
+New evidence did **not** overturn the v0.3.158 workflow finding: only Release
+Steward has weak structured-input pressure, and CSV still has none. The new
+requirement is platform-level and independently useful: agents routinely
+receive JSON context, and current TOON evidence suggests some uniform shapes
+can be smaller while non-uniform or output-heavy use can be less reliable.
+
+Decision: admit a **CLI translation layer**, not language syntax or a workflow
+stdlib parser. `parley data` keeps the JSON data model as the semantic contract,
+tries a conservative TOON 4.1 subset, proves exact decode equality, and selects
+TOON only when a declared tokenizer measures strictly fewer tokens. All other
+shapes retain compact JSON. The feature has no grammar, checker, emitter,
+runtime, generated-Rust, workflow-manifest, or compact-skill change.
+
+This is general because it operates on arbitrary strict JSON and publishes its
+selection evidence; it is maintainable because it has no new runtime dependency
+and unsupported forms fail or fall back deterministically. The next evidence
+gate is a frozen, shape-diverse corpus followed by repeated comprehension tests.
+Static compression alone will not justify claims about model accuracy. CSV,
+HTTP, and JSON values inside Parley programs remain deferred until real product
+pressure recurs.
+
 ## 2026-08-05 — v0.3.158 catalog review
 
 Evidence reviewed:

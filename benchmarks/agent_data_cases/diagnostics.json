@@ -1,0 +1,18 @@
+{
+  "tool": "parley check --json",
+  "language_version": "0.3.159",
+  "diagnostics": [
+    {"code": "P201", "file": "main.par", "line": 4, "column": 9, "severity": "error", "repair": "Declare the name before using it."},
+    {"code": "P204", "file": "records.par", "line": 12, "column": 9, "severity": "error", "repair": "Use the declared field name score."},
+    {"code": "P206", "file": "math.par", "line": 8, "column": 14, "severity": "error", "repair": "Use a number on both sides of plus."},
+    {"code": "P209", "file": "flow.par", "line": 18, "column": 5, "severity": "error", "repair": "Give back a text value on every branch."},
+    {"code": "P214", "file": "lists.par", "line": 22, "column": 11, "severity": "error", "repair": "Insert a number into this number list."},
+    {"code": "P221", "file": "maps.par", "line": 16, "column": 13, "severity": "error", "repair": "Use a text key for this map."},
+    {"code": "P228", "file": "maybe.par", "line": 10, "column": 9, "severity": "error", "repair": "Check whether the value is nothing before unwrapping it."},
+    {"code": "P233", "file": "calls.par", "line": 7, "column": 5, "severity": "error", "repair": "Pass two arguments to this function."},
+    {"code": "P242", "file": "loop.par", "line": 9, "column": 7, "severity": "error", "repair": "Use stop only inside a loop."},
+    {"code": "P301", "file": "include.par", "line": 1, "column": 1, "severity": "error", "repair": "Choose an include path that exists."},
+    {"code": "P312", "file": "when.par", "line": 15, "column": 9, "severity": "error", "repair": "Put the lower number before the upper number."},
+    {"code": "P314", "file": "closure.par", "line": 13, "column": 9, "severity": "error", "repair": "Copy the value into a local variable before changing it."}
+  ]
+}

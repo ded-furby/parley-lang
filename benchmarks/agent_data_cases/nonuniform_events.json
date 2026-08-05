@@ -1,0 +1,10 @@
+{
+  "stream": "release-operations",
+  "events": [
+    {"kind": "test", "suite": "full", "passed": 381, "failed": 0},
+    {"kind": "package", "name": "parley-lang", "version": "0.3.159", "signed": false},
+    {"kind": "checklist", "open": ["independent review", "publish rehearsal"]},
+    {"kind": "decision", "status": "blocked", "reason": "release evidence incomplete"}
+  ],
+  "complete": false
+}

@@ -103,6 +103,27 @@ fixtures. The runner requires every input, refuses to overwrite output unless
 file. `parley workflow verify` detects local changes to installed products. See
 [`workflows/`](workflows) for the product contract and roadmap.
 
+## Pack agent context safely
+
+Parley can also make structured context smaller without changing its meaning.
+`parley data` treats JSON as the semantic source of truth, tries a conservative
+TOON 4.1 encoding, decodes it back, and selects it only when the complete JSON
+value survives and the requested tokenizer measures strictly fewer tokens.
+Unsupported or unhelpful shapes stay compact JSON automatically.
+
+```bash
+parley data compare context.json
+parley data pack context.json \
+  --output context.agent \
+  --report context.measurement.json
+parley data unpack context.agent --output restored.json --pretty
+```
+
+This is an optional input-context translation layer, not Parley syntax or a
+claim that agents should emit TOON. The strict safe subset, failure behavior,
+tokenizer options, research boundary, and falsifiable thesis gates are in
+[`docs/AGENT_DATA.md`](docs/AGENT_DATA.md).
+
 ## The agent loop
 
 ```bash
@@ -369,6 +390,7 @@ the plan:
 - [x] safe workflow library, starters, and file-to-file runner — v0.3.156
 - [x] workflow fixtures and schema-2 named inputs — v0.3.157
 - [x] Release Steward and checksummed three-product workflow catalog — v0.3.158
+- [x] verified adaptive JSON/TOON agent-context packing — v0.3.159
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

@@ -34,6 +34,12 @@ For research runs from the source checkout, use `parley benchmark prompt
 --task hello --language parley` for language-neutral prompts, `parley benchmark
 measure --format json` for seed-corpus metrics, and `parley benchmark
 summarize --log runs.jsonl --format json` for attempt summaries.
+To pack existing JSON for read-only agent context, run `parley data compare
+context.json`, then `parley data pack context.json --output context.agent
+--report context.measurement.json`. Automatic mode keeps compact JSON unless a
+strictly decoded TOON safe-subset candidate preserves the complete JSON value
+and measures fewer tokens. Restore it with `parley data unpack context.agent
+--output restored.json`; this is a CLI translation layer, not Parley syntax.
 
 ## The whole language on one screen
 

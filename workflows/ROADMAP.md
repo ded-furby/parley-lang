@@ -33,6 +33,15 @@ to prove that outside a benchmark harness.
   source, with semantic versions and whole-tree SHA-256 lock records.
 - `parley workflow verify` detects missing or modified installed products.
 
+## Shipped beside Workflows in v0.3.159
+
+- `parley data compare`, `pack`, `check`, and `unpack` provide a platform-level
+  agent-context translation layer around the JSON data model.
+- automatic mode uses TOON only after exact round-trip verification and a
+  strictly-lower measured token count; unsupported shapes retain compact JSON.
+- no workflow contract or Parley language syntax changed, so this does not
+  manufacture product evidence for structured values inside programs.
+
 ## Next product loop
 
 1. Record where users edit installed source, where they get stuck, and how long
@@ -42,10 +51,12 @@ to prove that outside a benchmark harness.
 3. Seek independent maintainers before calling the first-party catalog an
    ecosystem.
 
-Near-term candidates are structured JSON/CSV input, explicit directory
-enumeration, and HTTP requests. None should become syntax merely because one
-benchmark or starter wants it; each needs a general API, deterministic tests,
-clear failure behavior, and a maintainable implementation.
+Near-term workflow/runtime candidates are structured JSON/CSV values inside a
+Parley program, explicit directory enumeration, and HTTP requests. The
+v0.3.159 CLI packer does not satisfy that separate need. None should become
+syntax merely because one benchmark or starter wants it; each needs a general
+API, deterministic tests, clear failure behavior, and a maintainable
+implementation.
 
 The v0.3.158 review in [`CAPABILITY_EVIDENCE.md`](CAPABILITY_EVIDENCE.md)
 deferred JSON and CSV: only one of three products needed flat key-value reads,

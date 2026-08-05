@@ -1,15 +1,24 @@
 # Research plan
 
-Parley's publishable research angle is not "English syntax is nicer." The
-paper should test whether an agent-oriented language surface reduces the cost
-of getting correct compiled programs from coding agents.
+Parley's publishable research angle is not "English syntax is nicer" or
+"another notation has fewer characters." The work now has two deliberately
+separate tracks: whether an agent-oriented language reduces the cost of getting
+correct programs, and whether verified context packing reduces input tokens
+without reducing agent comprehension.
 
 ## Claim
 
-Structured language design can improve AI coding-agent reliability. Parley
-combines one canonical English-like syntax, static checks, and JSON repair
-diagnostics. The expected result is fewer repair loops and less token spend
-than comparable Python or Rust tasks.
+**Track A — coding language.** Structured language design can improve AI
+coding-agent reliability. Parley combines one canonical English-like syntax,
+static checks, and JSON repair diagnostics. It must be compared with Python and
+Rust on hidden correctness, first-check success, repair loops, elapsed time,
+and complete session-token cost.
+
+**Track B — agent context.** A shape-aware translation of the JSON data model
+can reduce model-input tokens without changing meaning. It must compare compact
+JSON with automatically selected, round-trip-verified TOON on both token count
+and downstream task accuracy. This layer is documented in
+[`AGENT_DATA.md`](AGENT_DATA.md) and is not Parley language syntax.
 
 ## Questions
 
@@ -19,6 +28,10 @@ than comparable Python or Rust tasks.
 3. How much source-token overhead does Parley introduce relative to Python and
    Rust for the same small programs?
 4. Which error classes remain hard for agents even with structured hints?
+5. Which structured-data shapes produce real savings under each model's
+   tokenizer after exact round-trip verification?
+6. Does read-only TOON context preserve answer and coding accuracy relative to
+   JSON, including all format-repair tokens?
 
 ## Phase 1 benchmark
 
@@ -59,6 +72,12 @@ constraints, then ask the agent to implement in the assigned language.
    and patch attempt.
 5. Judge success with executable tests, not manual inspection.
 
+For agent-data experiments, freeze the JSON corpus, tokenizer, model, prompts,
+randomization, scoring code, repetitions, non-inferiority margin, and fallback
+policy before measuring outcomes. Report input compression separately from
+task accuracy. Keep requested model output in JSON so an output-format failure
+cannot be mistaken for a source-language or comprehension failure.
+
 ## Baselines
 
 - Python: concise dynamic baseline with broad model familiarity.
@@ -91,6 +110,17 @@ log with `parley benchmark append`. The same run log can be summarized with
 `parley benchmark summarize` into first-run success, eventual success, elapsed
 time, and repair-turn counts by task/language/model.
 
-This is not yet a paper result. Repeated agent runs and success judgments
-across fresh samples still need to be run before any comparative claims should
-be made.
+The independent deeper-project confirmation in report 032 froze 18 sessions
+and 72 language assignments. All 72 were hidden-correct and first-check-correct
+with no repairs, and all 24 Parley cases found the exact defect root. The strict
+efficiency gate nevertheless finished only 2/4: Parley's 15,704.5 median
+tokens exceeded Python's 15,033 and Rust's 15,451.375, while its 8.4545-second
+median was between Python's 7.5247 and Rust's 9.3756. That is repeated evidence
+for reliability and diagnosis, not proof that Parley is universally cheaper.
+
+The next agent-data stage starts from an adaptive JSON/TOON implementation and
+a frozen shape-diverse repository corpus. Static compression can establish only
+losslessness and conditional token savings. Repeated blinded comprehension and
+coding sessions are still required before claiming that the representation
+works better for agents. Track A likewise still needs mature external projects,
+more models, and independent replication before any "best language" claim.

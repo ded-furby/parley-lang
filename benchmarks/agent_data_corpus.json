@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "experiment_id": "agent-data-033",
+  "frozen_date": "2026-08-05",
+  "description": "Shape-diverse JSON from Parley product, compiler, package, workflow, benchmark, and report operations. Synthetic cases model real repository contracts and are labeled.",
+  "cases": [
+    {"id": "compiler-diagnostics", "family": "uniform-records", "origin": "synthetic-real-contract", "path": "benchmarks/agent_data_cases/diagnostics.json"},
+    {"id": "test-results", "family": "uniform-records", "origin": "synthetic-real-contract", "path": "benchmarks/agent_data_cases/test_results.json"},
+    {"id": "nested-configuration", "family": "nested-objects", "origin": "synthetic-real-contract", "path": "benchmarks/agent_data_cases/nested_configuration.json"},
+    {"id": "nonuniform-events", "family": "nonuniform-records", "origin": "synthetic-real-contract", "path": "benchmarks/agent_data_cases/nonuniform_events.json"},
+    {"id": "mixed-nested-arrays", "family": "mixed-nested-arrays", "origin": "synthetic-real-contract", "path": "benchmarks/agent_data_cases/mixed_nested_arrays.json"},
+    {"id": "package-registry", "family": "package-metadata", "origin": "repository", "path": "site/registry.json"},
+    {"id": "progress-manifest", "family": "report-index", "origin": "repository", "path": "progress/manifest.json"},
+    {"id": "release-workflow", "family": "workflow-manifest", "origin": "repository", "path": "parley/workflows/catalog/release-steward/workflow.json"},
+    {"id": "broad-agent-tasks", "family": "task-corpus", "origin": "repository", "path": "benchmarks/agent_tasks_broad.json"},
+    {"id": "confirmation-protocol", "family": "experiment-protocol", "origin": "repository", "path": "benchmarks/bundle_protocol_032.json"},
+    {"id": "reference-fixes", "family": "patch-catalog", "origin": "repository", "path": "benchmarks/deep_reference_fixes_032.json"},
+    {"id": "confirmation-report", "family": "portable-report", "origin": "repository", "path": "benchmarks/reports/032-independent-confirmation-strict-parity-not-met.artifact.json"}
+  ]
+}

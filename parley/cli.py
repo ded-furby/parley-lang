@@ -8,6 +8,10 @@
   parley explain P204             explain an error code
   parley new myproject            start a new program
   parley doctor                   verify local setup
+  parley data compare input.json measure safe agent-context encodings
+  parley data pack input.json     select JSON or TOON with a round-trip gate
+  parley data unpack input.toon   restore strict TOON to canonical JSON
+  parley data check input.toon    validate strict TOON without changing it
   parley package install name src vendor a local package
   parley package publish name src print a registry entry with owner metadata
   parley package review name src  dry-run package submission review
@@ -43,6 +47,15 @@ from urllib.request import urlopen
 from pathlib import Path
 
 from . import __version__
+from .agent_data import (
+    AgentDataError,
+    compare_value,
+    compact_json,
+    load_json_file,
+    packed_text,
+    pretty_json,
+    toon_decode,
+)
 from .checker import check_program
 from .diagnostics import Diagnostic, ParleyError, explain, render_human, render_json
 from .emit_rust import emit_program
@@ -824,6 +837,133 @@ def cmd_doctor(args) -> int:
     return 0 if ok else 1
 
 
+def _data_error(message: str, *, as_json: bool = False) -> int:
+    if as_json:
+        print(json.dumps({"ok": False, "error": message}, ensure_ascii=False))
+    else:
+        print(f"data error: {message}", file=sys.stderr)
+    return 1
+
+
+def _data_output_path(raw_path: str, input_path: Path, *, force: bool) -> Path | None:
+    if raw_path == "-":
+        return None
+    path = Path(raw_path).resolve()
+    if path == input_path.resolve() or (
+        path.exists() and input_path.exists() and os.path.samefile(path, input_path)
+    ):
+        raise AgentDataError("input and output must be different files")
+    if not path.parent.is_dir():
+        raise AgentDataError(f"output directory does not exist: {path.parent}")
+    if path.exists() and not path.is_file():
+        raise AgentDataError(f"output path is not a file: {raw_path}")
+    if path.exists() and not force:
+        raise AgentDataError(f"output already exists: {raw_path}; pass --force to replace it")
+    return path
+
+
+def _write_data_text(path: Path | None, content: str) -> bytes:
+    encoded = (content + "\n").encode("utf-8")
+    if path is None:
+        sys.stdout.buffer.write(encoded)
+    else:
+        path.write_bytes(encoded)
+    return encoded
+
+
+def cmd_data_compare(args) -> int:
+    input_path = Path(args.input)
+    try:
+        value, raw = load_json_file(input_path)
+        report = compare_value(value, tokenizer=args.tokenizer, source_bytes=raw)
+    except AgentDataError as exc:
+        return _data_error(str(exc), as_json=True)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_data_pack(args) -> int:
+    input_path = Path(args.input)
+    try:
+        value, raw = load_json_file(input_path)
+        report = compare_value(value, tokenizer=args.tokenizer, source_bytes=raw)
+        content = packed_text(value, report, args.format)
+        output_path = _data_output_path(args.output, input_path, force=args.force)
+        if args.report:
+            report_path = _data_output_path(args.report, input_path, force=args.force)
+            if report_path is None:
+                raise AgentDataError("the measurement report must be written to a file")
+            if output_path is not None and output_path == report_path:
+                raise AgentDataError("packed output and measurement report must be different files")
+        else:
+            report_path = None
+        delivered_format = report["selected_format"] if args.format == "auto" else args.format
+        output_bytes = (content + "\n").encode("utf-8")
+        report.update({
+            "requested_format": args.format,
+            "delivered_format": delivered_format,
+            "output_sha256": hashlib.sha256(output_bytes).hexdigest(),
+        })
+        _write_data_text(output_path, content)
+        if report_path is not None:
+            report_path.write_text(
+                json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+    except (AgentDataError, OSError) as exc:
+        return _data_error(str(exc))
+    if output_path is not None:
+        print(
+            f"Packed {args.input} as {delivered_format} -> {output_path.as_posix()} "
+            f"({report['savings']['tokens']} measured tokens saved)."
+        )
+    return 0
+
+
+def cmd_data_unpack(args) -> int:
+    input_path = Path(args.input)
+    try:
+        try:
+            source = input_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise AgentDataError(f"could not read UTF-8 TOON from {input_path}: {exc}") from exc
+        value = toon_decode(source)
+        content = pretty_json(value).rstrip("\n") if args.pretty else compact_json(value)
+        output_path = _data_output_path(args.output, input_path, force=args.force)
+        _write_data_text(output_path, content)
+    except (AgentDataError, OSError) as exc:
+        return _data_error(str(exc))
+    if output_path is not None:
+        print(f"Unpacked {args.input} as JSON -> {output_path.as_posix()}.")
+    return 0
+
+
+def cmd_data_check(args) -> int:
+    input_path = Path(args.input)
+    try:
+        try:
+            source = input_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise AgentDataError(f"could not read UTF-8 TOON from {input_path}: {exc}") from exc
+        value = toon_decode(source)
+        canonical = packed_text(value, {"selected_format": "toon"}, "toon")
+        details = {
+            "ok": True,
+            "format": "toon",
+            "profile": "parley-safe-subset-v1",
+            "canonical": source.rstrip("\n") == canonical,
+            "sha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
+        }
+    except (AgentDataError, OSError) as exc:
+        return _data_error(str(exc), as_json=args.json)
+    if args.json:
+        print(json.dumps(details, ensure_ascii=False, indent=2))
+    else:
+        status = "canonical" if details["canonical"] else "valid but non-canonical"
+        print(f"✓ {args.input}: valid {details['profile']} TOON ({status}).")
+    return 0
+
+
 def _lock_path() -> Path:
     return Path(LOCK_FILE)
 
@@ -1384,6 +1524,40 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("doctor", help="verify local Parley setup")
     p.add_argument("--json", action="store_true", help="machine-readable setup report")
     p.set_defaults(fn=cmd_doctor)
+
+    p = sub.add_parser("data", help="pack structured data for AI-agent context")
+    data_sub = p.add_subparsers(dest="data_cmd", required=True)
+    data_compare = data_sub.add_parser(
+        "compare", help="measure compact JSON and safe TOON without writing output")
+    data_compare.add_argument("input", help="strict JSON input file")
+    data_compare.add_argument(
+        "--tokenizer", default="rough", help="rough or a tiktoken encoding name")
+    data_compare.set_defaults(fn=cmd_data_compare)
+    data_pack = data_sub.add_parser(
+        "pack", help="pack JSON as the smallest verified safe encoding")
+    data_pack.add_argument("input", help="strict JSON input file")
+    data_pack.add_argument(
+        "--format", choices=("auto", "json", "toon"), default="auto")
+    data_pack.add_argument(
+        "--tokenizer", default="rough", help="rough or a tiktoken encoding name")
+    data_pack.add_argument("-o", "--output", default="-", help="output file or - for stdout")
+    data_pack.add_argument("--report", help="write the measurement and integrity report as JSON")
+    data_pack.add_argument(
+        "--force", action="store_true", help="replace existing output/report files")
+    data_pack.set_defaults(fn=cmd_data_pack)
+    data_unpack = data_sub.add_parser(
+        "unpack", help="decode strict safe-subset TOON to canonical JSON")
+    data_unpack.add_argument("input", help="TOON input file")
+    data_unpack.add_argument("-o", "--output", default="-", help="output file or - for stdout")
+    data_unpack.add_argument("--pretty", action="store_true", help="indent the JSON output")
+    data_unpack.add_argument(
+        "--force", action="store_true", help="replace an existing output file")
+    data_unpack.set_defaults(fn=cmd_data_unpack)
+    data_check = data_sub.add_parser(
+        "check", help="validate strict safe-subset TOON and report canonical status")
+    data_check.add_argument("input", help="TOON input file")
+    data_check.add_argument("--json", action="store_true", help="machine-readable result")
+    data_check.set_defaults(fn=cmd_data_check)
 
     p = sub.add_parser("workflow", help="create and run safe file workflows")
     workflow_sub = p.add_subparsers(dest="workflow_cmd", required=True)
