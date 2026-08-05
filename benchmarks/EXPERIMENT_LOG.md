@@ -2975,3 +2975,37 @@ No report-031 task, failure, repair, or metric selected these mechanisms. No
 language, skill, instruction, runner, or judgment changed. Commit and push this
 checkpoint before creating protocol 032. The instruction-compression experiment
 remains closed.
+
+## Pre-registration for 032 — Independent deeper-project confirmation
+
+- Date frozen: 2026-08-05
+- Product/compiler checkpoint: Parley 0.3.158; implementation commit `cb7820a`
+- Corpus checkpoint: `d435ecd`
+- Task manifest SHA-256:
+  `49df28a27ce00ac58d898a386fcee1cae46fd15fd02c38ec82272b39a326bb1f`
+- Model: `gpt-5.6-sol`, medium reasoning; Codex CLI 0.146.0
+- Instruction: unchanged 1,519-character core, SHA-256
+  `6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c`
+- Protocol: `benchmarks/bundle_protocol_032.json`, SHA-256
+  `d702c3401af57092196e9056ef51057b63700a70fa56212511c2927a758e588c`
+- Matrix: four-task complete bundles × three languages × six replicates = 18
+  fresh sessions and 72 hidden-judged assignments
+- Seed: `320260805`
+
+The primary gate is unchanged from 031: Parley must be 100% hidden-correct and
+no worse than either baseline; its median tokens/repository and elapsed
+seconds/repository must be no higher than the lower baseline; and its
+first-check rate must be no lower than the higher baseline. All four must pass.
+The fifth maintainability condition requires every one of 24 Parley assignments
+to modify exactly its predeclared owning defect file.
+
+Every session receives the same 590 rough tokens of read-only project evidence.
+The complete bundle contains 20 editable modules and 12 read-only files. Run
+all 18 cells once at concurrency three, report all sessions and assignments,
+and preserve any timeout, failure, extra edit, or protocol violation. No cell
+may be rerun, excluded, or replaced.
+
+This confirmation follows product work but includes no language, compiler,
+skill, instruction, runner, or metric tuning. The four mechanisms are new and
+were frozen in the preceding commit. Whether the result passes or fails, make
+no same-corpus change. The instruction-compression experiment remains closed.

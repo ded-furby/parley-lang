@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "experiment_id": "032",
+  "title": "Independent deeper-project confirmation after product work",
+  "description": "A frozen six-replicate comparison over four new five-module regressions, selected independently of report 031 and run after the v0.3.158 workflow product phase without compiler or instruction tuning.",
+  "frozen_config": {
+    "tasks_file": "benchmarks/agent_tasks_deep_confirmation_032.json",
+    "task_manifest_sha256": "49df28a27ce00ac58d898a386fcee1cae46fd15fd02c38ec82272b39a326bb1f",
+    "parley_version": "parley 0.3.158",
+    "compiler_commit": "cb7820a",
+    "corpus_commit": "d435ecd",
+    "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
+    "parley_skill_chars": 1519,
+    "bundle_sizes": [4],
+    "replicates": 6,
+    "languages": ["parley", "python", "rust"],
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "seed": 320260805,
+    "timeout_seconds": 1800,
+    "max_workers": 3
+  },
+  "matrix": {
+    "fresh_sessions": 18,
+    "judged_repository_assignments": 72,
+    "sessions_per_language": 6,
+    "repository_assignments_per_language": 24,
+    "editable_seed_files_per_session": 20,
+    "read_only_context_files_per_session": 12,
+    "visible_files_per_session": 32,
+    "raw_context_chars_per_session": 3178,
+    "raw_context_lines_per_session": 40,
+    "runner_context_chars_per_session": 3186,
+    "runner_context_lines_per_session": 48,
+    "context_rough_tokens_per_session": 590,
+    "public_case_groups_per_language": 24,
+    "hidden_case_groups_per_language": 96,
+    "root_cause_assignments_per_language": 24,
+    "derivation": "6 complete four-repository bundles x 3 languages"
+  },
+  "primary_gate": {
+    "scale": 4,
+    "correctness": "Parley hidden-repository success must be 100% and no lower than either baseline.",
+    "tokens": "Parley median reported total tokens per assigned repository must be no higher than the lower Python/Rust median.",
+    "elapsed": "Parley median elapsed seconds per assigned repository must be no higher than the lower Python/Rust median.",
+    "first_check": "Parley first-check repository success rate must be no lower than the higher Python/Rust rate.",
+    "verdict": "All four conditions must hold for strict efficiency/reliability parity on the independent deeper corpus."
+  },
+  "maintainability_gate": {
+    "root_cause": "All 24 Parley assignments must modify exactly the task/language defect file frozen in predeclared_analysis.root_cause_files.",
+    "caller_compensation": "A hidden-correct patch that changes a caller, formatter, cursor, or downstream module in addition to or instead of the owning defect file fails exact-root quality and remains fully reported.",
+    "overall_verdict": "A confirmed maintainable-parity result requires all four primary conditions plus the Parley exact-root condition."
+  },
+  "source_protocol": {
+    "first_shell_command": "./sources",
+    "source_command_count": 1,
+    "later_shell_command": "./check",
+    "editable_files": "Twenty language-specific seeded implementation modules across four repositories.",
+    "read_only_files": "Twelve language-neutral issue, architecture, and regression artifacts, visibly marked read-only and byte-identical across languages.",
+    "public_examples": "Protected by the checker and omitted from every agent prompt; diagnosis comes only from editable source and read-only project evidence.",
+    "protected_files": "Checker, source printer, configuration, prompt, provenance, public/hidden cases, reference fixes, and attempt log are never agent-readable and remain integrity-hashed."
+  },
+  "historical_grounding": [
+    {
+      "task": "quoted_environment_project",
+      "source": "https://github.com/quarkusio/quarkus/issues/35861",
+      "adapted_mechanism": "quoted environment values retain representation markers"
+    },
+    {
+      "task": "retry_after_precedence_project",
+      "source": "https://github.com/microsoftgraph/msgraph-sdk-javascript/issues/42",
+      "adapted_mechanism": "Retry-After response evidence is lost before retry scheduling"
+    },
+    {
+      "task": "webhook_raw_body_project",
+      "source": "https://github.com/stripe/stripe-node/issues/331",
+      "adapted_mechanism": "webhook signatures require access to the exact raw request body"
+    },
+    {
+      "task": "stable_pagination_project",
+      "source": "https://github.com/orgs/langfuse/discussions/7623",
+      "adapted_mechanism": "non-unique sort keys duplicate records across page boundaries"
+    }
+  ],
+  "interpretation_boundary": [
+    "The primary result is the within-iteration Parley/Python/Rust comparison under gpt-5.6-sol.",
+    "The product implementation, corpus builder, sources, evidence, cases, reference fixes, and root map were validated, committed, and pushed before this protocol or any measured session.",
+    "No task mechanism, defect, fixture, or repair was selected from report 031 outcomes; report 031 supplies only the unchanged gate and workload shape.",
+    "Historical grounding applies to semantic mechanisms only. Fixtures are deterministic cross-language adaptations and copy no upstream code or tests.",
+    "Read-only context is byte-identical across languages; implementation syntax and ordinary standard-library setup remain language-specific.",
+    "Root-cause location is a predeclared maintainability judgment separate from hidden-output correctness.",
+    "This is an independent six-replicate confirmation, not a pooled extension of iteration 031.",
+    "No task, language, or session cell may be selectively rerun, excluded, rewritten, or tuned."
+  ],
+  "secondary_analysis": [
+    "Report every session, repository outcome, repair, token count, elapsed time, prompt size, editable-source size, read-only-context size, edit size, changed-file count, integrity result, command event, and file-change event.",
+    "Classify every first-check and hidden failure by unrelated repository and independent session before considering any design review.",
+    "Report exact-root modification by language, task, and session; show every extra edit without altering hidden correctness.",
+    "Report complete token/time distributions, task-level medians, and action shapes; do not replace the primary complete result with a repair-free subset.",
+    "Compare with iteration 031 descriptively only; do not pool task cells, gates, or confidence claims across corpora."
+  ],
+  "feature_boundary": "Parley is frozen at v0.3.158 after workflow product work. The product phase added CLI workflow contracts and bundled products, not language syntax, compiler semantics, or benchmark instructions.",
+  "change_rule": "No syntax, compiler, grammar, AST, checker, runtime, diagnostic, prompt skill, or benchmark instruction may change from the frozen product checkpoint based on this corpus. Only a semantic signature recurring across independent product or project episodes may enter a separate design review under general usefulness, semantic consistency, maintainability, tests, and documentation.",
+  "instruction_rule": "The proven 1,519-character skill remains byte-for-byte unchanged and is injected once per Parley session. The one allowed instruction-compression experiment is closed.",
+  "stop_rule": "Preserve the complete result without selective reruns. Whether the gates pass or fail, make no same-corpus language, instruction, task, runner, or metric change. Future product or compiler work must be justified independently of benchmark token savings."
+}

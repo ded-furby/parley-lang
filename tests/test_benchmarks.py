@@ -2058,6 +2058,26 @@ def test_deep_confirmation_032_is_symmetric_and_independent():
             assert analysis["root_cause_files"][task["id"]][language]
 
 
+def test_deep_confirmation_032_protocol_is_frozen_to_product_checkpoint():
+    protocol_path = BENCHMARKS / "bundle_protocol_032.json"
+    protocol = load_protocol(protocol_path)
+    frozen = protocol["frozen_config"]
+
+    assert protocol["experiment_id"] == "032"
+    assert frozen["tasks_file"] == "benchmarks/agent_tasks_deep_confirmation_032.json"
+    assert frozen["task_manifest_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "agent_tasks_deep_confirmation_032.json").read_bytes()
+    ).hexdigest()
+    assert frozen["parley_version"] == "parley 0.3.158"
+    assert frozen["corpus_commit"] == "d435ecd"
+    assert frozen["bundle_sizes"] == [4]
+    assert frozen["replicates"] == 6
+    assert protocol["matrix"]["fresh_sessions"] == 18
+    assert protocol["matrix"]["judged_repository_assignments"] == 72
+    assert "No task mechanism" in protocol["interpretation_boundary"][2]
+    assert "closed" in protocol["instruction_rule"]
+
+
 def test_agent_prompt_includes_current_skill_only_for_parley():
     task = load_tasks(BENCHMARKS / "agent_tasks.json")[0]
     skill = "PARLEY-SKILL-SENTINEL"

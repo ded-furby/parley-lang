@@ -70,6 +70,13 @@ Update it whenever you finish or start a work item.
   isolated root fixes pass 60/60 cross-language case groups. The corpus is
   independent of report 031 outcomes and changes no compiler, skill,
   instruction, runner, or metric. Commit this checkpoint before protocol 032.
+- **Iteration 032 preregistration:** protocol SHA
+  `d702c3401af57092196e9056ef51057b63700a70fa56212511c2927a758e588c`
+  freezes six complete four-project bundles per language: 18 fresh sessions,
+  72 assignments, seed `320260805`, Parley v0.3.158, and the unchanged
+  1,519-character skill. The strict 4-part efficiency/reliability gate and
+  24/24 exact-root condition are unchanged from 031. Run all cells once with
+  no exclusions or reruns; no outcome may trigger same-corpus tuning.
 - **Committed progress archive:** `progress/index.html` is a responsive,
   searchable visual timeline over all 31 preserved benchmark HTML reports.
   `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
