@@ -7,7 +7,9 @@ Open [`index.html`](index.html) locally for the visual timeline.
   `benchmarks/reports/`, including preserved report 013.
 - `manifest.json` records each file's source path, byte length, and SHA-256.
 - `index.html` is a self-contained searchable dashboard with no external
-  dependencies.
+  dependencies. Its light/dark typography, spacing, cards, borders, and status
+  colors deliberately match the established portable design of the numbered
+  benchmark reports.
 
 After adding a benchmark HTML report, refresh this archive with:
 
