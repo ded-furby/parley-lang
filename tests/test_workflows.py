@@ -34,6 +34,19 @@ def test_workflow_new_scaffolds_manifest_source_and_sample(tmp_path):
     assert checked.returncode == 0, checked.stderr
     assert json.loads(checked.stdout)["ok"] is True
 
+    manifest["entrypoint"] = "../outside.par"
+    (root / "workflow.json").write_text(json.dumps(manifest))
+    escaped = run_cli(
+        [
+            "workflow", "run", "release-report",
+            "--input", "release-report/input.txt",
+            "--output", "result.txt",
+        ],
+        cwd=tmp_path,
+    )
+    assert escaped.returncode == 1
+    assert "entrypoint must stay inside" in escaped.stderr
+
 
 def test_every_workflow_template_type_checks(tmp_path):
     for template in ("clean-text", "log-summary", "checklist-report"):
@@ -65,6 +78,19 @@ def test_workflow_run_executes_clean_text_end_to_end(tmp_path):
     assert proc.returncode == 0, proc.stderr
     assert output.read_text() == "alpha\nbeta"
     assert "workflow complete: wrote 2 lines" in proc.stdout
+
+    source.write_text(" replacement ")
+    forced = run_cli(
+        [
+            "workflow", "run", "cleaner",
+            "--input", str(source),
+            "--output", str(output),
+            "--force",
+        ],
+        cwd=tmp_path,
+    )
+    assert forced.returncode == 0, forced.stderr
+    assert output.read_text() == "replacement"
 
 
 def test_workflow_run_refuses_missing_input_and_existing_output(tmp_path):

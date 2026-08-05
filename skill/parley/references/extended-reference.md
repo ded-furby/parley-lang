@@ -26,6 +26,10 @@ Use `parley doctor --json` to verify a fresh install before starting a larger
 program or debugging an environment problem.
 For editor diagnostics, run `parley-lsp` as a stdio Language Server Protocol
 server; it emits the same P-code diagnostics as `parley check --json`.
+For a deterministic file automation, start with `parley workflow list`, then
+`parley workflow new name --template clean-text`; run it with `parley workflow
+run name --input input.txt --output output.txt`. Generated source uses the
+bundled `std/workflow` package and remains normal editable Parley.
 For research runs from the source checkout, use `parley benchmark prompt
 --task hello --language parley` for language-neutral prompts, `parley benchmark
 measure --format json` for seed-corpus metrics, and `parley benchmark
@@ -248,6 +252,10 @@ The hosted starter index is
   launch a stdio LSP server.
 * `parley doctor --json` reports Parley, Python, cargo, bundled stdlib, and
   local package readiness.
+* `parley workflow list/new/run` scaffolds and safely runs file-to-file
+  workflows. Existing outputs need `--force`; input and output may never be the
+  same file. `include "std/workflow"` exposes the reusable transformation
+  helpers.
 * `parley benchmark prompt`, `parley benchmark measure`, and
   `parley benchmark summarize` expose the research harness from the source
   checkout.

@@ -212,6 +212,24 @@ the catalog entry. The intended loop: **check → apply hint → re-check → ru
 `parley doctor --json` in scripts or agent setup checks; it returns a
 machine-readable report with an `ok` field and one entry per check.
 
+## Workflows
+
+`parley workflow list` prints the bundled file-workflow starters. Create one
+with `parley workflow new name --template clean-text` (or `log-summary` /
+`checklist-report`). The generated directory contains `workflow.json`, a
+normal `main.par`, and sample `input.txt`.
+
+Run it with `parley workflow run name --input input.txt --output output.txt`.
+The input must exist, the output directory must exist, and an existing output
+requires explicit `--force`. The runner rejects any output that resolves to the
+input, including hard links. A schema-1 `workflow.json` may select a relative
+entrypoint that stays inside the workflow directory.
+
+`include "std/workflow"` supplies `workflow_read_required_text`,
+`workflow_normalized_lines`, containing/starting line filters and counts,
+numbered and Markdown-bullet renderers, and `workflow_write_output`. These are
+ordinary Parley functions and may also be used without the workflow CLI.
+
 ## Benchmark research
 
 From a source checkout, `parley benchmark prompt --task hello --language parley`

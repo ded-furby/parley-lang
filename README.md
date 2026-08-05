@@ -74,6 +74,27 @@ parley doctor
 parley new hello && parley run hello/main.par
 ```
 
+## Build something real: Parley Workflows
+
+Parley Workflows is the first product layer on top of the language: small,
+deterministic file transformations that a person can inspect, an agent can
+modify, and Rust can compile to a native binary.
+
+```bash
+parley workflow list
+parley workflow new release-report --template checklist-report
+parley workflow run release-report \
+  --input release-report/input.txt \
+  --output report.md
+```
+
+The bundled starters clean text, summarize logs, and turn Markdown checklists
+into status reports. Every starter is ordinary `main.par` source and can use
+`include "std/workflow"` for reusable file, matching, normalization, and report
+helpers. The runner requires an existing input, refuses to overwrite output
+unless `--force` is explicit, and never permits input and output to be the same
+file. See [`workflows/`](workflows) for the product contract and roadmap.
+
 ## The agent loop
 
 ```bash
@@ -99,13 +120,16 @@ parley` to render a language-neutral agent prompt, `parley benchmark measure
 --format json` from a source checkout to produce the Parley/Python/Rust
 seed-corpus metrics, and `parley benchmark summarize --log runs.jsonl --format
 json` to review recorded agent attempts. The preserved
-[iteration 026 repository report](benchmarks/reports/026-eight-repository-expansion-failed.html)
-shows Parley beating Rust on median agent tokens and elapsed time across eight
-repositories. The follow-up
-[iteration 027 scale report](benchmarks/reports/027-sixteen-repository-scale-regression.html)
-preserves perfect Parley reliability but shows that token advantage does not
-survive a sixteen-repository bundle; strict Python-and-Rust parity remains
-unconfirmed.
+[90-session scaling report](benchmarks/reports/030-ninety-session-scaling-mechanism.html)
+found a clear amortization mechanism and confirmed Rust parity around six or
+more diagnosis tasks per session, while still trailing Python. The independent
+[deeper-project report](benchmarks/reports/031-deeper-project-efficiency-win.html)
+then passed all four predeclared efficiency/reliability conditions: Parley used
+15,937 median tokens per repository and 7.3906 seconds versus Python's
+23,668.38/9.2024 and Rust's 24,475.75/10.2195. Exact-root patch quality was
+23/24, so this is strong evidence to build on—not a claim that the language is
+finished. Browse the complete, checksum-backed visual history in
+[`progress/index.html`](progress/index.html).
 
 For editor integration, start the stdio language server from your editor:
 
@@ -131,7 +155,7 @@ parameters and recursion · string interpolation `"{x}"` ·
 custom runtime failures with `fail "message"` ·
 runtime assertions with `assert condition, "message"` ·
 `attempt:`/`if it failed:` error handling with `the error` · file I/O ·
-stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, and `std/map`
+stdin `ask` · random numbers · bundled `std/math`, `std/text`, `std/list`, `std/map`, and `std/workflow`
 packages · multi-file programs via `include`, `parley_modules`, and `PARLEY_PATH` package roots ·
 local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package verify`, plus registry validation with
@@ -139,6 +163,7 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package review`, and optional HMAC-SHA256 release signatures, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
+safe workflow scaffolding and execution with `parley workflow list/new/run` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
 division, powers, roots, math constants, integer square roots, perfect-square checks, factorials, GCD/LCM, combinations/permutations, decimal closeness, hypotenuse, point-distance helpers, sign-copy checks, and angle conversions · a text toolbox (`split by`, `joined with`,
 `replacing … with …`, bounded replacement, `position of … in …`, `count of … in …`,
@@ -153,7 +178,8 @@ Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
 [docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
 [docs/RELEASE.md](docs/RELEASE.md). Domain options:
 [docs/DOMAINS.md](docs/DOMAINS.md). Seed benchmark harness:
-[benchmarks/](benchmarks). Eleven working programs: [examples/](examples).
+[benchmarks/](benchmarks). Browseable evidence archive: [progress/](progress).
+Eleven working programs: [examples/](examples).
 
 ## How it works
 
@@ -325,6 +351,7 @@ the plan:
 - [x] contextual `modulo` alias from anti-primed cross-task evidence — v0.3.153
 - [x] mutable range/list loop bindings preserve checker-to-Rust totality — v0.3.154
 - [x] contextual value identifier `number` from five unrelated task families — v0.3.155
+- [x] safe workflow library, starters, and file-to-file runner — v0.3.156
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -352,7 +379,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-python3 -m pytest # 309 tests; e2e compiles real binaries (needs cargo)
+python3 -m pytest # 355 tests; e2e compiles real binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

@@ -710,6 +710,28 @@ parley package search --registry https://ded-furby.github.io/parley-lang/registr
 parley package install mathkit --registry https://ded-furby.github.io/parley-lang/registry.json
 ```
 
+## 14. Build a file workflow
+
+Use a starter when the program is a deterministic file-to-file automation:
+
+```bash
+parley workflow list
+parley workflow new my-cleaner --template clean-text
+parley check my-cleaner/main.par --json
+parley workflow run my-cleaner \
+  --input my-cleaner/input.txt \
+  --output cleaned.txt
+```
+
+Edit `main.par` exactly like any other Parley program. It includes
+`std/workflow`, reads the two paths supplied by the safe runner, transforms the
+input, and writes the output. The runner refuses to replace `cleaned.txt`
+unless you pass `--force`, and it will never replace the input itself.
+
+Other starters are `log-summary` and `checklist-report`. Their output is
+Markdown, making them useful as small building blocks for release notes,
+operations reports, and repository maintenance.
+
 ## That's the whole language
 
 Next steps:
@@ -718,4 +740,5 @@ Next steps:
 * [ERRORS.md](ERRORS.md) — every error code with its fix
 * `parley benchmark prompt --task hello --language parley` — a reusable agent prompt
 * `parley benchmark measure --format json` — the seed research corpus metrics
+* `parley workflow new name --template clean-text` — a safe automation starter
 * `examples/` — eleven programs from hello to closures and a todo app

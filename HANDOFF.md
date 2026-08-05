@@ -12,22 +12,41 @@ Update it whenever you finish or start a work item.
    `parley run`, and `parley build` any reasonable program. AI agents are
    the primary authors: one canonical way to write each construct, and
    every compiler error is a JSON repair instruction with a stable P-code.
-2. **A landing page** (one page, scrolling, Three.js, cursor-controlled 3D,
+2. **A useful product layer.** Parley Workflows must prove the language on
+   real, repeatable automation: inspectable source, safe execution, native
+   output, and an adoption loop driven by unrelated user tasks.
+3. **A landing page** (one page, scrolling, Three.js, cursor-controlled 3D,
    unique, craft level above igloo.inc without copying it).
-3. **The research angle.** Formalise token efficiency as a language-design
+4. **The research angle.** Formalise token efficiency as a language-design
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-08-04)
+## Where things stand (2026-08-05)
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.155** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 309 tests, including e2e tests that
+- **Language v0.3 / toolchain v0.3.156** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest local suite has 355 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
+- **v0.3.156 Parley Workflows:** `parley workflow list/new/run` ships the first
+  product layer over the language. Three bundled starters cover text cleanup,
+  log summaries, and Markdown checklist reports; normal Parley source can
+  `include "std/workflow"` for reusable deterministic helpers. The runner
+  requires a real input file, refuses an existing output without `--force`,
+  rejects input/output identity including hard links, validates schema-1
+  manifests, and compiles through the existing Rust backend. Focused tests pass
+  10/10, the full suite passes 355/355, and a built v0.3.156 wheel contains all
+  three templates plus `std/workflow`. Product history and adoption gates live
+  in `workflows/`; future helpers require recurring real-workflow evidence.
+- **Committed progress archive:** `progress/index.html` is a responsive,
+  searchable visual timeline over all 31 preserved benchmark HTML reports.
+  `progress/manifest.json` records source/archive paths, sizes, and SHA-256;
+  all 31 copies verify byte-for-byte, including explicitly preserved report
+  013. Refresh it with `python3 scripts/sync_progress_reports.py` after a new
+  report is added.
 - **v0.2 features just added:** richer `when` patterns (multi-value arms
   `is 1, 2 or 3:`, inclusive numeric ranges `is 10 to 20:`, new P312) and
   first-class function values (`the function f`, type
@@ -1049,16 +1068,18 @@ Update it whenever you finish or start a work item.
   install path uses `pip install git+https://github.com/ded-furby/parley-lang`,
   which works before a PyPI release.
 
-### Not started (the remaining roadmap, in suggested order)
+### Next work (in suggested order)
 
-1. **Run the benchmark study** (goal 3). `parley benchmark prompt` now renders
-   language-neutral task prompts, `parley benchmark measure` measures
-   Parley/Python/Rust seed references, supports optional `tiktoken` token
-   counts, checks Parley with JSON diagnostics, and captures generated attempts
-   to JSONL with `parley benchmark append` and summary analysis through
-   `parley benchmark summarize`. Still needed: repeated agent error-rate runs
-   and a result write-up.
-2. **Package publishing workflow** — checksum installs, publish-entry
+1. **Dogfood Parley Workflows.** Use the shipped starters on real repository
+   and operations tasks; record time-to-first-run and actual edits. Add JSON,
+   CSV, directory, or HTTP capability only after it recurs across unrelated
+   workflows with a coherent deterministic and safety contract. The concrete
+   adoption gates are in `workflows/ROADMAP.md`.
+2. **Independent deeper-project confirmation.** Report 031 passed the four
+   efficiency/reliability conditions but exact-root quality was 23/24. Freeze
+   new mechanisms and projects before measuring; do not tune from 031 or add
+   transcript-specific syntax. Preserve outputs in the progress archive.
+3. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
@@ -1074,12 +1095,12 @@ Update it whenever you finish or start a work item.
 - Every new feature needs: grammar + AST + checker (with P-coded errors
   and hints) + emitter + tests at all four levels (parser/checker/emit/
   e2e) + docs (TUTORIAL, REFERENCE, SPEC, skill) + an example if user-facing.
-- Run `python3 -m pytest tests/` (e2e needs cargo; ~20 s warm).
+- Run `python3 -m pytest tests/` (e2e needs cargo; runtime varies with Cargo cache).
 - Keep diagnostics stable: never renumber existing P-codes.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.155).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.156).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
