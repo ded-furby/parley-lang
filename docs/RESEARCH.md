@@ -134,3 +134,12 @@ families, JSON/TOON pairs, sol-low/sol-medium/terra-medium configurations, and
 three repetitions. It spans two model IDs rather than the three proposed in the
 Stage B outline because only those two are available in the established Codex
 runner; that constraint is recorded before output and limits generalization.
+
+The complete 90-session result passes all five frozen conditions: 90 unique
+tool-free sessions, 90/90 exact answers, 90/90 valid JSON responses, and lower
+input plus total tokens in every one of 45 matched pairs. TOON saves 1.1083% of
+summed input tokens and 1.1066% of complete input-plus-output tokens after the
+large fixed Codex context is included. This confirms non-inferior adaptive input
+packing for the selected record-heavy tasks. It does not test model-generated
+TOON, heterogeneous shapes, external model families, or Parley source against
+Python/Rust.

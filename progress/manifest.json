@@ -396,6 +396,18 @@
       "sha256": "8e8ac6120f9ca69cdd28fdf02515cf80da90fd7ae85fbb44e96188389a8b3cfb",
       "source": "benchmarks/reports/033-adaptive-agent-data-gate-not-met.html",
       "archive": "progress/reports/033-adaptive-agent-data-gate-not-met.html"
+    },
+    {
+      "number": 34,
+      "file": "034-verified-toon-context-efficiency-win.html",
+      "title": "Verified TOON Context Is Cheaper Without Accuracy Loss \u2014 Iteration 034",
+      "label": "Verified Toon Context Efficiency Win",
+      "stage": "Repository scale",
+      "signal": "positive",
+      "bytes": 624121,
+      "sha256": "85f9cca1344359728ab8cc71014108ae3d3e659d1116c6d2d6475abe24bfddd5",
+      "source": "benchmarks/reports/034-verified-toon-context-efficiency-win.html",
+      "archive": "progress/reports/034-verified-toon-context-efficiency-win.html"
     }
   ],
   "product_records": [

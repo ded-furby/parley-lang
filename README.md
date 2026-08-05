@@ -174,6 +174,16 @@ increased tokens. Three record-heavy cases selected TOON under both primary
 tokenizers, saving 4.5682% and 4.5673% in aggregate—useful, but below the frozen
 5% gate. The result is preserved as a failed 4/5, with no same-corpus tuning.
 
+The separately committed [90-session agent
+confirmation](benchmarks/reports/034-verified-toon-context-efficiency-win.html)
+then tested only the record-heavy shapes where Stage A said TOON helps. JSON
+and TOON both achieved 45/45 exact answers and valid JSON responses across
+sol-low, sol-medium, and terra-medium. TOON used fewer tokens in all 45 matched
+pairs, saving 6,392 input tokens (1.1083%) and 6,422 total session tokens
+(1.1066%); the frozen gate passed 5/5. This validates adaptive read-only input
+packing on this corpus, not universal TOON output or a general Parley/Python/Rust
+victory.
+
 For editor integration, start the stdio language server from your editor:
 
 ```bash

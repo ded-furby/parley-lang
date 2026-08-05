@@ -41,6 +41,9 @@ to prove that outside a benchmark harness.
   strictly-lower measured token count; unsupported shapes retain compact JSON.
 - no workflow contract or Parley language syntax changed, so this does not
   manufacture product evidence for structured values inside programs.
+- iteration 034 confirms the input layer on 90 fresh sessions: 90/90 exact,
+  45/45 paired token reductions, and a 5/5 frozen gate. The evidence remains
+  limited to selected record-heavy input and does not promote a workflow parser.
 
 ## Next product loop
 

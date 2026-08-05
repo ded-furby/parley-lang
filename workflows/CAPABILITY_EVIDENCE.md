@@ -33,6 +33,14 @@ savings were about 4.57% and missed the 5% aggregate gate. Three record-heavy
 documents benefited; nine retained JSON. Preserve the CLI layer and do not tune
 the profile, workflow contracts, or language syntax from that corpus.
 
+Iteration 034 independently confirms the narrow positive case without changing
+that decision. Across 90 fresh exact-answer sessions on record-heavy contexts,
+JSON and TOON are both 45/45 correct, while TOON uses fewer total tokens in all
+45 matched pairs and passes the frozen 5/5 gate. This earns the adaptive CLI
+input layer as a maintained feature. It still does not earn JSON/TOON language
+syntax, agent-generated TOON, a workflow runtime parser, or removal of JSON
+fallback.
+
 ## 2026-08-05 — v0.3.158 catalog review
 
 Evidence reviewed:

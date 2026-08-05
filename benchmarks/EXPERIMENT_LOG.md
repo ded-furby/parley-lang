@@ -3181,3 +3181,59 @@ parse non-inferiority, lower summed input tokens, and lower summed total tokens.
 All must pass. No cell may be rerun, excluded, or replaced, and no prompt,
 context, expected answer, schema, model, margin, TOON profile, or threshold may
 change from the measured result.
+
+## 034 — Paired confirmation passes all five frozen conditions
+
+- Completed: 2026-08-05, all cells once with no reruns or exclusions
+- Protocol checkpoint: `ca82a5b`
+- Raw result: `benchmarks/results/agent_data_confirmation_034.json`
+- Raw SHA-256:
+  `69906633e6ad762b69188aea489023f81602845b1feeae920e237457be0deb2f`
+- Report: `benchmarks/reports/034-verified-toon-context-efficiency-win.html`
+- Report SHA-256:
+  `85f9cca1344359728ab8cc71014108ae3d3e659d1116c6d2d6475abe24bfddd5`
+- Canonical artifact SHA-256:
+  `33fa297a004ce5b11be7f1bff319d4a803e130cbb5aca389151b407d329fd1e0`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_034_report.py`
+- Integrity: 90 unique thread IDs; 90/90 zero-exit, non-timeout, tool-free,
+  agent-error-free, schema-parse, and exact hidden-answer sessions
+
+The preregistered primary gate passes **5/5**. JSON and TOON each score 45/45
+on exact answers and valid JSON responses. TOON input saves 6,392 reported
+tokens (1.1083%), and TOON input plus output saves 6,422 (1.1066%). All 45
+matched task/configuration/replicate pairs have negative TOON-minus-JSON input
+and total-token deltas; input savings range from 55 to 267 per pair and total
+savings from 49 to 265.
+
+| Representation | Sessions | Exact | Parsed | Input tokens | Output tokens | Total tokens | Median total | Median seconds |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Compact JSON | 45 | 45 | 45 | 576,761 | 3,571 | 580,332 | 12,817 | 9.4193 |
+| Verified TOON | 45 | 45 | 45 | 570,369 | 3,541 | 573,910 | 12,738 | 9.9798 |
+
+Each frozen agent configuration is 15/15 exact per representation and saves
+between 2,120 and 2,161 total tokens with TOON. Every task family is 9/9 exact
+per arm. Complete-session savings are 0.466% for aggregation, 0.549% for
+filtering, 1.093% for exact lookup, 1.465% for rename planning, and 1.911% for
+rollback reasoning. The larger-context tasks preserve more of their
+representation saving after roughly 12k fixed agent tokens are included.
+
+Median TOON elapsed is 5.95% higher overall, with opposite directions across
+configurations. Elapsed was not a frozen condition, concurrency makes the
+comparison noisy, and no speed claim follows. Cached-input totals also differ
+between randomized arms, although every reported matched input-token delta is
+negative. The result covers two model IDs, selected record-heavy contexts, and
+model output constrained to JSON; it does not establish generated-TOON
+reliability or a universal model/format win.
+
+The canonical report passes artifact validation, packaging, keyboard source
+interaction, and responsive Chromium checks at 1,440 and 390 pixels. It
+contains 26 blocks, two charts, eight metrics, five tables, all configurations,
+all tasks, all gates, and every matched pair.
+
+**Ship and preserve the adaptive input layer exactly as designed:** JSON stays
+the semantic source of truth and fallback; TOON is used only after exact
+round-trip verification and measured savings. Make no same-corpus profile,
+prompt, model, task, or threshold change. Replicate with external models and
+longer real repositories before broad claims, and continue evaluating Parley
+source-language capability separately from context encoding.

@@ -1,0 +1,1309 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Verified TOON Context Is Cheaper Without Accuracy Loss — Iteration 034",
+    "description": "Preregistered 90-session paired compact-JSON versus verified-TOON agent confirmation.",
+    "generatedAt": "2026-08-05T03:34:35.502687Z",
+    "cards": [
+      {
+        "id": "sessions_card",
+        "description": "Every frozen matrix cell ran once.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "sessions",
+            "label": "Fresh sessions",
+            "format": "number",
+            "unit": "sessions"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "exact_card",
+        "description": "Both arms match every hidden expected answer.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "exact_successes",
+            "label": "Exact answers",
+            "format": "number",
+            "unit": "of 90"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "pairs_card",
+        "description": "TOON uses fewer total tokens in every matched pair.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "paired_token_wins",
+            "label": "Paired token wins",
+            "format": "number",
+            "unit": "of 45"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "input_card",
+        "description": "Summed Codex input reduction across 45 TOON sessions.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "input_saved",
+            "label": "Input tokens saved",
+            "format": "number",
+            "unit": "tokens"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "input_percent_card",
+        "description": "Full-session input savings, including fixed agent context.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "input_savings_percent",
+            "label": "Input reduction",
+            "format": "number",
+            "unit": "%"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "total_card",
+        "description": "Input plus output reduction across the complete paired study.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "total_saved",
+            "label": "Total tokens saved",
+            "format": "number",
+            "unit": "tokens"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "total_percent_card",
+        "description": "Complete session-token reduction versus compact JSON.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "total_savings_percent",
+            "label": "Total reduction",
+            "format": "number",
+            "unit": "%"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "gate_card",
+        "description": "Every preregistered integrity, quality, and token gate passes.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "gate_conditions",
+            "label": "Frozen conditions",
+            "format": "number",
+            "unit": "of 5"
+          }
+        ],
+        "sourceId": "agent_data_confirmation_034"
+      }
+    ],
+    "charts": [
+      {
+        "id": "config_chart",
+        "title": "Total session tokens by agent configuration",
+        "subtitle": "15 fresh sessions per representation/configuration; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "config_summary",
+        "encodings": {
+          "x": {
+            "field": "agent_config",
+            "type": "nominal",
+            "label": "Agent configuration"
+          },
+          "y": {
+            "field": "total_tokens",
+            "type": "quantitative",
+            "label": "Total tokens",
+            "format": "compact"
+          },
+          "color": {
+            "field": "representation",
+            "type": "nominal",
+            "label": "Representation"
+          }
+        },
+        "xAxisTitle": "Agent configuration",
+        "yAxisTitle": "Total tokens",
+        "valueFormat": "compact",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "question": "Is the token reduction consistent across frozen agent configurations?",
+        "rationale": "Grouped bars preserve configuration and representation denominators while exposing whether one configuration drives the aggregate.",
+        "comparisonContext": {
+          "unit": "input plus output tokens",
+          "grain": "configuration-representation aggregate",
+          "denominator": "15 sessions per bar",
+          "semanticFamily": "complete agent-session tokens"
+        }
+      },
+      {
+        "id": "task_chart",
+        "title": "Total token savings by task family",
+        "subtitle": "Nine paired sessions per task; positive percent means verified TOON used fewer full-session tokens.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "task_savings",
+        "encodings": {
+          "x": {
+            "field": "task",
+            "type": "nominal",
+            "label": "Task family"
+          },
+          "y": {
+            "field": "saved_percent",
+            "type": "quantitative",
+            "label": "Total tokens saved",
+            "format": "number"
+          }
+        },
+        "xAxisTitle": "Task family",
+        "yAxisTitle": "Savings (%)",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "question": "Which task families convert compact context into the largest complete-session saving?",
+        "rationale": "A single-series category comparison shows the treatment effect by task without implying an unsupported trend.",
+        "comparisonContext": {
+          "unit": "percent of compact-JSON total tokens",
+          "grain": "task aggregate",
+          "denominator": "nine JSON and nine TOON sessions per task",
+          "semanticFamily": "paired total-token savings"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "gate_table",
+        "title": "Frozen five-part confirmation gate",
+        "subtitle": "All conditions were defined and committed before the 90 measured task sessions.",
+        "dataset": "gate_detail",
+        "columns": [
+          {
+            "field": "condition",
+            "label": "Condition",
+            "type": "text"
+          },
+          {
+            "field": "threshold",
+            "label": "Frozen threshold",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "result",
+            "label": "Result",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "condition",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "representation_table",
+        "title": "Representation-level result",
+        "subtitle": "45 fresh sessions per arm over identical JSON data models and answer schemas.",
+        "dataset": "representation_summary",
+        "columns": [
+          {
+            "field": "representation",
+            "label": "Representation",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "exact",
+            "label": "Exact",
+            "format": "number"
+          },
+          {
+            "field": "parsed",
+            "label": "Parsed",
+            "format": "number"
+          },
+          {
+            "field": "tool_free",
+            "label": "Tool-free",
+            "format": "number"
+          },
+          {
+            "field": "input_tokens",
+            "label": "Input tokens",
+            "format": "number"
+          },
+          {
+            "field": "output_tokens",
+            "label": "Output tokens",
+            "format": "number"
+          },
+          {
+            "field": "total_tokens",
+            "label": "Total tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_total",
+            "label": "Median/session",
+            "format": "number"
+          },
+          {
+            "field": "median_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "representation",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "config_table",
+        "title": "Agent-configuration audit",
+        "subtitle": "Each row retains 15 fresh sessions; model and reasoning differences remain visible.",
+        "dataset": "config_summary",
+        "columns": [
+          {
+            "field": "agent_config",
+            "label": "Agent config",
+            "type": "text"
+          },
+          {
+            "field": "representation",
+            "label": "Representation",
+            "type": "text"
+          },
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number"
+          },
+          {
+            "field": "exact",
+            "label": "Exact",
+            "format": "number"
+          },
+          {
+            "field": "input_tokens",
+            "label": "Input tokens",
+            "format": "number"
+          },
+          {
+            "field": "output_tokens",
+            "label": "Output tokens",
+            "format": "number"
+          },
+          {
+            "field": "total_tokens",
+            "label": "Total tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_total",
+            "label": "Median/session",
+            "format": "number"
+          },
+          {
+            "field": "median_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "agent_config",
+          "direction": "asc"
+        },
+        "density": "spacious",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "task_table",
+        "title": "Task-level paired audit",
+        "subtitle": "Each task has nine JSON and nine TOON sessions; all 18 answers per task are exact.",
+        "dataset": "task_summary",
+        "columns": [
+          {
+            "field": "task",
+            "label": "Task",
+            "type": "text"
+          },
+          {
+            "field": "family",
+            "label": "Family",
+            "type": "text"
+          },
+          {
+            "field": "json_correct",
+            "label": "JSON exact",
+            "format": "number"
+          },
+          {
+            "field": "toon_correct",
+            "label": "TOON exact",
+            "format": "number"
+          },
+          {
+            "field": "json_context_chars",
+            "label": "JSON chars",
+            "format": "number"
+          },
+          {
+            "field": "toon_context_chars",
+            "label": "TOON chars",
+            "format": "number"
+          },
+          {
+            "field": "json_total",
+            "label": "JSON total",
+            "format": "number"
+          },
+          {
+            "field": "toon_total",
+            "label": "TOON total",
+            "format": "number"
+          },
+          {
+            "field": "saved_tokens",
+            "label": "Saved",
+            "format": "number"
+          },
+          {
+            "field": "saved_percent",
+            "label": "Saved %",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "task",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034"
+      },
+      {
+        "id": "pair_table",
+        "title": "Complete 45-pair token audit",
+        "subtitle": "Positive saved values mean TOON used fewer tokens for the identical task/configuration/replicate pair.",
+        "dataset": "pair_detail",
+        "columns": [
+          {
+            "field": "agent_config",
+            "label": "Agent config",
+            "type": "text"
+          },
+          {
+            "field": "replicate",
+            "label": "Rep",
+            "format": "number"
+          },
+          {
+            "field": "task",
+            "label": "Task",
+            "type": "text"
+          },
+          {
+            "field": "json_correct",
+            "label": "JSON correct",
+            "type": "text"
+          },
+          {
+            "field": "toon_correct",
+            "label": "TOON correct",
+            "type": "text"
+          },
+          {
+            "field": "input_saved",
+            "label": "Input saved",
+            "format": "number"
+          },
+          {
+            "field": "total_saved",
+            "label": "Total saved",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "agent_config",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034"
+      }
+    ],
+    "sources": [
+      {
+        "id": "agent_data_confirmation_034",
+        "label": "Frozen iteration 034 paired agent confirmation",
+        "path": "034-verified-toon-context-efficiency-win.sql"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Verified TOON Context Is Cheaper Without Accuracy Loss — Iteration 034"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## Technical summary\n\n**Verified TOON input passes the complete preregistered confirmation on record-heavy agent tasks.** Compact JSON and TOON both achieve **45/45 exact answers**, **45/45 valid schema-constrained JSON responses**, and zero tool calls. TOON reduces summed input tokens from **576,761 to 570,369** and complete input-plus-output tokens from **580,332 to 573,910**. All **45/45 matched pairs** use fewer total tokens, so the frozen gate passes **5/5**. This is evidence for Parley's adaptive input layer on these shapes and two model IDs—not proof that TOON should replace JSON or that Parley is already the best general-purpose language."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions_card",
+          "exact_card",
+          "pairs_card",
+          "input_card",
+          "input_percent_card",
+          "total_card",
+          "total_percent_card",
+          "gate_card"
+        ]
+      },
+      {
+        "id": "quality",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## Meaning survives every representation change\n\nEvery lookup, filter, aggregation, rollback selection, and rename plan is exact in both arms across sol-low, sol-medium, and terra-medium. All 90 output files parse against the same per-task JSON schema; no session invokes a command, times out, returns nonzero, or reports an agent error. The accuracy margin is therefore unused: TOON ties JSON overall and within every configuration."
+      },
+      {
+        "id": "gate_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "gate_table"
+      },
+      {
+        "id": "token_result",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## The full agent session is 1.1066% cheaper, consistently\n\nTOON saves **6,392 input tokens (1.1083%)** and **6,422 total tokens (1.1066%)** across 45 sessions. Median total tokens fall from 12,817 to 12,738. The absolute percentage is smaller than the context-only reduction because roughly 12k fixed agent/system tokens surround each task, but the direction is unusually consistent: every matched pair saves between 49 and 265 total tokens."
+      },
+      {
+        "id": "config_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "config_chart"
+      },
+      {
+        "id": "representation_table_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "representation_table"
+      },
+      {
+        "id": "config_table_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "config_table"
+      },
+      {
+        "id": "task_result",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## Larger reasoning contexts create the largest complete-session gains\n\nRollback reasoning saves 2,290 total tokens (1.911%) and rename planning saves 1,711 (1.465%). Exact lookup saves 1.093%; filtering and aggregation save 0.549% and 0.466%. All task families remain 9/9 exact per arm. The difference follows useful context volume rather than a correctness tradeoff: TOON removes repeated record keys, while fixed session overhead remains unchanged."
+      },
+      {
+        "id": "task_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "task_chart"
+      },
+      {
+        "id": "task_table_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "task_table"
+      },
+      {
+        "id": "pairs",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## All 45 matched pairs point in the same token direction\n\nPairing holds task, agent configuration, and replicate fixed. Input-token deltas range from 55 to 267 saved; complete-token deltas range from 49 to 265 saved. The complete audit below prevents the aggregate from hiding one configuration, task, or replicate that became more expensive."
+      },
+      {
+        "id": "pair_table_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "pair_table"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## Scope, population, and metric definitions\n\nThe population is five frozen record-heavy contexts where canonical TOON is exact and character-smaller: compiler diagnostics, test results used for two tasks, deployment history, and a symbol index. Each task appears under compact JSON and TOON for three configurations and three repetitions, giving 45 pairs and 90 fresh sessions. **Exact** means the hidden answer matches after JSON parsing. **Total tokens** means the Codex-reported input plus output tokens for the full session, not context tokens alone."
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## The protocol was committed before task output\n\nCommit `ca82a5b` freezes protocol SHA `a50cbe79…`, task SHA `9fa1588f…`, context hashes, seed `340260805`, 180-second timeout, concurrency six, prompts, hidden answers, output schemas, runner, exact scorer, token definitions, and five all-required gates. Cells were shuffled once, each used an ephemeral task with tools disabled, and all ran exactly once. Unrelated `ready` prompts checked model/schema availability before the freeze; no benchmark context or answer was exposed."
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "agent_data_confirmation_034",
+        "body": "## Limits: two models, selected shapes, and no elapsed win\n\nThe matrix has three configurations but only two model IDs; sol-low is a reasoning-budget sensitivity, not an independent third model. Tasks are exact-answer and intentionally use the uniform records where Stage A said TOON helps, so this does not generalize to prose, deep heterogeneous JSON, agent-generated TOON, or arbitrary coding repositories. Median elapsed time is **9.9798 seconds for TOON versus 9.4193 for JSON** and varies by configuration; elapsed was not a frozen gate, concurrency adds noise, and this run supports no speed claim. Cached-input totals also differ by randomized execution, although every matched reported input-token delta remains negative."
+      },
+      {
+        "id": "decision",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Decision: ship adaptive input packing, keep JSON as the contract\n\n1. Keep `parley data` automatic: use TOON only after exact round trip and real-token savings; keep JSON fallback for every other shape.\n2. Keep model output, tool diagnostics, public APIs, and stored source-of-truth data as JSON.\n3. Do not expand the TOON profile from these sessions; future forms need independent product pressure and a new corpus.\n4. Replicate on at least one external model family and longer real coding contexts before using broad marketing language.\n5. Continue the source-language thesis separately on mature backend and frontend projects; never add this 1.1066% context result to Parley/Python/Rust source scores."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Does the 45/45 paired token direction repeat with external model families and larger context windows?\n- At what context size does removing repeated keys materially change full-session cost after fixed agent overhead?\n- Does non-inferior accuracy persist on ambiguous real repository tasks rather than exact-answer fixtures?\n- Which backend and frontend product capability should Parley dogfood next without introducing benchmark-shaped syntax?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-05T03:34:35.502687Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "sessions": 90,
+          "exact_successes": 90,
+          "paired_token_wins": 45,
+          "input_saved": 6392,
+          "input_savings_percent": 1.1083,
+          "total_saved": 6422,
+          "total_savings_percent": 1.1066,
+          "gate_conditions": 5
+        }
+      ],
+      "representation_summary": [
+        {
+          "representation": "Compact JSON",
+          "sessions": 45,
+          "exact": 45,
+          "parsed": 45,
+          "tool_free": 45,
+          "input_tokens": 576761,
+          "output_tokens": 3571,
+          "total_tokens": 580332,
+          "median_total": 12817,
+          "median_seconds": 9.4193
+        },
+        {
+          "representation": "Verified TOON",
+          "sessions": 45,
+          "exact": 45,
+          "parsed": 45,
+          "tool_free": 45,
+          "input_tokens": 570369,
+          "output_tokens": 3541,
+          "total_tokens": 573910,
+          "median_total": 12738,
+          "median_seconds": 9.9798
+        }
+      ],
+      "config_summary": [
+        {
+          "agent_config": "sol-low",
+          "representation": "Compact JSON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 191685,
+          "output_tokens": 1135,
+          "total_tokens": 192820,
+          "median_total": 12817,
+          "median_seconds": 10.6683
+        },
+        {
+          "agent_config": "sol-low",
+          "representation": "Verified TOON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 189557,
+          "output_tokens": 1143,
+          "total_tokens": 190700,
+          "median_total": 12675,
+          "median_seconds": 9.0869
+        },
+        {
+          "agent_config": "sol-medium",
+          "representation": "Compact JSON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 191677,
+          "output_tokens": 1142,
+          "total_tokens": 192819,
+          "median_total": 12815,
+          "median_seconds": 9.4193
+        },
+        {
+          "agent_config": "sol-medium",
+          "representation": "Verified TOON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 189545,
+          "output_tokens": 1133,
+          "total_tokens": 190678,
+          "median_total": 12675,
+          "median_seconds": 9.9798
+        },
+        {
+          "agent_config": "terra-medium",
+          "representation": "Compact JSON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 193399,
+          "output_tokens": 1294,
+          "total_tokens": 194693,
+          "median_total": 12929,
+          "median_seconds": 8.5233
+        },
+        {
+          "agent_config": "terra-medium",
+          "representation": "Verified TOON",
+          "sessions": 15,
+          "exact": 15,
+          "input_tokens": 191267,
+          "output_tokens": 1265,
+          "total_tokens": 192532,
+          "median_total": 12789,
+          "median_seconds": 10.9628
+        }
+      ],
+      "task_summary": [
+        {
+          "task": "Aggregation",
+          "family": "aggregation",
+          "json_correct": 9,
+          "toon_correct": 9,
+          "json_input": 113263,
+          "toon_input": 112728,
+          "json_total": 114512,
+          "toon_total": 113978,
+          "saved_tokens": 534,
+          "saved_percent": 0.4663,
+          "json_context_chars": 674,
+          "toon_context_chars": 316
+        },
+        {
+          "task": "Exact lookup",
+          "family": "exact lookup",
+          "json_correct": 9,
+          "toon_correct": 9,
+          "json_input": 115271,
+          "toon_input": 114007,
+          "json_total": 115685,
+          "toon_total": 114421,
+          "saved_tokens": 1264,
+          "saved_percent": 1.0926,
+          "json_context_chars": 1580,
+          "toon_context_chars": 916
+        },
+        {
+          "task": "Filtering",
+          "family": "filtering",
+          "json_correct": 9,
+          "toon_correct": 9,
+          "json_input": 113137,
+          "toon_input": 112608,
+          "json_total": 113533,
+          "toon_total": 112910,
+          "saved_tokens": 623,
+          "saved_percent": 0.5487,
+          "json_context_chars": 674,
+          "toon_context_chars": 316
+        },
+        {
+          "task": "Rollback reasoning",
+          "family": "cross-record reasoning",
+          "json_correct": 9,
+          "toon_correct": 9,
+          "json_input": 118885,
+          "toon_input": 116532,
+          "json_total": 119830,
+          "toon_total": 117540,
+          "saved_tokens": 2290,
+          "saved_percent": 1.911,
+          "json_context_chars": 2474,
+          "toon_context_chars": 1171
+        },
+        {
+          "task": "Rename planning",
+          "family": "context-grounded code modification",
+          "json_correct": 9,
+          "toon_correct": 9,
+          "json_input": 116205,
+          "toon_input": 114494,
+          "json_total": 116772,
+          "toon_total": 115061,
+          "saved_tokens": 1711,
+          "saved_percent": 1.4652,
+          "json_context_chars": 2100,
+          "toon_context_chars": 1110
+        }
+      ],
+      "task_savings": [
+        {
+          "task": "Aggregation",
+          "saved_percent": 0.4663,
+          "saved_tokens": 534,
+          "json_total": 114512,
+          "toon_total": 113978,
+          "pairs": 9
+        },
+        {
+          "task": "Exact lookup",
+          "saved_percent": 1.0926,
+          "saved_tokens": 1264,
+          "json_total": 115685,
+          "toon_total": 114421,
+          "pairs": 9
+        },
+        {
+          "task": "Filtering",
+          "saved_percent": 0.5487,
+          "saved_tokens": 623,
+          "json_total": 113533,
+          "toon_total": 112910,
+          "pairs": 9
+        },
+        {
+          "task": "Rollback reasoning",
+          "saved_percent": 1.911,
+          "saved_tokens": 2290,
+          "json_total": 119830,
+          "toon_total": 117540,
+          "pairs": 9
+        },
+        {
+          "task": "Rename planning",
+          "saved_percent": 1.4652,
+          "saved_tokens": 1711,
+          "json_total": 116772,
+          "toon_total": 115061,
+          "pairs": 9
+        }
+      ],
+      "pair_detail": [
+        {
+          "agent_config": "sol-low",
+          "replicate": 1,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 61,
+          "total_saved": 57
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 1,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 142,
+          "total_saved": 142
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 1,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 59
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 1,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 261,
+          "total_saved": 261
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 1,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 185,
+          "total_saved": 185
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 2,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 57,
+          "total_saved": 56
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 2,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 142,
+          "total_saved": 142
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 2,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 59
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 2,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 261,
+          "total_saved": 261
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 2,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 191,
+          "total_saved": 191
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 3,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 63,
+          "total_saved": 60
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 3,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 142,
+          "total_saved": 142
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 3,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 57,
+          "total_saved": 57
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 3,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 259,
+          "total_saved": 259
+        },
+        {
+          "agent_config": "sol-low",
+          "replicate": 3,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 189,
+          "total_saved": 189
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 1,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 61,
+          "total_saved": 60
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 1,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 136,
+          "total_saved": 136
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 1,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 63,
+          "total_saved": 63
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 1,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 265,
+          "total_saved": 265
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 1,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 193,
+          "total_saved": 193
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 2,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 62
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 2,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 140,
+          "total_saved": 140
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 2,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 57,
+          "total_saved": 57
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 2,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 261,
+          "total_saved": 261
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 2,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 189,
+          "total_saved": 189
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 3,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 57,
+          "total_saved": 64
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 3,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 142,
+          "total_saved": 142
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 3,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 59
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 3,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 259,
+          "total_saved": 259
+        },
+        {
+          "agent_config": "sol-medium",
+          "replicate": 3,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 191,
+          "total_saved": 191
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 1,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 60
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 1,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 142,
+          "total_saved": 142
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 1,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 61,
+          "total_saved": 115
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 1,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 261,
+          "total_saved": 261
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 1,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 189,
+          "total_saved": 189
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 2,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 61,
+          "total_saved": 65
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 2,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 138,
+          "total_saved": 138
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 2,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 55,
+          "total_saved": 105
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 2,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 267,
+          "total_saved": 204
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 2,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 193,
+          "total_saved": 193
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 3,
+          "task": "Aggregation",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 57,
+          "total_saved": 50
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 3,
+          "task": "Exact lookup",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 140,
+          "total_saved": 140
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 3,
+          "task": "Filtering",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 59,
+          "total_saved": 49
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 3,
+          "task": "Rollback reasoning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 259,
+          "total_saved": 259
+        },
+        {
+          "agent_config": "terra-medium",
+          "replicate": 3,
+          "task": "Rename planning",
+          "json_correct": "yes",
+          "toon_correct": "yes",
+          "input_saved": 191,
+          "total_saved": 191
+        }
+      ],
+      "gate_detail": [
+        {
+          "condition": "Execution integrity",
+          "threshold": "90 unique, zero timeout/error/tool calls",
+          "observed": "90/90 clean",
+          "result": "PASS"
+        },
+        {
+          "condition": "Accuracy non-inferior",
+          "threshold": "No worse than -2 overall / -1 per config",
+          "observed": "45/45 vs 45/45",
+          "result": "PASS"
+        },
+        {
+          "condition": "Response parse non-inferior",
+          "threshold": "TOON parsed ≥ JSON",
+          "observed": "45/45 vs 45/45",
+          "result": "PASS"
+        },
+        {
+          "condition": "Input tokens lower",
+          "threshold": "TOON sum < JSON sum",
+          "observed": "570,369 < 576,761",
+          "result": "PASS"
+        },
+        {
+          "condition": "Total tokens lower",
+          "threshold": "TOON sum < JSON sum",
+          "observed": "573,910 < 580,332",
+          "result": "PASS"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "agent_data_confirmation_034",
+      "label": "Frozen iteration 034 paired agent confirmation",
+      "path": "034-verified-toon-context-efficiency-win.sql",
+      "query": {
+        "engine": "Codex CLI 0.146.0 + Python 3",
+        "query": "python3 benchmarks/agent_data_runner.py --protocol benchmarks/agent_data_protocol_034.json --output benchmarks/results/agent_data_confirmation_034.json",
+        "description": "All 90 fresh session transcripts, schema-constrained responses, token usage records, elapsed times, command events, exact hidden judgments, and paired JSON/TOON aggregates.",
+        "executed_at": "2026-08-05T03:34:35.502687Z",
+        "language": "Python",
+        "metric_definitions": [
+          "Exact success: the parsed top-level answer equals the frozen hidden answer, including required array ordering and exact strings.",
+          "Input tokens: Codex turn.completed input_tokens summed across the 45 sessions in each representation arm.",
+          "Total tokens: Codex input_tokens plus output_tokens; reasoning_output_tokens remain separately preserved in every raw session.",
+          "Paired token win: TOON total_tokens are strictly below JSON total_tokens for the same task, agent configuration, and replicate.",
+          "Accuracy non-inferiority: TOON loses no more than two exact successes overall and no more than one within any agent configuration."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "034-verified-toon-context-efficiency-win.artifact.json",
+    "snapshotPath": "agent_data_confirmation_034.json",
+    "originUrl": "artifact://parley-agent-data-confirmation-034"
+  }
+}

@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3 / toolchain v0.3.159** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 381 tests, including e2e tests that
+  → cargo). The latest local suite has 385 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -75,7 +75,7 @@ Update it whenever you finish or start a work item.
   `3d3068e1501782f9f5a2242f1bdb061d4dace25dc59d26a847d2fabb71f26b78`;
   the canonical report passes desktop/narrow Chromium and source-interaction
   verification. Preserve the near miss, make no same-corpus profile change,
-  and run the separately frozen 90-session comprehension confirmation next.
+  and interpret it beside the separately frozen 90-session confirmation.
 - **Iteration 034 frozen before output:** five exact-answer task families pair
   compact JSON with exact-round-trip TOON across sol-low, sol-medium, and
   terra-medium, three repetitions each, for 90 fresh sessions. Output is
@@ -85,6 +85,18 @@ Update it whenever you finish or start a work item.
   reasoning-budget sensitivity rather than the third independent model
   proposed in 033. Protocol, tasks, runner, contexts, hashes, and five-part
   non-inferiority/token gate are committed before any measured task output.
+- **Iteration 034 confirmation result:** every one of 90 unique tool-free
+  sessions returns valid JSON and the exact hidden answer. Compact JSON and
+  verified TOON are both 45/45 correct; TOON uses fewer reported input and
+  total tokens in all 45 paired task/configuration/replicate comparisons.
+  Summed input falls 576,761 → 570,369 (1.1083%) and input-plus-output falls
+  580,332 → 573,910 (1.1066%), passing the frozen gate 5/5. Raw SHA is
+  `69906633e6ad762b69188aea489023f81602845b1feeae920e237457be0deb2f`.
+  The responsive report passes validation, packaging, source interaction, and
+  Chromium checks at 1,440/390 px. Median TOON elapsed is higher and the study
+  covers two model IDs plus selected record-heavy inputs, so claim an adaptive
+  input win only—not universal TOON, output-format, elapsed, or language
+  superiority.
 - **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` preserves
   the v0.3.158 finding that JSON/CSV values *inside Parley workflows* remain
   low-pressure. The v0.3.159 platform CLI layer does not manufacture evidence

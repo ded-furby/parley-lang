@@ -138,3 +138,17 @@ keeps JSON-schema-constrained output identical in both arms. The corpus, exact
 answers, prompts, randomization, margins, tool ban, runner, and raw-session
 accounting are committed before output in
 [`agent_data_protocol_034.json`](../benchmarks/agent_data_protocol_034.json).
+
+That run is now complete. All 90 fresh sessions are exact-correct and produce
+valid JSON; all 45 compact-JSON/TOON pairs preserve correctness while TOON uses
+fewer reported input and total tokens. Summed input falls from 576,761 to
+570,369 (1.1083%), and input-plus-output falls from 580,332 to 573,910
+(1.1066%). The five-part gate passes 5/5. The complete, responsive [iteration
+034 report](../benchmarks/reports/034-verified-toon-context-efficiency-win.html)
+preserves the configuration, task, and pair audits.
+
+The percentage is intentionally reported on the full agent session: fixed
+system/agent context is much larger than these small data payloads. The result
+therefore demonstrates a reliable directional saving, not a dramatic end-to-end
+cost collapse. It is bounded to selected record-heavy inputs, two model IDs,
+and JSON output; broader replication remains required.
