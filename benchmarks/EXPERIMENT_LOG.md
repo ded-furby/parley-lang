@@ -2945,3 +2945,33 @@ and an overall 4/5 maintainability pilot. Do not claim universal superiority
 from four synthetic projects. Next preregister an independent deeper-project
 confirmation with new semantic mechanisms and the same gates; do not select
 tasks from the iteration-031 failure or tune this corpus.
+
+## Corpus checkpoint for 032 — Independent deeper-project confirmation
+
+- Frozen: 2026-08-05, after product work and before protocol or measured output
+- Manifest: `benchmarks/agent_tasks_deep_confirmation_032.json`
+- Manifest SHA-256:
+  `49df28a27ce00ac58d898a386fcee1cae46fd15fd02c38ec82272b39a326bb1f`
+- Reference validation fixes: `benchmarks/deep_reference_fixes_032.json`
+- Reference SHA-256:
+  `03e14e19bd608654dbc7b5bce0057b37789cecddae9d8541b72ce65cc1936e70`
+- Source/adaptation record: `benchmarks/DEEP_CONFIRMATION_032.md`
+- Builder/validator: `build_deep_confirmation_032.py` and
+  `validate_deep_corpus_032.py`
+
+Four new mechanisms are adapted independently of report 031: quoted
+environment normalization, Retry-After precedence, raw webhook-body signature
+verification, and stable pagination tie-breaking. Every task/language contains
+five editable modules, three byte-identical read-only evidence files, one
+public case group, four withheld groups, and a predeclared owning defect file.
+
+All 12 seeds compile and fail expected behavior. Isolated reference root fixes
+pass all 60/60 case groups. Read-only evidence totals 3,178 characters, 40
+lines, and 590 rough tokens per language. Complete editable source is 5,334
+characters/1,068 rough tokens for Parley, 3,895/894 for Python, and 4,926/1,493
+for Rust.
+
+No report-031 task, failure, repair, or metric selected these mechanisms. No
+language, skill, instruction, runner, or judgment changed. Commit and push this
+checkpoint before creating protocol 032. The instruction-compression experiment
+remains closed.

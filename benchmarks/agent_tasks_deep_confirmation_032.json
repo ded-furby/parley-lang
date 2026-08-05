@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "description": "Four new five-module regressions for an independent deeper-project confirmation after product work.",
+  "predeclared_analysis": {
+    "experiment_id": "032",
+    "scope": "New project mechanisms selected independently of report 031; each has five editable modules and three visibly read-only evidence files per language.",
+    "primary_question": "After shipping workflow products without compiler or instruction tuning, does Parley repeat strict efficiency/reliability parity against Python and Rust on new deeper projects?",
+    "historical_sources": [
+      {
+        "task": "quoted_environment_project",
+        "url": "https://github.com/quarkusio/quarkus/issues/35861",
+        "mechanism": "quoted dotenv values retaining their quote representation"
+      },
+      {
+        "task": "retry_after_precedence_project",
+        "url": "https://github.com/microsoftgraph/msgraph-sdk-javascript/issues/42",
+        "mechanism": "Retry-After response evidence lost before retry policy"
+      },
+      {
+        "task": "webhook_raw_body_project",
+        "url": "https://github.com/stripe/stripe-node/issues/331",
+        "mechanism": "signature verification requires the exact raw request body"
+      },
+      {
+        "task": "stable_pagination_project",
+        "url": "https://github.com/orgs/langfuse/discussions/7623",
+        "mechanism": "non-unique sort keys duplicate records across paginated responses"
+      }
+    ],
+    "adaptation_rule": "Mechanisms and dependency shapes are adapted independently; no upstream source code, tests, names, or fixtures are copied.",
+    "independence_rule": "No task mechanism, defect location, fixture, or expected repair was selected from report 031 outcomes or failures.",
+    "root_cause_files": {
+      "quoted_environment_project": {
+        "parley": "normalization.par",
+        "python": "normalization.py",
+        "rust": "normalization.rs"
+      },
+      "retry_after_precedence_project": {
+        "parley": "retry_policy.par",
+        "python": "retry_policy.py",
+        "rust": "retry_policy.rs"
+      },
+      "webhook_raw_body_project": {
+        "parley": "verification.par",
+        "python": "verification.py",
+        "rust": "verification.rs"
+      },
+      "stable_pagination_project": {
+        "parley": "ordering.par",
+        "python": "ordering.py",
+        "rust": "ordering.rs"
+      }
+    },
+    "root_cause_gate": "Every Parley assignment must change exactly its predeclared seeded defect file; caller, formatter, or downstream compensation fails maintainability even if hidden output passes.",
+    "change_rule": "No language change follows one project or efficiency delta. Eligibility requires a semantic failure recurring across independent products or projects, followed by general usefulness, semantic consistency, maintainability, and full regression coverage.",
+    "instruction_rule": "Use the unchanged 1,519-character Parley skill. The one allowed instruction-compression experiment remains closed."
+  },
+  "tasks": [
+    {
+      "id": "quoted_environment_project",
+      "title": "Preserve values while removing environment quote markers",
+      "category": "configuration normalization across parser layers",
+      "statement": "Fix the quoted-environment normalization regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nURL|dq:db://local\nUSER|sq:admin\nMODE|raw:prod\n",
+          "stdout": "key=URL|value=db://local|kind=quoted\nkey=USER|value=admin|kind=quoted\nkey=MODE|value=prod|kind=raw\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nEMPTY|empty\n",
+          "stdout": "key=EMPTY|value=|kind=empty\n"
+        },
+        {
+          "stdin": "1\nTOKEN|dq:a=b=c\n",
+          "stdout": "key=TOKEN|value=a=b=c|kind=quoted\n"
+        },
+        {
+          "stdin": "2\nA|dq:x\nB|sq:y\n",
+          "stdout": "key=A|value=x|kind=quoted\nkey=B|value=y|kind=quoted\n"
+        },
+        {
+          "stdin": "1\nRAW|raw:dq:value\n",
+          "stdout": "key=RAW|value=dq:value|kind=raw\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "normalization.par": "include \"std/text\"\n\nto normalize_env with token as text giving text:\n    if token starts with \"sq:\":\n        give back (without_prefix with token, \"sq:\")\n    if token starts with \"dq:\":\n        give back token\n    if token is \"empty\":\n        give back \"\"\n    give back (without_prefix with token, \"raw:\")\n",
+          "classification.par": "to env_kind with token as text giving text:\n    if token starts with \"dq:\" or token starts with \"sq:\":\n        give back \"quoted\"\n    if token is \"empty\":\n        give back \"empty\"\n    give back \"raw\"\n",
+          "validation.par": "to env_supported with token as text giving yesno:\n    give back token is \"empty\" or token starts with \"dq:\" or token starts with \"sq:\" or token starts with \"raw:\"\n",
+          "formatting.par": "to format_env with key as text, value as text, kind as text giving text:\n    give back \"key=\" + key + \"|value=\" + value + \"|kind=\" + kind\n",
+          "main.par": "include \"normalization.par\"\ninclude \"classification.par\"\ninclude \"validation.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let key be item 1 of parts\n        let token be item 2 of parts\n        if (env_supported with token) is no:\n            fail \"unsupported environment token\"\n        say (format_env with key, (normalize_env with token), (env_kind with token))\n"
+        },
+        "python": {
+          "normalization.py": "def normalize_env(token: str) -> str:\n    if token.startswith(\"sq:\"):\n        return token.removeprefix(\"sq:\")\n    if token.startswith(\"dq:\"):\n        return token\n    if token == \"empty\":\n        return \"\"\n    return token.removeprefix(\"raw:\")\n",
+          "classification.py": "def env_kind(token: str) -> str:\n    if token.startswith((\"dq:\", \"sq:\")):\n        return \"quoted\"\n    if token == \"empty\":\n        return \"empty\"\n    return \"raw\"\n",
+          "validation.py": "def env_supported(token: str) -> bool:\n    return token == \"empty\" or token.startswith((\"dq:\", \"sq:\", \"raw:\"))\n",
+          "formatting.py": "def format_env(key: str, value: str, kind: str) -> str:\n    return f\"key={key}|value={value}|kind={kind}\"\n",
+          "main.py": "from classification import env_kind\nfrom formatting import format_env\nfrom normalization import normalize_env\nfrom validation import env_supported\n\ncount = int(input())\nfor _ in range(count):\n    key, token = input().split(\"|\", 1)\n    if not env_supported(token):\n        raise ValueError(\"unsupported environment token\")\n    print(format_env(key, normalize_env(token), env_kind(token)))\n"
+        },
+        "rust": {
+          "normalization.rs": "pub fn normalize_env(token: &str) -> String {\n    if let Some(value) = token.strip_prefix(\"sq:\") { return value.to_string(); }\n    if token.starts_with(\"dq:\") { return token.to_string(); }\n    if token == \"empty\" { return String::new(); }\n    token.strip_prefix(\"raw:\").unwrap_or(token).to_string()\n}\n",
+          "classification.rs": "pub fn env_kind(token: &str) -> &'static str {\n    if token.starts_with(\"dq:\") || token.starts_with(\"sq:\") { return \"quoted\"; }\n    if token == \"empty\" { return \"empty\"; }\n    \"raw\"\n}\n",
+          "validation.rs": "pub fn env_supported(token: &str) -> bool {\n    token == \"empty\" || token.starts_with(\"dq:\") || token.starts_with(\"sq:\") || token.starts_with(\"raw:\")\n}\n",
+          "formatting.rs": "pub fn format_env(key: &str, value: &str, kind: &str) -> String {\n    format!(\"key={key}|value={value}|kind={kind}\")\n}\n",
+          "main.rs": "mod classification;\nmod formatting;\nmod normalization;\nmod validation;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let (key, token) = line.split_once('|').unwrap();\n        assert!(validation::env_supported(token));\n        println!(\"{}\", formatting::format_env(key, &normalization::normalize_env(token), classification::env_kind(token)));\n    }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Quoted environment values keep their quote marker\n\nThe environment loader represents matching double and single quotes as `dq:` and `sq:` markers. Both markers are syntax and must be removed exactly once. Raw values remove only `raw:`; an explicit empty value stays present and empty. Content after a marker is arbitrary and may contain `=` or marker-like text.\n",
+          "architecture/flow.md": "# Environment loading flow\n\n`validation` accepts encoded tokens. `classification` records quoted, raw, or empty state. `normalization` owns removal of one outer marker. `formatting` owns stable output. `main` orchestrates. Repair normalization instead of hiding markers in the formatter.\n",
+          "tests/regression.txt": "double-quoted marker is removed once\nsingle-quoted marker is removed once\nraw marker is removed without reinterpreting content\nempty remains present with an empty value\n"
+        },
+        "python": {
+          "ISSUE.md": "# Quoted environment values keep their quote marker\n\nThe environment loader represents matching double and single quotes as `dq:` and `sq:` markers. Both markers are syntax and must be removed exactly once. Raw values remove only `raw:`; an explicit empty value stays present and empty. Content after a marker is arbitrary and may contain `=` or marker-like text.\n",
+          "architecture/flow.md": "# Environment loading flow\n\n`validation` accepts encoded tokens. `classification` records quoted, raw, or empty state. `normalization` owns removal of one outer marker. `formatting` owns stable output. `main` orchestrates. Repair normalization instead of hiding markers in the formatter.\n",
+          "tests/regression.txt": "double-quoted marker is removed once\nsingle-quoted marker is removed once\nraw marker is removed without reinterpreting content\nempty remains present with an empty value\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Quoted environment values keep their quote marker\n\nThe environment loader represents matching double and single quotes as `dq:` and `sq:` markers. Both markers are syntax and must be removed exactly once. Raw values remove only `raw:`; an explicit empty value stays present and empty. Content after a marker is arbitrary and may contain `=` or marker-like text.\n",
+          "architecture/flow.md": "# Environment loading flow\n\n`validation` accepts encoded tokens. `classification` records quoted, raw, or empty state. `normalization` owns removal of one outer marker. `formatting` owns stable output. `main` orchestrates. Repair normalization instead of hiding markers in the formatter.\n",
+          "tests/regression.txt": "double-quoted marker is removed once\nsingle-quoted marker is removed once\nraw marker is removed without reinterpreting content\nempty remains present with an empty value\n"
+        }
+      }
+    },
+    {
+      "id": "retry_after_precedence_project",
+      "title": "Honor server Retry-After before configured backoff",
+      "category": "throttling policy across response layers",
+      "statement": "Fix the throttling-delay regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\n429|30|5\n429|none|5\n200|20|5\n",
+          "stdout": "status=429|delay=30|source=header\nstatus=429|delay=5|source=configured\nstatus=200|delay=0|source=none\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\n429|120|none\n",
+          "stdout": "status=429|delay=120|source=header\n"
+        },
+        {
+          "stdin": "1\n429|none|none\n",
+          "stdout": "status=429|delay=60|source=default\n"
+        },
+        {
+          "stdin": "1\n503|9|7\n",
+          "stdout": "status=503|delay=0|source=none\n"
+        },
+        {
+          "stdin": "2\n429|1|99\n429|none|8\n",
+          "stdout": "status=429|delay=1|source=header\nstatus=429|delay=8|source=configured\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "retry_policy.par": "to retry_delay with status as text, header_delay as text, configured_delay as text giving text:\n    if status is not \"429\":\n        give back \"0\"\n    if configured_delay is not \"none\":\n        give back configured_delay\n    if header_delay is not \"none\":\n        give back header_delay\n    give back \"60\"\n",
+          "status.par": "to is_throttled with status as text giving yesno:\n    give back status is \"429\"\n",
+          "source.par": "to retry_source with status as text, header_delay as text, configured_delay as text giving text:\n    if status is not \"429\":\n        give back \"none\"\n    if header_delay is not \"none\":\n        give back \"header\"\n    if configured_delay is not \"none\":\n        give back \"configured\"\n    give back \"default\"\n",
+          "formatting.par": "to format_retry with status as text, delay as text, source as text giving text:\n    give back \"status=\" + status + \"|delay=\" + delay + \"|source=\" + source\n",
+          "main.par": "include \"retry_policy.par\"\ninclude \"status.par\"\ninclude \"source.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let status be item 1 of parts\n        let header_delay be item 2 of parts\n        let configured_delay be item 3 of parts\n        say (format_retry with status, (retry_delay with status, header_delay, configured_delay), (retry_source with status, header_delay, configured_delay))\n"
+        },
+        "python": {
+          "retry_policy.py": "def retry_delay(status: str, header_delay: str, configured_delay: str) -> str:\n    if status != \"429\":\n        return \"0\"\n    if configured_delay != \"none\":\n        return configured_delay\n    if header_delay != \"none\":\n        return header_delay\n    return \"60\"\n",
+          "status.py": "def is_throttled(status: str) -> bool:\n    return status == \"429\"\n",
+          "source.py": "def retry_source(status: str, header_delay: str, configured_delay: str) -> str:\n    if status != \"429\": return \"none\"\n    if header_delay != \"none\": return \"header\"\n    if configured_delay != \"none\": return \"configured\"\n    return \"default\"\n",
+          "formatting.py": "def format_retry(status: str, delay: str, source: str) -> str:\n    return f\"status={status}|delay={delay}|source={source}\"\n",
+          "main.py": "from formatting import format_retry\nfrom retry_policy import retry_delay\nfrom source import retry_source\n\ncount = int(input())\nfor _ in range(count):\n    status, header_delay, configured_delay = input().split(\"|\")\n    print(format_retry(status, retry_delay(status, header_delay, configured_delay), retry_source(status, header_delay, configured_delay)))\n"
+        },
+        "rust": {
+          "retry_policy.rs": "pub fn retry_delay(status: &str, header_delay: &str, configured_delay: &str) -> String {\n    if status != \"429\" { return \"0\".to_string(); }\n    if configured_delay != \"none\" { return configured_delay.to_string(); }\n    if header_delay != \"none\" { return header_delay.to_string(); }\n    \"60\".to_string()\n}\n",
+          "status.rs": "pub fn is_throttled(status: &str) -> bool { status == \"429\" }\n",
+          "source.rs": "pub fn retry_source(status: &str, header_delay: &str, configured_delay: &str) -> &'static str {\n    if status != \"429\" { return \"none\"; }\n    if header_delay != \"none\" { return \"header\"; }\n    if configured_delay != \"none\" { return \"configured\"; }\n    \"default\"\n}\n",
+          "formatting.rs": "pub fn format_retry(status: &str, delay: &str, source: &str) -> String {\n    format!(\"status={status}|delay={delay}|source={source}\")\n}\n",
+          "main.rs": "mod formatting;\nmod retry_policy;\nmod source;\nmod status;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let parts: Vec<&str> = line.split('|').collect();\n        println!(\"{}\", formatting::format_retry(parts[0], &retry_policy::retry_delay(parts[0], parts[1], parts[2]), source::retry_source(parts[0], parts[1], parts[2])));\n    }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Client ignores Retry-After while throttled\n\nFor HTTP 429, a server-provided Retry-After delay is authoritative and must override configured backoff. Configured backoff is used only when the header is absent; otherwise use the 60-second default. Non-429 responses are not scheduled for retry by this policy.\n",
+          "architecture/flow.md": "# Retry decision flow\n\n`status` identifies throttling. `retry_policy` owns the selected delay. `source` independently labels the evidence source. `formatting` owns stable output. `main` orchestrates. Repair precedence in the policy instead of changing source labels or presentation.\n",
+          "tests/regression.txt": "429 + header + configured -> header delay\n429 + no header -> configured delay\n429 + neither -> 60-second default\nnon-429 -> zero delay and no source\n"
+        },
+        "python": {
+          "ISSUE.md": "# Client ignores Retry-After while throttled\n\nFor HTTP 429, a server-provided Retry-After delay is authoritative and must override configured backoff. Configured backoff is used only when the header is absent; otherwise use the 60-second default. Non-429 responses are not scheduled for retry by this policy.\n",
+          "architecture/flow.md": "# Retry decision flow\n\n`status` identifies throttling. `retry_policy` owns the selected delay. `source` independently labels the evidence source. `formatting` owns stable output. `main` orchestrates. Repair precedence in the policy instead of changing source labels or presentation.\n",
+          "tests/regression.txt": "429 + header + configured -> header delay\n429 + no header -> configured delay\n429 + neither -> 60-second default\nnon-429 -> zero delay and no source\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Client ignores Retry-After while throttled\n\nFor HTTP 429, a server-provided Retry-After delay is authoritative and must override configured backoff. Configured backoff is used only when the header is absent; otherwise use the 60-second default. Non-429 responses are not scheduled for retry by this policy.\n",
+          "architecture/flow.md": "# Retry decision flow\n\n`status` identifies throttling. `retry_policy` owns the selected delay. `source` independently labels the evidence source. `formatting` owns stable output. `main` orchestrates. Repair precedence in the policy instead of changing source labels or presentation.\n",
+          "tests/regression.txt": "429 + header + configured -> header delay\n429 + no header -> configured delay\n429 + neither -> 60-second default\nnon-429 -> zero delay and no source\n"
+        }
+      }
+    },
+    {
+      "id": "webhook_raw_body_project",
+      "title": "Verify webhook signatures against the captured raw body",
+      "category": "security verification across request middleware",
+      "statement": "Fix the webhook-verification regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\nd1|a:1,b:2|a:1;b:2|sig:a:1,b:2\nd2|same|same|sig:same\nd3|raw-x|norm-x|sig:norm-x\n",
+          "stdout": "delivery=d1|verified=yes|body=a:1,b:2\ndelivery=d2|verified=yes|body=same\ndelivery=d3|verified=no|body=raw-x\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\nx|space+kept|space-trimmed|sig:space+kept\n",
+          "stdout": "delivery=x|verified=yes|body=space+kept\n"
+        },
+        {
+          "stdin": "1\ny|unicode-raw|unicode-normal|sig:unicode-normal\n",
+          "stdout": "delivery=y|verified=no|body=unicode-raw\n"
+        },
+        {
+          "stdin": "1\nz|same|same|sig:wrong\n",
+          "stdout": "delivery=z|verified=no|body=same\n"
+        },
+        {
+          "stdin": "2\na|r1|n1|sig:r1\nb|r2|n2|sig:n2\n",
+          "stdout": "delivery=a|verified=yes|body=r1\ndelivery=b|verified=no|body=r2\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "verification.par": "to webhook_verified with raw_body as text, normalized_body as text, signature as text giving yesno:\n    give back signature is \"sig:\" + normalized_body\n",
+          "capture.par": "to captured_body with raw_body as text giving text:\n    give back raw_body\n",
+          "normalization.par": "to normalized_for_application with normalized_body as text giving text:\n    give back normalized_body\n",
+          "formatting.par": "to format_webhook with delivery as text, verified as yesno, body as text giving text:\n    give back \"delivery={delivery}|verified={verified}|body={body}\"\n",
+          "main.par": "include \"verification.par\"\ninclude \"capture.par\"\ninclude \"normalization.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let delivery be item 1 of parts\n        let raw_body be item 2 of parts\n        let normalized_body be (normalized_for_application with item 3 of parts)\n        let signature be item 4 of parts\n        say (format_webhook with delivery, (webhook_verified with raw_body, normalized_body, signature), (captured_body with raw_body))\n"
+        },
+        "python": {
+          "verification.py": "def webhook_verified(raw_body: str, normalized_body: str, signature: str) -> bool:\n    return signature == \"sig:\" + normalized_body\n",
+          "capture.py": "def captured_body(raw_body: str) -> str:\n    return raw_body\n",
+          "normalization.py": "def normalized_for_application(normalized_body: str) -> str:\n    return normalized_body\n",
+          "formatting.py": "def format_webhook(delivery: str, verified: bool, body: str) -> str:\n    return f\"delivery={delivery}|verified={'yes' if verified else 'no'}|body={body}\"\n",
+          "main.py": "from capture import captured_body\nfrom formatting import format_webhook\nfrom normalization import normalized_for_application\nfrom verification import webhook_verified\n\ncount = int(input())\nfor _ in range(count):\n    delivery, raw_body, normalized_body, signature = input().split(\"|\")\n    normalized_body = normalized_for_application(normalized_body)\n    print(format_webhook(delivery, webhook_verified(raw_body, normalized_body, signature), captured_body(raw_body)))\n"
+        },
+        "rust": {
+          "verification.rs": "pub fn webhook_verified(_raw_body: &str, normalized_body: &str, signature: &str) -> bool {\n    signature == format!(\"sig:{normalized_body}\")\n}\n",
+          "capture.rs": "pub fn captured_body(raw_body: &str) -> &str { raw_body }\n",
+          "normalization.rs": "pub fn normalized_for_application(normalized_body: &str) -> &str { normalized_body }\n",
+          "formatting.rs": "pub fn format_webhook(delivery: &str, verified: bool, body: &str) -> String {\n    format!(\"delivery={delivery}|verified={}|body={body}\", if verified { \"yes\" } else { \"no\" })\n}\n",
+          "main.rs": "mod capture;\nmod formatting;\nmod normalization;\nmod verification;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let parts: Vec<&str> = line.split('|').collect();\n        let normalized = normalization::normalized_for_application(parts[2]);\n        println!(\"{}\", formatting::format_webhook(parts[0], verification::webhook_verified(parts[1], normalized, parts[3]), capture::captured_body(parts[1])));\n    }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Webhook signatures fail or validate after body parsing\n\nA signature authenticates the exact captured request bytes. Application normalization may reorder or rewrite the body and is useful only after verification. Compare the provided signature with the raw-body signature; never verify normalized content. The output still exposes the captured body for audit.\n",
+          "architecture/flow.md": "# Webhook request flow\n\n`capture` owns the immutable raw body. `normalization` prepares application content. `verification` owns signature comparison. `formatting` owns stable audit output. `main` orchestrates. Repair verification instead of bypassing normalization or rewriting audit output.\n",
+          "tests/regression.txt": "raw differs from normalized + raw signature -> verified\nraw differs + normalized signature -> rejected\nidentical bodies still verify correctly\naudit body is always the captured raw value\n"
+        },
+        "python": {
+          "ISSUE.md": "# Webhook signatures fail or validate after body parsing\n\nA signature authenticates the exact captured request bytes. Application normalization may reorder or rewrite the body and is useful only after verification. Compare the provided signature with the raw-body signature; never verify normalized content. The output still exposes the captured body for audit.\n",
+          "architecture/flow.md": "# Webhook request flow\n\n`capture` owns the immutable raw body. `normalization` prepares application content. `verification` owns signature comparison. `formatting` owns stable audit output. `main` orchestrates. Repair verification instead of bypassing normalization or rewriting audit output.\n",
+          "tests/regression.txt": "raw differs from normalized + raw signature -> verified\nraw differs + normalized signature -> rejected\nidentical bodies still verify correctly\naudit body is always the captured raw value\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Webhook signatures fail or validate after body parsing\n\nA signature authenticates the exact captured request bytes. Application normalization may reorder or rewrite the body and is useful only after verification. Compare the provided signature with the raw-body signature; never verify normalized content. The output still exposes the captured body for audit.\n",
+          "architecture/flow.md": "# Webhook request flow\n\n`capture` owns the immutable raw body. `normalization` prepares application content. `verification` owns signature comparison. `formatting` owns stable audit output. `main` orchestrates. Repair verification instead of bypassing normalization or rewriting audit output.\n",
+          "tests/regression.txt": "raw differs from normalized + raw signature -> verified\nraw differs + normalized signature -> rejected\nidentical bodies still verify correctly\naudit body is always the captured raw value\n"
+        }
+      }
+    },
+    {
+      "id": "stable_pagination_project",
+      "title": "Stabilize pagination ordering with a unique tie-breaker",
+      "category": "deterministic ordering across pagination layers",
+      "statement": "Fix the pagination-order regression using the read-only issue, architecture, and regression evidence. Preserve the existing input/output contract and do not modify read-only files.",
+      "show_public_examples": false,
+      "entrypoints": {
+        "parley": "main.par",
+        "python": "main.py",
+        "rust": "main.rs"
+      },
+      "public_cases": [
+        {
+          "stdin": "3\n10|4|10|9\n2|8|7|3\n9|7|3|2\n",
+          "stdout": "first=4|second=9|cursor=9\nfirst=8|second=3|cursor=3\nfirst=2|second=7|cursor=7\n"
+        }
+      ],
+      "hidden_cases": [
+        {
+          "stdin": "1\n5|99|5|1\n",
+          "stdout": "first=1|second=99|cursor=99\n"
+        },
+        {
+          "stdin": "1\n1|9|2|1\n",
+          "stdout": "first=9|second=1|cursor=1\n"
+        },
+        {
+          "stdin": "1\n3|2|1|8\n",
+          "stdout": "first=8|second=2|cursor=2\n"
+        },
+        {
+          "stdin": "2\n7|3|7|4\n8|6|8|2\n",
+          "stdout": "first=3|second=4|cursor=4\nfirst=2|second=6|cursor=6\n"
+        }
+      ],
+      "seed_files": {
+        "parley": {
+          "ordering.par": "to first_item with left_time as number, left_id as number, right_time as number, right_id as number giving number:\n    if left_time is less than right_time:\n        give back left_id\n    if left_time is right_time:\n        give back right_id\n    give back right_id\n",
+          "page.par": "to second_item with first as number, left_id as number, right_id as number giving number:\n    if first is left_id:\n        give back right_id\n    give back left_id\n",
+          "cursor.par": "to page_cursor with second as number giving number:\n    give back second\n",
+          "formatting.par": "to format_page with first as number, second as number, cursor as number giving text:\n    give back \"first={first}|second={second}|cursor={cursor}\"\n",
+          "main.par": "include \"ordering.par\"\ninclude \"page.par\"\ninclude \"cursor.par\"\ninclude \"formatting.par\"\n\nto main:\n    let count_input be ask for a number \"\"\n    let count be value of count_input\n    repeat count times:\n        let parts be (ask \"\") split by \"|\"\n        let left_time_input be number from item 1 of parts\n        let left_id_input be number from item 2 of parts\n        let right_time_input be number from item 3 of parts\n        let right_id_input be number from item 4 of parts\n        let left_time be value of left_time_input\n        let left_id be value of left_id_input\n        let right_time be value of right_time_input\n        let right_id be value of right_id_input\n        let first be (first_item with left_time, left_id, right_time, right_id)\n        let second be (second_item with first, left_id, right_id)\n        say (format_page with first, second, (page_cursor with second))\n"
+        },
+        "python": {
+          "ordering.py": "def first_item(left_time: int, left_id: int, right_time: int, right_id: int) -> int:\n    if left_time < right_time:\n        return left_id\n    if left_time == right_time:\n        return right_id\n    return right_id\n",
+          "page.py": "def second_item(first: int, left_id: int, right_id: int) -> int:\n    return right_id if first == left_id else left_id\n",
+          "cursor.py": "def page_cursor(second: int) -> int:\n    return second\n",
+          "formatting.py": "def format_page(first: int, second: int, cursor: int) -> str:\n    return f\"first={first}|second={second}|cursor={cursor}\"\n",
+          "main.py": "from cursor import page_cursor\nfrom formatting import format_page\nfrom ordering import first_item\nfrom page import second_item\n\ncount = int(input())\nfor _ in range(count):\n    left_time, left_id, right_time, right_id = map(int, input().split(\"|\"))\n    first = first_item(left_time, left_id, right_time, right_id)\n    second = second_item(first, left_id, right_id)\n    print(format_page(first, second, page_cursor(second)))\n"
+        },
+        "rust": {
+          "ordering.rs": "pub fn first_item(left_time: i64, left_id: i64, right_time: i64, right_id: i64) -> i64 {\n    if left_time < right_time { return left_id; }\n    if left_time == right_time { return right_id; }\n    right_id\n}\n",
+          "page.rs": "pub fn second_item(first: i64, left_id: i64, right_id: i64) -> i64 {\n    if first == left_id { right_id } else { left_id }\n}\n",
+          "cursor.rs": "pub fn page_cursor(second: i64) -> i64 { second }\n",
+          "formatting.rs": "pub fn format_page(first: i64, second: i64, cursor: i64) -> String {\n    format!(\"first={first}|second={second}|cursor={cursor}\")\n}\n",
+          "main.rs": "mod cursor;\nmod formatting;\nmod ordering;\nmod page;\n\nuse std::io::{self, Read};\n\nfn main() {\n    let mut input = String::new();\n    io::stdin().read_to_string(&mut input).unwrap();\n    let mut lines = input.lines();\n    let count: usize = lines.next().unwrap().parse().unwrap();\n    for line in lines.take(count) {\n        let values: Vec<i64> = line.split('|').map(|part| part.parse().unwrap()).collect();\n        let first = ordering::first_item(values[0], values[1], values[2], values[3]);\n        let second = page::second_item(first, values[1], values[3]);\n        println!(\"{}\", formatting::format_page(first, second, cursor::page_cursor(second)));\n    }\n}\n"
+        }
+      },
+      "context_files": {
+        "parley": {
+          "ISSUE.md": "# Adjacent pages duplicate items when timestamps tie\n\nPagination orders records by creation time, but timestamps are not unique. A stable total order must use ascending creation time and then ascending unique ID. The page cursor is the second item's ID after ordering. Without the ID tie-breaker, equal-time records can swap and appear twice across page boundaries.\n",
+          "architecture/flow.md": "# Pagination flow\n\n`ordering` owns the stable first item. `page` derives the second item. `cursor` advances from that second item. `formatting` owns stable output. `main` parses and orchestrates. Repair ordering rather than compensating in cursor or presentation code.\n",
+          "tests/regression.txt": "earlier timestamp sorts first\nlater timestamp sorts second\nequal timestamps use ascending unique ID\ncursor is always the ordered second ID\n"
+        },
+        "python": {
+          "ISSUE.md": "# Adjacent pages duplicate items when timestamps tie\n\nPagination orders records by creation time, but timestamps are not unique. A stable total order must use ascending creation time and then ascending unique ID. The page cursor is the second item's ID after ordering. Without the ID tie-breaker, equal-time records can swap and appear twice across page boundaries.\n",
+          "architecture/flow.md": "# Pagination flow\n\n`ordering` owns the stable first item. `page` derives the second item. `cursor` advances from that second item. `formatting` owns stable output. `main` parses and orchestrates. Repair ordering rather than compensating in cursor or presentation code.\n",
+          "tests/regression.txt": "earlier timestamp sorts first\nlater timestamp sorts second\nequal timestamps use ascending unique ID\ncursor is always the ordered second ID\n"
+        },
+        "rust": {
+          "ISSUE.md": "# Adjacent pages duplicate items when timestamps tie\n\nPagination orders records by creation time, but timestamps are not unique. A stable total order must use ascending creation time and then ascending unique ID. The page cursor is the second item's ID after ordering. Without the ID tie-breaker, equal-time records can swap and appear twice across page boundaries.\n",
+          "architecture/flow.md": "# Pagination flow\n\n`ordering` owns the stable first item. `page` derives the second item. `cursor` advances from that second item. `formatting` owns stable output. `main` parses and orchestrates. Repair ordering rather than compensating in cursor or presentation code.\n",
+          "tests/regression.txt": "earlier timestamp sorts first\nlater timestamp sorts second\nequal timestamps use ascending unique ID\ncursor is always the ordered second ID\n"
+        }
+      }
+    }
+  ]
+}

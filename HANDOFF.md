@@ -62,6 +62,14 @@ Update it whenever you finish or start a work item.
   in zero, so both are deliberately deferred. No compiler, skill, or benchmark
   instruction changed. Reconsider only when two unrelated maintained workflows
   need genuinely structured values or repeated typed records.
+- **Independent deeper corpus checkpoint (iteration 032):** four new
+  five-module projects cover quoted environment normalization, Retry-After
+  precedence, raw webhook-body verification, and stable pagination ordering.
+  The manifest SHA is
+  `49df28a27ce00ac58d898a386fcee1cae46fd15fd02c38ec82272b39a326bb1f`;
+  isolated root fixes pass 60/60 cross-language case groups. The corpus is
+  independent of report 031 outcomes and changes no compiler, skill,
+  instruction, runner, or metric. Commit this checkpoint before protocol 032.
 - **Committed progress archive:** `progress/index.html` is a responsive,
   searchable visual timeline over all 31 preserved benchmark HTML reports.
   `progress/manifest.json` records source/archive paths, sizes, and SHA-256;

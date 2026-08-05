@@ -2031,6 +2031,33 @@ def test_bundle_summary_applies_strict_scale_gate():
     }
 
 
+def test_deep_confirmation_032_is_symmetric_and_independent():
+    manifest = json.loads(
+        (BENCHMARKS / "agent_tasks_deep_confirmation_032.json").read_text())
+    analysis = manifest["predeclared_analysis"]
+
+    assert analysis["experiment_id"] == "032"
+    assert "No task mechanism" in analysis["independence_rule"]
+    assert "unchanged 1,519-character Parley skill" in analysis["instruction_rule"]
+    assert len(manifest["tasks"]) == 4
+    assert {task["id"] for task in manifest["tasks"]} == {
+        "quoted_environment_project",
+        "retry_after_precedence_project",
+        "webhook_raw_body_project",
+        "stable_pagination_project",
+    }
+    for task in manifest["tasks"]:
+        assert task["show_public_examples"] is False
+        assert len(task["public_cases"]) == 1
+        assert len(task["hidden_cases"]) == 4
+        assert task["context_files"]["parley"] == task["context_files"]["python"]
+        assert task["context_files"]["parley"] == task["context_files"]["rust"]
+        for language in ("parley", "python", "rust"):
+            assert len(task["seed_files"][language]) == 5
+            assert len(task["context_files"][language]) == 3
+            assert analysis["root_cause_files"][task["id"]][language]
+
+
 def test_agent_prompt_includes_current_skill_only_for_parley():
     task = load_tasks(BENCHMARKS / "agent_tasks.json")[0]
     skill = "PARLEY-SKILL-SENTINEL"

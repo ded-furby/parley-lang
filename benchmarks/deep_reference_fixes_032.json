@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "description": "Unmeasured reference root fixes used only to validate the frozen iteration-032 corpus before preregistration.",
+  "fixes": {
+    "quoted_environment_project": {
+      "parley": {
+        "normalization.par": "include \"std/text\"\n\nto normalize_env with token as text giving text:\n    if token starts with \"sq:\":\n        give back (without_prefix with token, \"sq:\")\n    if token starts with \"dq:\":\n        give back (without_prefix with token, \"dq:\")\n    if token is \"empty\":\n        give back \"\"\n    give back (without_prefix with token, \"raw:\")\n"
+      },
+      "python": {
+        "normalization.py": "def normalize_env(token: str) -> str:\n    if token.startswith(\"sq:\"):\n        return token.removeprefix(\"sq:\")\n    if token.startswith(\"dq:\"):\n        return token.removeprefix(\"dq:\")\n    if token == \"empty\":\n        return \"\"\n    return token.removeprefix(\"raw:\")\n"
+      },
+      "rust": {
+        "normalization.rs": "pub fn normalize_env(token: &str) -> String {\n    if let Some(value) = token.strip_prefix(\"sq:\") { return value.to_string(); }\n    if let Some(value) = token.strip_prefix(\"dq:\") { return value.to_string(); }\n    if token == \"empty\" { return String::new(); }\n    token.strip_prefix(\"raw:\").unwrap_or(token).to_string()\n}\n"
+      }
+    },
+    "retry_after_precedence_project": {
+      "parley": {
+        "retry_policy.par": "to retry_delay with status as text, header_delay as text, configured_delay as text giving text:\n    if status is not \"429\":\n        give back \"0\"\n    if header_delay is not \"none\":\n        give back header_delay\n    if configured_delay is not \"none\":\n        give back configured_delay\n    give back \"60\"\n"
+      },
+      "python": {
+        "retry_policy.py": "def retry_delay(status: str, header_delay: str, configured_delay: str) -> str:\n    if status != \"429\":\n        return \"0\"\n    if header_delay != \"none\":\n        return header_delay\n    if configured_delay != \"none\":\n        return configured_delay\n    return \"60\"\n"
+      },
+      "rust": {
+        "retry_policy.rs": "pub fn retry_delay(status: &str, header_delay: &str, configured_delay: &str) -> String {\n    if status != \"429\" { return \"0\".to_string(); }\n    if header_delay != \"none\" { return header_delay.to_string(); }\n    if configured_delay != \"none\" { return configured_delay.to_string(); }\n    \"60\".to_string()\n}\n"
+      }
+    },
+    "webhook_raw_body_project": {
+      "parley": {
+        "verification.par": "to webhook_verified with raw_body as text, normalized_body as text, signature as text giving yesno:\n    give back signature is \"sig:\" + raw_body\n"
+      },
+      "python": {
+        "verification.py": "def webhook_verified(raw_body: str, normalized_body: str, signature: str) -> bool:\n    return signature == \"sig:\" + raw_body\n"
+      },
+      "rust": {
+        "verification.rs": "pub fn webhook_verified(raw_body: &str, _normalized_body: &str, signature: &str) -> bool {\n    signature == format!(\"sig:{raw_body}\")\n}\n"
+      }
+    },
+    "stable_pagination_project": {
+      "parley": {
+        "ordering.par": "to first_item with left_time as number, left_id as number, right_time as number, right_id as number giving number:\n    if left_time is less than right_time:\n        give back left_id\n    if left_time is right_time:\n        if left_id is less than right_id:\n            give back left_id\n        give back right_id\n    give back right_id\n"
+      },
+      "python": {
+        "ordering.py": "def first_item(left_time: int, left_id: int, right_time: int, right_id: int) -> int:\n    if left_time < right_time:\n        return left_id\n    if left_time == right_time:\n        return min(left_id, right_id)\n    return right_id\n"
+      },
+      "rust": {
+        "ordering.rs": "pub fn first_item(left_time: i64, left_id: i64, right_time: i64, right_id: i64) -> i64 {\n    if left_time < right_time { return left_id; }\n    if left_time == right_time { return left_id.min(right_id); }\n    right_id\n}\n"
+      }
+    }
+  }
+}
