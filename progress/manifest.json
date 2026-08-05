@@ -384,6 +384,18 @@
       "sha256": "5c309fa0a2c9a81281a90e9b921600c67b46fc2f3b59f38daac3d48369ce75db",
       "source": "benchmarks/reports/032-independent-confirmation-strict-parity-not-met.html",
       "archive": "progress/reports/032-independent-confirmation-strict-parity-not-met.html"
+    },
+    {
+      "number": 33,
+      "file": "033-adaptive-agent-data-gate-not-met.html",
+      "title": "Adaptive Agent Data Saves Tokens, but Misses the Frozen Gate \u2014 Iteration 033",
+      "label": "Adaptive Agent Data Gate Not Met",
+      "stage": "Repository scale",
+      "signal": "learning",
+      "bytes": 493203,
+      "sha256": "8e8ac6120f9ca69cdd28fdf02515cf80da90fd7ae85fbb44e96188389a8b3cfb",
+      "source": "benchmarks/reports/033-adaptive-agent-data-gate-not-met.html",
+      "archive": "progress/reports/033-adaptive-agent-data-gate-not-met.html"
     }
   ],
   "product_records": [

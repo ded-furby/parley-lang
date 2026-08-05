@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language v0.3 / toolchain v0.3.159** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has more than 360 tests, including e2e tests that
+  → cargo). The latest local suite has 381 tests, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -66,6 +66,16 @@ Update it whenever you finish or start a work item.
   sizes, selection reason, and delivered format. The implementation adds no
   runtime dependency and no language syntax. Design and claim boundaries are
   in `docs/AGENT_DATA.md`; focused tests pass 19/19.
+- **Iteration 033 agent-data result:** the 12-case corpus and 5% gate were
+  committed at `87e6487` before broad measurement. All seven supported TOON
+  candidates round-trip exactly, automatic selection never increases tokens,
+  and three record-heavy cases select TOON under each primary tokenizer. The
+  frozen aggregate gate nevertheless fails 4/5: savings are 4.5682% under
+  `cl100k_base` and 4.5673% under `o200k_base`, short of 5%. Raw SHA is
+  `3d3068e1501782f9f5a2242f1bdb061d4dace25dc59d26a847d2fabb71f26b78`;
+  the canonical report passes desktop/narrow Chromium and source-interaction
+  verification. Preserve the near miss, make no same-corpus profile change,
+  and run the separately frozen 90-session comprehension confirmation next.
 - **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` preserves
   the v0.3.158 finding that JSON/CSV values *inside Parley workflows* remain
   low-pressure. The v0.3.159 platform CLI layer does not manufacture evidence

@@ -27,6 +27,12 @@ Static compression alone will not justify claims about model accuracy. CSV,
 HTTP, and JSON values inside Parley programs remain deferred until real product
 pressure recurs.
 
+The subsequent frozen iteration 033 diagnostic supported this boundary rather
+than expanding it: exactness and adaptive coverage passed, but real-tokenizer
+savings were about 4.57% and missed the 5% aggregate gate. Three record-heavy
+documents benefited; nine retained JSON. Preserve the CLI layer and do not tune
+the profile, workflow contracts, or language syntax from that corpus.
+
 ## 2026-08-05 — v0.3.158 catalog review
 
 Evidence reviewed:

@@ -260,6 +260,7 @@ def render_index(reports: list[dict]) -> str:
         <a class="milestone" href="reports/030-ninety-session-scaling-mechanism.html"><b>030</b><h3>90-session mechanism</h3><p>The scale confirmation explaining where Parley saves agent work.</p></a>
         <a class="milestone" href="reports/031-deeper-project-efficiency-win.html"><b>031</b><h3>Deeper project win</h3><p>The strict efficiency result that justified building a real product next.</p></a>
         <a class="milestone" href="reports/032-independent-confirmation-strict-parity-not-met.html"><b>032</b><h3>Reliability confirmed</h3><p>Perfect first-check and root quality repeat; strict efficiency does not.</p></a>
+        <a class="milestone" href="reports/033-adaptive-agent-data-gate-not-met.html"><b>033</b><h3>Adaptive data near miss</h3><p>Lossless shape-aware packing saves 4.57%; the frozen 5% gate stays failed.</p></a>
         <a class="milestone" href="product/001-release-steward-workflow-catalog.html"><b>PRODUCT 001</b><h3>Release Steward ships</h3><p>Three installable, fixture-tested workflows with checksum verification.</p></a>
       </div>
     </section>

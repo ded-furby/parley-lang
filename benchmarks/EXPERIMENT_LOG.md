@@ -3082,3 +3082,61 @@ collect real Release Steward adoption evidence; consider JSON only if
 structured-input friction recurs across unrelated maintained workflows. Any
 future benchmark should use a mature repository or real release operation and
 must be preregistered independently of reports 031 and 032.
+
+## 033 — Verified agent-data packing; frozen 5% gate not met
+
+- Completed: 2026-08-05
+- Product checkpoint and preregistration commit: `87e6487`
+- Parley version: 0.3.159
+- Protocol: `benchmarks/AGENT_DATA_PROTOCOL_033.md`
+- Corpus manifest: `benchmarks/agent_data_corpus.json`
+- Manifest SHA-256:
+  `8dd47b32a3b5103cb22153d9a390ff8a4b7669e7fead3cea9a397ece2c19e08b`
+- Corpus content SHA-256:
+  `1840da37fff6828dcce3ac589e0076c4d1f631ec0ce421eded4abd78ae92de79`
+- Raw result: `benchmarks/results/agent_data_033.json`
+- Raw SHA-256:
+  `3d3068e1501782f9f5a2242f1bdb061d4dace25dc59d26a847d2fabb71f26b78`
+- Report: `benchmarks/reports/033-adaptive-agent-data-gate-not-met.html`
+- Report SHA-256:
+  `8e8ac6120f9ca69cdd28fdf02515cf80da90fd7ae85fbb44e96188389a8b3cfb`
+- Canonical artifact SHA-256:
+  `ed15386df0758667d90b7444fd5136122f8fbc39a747adbdfa18e9f85a7cf9e7`
+- Report inputs: matching `.artifact.json`, `.sql`, `.chart-map.md`, and
+  reproducible `build_033_report.py`
+
+The frozen Stage A gate finishes **4/5 and fails**. All 12 files parse as
+strict JSON; all seven supported TOON candidates decode to the exact ordered
+JSON data model; automatic selection never increases measured tokens; and both
+primary tokenizers select TOON for three cases while retaining JSON for nine.
+The aggregate condition does not pass: adaptive selection saves 4.5682% under
+`cl100k_base` and 4.5673% under `o200k_base`, short of the preregistered 5%
+threshold by 0.4318 and 0.4327 percentage points.
+
+| Tokenizer | Compact JSON | Adaptive | Saved | Savings | TOON selected | JSON fallback |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| rough-regex-v1 (exploratory) | 22,097 | 19,071 | 3,026 | 13.6942% | 7 | 5 |
+| cl100k_base (primary) | 17,994 | 17,172 | 822 | 4.5682% | 3 | 9 |
+| o200k_base (primary) | 18,063 | 17,238 | 825 | 4.5673% | 3 | 9 |
+
+Under `o200k_base`, compiler diagnostics save 146/424 tokens (34.43%), test
+results save 66/205 (32.20%), and the progress manifest saves 613/4,068
+(15.07%). Those three record-heavy documents create the whole primary result.
+Four other safe-subset values are encodable but not smaller and therefore stay
+JSON; five heterogeneous values are outside the conservative subset and also
+stay JSON. The previously disclosed registry pilot selected TOON only under
+the rough counter, not either primary tokenizer.
+
+The initial sandboxed invocation could not download tiktoken encoding tables
+and wrote no result. The identical frozen command then completed once with
+network access; no corpus case, tokenizer, result row, or threshold changed.
+The canonical portable report passes artifact validation, packaging,
+source-dialog interaction, and responsive Chromium checks at 1,440 and 390
+pixels. It contains 20 blocks, one grouped comparison chart, six metrics, three
+tables, every case, and the complete five-condition gate.
+
+**No compiler, language syntax, workflow contract, tokenizer threshold, TOON
+profile, or corpus change follows from this result.** Static representation
+savings do not establish model comprehension. The next evidence step is the
+separately frozen 90-session paired JSON/adaptive confirmation described in the
+protocol, with JSON output in both arms and all format-repair tokens retained.

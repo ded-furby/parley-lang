@@ -113,3 +113,20 @@ Source-language claims remain separate: Parley must still beat Python and Rust
 on hidden correctness, first-check success, repair turns, and total session
 cost. Combining those scores would hide which part of the system actually
 helped.
+
+## Current evidence: iteration 033
+
+The frozen 12-document Stage A diagnostic passed exactness and adaptive
+coverage but missed its aggregate savings gate. All seven supported candidates
+round-tripped, and three record-heavy documents selected TOON under both
+primary tokenizers. Aggregate savings were 4.5682% for `cl100k_base` and
+4.5673% for `o200k_base`, below the preregistered 5% threshold. The result is
+preserved as a failed 4/5 in the [iteration 033 HTML
+report](../benchmarks/reports/033-adaptive-agent-data-gate-not-met.html); the
+safe subset and threshold were not tuned afterward.
+
+That outcome supports keeping the adaptive layer because it is lossless and
+never makes selected context larger. It does not support making TOON the
+default interchange format or claiming better agent performance. The next
+evidence gate is the 90-session paired comprehension/coding study frozen in
+[`AGENT_DATA_PROTOCOL_033.md`](../benchmarks/AGENT_DATA_PROTOCOL_033.md).

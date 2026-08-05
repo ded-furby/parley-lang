@@ -119,8 +119,12 @@ median was between Python's 7.5247 and Rust's 9.3756. That is repeated evidence
 for reliability and diagnosis, not proof that Parley is universally cheaper.
 
 The next agent-data stage starts from an adaptive JSON/TOON implementation and
-a frozen shape-diverse repository corpus. Static compression can establish only
-losslessness and conditional token savings. Repeated blinded comprehension and
-coding sessions are still required before claiming that the representation
-works better for agents. Track A likewise still needs mature external projects,
-more models, and independent replication before any "best language" claim.
+a frozen shape-diverse repository corpus. Iteration 033 retained all 12 cases,
+verified every supported round trip, and selected TOON for three cases under
+both primary tokenizers. Savings were 4.5682% (`cl100k_base`) and 4.5673%
+(`o200k_base`), narrowly below the frozen 5% threshold, so Stage A is preserved
+as a failed 4/5 with no profile tuning. Static compression can establish only
+losslessness and conditional token savings. The preregistered 90-session paired
+study is still required before claiming that the representation works better
+for agents. Track A likewise still needs mature external projects, more models,
+and independent replication before any "best language" claim.

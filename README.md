@@ -166,6 +166,14 @@ finished or a reason to tune syntax to one corpus. Browse the complete,
 checksum-backed visual history in
 [`progress/index.html`](progress/index.html).
 
+The preregistered [adaptive agent-data
+diagnostic](benchmarks/reports/033-adaptive-agent-data-gate-not-met.html) then
+tested 12 JSON documents with rough, `cl100k_base`, and `o200k_base` tokenizers.
+Every supported TOON candidate round-tripped exactly and automatic mode never
+increased tokens. Three record-heavy cases selected TOON under both primary
+tokenizers, saving 4.5682% and 4.5673% in aggregate—useful, but below the frozen
+5% gate. The result is preserved as a failed 4/5, with no same-corpus tuning.
+
 For editor integration, start the stdio language server from your editor:
 
 ```bash
