@@ -1,0 +1,39 @@
+note: Release Radar — Parley's typed HTTP/JSON and browser/WASM dogfood app
+
+a release_input has version as text, tests_passed as number, tests_total as number, checklist_done as number, checklist_total as number, package_ready as yesno
+
+a release_assessment has version as text, ready as yesno, score as number, verdict as text, blockers as list of text
+
+a service_status has service as text, milestone as text, typed_routes as number, browser_exports as number, ready as yesno
+
+to readiness_score with tests_passed as number, tests_total as number, checklist_done as number, checklist_total as number, package_ready as yesno giving number:
+    let score be 0
+    if tests_total is more than 0 and tests_passed is tests_total:
+        set score to score plus 60
+    if checklist_total is more than 0 and checklist_done is checklist_total:
+        set score to score plus 30
+    if package_ready:
+        set score to score plus 10
+    give back score
+
+to project_status giving service_status:
+    give back a service_status with service "Release Radar", milestone "typed-http-json-plus-browser-wasm", typed_routes 2, browser_exports 1, ready yes
+
+to assess_release with release as release_input giving release_assessment:
+    let blockers be an empty list of text
+    if release's tests_total is at most 0:
+        add "No test run was supplied." to blockers
+    otherwise if release's tests_passed is not release's tests_total:
+        add "The test suite is not fully passing." to blockers
+    if release's checklist_total is at most 0:
+        add "No release checklist was supplied." to blockers
+    otherwise if release's checklist_done is not release's checklist_total:
+        add "The release checklist is incomplete." to blockers
+    if not release's package_ready:
+        add "The package artifact is not ready." to blockers
+    let score be (readiness_score with release's tests_passed, release's tests_total, release's checklist_done, release's checklist_total, release's package_ready)
+    let is_ready be score is 100
+    let verdict be "Blocked — resolve the remaining release evidence."
+    if is_ready:
+        set verdict to "Ready — every declared release gate passed."
+    give back a release_assessment with version release's version, ready is_ready, score score, verdict verdict, blockers blockers

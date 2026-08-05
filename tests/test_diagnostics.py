@@ -40,7 +40,7 @@ def test_explain_known_and_unknown():
 def test_every_emitted_code_is_in_the_catalog():
     """Grep the compiler sources for P-codes; each must have a catalog entry."""
     used = set()
-    for f in ["parser.py", "checker.py", "cli.py"]:
+    for f in ["parser.py", "checker.py", "cli.py", "web.py"]:
         src = (REPO / "parley" / f).read_text()
         used |= set(re.findall(r'"(P\d{3})"', src))
     missing = used - set(ERROR_CATALOG)

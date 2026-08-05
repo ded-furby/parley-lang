@@ -12,7 +12,9 @@ to main:
     say "Hello!"
 ```
 
-Every program starts at `to main:`. Blocks are indentation (4 spaces), exactly
+Every normal command program starts at `to main:`. Typed web projects select
+checked functions through `parley.web.json` and are covered in
+[WEB.md](WEB.md). Blocks are indentation (4 spaces), exactly
 like Python. `say` prints anything.
 
 ## 2. Variables

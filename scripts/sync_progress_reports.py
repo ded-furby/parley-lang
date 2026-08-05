@@ -220,7 +220,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 """
 
 
-def render_index(reports: list[dict]) -> str:
+def render_index(reports: list[dict], product_records: list[dict]) -> str:
     payload = json.dumps(reports, ensure_ascii=False).replace("</", "<\\/")
     total_bytes = sum(item["bytes"] for item in reports)
     latest = reports[-1] if reports else {"number": 0, "title": "No reports"}
@@ -237,7 +237,7 @@ def render_index(reports: list[dict]) -> str:
   <style>{INDEX_CSS}</style>
 </head>
 <body>
-  <header class="report-bar"><strong>Parley Progress</strong><span>{len(reports)} benchmark reports · 1 product record</span></header>
+  <header class="report-bar"><strong>Parley Progress</strong><span>{len(reports)} benchmark reports · {len(product_records)} product records</span></header>
   <main class="page">
     <section class="intro">
       <h1>Benchmark and product evidence archive</h1>
@@ -247,7 +247,7 @@ def render_index(reports: list[dict]) -> str:
       <div class="section-head"><h2>Archive summary</h2><p>Checksum-backed and locally browseable</p></div>
       <div class="facts">
         <div class="fact"><span>Benchmark reports</span><strong>{len(reports)}</strong></div>
-        <div class="fact"><span>Product records</span><strong>1</strong></div>
+        <div class="fact"><span>Product records</span><strong>{len(product_records)}</strong></div>
         <div class="fact"><span>Archived evidence</span><strong>{total_bytes / 1024 / 1024:.1f} MB</strong></div>
         <div class="fact"><span>Report 013 intact</span><strong>{'Yes' if preserved_013 else 'No'}</strong></div>
         <div class="fact"><span>Latest report</span><strong>{latest['number']:03d}</strong></div>
@@ -263,6 +263,7 @@ def render_index(reports: list[dict]) -> str:
         <a class="milestone" href="reports/033-adaptive-agent-data-gate-not-met.html"><b>033</b><h3>Adaptive data near miss</h3><p>Lossless shape-aware packing saves 4.57%; the frozen 5% gate stays failed.</p></a>
         <a class="milestone" href="reports/034-verified-toon-context-efficiency-win.html"><b>034</b><h3>Agent-data confirmation</h3><p>90/90 exact answers and 45/45 paired token wins pass the frozen gate 5/5.</p></a>
         <a class="milestone" href="product/001-release-steward-workflow-catalog.html"><b>PRODUCT 001</b><h3>Release Steward ships</h3><p>Three installable, fixture-tested workflows with checksum verification.</p></a>
+        <a class="milestone" href="product/002-typed-full-stack-foundation.html"><b>PRODUCT 002</b><h3>Typed full-stack foundation</h3><p>Strict JSON routes, native HTTP, browser WASM, and a dogfood application.</p></a>
       </div>
     </section>
     <section class="block">
@@ -320,7 +321,7 @@ def main() -> None:
             "reports": reports,
             "product_records": product_records,
         }, indent=2) + "\n")
-    (PROGRESS / "index.html").write_text(render_index(reports))
+    (PROGRESS / "index.html").write_text(render_index(reports, product_records))
     print(
         f"Archived {len(reports)} benchmark reports and "
         f"{len(product_records)} product records in {PROGRESS.relative_to(ROOT)}")

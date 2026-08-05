@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-parley-report-theme="portable-v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Typed Full-Stack Foundation — Product record 002</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--canvas:#fff;--surface:#fff;--subtle:#f7f7f7;--ink:#0d0d0d;--muted:#606060;--tertiary:#929292;--line:rgba(13,13,13,.09);--blue:#0285ff;--green:#087d3e;--green-bg:#edf9f1;--amber:#a65d00;--amber-bg:#fff7e8;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--canvas)}
+    @media(prefers-color-scheme:dark){:root{--canvas:#181818;--surface:#212121;--subtle:#292929;--ink:#e7e7e7;--muted:#c2c2c2;--tertiary:#9f9f9f;--line:rgba(255,255,255,.09);--blue:#68b7ff;--green:#45d27e;--green-bg:rgba(69,210,126,.13);--amber:#ffb552;--amber-bg:rgba(255,181,82,.13)}}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--canvas);color:var(--ink)}body{font-size:14px;line-height:1.55}.bar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:20px;padding:13px 18px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--canvas) 92%,transparent);backdrop-filter:blur(12px)}.bar strong{font-weight:550}.bar span{color:var(--tertiary)}main{width:min(900px,100%);margin:auto;padding:54px 28px 80px}.eyebrow{margin:0 0 12px;color:var(--blue);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}h1{max-width:760px;margin:0;font-size:clamp(38px,7vw,68px);font-weight:620;line-height:1.02;letter-spacing:-.05em}.summary{max-width:760px;margin:22px 0 0;color:var(--muted);font-size:17px;line-height:1.65}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:40px}.metric,.card,.flow,.limit{border:1px solid var(--line);border-radius:16px;background:var(--surface)}.metric{padding:20px}.metric span{display:block;color:var(--muted)}.metric strong{display:block;margin-top:6px;font-size:24px;font-weight:550}.section{margin-top:48px}.head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:16px}.head h2{margin:0;font-size:22px;font-weight:550;letter-spacing:-.025em}.head p{margin:0;color:var(--tertiary);font-size:12px}.flow{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;align-items:stretch;padding:10px;background:var(--subtle)}.node{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.node b{display:block;font-size:15px;font-weight:550}.node span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.arrow{display:grid;place-items:center;color:var(--blue);font-size:20px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{padding:24px}.card h3{margin:0 0 9px;font-size:16px;font-weight:550}.card p{margin:0;color:var(--muted)}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}.checks{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.checks li{display:grid;grid-template-columns:92px 1fr auto;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}.checks b{font-weight:550}.checks span{color:var(--muted)}.pass{color:var(--green)!important}.limit{padding:22px;border-color:color-mix(in srgb,var(--amber) 34%,var(--line));background:var(--amber-bg)}.limit strong{display:block;color:var(--amber)}.limit p{margin:7px 0 0;color:var(--muted)}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.links a{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none}.links a:hover{border-color:var(--blue);color:var(--blue)}footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);color:var(--tertiary);font-size:12px}@media(max-width:720px){.bar{position:static;flex-direction:column;gap:0}.metrics{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr}.arrow{height:34px;transform:rotate(90deg)}.cards{grid-template-columns:1fr}.checks li{grid-template-columns:1fr;gap:3px}}@media(max-width:420px){main{padding:36px 18px 60px}.metrics{grid-template-columns:1fr}.head{align-items:start;flex-direction:column;gap:2px}}
+  </style>
+</head>
+<body>
+  <header class="bar"><strong>Parley Progress</strong><span>Product record 002 · 5 August 2026</span></header>
+  <main>
+    <p class="eyebrow">V0.4.0 / PRODUCT FOUNDATION</p>
+    <h1>Parley now builds one real product across native HTTP, typed JSON, and browser WASM.</h1>
+    <p class="summary">Release Radar is the first end-to-end dogfood application. Its route contracts are ordinary Parley records and functions. The compiler generates strict JSON decoding, a bounded native server, a WebAssembly module, JavaScript wrappers, and TypeScript declarations—without adding web-shaped language syntax.</p>
+
+    <section class="metrics" aria-label="Milestone metrics">
+      <article class="metric"><span>Typed routes</span><strong>2</strong></article>
+      <article class="metric"><span>WASM exports</span><strong>1</strong></article>
+      <article class="metric"><span>Browser/backend</span><strong>100 = 100</strong></article>
+      <article class="metric"><span>Syntax additions</span><strong>0</strong></article>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>One checked source, two runtimes</h2><p>The product path, not a benchmark shortcut</p></div>
+      <div class="flow" aria-label="Parley full-stack build flow">
+        <div class="node"><b>Ordinary Parley</b><span>Records describe JSON. Functions describe handlers and shared deterministic logic.</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><b>Web contract checker</b><span>Exact routes, JSON-safe types, effect-safe browser ABI, stable P710–P724 errors.</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><b>Deployable bundle</b><span>Native server + public assets + <code>parley.wasm</code> + JS/TypeScript bindings.</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>What shipped</h2><p>General product capability</p></div>
+      <div class="cards">
+        <article class="card"><h3>Strict typed JSON</h3><p>Request and response types are inferred from handler signatures. Unknown fields, malformed bodies, wrong media types, unsafe maps, and invalid handler shapes fail explicitly.</p></article>
+        <article class="card"><h3>Bounded native HTTP</h3><p>Header/body limits, timeouts, conflicting-length rejection, no chunked ambiguity, canonicalized static paths, correct content lengths, and <code>nosniff</code> responses.</p></article>
+        <article class="card"><h3>Deterministic browser ABI</h3><p>Scalar exports compile to <code>wasm32-unknown-unknown</code>. The checker walks their call graph and rejects terminal I/O, files, randomness, closures, and dynamic calls.</p></article>
+        <article class="card"><h3>Release Radar dogfood</h3><p>The browser previews readiness through WASM; the native API independently returns the typed assessment. The verified ready flow produced 100 in both places.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>Verification record</h2><p>Observed on the built bundle</p></div>
+      <ul class="checks">
+        <li><b>Contract</b><span>2 exact routes and 1 scalar browser export inferred</span><span class="pass">PASS</span></li>
+        <li><b>HTTP/JSON</b><span>Valid request 200; malformed JSON 400; wrong media type 415</span><span class="pass">PASS</span></li>
+        <li><b>Static</b><span>WASM served as application/wasm; traversal returned 404</span><span class="pass">PASS</span></li>
+        <li><b>Browser</b><span>Real Chromium loaded WASM + API and completed the ready flow</span><span class="pass">PASS</span></li>
+        <li><b>Agreement</b><span>Local WASM score 100; native response score 100</span><span class="pass">PASS</span></li>
+        <li><b>Focused tests</b><span>Manifest, type, effect, generation, CLI, native integration, and output safety</span><span class="pass">9 / 9</span></li>
+      </ul>
+    </section>
+
+    <section class="section limit">
+      <strong>Honest boundary</strong>
+      <p>This is not framework parity yet. The server is HTTP/1.1 with one thread per connection, no TLS, WebSockets, dynamic path parameters, middleware, databases, or auth. Browser exports are scalar-only. The next evidence step is a frozen, independent Release Radar comparison against Python, TypeScript, and Rust—not syntax tuning.</p>
+    </section>
+
+    <nav class="links" aria-label="Product sources">
+      <a href="../../examples/release-radar/README.md">Open Release Radar</a>
+      <a href="../../docs/WEB.md">Read the web contract</a>
+      <a href="../../tests/test_web.py">Inspect the tests</a>
+      <a href="../index.html">Back to progress</a>
+    </nav>
+    <footer>Durable local product record. Benchmark claims remain separate and preregistered.</footer>
+  </main>
+</body>
+</html>

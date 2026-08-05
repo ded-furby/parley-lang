@@ -66,8 +66,9 @@ def _suggest(name: str, candidates) -> str | None:
 
 
 class Checker:
-    def __init__(self, program: A.Program):
+    def __init__(self, program: A.Program, *, require_main: bool = True):
         self.program = program
+        self.require_main = require_main
         self.diags: list[Diagnostic] = []
         self.records: dict[str, A.RecordDef] = {}
         self.enums: dict[str, A.EnumDef] = {}
@@ -247,10 +248,10 @@ class Checker:
                     prm.changing = True
 
         main = self.funcs.get("main")
-        if main is None:
+        if main is None and self.require_main:
             self.err("P210", "Every program needs a `to main:` to start from.", p,
                      hint="Add `to main:` with the program body indented underneath.")
-        else:
+        elif main is not None:
             if main.params:
                 self.err("P210", "`to main:` takes no parameters.", main)
             if main.ret is not None:
@@ -1252,6 +1253,6 @@ class Checker:
         return A.TRecord(rec.name)
 
 
-def check_program(program: A.Program) -> list[Diagnostic]:
+def check_program(program: A.Program, *, require_main: bool = True) -> list[Diagnostic]:
     """Convenience entry point. Returns diagnostics (empty list = all good)."""
-    return Checker(program).check()
+    return Checker(program, require_main=require_main).check()

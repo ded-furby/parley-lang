@@ -308,6 +308,10 @@ fn parley_random(lo: i64, hi: i64) -> i64 {
     a + (x % span) as i64
 }
 
+""".strip()
+
+
+PROGRAM_MAIN = r"""
 fn main() {
     std::panic::set_hook(Box::new(|info| {
         let msg = if let Some(s) = info.payload().downcast_ref::<&str>() {
@@ -328,8 +332,11 @@ fn main() {
 
 
 class Emitter:
-    def __init__(self, program: A.Program):
+    def __init__(self, program: A.Program, *, program_main: str | None = PROGRAM_MAIN,
+                 serde: bool = False):
         self.program = program
+        self.program_main = program_main
+        self.serde = serde
         self.lines: list[str] = []
         self.linemap: dict[int, int] = {}   # rust line (1-based) -> parley line
         self.indent = 0
@@ -363,13 +370,24 @@ class Emitter:
             self.emit_enum(e)
         for f in self.program.funcs:
             self.emit_func(f)
+        if self.program_main:
+            for line in self.program_main.splitlines():
+                self.out(line)
+            self.out("")
         return "\n".join(self.lines) + "\n", self.linemap
 
     def emit_record(self, r: A.RecordDef):
-        self.out("#[derive(Clone, Debug, PartialEq)]", r.line)
+        derives = "Clone, Debug, PartialEq"
+        if self.serde:
+            derives += ", serde::Serialize, serde::Deserialize"
+        self.out(f"#[derive({derives})]", r.line)
+        if self.serde:
+            self.out("#[serde(deny_unknown_fields)]", r.line)
         self.out(f"struct {camel(r.name)} {{", r.line)
         self.indent += 1
         for fname, fty in r.fields:
+            if self.serde and safe(fname) != fname:
+                self.out(f'#[serde(rename = "{rust_str_lit(fname)}")]', r.line)
             self.out(f"{safe(fname)}: {rust_type(fty)},", r.line)
         self.indent -= 1
         self.out("}")
@@ -377,10 +395,15 @@ class Emitter:
 
     def emit_enum(self, e: A.EnumDef):
         name = camel(e.name)
-        self.out("#[derive(Clone, Copy, Debug, PartialEq)]", e.line)
+        derives = "Clone, Copy, Debug, PartialEq"
+        if self.serde:
+            derives += ", serde::Serialize, serde::Deserialize"
+        self.out(f"#[derive({derives})]", e.line)
         self.out(f"enum {name} {{", e.line)
         self.indent += 1
         for v in e.variants:
+            if self.serde:
+                self.out(f'#[serde(rename = "{rust_str_lit(v)}")]', e.line)
             self.out(f"{camel(v)},", e.line)
         self.indent -= 1
         self.out("}")
@@ -1176,6 +1199,7 @@ class Emitter:
             self.out(f"{call};", st.line)
 
 
-def emit_program(program: A.Program) -> tuple[str, dict[int, int]]:
+def emit_program(program: A.Program, *, program_main: str | None = PROGRAM_MAIN,
+                 serde: bool = False) -> tuple[str, dict[int, int]]:
     """Emit Rust for a checked program. Returns (source, rust_line -> par_line)."""
-    return Emitter(program).emit()
+    return Emitter(program, program_main=program_main, serde=serde).emit()

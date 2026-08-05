@@ -124,6 +124,29 @@ claim that agents should emit TOON. The strict safe subset, failure behavior,
 tokenizer options, research boundary, and falsifiable thesis gates are in
 [`docs/AGENT_DATA.md`](docs/AGENT_DATA.md).
 
+## Build a typed full-stack product
+
+Parley web projects bind ordinary checked functions to exact HTTP routes. The
+compiler infers each JSON request and response contract from Parley records,
+rejects unknown request fields, and builds a native server. Deterministic
+scalar functions can also compile to browser WebAssembly with generated
+JavaScript wrappers and TypeScript declarations—without adding web-only syntax
+to the language.
+
+```bash
+parley web check examples/release-radar --json
+parley web build examples/release-radar
+parley web serve examples/release-radar
+```
+
+Release Radar is the dogfood application: one Parley readiness rule produces a
+live WASM score in the browser and the confirmed typed assessment on the native
+JSON backend. The generated server bounds headers and bodies, rejects ambiguous
+lengths and unsupported transfer encoding, canonicalizes static paths, and
+serves `.wasm` with the streaming MIME type. The present HTTP/1.1 and scalar
+WASM limits are explicit in [`docs/WEB.md`](docs/WEB.md); this is a foundation,
+not yet a claim of mature-framework parity.
+
 ## The agent loop
 
 ```bash
@@ -216,6 +239,9 @@ local and registry-backed package vendoring with SHA-256 lock metadata and
 `parley package review`, and optional HMAC-SHA256 release signatures, via
 `parley package` and `parley.lock.json` ·
 setup checks with `parley doctor` ·
+typed HTTP/JSON projects with checked route signatures, strict record decoding,
+native static serving, bounded requests, and browser/WASM scalar exports with
+generated JavaScript and TypeScript bindings via `parley web` ·
 safe workflow scaffolding, fixture testing, named-input execution, checksummed
 catalog installation, and drift verification with `parley workflow` ·
 `stop`/`skip`/`give back` · whole-number and decimal math helpers with guarded
@@ -230,7 +256,8 @@ construct and its Rust mapping: [docs/REFERENCE.md](docs/REFERENCE.md).
 Formal details: [docs/SPEC.md](docs/SPEC.md). All error codes:
 [docs/ERRORS.md](docs/ERRORS.md). Research plan:
 [docs/RESEARCH.md](docs/RESEARCH.md). Release and hosting checklist:
-[docs/RELEASE.md](docs/RELEASE.md). Domain options:
+[docs/RELEASE.md](docs/RELEASE.md). Typed web projects:
+[docs/WEB.md](docs/WEB.md). Domain options:
 [docs/DOMAINS.md](docs/DOMAINS.md). Seed benchmark harness:
 [benchmarks/](benchmarks). Browseable evidence archive: [progress/](progress).
 Eleven working programs: [examples/](examples).
@@ -409,6 +436,7 @@ the plan:
 - [x] workflow fixtures and schema-2 named inputs — v0.3.157
 - [x] Release Steward and checksummed three-product workflow catalog — v0.3.158
 - [x] verified adaptive JSON/TOON agent-context packing — v0.3.159
+- [x] typed HTTP/JSON and deterministic browser/WASM full-stack foundation — v0.4.0
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -436,7 +464,7 @@ the plan:
 ```bash
 git clone https://github.com/ded-furby/parley-lang && cd parley-lang
 pip install -e ".[dev]"
-python3 -m pytest # 362 tests; e2e compiles real binaries (needs cargo)
+python3 -m pytest # e2e compiles real native and web binaries (needs cargo)
 ```
 
 MIT licensed. Built by [Arjun Avtani](https://github.com/ded-furby) with

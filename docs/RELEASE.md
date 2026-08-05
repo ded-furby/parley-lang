@@ -21,6 +21,8 @@ tmp="$(mktemp -d)" && mkdir -p "$tmp/packages/demo_pkg" && printf 'to ready givi
 tmp="$(mktemp -d)" && mkdir "$tmp/demo_pkg" && printf 'to ready giving yesno:\n    give back yes\n' > "$tmp/demo_pkg/main.par" && hash="$(python3 -c 'import hashlib, pathlib, sys; p=pathlib.Path(sys.argv[1]); print(hashlib.sha256(b"main.par\0"+(p/"main.par").read_bytes()).hexdigest())' "$tmp/demo_pkg")" && printf '{"schema_version":1,"packages":{"demo_pkg":{"version":"1.0.0","source":"demo_pkg","description":"demo package","license":"MIT","maintainer":"Demo Maintainer <https://example.com>","sha256":"%s"}}}\n' "$hash" > "$tmp/registry.json" && (cd "$tmp" && parley package check-registry registry.json && parley package search --registry registry.json && parley package install demo_pkg --registry registry.json && parley package verify)
 parley doctor --json
 parley --version
+parley web check examples/release-radar --json
+parley web build examples/release-radar --output /tmp/parley_release_radar
 parley benchmark prompt --task hello --language parley
 parley benchmark measure --no-check --format json --output /tmp/parley_seed_metrics.json
 parley run examples/hello.par
@@ -159,5 +161,8 @@ python3 -m twine check dist/*
   metadata, and the listed package source files.
 - A clean wheel can install, fixture-test, and checksum-verify Release Steward,
   Log Summary, and Checklist Report using only `parley workflow` commands.
+- `parley web check examples/release-radar --json` reports two typed routes and
+  one deterministic browser export; a full build emits the native server,
+  strict JSON contract, `.wasm`, JavaScript loader, and TypeScript declarations.
 - The GitHub branch is pushed and visible publicly.
 - The website URL is live and linked from the repository description.

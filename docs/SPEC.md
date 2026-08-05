@@ -1,4 +1,4 @@
-# Parley specification (v0.3)
+# Parley specification (v0.4)
 
 This document defines the language precisely enough to reimplement it.
 For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
@@ -61,6 +61,11 @@ parse-relevant highlights:
   multiplication or other operators to disambiguate the delimiter `times`.
 
 ## 4. Static semantics
+
+The normal command target requires one parameterless, non-returning `main`
+function (P210). The typed web target checks a module without requiring
+`main`; its manifest-selected route and browser entry functions are separately
+validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 
 * **Variable introduction.** `let name be value` always creates a variable.
   `set name to value` creates it when absent and mutates it when present;

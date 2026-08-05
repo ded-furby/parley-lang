@@ -23,6 +23,9 @@
   parley workflow test name       run deterministic workflow fixtures
   parley workflow install name    install a checksummed workflow product
   parley workflow verify          verify installed workflow checksums
+  parley web check app            verify typed HTTP/JSON and browser contracts
+  parley web build app            build a native server and browser/WASM bundle
+  parley web serve app            build and run the full-stack project locally
   parley benchmark measure        measure the seed research corpus
   parley benchmark prompt         render language-neutral benchmark prompts
 """
@@ -62,6 +65,17 @@ from .emit_rust import emit_program
 from .parser import SourceMap, parse_program
 from .workflows import WORKFLOW_TEMPLATES
 from .workflows.catalog import WORKFLOW_CATALOG
+from .web import (
+    WASM_CARGO_TOML,
+    WEB_CARGO_TOML,
+    WebProject,
+    WebProjectError,
+    check_browser,
+    check_web,
+    load_project,
+    render_browser,
+    render_server,
+)
 
 CARGO_TOML = """\
 [package]
@@ -98,6 +112,31 @@ SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 SIGNATURE_RE = re.compile(r"^hmac-sha256:[0-9a-fA-F]{64}$")
 DEFAULT_REGISTRY = "parley.registry.json"
 WORKFLOW_LOCK_FILE = "parley.workflows.lock.json"
+
+WEB_NEW_SOURCE = """\
+a health has ok as yesno, service as text
+
+to health_check giving health:
+    give back a health with ok yes, service "{name}"
+"""
+
+WEB_NEW_INDEX = """\
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{name}</title>
+<main>
+  <h1>{name}</h1>
+  <p id="status">Checking the typed Parley API…</p>
+</main>
+<script type="module">
+const response = await fetch("/api/health");
+const value = await response.json();
+document.querySelector("#status").textContent = value.ok
+  ? `${{value.service}} is ready.` : "The service is not ready.";
+</script>
+"""
 
 
 # ------------------------------------------------------------------ pipeline
@@ -1435,6 +1474,279 @@ def cmd_package_search(args) -> int:
     return 0
 
 
+def _web_project_error(exc: Exception) -> int:
+    print(f"web error: {exc}", file=sys.stderr)
+    return 1
+
+
+def cmd_web_new(args) -> int:
+    root = Path(args.name)
+    if root.exists():
+        return _web_project_error(WebProjectError(f"'{args.name}' already exists"))
+    if not PACKAGE_NAME_RE.fullmatch(root.name):
+        return _web_project_error(WebProjectError(
+            "project names may only contain letters, numbers, dashes, underscores, and dots"))
+    root.mkdir(parents=True)
+    public = root / "public"
+    public.mkdir()
+    (root / "main.par").write_text(WEB_NEW_SOURCE.format(name=root.name))
+    (public / "index.html").write_text(WEB_NEW_INDEX.format(name=root.name))
+    (root / "parley.web.json").write_text(json.dumps({
+        "schema_version": 1,
+        "name": root.name,
+        "entrypoint": "main.par",
+        "static_dir": "public",
+        "routes": [
+            {"method": "GET", "path": "/api/health", "handler": "health_check"},
+        ],
+        "server": {"host": "127.0.0.1", "port": 8787, "max_body_bytes": 1048576},
+    }, indent=2) + "\n")
+    print(f"Created typed web project {root}/")
+    print(f"Run it with: parley web serve {root}")
+    return 0
+
+
+def _load_checked_web(path: str):
+    project = load_project(path)
+    web = check_web(project)
+    browser = check_browser(project)
+    return project, web, browser
+
+
+def cmd_web_check(args) -> int:
+    try:
+        project, web, browser = _load_checked_web(args.project)
+    except WebProjectError as exc:
+        return _web_project_error(exc)
+    except ParleyError as exc:
+        return _fail(exc, None, as_json=args.json)
+    result = {
+        "ok": True,
+        "project": project.name,
+        "entrypoint": str(project.entrypoint.relative_to(project.root)),
+        "routes": [
+            {
+                "method": route.route.method,
+                "path": route.route.path,
+                "handler": route.route.handler,
+                "request_metadata": route.has_request,
+                "json_body": None if route.body_param is None else str(route.body_param.type),
+                "json_response": str(route.function.ret),
+            }
+            for route in web.routes
+        ],
+        "browser_exports": [] if browser is None else [
+            {
+                "name": function.name,
+                "parameters": [str(param.type) for param in function.params],
+                "returns": str(function.ret),
+            }
+            for function in browser.exports
+        ],
+    }
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print(f"✓ {project.name}: typed web contract is valid.")
+        for route in result["routes"]:
+            request = route["json_body"] or "no JSON body"
+            print(
+                f"  {route['method']:6} {route['path']:<24} "
+                f"{route['handler']} ({request} → {route['json_response']})")
+        for export in result["browser_exports"]:
+            params = ", ".join(export["parameters"]) or "no parameters"
+            print(f"  WASM   {export['name']} ({params} → {export['returns']})")
+    return 0
+
+
+def _wasm_target_ready() -> bool:
+    if shutil.which("rustc") is None:
+        return False
+    proc = subprocess.run(
+        ["rustc", "--print", "target-libdir", "--target", "wasm32-unknown-unknown"],
+        capture_output=True,
+        text=True,
+    )
+    return proc.returncode == 0 and Path(proc.stdout.strip()).is_dir()
+
+
+def _cargo_web_artifact(
+        build_dir: Path,
+        cargo_toml: str,
+        rust: str,
+        linemap: dict[int, int],
+        srcmap: SourceMap,
+        *,
+        release: bool,
+        wasm: bool,
+) -> Path:
+    if shutil.which("cargo") is None:
+        raise ParleyError([Diagnostic(
+            "P902", "Parley needs Rust to build web projects, and `cargo` was not found.",
+            file=srcmap.main_file, line=1,
+            hint="Install it from https://rustup.rs, then re-run.")])
+    source_dir = build_dir / "src"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    (build_dir / "Cargo.toml").write_text(cargo_toml)
+    source_name = "lib.rs" if wasm else "main.rs"
+    (source_dir / source_name).write_text(rust)
+    command = ["cargo", "build", "--message-format=json", "-q"]
+    if release:
+        command.append("--release")
+    if wasm:
+        command.extend(["--target", "wasm32-unknown-unknown"])
+    proc = subprocess.run(
+        command,
+        cwd=build_dir,
+        env=_cargo_env(),
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        diagnostics = _map_rustc_errors(proc.stdout, linemap, srcmap)
+        if diagnostics and all(d.code == "P901" for d in diagnostics):
+            detail = (proc.stderr or proc.stdout).strip().splitlines()
+            if detail:
+                diagnostics[0].hint = detail[-1][:500]
+        raise ParleyError(diagnostics)
+    profile = "release" if release else "debug"
+    if wasm:
+        return _target_dir() / "wasm32-unknown-unknown" / profile / "parley_browser.wasm"
+    return _target_dir() / profile / "parley_web"
+
+
+def _web_build_key(project: WebProject) -> str:
+    digest = hashlib.sha256(str(project.root).encode()).hexdigest()[:12]
+    return f"{project.name}-{digest}"
+
+
+def _build_web_artifacts(project: WebProject, web, browser, *, release: bool):
+    if browser is not None and not _wasm_target_ready():
+        raise ParleyError([Diagnostic(
+            "P724",
+            "This project has browser exports, but Rust's wasm32-unknown-unknown target is not installed.",
+            file=browser.srcmap.main_file,
+            line=1,
+            hint="Install it once with `rustup target add wasm32-unknown-unknown`.",
+        )])
+    key = _web_build_key(project)
+    server_rust, server_linemap = render_server(web)
+    server_binary = _cargo_web_artifact(
+        Path(".parley-build") / "web" / key / "server",
+        WEB_CARGO_TOML,
+        server_rust,
+        server_linemap,
+        web.srcmap,
+        release=release,
+        wasm=False,
+    )
+    browser_artifacts = None
+    if browser is not None:
+        wasm_rust, wasm_linemap, javascript, declarations = render_browser(browser)
+        wasm_binary = _cargo_web_artifact(
+            Path(".parley-build") / "web" / key / "browser",
+            WASM_CARGO_TOML,
+            wasm_rust,
+            wasm_linemap,
+            browser.srcmap,
+            release=True,
+            wasm=True,
+        )
+        browser_artifacts = wasm_binary, javascript, declarations
+    return server_binary, browser_artifacts
+
+
+def _safe_bundle_target(project: WebProject, raw_output: str | None) -> Path:
+    output = (Path(raw_output).resolve() if raw_output
+              else (project.root / "dist").resolve())
+    forbidden = {Path("/").resolve(), project.root, Path.home().resolve()}
+    if output in forbidden or output in project.root.parents:
+        raise WebProjectError("the bundle output must be a dedicated directory, not a broad root")
+    return output
+
+
+def _write_web_bundle(project: WebProject, web, browser, server_binary: Path,
+                      browser_artifacts, output: Path, *, force: bool) -> None:
+    if output.exists():
+        if not force:
+            raise WebProjectError(f"{output} already exists; use --force to replace that bundle")
+        if output.is_dir():
+            shutil.rmtree(output)
+        else:
+            output.unlink()
+    output.mkdir(parents=True)
+    copied_server = output / "server"
+    shutil.copy2(server_binary, copied_server)
+    public = output / "public"
+    if project.static_dir is not None:
+        shutil.copytree(project.static_dir, public)
+    else:
+        public.mkdir()
+    if browser_artifacts is not None:
+        wasm_binary, javascript, declarations = browser_artifacts
+        shutil.copy2(wasm_binary, public / "parley.wasm")
+        (public / "parley.js").write_text(javascript)
+        (public / "parley.d.ts").write_text(declarations)
+    metadata = {
+        "schema_version": 1,
+        "parley_version": __version__,
+        "project": project.name,
+        "server": "server",
+        "public": "public",
+        "routes": [
+            {"method": route.route.method, "path": route.route.path,
+             "handler": route.route.handler}
+            for route in web.routes
+        ],
+        "browser_exports": [] if browser is None else [
+            function.name for function in browser.exports
+        ],
+    }
+    (output / "parley.build.json").write_text(json.dumps(metadata, indent=2) + "\n")
+
+
+def cmd_web_build(args) -> int:
+    try:
+        project, web, browser = _load_checked_web(args.project)
+        output = _safe_bundle_target(project, args.output)
+        server, browser_artifacts = _build_web_artifacts(
+            project, web, browser, release=True)
+        _write_web_bundle(
+            project, web, browser, server, browser_artifacts, output, force=args.force)
+    except WebProjectError as exc:
+        return _web_project_error(exc)
+    except ParleyError as exc:
+        return _fail(exc, None)
+    print(f"Built {project.name} full-stack bundle at {output}")
+    print(f"  native server: {output / 'server'}")
+    if browser is not None:
+        print(f"  browser module: {output / 'public' / 'parley.wasm'}")
+    return 0
+
+
+def cmd_web_serve(args) -> int:
+    try:
+        project, web, browser = _load_checked_web(args.project)
+        server, browser_artifacts = _build_web_artifacts(
+            project, web, browser, release=False)
+    except WebProjectError as exc:
+        return _web_project_error(exc)
+    except ParleyError as exc:
+        return _fail(exc, None)
+    with tempfile.TemporaryDirectory(prefix=f"parley-web-{project.name}-") as temp:
+        bundle = Path(temp) / "bundle"
+        _write_web_bundle(
+            project, web, browser, server, browser_artifacts, bundle, force=False)
+        env = dict(os.environ)
+        env["PARLEY_WEB_HOST"] = args.host or project.host
+        env["PARLEY_WEB_PORT"] = str(args.port or project.port)
+        try:
+            proc = subprocess.run([str(bundle / "server")], cwd=bundle, env=env)
+        except KeyboardInterrupt:
+            return 130
+    return proc.returncode if proc.returncode >= 0 else 1
+
+
 def _load_benchmark_script(name: str):
     path = Path("benchmarks") / f"{name}.py"
     if not path.is_file():
@@ -1605,6 +1917,29 @@ def main(argv: list[str] | None = None) -> int:
     workflow_verify = workflow_sub.add_parser(
         "verify", help=f"verify installed workflows against {WORKFLOW_LOCK_FILE}")
     workflow_verify.set_defaults(fn=cmd_workflow_verify)
+
+    p = sub.add_parser("web", help="build typed HTTP/JSON and browser/WASM projects")
+    web_sub = p.add_subparsers(dest="web_cmd", required=True)
+    web_new = web_sub.add_parser("new", help="create a typed full-stack project")
+    web_new.add_argument("name")
+    web_new.set_defaults(fn=cmd_web_new)
+    web_check = web_sub.add_parser(
+        "check", help="verify route, JSON, and browser export contracts")
+    web_check.add_argument("project", help="project directory or parley.web.json")
+    web_check.add_argument("--json", action="store_true", help="machine-readable contract")
+    web_check.set_defaults(fn=cmd_web_check)
+    web_build = web_sub.add_parser(
+        "build", help="build a native server plus optional browser/WASM bundle")
+    web_build.add_argument("project", help="project directory or parley.web.json")
+    web_build.add_argument("-o", "--output", help="bundle directory (default: PROJECT/dist)")
+    web_build.add_argument(
+        "--force", action="store_true", help="replace an existing dedicated bundle directory")
+    web_build.set_defaults(fn=cmd_web_build)
+    web_serve = web_sub.add_parser("serve", help="build and run a project locally")
+    web_serve.add_argument("project", help="project directory or parley.web.json")
+    web_serve.add_argument("--host", help="listen host override")
+    web_serve.add_argument("--port", type=int, choices=range(1, 65536), help="listen port override")
+    web_serve.set_defaults(fn=cmd_web_serve)
 
     p = sub.add_parser("package", help="manage local Parley packages")
     package_sub = p.add_subparsers(dest="package_cmd", required=True)

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "name": "release-radar",
+  "entrypoint": "main.par",
+  "static_dir": "public",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/status",
+      "handler": "project_status"
+    },
+    {
+      "method": "POST",
+      "path": "/api/assess",
+      "handler": "assess_release"
+    }
+  ],
+  "browser": {
+    "entrypoint": "main.par",
+    "exports": [
+      {
+        "name": "readiness_score"
+      }
+    ]
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8787,
+    "max_body_bytes": 16384
+  }
+}

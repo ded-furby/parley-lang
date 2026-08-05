@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Release Radar · Parley</title>
+  <meta name="description" content="A typed release-readiness console built end-to-end with Parley.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">PARLEY / FULL-STACK DOGFOOD 001</p>
+        <h1>Release Radar</h1>
+        <p class="lede">One readiness rule, running in your browser as WebAssembly and on the native typed JSON backend.</p>
+      </div>
+      <div class="system-state" aria-live="polite">
+        <span class="pulse" aria-hidden="true"></span>
+        <span id="system-label">Booting Parley modules</span>
+      </div>
+    </header>
+
+    <section class="workspace" aria-label="Release assessment workspace">
+      <form id="release-form" class="panel input-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">Input contract</p>
+            <h2>Release evidence</h2>
+          </div>
+          <span class="type-chip">release_input</span>
+        </div>
+
+        <label class="wide">
+          <span>Version</span>
+          <input id="version" name="version" value="0.4.0-alpha.1" required autocomplete="off">
+        </label>
+
+        <div class="field-grid">
+          <label>
+            <span>Tests passed</span>
+            <input id="tests-passed" name="tests_passed" type="number" min="0" value="385" required>
+          </label>
+          <label>
+            <span>Tests total</span>
+            <input id="tests-total" name="tests_total" type="number" min="0" value="385" required>
+          </label>
+          <label>
+            <span>Checklist done</span>
+            <input id="checklist-done" name="checklist_done" type="number" min="0" value="11" required>
+          </label>
+          <label>
+            <span>Checklist total</span>
+            <input id="checklist-total" name="checklist_total" type="number" min="0" value="12" required>
+          </label>
+        </div>
+
+        <label class="toggle-row">
+          <span>
+            <strong>Package artifact</strong>
+            <small>Signed, verified, and ready to publish</small>
+          </span>
+          <input id="package-ready" name="package_ready" type="checkbox" role="switch">
+        </label>
+
+        <div class="local-signal">
+          <span>Local WASM preview</span>
+          <strong><span id="local-score">—</span>/100</strong>
+        </div>
+
+        <button id="assess-button" type="submit">Confirm with typed backend <span>↗</span></button>
+      </form>
+
+      <section class="panel result-panel" aria-labelledby="result-title">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">Response contract</p>
+            <h2 id="result-title">Readiness result</h2>
+          </div>
+          <span class="type-chip">release_assessment</span>
+        </div>
+
+        <div class="score-stage">
+          <div class="score-copy">
+            <span>Confirmed score</span>
+            <strong id="confirmed-score">—</strong>
+            <small>/ 100</small>
+          </div>
+          <div class="score-track" aria-hidden="true">
+            <span id="score-fill"></span>
+          </div>
+        </div>
+
+        <div class="gate-list" aria-label="Weighted readiness gates">
+          <div class="gate-row">
+            <span class="gate-index">01</span>
+            <span class="gate-name">Test suite</span>
+            <span class="gate-weight">60 pts</span>
+            <span id="tests-state" class="gate-state">waiting</span>
+          </div>
+          <div class="gate-row">
+            <span class="gate-index">02</span>
+            <span class="gate-name">Release checklist</span>
+            <span class="gate-weight">30 pts</span>
+            <span id="checklist-state" class="gate-state">waiting</span>
+          </div>
+          <div class="gate-row">
+            <span class="gate-index">03</span>
+            <span class="gate-name">Package artifact</span>
+            <span class="gate-weight">10 pts</span>
+            <span id="package-state" class="gate-state">waiting</span>
+          </div>
+        </div>
+
+        <div id="verdict" class="verdict muted" aria-live="polite">
+          Submit the evidence to receive a typed backend decision.
+        </div>
+        <ul id="blockers" class="blockers"></ul>
+      </section>
+    </section>
+
+    <footer>
+      <span id="runtime-proof">WASM pending · API pending</span>
+      <span>Exact JSON contracts · no client framework</span>
+    </footer>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

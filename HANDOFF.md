@@ -25,8 +25,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language v0.3 / toolchain v0.3.159** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest local suite has 385 tests, including e2e tests that
+- **Language/toolchain v0.4.0** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 394/394, including e2e tests that
   compile every feature to a native binary and assert stdout. Eleven examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -66,6 +66,16 @@ Update it whenever you finish or start a work item.
   sizes, selection reason, and delivered format. The implementation adds no
   runtime dependency and no language syntax. Design and claim boundaries are
   in `docs/AGENT_DATA.md`; focused tests pass 19/19.
+- **v0.4.0 typed full-stack foundation:** `parley web new/check/build/serve`
+  binds exact manifest routes to ordinary checked Parley functions, infers
+  strict JSON request/response types, and emits a bounded native HTTP/1.1
+  server with canonicalized static paths. Optional deterministic scalar
+  exports compile to `wasm32-unknown-unknown` with generated JavaScript and
+  TypeScript bindings. P710–P724 make contract failures actionable. The
+  Release Radar dogfood app runs the same readiness rule in browser WASM and
+  a typed native route; valid, malformed, wrong-content-type, unknown-field,
+  MIME, static, and traversal behavior are covered. Limits and security
+  boundaries are explicit in `docs/WEB.md`; no language syntax was added.
 - **Iteration 033 agent-data result:** the 12-case corpus and 5% gate were
   committed at `87e6487` before broad measurement. All seven supported TOON
   candidates round-trip exactly, automatic selection never increases tokens,
@@ -1160,20 +1170,24 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Independent adoption evidence.** Record first-run/edit friction with
+1. **Independent full-stack comparison.** Freeze the Release Radar task and
+   measurement protocol before implementing Python, TypeScript, and Rust
+   references. Compare correctness, source/context size, build artifact, build
+   time, and agent performance without tuning the Parley compiler from output.
+2. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-2. **Agent-data evaluation.** Freeze a shape-diverse JSON corpus and real
+3. **Agent-data evaluation.** Freeze a shape-diverse JSON corpus and real
    tokenizers, publish lossless compression measurements, then run blinded
    repeated comprehension/coding tasks. Keep model output in JSON and include
    all parse/repair tokens; static savings alone are not an agent-performance
    result.
-3. **Real Release Steward operation.** Use the installed workflow on each
+4. **Real Release Steward operation.** Use the installed workflow on each
    actual release candidate and preserve its report. Promote structured values
    inside programs only if friction recurs across maintained products.
-4. **Mature-repository validation.** If another language benchmark is justified, use a
+5. **Mature-repository validation.** If another language benchmark is justified, use a
    real repository or release operation with history and dependency search;
    preregister it and do not tune from reports 031 or 032.
-5. **Package publishing workflow** — checksum installs, publish-entry
+6. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
@@ -1194,7 +1208,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.3.159).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.4.0).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

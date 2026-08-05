@@ -190,6 +190,72 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.
 
+## P710 — Web route names a missing handler
+
+**What it means:** A route manifest points to a function that is not defined.
+
+**How to fix it:** Add the named function or correct the route's `handler` field.
+
+## P711 — Web handler has no response type
+
+**What it means:** A typed route handler must give back a JSON response value.
+
+**How to fix it:** Add a `giving` type and give back that value on every path.
+
+## P712 — Web response is not JSON-safe
+
+**What it means:** The response contains an unsupported boundary type.
+
+**How to fix it:** Use JSON-safe scalars, maybes, lists, text-keyed maps, records, or kinds.
+
+## P713 — Unsupported web handler signature
+
+**What it means:** The function has too many, changing, or incorrectly ordered parameters.
+
+**How to fix it:** Use no parameters, one typed body, `web_request`, or `web_request` followed by one typed body.
+
+## P714 — Malformed web_request record
+
+**What it means:** The record does not match the stable HTTP metadata contract.
+
+**How to fix it:** Declare the exact method, path, query, headers, and body fields in [WEB.md](WEB.md).
+
+## P715 — Web request body is not JSON-safe
+
+**What it means:** The body parameter contains a value the generated boundary cannot decode.
+
+**How to fix it:** Use the supported JSON types documented in [WEB.md](WEB.md).
+
+## P720 — Browser export names a missing function
+
+**What it means:** `browser.exports` points to a function that is not defined.
+
+**How to fix it:** Add the function or correct the manifest.
+
+## P721 — Unsupported browser return type
+
+**What it means:** The first stable browser ABI returns only scalar values.
+
+**How to fix it:** Return `number`, `decimal`, or `yesno`.
+
+## P722 — Unsupported browser parameter
+
+**What it means:** The export has a changing or non-scalar parameter.
+
+**How to fix it:** Use non-changing `number`, `decimal`, and `yesno` parameters.
+
+## P723 — Browser export is not deterministic
+
+**What it means:** The exported call graph uses platform I/O, randomness, runtime failure state, or dynamic function values.
+
+**How to fix it:** Move those effects outside the exported calculation.
+
+## P724 — Browser build target is missing
+
+**What it means:** The project declares browser exports but Rust's browser target is not installed.
+
+**How to fix it:** Run `rustup target add wasm32-unknown-unknown` once, then build again.
+
 ## P901 — The Rust backend rejected the program
 
 **What it means:** The generated Rust did not compile. This usually means a Parley checker gap — the position points at the Parley line involved.

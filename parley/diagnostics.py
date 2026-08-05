@@ -192,6 +192,62 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An anonymous function captures outside variables by value when it is created.",
         "fix": "Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.",
     },
+    # --- typed web project errors (P7xx)
+    "P710": {
+        "title": "Web route names a missing handler",
+        "explain": "A route in parley.web.json points to a function that is not defined in the checked entrypoint.",
+        "fix": "Add the named Parley function or correct the route's handler field.",
+    },
+    "P711": {
+        "title": "Web handler has no response type",
+        "explain": "Every typed HTTP route must give back a value that the server can encode as JSON.",
+        "fix": "Add a `giving` type and give back that value on every path.",
+    },
+    "P712": {
+        "title": "Web response is not JSON-safe",
+        "explain": "The handler's return type contains a value that cannot cross the generated JSON boundary.",
+        "fix": "Use JSON-safe scalars, maybes, lists, text-keyed maps, records, or kinds.",
+    },
+    "P713": {
+        "title": "Unsupported web handler signature",
+        "explain": "The route function has too many, changing, or incorrectly ordered parameters.",
+        "fix": "Use no parameters, one typed body, web_request, or web_request followed by one typed body.",
+    },
+    "P714": {
+        "title": "Malformed web_request record",
+        "explain": "A handler uses web_request, but that record does not match the stable HTTP metadata contract.",
+        "fix": "Declare method, path, query, headers, and body with the types and order shown in docs/WEB.md.",
+    },
+    "P715": {
+        "title": "Web request body is not JSON-safe",
+        "explain": "The handler's body parameter contains a value that cannot be decoded from JSON.",
+        "fix": "Use JSON-safe scalars, maybes, lists, text-keyed maps, records, or kinds.",
+    },
+    "P720": {
+        "title": "Browser export names a missing function",
+        "explain": "A browser export in parley.web.json points to a function that is not defined in its entrypoint.",
+        "fix": "Add the named function or correct browser.exports.",
+    },
+    "P721": {
+        "title": "Unsupported browser return type",
+        "explain": "The first stable browser ABI returns only number, decimal, or yesno values.",
+        "fix": "Return a supported scalar or keep this function on the native backend.",
+    },
+    "P722": {
+        "title": "Unsupported browser parameter",
+        "explain": "A browser export has a changing or non-scalar parameter outside the first stable ABI.",
+        "fix": "Use non-changing number, decimal, and yesno parameters.",
+    },
+    "P723": {
+        "title": "Browser export is not deterministic",
+        "explain": "The export's call graph uses platform I/O, randomness, runtime failure state, or a dynamic function value.",
+        "fix": "Move those effects outside the exported call graph and export deterministic calculation logic.",
+    },
+    "P724": {
+        "title": "Browser build target is missing",
+        "explain": "The project declares browser exports but Rust's wasm32-unknown-unknown standard library is not installed.",
+        "fix": "Run `rustup target add wasm32-unknown-unknown` once, then build again.",
+    },
     # --- residual Rust errors (P9xx)
     "P901": {
         "title": "The Rust backend rejected the program",

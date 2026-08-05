@@ -7,7 +7,10 @@ prints (minus mechanical details like `i64` suffixes and helper plumbing).
 ## Program shape
 
 A program is records, kinds (enums) and functions at the top level, with
-indentation-based blocks (4 spaces). Execution starts at `to main:`.
+indentation-based blocks (4 spaces). Normal command programs start at
+`to main:`. A `parley web` entrypoint is a checked function module whose route
+and browser entry functions are selected by `parley.web.json`, so it does not
+need a synthetic `main`; see [WEB.md](WEB.md).
 Comments: `note: …` or `# …` to end of line.
 
 Names use letters, digits, and underscores and cannot start with a digit.

@@ -262,6 +262,10 @@ The hosted starter index is
   workflows. Existing outputs need `--force`; input and output may never be the
   same file. `include "std/workflow"` exposes the reusable transformation
   helpers.
+* `parley web new/check/build/serve` creates and verifies typed full-stack
+  projects. Route records/functions stay ordinary Parley; `parley.web.json`
+  binds exact HTTP routes and optional deterministic browser/WASM scalar
+  exports. Read `docs/WEB.md` before authoring a manifest or `web_request`.
 * `parley benchmark prompt`, `parley benchmark measure`, and
   `parley benchmark summarize` expose the research harness from the source
   checkout.
