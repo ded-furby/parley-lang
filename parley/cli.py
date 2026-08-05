@@ -13,6 +13,9 @@
   parley package review name src  dry-run package submission review
   parley package verify           verify vendored packages against the lockfile
   parley package check-registry x validate a package registry manifest
+  parley workflow list            list bundled workflow starters
+  parley workflow new name        create a workflow from a starter
+  parley workflow run name        safely run a file-to-file workflow
   parley benchmark measure        measure the seed research corpus
   parley benchmark prompt         render language-neutral benchmark prompts
 """
@@ -40,6 +43,7 @@ from .checker import check_program
 from .diagnostics import Diagnostic, ParleyError, explain, render_human, render_json
 from .emit_rust import emit_program
 from .parser import SourceMap, parse_program
+from .workflows import WORKFLOW_TEMPLATES
 
 CARGO_TOML = """\
 [package]
@@ -235,6 +239,110 @@ def cmd_new(args) -> int:
     return 0
 
 
+def cmd_workflow_list(args) -> int:
+    print("Parley workflow starters")
+    for name, metadata in WORKFLOW_TEMPLATES.items():
+        print(f"{name:18} {metadata['description']}")
+    return 0
+
+
+def cmd_workflow_new(args) -> int:
+    root = Path(args.name)
+    if root.exists():
+        print(f"workflow error: '{args.name}' already exists.", file=sys.stderr)
+        return 1
+    if not PACKAGE_NAME_RE.fullmatch(root.name):
+        print(
+            "workflow error: names may only contain letters, numbers, dashes, "
+            "underscores, and dots",
+            file=sys.stderr,
+        )
+        return 1
+
+    template = WORKFLOW_TEMPLATES[args.template]
+    source = (
+        resources.files("parley.workflows.templates")
+        .joinpath(f"{args.template}.par")
+        .read_text()
+        .replace("__WORKFLOW_NAME__", root.name)
+    )
+    root.mkdir(parents=True)
+    (root / "main.par").write_text(source)
+    (root / "input.txt").write_text(template["sample"])
+    (root / "workflow.json").write_text(json.dumps({
+        "schema_version": 1,
+        "name": root.name,
+        "template": args.template,
+        "entrypoint": "main.par",
+    }, indent=2) + "\n")
+    print(
+        f"Created {root.as_posix()}/ from the {args.template} starter.\n"
+        f"Check it: parley check {root.as_posix()}/main.par\n"
+        f"Run it:   parley workflow run {root.as_posix()} "
+        f"--input {root.as_posix()}/input.txt --output output.txt"
+    )
+    return 0
+
+
+def _workflow_entrypoint(target: str) -> Path:
+    path = Path(target)
+    if path.is_dir():
+        manifest_path = path / "workflow.json"
+        entrypoint = "main.par"
+        if manifest_path.is_file():
+            try:
+                manifest = json.loads(manifest_path.read_text())
+            except json.JSONDecodeError as exc:
+                raise OSError(f"invalid workflow.json: {exc.msg}") from exc
+            if manifest.get("schema_version") != 1:
+                raise OSError("workflow.json must use schema_version 1")
+            entrypoint = manifest.get("entrypoint", "main.par")
+            if not isinstance(entrypoint, str) or not entrypoint.strip():
+                raise OSError("workflow.json entrypoint must be a file name")
+            entry_path = Path(entrypoint)
+            if entry_path.is_absolute() or ".." in entry_path.parts:
+                raise OSError("workflow.json entrypoint must stay inside the workflow")
+        path = path / entrypoint
+    if not path.is_file():
+        raise OSError(f"workflow entrypoint does not exist: {path.as_posix()}")
+    return path
+
+
+def cmd_workflow_run(args) -> int:
+    try:
+        entrypoint = _workflow_entrypoint(args.workflow)
+        input_path = Path(args.input).resolve()
+        output_path = Path(args.output).resolve()
+        if "\n" in str(input_path) or "\n" in str(output_path):
+            raise OSError("workflow paths cannot contain newlines")
+        if not input_path.is_file():
+            raise OSError(f"input file does not exist: {args.input}")
+        same_existing_file = output_path.exists() and os.path.samefile(input_path, output_path)
+        if input_path == output_path or same_existing_file:
+            raise OSError("workflow input and output must be different files")
+        if not output_path.parent.is_dir():
+            raise OSError(f"output directory does not exist: {output_path.parent}")
+        if output_path.exists() and not output_path.is_file():
+            raise OSError(f"output path is not a file: {args.output}")
+        if output_path.exists() and not args.force:
+            raise OSError(
+                f"output already exists: {args.output}; pass --force to replace it")
+        rust, linemap, srcmap = compile_source(str(entrypoint))
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
+    except OSError as exc:
+        print(f"workflow error: {exc}", file=sys.stderr)
+        return 1
+    except ParleyError as exc:
+        return _fail(exc, None)
+
+    proc = subprocess.run(
+        [str(binary)],
+        input=f"{input_path}\n{output_path}\n",
+        text=True,
+    )
+    return proc.returncode if proc.returncode >= 0 else 1
+
+
 def _doctor_checks() -> list[dict]:
     checks = [
         {
@@ -285,7 +393,7 @@ def _doctor_checks() -> list[dict]:
         for path in stdlib_root.iterdir()
         if path.name.endswith(".par")
     )
-    required_stdlib = ["std/math", "std/text", "std/list", "std/map"]
+    required_stdlib = ["std/math", "std/text", "std/list", "std/map", "std/workflow"]
     missing = [name for name in required_stdlib if name not in stdlib]
     checks.append({
         "name": "stdlib",
@@ -888,6 +996,30 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("doctor", help="verify local Parley setup")
     p.add_argument("--json", action="store_true", help="machine-readable setup report")
     p.set_defaults(fn=cmd_doctor)
+
+    p = sub.add_parser("workflow", help="create and run safe file workflows")
+    workflow_sub = p.add_subparsers(dest="workflow_cmd", required=True)
+    workflow_list = workflow_sub.add_parser(
+        "list", help="list bundled workflow starters")
+    workflow_list.set_defaults(fn=cmd_workflow_list)
+    workflow_new = workflow_sub.add_parser(
+        "new", help="create a workflow from a bundled starter")
+    workflow_new.add_argument("name")
+    workflow_new.add_argument(
+        "--template",
+        choices=tuple(WORKFLOW_TEMPLATES),
+        default="clean-text",
+        help="starter to use (default: clean-text)",
+    )
+    workflow_new.set_defaults(fn=cmd_workflow_new)
+    workflow_run = workflow_sub.add_parser(
+        "run", help="compile and safely run a file-to-file workflow")
+    workflow_run.add_argument("workflow", help="workflow directory or .par entrypoint")
+    workflow_run.add_argument("--input", required=True, help="existing input file")
+    workflow_run.add_argument("--output", required=True, help="output file to create")
+    workflow_run.add_argument(
+        "--force", action="store_true", help="replace an existing output file")
+    workflow_run.set_defaults(fn=cmd_workflow_run)
 
     p = sub.add_parser("package", help="manage local Parley packages")
     package_sub = p.add_subparsers(dest="package_cmd", required=True)

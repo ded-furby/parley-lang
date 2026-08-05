@@ -1,0 +1,54 @@
+include "std/text"
+
+note: deterministic helpers for local file-to-file workflows
+
+to workflow_read_required_text with path as text giving text:
+    let content be read file path
+    if content is nothing:
+        fail "workflow input could not be read: {path}"
+    give back value of content
+
+to workflow_normalized_lines with source as text giving list of text:
+    let out be an empty list of text
+    for each line in (split_lines with source):
+        let clean_line be trimmed line
+        if clean_line is not "":
+            add clean_line to out
+    give back out
+
+to workflow_lines_containing with source as text, needle as text giving list of text:
+    if needle is "":
+        fail "workflow line matching needs non-empty text"
+    let out be an empty list of text
+    for each line in (split_lines with source):
+        if line contains needle:
+            add line to out
+    give back out
+
+to workflow_lines_starting_with with source as text, prefix as text giving list of text:
+    if prefix is "":
+        fail "workflow prefix matching needs non-empty text"
+    let out be an empty list of text
+    for each line in (split_lines with source):
+        if trimmed line starts with prefix:
+            add trimmed line to out
+    give back out
+
+to workflow_count_lines_containing with source as text, needle as text giving number:
+    give back length of (workflow_lines_containing with source, needle)
+
+to workflow_numbered_lines with lines as list of text giving text:
+    let out be an empty list of text
+    for each i from 1 to length of lines:
+        add "{i}. {item i of lines}" to out
+    give back out joined with "\n"
+
+to workflow_markdown_bullets with lines as list of text giving text:
+    let out be an empty list of text
+    for each line in lines:
+        add "- {line}" to out
+    give back out joined with "\n"
+
+to workflow_write_output with path as text, content as text:
+    write content to file path
+

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "parley-lang"
-version = "0.3.155"
+version = "0.3.156"
 description = "Speak plainly, ship native binaries — an English-like compiled language for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -29,11 +29,18 @@ publish = ["build>=1", "twine>=5"]
 research = ["tiktoken>=0.7"]
 
 [tool.setuptools]
-packages = ["parley", "parley.stdlib", "parley.stdlib.std"]
+packages = [
+  "parley",
+  "parley.stdlib",
+  "parley.stdlib.std",
+  "parley.workflows",
+  "parley.workflows.templates",
+]
 
 [tool.setuptools.package-data]
 parley = ["grammar.lark"]
 "parley.stdlib.std" = ["*.par"]
+"parley.workflows.templates" = ["*.par"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,19 @@
+include "std/workflow"
+
+note: __WORKFLOW_NAME__ — summarize a Markdown checklist
+
+to main:
+    let input_path be ask "Input file: "
+    let output_path be ask "Output file: "
+    let source be (workflow_read_required_text with input_path)
+    let done_count be (workflow_count_lines_containing with source, "- [x]")
+    let open_lines be (workflow_lines_containing with source, "- [ ]")
+    let open_count be length of open_lines
+    let total_count be done_count plus open_count
+    let report be "# Checklist report\n\n- Total: {total_count}\n- Complete: {done_count}\n- Open: {open_count}"
+    if open_count is more than 0:
+        let open_report be (workflow_markdown_bullets with open_lines)
+        set report to "{report}\n\n## Still open\n\n{open_report}"
+    workflow_write_output with output_path, report
+    say "workflow complete: wrote checklist report to {output_path}"
+

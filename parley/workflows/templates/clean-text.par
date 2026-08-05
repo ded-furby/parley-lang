@@ -1,0 +1,12 @@
+include "std/workflow"
+
+note: __WORKFLOW_NAME__ — normalize useful text lines
+
+to main:
+    let input_path be ask "Input file: "
+    let output_path be ask "Output file: "
+    let source be (workflow_read_required_text with input_path)
+    let lines be (workflow_normalized_lines with source)
+    workflow_write_output with output_path, lines joined with "\n"
+    say "workflow complete: wrote {length of lines} lines to {output_path}"
+

@@ -18,7 +18,7 @@ def test_doctor_json_reports_ready_toolchain(workdir):
     assert checks["cargo"]["ok"] is True
     assert checks["stdlib"]["ok"] is True
     assert checks["packages"]["ok"] is True
-    for package in ["std/math", "std/text", "std/list", "std/map"]:
+    for package in ["std/math", "std/text", "std/list", "std/map", "std/workflow"]:
         assert package in checks["stdlib"]["detail"]
 
 
