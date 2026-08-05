@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "protocol_revision": 2,
   "experiment_id": "035",
   "title": "Frozen Release Radar full-stack implementation comparison",
   "description": "A product-level comparison of the same typed HTTP/JSON service and browser scoring flow in Parley, Python, TypeScript, and Rust, preregistered after Parley v0.4.0 product work and before any baseline implementation or measurement.",
@@ -8,10 +9,17 @@
     "compiler_commit": "e5470b6f844f1586a7aedef814e20c39ce9746c6",
     "dogfood_project": "examples/release-radar",
     "cases_file": "benchmarks/fullstack_035_cases.json",
-    "cases_sha256": "dbed22ea140c09d65bd85f9959143c0b95fd1724cf79fbea07657e1660285a52",
+    "cases_sha256": "ed1b8ffb9d568e366b3c99104df9f492f79da9eefcaae272f910c2b20628bdbe",
     "parley_skill_sha256": "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c",
     "parley_skill_bytes": 1519,
-    "protocol_commit": "recorded in the raw result after this file is committed"
+    "protocol_commit": "revision 1: bafeca5; revision 2 recorded in the raw result after amendment commit"
+  },
+  "amendment": {
+    "record": "benchmarks/FULLSTACK_035_AMENDMENT.md",
+    "previous_cases_sha256": "dbed22ea140c09d65bd85f9959143c0b95fd1724cf79fbea07657e1660285a52",
+    "reason": "The stopped pre-measurement smoke exposed an assumed 415 error code that did not match frozen Parley v0.4.0.",
+    "only_case_change": "wrong_media_type.expected_error: unsupported_media_type -> json_content_type_required",
+    "measurement_status_at_change": "No complete four-language correctness result, source verdict, performance result, or report existed."
   },
   "languages": {
     "parley": {

@@ -186,7 +186,7 @@
       "raw_body": "{}",
       "content_type": "text/plain",
       "expected_status": 415,
-      "expected_error": "unsupported_media_type"
+      "expected_error": "json_content_type_required"
     },
     {
       "id": "missing_route",

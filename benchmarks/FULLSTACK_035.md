@@ -45,3 +45,8 @@ agents always use fewer tokens with Parley.”
 
 No Parley product or compiler code may change from the frozen commit based on
 this comparison. Complete results will be preserved as report 035.
+
+Revision 2 records one pre-measurement transcription correction in
+`FULLSTACK_035_AMENDMENT.md`: the frozen product's existing 415 error code is
+`json_content_type_required`. The original protocol commit and case hash remain
+preserved in git history.
