@@ -3140,3 +3140,44 @@ profile, or corpus change follows from this result.** Static representation
 savings do not establish model comprehension. The next evidence step is the
 separately frozen 90-session paired JSON/adaptive confirmation described in the
 protocol, with JSON output in both arms and all format-repair tokens retained.
+
+## 034 — Paired 90-session agent-data confirmation preregistered
+
+- Frozen: 2026-08-05, before any measured task output
+- Product checkpoint: `5674908`
+- Parley version: 0.3.159
+- Protocol: `benchmarks/agent_data_protocol_034.json`
+- Protocol SHA-256:
+  `a50cbe7952fd2d62c5c28f0a1a3a9adee3c8d74bc4f37342e51e07c2fd83d951`
+- Tasks: `benchmarks/agent_data_tasks_034.json`
+- Task SHA-256:
+  `9fa1588f06cc46a1e46984b67301e1aafccc46f8efaf19fc8104a743e553bfdc`
+- Runner: `benchmarks/agent_data_runner.py`
+- Runner SHA-256:
+  `eb996c96808c967db18656d1cc7c4378b0006fc6465228f1282e3f92d6dfdf01`
+- Matrix: five tasks × two input representations × three agent configurations
+  × three repetitions = 90 fresh sessions
+- Seed: `340260805`; concurrency: 6; timeout: 180 seconds per session
+
+The task families are exact lookup, filtering, aggregation, cross-record
+reasoning, and context-grounded code-modification planning. Every context is a
+record-heavy shape for which canonical TOON is character-smaller and decodes to
+the exact ordered JSON data model. Compact JSON and TOON prompts differ only in
+the representation, honest format label, fence label, and resulting bytes.
+Both arms require the same schema-constrained JSON answer; exact expected values
+stay in the parent runner and never appear in the prompt.
+
+The three frozen configurations are `gpt-5.6-sol` low,
+`gpt-5.6-sol` medium, and `gpt-5.6-terra` medium. This spans two model IDs, not
+the three independently frozen IDs proposed in the 033 Stage B outline. That
+available-runner limitation is declared before output and blocks a three-model
+generality claim. Unrelated `ready` prompts confirmed both IDs, the low/medium
+reasoning settings, and JSON output-schema delivery before this freeze; no
+benchmark context or expected answer was shown during those smoke checks.
+
+The five-part primary gate requires complete 90-thread execution integrity,
+accuracy non-inferiority overall and within each agent configuration, response
+parse non-inferiority, lower summed input tokens, and lower summed total tokens.
+All must pass. No cell may be rerun, excluded, or replaced, and no prompt,
+context, expected answer, schema, model, margin, TOON profile, or threshold may
+change from the measured result.

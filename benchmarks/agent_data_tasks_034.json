@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "experiment_id": "agent-data-confirmation-034",
+  "description": "Five exact-answer agent tasks over record-heavy JSON contexts for paired compact-JSON versus verified-TOON input testing.",
+  "tasks": [
+    {
+      "id": "exact-diagnostic-lookup",
+      "family": "exact lookup",
+      "context_path": "benchmarks/agent_data_cases/diagnostics.json",
+      "question": "Find diagnostic P228. Return its code, file, line, column, and repair text exactly as represented in the context.",
+      "expected_answer": {"code": "P228", "file": "maybe.par", "line": 10, "column": 9, "repair": "Check whether the value is nothing before unwrapping it."},
+      "answer_schema": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string"},
+          "file": {"type": "string"},
+          "line": {"type": "integer"},
+          "column": {"type": "integer"},
+          "repair": {"type": "string"}
+        },
+        "required": ["code", "file", "line", "column", "repair"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "filtered-slow-suites",
+      "family": "filtering",
+      "context_path": "benchmarks/agent_data_cases/test_results.json",
+      "question": "Return the suite names whose seconds are at least 0.30 and whose passed count is at most 51. Order them by seconds descending, then suite name ascending for any tie.",
+      "expected_answer": ["examples", "workflows", "agent_data", "packages", "emitter"],
+      "answer_schema": {
+        "type": "array",
+        "items": {"type": "string"}
+      }
+    },
+    {
+      "id": "aggregate-test-totals",
+      "family": "aggregation",
+      "context_path": "benchmarks/agent_data_cases/test_results.json",
+      "question": "Across every result row, return total_passed, total_failed, and total_seconds. Round total_seconds to exactly two decimal places as a JSON number.",
+      "expected_answer": {"total_passed": 383, "total_failed": 0, "total_seconds": 4.89},
+      "answer_schema": {
+        "type": "object",
+        "properties": {
+          "total_passed": {"type": "integer"},
+          "total_failed": {"type": "integer"},
+          "total_seconds": {"type": "number"}
+        },
+        "required": ["total_passed", "total_failed", "total_seconds"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "rollback-targets",
+      "family": "cross-record reasoning",
+      "context_path": "benchmarks/agent_data_confirmation_cases/deployments.json",
+      "question": "For each service, identify its most recent production deployment in the sydney region. If that current deployment is degraded, select the newest earlier deployment for the same service/environment/region that is healthy, signed, and has error_rate at most 0.01. Return only those rollback targets as objects with service, version, and deployed_at, sorted by service ascending.",
+      "expected_answer": [
+        {"service": "api", "version": "2.3.2", "deployed_at": "2026-08-04T22:15:00Z"},
+        {"service": "scheduler", "version": "0.8.1", "deployed_at": "2026-08-02T21:05:00Z"},
+        {"service": "web", "version": "5.0.1", "deployed_at": "2026-08-04T12:00:00Z"}
+      ],
+      "answer_schema": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "service": {"type": "string"},
+            "version": {"type": "string"},
+            "deployed_at": {"type": "string"}
+          },
+          "required": ["service", "version", "deployed_at"],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "id": "symbol-rename-plan",
+      "family": "context-grounded code modification",
+      "context_path": "benchmarks/agent_data_confirmation_cases/symbol_index.json",
+      "question": "Plan an executable-code rename from parse_config to load_config. Put the non-generated definition file first, followed by every non-generated call file sorted ascending. Do not put documentation in edit_order. Return generated files containing parse_config separately so they can be regenerated. Return old_symbol, new_symbol, edit_order, and generated_files_to_regenerate.",
+      "expected_answer": {
+        "old_symbol": "parse_config",
+        "new_symbol": "load_config",
+        "edit_order": ["src/config.par", "src/main.par", "src/server.par", "src/worker.par", "tests/config.par"],
+        "generated_files_to_regenerate": ["generated/bindings.par"]
+      },
+      "answer_schema": {
+        "type": "object",
+        "properties": {
+          "old_symbol": {"type": "string"},
+          "new_symbol": {"type": "string"},
+          "edit_order": {"type": "array", "items": {"type": "string"}},
+          "generated_files_to_regenerate": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["old_symbol", "new_symbol", "edit_order", "generated_files_to_regenerate"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

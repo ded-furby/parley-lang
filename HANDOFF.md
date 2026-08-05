@@ -76,6 +76,15 @@ Update it whenever you finish or start a work item.
   the canonical report passes desktop/narrow Chromium and source-interaction
   verification. Preserve the near miss, make no same-corpus profile change,
   and run the separately frozen 90-session comprehension confirmation next.
+- **Iteration 034 frozen before output:** five exact-answer task families pair
+  compact JSON with exact-round-trip TOON across sol-low, sol-medium, and
+  terra-medium, three repetitions each, for 90 fresh sessions. Output is
+  schema-constrained JSON in both arms; tools are prohibited; all session
+  tokens, parser results, commands, elapsed time, and exact hidden judgments
+  are retained. The environment provides two model IDs, so the third cell is a
+  reasoning-budget sensitivity rather than the third independent model
+  proposed in 033. Protocol, tasks, runner, contexts, hashes, and five-part
+  non-inferiority/token gate are committed before any measured task output.
 - **Structured-input decision:** `workflows/CAPABILITY_EVIDENCE.md` preserves
   the v0.3.158 finding that JSON/CSV values *inside Parley workflows* remain
   low-pressure. The v0.3.159 platform CLI layer does not manufacture evidence

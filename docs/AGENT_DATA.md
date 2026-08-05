@@ -130,3 +130,11 @@ never makes selected context larger. It does not support making TOON the
 default interchange format or claiming better agent performance. The next
 evidence gate is the 90-session paired comprehension/coding study frozen in
 [`AGENT_DATA_PROTOCOL_033.md`](../benchmarks/AGENT_DATA_PROTOCOL_033.md).
+
+Iteration 034 now supplies the executable freeze for that study: five task
+families × two representations × three model/reasoning configurations × three
+repetitions. It spans the two Codex model IDs available to this benchmark and
+keeps JSON-schema-constrained output identical in both arms. The corpus, exact
+answers, prompts, randomization, margins, tool ban, runner, and raw-session
+accounting are committed before output in
+[`agent_data_protocol_034.json`](../benchmarks/agent_data_protocol_034.json).

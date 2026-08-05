@@ -128,3 +128,9 @@ losslessness and conditional token savings. The preregistered 90-session paired
 study is still required before claiming that the representation works better
 for agents. Track A likewise still needs mature external projects, more models,
 and independent replication before any "best language" claim.
+
+Iteration 034 freezes that next study at 90 fresh cells: five exact-answer task
+families, JSON/TOON pairs, sol-low/sol-medium/terra-medium configurations, and
+three repetitions. It spans two model IDs rather than the three proposed in the
+Stage B outline because only those two are available in the established Codex
+runner; that constraint is recorded before output and limits generalization.

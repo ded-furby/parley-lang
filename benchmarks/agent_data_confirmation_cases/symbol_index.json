@@ -1,0 +1,25 @@
+{
+  "repository": "agent-service",
+  "symbols": [
+    {"file": "src/config.par", "symbol": "parse_config", "kind": "definition", "scope": "public", "generated": false},
+    {"file": "src/main.par", "symbol": "parse_config", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/server.par", "symbol": "parse_config", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/worker.par", "symbol": "parse_config", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "tests/config.par", "symbol": "parse_config", "kind": "call", "scope": "test", "generated": false},
+    {"file": "generated/bindings.par", "symbol": "parse_config", "kind": "call", "scope": "generated", "generated": true},
+    {"file": "docs/config.md", "symbol": "parse_config", "kind": "documentation", "scope": "public", "generated": false},
+    {"file": "src/config.par", "symbol": "validate_config", "kind": "definition", "scope": "public", "generated": false},
+    {"file": "src/main.par", "symbol": "validate_config", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/server.par", "symbol": "validate_config", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/worker.par", "symbol": "load_jobs", "kind": "definition", "scope": "internal", "generated": false},
+    {"file": "src/main.par", "symbol": "load_jobs", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/server.par", "symbol": "start_server", "kind": "definition", "scope": "public", "generated": false},
+    {"file": "src/main.par", "symbol": "start_server", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "tests/server.par", "symbol": "start_server", "kind": "call", "scope": "test", "generated": false},
+    {"file": "generated/routes.par", "symbol": "start_server", "kind": "call", "scope": "generated", "generated": true},
+    {"file": "src/metrics.par", "symbol": "record_metric", "kind": "definition", "scope": "public", "generated": false},
+    {"file": "src/server.par", "symbol": "record_metric", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "src/worker.par", "symbol": "record_metric", "kind": "call", "scope": "internal", "generated": false},
+    {"file": "tests/metrics.par", "symbol": "record_metric", "kind": "call", "scope": "test", "generated": false}
+  ]
+}

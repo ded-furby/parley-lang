@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment_id": "agent-data-confirmation-034",
+  "title": "Paired 90-session JSON versus verified-TOON comprehension confirmation",
+  "description": "Five exact-answer task families, two semantically identical input representations, three frozen model/reasoning configurations, and three repetitions per cell. Model output remains JSON in both arms.",
+  "frozen_config": {
+    "product_commit": "5674908b2607fd7633ff76f359210e61bdb1f525",
+    "parley_version": "0.3.159",
+    "codex_cli_version": "0.146.0",
+    "tasks_file": "benchmarks/agent_data_tasks_034.json",
+    "tasks_sha256": "9fa1588f06cc46a1e46984b67301e1aafccc46f8efaf19fc8104a743e553bfdc",
+    "context_sha256": {
+      "benchmarks/agent_data_cases/diagnostics.json": "6239c75bb5b16667874ad1ec9cad36ca2ce8f46832c6ac34b32d8b032e6c509f",
+      "benchmarks/agent_data_cases/test_results.json": "d1e6b06c6081963158c73c73ecbdbdcb11a7139d86a0c0c74a4c404d4e520269",
+      "benchmarks/agent_data_confirmation_cases/deployments.json": "e282d906c35a417b040fd2b0cb392eecfa71fbc9a0daf23224874e4defa5b68e",
+      "benchmarks/agent_data_confirmation_cases/symbol_index.json": "02861c460cbeee7285837e43242dfd57d15f4d3ab0d29220beb90704e888bfa6"
+    },
+    "representations": ["json", "toon"],
+    "agent_configs": [
+      {"id": "sol-medium", "model": "gpt-5.6-sol", "reasoning": "medium"},
+      {"id": "sol-low", "model": "gpt-5.6-sol", "reasoning": "low"},
+      {"id": "terra-medium", "model": "gpt-5.6-terra", "reasoning": "medium"}
+    ],
+    "replicates": 3,
+    "seed": 340260805,
+    "timeout_seconds": 180,
+    "max_workers": 6,
+    "sessions": 90,
+    "task_families": [
+      "exact lookup",
+      "filtering",
+      "aggregation",
+      "cross-record reasoning",
+      "context-grounded code modification"
+    ],
+    "output_format": "JSON constrained by a per-task schema in both input arms",
+    "allowed_tools": "none",
+    "retry_policy": "no session reruns, replacements, or exclusions"
+  },
+  "design": {
+    "unit": "one fresh ephemeral Codex session answering one task from one representation",
+    "pair": "same task, model/reasoning configuration, and replicate under compact JSON and canonical TOON",
+    "treatment": "only the context representation and its honest format label differ",
+    "semantic_control": "runner decodes canonical TOON and verifies equality with the ordered JSON data model before any session",
+    "randomization": "all 90 cells shuffled once with seed 340260805 before concurrent execution",
+    "hidden_scoring": "exact answer stored in the task manifest and omitted from the prompt",
+    "session_accounting": "Codex input, cached input, output, reasoning output, total tokens, elapsed time, command events, parser status, and exact correctness",
+    "known_stage_a_result": "Iteration 033 saved 4.5682% cl100k_base and 4.5673% o200k_base across the broad corpus and failed its frozen 5% gate. These Stage B contexts are the record-heavy shapes where TOON was verified to help.",
+    "deviation_from_stage_b_outline": "The outline in AGENT_DATA_PROTOCOL_033 proposed three independently frozen model IDs. The configured Codex environment exposes two benchmarked IDs, gpt-5.6-sol and gpt-5.6-terra, so iteration 034 freezes three model/reasoning configurations instead: sol low, sol medium, and terra medium. This limitation is declared before task output and blocks a three-model generality claim."
+  },
+  "primary_gate": {
+    "all_required": true,
+    "conditions": {
+      "execution_integrity": "90 unique fresh threads; zero timeout, nonzero return, agent error, or tool-command event",
+      "accuracy_noninferior": "TOON exact successes are no more than two below JSON overall and no more than one below JSON in any of the three agent configurations",
+      "parse_noninferior": "TOON JSON-response parse successes are at least JSON parse successes",
+      "input_tokens_lower": "summed TOON-arm Codex input tokens are strictly below summed JSON-arm input tokens",
+      "total_tokens_lower": "summed TOON-arm input plus output tokens are strictly below summed JSON-arm total tokens"
+    }
+  },
+  "interpretation": {
+    "all_five_pass": "Evidence that verified TOON input is non-inferior and cheaper for these record-heavy agent tasks under the frozen configurations; not a universal format or language win.",
+    "any_fail": "Preserve the failure, keep JSON as the contract/default fallback, and do not tune prompts, contexts, schemas, profile, models, or margins on these sessions.",
+    "prohibited_claim": "This experiment does not compare Parley source code with Python or Rust and cannot establish that Parley is the best general-purpose language."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "snapshot": "2026-08-05T03:30:00Z",
+  "deployments": [
+    {"service": "api", "environment": "production", "region": "sydney", "version": "2.4.0", "status": "degraded", "signed": true, "error_rate": 0.047, "deployed_at": "2026-08-05T02:10:00Z"},
+    {"service": "api", "environment": "production", "region": "sydney", "version": "2.3.2", "status": "healthy", "signed": true, "error_rate": 0.004, "deployed_at": "2026-08-04T22:15:00Z"},
+    {"service": "api", "environment": "production", "region": "sydney", "version": "2.3.1", "status": "healthy", "signed": true, "error_rate": 0.003, "deployed_at": "2026-08-03T17:40:00Z"},
+    {"service": "api", "environment": "staging", "region": "sydney", "version": "2.4.0-rc2", "status": "healthy", "signed": true, "error_rate": 0.001, "deployed_at": "2026-08-05T00:05:00Z"},
+    {"service": "worker", "environment": "production", "region": "sydney", "version": "1.8.0", "status": "healthy", "signed": true, "error_rate": 0.002, "deployed_at": "2026-08-05T01:45:00Z"},
+    {"service": "worker", "environment": "production", "region": "sydney", "version": "1.7.4", "status": "healthy", "signed": true, "error_rate": 0.003, "deployed_at": "2026-08-03T08:15:00Z"},
+    {"service": "web", "environment": "production", "region": "sydney", "version": "5.1.0", "status": "degraded", "signed": true, "error_rate": 0.031, "deployed_at": "2026-08-05T02:25:00Z"},
+    {"service": "web", "environment": "production", "region": "sydney", "version": "5.0.1", "status": "healthy", "signed": true, "error_rate": 0.008, "deployed_at": "2026-08-04T12:00:00Z"},
+    {"service": "web", "environment": "production", "region": "sydney", "version": "5.0.0", "status": "healthy", "signed": false, "error_rate": 0.002, "deployed_at": "2026-08-03T11:30:00Z"},
+    {"service": "web", "environment": "production", "region": "melbourne", "version": "5.1.0", "status": "healthy", "signed": true, "error_rate": 0.004, "deployed_at": "2026-08-05T02:30:00Z"},
+    {"service": "scheduler", "environment": "production", "region": "sydney", "version": "0.9.0", "status": "degraded", "signed": true, "error_rate": 0.026, "deployed_at": "2026-08-05T01:20:00Z"},
+    {"service": "scheduler", "environment": "production", "region": "sydney", "version": "0.8.2", "status": "healthy", "signed": true, "error_rate": 0.011, "deployed_at": "2026-08-04T18:10:00Z"},
+    {"service": "scheduler", "environment": "production", "region": "sydney", "version": "0.8.1", "status": "healthy", "signed": true, "error_rate": 0.009, "deployed_at": "2026-08-02T21:05:00Z"},
+    {"service": "scheduler", "environment": "development", "region": "sydney", "version": "0.10.0-dev", "status": "healthy", "signed": false, "error_rate": 0.0, "deployed_at": "2026-08-05T03:00:00Z"}
+  ]
+}
