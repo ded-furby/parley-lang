@@ -13,11 +13,11 @@
   </style>
 </head>
 <body>
-  <div class="bar"><strong>Parley product record 003</strong><span>Language capability &middot; v0.4.1 &rarr; v0.4.4</span></div>
+  <div class="bar"><strong>Parley product record 003</strong><span>Language capability &middot; v0.4.1 &rarr; v0.5.0</span></div>
   <main>
     <p class="eyebrow">Product record 003</p>
     <h1>A language you would actually pick for the task.</h1>
-    <p class="summary">Four releases driven by one question: what stops a working programmer
+    <p class="summary">Six releases driven by one question: what stops a working programmer
     from choosing Parley for an ordinary job? Every change below came from measuring the gap
     or from hitting a wall while writing a real program &mdash; not from a benchmark result.</p>
 
@@ -25,7 +25,7 @@
       <div class="metric"><span>Source tokens cut</span><strong>&minus;6.6%</strong></div>
       <div class="metric"><span>Paired programs</span><strong>32</strong></div>
       <div class="metric"><span>Behaviour identical</span><strong>26 / 26</strong></div>
-      <div class="metric"><span>Local suite</span><strong>467 / 467</strong></div>
+      <div class="metric"><span>Local suite</span><strong>478 / 478</strong></div>
     </div>
 
     <section class="section">
@@ -99,6 +99,36 @@
       </ul>
     </section>
 
+    <section class="section">
+      <div class="head"><h2>v0.4.5 &mdash; dates, and includes that survive a diamond</h2><p>Both found by building on what shipped</p></div>
+      <ul class="checks">
+        <li><b>Diamond include</b><span>Two modules needing the same helper file spliced it twice and every name collided (P207)</span><span class="pass">FIXED</span></li>
+        <li><b><code>std/time</code></b><span>Civil dates from <code>the current time</code>, written in ordinary Parley &mdash; no compiler change</span><span class="pass">ADDED</span></li>
+        <li><b>Verified</b><span>70 timestamps against Python <code>datetime</code>, spanning pre-1970, leap days, and the 2100 century rule</span><span class="pass">0 MISMATCHES</span></li>
+        <li><b>No new operator</b><span><code>number from (a divided by b)</code> already truncates; documented rather than given syntax</span><span class="pass">DECLINED</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>v0.5.0 &mdash; generic functions</h2><p>The oldest structural hole</p></div>
+      <p class="summary"><code>std/list</code> holds <strong>279 functions for 94 operations</strong>, because every
+      one needs a number, text, decimal, and yesno copy &mdash; and a user could not write a reusable
+      helper across types at all. A type may now be written <code>any name</code>.</p>
+      <div class="flow">
+        <div class="node"><b>one definition</b><span>list of any item</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>unify per call</b><span>the arguments decide the variables</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>one copy per type</b><span>ordinary monomorphic Rust</span></div>
+      </div>
+      <ul class="checks">
+        <li><b>Emitter unchanged</b><span>Monomorphizing in the checker means the backend still only sees concrete functions</span><span class="pass">0 LINES</span></li>
+        <li><b>Error quality</b><span>A body failure is re-pointed at the call and names the function, not a line inside a helper</span><span class="pass">HELD</span></li>
+        <li><b>Stated tradeoff</b><span>A generic body is checked per instantiation, so an uncalled generic is never checked</span><span class="pass">DOCUMENTED</span></li>
+        <li><b>Stdlib untouched</b><span>Those 279 names are public API; collapsing them is a major version, not a drive-by</span><span class="pass">DEFERRED</span></li>
+      </ul>
+    </section>
+
     <section class="section limit">
       <strong>Honest boundary</strong>
       <p>The token result is a <em>source</em> measurement, not a session measurement. Report 030 put the
@@ -106,7 +136,8 @@
       6.6% source cut is not a 6.6% session cut and no fresh-agent claim follows from it. Nothing here was
       measured by re-running a frozen benchmark, and no preregistered protocol was touched. Parley is now
       a language I would choose for local file, text, and data work; it still has no HTTP client, no
-      regex, no dates beyond an epoch integer, no process spawning, and no concurrency.</p>
+      regex, no process spawning, and no concurrency. The 279-function stdlib is still 279 functions:
+      generics make that cleanup possible, they do not perform it.</p>
     </section>
 
     <nav class="links" aria-label="Product sources">
