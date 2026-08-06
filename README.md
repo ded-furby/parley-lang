@@ -97,6 +97,36 @@ line of stdin, read once. `maybe item i of x` is non-failing access for lists,
 text, and maps, so `… otherwise default` is the one-line safe read. See
 [`examples/wordcount.par`](examples/wordcount.par) for a complete tool.
 
+## Read and write JSON, typed
+
+JSON crosses into Parley as a record you already declared. There is no untyped
+"any" value to pick apart later, and no schema to keep in sync by hand:
+
+```parley
+a author has name as text, email as maybe text
+a post has title as text, tags as list of text, writer as author
+
+let loaded be a post from json ((read file "post.json") otherwise "")
+if loaded has no value:
+    fail "post.json is not a post"
+
+let p be value of loaded
+say "{p's title} by {p's writer's name}"
+write p as json to file "copy.json"
+```
+
+`a R from json t` gives `maybe R` — `nothing` for malformed JSON, a missing
+field, a wrong type, or an unknown field, the same strictness the typed web
+layer applies to request bodies. An absent `maybe` field simply decodes as
+`nothing`. `x as json` goes the other way for any JSON-safe value; anything
+that has no JSON form is refused at check time (P317).
+
+Maps encode in key order, so the same value always produces the same bytes —
+Parley maps are `BTreeMap`, and iteration, printing, and JSON all agree. A
+program that never mentions JSON still builds with no dependencies; one that
+does adds serde and about 68 KiB. See
+[`examples/jsonreport.par`](examples/jsonreport.par).
+
 ## Build something real: Parley Workflows
 
 Parley Workflows is the first product layer on top of the language: small,
@@ -474,6 +504,7 @@ the plan:
 - [x] record sorting, generic `reversed`, and deterministic yes/no-aware printing — v0.4.2
 - [x] real command-line programs: arguments, stdin, `maybe item`, `files in`,
       `the setting`, `the current time`, `fixed_decimal` — v0.4.3
+- [x] typed JSON in the core language and key-ordered maps end to end — v0.4.4
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

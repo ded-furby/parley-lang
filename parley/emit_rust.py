@@ -28,7 +28,7 @@ RUST_KEYWORDS = {
 }
 
 RESERVED_TYPE_NAMES = {
-    "String", "Vec", "Option", "Box", "HashMap", "Result", "Self", "Clone",
+    "String", "Vec", "Option", "Box", "BTreeMap", "Result", "Self", "Clone",
     "Copy", "Debug", "Display", "PartialEq", "Ord", "Eq", "Send", "Sync",
 }
 
@@ -83,7 +83,7 @@ def rust_type(ty: A.Type) -> str:
     if isinstance(ty, A.TList):
         return f"Vec<{rust_type(ty.elem)}>"
     if isinstance(ty, A.TMap):
-        return f"HashMap<{rust_type(ty.key)}, {rust_type(ty.val)}>"
+        return f"BTreeMap<{rust_type(ty.key)}, {rust_type(ty.val)}>"
     if isinstance(ty, A.TMaybe):
         return f"Option<{rust_type(ty.elem)}>"
     if isinstance(ty, (A.TRecord, A.TEnum)):
@@ -116,7 +116,7 @@ def rust_str_lit(s: str, for_format: bool = False) -> str:
 
 
 PRELUDE = r"""
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -202,7 +202,7 @@ fn parley_maybe_text_item(s: &str, i: i64) -> Option<String> {
     s.chars().nth((i - 1) as usize).map(|c| c.to_string())
 }
 
-fn parley_maybe_get<K: std::hash::Hash + Eq, V: Clone>(m: &HashMap<K, V>, k: &K) -> Option<V> {
+fn parley_maybe_get<K: Ord, V: Clone>(m: &BTreeMap<K, V>, k: &K) -> Option<V> {
     m.get(k).cloned()
 }
 
@@ -220,23 +220,22 @@ fn parley_remove<T>(xs: &mut Vec<T>, i: i64) {
     xs.remove((i - 1) as usize);
 }
 
-fn parley_get<K: std::hash::Hash + Eq + std::fmt::Debug, V: Clone>(m: &HashMap<K, V>, k: &K) -> V {
+fn parley_get<K: Ord + std::fmt::Debug, V: Clone>(m: &BTreeMap<K, V>, k: &K) -> V {
     match m.get(k) {
         Some(v) => v.clone(),
         None => panic!("There is no item {:?} in the map.", k),
     }
 }
 
-fn parley_keys<K: Ord + Clone, V>(m: &HashMap<K, V>) -> Vec<K> {
-    let mut ks: Vec<K> = m.keys().cloned().collect();
-    ks.sort();
-    ks
+// A Parley map is ordered by key by definition — `keys of`, `values of`,
+// printing, and JSON all agree — so the backing type is the ordered one and
+// none of these have to sort.
+fn parley_keys<K: Ord + Clone, V>(m: &BTreeMap<K, V>) -> Vec<K> {
+    m.keys().cloned().collect()
 }
 
-fn parley_values<K: Ord + Clone + std::hash::Hash + Eq, V: Clone>(m: &HashMap<K, V>) -> Vec<V> {
-    let mut ks: Vec<K> = m.keys().cloned().collect();
-    ks.sort();
-    ks.into_iter().map(|k| m.get(&k).unwrap().clone()).collect()
+fn parley_values<K: Ord, V: Clone>(m: &BTreeMap<K, V>) -> Vec<V> {
+    m.values().cloned().collect()
 }
 
 fn parley_sum_i(xs: &[i64]) -> i64 { xs.iter().sum() }
@@ -485,6 +484,9 @@ class Emitter:
         for fname, fty in r.fields:
             if self.serde and safe(fname) != fname:
                 self.out(f'#[serde(rename = "{rust_str_lit(fname)}")]', r.line)
+            if self.serde and isinstance(fty, A.TMaybe):
+                # An absent key is exactly what `maybe` already means.
+                self.out("#[serde(default)]", r.line)
             self.out(f"{safe(fname)}: {rust_type(fty)},", r.line)
         self.indent -= 1
         self.out("}")
@@ -636,6 +638,8 @@ class Emitter:
             return self.mutated_names_in_expr(e.index) | self.mutated_names_in_expr(e.container)
         if isinstance(e, A.FilesIn):
             return self.mutated_names_in_expr(e.path)
+        if isinstance(e, A.FromJson):
+            return self.mutated_names_in_expr(e.value)
         if isinstance(e, A.Setting):
             return self.mutated_names_in_expr(e.name)
         if isinstance(e, A.ReadFile) or isinstance(e, A.Ask):
@@ -903,6 +907,9 @@ class Emitter:
             return f"parley_setting(&({self.borrow(e.name)}))"
         if isinstance(e, A.TheTime):
             return "parley_current_time()"
+        if isinstance(e, A.FromJson):
+            return (f"serde_json::from_str::<{camel(e.type_name)}>"
+                    f"(&({self.borrow(e.value)})).ok()")
         if isinstance(e, A.Ask):
             fn = "parley_ask_num" if e.numeric else "parley_ask"
             return f"{fn}(&({self.borrow(e.prompt)}))"
@@ -915,7 +922,7 @@ class Emitter:
         if isinstance(e, A.EmptyList):
             return f"Vec::<{rust_type(e.elem_type)}>::new()"
         if isinstance(e, A.EmptyMap):
-            return f"HashMap::<{rust_type(e.key_type)}, {rust_type(e.val_type)}>::new()"
+            return f"BTreeMap::<{rust_type(e.key_type)}, {rust_type(e.val_type)}>::new()"
         if isinstance(e, A.Construct):
             rec = next(r for r in self.program.records if r.name == e.record)
             ftypes = dict(rec.fields)
@@ -1090,6 +1097,9 @@ class Emitter:
             return f"parley_keys(&({self.borrow(v)}))"
         if op == "values":
             return f"parley_values(&({self.borrow(v)}))"
+        if op == "json_text":
+            return (f"serde_json::to_string(&({self.borrow(v)}))"
+                    f'.unwrap_or_else(|_| "null".to_string())')
         if op == "text_from":
             spec, arg = self.fmt_arg(v)
             return f'format!("{spec}", {arg})'
@@ -1373,7 +1383,47 @@ class Emitter:
             self.out(f"{call};", st.line)
 
 
+def program_uses_json(program: A.Program) -> bool:
+    """Does any expression in this program cross JSON?
+
+    Drives both the serde derives and the Cargo dependency, so a program that
+    never mentions JSON still builds with no dependencies at all.
+    """
+    found = False
+    # The checker annotates call nodes with `target_fn`, which points back at
+    # the definition — so a recursive function makes the AST a cycle.
+    seen: set[int] = set()
+
+    def walk(node):
+        nonlocal found
+        if found or node is None:
+            return
+        if isinstance(node, A.FromJson):
+            found = True
+            return
+        if isinstance(node, A.PrefixOp) and node.op == "json_text":
+            found = True
+            return
+        if isinstance(node, (list, tuple)):
+            for item in node:
+                walk(item)
+            return
+        if isinstance(node, A.Node):
+            if id(node) in seen:
+                return
+            seen.add(id(node))
+            for value in vars(node).values():
+                walk(value)
+
+    walk(program.funcs)
+    return found
+
+
 def emit_program(program: A.Program, *, program_main: str | None = PROGRAM_MAIN,
                  serde: bool = False) -> tuple[str, dict[int, int]]:
     """Emit Rust for a checked program. Returns (source, rust_line -> par_line)."""
+    # Emitting `serde_json::…` without the derives would produce Rust that
+    # cannot compile, so the emitter decides this for itself; the web layer
+    # still forces it on for route records that JSON never mentions directly.
+    serde = serde or program_uses_json(program)
     return Emitter(program, program_main=program_main, serde=serde).emit()

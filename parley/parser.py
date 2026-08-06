@@ -729,6 +729,12 @@ class ToAst(Transformer):
     def the_time(self, meta, ch):
         return A.TheTime(**_pos(meta))
 
+    def from_json(self, meta, ch):
+        return A.FromJson(type_name=str(ch[0]), value=ch[1], **_pos(meta))
+
+    def as_json(self, meta, ch):
+        return self._prefix(meta, ch, "json_text")
+
     def ask_number(self, meta, ch):
         return A.Ask(prompt=ch[0], numeric=True, **_pos(meta))
 

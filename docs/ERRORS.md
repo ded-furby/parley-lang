@@ -226,6 +226,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Remove the `otherwise …` when the value is not a maybe. Use it on results that can be nothing, such as `ask for a number`, a maybe lookup, or a function that gives back `nothing`.
 
+## P317 — Value cannot cross JSON
+
+**What it means:** JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.
+
+**How to fix it:** Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.

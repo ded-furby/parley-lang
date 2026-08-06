@@ -62,7 +62,7 @@ from .agent_data import (
 )
 from .checker import check_program
 from .diagnostics import Diagnostic, ParleyError, explain, render_human, render_json
-from .emit_rust import emit_program
+from .emit_rust import emit_program, program_uses_json
 from .parser import SourceMap, parse_program
 from .workflows import WORKFLOW_TEMPLATES
 from .workflows.catalog import WORKFLOW_CATALOG
@@ -90,6 +90,12 @@ strip = true
 # behaviour from `run` and `build` — overflow stops the program — so the
 # release profile keeps the checks debug builds already have.
 overflow-checks = true
+"""
+
+CARGO_TOML_JSON = CARGO_TOML + """
+[dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.151"
 """
 
 NEW_TEMPLATE = """\
@@ -153,8 +159,9 @@ def compile_source(path: str):
     diags = check_program(program)
     if diags:
         raise ParleyError(srcmap.resolve(diags))
-    rust, linemap = emit_program(program)
-    return rust, linemap, srcmap
+    uses_json = program_uses_json(program)
+    rust, linemap = emit_program(program, serde=uses_json)
+    return rust, linemap, srcmap, uses_json
 
 
 def _build_dir(path: Path) -> Path:
@@ -218,7 +225,7 @@ def _map_rustc_errors(stdout: str, linemap: dict[int, int], srcmap: SourceMap) -
 
 
 def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMap,
-                release: bool) -> Path:
+                release: bool, uses_json: bool = False) -> Path:
     """Build the generated Rust; returns the binary path. Raises ParleyError."""
     if shutil.which("cargo") is None:
         raise ParleyError([Diagnostic(
@@ -226,7 +233,7 @@ def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMa
             file=srcmap.main_file, line=1,
             hint="Install it from https://rustup.rs (one command), then re-run.")])
     d = _build_dir(path)
-    (d / "Cargo.toml").write_text(CARGO_TOML)
+    (d / "Cargo.toml").write_text(CARGO_TOML_JSON if uses_json else CARGO_TOML)
     (d / "src" / "main.rs").write_text(rust)
     cmd = ["cargo", "build", "--message-format=json", "-q"]
     if release:
@@ -252,8 +259,8 @@ def _fail(e: ParleyError, srcmap: SourceMap | None, as_json: bool = False) -> in
 def cmd_run(args) -> int:
     path = Path(args.file)
     try:
-        rust, linemap, srcmap = compile_source(args.file)
-        binary = cargo_build(path, rust, linemap, srcmap, release=False)
+        rust, linemap, srcmap, uses_json = compile_source(args.file)
+        binary = cargo_build(path, rust, linemap, srcmap, release=False, uses_json=uses_json)
     except ParleyError as e:
         return _fail(e, None)
     forwarded = [a for a in getattr(args, "program_args", []) if a != "--"]
@@ -263,8 +270,8 @@ def cmd_run(args) -> int:
 def cmd_build(args) -> int:
     path = Path(args.file)
     try:
-        rust, linemap, srcmap = compile_source(args.file)
-        binary = cargo_build(path, rust, linemap, srcmap, release=True)
+        rust, linemap, srcmap, uses_json = compile_source(args.file)
+        binary = cargo_build(path, rust, linemap, srcmap, release=True, uses_json=uses_json)
     except ParleyError as e:
         return _fail(e, None)
     out = Path(args.output or path.stem)
@@ -303,7 +310,7 @@ def cmd_check(args) -> int:
 
 def cmd_rust(args) -> int:
     try:
-        rust, _, _ = compile_source(args.file)
+        rust, _, _, _ = compile_source(args.file)
     except ParleyError as e:
         return _fail(e, None)
     print(rust, end="")
@@ -529,8 +536,8 @@ def cmd_workflow_run(args) -> int:
         names = _workflow_input_names(manifest)
         input_paths = _workflow_inputs(args.input, names, manifest["schema_version"])
         output_path = _validate_workflow_output(input_paths, args.output, args.force)
-        rust, linemap, srcmap = compile_source(str(entrypoint))
-        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
+        rust, linemap, srcmap, uses_json = compile_source(str(entrypoint))
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False, uses_json=uses_json)
     except OSError as exc:
         print(f"workflow error: {exc}", file=sys.stderr)
         return 1
@@ -564,8 +571,8 @@ def cmd_workflow_test(args) -> int:
         tests = manifest.get("tests")
         if not isinstance(tests, list) or not tests:
             raise OSError("workflow.json needs at least one test fixture")
-        rust, linemap, srcmap = compile_source(str(entrypoint))
-        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
+        rust, linemap, srcmap, uses_json = compile_source(str(entrypoint))
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False, uses_json=uses_json)
     except OSError as exc:
         print(f"workflow error: {exc}", file=sys.stderr)
         return 1
@@ -718,7 +725,7 @@ def _validate_workflow_product(source: Path, expected_name: str) -> tuple[dict, 
             f"test fixture '{case_name}' expected_output",
         )
     try:
-        rust, _, _ = compile_source(str(entrypoint))
+        rust, _, _, _ = compile_source(str(entrypoint))
     except ParleyError as exc:
         diag = exc.diagnostics[0]
         raise OSError(

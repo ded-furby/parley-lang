@@ -155,6 +155,7 @@ closure_param: NAME "as" type
        | link_e _OTHERWISE sum_e     -> otherwise_op
        | link_e _AS_NUMBER            -> as_number
        | link_e _AS_TEXT              -> as_text
+       | link_e _AS_JSON              -> as_json
        | link_e _SPLIT_BY sum_e      -> split_by
        | link_e _JOINED_WITH sum_e   -> joined_with
        | link_e _REPLACING sum_e "with" sum_e -> replacing_with
@@ -198,6 +199,7 @@ closure_param: NAME "as" type
       | _ITEM item_index _OF unary -> item_of
       | _READ_FILE unary        -> read_file
       | _FILES_IN unary         -> files_in
+      | _A NAME _FROM_JSON unary -> from_json
       | _THE_SETTING unary      -> setting_of
       | _ASK_NUM unary          -> ask_number
       | _ASK unary              -> ask_text
@@ -291,6 +293,8 @@ _NUMBER_FROM.2: /number +from\b/
 _DECIMAL_FROM.2: /decimal +from\b/
 _AS_NUMBER.2: /as +number\b/
 _AS_TEXT.2: /as +text\b/
+_AS_JSON.2: /as +json\b/
+_FROM_JSON.2: /from +json\b/
 _REMAINDER_OF.2: /remainder +of\b/
 _SORTED.2: /sorted\b/
 _BY.2: /by\b/

@@ -439,6 +439,38 @@ so it never stops the program. It works on lists, text, and maps, and pairs
 with `otherwise` for the one-line safe read above. Use plain `item` when a
 missing value really is a bug worth stopping for.
 
+## 15b. JSON, typed
+
+JSON crosses into Parley as a record you already declared — there is no
+untyped "any" value to pick apart later:
+
+```parley
+a author has name as text, email as maybe text
+a post has title as text, tags as list of text, writer as author
+
+let doc be (read file "post.json") otherwise ""
+let loaded be a post from json doc
+if loaded has no value:
+    fail "post.json is not a post"
+
+let p be value of loaded
+say "{p's title} by {p's writer's name}"
+say p as json
+```
+
+`a R from json t` gives `maybe R`. It is `nothing` for malformed JSON, a
+missing field, a wrong type, or an unknown field — the same strictness the
+typed web layer applies to request bodies. A `maybe` field is the exception:
+an absent key simply decodes as `nothing`.
+
+`x as json` goes the other way for any JSON-safe value — numbers, decimals,
+text, yes/no, kinds, lists, text-keyed maps, and records of those. Anything
+else is refused at check time with P317. Maps encode in key order, so the same
+value always produces the same bytes.
+
+A program that never mentions JSON still builds with no dependencies; one that
+does adds serde and about 68 KiB to the binary.
+
 ## 16. Many files
 
 ```parley

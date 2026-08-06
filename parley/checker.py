@@ -925,6 +925,30 @@ class Checker:
             return A.TMaybe(A.TText())
         if isinstance(e, A.TheTime):
             return A.TNum()
+        if isinstance(e, A.FromJson):
+            ty = self.infer(e.value)
+            if not isinstance(ty, (A.TText, TErr)):
+                self.type_mismatch(A.TText(), ty, e.value, "The JSON text")
+            if e.type_name not in self.records:
+                hint = None
+                guess = _suggest(e.type_name, self.records)
+                if guess:
+                    hint = f'Did you mean "{guess}"?'
+                elif e.type_name in self.enums:
+                    hint = ("A kind has no fields to fill. Read a record whose "
+                            "field has that kind's type.")
+                self.err("P205",
+                         f'There is no record called "{e.type_name}".', e, hint=hint)
+                return TErr()
+            target = A.TRecord(e.type_name)
+            problem = self._json_safe(target)
+            if problem:
+                self.err("P317",
+                         f"{e.type_name} cannot be read from JSON: {problem}.", e,
+                         hint="JSON carries number, decimal, text, yesno, kinds, "
+                              "lists, text-keyed maps, and records of those.")
+                return TErr()
+            return A.TMaybe(target)
         if isinstance(e, A.Ask):
             ty = self.infer(e.prompt)
             if not isinstance(ty, (A.TText, TErr)):
@@ -1217,6 +1241,14 @@ class Checker:
                 self.err("P301", "A function value cannot be turned into text.", e)
                 return TErr()
             return A.TText()
+        if op == "json_text":
+            problem = self._json_safe(ty)
+            if problem:
+                self.err("P317", f"This cannot be written as JSON: {problem}.", e,
+                         hint="JSON carries number, decimal, text, yesno, kinds, "
+                              "lists, text-keyed maps, and records of those.")
+                return TErr()
+            return A.TText()
         if op == "number_from":
             if isinstance(ty, A.TText):
                 return A.TMaybe(A.TNum())
@@ -1248,6 +1280,35 @@ class Checker:
                      f"but this is {ty}.", e, hint=hint)
             return TErr()
         raise AssertionError(f"unknown prefix op {op}")
+
+    def _json_safe(self, ty: A.Type, trail: frozenset = frozenset()) -> str | None:
+        """Why this type cannot cross JSON, or None when it can.
+
+        Same rule the typed web layer applies to request and response bodies,
+        so `x as json` and a route body accept exactly the same shapes.
+        """
+        if isinstance(ty, (A.TNum, A.TDec, A.TText, A.TBool, TErr)):
+            return None
+        if isinstance(ty, (A.TMaybe, A.TList)):
+            return self._json_safe(ty.elem, trail)
+        if isinstance(ty, A.TMap):
+            if not isinstance(ty.key, A.TText):
+                return "JSON object keys must be text"
+            return self._json_safe(ty.val, trail)
+        if isinstance(ty, A.TEnum):
+            return None
+        if isinstance(ty, A.TRecord):
+            if ty.name in trail:
+                return f"{ty.name} contains itself, so it cannot cross JSON"
+            record = self.records.get(ty.name)
+            if record is None:
+                return f"there is no record called {ty.name}"
+            for field_name, field_type in record.fields:
+                problem = self._json_safe(field_type, trail | {ty.name})
+                if problem:
+                    return f"field {field_name}: {problem}"
+            return None
+        return f"{ty} values cannot cross JSON"
 
     def _infer_item(self, e: A.ItemOf) -> A.Type:
         cty = self.infer(e.container)

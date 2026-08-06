@@ -25,9 +25,9 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language/toolchain v0.4.3** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 457/457, including e2e tests that
-  compile every feature to a native binary and assert stdout. Sixteen examples in
+- **Language/toolchain v0.4.4** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 467/467, including e2e tests that
+  compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
@@ -76,6 +76,40 @@ Update it whenever you finish or start a work item.
   a typed native route; valid, malformed, wrong-content-type, unknown-field,
   MIME, static, and traversal behavior are covered. Limits and security
   boundaries are explicit in `docs/WEB.md`; no language syntax was added.
+- **v0.4.4 typed JSON in the core language.** The last gap that blocked whole
+  categories of ordinary work: the compiler could already infer JSON contracts
+  for web routes, but a plain program could not read a config file.
+  - `a R from json t` decodes into a declared record, giving `maybe R`.
+    `nothing` covers malformed JSON, a missing field, a wrong type, and an
+    unknown field — the same `deny_unknown_fields` strictness the web layer
+    applies, so both boundaries behave identically. A `maybe T` field is the
+    one exception: an absent key decodes as `nothing`, which is what `maybe`
+    already means (`#[serde(default)]`). No web record uses a maybe field, so
+    this changes nothing frozen in benchmark 035.
+  - `x as json` encodes any JSON-safe value, joining `as text` and `as number`
+    in the postfix conversion family. P317 refuses function values,
+    number-keyed maps, and self-containing records at check time, using the
+    same walk the web layer uses for route bodies.
+  - **Design choice worth defending:** JSON enters as a record you declared,
+    not as a dynamic value. There is no `any` type to pick apart later, so a
+    decoded document is as statically typed as the rest of the program, and a
+    schema mistake is a check-time error rather than a runtime surprise. A
+    top-level JSON array is therefore wrapped in a record with one list field.
+  - **Maps are now `BTreeMap`, not `HashMap`.** `as json` initially emitted
+    map keys in hash order while `keys of`, `values of`, and printing were all
+    sorted — the language promised determinism and JSON broke it. Switching the
+    backing type makes ordering structural instead of bolted on, and *deletes*
+    code: `parley_keys` and `parley_values` no longer sort by hand.
+  - Serde is opt-in per program: `program_uses_json` walks the AST, so a
+    program that never mentions JSON still builds with no dependencies at
+    345 KiB. A JSON program is 413 KiB. The emitter enables the derives itself
+    rather than trusting a caller, because emitting `serde_json::…` without
+    them would produce Rust that cannot compile.
+  - That AST walk needs a cycle guard: the checker annotates call nodes with
+    `target_fn`, so a recursive function makes the AST a cycle and the first
+    version blew the stack on `test_recursion`.
+  - `examples/jsonreport.par` reads a typed feed, filters and ranks it, and
+    writes the kept records back out.
 - **v0.4.3 Parley can be a real command-line tool.** Found by trying to write
   tasks a user would actually assign and recording what blocked. Before this,
   the entire outside-world surface was `ask`, `read file`, `write to file`, and

@@ -451,6 +451,17 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   removed and empty input giving an empty list. Both name values, not streams:
   `the input` drains stdin at most once and every later mention sees the same
   lines. A program should therefore use `the input` or `ask`, not both.
+* **JSON.** `a R from json t` decodes text into record `R`, giving `maybe R`:
+  `nothing` for malformed JSON, a missing required field, a wrong field type,
+  or an unknown field — the same `deny_unknown_fields` strictness the typed web
+  layer applies. A `maybe T` field is the one exception: an absent key decodes
+  as `nothing`, which is what `maybe` already means. `x as json` encodes any
+  JSON-safe value as text. Both directions accept exactly the types the web
+  layer accepts: number, decimal, text, yesno, kinds, lists, text-keyed maps,
+  and records of those; anything else is P317. Maps encode in key order, so the
+  same value always produces the same bytes. A program that never mentions JSON
+  builds with no dependencies at all; one that does adds serde and about 68 KiB
+  to the binary.
 * **Environment and clock.** `the setting "NAME"` gives `maybe text` for an
   environment variable. `the current time` gives whole seconds since the Unix
   epoch; like `a random number` it is a deliberate exception to design goal 4,

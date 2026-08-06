@@ -437,6 +437,13 @@ class TheArguments(Expr):
 
 
 @dataclass
+class FromJson(Expr):
+    """`a config from json text` — typed JSON decode, `nothing` on any problem."""
+    type_name: str
+    value: Expr
+
+
+@dataclass
 class TheTime(Expr):
     """`the current time` — whole seconds since 1970-01-01 UTC."""
 

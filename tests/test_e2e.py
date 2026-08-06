@@ -57,6 +57,20 @@ def test_logreport_example(workdir):
     assert "no readable files in no_such_dir" in missing.stderr
 
 
+def test_jsonreport_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "jsonreport.par"),
+                    str(EXAMPLES / "feed.json"), "5"], cwd=workdir)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == (
+        "3 posts, showing those scoring at least 5.0\n"
+        "9.5  Shipping typed JSON  <ada@example.com>  [parley, design]\n"
+        "7.3  Determinism matters  <cy>  [parley, rust]\n"
+        "wrote kept.json\n")
+    written = (workdir / "kept.json").read_text()
+    assert written.startswith('{"posts":[{"title":"Shipping typed JSON"')
+    assert '"email":null' in written
+
+
 def test_csvsum_example(workdir):
     proc = run_cli(["run", str(EXAMPLES / "csvsum.par"), str(EXAMPLES / "orders.csv")],
                    cwd=workdir)
@@ -369,6 +383,43 @@ def test_setting_and_current_time(workdir):
     without = subprocess.run([str(workdir / "settings")], capture_output=True,
                              text=True, env=bare)
     assert without.stdout == "user: nobody\nyes\n"
+
+
+def test_typed_json_round_trip(workdir):
+    src = ('a author has name as text, email as maybe text\n'
+           'a post has title as text, tags as list of text, writer as author, score as decimal\n'
+           'a feed has posts as list of post, counts as map from text to number\n'
+           '\n'
+           'let doc be (read file "feed.json") otherwise ""\n'
+           'let got be a feed from json doc\n'
+           'if got has no value:\n'
+           '    fail "did not parse"\n'
+           'let f be value of got\n'
+           'let p be item 1 of f\'s posts\n'
+           'say "{p\'s title} by {p\'s writer\'s name} score={p\'s score}"\n'
+           'say "tags: {p\'s tags joined with \\",\\"}"\n'
+           'say "email absent: {p\'s writer\'s email has no value}"\n'
+           'say f as json\n'
+           'note: unknown fields are refused, like every typed boundary in Parley\n'
+           'say (a author from json "{{\\"name\\":\\"x\\",\\"nope\\":1}}") has no value\n'
+           'say (a author from json "not json at all") has no value\n'
+           'say 42 as json\n'
+           'say (a list of 1, 2) as json\n')
+    (workdir / "feed.json").write_text(
+        '{"posts":[{"title":"hi","tags":["a","b"],'
+        '"writer":{"name":"ada"},"score":9.5}],"counts":{"z":2,"a":1}}')
+    proc = run_program(workdir, "json_round_trip", src)
+    assert proc.stdout == (
+        "hi by ada score=9.5\n"
+        "tags: a,b\n"
+        "email absent: yes\n"
+        # Maps serialise in key order, like every other map operation.
+        '{"posts":[{"title":"hi","tags":["a","b"],"writer":{"name":"ada",'
+        '"email":null},"score":9.5}],"counts":{"a":1,"z":2}}\n'
+        "yes\n"
+        "yes\n"
+        "42\n"
+        "[1,2]\n")
 
 
 def test_files_in_lists_regular_files_in_order(workdir):

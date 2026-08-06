@@ -519,7 +519,7 @@ struct ParleyHttpRequest {
     method: String,
     path: String,
     query: String,
-    headers: HashMap<String, String>,
+    headers: BTreeMap<String, String>,
     body: String,
 }
 
@@ -618,7 +618,7 @@ fn parley_read_request(stream: &mut std::net::TcpStream) -> Result<ParleyHttpReq
     }
     let method = parts[0].to_ascii_uppercase();
     let target = parts[1].clone();
-    let mut headers = HashMap::new();
+    let mut headers = BTreeMap::new();
     for line in lines {
         let (raw_name, raw_value) = line.split_once(':')
             .ok_or_else(|| parley_json_error(400, "invalid_header", "header line has no colon"))?;

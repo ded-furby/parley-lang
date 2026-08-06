@@ -1,0 +1,5 @@
+{"posts":[
+ {"title":"Shipping typed JSON","tags":["parley","design"],"writer":{"name":"ada","email":"ada@example.com"},"score":9.5},
+ {"title":"A quiet note","tags":["misc"],"writer":{"name":"bo"},"score":4.0},
+ {"title":"Determinism matters","tags":["parley","rust"],"writer":{"name":"cy"},"score":7.25}
+]}

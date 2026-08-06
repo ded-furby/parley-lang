@@ -1,0 +1,33 @@
+note: jsonreport — read a typed JSON file and answer questions about it:
+note: `jsonreport FILE [MIN_SCORE]`
+
+include "std/text"
+
+a author has name as text, email as maybe text
+a post has title as text, tags as list of text, writer as author, score as decimal
+a feed has posts as list of post
+
+let path be (maybe item 1 of the arguments) otherwise "feed.json"
+let floor be (decimal from ((maybe item 2 of the arguments) otherwise "0")) otherwise 0.0
+
+let doc be (read file path) otherwise ""
+let loaded be a feed from json doc
+if loaded has no value:
+    fail "{path} is not a feed document"
+
+let f be value of loaded
+say "{length of f's posts} posts, showing those scoring at least {(fixed_decimal with floor, 1)}"
+
+let kept be an empty list of post
+for each p in f's posts:
+    if p's score is at least floor:
+        add p to kept
+
+for each p in reversed (sorted kept by score):
+    let who be (p's writer's email) otherwise p's writer's name
+    say "{(fixed_decimal with p's score, 1)}  {p's title}  <{who}>  [{p's tags joined with \", \"}]"
+
+note: the same records serialise back out, in key order, ready to write
+let summary be a feed with posts kept
+write summary as json to file "kept.json"
+say "wrote kept.json"

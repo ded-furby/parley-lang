@@ -2118,9 +2118,9 @@ def test_agent_command_protocol_allows_only_exact_public_check():
 def test_parley_core_skill_restores_proven_reliability_contract():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) == 1_879
+    assert len(skill) == 2_020
     assert hashlib.sha256(skill.encode()).hexdigest() == (
-        "bc5d393ce676a29c1f8561a4aab12ef547da40b50dfee0fb4d414d219cf5b358"
+        "378d1224ee94f71e247a66aa92a02bd9a1256f6407eb4f1c33c67aabae0a6a1e"
     )
     # v0.4.1 teaches the two token-cutting shapes: top-level statements
     # instead of a `to main:` wrapper, and one-line maybe fallbacks.
@@ -2132,6 +2132,7 @@ def test_parley_core_skill_restores_proven_reliability_contract():
         "Top-level statements are the program body",
         "`m otherwise default`",
         "`the arguments` and `the input`",
+        "JSON is typed",
         "if (valid with line):",
         "an empty list of text",
         'Literal braces are `"{{"` / `"}}"`',
@@ -2206,14 +2207,14 @@ def test_parley_reliability_core_is_preserved_unchanged():
     )
 
 
-def test_parley_v043_core_is_preserved_unchanged():
+def test_parley_v044_core_is_preserved_unchanged():
     reference = (
-        REPO / "skill" / "parley" / "references" / "core-v0.4.3.md"
+        REPO / "skill" / "parley" / "references" / "core-v0.4.4.md"
     ).read_text()
 
-    assert len(reference) == 1_879
+    assert len(reference) == 2_020
     assert hashlib.sha256(reference.encode()).hexdigest() == (
-        "bc5d393ce676a29c1f8561a4aab12ef547da40b50dfee0fb4d414d219cf5b358"
+        "378d1224ee94f71e247a66aa92a02bd9a1256f6407eb4f1c33c67aabae0a6a1e"
     )
 
 

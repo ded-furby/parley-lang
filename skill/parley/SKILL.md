@@ -34,6 +34,8 @@ repeat count times:
   `parts joined with ","`, `sorted xs by field` for records.
 - Maps: `a map from text to number`; `map contains key`;
   `set item key of map to value`; `item key of map`; sorted `keys of map`.
+- JSON is typed: declare a record, then `a config from json t` (maybe config,
+  strict about unknown/missing fields) and `x as json` (text).
 - Use `yesno`/`yes`/`no`; comparisons use `is [not/less than/at most/more
   than/at least]`. Literal braces are `"{{"` / `"}}"`.
 - `for each i from 1 to length of xs` is inclusive. Names are `snake_case`.

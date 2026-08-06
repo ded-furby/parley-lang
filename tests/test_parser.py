@@ -215,6 +215,17 @@ def test_by_is_still_usable_as_a_name():
     assert prog.funcs[0].body[0].name == "by"
 
 
+def test_json_forms_parse():
+    prog = parse('a config has name as text\n'
+                 'let c be a config from json "x"\n'
+                 'say c as json\n')
+    body = prog.funcs[0].body
+    assert isinstance(body[0].value, A.FromJson)
+    assert body[0].value.type_name == "config"
+    assert isinstance(body[1].value, A.PrefixOp)
+    assert body[1].value.op == "json_text"
+
+
 def test_otherwise_fallback_expression_parse():
     prog = parse('to main:\n    say number from "5" otherwise 0\n')
     expr = prog.funcs[0].body[0].value

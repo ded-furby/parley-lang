@@ -217,6 +217,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "A whole number in Parley is a 64-bit signed integer, and this expression's result provably falls outside it.",
         "fix": "Keep whole-number arithmetic between -9223372036854775808 and 9223372036854775807, or use `decimal` values when a wider range matters. At runtime, an overflow stops the program rather than wrapping.",
     },
+    "P317": {
+        "title": "Value cannot cross JSON",
+        "explain": "JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.",
+        "fix": "Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",

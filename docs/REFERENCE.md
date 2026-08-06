@@ -37,7 +37,7 @@ item index.
 | `text` | `String` | UTF-8; `length of` counts characters |
 | `yesno` | `bool` | literals `yes` / `no` |
 | `list of T` | `Vec<T>` | items count from 1 |
-| `map from K to V` | `HashMap<K, V>` | K is `number` or `text`; `keys of` and `values of` are sorted by key |
+| `map from K to V` | `BTreeMap<K, V>` | K is `number` or `text`; iteration, printing, and JSON are all in key order |
 | `maybe T` | `Option<T>` | `some x` or `nothing`; unwrap with `value of` or `otherwise` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
@@ -128,7 +128,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `item i of xs` / `item i of t` / `item k of m` | bounds/presence-checked access (1-based) | element/text/value |
 | `a list of 1, 2, 3` | `vec![1, 2, 3]` | directly after be/to/give back, or in parens |
 | `an empty list of text` | `Vec::<String>::new()` | |
-| `a map from text to number` | `HashMap::new()` | |
+| `a map from text to number` | `BTreeMap::new()` | |
 | `a point with x 1, y 2` | `Point { x: 1, y: 2 }` | all fields required |
 | `nothing` | `None` | |
 | `t as number` | checked parse and unwrap | number |
@@ -142,6 +142,8 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `files in "dir"` | sorted paths of the regular files in a directory | maybe list of text |
 | `the setting "NAME"` | an environment variable | maybe text |
 | `the current time` | whole seconds since 1970-01-01 UTC | number |
+| `a config from json t` | `serde_json::from_str::<Config>(t).ok()` | maybe config |
+| `x as json` | `serde_json::to_string(&x)` — maps in key order | text |
 | `maybe item i of xs` / `of t` / `of m` | non-failing access | maybe element/text/value |
 | `the function f` | `Rc::new(move |…| f(…))` | a named function value (no `changing` params) |
 | `a function taking x as number giving number: ...` | `Rc::new(move |x: i64| -> i64 { ... })` | anonymous closure with captured values |

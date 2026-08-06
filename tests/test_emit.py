@@ -150,6 +150,32 @@ def test_sorted_by_emits_stable_sort_on_the_field():
     assert "sort_unstable" not in rust
 
 
+def test_json_decode_and_encode_emit_serde():
+    rust = emit_text('a config has name as text\n'
+                     'let c be a config from json "x"\n'
+                     'say (value of c) as json\n')
+    assert "serde_json::from_str::<Config>" in rust
+    assert "serde_json::to_string" in rust
+    assert "serde::Serialize, serde::Deserialize" in rust
+    assert "deny_unknown_fields" in rust
+
+
+def test_maybe_json_field_defaults_to_nothing_when_absent():
+    rust = emit_text('a author has name as text, email as maybe text\n'
+                     'let a_value be a author from json "x"\n')
+    assert "#[serde(default)]" in rust
+
+
+def test_maps_emit_as_btreemap_so_every_ordering_agrees():
+    rust = emit_text('to main:\n'
+                     '    let m be a map from text to number\n'
+                     '    say keys of m\n')
+    assert "BTreeMap" in rust
+    assert "HashMap" not in rust
+    # BTreeMap is ordered, so the key helpers no longer sort by hand.
+    assert "fn parley_keys<K: Ord + Clone, V>(m: &BTreeMap<K, V>) -> Vec<K> {\n    m.keys().cloned().collect()\n}" in rust
+
+
 def test_otherwise_emits_lazy_match():
     rust = emit_text('to main:\n    say (number from "5") otherwise 0\n')
     assert "Some(__v) => __v, None => 0i64" in rust
