@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-parley-report-theme="portable-v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>A Language You Would Pick — Product record 003</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--canvas:#fff;--surface:#fff;--subtle:#f7f7f7;--ink:#0d0d0d;--muted:#606060;--tertiary:#929292;--line:rgba(13,13,13,.09);--blue:#0285ff;--green:#087d3e;--green-bg:#edf9f1;--amber:#a65d00;--amber-bg:#fff7e8;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--canvas)}
+    @media(prefers-color-scheme:dark){:root{--canvas:#181818;--surface:#212121;--subtle:#292929;--ink:#e7e7e7;--muted:#c2c2c2;--tertiary:#9f9f9f;--line:rgba(255,255,255,.09);--blue:#68b7ff;--green:#45d27e;--green-bg:rgba(69,210,126,.13);--amber:#ffb552;--amber-bg:rgba(255,181,82,.13)}}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--canvas);color:var(--ink)}body{font-size:14px;line-height:1.55}.bar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:20px;padding:13px 18px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--canvas) 92%,transparent);backdrop-filter:blur(12px)}.bar strong{font-weight:550}.bar span{color:var(--tertiary)}main{width:min(900px,100%);margin:auto;padding:54px 28px 80px}.eyebrow{margin:0 0 12px;color:var(--blue);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}h1{max-width:760px;margin:0;font-size:clamp(38px,7vw,68px);font-weight:620;line-height:1.02;letter-spacing:-.05em}.summary{max-width:760px;margin:22px 0 0;color:var(--muted);font-size:17px;line-height:1.65}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:40px}.metric,.card,.flow,.limit{border:1px solid var(--line);border-radius:16px;background:var(--surface)}.metric{padding:20px}.metric span{display:block;color:var(--muted)}.metric strong{display:block;margin-top:6px;font-size:24px;font-weight:550}.section{margin-top:48px}.head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:16px}.head h2{margin:0;font-size:22px;font-weight:550;letter-spacing:-.025em}.head p{margin:0;color:var(--tertiary);font-size:12px}.flow{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;align-items:stretch;padding:10px;background:var(--subtle)}.node{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.node b{display:block;font-size:15px;font-weight:550}.node span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.arrow{display:grid;place-items:center;color:var(--blue);font-size:20px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{padding:24px}.card h3{margin:0 0 9px;font-size:16px;font-weight:550}.card p{margin:0;color:var(--muted)}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}.checks{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.checks li{display:grid;grid-template-columns:92px 1fr auto;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}.checks b{font-weight:550}.checks span{color:var(--muted)}.pass{color:var(--green)!important}.limit{padding:22px;border-color:color-mix(in srgb,var(--amber) 34%,var(--line));background:var(--amber-bg)}.limit strong{display:block;color:var(--amber)}.limit p{margin:7px 0 0;color:var(--muted)}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.links a{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none}.links a:hover{border-color:var(--blue);color:var(--blue)}footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);color:var(--tertiary);font-size:12px}@media(max-width:720px){.bar{position:static;flex-direction:column;gap:0}.metrics{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr}.arrow{height:34px;transform:rotate(90deg)}.cards{grid-template-columns:1fr}.checks li{grid-template-columns:1fr;gap:3px}}@media(max-width:420px){main{padding:36px 18px 60px}.metrics{grid-template-columns:1fr}.head{align-items:start;flex-direction:column;gap:2px}}
+  </style>
+</head>
+<body>
+  <div class="bar"><strong>Parley product record 003</strong><span>Language capability &middot; v0.4.1 &rarr; v0.4.4</span></div>
+  <main>
+    <p class="eyebrow">Product record 003</p>
+    <h1>A language you would actually pick for the task.</h1>
+    <p class="summary">Four releases driven by one question: what stops a working programmer
+    from choosing Parley for an ordinary job? Every change below came from measuring the gap
+    or from hitting a wall while writing a real program &mdash; not from a benchmark result.</p>
+
+    <div class="metrics">
+      <div class="metric"><span>Source tokens cut</span><strong>&minus;7.7%</strong></div>
+      <div class="metric"><span>Paired programs</span><strong>64</strong></div>
+      <div class="metric"><span>Behaviour identical</span><strong>26 / 26</strong></div>
+      <div class="metric"><span>Local suite</span><strong>467 / 467</strong></div>
+    </div>
+
+    <section class="section">
+      <div class="head"><h2>v0.4.1 &mdash; measured, then cut</h2><p>Attribution before design</p></div>
+      <p class="summary">Every paired Parley/Python/Rust program in the frozen corpora was tokenized
+      with <code>o200k_base</code> and the excess over Python attributed phrase by phrase. Parley
+      source was <strong>40.4% larger than Python</strong> &mdash; the opposite of the pitch. Two shapes
+      accounted for most of the recoverable difference.</p>
+      <div class="cards">
+        <div class="card"><b>Top-level statements</b><span>Statements at the top level are the body of
+        <code>main</code>. Removes a wrapper line and one indent level from every program: <strong>531 tokens</strong> (5.0%).</span></div>
+        <div class="card"><b><code>x otherwise y</code></b><span>Unwraps a <code>maybe</code> with a fallback, lazily.
+        Collapses 57 two-line <code>ask</code>/<code>value of</code> pairs: <strong>342 tokens</strong> (3.2%).</span></div>
+      </div>
+      <ul class="checks">
+        <li><b>Result</b><span>10,632 &rarr; 9,811 source tokens across 64 programs</span><span class="pass">&minus;7.7%</span></li>
+        <li><b>Equivalence</b><span>Rewritten programs re-run against their own public cases</span><span class="pass">26 / 26 identical</span></li>
+        <li><b>Declined</b><span>Conditional expression: 1.5% for a duplicated LALR chain</span><span class="pass">NOT BUILT</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>v0.4.2 &mdash; correctness found by reading the spec</h2><p>Six defects, no report asked for them</p></div>
+      <ul class="checks">
+        <li><b>Overflow</b><span><code>run</code> stopped the program; the shipped <code>build</code> binary silently wrapped</span><span class="pass">FIXED</span></li>
+        <li><b>Determinism</b><span>Printing a map used hash order, contradicting <code>keys of</code></span><span class="pass">FIXED</span></li>
+        <li><b>Round trip</b><span><code>parley data unpack</code> could not read its own JSON fallback</span><span class="pass">FIXED</span></li>
+        <li><b>HTTP</b><span><code>HEAD</code> returned 404 on live <code>GET</code> routes</span><span class="pass">FIXED</span></li>
+        <li><b>Records</b><span>A list of records could not be sorted at all</span><span class="pass">ADDED</span></li>
+        <li><b>Reversal</b><span><code>reversed</code> refused every list it could not compare</span><span class="pass">FIXED</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>v0.4.3 &mdash; it could not read its own arguments</h2><p>Found by writing tasks a user would assign</p></div>
+      <p class="summary">The entire outside-world surface was <code>ask</code>, <code>read file</code>,
+      <code>write to file</code>, and a random number. A program could not take a command-line argument,
+      could not loop over stdin without treating end-of-input as a failure, and could not look at a
+      directory. Parley could be a filter with hardcoded paths; it could not be a tool.</p>
+      <div class="cards">
+        <div class="card"><b><code>the arguments</code> &middot; <code>the input</code></b><span>Both plain
+        <code>list of text</code>. <code>the input</code> names a value, not a stream: stdin drains once and
+        every later mention sees the same lines.</span></div>
+        <div class="card"><b><code>maybe item</code> &middot; <code>files in</code></b><span>Non-failing access for
+        lists, text, and maps, and a sorted directory listing. One general form replaces about a dozen
+        per-type stdlib helpers.</span></div>
+      </div>
+      <ul class="checks">
+        <li><b>Near miss</b><span>A bare <code>setting</code> keyword broke a frozen corpus program binding <code>let setting be &hellip;</code></span><span class="pass">RULE ADDED</span></li>
+        <li><b>Proof</b><span>wordcount, logreport, and csvsum written with no walls</span><span class="pass">3 TOOLS</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>v0.4.4 &mdash; JSON, typed</h2><p>The last category-blocking gap</p></div>
+      <p class="summary">The compiler already inferred JSON contracts for web routes, but a plain
+      program could not read a config file. JSON now enters as a record you declared &mdash; there is no
+      dynamic <em>any</em> value to pick apart later, so a decoded document is as statically typed as
+      the rest of the program and a schema mistake is a check-time error.</p>
+      <div class="flow">
+        <div class="node"><b>JSON text</b><span>a file, a response, a line of stdin</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>a R from json t</b><span>maybe R &mdash; strict about unknown and missing fields</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>x as json</b><span>text, maps in key order</span></div>
+      </div>
+      <ul class="checks">
+        <li><b>Same rule as the web layer</b><span>One JSON-safety walk decides what may cross, in both directions</span><span class="pass">SHARED</span></li>
+        <li><b>Determinism</b><span>Maps became <code>BTreeMap</code>: iteration, printing, and JSON now agree</span><span class="pass">STRUCTURAL</span></li>
+        <li><b>Cost</b><span>Serde is opt-in per program &mdash; a non-JSON binary stays 345 KiB</span><span class="pass">+68 KiB</span></li>
+      </ul>
+    </section>
+
+    <section class="section limit">
+      <strong>Honest boundary</strong>
+      <p>The token result is a <em>source</em> measurement, not a session measurement. Report 030 put the
+      Parley/Python gap at roughly 2,010 fixed tokens per session plus 74 residual tokens per task, so a
+      7.7% source cut is not a 7.7% session cut and no fresh-agent claim follows from it. Nothing here was
+      measured by re-running a frozen benchmark, and no preregistered protocol was touched. Parley is now
+      a language I would choose for local file, text, and data work; it still has no HTTP client, no
+      regex, no dates beyond an epoch integer, no process spawning, and no concurrency.</p>
+    </section>
+
+    <nav class="links" aria-label="Product sources">
+      <a href="../../docs/SPEC.md">Read the specification</a>
+      <a href="../../examples/jsonreport.par">Open the JSON example</a>
+      <a href="../../HANDOFF.md">Read the full record</a>
+      <a href="../index.html">Back to progress</a>
+    </nav>
+    <footer>Durable local product record. Benchmark claims remain separate and preregistered.</footer>
+  </main>
+</body>
+</html>

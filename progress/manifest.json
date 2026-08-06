@@ -436,6 +436,13 @@
       "bytes": 9145,
       "sha256": "35acd50316d26fdb311c4d4648be336df9548ee1c5b1dcf648328a28bc96e9b4",
       "path": "progress/product/002-typed-full-stack-foundation.html"
+    },
+    {
+      "file": "003-language-capability-and-token-cuts.html",
+      "title": "A Language You Would Pick \u2014 Product record 003",
+      "bytes": 11882,
+      "sha256": "547b05e2273f5a0e2572e2e58dd81d05c8c9cdd404e0d15545b97d173f4496ec",
+      "path": "progress/product/003-language-capability-and-token-cuts.html"
     }
   ]
 }
