@@ -505,6 +505,7 @@ the plan:
 - [x] real command-line programs: arguments, stdin, `maybe item`, `files in`,
       `the setting`, `the current time`, `fixed_decimal` — v0.4.3
 - [x] typed JSON in the core language and key-ordered maps end to end — v0.4.4
+- [x] `std/time` civil dates and diamond-safe includes — v0.4.5
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

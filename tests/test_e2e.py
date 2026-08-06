@@ -20,6 +20,34 @@ def test_hello(workdir):
     assert proc.stdout == "Hello, world!\nTwo plus two is 4.\n"
 
 
+def test_std_time_matches_calendar_truth(workdir):
+    # Values chosen to cover the epoch, pre-1970, a leap day, and the century
+    # rule (2100 is not a leap year); each was checked against Python datetime.
+    src = '''include "std/time"
+
+let stamps be a list of 0, -1, 1000000000, 951782400, 4102444800, 1770000000
+for each t in stamps:
+    say "{(timestamp_text with t)} {(weekday_name with t)}"
+say (month_name with 951782400)
+say (days_between with 0, 86400 times 10)
+note: civil -> epoch -> civil round-trips exactly
+say (epoch_from_civil with 2000, 2, 29)
+say (weekday_of with 0)
+'''
+    proc = run_program(workdir, "std_time", src)
+    assert proc.stdout == (
+        "1970-01-01 00:00:00 Thursday\n"
+        "1969-12-31 23:59:59 Wednesday\n"
+        "2001-09-09 01:46:40 Sunday\n"
+        "2000-02-29 00:00:00 Tuesday\n"
+        "2100-01-01 00:00:00 Friday\n"
+        "2026-02-02 02:40:00 Monday\n"
+        "February\n"
+        "10\n"
+        "951782400\n"
+        "4\n")
+
+
 def test_fixed_decimal_renders_exact_places(workdir):
     src = '''include "std/text"
 

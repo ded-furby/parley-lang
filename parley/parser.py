@@ -92,12 +92,20 @@ def load_program(path) -> tuple[str, SourceMap]:
     out_lines: list[str] = []
     entries: list[tuple[str, int]] = []
     sources: dict[str, str] = {}
+    # Splicing a file twice would redefine everything in it, so two modules
+    # that each need the same helper file must not collide. A file already in
+    # the current stack is still a cycle; one merely already spliced is a
+    # diamond, and is simply skipped.
+    spliced: set[Path] = set()
 
     def load(p: Path, stack: list[Path]):
         if p in stack:
             raise ParleyError([Diagnostic(
                 "P105", f'"{p.name}" is included in a cycle (a file ends up including itself).',
                 file=_display(p), line=1)])
+        if p in spliced:
+            return
+        spliced.add(p)
         try:
             text = p.read_text()
         except OSError as e:

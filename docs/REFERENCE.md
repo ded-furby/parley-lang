@@ -362,6 +362,22 @@ Use `include "std/text"` for small text helpers:
 | `tabs_expanded with t, tab_size` | text with tabs replaced by spaces up to the next tab stop; non-positive tab size removes tabs |
 | `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |
 
+### `include "std/time"`
+
+Civil dates and clock times from whole seconds since 1970-01-01. Everything is
+UTC: no time zones, no leap seconds, no parsing.
+
+| Helper | Gives |
+|---|---|
+| `date_text with t` / `clock_text with t` / `timestamp_text with t` | `2026-02-02`, `02:40:00`, `2026-02-02 02:40:00` |
+| `year_of` / `month_of` / `day_of` / `hour_of` / `minute_of` / `second_of` | the field as a number |
+| `weekday_of with t` | 1–7, Monday is 1 |
+| `weekday_name with t` / `month_name with t` | `Monday`, `February` |
+| `civil_from_epoch with t` | a `civil_date` record (year, month, day) |
+| `epoch_from_civil with y, m, d` | whole seconds for midnight UTC on that date |
+| `days_between with earlier, later` | whole days from one instant to another |
+| `floor_divide with a, b` | whole-number division that floors (unlike `number from (a divided by b)`, which truncates toward zero) |
+
 Use `include "std/list"` for common list helpers:
 
 | Function | Gives |

@@ -36,6 +36,8 @@ repeat count times:
   `set item key of map to value`; `item key of map`; sorted `keys of map`.
 - JSON is typed: declare a record, then `a config from json t` (maybe config,
   strict about unknown/missing fields) and `x as json` (text).
+- Stdlib: `include "std/text"` (padding, `fixed_decimal`), `std/time`
+  (`timestamp_text with the current time`), `std/list`, `std/map`, `std/math`.
 - Use `yesno`/`yes`/`no`; comparisons use `is [not/less than/at most/more
   than/at least]`. Literal braces are `"{{"` / `"}}"`.
 - `for each i from 1 to length of xs` is inclusive. Names are `snake_case`.

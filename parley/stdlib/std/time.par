@@ -1,0 +1,106 @@
+note: std/time — civil dates and clock times from `the current time`.
+note:
+note: Everything here is UTC. There are no time zones, no leap seconds, and no
+note: parsing: this turns whole seconds since 1970-01-01 into the fields and
+note: text a report needs, and back again.
+
+include "std/text"
+
+a civil_date has year as number, month as number, day as number
+
+note: `number from (a divided by b)` truncates toward zero, which is not floor
+note: for negative numerators. Dates before 1970 need real floor division, so
+note: correct the one case where they differ. Denominators here are positive.
+to floor_divide with numerator as number, denominator as number giving number:
+    if denominator is 0:
+        fail "floor_divide cannot divide by zero"
+    let quotient be number from ((decimal from numerator) divided by (decimal from denominator))
+    if quotient times denominator is more than numerator:
+        give back quotient minus 1
+    give back quotient
+
+to days_from_epoch with epoch_seconds as number giving number:
+    give back (floor_divide with epoch_seconds, 86400)
+
+to seconds_into_day with epoch_seconds as number giving number:
+    give back epoch_seconds minus ((days_from_epoch with epoch_seconds) times 86400)
+
+note: Howard Hinnant's civil_from_days, which is exact for every proleptic
+note: Gregorian date and needs only whole-number arithmetic.
+to civil_from_epoch with epoch_seconds as number giving civil_date:
+    let z be (days_from_epoch with epoch_seconds) plus 719468
+    let era be (floor_divide with z, 146097)
+    let doe be z minus (era times 146097)
+    let yoe be (floor_divide with (doe minus (floor_divide with doe, 1460) plus (floor_divide with doe, 36524) minus (floor_divide with doe, 146096)), 365)
+    let y be yoe plus (era times 400)
+    let doy be doe minus ((365 times yoe) plus (floor_divide with yoe, 4) minus (floor_divide with yoe, 100))
+    let mp be (floor_divide with ((5 times doy) plus 2), 153)
+    let d be doy minus (floor_divide with ((153 times mp) plus 2), 5) plus 1
+    let m be mp plus 3
+    if mp is at least 10:
+        set m to mp minus 9
+    if m is at most 2:
+        set y to y plus 1
+    give back a civil_date with year y, month m, day d
+
+to year_of with epoch_seconds as number giving number:
+    give back (civil_from_epoch with epoch_seconds)'s year
+
+to month_of with epoch_seconds as number giving number:
+    give back (civil_from_epoch with epoch_seconds)'s month
+
+to day_of with epoch_seconds as number giving number:
+    give back (civil_from_epoch with epoch_seconds)'s day
+
+to hour_of with epoch_seconds as number giving number:
+    give back (floor_divide with (seconds_into_day with epoch_seconds), 3600)
+
+to minute_of with epoch_seconds as number giving number:
+    give back (floor_divide with ((seconds_into_day with epoch_seconds) modulo 3600), 60)
+
+to second_of with epoch_seconds as number giving number:
+    give back (seconds_into_day with epoch_seconds) modulo 60
+
+note: 1970-01-01 was a Thursday, so shift the epoch day to make Monday 1.
+to weekday_of with epoch_seconds as number giving number:
+    let shifted be (days_from_epoch with epoch_seconds) plus 3
+    note: `modulo` takes the dividend's sign, so dates before 1970 would
+    note: otherwise index backwards off the front of the week.
+    give back (((shifted modulo 7) plus 7) modulo 7) plus 1
+
+to weekday_name with epoch_seconds as number giving text:
+    let names be a list of "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+    give back item (weekday_of with epoch_seconds) of names
+
+to month_name with epoch_seconds as number giving text:
+    let names be a list of "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    give back item (month_of with epoch_seconds) of names
+
+to date_text with epoch_seconds as number giving text:
+    let c be (civil_from_epoch with epoch_seconds)
+    give back "{(zero_filled with \"{c's year}\", 4)}-{(zero_filled with \"{c's month}\", 2)}-{(zero_filled with \"{c's day}\", 2)}"
+
+to clock_text with epoch_seconds as number giving text:
+    give back "{(zero_filled with \"{(hour_of with epoch_seconds)}\", 2)}:{(zero_filled with \"{(minute_of with epoch_seconds)}\", 2)}:{(zero_filled with \"{(second_of with epoch_seconds)}\", 2)}"
+
+to timestamp_text with epoch_seconds as number giving text:
+    give back "{(date_text with epoch_seconds)} {(clock_text with epoch_seconds)}"
+
+note: The reverse direction: whole seconds for a UTC date, using Hinnant's
+note: days_from_civil so it round-trips exactly with civil_from_epoch.
+to epoch_from_civil with year as number, month as number, day as number giving number:
+    let y be year
+    if month is at most 2:
+        set y to y minus 1
+    let era be (floor_divide with y, 400)
+    let yoe be y minus (era times 400)
+    let mp be month plus 9
+    if month is more than 2:
+        set mp to month minus 3
+    let doy be (floor_divide with ((153 times mp) plus 2), 5) plus day minus 1
+    let doe be (yoe times 365) plus (floor_divide with yoe, 4) minus (floor_divide with yoe, 100) plus doy
+    let days be (era times 146097) plus doe minus 719468
+    give back days times 86400
+
+to days_between with earlier as number, later as number giving number:
+    give back (days_from_epoch with later) minus (days_from_epoch with earlier)

@@ -3,6 +3,7 @@
 import pytest
 
 import parley.ast_nodes as A
+from parley.checker import check_program
 from parley.diagnostics import ParleyError
 from parley.parser import load_program, parse, parse_program
 
@@ -517,6 +518,20 @@ def test_entrypoint_top_level_statements_survive_includes(tmp_path):
     prog, _ = parse_program(tmp_path / "main.par")
     assert sorted(f.name for f in prog.funcs) == ["double", "main"]
     assert next(f for f in prog.funcs if f.name == "main").implicit_main
+
+
+def test_diamond_include_splices_once(tmp_path):
+    # Two modules that each need the same helper is ordinary structure; before
+    # dedupe it redefined every name in the shared file (P207).
+    (tmp_path / "base.par").write_text(
+        "to shared giving number:\n    give back 1\n")
+    (tmp_path / "mid.par").write_text(
+        'include "base.par"\nto mid giving number:\n    give back (shared)\n')
+    (tmp_path / "main.par").write_text(
+        'include "base.par"\ninclude "mid.par"\nsay (mid)\n')
+    prog, _ = parse_program(tmp_path / "main.par")
+    assert sorted(f.name for f in prog.funcs) == ["main", "mid", "shared"]
+    assert check_program(prog) == []
 
 
 def test_include_cycle(tmp_path):

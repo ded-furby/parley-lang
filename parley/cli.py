@@ -869,7 +869,8 @@ def _doctor_checks() -> list[dict]:
         for path in stdlib_root.iterdir()
         if path.name.endswith(".par")
     )
-    required_stdlib = ["std/math", "std/text", "std/list", "std/map", "std/workflow"]
+    required_stdlib = ["std/math", "std/text", "std/list", "std/map",
+                       "std/time", "std/workflow"]
     missing = [name for name in required_stdlib if name not in stdlib]
     checks.append({
         "name": "stdlib",

@@ -462,6 +462,10 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   same value always produces the same bytes. A program that never mentions JSON
   builds with no dependencies at all; one that does adds serde and about 68 KiB
   to the binary.
+* **Whole-number division.** `number from (a divided by b)` is integer
+  division: the decimal quotient truncated toward zero. `std/time`'s
+  `floor_divide` is the flooring variant, which differs only for negative
+  numerators.
 * **Environment and clock.** `the setting "NAME"` gives `maybe text` for an
   environment variable. `the current time` gives whole seconds since the Unix
   epoch; like `a random number` it is a deliberate exception to design goal 4,

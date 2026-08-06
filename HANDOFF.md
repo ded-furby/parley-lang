@@ -25,8 +25,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language/toolchain v0.4.4** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 467/467, including e2e tests that
+- **Language/toolchain v0.4.5** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 469/469, including e2e tests that
   compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -76,6 +76,29 @@ Update it whenever you finish or start a work item.
   a typed native route; valid, malformed, wrong-content-type, unknown-field,
   MIME, static, and traversal behavior are covered. Limits and security
   boundaries are explicit in `docs/WEB.md`; no language syntax was added.
+- **v0.4.5 dates, and includes that survive a diamond.**
+  - **A diamond include was fatal.** Two modules that each `include` the same
+    helper file spliced it twice and every name in it collided with itself
+    (P207) — ordinary structure, hard error. `load_program` now splices each
+    resolved file at most once. A file already in the current include *stack*
+    is still a cycle (P105); one merely already spliced is a diamond and is
+    skipped. No working program could have depended on the old behaviour,
+    because the old behaviour was a compile error.
+  - **`std/time`** turns `the current time` into something a report can print:
+    `date_text`, `clock_text`, `timestamp_text`, the individual fields,
+    `weekday_of`/`weekday_name`, `month_name`, `civil_from_epoch`,
+    `epoch_from_civil`, and `days_between`. UTC only — no zones, no leap
+    seconds, no parsing. It is **written in ordinary Parley**, using Howard
+    Hinnant's civil-from-days algorithm, so it needed no compiler change; that
+    it can be written in the language at all is the point.
+  - Verified against Python's `datetime` on 70 timestamps spanning pre-1970,
+    the epoch, leap days, and the 2100 century rule: **0 mismatches**, plus an
+    exact civil → epoch → civil round trip. One bug the fuzz caught:
+    `weekday_of` indexed backwards off the front of the week for pre-1970
+    dates, because `modulo` takes the dividend's sign.
+  - **No integer-division operator was added.** `number from (a divided by b)`
+    already truncates toward zero, and `std/time` supplies `floor_divide` for
+    the flooring variant. Documented in SPEC rather than given new syntax.
 - **v0.4.4 typed JSON in the core language.** The last gap that blocked whole
   categories of ordinary work: the compiler could already infer JSON contracts
   for web routes, but a plain program could not read a config file.
