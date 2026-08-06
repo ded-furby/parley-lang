@@ -232,6 +232,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.
 
+## P318 — Type variable is not decided by the call
+
+**What it means:** A generic function's `any name` types are worked out from its arguments, so every type variable in the giving type must also appear in a parameter type.
+
+**How to fix it:** Add a parameter that mentions the same `any name`, or give the function a concrete giving type.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.

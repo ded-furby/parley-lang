@@ -118,6 +118,19 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   (`is 1, 2 or 3:`) and, when the subject is numeric, inclusive ranges
   (`is 10 to 20:`); range ends are literals of the subject's type, smaller
   first (P312).
+* **Generic functions.** A type may be written `any name`, which declares a
+  type variable. A function whose parameter or giving types mention one is
+  generic: each call decides its variables by structural unification against
+  the argument types, and the checker emits one concrete copy per distinct
+  instantiation, so the Rust backend only ever sees ordinary monomorphic
+  functions. Every variable in the giving type must also appear in a parameter
+  type (P318), checked at the definition, since nothing else could decide it.
+  A generic body is checked once per instantiation rather than abstractly:
+  the consequence is that a generic function that is never called is never
+  checked, and a body failure is reported **at the call site** with the
+  function named, so the author sees which call is at fault rather than a line
+  inside a helper they did not write. `any` is a type word only; it remains
+  usable as an ordinary value name.
 * **Function values.** `the function f` is a value of type
   `(function taking …  giving …)`, represented as a cloneable Rust
   `Rc<dyn Fn...>`. Only plain defined functions qualify: not `main` and not

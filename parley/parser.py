@@ -361,6 +361,9 @@ class ToAst(Transformer):
     def t_maybe(self, meta, ch):
         return A.TMaybe(ch[0])
 
+    def t_var(self, meta, ch):
+        return A.TVar(str(ch[0]))
+
     def t_named(self, meta, ch):
         return A.TNamed(str(ch[0]))
 

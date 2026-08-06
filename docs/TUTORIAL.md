@@ -322,6 +322,38 @@ to main:
 The closure reads the original `offset` value. It cannot `set offset` inside
 the closure; give back a new value if you want to change something outside.
 
+## 12b. One function, many types
+
+A type can be written `any name`. That name stands for whatever type the call
+supplies, so one definition serves every type:
+
+```parley
+to head_or with xs as list of any item, fallback as any item giving any item:
+    give back (maybe item 1 of xs) otherwise fallback
+
+to main:
+    say (head_or with (a list of 3, 4), 0)
+    say (head_or with (an empty list of text), "nothing here")
+```
+
+The types are worked out from the arguments, so every `any name` in the
+`giving` type must also appear in a parameter (P318). Several variables are
+fine — this maps a list of one type to a list of another:
+
+```parley
+to mapped with xs as list of any input, f as (function taking any input giving any output) giving list of any output:
+    let out be an empty list of any output
+    for each x in xs:
+        add (f with x) to out
+    give back out
+```
+
+Parley compiles one concrete copy of a generic function per type it is called
+with, so the generated Rust is exactly what you would have written by hand.
+The body is checked once per type rather than once in the abstract: a mistake
+inside a generic function is reported at the *call* that exposed it, naming
+the function, and a generic function nothing ever calls is never checked.
+
 ## 13. Maybe: values that might be missing
 
 Some operations can fail honestly — they give back a `maybe`:

@@ -1,0 +1,42 @@
+note: generics — one definition, every type. `any name` is a type variable;
+note: the call decides what it stands for, and one concrete copy is compiled
+note: for each type actually used.
+
+a book has title as text, year as number
+
+to head_or with xs as list of any item, fallback as any item giving any item:
+    give back (maybe item 1 of xs) otherwise fallback
+
+to kept with xs as list of any item, keep as (function taking any item giving yesno) giving list of any item:
+    let out be an empty list of any item
+    for each x in xs:
+        if (keep with x):
+            add x to out
+    give back out
+
+to mapped with xs as list of any input, change as (function taking any input giving any output) giving list of any output:
+    let out be an empty list of any output
+    for each x in xs:
+        add (change with x) to out
+    give back out
+
+to is_recent with b as book giving yesno:
+    give back b's year is at least 2000
+
+to title_of with b as book giving text:
+    give back "{b's title} ({b's year})"
+
+to is_long with word as text giving yesno:
+    give back length of word is more than 3
+
+let library be a list of (a book with title "Dune", year 1965)
+add (a book with title "Piranesi", year 2020) to library
+add (a book with title "Klara", year 2021) to library
+
+say (mapped with (kept with library, the function is_recent), the function title_of) joined with "; "
+
+note: the same three helpers, now over plain text
+let words be a list of "a", "tree", "of", "nights"
+say (kept with words, the function is_long) joined with ", "
+say (head_or with words, "none")
+say (head_or with (an empty list of text), "none")

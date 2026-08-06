@@ -72,6 +72,16 @@ class TMaybe(Type):
         return f"maybe {self.elem}"
 
 
+class TVar(Type):
+    """`any item` — a type variable, resolved per call site by monomorphizing."""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    def __str__(self):
+        return f"any {self.name}"
+
+
 class TNamed(Type):
     """A user-written type name, resolved by the checker to record or enum."""
 

@@ -37,6 +37,7 @@ type: "number"                  -> t_number
     | _LIST_OF type             -> t_list
     | _MAP_FROM type _TO type   -> t_map
     | "maybe" type              -> t_maybe
+    | _ANY NAME                 -> t_var
     | NAME                      -> t_named
     | _LPAR _FUNCTION [_TAKING type ("," type)*] giving _RPAR -> t_func
 
@@ -267,6 +268,7 @@ _TO.2: /to\b/
 _MAYBE_ITEM.3: /maybe +item\b/
 _ITEM.2: /item\b/
 _OF.2: /of\b/
+_ANY.3: /any\b/
 _A.2: /an?\b/
 _TIMES.2: /times\b/ | "*"
 CHANGING.2: /changing\b/

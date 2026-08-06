@@ -15,6 +15,7 @@ The checker also annotates the AST for the emitter:
 
 from __future__ import annotations
 
+import copy
 import difflib
 
 from . import ast_nodes as A
@@ -65,6 +66,90 @@ def _suggest(name: str, candidates) -> str | None:
     return close[0] if close else None
 
 
+# ----------------------------------------------------------------- generics
+
+def _type_vars(ty: A.Type) -> set[str]:
+    """Every `any name` appearing anywhere inside a type."""
+    if isinstance(ty, A.TVar):
+        return {ty.name}
+    if isinstance(ty, (A.TList, A.TMaybe)):
+        return _type_vars(ty.elem)
+    if isinstance(ty, A.TMap):
+        return _type_vars(ty.key) | _type_vars(ty.val)
+    if isinstance(ty, A.TFunc):
+        out = set()
+        for part in ty.params:
+            out |= _type_vars(part)
+        if ty.ret is not None:
+            out |= _type_vars(ty.ret)
+        return out
+    return set()
+
+
+def _substitute(ty: A.Type, mapping: dict[str, A.Type]) -> A.Type:
+    if isinstance(ty, A.TVar):
+        return mapping.get(ty.name, ty)
+    if isinstance(ty, A.TList):
+        return A.TList(_substitute(ty.elem, mapping))
+    if isinstance(ty, A.TMaybe):
+        return A.TMaybe(_substitute(ty.elem, mapping))
+    if isinstance(ty, A.TMap):
+        return A.TMap(_substitute(ty.key, mapping), _substitute(ty.val, mapping))
+    if isinstance(ty, A.TFunc):
+        return A.TFunc([_substitute(p, mapping) for p in ty.params],
+                       None if ty.ret is None else _substitute(ty.ret, mapping))
+    return ty
+
+
+def _unify(param: A.Type, arg: A.Type, mapping: dict[str, A.Type]) -> bool:
+    """Bind type variables in `param` so it matches `arg`. Structural only."""
+    if isinstance(param, A.TVar):
+        bound = mapping.get(param.name)
+        if bound is None:
+            mapping[param.name] = arg
+            return True
+        return bound == arg
+    if isinstance(param, A.TList) and isinstance(arg, A.TList):
+        return _unify(param.elem, arg.elem, mapping)
+    if isinstance(param, A.TMaybe) and isinstance(arg, A.TMaybe):
+        return _unify(param.elem, arg.elem, mapping)
+    if isinstance(param, A.TMap) and isinstance(arg, A.TMap):
+        return (_unify(param.key, arg.key, mapping)
+                and _unify(param.val, arg.val, mapping))
+    if isinstance(param, A.TFunc) and isinstance(arg, A.TFunc):
+        if len(param.params) != len(arg.params):
+            return False
+        for want, got in zip(param.params, arg.params):
+            if not _unify(want, got, mapping):
+                return False
+        if (param.ret is None) != (arg.ret is None):
+            return False
+        return param.ret is None or _unify(param.ret, arg.ret, mapping)
+    return not _type_vars(param)
+
+
+def _mangle(ty: A.Type) -> str:
+    return "".join(ch if ch.isalnum() else "_" for ch in str(ty))
+
+
+def _substitute_in_tree(node, mapping: dict[str, A.Type], seen: set[int]) -> None:
+    """Rewrite every declared type inside a copied function body in place."""
+    if node is None or id(node) in seen:
+        return
+    if isinstance(node, (list, tuple)):
+        for item in node:
+            _substitute_in_tree(item, mapping, seen)
+        return
+    if not isinstance(node, A.Node):
+        return
+    seen.add(id(node))
+    for field_name, value in list(vars(node).items()):
+        if isinstance(value, A.Type):
+            setattr(node, field_name, _substitute(value, mapping))
+        elif isinstance(value, (list, tuple, A.Node)):
+            _substitute_in_tree(value, mapping, seen)
+
+
 class Checker:
     def __init__(self, program: A.Program, *, require_main: bool = True):
         self.program = program
@@ -83,6 +168,10 @@ class Checker:
         self.loop_depth = 0
         self.attempt_loop_marks: list[int] = []
         self.closure_stack: list[dict] = []
+        # Generic functions are monomorphized here, so the emitter only ever
+        # sees ordinary concrete definitions.
+        self._instances: dict[tuple, A.FuncDef] = {}
+        self._instance_queue: list[tuple] = []
 
     # ------------------------------------------------------------- plumbing
 
@@ -245,6 +334,19 @@ class Checker:
                 prm.type = self.resolve_type(prm.type, prm)
             if f.ret is not None:
                 f.ret = self.resolve_type(f.ret, f)
+            # A type variable is decided by the arguments, so one that appears
+            # only in the giving type can never be decided at all. That is a
+            # mistake in the definition, not in any particular call.
+            from_params: set[str] = set()
+            for prm in f.params:
+                from_params |= _type_vars(prm.type)
+            loose = sorted(_type_vars(f.ret) - from_params) if f.ret else []
+            if loose:
+                self.err("P318",
+                         f'"{f.name}" gives back `any {loose[0]}`, but no '
+                         "parameter says what that is.", f,
+                         hint="Every type variable in the giving type must "
+                              "also appear in a parameter type.")
 
         # A natural `x as T and y as U` signature expresses an action over
         # its arguments. When that body directly mutates a list or map
@@ -270,8 +372,62 @@ class Checker:
 
         for f in p.funcs:
             if f.name in self.funcs and self.funcs[f.name] is f:
+                if self._is_generic(f):
+                    # A generic body only means something once its type
+                    # variables are known, so it is checked per instantiation.
+                    continue
                 self.check_function(f)
+        self._check_instantiations(p)
         return self.diags
+
+    # ------------------------------------------------------------- generics
+
+    def _is_generic(self, fn: A.FuncDef) -> bool:
+        types = [prm.type for prm in fn.params] + ([fn.ret] if fn.ret else [])
+        return any(_type_vars(ty) for ty in types)
+
+    def _instantiate(self, fn: A.FuncDef, mapping: dict[str, A.Type],
+                     node) -> A.FuncDef:
+        """One concrete copy of a generic function per distinct instantiation."""
+        key = (fn.name, tuple(sorted((k, str(v)) for k, v in mapping.items())))
+        existing = self._instances.get(key)
+        if existing is not None:
+            return existing
+        concrete = copy.deepcopy(fn)
+        concrete.name = fn.name + "__" + "_".join(
+            _mangle(mapping[v]) for v in sorted(mapping))
+        _substitute_in_tree(concrete, mapping, set())
+        self._instances[key] = concrete
+        self.funcs[concrete.name] = concrete
+        # Where the first call was, so an error inside the body can say so.
+        self._instance_queue.append((concrete, fn, node))
+        return concrete
+
+    def _check_instantiations(self, program: A.Program) -> None:
+        """Check every concrete copy, reporting failures at the call site."""
+        checked: set[str] = set()
+        while self._instance_queue:
+            concrete, generic, node = self._instance_queue.pop(0)
+            if concrete.name in checked:
+                continue
+            checked.add(concrete.name)
+            before = len(self.diags)
+            saved = (self.fn, self.current_name, self.current_ret, self.scopes,
+                     self.changing, self.loop_depth, self.attempt_loop_marks,
+                     self.closure_stack)
+            self.check_function(concrete)
+            self.fn, self.current_name, self.current_ret, self.scopes, \
+                self.changing, self.loop_depth, self.attempt_loop_marks, \
+                self.closure_stack = saved
+            for diag in self.diags[before:]:
+                # Point at the call, not at a line the caller never wrote.
+                diag.line = getattr(node, "line", diag.line)
+                diag.col = getattr(node, "col", diag.col)
+                diag.message = (f'"{generic.name}" cannot be used this way: '
+                                + diag.message)
+        program.funcs = [f for f in program.funcs if not self._is_generic(f)]
+        program.funcs.extend(
+            self._instances[key] for key in self._instances)
 
     def _directly_mutated_names(self, body: list[A.Stmt]) -> set[str]:
         """Names assigned or container-mutated anywhere in a statement tree."""
@@ -714,6 +870,11 @@ class Checker:
             for a in args:
                 self.infer(a)
             return fn.ret or A.TUnit()
+        if self._is_generic(fn):
+            fn = self._resolve_generic_call(node, name, fn, args)
+            node.target_fn = fn
+            if fn is None:
+                return TErr()
         for prm, arg in zip(fn.params, args):
             a_ty = self.infer(arg)
             if prm.changing:
@@ -727,6 +888,32 @@ class Checker:
             elif not self.assignable(prm.type, a_ty):
                 self.type_mismatch(prm.type, a_ty, arg, f'The argument "{prm.name}" of {name}')
         return fn.ret or A.TUnit()
+
+    def _resolve_generic_call(self, node, name: str, fn: A.FuncDef,
+                              args: list[A.Expr]) -> A.FuncDef | None:
+        """Decide this call's type variables, then use a concrete copy."""
+        mapping: dict[str, A.Type] = {}
+        for prm, arg in zip(fn.params, args):
+            a_ty = self.infer(arg)
+            if isinstance(a_ty, TErr):
+                return None
+            if not _unify(prm.type, a_ty, mapping):
+                self.type_mismatch(_substitute(prm.type, mapping), a_ty, arg,
+                                   f'The argument "{prm.name}" of {name}')
+                return None
+        declared = set()
+        for prm in fn.params:
+            declared |= _type_vars(prm.type)
+        unresolved = sorted(
+            (_type_vars(fn.ret) if fn.ret else set()) - set(mapping))
+        if unresolved:
+            self.err("P318",
+                     f'"{name}" gives back `any {unresolved[0]}`, but nothing in '
+                     "the call says what that is.", node,
+                     hint="Every type variable in the giving type must also "
+                          "appear in a parameter type.")
+            return None
+        return self._instantiate(fn, mapping, node)
 
     def _flatten_natural_call_arg(self, expr: A.Expr) -> list[A.Expr]:
         """Flatten `a and b` only when call arity proves `and` is a separator."""

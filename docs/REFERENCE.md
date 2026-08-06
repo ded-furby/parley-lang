@@ -59,6 +59,7 @@ parameters (`&mut T`).
 | `to f with xs as list of number:` | `fn f(xs: &Vec<i64>) {` |
 | `to f with changing xs as list of number:` | `fn f(xs: &mut Vec<i64>) {` |
 | `to f with a as number and b as number:` | natural multi-parameter form |
+| `to f with xs as list of any item giving any item:` | generic — one concrete copy is emitted per type it is called with |
 
 Variant names share one global namespace (so `happy` alone is unambiguous).
 

@@ -216,6 +216,23 @@ def test_by_is_still_usable_as_a_name():
     assert prog.funcs[0].body[0].name == "by"
 
 
+def test_type_variables_parse():
+    prog = parse('to first_or with xs as list of any item, d as any item giving any item:\n'
+                 '    give back d\n'
+                 'say 1\n')
+    fn = prog.funcs[0]
+    assert str(fn.params[0].type) == "list of any item"
+    assert isinstance(fn.params[1].type, A.TVar)
+    assert str(fn.ret) == "any item"
+
+
+def test_any_is_only_a_type_word():
+    # `any` must not become a keyword in value position, or it would break
+    # any existing program that already uses it as a name.
+    prog = parse('to main:\n    let any be 1\n    say any\n')
+    assert prog.funcs[0].body[0].name == "any"
+
+
 def test_json_forms_parse():
     prog = parse('a config has name as text\n'
                  'let c be a config from json "x"\n'

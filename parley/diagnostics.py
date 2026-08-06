@@ -222,6 +222,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.",
         "fix": "Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.",
     },
+    "P318": {
+        "title": "Type variable is not decided by the call",
+        "explain": "A generic function's `any name` types are worked out from its arguments, so every type variable in the giving type must also appear in a parameter type.",
+        "fix": "Add a parameter that mentions the same `any name`, or give the function a concrete giving type.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",

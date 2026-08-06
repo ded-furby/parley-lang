@@ -85,6 +85,16 @@ def test_logreport_example(workdir):
     assert "no readable files in no_such_dir" in missing.stderr
 
 
+def test_generics_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "generics.par")], cwd=workdir)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == (
+        "Piranesi (2020); Klara (2021)\n"
+        "tree, nights\n"
+        "a\n"
+        "none\n")
+
+
 def test_jsonreport_example(workdir):
     proc = run_cli(["run", str(EXAMPLES / "jsonreport.par"),
                     str(EXAMPLES / "feed.json"), "5"], cwd=workdir)
@@ -413,6 +423,43 @@ def test_setting_and_current_time(workdir):
     assert without.stdout == "user: nobody\nyes\n"
 
 
+def test_generic_functions(workdir):
+    src = '''a point has x as number, y as number
+
+to head_or with xs as list of any item, fallback as any item giving any item:
+    give back (maybe item 1 of xs) otherwise fallback
+
+to mapped with xs as list of any input, f as (function taking any input giving any output) giving list of any output:
+    let out be an empty list of any output
+    for each x in xs:
+        add (f with x) to out
+    give back out
+
+to push_all with source as list of any item, changing target as list of any item:
+    for each x in source:
+        add x to target
+
+to depth with xs as list of any item, n as number giving number:
+    if n is at most 0:
+        give back length of xs
+    give back (depth with xs, n minus 1)
+
+to label with n as number giving text:
+    give back "#{n}"
+
+let pts be a list of (a point with x 1, y 2)
+say (head_or with pts, (a point with x 0, y 0))'s x
+say (head_or with (an empty list of text), "empty")
+say (mapped with (a list of 1, 2, 3), the function label) joined with ","
+let dest be an empty list of text
+push_all with (a list of "x", "y"), dest
+say dest joined with ","
+say (depth with (a list of 1, 2, 3), 3)
+'''
+    proc = run_program(workdir, "generics", src)
+    assert proc.stdout == "1\nempty\n#1,#2,#3\nx,y\n3\n"
+
+
 def test_typed_json_round_trip(workdir):
     src = ('a author has name as text, email as maybe text\n'
            'a post has title as text, tags as list of text, writer as author, score as decimal\n'
@@ -448,6 +495,38 @@ def test_typed_json_round_trip(workdir):
         "yes\n"
         "42\n"
         "[1,2]\n")
+
+
+def test_json_strictness_and_kinds(workdir):
+    src = '''a level is one of low, high
+a inner has flag as yesno, rank as level
+a outer has label as text, part as inner, scores as list of decimal, tags as map from text to text
+
+let deep_unknown be "{{\\"label\\":\\"x\\",\\"part\\":{{\\"flag\\":true,\\"rank\\":\\"low\\",\\"extra\\":1}},\\"scores\\":[],\\"tags\\":{{}}}}"
+let good be "{{\\"label\\":\\"x\\",\\"part\\":{{\\"flag\\":true,\\"rank\\":\\"high\\"}},\\"scores\\":[1.5,2.0],\\"tags\\":{{\\"b\\":\\"2\\",\\"a\\":\\"1\\"}}}}"
+
+say (a outer from json deep_unknown) has no value
+let o be value of (a outer from json good)
+say o as json
+when o's part's rank:
+    is low:
+        say "low"
+    is high:
+        say "high"
+say (a inner from json "{{\\"flag\\":true,\\"rank\\":\\"sideways\\"}}") has no value
+say (a inner from json "{{\\"flag\\":\\"yes\\",\\"rank\\":\\"low\\"}}") has no value
+say (a inner from json "") has no value
+'''
+    proc = run_program(workdir, "json_strictness", src)
+    assert proc.stdout == (
+        # An unknown field nested inside a record is refused, not ignored.
+        "yes\n"
+        # Kinds cross as their variant name, and map keys come back sorted.
+        '{"label":"x","part":{"flag":true,"rank":"high"},"scores":[1.5,2.0],'
+        '"tags":{"a":"1","b":"2"}}\n'
+        "high\n"
+        # Unknown variant, wrong scalar type, empty document.
+        "yes\nyes\nyes\n")
 
 
 def test_files_in_lists_regular_files_in_order(workdir):

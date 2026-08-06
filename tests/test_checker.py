@@ -97,6 +97,18 @@ CASES = [
     ("sort_by_unknown_field",
      'a p has n as text\nto main:\n    let ps be an empty list of p\n    sort ps by nam\n',
      "P204", "not a field"),
+    ("generic_giving_type_undecidable",
+     "to make giving any item:\n    give back 1\nsay (make)\n",
+     "P318", "no parameter says what that is"),
+    ("generic_body_failure_points_at_the_call",
+     'to doubled with x as any item giving any item:\n    give back x times 2\n'
+     'say (doubled with "text")\n',
+     "P302", '"doubled" cannot be used this way'),
+    ("generic_argument_types_must_agree",
+     "to pair with a_value as any item, b_value as any item giving number:\n"
+     "    give back 1\n"
+     'say (pair with 1, "two")\n',
+     "P301", "needs number"),
     ("json_into_unknown_record",
      'a config has name as text\nlet c be a nope from json "x"\n',
      "P205", "no record called"),

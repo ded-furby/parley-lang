@@ -150,6 +150,20 @@ def test_sorted_by_emits_stable_sort_on_the_field():
     assert "sort_unstable" not in rust
 
 
+def test_generic_function_is_monomorphized_once_per_type():
+    rust = emit_text('to head_or with xs as list of any item, d as any item giving any item:\n'
+                     '    give back (maybe item 1 of xs) otherwise d\n'
+                     'say (head_or with (a list of 1), 0)\n'
+                     'say (head_or with (a list of 2), 0)\n'
+                     'say (head_or with (a list of "a"), "z")\n')
+    # Two concrete copies for two types, not one per call site.
+    assert rust.count("fn head_or__") == 2
+    assert "fn head_or__number(xs: &Vec<i64>, d: i64) -> i64" in rust
+    assert "fn head_or__text(xs: &Vec<String>, d: &String) -> String" in rust
+    # Nothing generic survives into the Rust.
+    assert "any item" not in rust
+
+
 def test_json_decode_and_encode_emit_serde():
     rust = emit_text('a config has name as text\n'
                      'let c be a config from json "x"\n'

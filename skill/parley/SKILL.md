@@ -36,6 +36,8 @@ repeat count times:
   `set item key of map to value`; `item key of map`; sorted `keys of map`.
 - JSON is typed: declare a record, then `a config from json t` (maybe config,
   strict about unknown/missing fields) and `x as json` (text).
+- A type may be `any name` (a type variable) to write one function for every
+  type: `to head_or with xs as list of any item, d as any item giving any item:`.
 - Stdlib: `include "std/text"` (padding, `fixed_decimal`), `std/time`
   (`timestamp_text with the current time`), `std/list`, `std/map`, `std/math`.
 - Use `yesno`/`yes`/`no`; comparisons use `is [not/less than/at most/more

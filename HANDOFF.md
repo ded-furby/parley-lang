@@ -25,8 +25,8 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language/toolchain v0.4.5** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 469/469, including e2e tests that
+- **Language/toolchain v0.5.0** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 478/478, including e2e tests that
   compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -76,6 +76,36 @@ Update it whenever you finish or start a work item.
   a typed native route; valid, malformed, wrong-content-type, unknown-field,
   MIME, static, and traversal behavior are covered. Limits and security
   boundaries are explicit in `docs/WEB.md`; no language syntax was added.
+- **v0.5.0 generic functions.** The oldest structural hole in the language:
+  `std/list` held **279 functions for 94 distinct operations** because every
+  one needed a number, text, decimal, and yesno copy — and a *user* could not
+  write a reusable helper across types at all.
+  - A type may be written `any name`, declaring a type variable. Each call
+    unifies the parameter types against the argument types structurally; the
+    checker emits one concrete copy per distinct instantiation and retargets
+    the call, so **the emitter never changed** — it only ever sees ordinary
+    monomorphic functions, and the generated Rust is what you would hand-write
+    (borrowed `&Vec<String>`, copied `i64`, no boxing or dispatch).
+  - Several variables work: `to mapped with xs as list of any input, f as
+    (function taking any input giving any output) giving list of any output:`.
+  - Every variable in the giving type must also appear in a parameter (P318),
+    checked **at the definition**, since nothing else could ever decide it.
+    The first version only checked this at call sites and so missed a
+    zero-parameter generic entirely.
+  - **The one real tradeoff:** a generic body is checked per instantiation, not
+    abstractly, so a generic function nobody calls is never checked. To keep
+    the language's promise that every error is a repair instruction, a body
+    failure is re-pointed at the *call site* and prefixed with the function
+    name — `"doubled" cannot be used this way: \`times\` works on numbers, but
+    this is text` — rather than surfacing as a C++-style error inside a helper
+    the author never wrote.
+  - `any` is a type word only, so it stays usable as an ordinary value name;
+    `test_any_is_only_a_type_word` pins that, following the v0.4.3 lesson.
+  - **Not done, deliberately:** the 279 stdlib helpers are unchanged. Their
+    names are public API used by existing programs and the workflow templates,
+    so collapsing them is a breaking change for a major version, not a
+    drive-by. Generics are what make that cleanup possible later; the win
+    available today is that users can write generic helpers at all.
 - **v0.4.5 dates, and includes that survive a diamond.**
   - **A diamond include was fatal.** Two modules that each `include` the same
     helper file spliced it twice and every name in it collided with itself

@@ -97,6 +97,24 @@ line of stdin, read once. `maybe item i of x` is non-failing access for lists,
 text, and maps, so `… otherwise default` is the one-line safe read. See
 [`examples/wordcount.par`](examples/wordcount.par) for a complete tool.
 
+## One function, every type
+
+A type may be written `any name` — a type variable the call decides:
+
+```parley
+to head_or with xs as list of any item, fallback as any item giving any item:
+    give back (maybe item 1 of xs) otherwise fallback
+
+say (head_or with (a list of 3, 4), 0)
+say (head_or with (an empty list of text), "nothing here")
+```
+
+Parley compiles one concrete copy per type actually used, so the generated
+Rust is exactly what you would have written by hand — no runtime dispatch, no
+boxing. A mistake inside a generic function is reported at the call that
+exposed it, naming the function, rather than as an error inside a helper you
+did not write. See [`examples/generics.par`](examples/generics.par).
+
 ## Read and write JSON, typed
 
 JSON crosses into Parley as a record you already declared. There is no untyped
@@ -506,6 +524,7 @@ the plan:
       `the setting`, `the current time`, `fixed_decimal` — v0.4.3
 - [x] typed JSON in the core language and key-ordered maps end to end — v0.4.4
 - [x] `std/time` civil dates and diamond-safe includes — v0.4.5
+- [x] generic functions: `any name` type variables, monomorphized — v0.5.0
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
