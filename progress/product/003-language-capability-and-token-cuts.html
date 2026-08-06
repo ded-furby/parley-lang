@@ -22,17 +22,17 @@
     or from hitting a wall while writing a real program &mdash; not from a benchmark result.</p>
 
     <div class="metrics">
-      <div class="metric"><span>Source tokens cut</span><strong>&minus;7.7%</strong></div>
-      <div class="metric"><span>Paired programs</span><strong>64</strong></div>
+      <div class="metric"><span>Source tokens cut</span><strong>&minus;6.6%</strong></div>
+      <div class="metric"><span>Paired programs</span><strong>32</strong></div>
       <div class="metric"><span>Behaviour identical</span><strong>26 / 26</strong></div>
       <div class="metric"><span>Local suite</span><strong>467 / 467</strong></div>
     </div>
 
     <section class="section">
       <div class="head"><h2>v0.4.1 &mdash; measured, then cut</h2><p>Attribution before design</p></div>
-      <p class="summary">Every paired Parley/Python/Rust program in the frozen corpora was tokenized
+      <p class="summary">Every unique paired Parley/Python/Rust program in the frozen corpora was tokenized
       with <code>o200k_base</code> and the excess over Python attributed phrase by phrase. Parley
-      source was <strong>40.4% larger than Python</strong> &mdash; the opposite of the pitch. Two shapes
+      source was <strong>37.8% larger than Python</strong> &mdash; the opposite of the pitch. Two shapes
       accounted for most of the recoverable difference.</p>
       <div class="cards">
         <div class="card"><b>Top-level statements</b><span>Statements at the top level are the body of
@@ -41,7 +41,7 @@
         Collapses 57 two-line <code>ask</code>/<code>value of</code> pairs: <strong>342 tokens</strong> (3.2%).</span></div>
       </div>
       <ul class="checks">
-        <li><b>Result</b><span>10,632 &rarr; 9,811 source tokens across 64 programs</span><span class="pass">&minus;7.7%</span></li>
+        <li><b>Result</b><span>6,217 &rarr; 5,810 source tokens across 32 programs &mdash; +37.8% to +28.7% of Python</span><span class="pass">&minus;6.6%</span></li>
         <li><b>Equivalence</b><span>Rewritten programs re-run against their own public cases</span><span class="pass">26 / 26 identical</span></li>
         <li><b>Declined</b><span>Conditional expression: 1.5% for a duplicated LALR chain</span><span class="pass">NOT BUILT</span></li>
       </ul>
@@ -103,7 +103,7 @@
       <strong>Honest boundary</strong>
       <p>The token result is a <em>source</em> measurement, not a session measurement. Report 030 put the
       Parley/Python gap at roughly 2,010 fixed tokens per session plus 74 residual tokens per task, so a
-      7.7% source cut is not a 7.7% session cut and no fresh-agent claim follows from it. Nothing here was
+      6.6% source cut is not a 6.6% session cut and no fresh-agent claim follows from it. Nothing here was
       measured by re-running a frozen benchmark, and no preregistered protocol was touched. Parley is now
       a language I would choose for local file, text, and data work; it still has no HTTP client, no
       regex, no dates beyond an epoch integer, no process spawning, and no concurrency.</p>

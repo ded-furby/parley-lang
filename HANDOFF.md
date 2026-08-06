@@ -233,18 +233,19 @@ Update it whenever you finish or start a work item.
   you run are the body of `main`; a file cannot also define `to main:` (P212)
   and an included file may hold only definitions (P213). (2) `x otherwise y`
   unwraps a `maybe` with a fallback, is lazy in `y`, never stops the program,
-  and rejects a non-maybe left side (P315). Method: all 64 paired
+  and rejects a non-maybe left side (P315). Method: all 32 unique paired
   Parley/Python/Rust programs in `benchmarks/agent_tasks_*.json` were
   tokenized with `o200k_base`, the excess over Python attributed by phrase,
-  then rewritten to the new shapes and re-measured. Parley source falls
-  10,632 → 9,811 tokens, from **+40.4% to +29.5% versus Python** (and stays
-  27.7% below Rust). Of the 32 tasks with public cases, the 26 whose seed runs
+  then rewritten to the new shapes and re-measured
+  (`benchmarks/measure_source_tokens.py`). Parley source falls
+  6,217 → 5,810 tokens, from **+37.8% to +28.7% versus Python** (and stays
+  23.2% below Rust). Of those 32 tasks, the 26 whose seed runs
   cleanly produce **byte-identical output** before and after; the other six are
   seeded-defect programs that crash on their own public case, where `value of`
   (stops) and `otherwise` (defaults) legitimately differ. **Bound the claim:**
   this is a source-token result only. Report 030 measured the Parley/Python
   session gap as ~2,010 fixed tokens/session plus ~74 residual tokens/task, so
-  a 7.7% source cut is not a 7.7% session cut and no fresh-agent claim follows.
+  a 6.6% source cut is not a 6.6% session cut and no fresh-agent claim follows.
   The skill is v0.4.3 (1,879 chars / 520 `o200k` tokens, SHA `bc5d393c…`),
   preserved at `skill/parley/references/core-v0.4.3.md`; the skill that protocols 017–030
   ran against is preserved unchanged at `core-v0.3.149.md`, and those protocol
@@ -270,6 +271,14 @@ Update it whenever you finish or start a work item.
   an unwritable path used to raise a bare Python `PermissionError`, and `-o
   some_directory` used to copy the binary *into* the directory and then print
   `Built ./some_directory (0 KiB)` as a success.
+- **Correction to the v0.4.1 figures (made 2026-08-06).** The first count
+  walked every corpus file and so counted a task twice when it appears in more
+  than one corpus. Deduplicated by task id the corpus is **32 unique programs**,
+  not 64, and the result is **+37.8% → +28.7%** versus Python (a 6.55% cut),
+  not +40.4% → +29.5% (7.7%). The finding is unchanged in direction and close
+  in size; the published numbers were wrong and are corrected here, in product
+  record 003, and in the progress index. `benchmarks/measure_source_tokens.py`
+  now does the deduplicating count so the figure is reproducible.
 - **Measured and declined (v0.4.1):** a conditional expression
   (`A if C otherwise B`) collapses 41 guard-clause pairs in the same corpus but
   is worth only 157 tokens (1.48%), and the condition slot would greedily
