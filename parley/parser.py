@@ -282,6 +282,7 @@ class ToAst(Transformer):
 
     def start(self, meta, ch):
         prog = A.Program(records=[], enums=[], funcs=[], line=1, col=1)
+        loose: list[A.Stmt] = []
         for it in ch:
             if isinstance(it, A.RecordDef):
                 prog.records.append(it)
@@ -289,6 +290,14 @@ class ToAst(Transformer):
                 prog.enums.append(it)
             elif isinstance(it, A.FuncDef):
                 prog.funcs.append(it)
+            elif isinstance(it, A.Stmt):
+                loose.append(it)
+        if loose:
+            first = loose[0]
+            prog.funcs.append(A.FuncDef(
+                name="main", params=[], ret=None, body=loose,
+                line=getattr(first, "line", 1), col=getattr(first, "col", 1),
+                implicit_main=True))
         return prog
 
     def item(self, meta, ch):
@@ -371,12 +380,20 @@ class ToAst(Transformer):
 
     def sort_stmt(self, meta, ch):
         name = str(ch[0])
+        field = ch[1]
         pos = _pos(meta)
+        target = A.Var(name=name, **pos)
+        sorted_value = (
+            A.SortedBy(value=target, field_name=str(field), **pos) if field is not None
+            else A.PrefixOp(op="sorted", value=target, **pos))
         return A.SetVar(
             target=A.LValue(base=name, fields=[], **pos),
-            value=A.PrefixOp(op="sorted", value=A.Var(name=name, **pos), **pos),
+            value=sorted_value,
             **pos,
         )
+
+    def sorted_by(self, meta, ch):
+        return A.SortedBy(value=ch[0], field_name=str(ch[1]), **_pos(meta))
 
     def give_stmt(self, meta, ch):
         return A.Give(value=ch[0], **_pos(meta))
@@ -592,6 +609,9 @@ class ToAst(Transformer):
     def replacing_with(self, meta, ch):
         return A.ReplacingWith(value=ch[0], old=ch[1], new=ch[2], **_pos(meta))
 
+    def otherwise_op(self, meta, ch):
+        return A.Otherwise(value=ch[0], fallback=ch[1], **_pos(meta))
+
     def position_of(self, meta, ch):
         return A.PositionOf(needle=ch[0], value=ch[1], **_pos(meta))
 
@@ -694,8 +714,20 @@ class ToAst(Transformer):
     def item_of(self, meta, ch):
         return A.ItemOf(index=ch[0], container=ch[1], **_pos(meta))
 
+    def maybe_item_of(self, meta, ch):
+        return A.ItemOf(index=ch[0], container=ch[1], safe=True, **_pos(meta))
+
     def read_file(self, meta, ch):
         return A.ReadFile(path=ch[0], **_pos(meta))
+
+    def files_in(self, meta, ch):
+        return A.FilesIn(path=ch[0], **_pos(meta))
+
+    def setting_of(self, meta, ch):
+        return A.Setting(name=ch[0], **_pos(meta))
+
+    def the_time(self, meta, ch):
+        return A.TheTime(**_pos(meta))
 
     def ask_number(self, meta, ch):
         return A.Ask(prompt=ch[0], numeric=True, **_pos(meta))
@@ -732,6 +764,12 @@ class ToAst(Transformer):
     def the_error(self, meta, ch):
         return A.TheError(**_pos(meta))
 
+    def the_arguments(self, meta, ch):
+        return A.TheArguments(**_pos(meta))
+
+    def the_input(self, meta, ch):
+        return A.TheInput(**_pos(meta))
+
     def var(self, meta, ch):
         return A.Var(name=str(ch[0]), **_pos(meta))
 
@@ -762,6 +800,20 @@ _TERM_DESC = {
     "_RPAR": "')'",
     "_APOS_S": "'s",
     "CHANGING": "'changing'",
+    # Terminals whose internal name is not what an author would type.
+    "PARAM_AND": "'and'",
+    "_DIV": "'divided by'",
+    "_POW": "'to the power of'",
+    "_MOD": "'modulo'",
+    "_A": "'a'",
+}
+
+# Punctuation and layout answer "what does this line still need"; operators
+# only answer "what else could this expression contain", which is rarely the
+# author's mistake. Lower number sorts first.
+_TERM_RANK = {
+    "COLON": 0, "_NL": 0, "$END": 0, "_INDENT": 0, "_DEDENT": 0,
+    "COMMA": 1, "_RPAR": 1,
 }
 
 
@@ -774,15 +826,57 @@ def _describe_terminal(t: str) -> str:
     return f"'{word}'"
 
 
+def _describe_expected(expected: list[str]) -> str | None:
+    """Turn lark's accepted-terminal set into one short, useful sentence."""
+    terms = list(expected)
+    collapsed = []
+    if {"NAME", "INT", "STRING"} <= set(terms):
+        # A value position. Every other accepted terminal here is one more way
+        # to begin a value (`length of`, `some`, `-`, `(`, …), so listing them
+        # is noise; only structural expectations still carry information.
+        terms = [t for t in terms if t in _TERM_RANK]
+        collapsed = ["a value"]
+    ranked = sorted(terms, key=lambda t: (_TERM_RANK.get(t, 2), t))
+    shown = collapsed + [_describe_terminal(t) for t in ranked[:3]]
+    if not shown:
+        return None
+    more = "…" if len(ranked) > 3 else "."
+    return "Expected " + " or ".join(shown) + more
+
+
+def _nested_quote_hint(line: str) -> str | None:
+    """`"{name otherwise "unknown"}"` closes the string at the inner quote.
+
+    Escaped quotes inside an interpolation are supported, so the fix is one
+    character per quote — but the resulting error lands on whatever followed
+    and says nothing about that. Name it whenever the shape is present.
+    """
+    pos = 0
+    while True:
+        open_brace = line.find("{", pos)
+        if open_brace == -1:
+            return None
+        rest = line[open_brace + 1:]
+        close = rest.find("}")
+        inside = rest if close == -1 else rest[:close]
+        if '"' in inside:
+            return ('Escape quotes inside {…}: write \\" for each one, as in '
+                    '"{name otherwise \\"unknown\\"}".')
+        if close == -1:
+            return None
+        pos = open_brace + 1 + close + 1
+
+
 def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
     tok = e.token
     if tok.type == "$END":
         got = "the end of the file"
+    elif not str(tok.value).strip():
+        got = "the end of the line"
     else:
         got = f"'{tok.value}'"
     expected = sorted(e.accepts or e.expected or [])
-    shown = [_describe_terminal(t) for t in expected[:8]]
-    hint = "Expected " + " or ".join(shown) + ("…" if len(expected) > 8 else ".") if shown else None
+    hint = _describe_expected(expected)
     word = str(tok.value) if tok.type != "$END" else ""
     if "NAME" in expected and tok.type != "NAME" and re.fullmatch(r"[a-z][a-z ]*", word):
         hint = (hint or "") + f" Note: '{word}' is a reserved Parley phrase, so it cannot be used as a name here."
@@ -820,6 +914,9 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
         hint = (hint or "") + " Write `giving TYPE`, not `returns TYPE`."
     if re.match(r"^\s*(?:return\b|give\s+(?!back\b))", line):
         hint = (hint or "") + " Return a value with `give back value`."
+    nested = _nested_quote_hint(line)
+    if nested:
+        hint = (hint or "") + " " + nested
     return Diagnostic(
         "P101", f"I didn't expect {got} here.",
         line=getattr(tok, "line", 0) or 0, col=getattr(tok, "column", 0) or 0,
@@ -839,10 +936,14 @@ def parse(text: str) -> A.Program:
     except UnexpectedToken as e:
         raise ParleyError([_token_error(e, text)])
     except UnexpectedCharacters as e:
+        bad_line = text.splitlines()[e.line - 1]
+        hint = "Strings use double quotes; names use letters, digits and underscores."
+        nested = _nested_quote_hint(bad_line)
+        if nested:
+            hint = nested
         raise ParleyError([Diagnostic(
-            "P102", f"Parley does not recognise the character {text.splitlines()[e.line - 1][e.column - 1]!r}.",
-            line=e.line, col=e.column,
-            hint="Strings use double quotes; names use letters, digits and underscores.")])
+            "P102", f"Parley does not recognise the character {bad_line[e.column - 1]!r}.",
+            line=e.line, col=e.column, hint=hint)])
     except ParleyError:
         raise
     except LarkError as e:
@@ -865,4 +966,27 @@ def parse_program(path) -> tuple[A.Program, SourceMap]:
     except ParleyError as e:
         srcmap.resolve(e.diagnostics)
         raise
+    _reject_included_top_level(program, srcmap)
     return program, srcmap
+
+
+def _reject_included_top_level(program: A.Program, srcmap: SourceMap) -> None:
+    """Top-level statements belong to the file being run, not to its includes.
+
+    Includes are spliced textually, so without this an included file's loose
+    statements would silently join the entrypoint's `main`.
+    """
+    implicit = next((f for f in program.funcs
+                     if f.name == "main" and getattr(f, "implicit_main", False)), None)
+    if implicit is None:
+        return
+    for st in implicit.body:
+        file, line = srcmap.loc(getattr(st, "line", 1))
+        if file != srcmap.main_file:
+            raise ParleyError([Diagnostic(
+                "P213",
+                f'"{file}" is included, so it can only define functions, '
+                f"records, and enums — not loose statements.",
+                file=file, line=line,
+                hint="Move the statement into a `to name:` function and call "
+                     "that from the file you run.")])

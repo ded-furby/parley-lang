@@ -192,3 +192,37 @@ def test_forced_toon_fails_cleanly_for_unsupported_shape(tmp_path):
 
     assert proc.returncode == 1
     assert "cannot safely encode" in proc.stderr
+
+
+def test_unpack_and_check_accept_the_json_fallback_pack_produces(tmp_path):
+    # A nested shape is outside the TOON profile, so `pack` delivers compact
+    # JSON. The documented pack -> unpack round trip has to survive that.
+    source = tmp_path / "nested.json"
+    document = {"rows": [{"n": "a", "v": {"deep": [1, 2, {"x": True}]}}]}
+    source.write_text(json.dumps(document))
+    packed = tmp_path / "nested.agent"
+
+    pack = run_cli(["data", "pack", str(source), "--output", str(packed)], cwd=tmp_path)
+    assert pack.returncode == 0, pack.stdout + pack.stderr
+    assert packed.read_text().lstrip().startswith("{")
+
+    restored = tmp_path / "restored.json"
+    unpack = run_cli(
+        ["data", "unpack", str(packed), "--output", str(restored)], cwd=tmp_path)
+    assert unpack.returncode == 0, unpack.stdout + unpack.stderr
+    assert json.loads(restored.read_text()) == document
+
+    checked = run_cli(["data", "check", str(packed), "--json"], cwd=tmp_path)
+    assert checked.returncode == 0, checked.stdout + checked.stderr
+    assert json.loads(checked.stdout)["format"] == "json"
+
+
+def test_check_still_reports_toon_for_a_toon_artifact(tmp_path):
+    source = tmp_path / "rows.json"
+    document = {"rows": [{"n": "a", "v": 1}, {"n": "b", "v": 2}]}
+    source.write_text(json.dumps(document))
+    packed = tmp_path / "rows.agent"
+    run_cli(["data", "pack", str(source), "--output", str(packed)], cwd=tmp_path)
+
+    checked = run_cli(["data", "check", str(packed), "--json"], cwd=tmp_path)
+    assert json.loads(checked.stdout)["format"] == "toon"

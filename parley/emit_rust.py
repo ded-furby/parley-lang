@@ -46,6 +46,29 @@ def camel(name: str) -> str:
     return out
 
 
+def _needs_parley_display(ty: A.Type, seen: frozenset = frozenset()) -> bool:
+    """Does rendering this type with Rust's Debug disagree with Parley?
+
+    Maps disagree on ordering; yesno disagrees on spelling. Records are
+    followed through, guarding against a record that contains itself.
+    """
+    if isinstance(ty, (A.TBool, A.TMap)):
+        return True
+    if isinstance(ty, (A.TList, A.TMaybe)):
+        return _needs_parley_display(ty.elem, seen)
+    if isinstance(ty, A.TRecord):
+        if ty.name in seen:
+            return False
+        return any(_needs_parley_display(f, seen | {ty.name})
+                   for _, f in _RECORD_FIELDS.get(ty.name, ()))
+    return False
+
+
+# Filled in per program by the emitter so _needs_parley_display can walk
+# record fields without threading the program through every call.
+_RECORD_FIELDS: dict[str, list] = {}
+
+
 def rust_type(ty: A.Type) -> str:
     if isinstance(ty, A.TNum):
         return "i64"
@@ -99,6 +122,7 @@ use std::rc::Rc;
 
 thread_local! {
     static LAST_ERROR: RefCell<String> = RefCell::new(String::new());
+    static INPUT_LINES: RefCell<Option<Vec<String>>> = RefCell::new(None);
 }
 
 fn parley_last_error() -> String {
@@ -106,6 +130,34 @@ fn parley_last_error() -> String {
 }
 
 fn parley_yesno(b: bool) -> &'static str { if b { "yes" } else { "no" } }
+
+fn parley_arguments() -> Vec<String> {
+    std::env::args().skip(1).collect()
+}
+
+fn parley_input_lines() -> Vec<String> {
+    // `the input` names a value, not a stream: stdin is drained once and every
+    // later mention sees the same lines.
+    INPUT_LINES.with(|cell| {
+        if cell.borrow().is_none() {
+            use std::io::Read;
+            let mut buffer = String::new();
+            let _ = std::io::stdin().read_to_string(&mut buffer);
+            let lines: Vec<String> = if buffer.is_empty() {
+                Vec::new()
+            } else {
+                let trimmed = buffer.strip_suffix('\n').unwrap_or(&buffer);
+                let trimmed = trimmed.strip_suffix('\r').unwrap_or(trimmed);
+                trimmed
+                    .split('\n')
+                    .map(|line| line.strip_suffix('\r').unwrap_or(line).to_string())
+                    .collect()
+            };
+            *cell.borrow_mut() = Some(lines);
+        }
+        cell.borrow().as_ref().unwrap().clone()
+    })
+}
 
 fn parley_fmt_maybe_disp<T: std::fmt::Display>(o: &Option<T>) -> String {
     match o { Some(v) => format!("{}", v), None => "nothing".to_string() }
@@ -139,6 +191,19 @@ fn parley_text_item(s: &str, i: i64) -> String {
         panic!("There is no character {} — the text has {} character(s).", i, len);
     }
     s.chars().nth((i - 1) as usize).unwrap().to_string()
+}
+
+fn parley_maybe_item<T: Clone>(xs: &[T], i: i64) -> Option<T> {
+    if i < 1 || (i as usize) > xs.len() { None } else { Some(xs[(i - 1) as usize].clone()) }
+}
+
+fn parley_maybe_text_item(s: &str, i: i64) -> Option<String> {
+    if i < 1 { return None; }
+    s.chars().nth((i - 1) as usize).map(|c| c.to_string())
+}
+
+fn parley_maybe_get<K: std::hash::Hash + Eq, V: Clone>(m: &HashMap<K, V>, k: &K) -> Option<V> {
+    m.get(k).cloned()
 }
 
 fn parley_set_item<T>(xs: &mut Vec<T>, i: i64, v: T) {
@@ -277,6 +342,28 @@ fn parley_ask_num(prompt: &str) -> Option<i64> { parley_parse_int(&parley_ask(pr
 
 fn parley_read_file(p: &str) -> Option<String> { std::fs::read_to_string(p).ok() }
 
+fn parley_setting(name: &str) -> Option<String> { std::env::var(name).ok() }
+
+fn parley_current_time() -> i64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0)
+}
+
+fn parley_files_in(dir: &str) -> Option<Vec<String>> {
+    // Regular files only, sorted, so a program sees the same order everywhere.
+    let entries = std::fs::read_dir(dir).ok()?;
+    let mut paths: Vec<String> = Vec::new();
+    for entry in entries.flatten() {
+        if entry.file_type().map(|t| t.is_file()).unwrap_or(false) {
+            paths.push(entry.path().to_string_lossy().into_owned());
+        }
+    }
+    paths.sort();
+    Some(paths)
+}
+
 fn parley_write_file(p: &str, content: &str, append: bool) {
     use std::io::Write;
     let r = if append {
@@ -321,6 +408,13 @@ fn main() {
         } else {
             "something went wrong".to_string()
         };
+        // Rust's own overflow panics are the one failure Parley does not
+        // phrase itself, so translate them into the same English style.
+        let msg = if msg.starts_with("attempt to") && msg.ends_with("with overflow") {
+            "A whole number went past the largest value a number can hold.".to_string()
+        } else {
+            msg
+        };
         LAST_ERROR.with(|e| *e.borrow_mut() = msg);
     }));
     if std::panic::catch_unwind(main_p).is_err() {
@@ -341,6 +435,9 @@ class Emitter:
         self.linemap: dict[int, int] = {}   # rust line (1-based) -> parley line
         self.indent = 0
         self.enums = {e.name: e for e in program.enums}
+        self.records = {r.name: r for r in program.records}
+        _RECORD_FIELDS.clear()
+        _RECORD_FIELDS.update({r.name: r.fields for r in program.records})
         self.tmp = 0
         self.borrowed_params: set[str] = set()
 
@@ -518,6 +615,11 @@ class Emitter:
             return self.mutated_names_in_expr(e.value)
         if isinstance(e, A.SplitBy) or isinstance(e, A.JoinedWith):
             return self.mutated_names_in_expr(e.value) | self.mutated_names_in_expr(e.sep)
+        if isinstance(e, A.Otherwise):
+            return (self.mutated_names_in_expr(e.value)
+                    | self.mutated_names_in_expr(e.fallback))
+        if isinstance(e, A.SortedBy):
+            return self.mutated_names_in_expr(e.value)
         if isinstance(e, A.ReplacingWith):
             return (
                 self.mutated_names_in_expr(e.value)
@@ -532,6 +634,10 @@ class Emitter:
             return self.mutated_names_in_expr(e.left) | self.mutated_names_in_expr(e.right)
         if isinstance(e, A.ItemOf):
             return self.mutated_names_in_expr(e.index) | self.mutated_names_in_expr(e.container)
+        if isinstance(e, A.FilesIn):
+            return self.mutated_names_in_expr(e.path)
+        if isinstance(e, A.Setting):
+            return self.mutated_names_in_expr(e.name)
         if isinstance(e, A.ReadFile) or isinstance(e, A.Ask):
             return self.mutated_names_in_expr(e.path if isinstance(e, A.ReadFile) else e.prompt)
         if isinstance(e, A.RandomFrom):
@@ -648,9 +754,48 @@ class Emitter:
                 fn = "parley_fmt_maybe_dbg"
             return "{}", f"{fn}(&({self.borrow(e)}))"
         if isinstance(ty, (A.TList, A.TMap, A.TRecord)):
+            # Rust's derived Debug would print HashMaps in hash order (which is
+            # randomised per process) and yesno values as true/false. Both
+            # contradict the language, so those shapes get a Parley-side
+            # renderer instead; everything else keeps Debug byte-for-byte.
+            if _needs_parley_display(ty):
+                return "{}", self._display_nested(ty, f"&({self.borrow(e)})")
             return "{:?}", f"&({self.borrow(e)})"
         # text, numbers, enums (Display)
         return "{}", f"&({self.borrow(e)})"
+
+    def _display_nested(self, ty: A.Type, expr: str) -> str:
+        """A Rust String expression rendering `expr` the way Debug would,
+        except that maps are ordered by key and yesno reads yes/no."""
+        if isinstance(ty, A.TBool):
+            return f"parley_yesno(*{expr}).to_string()"
+        if isinstance(ty, A.TList):
+            inner = self._display_nested(ty.elem, "__d")
+            return (f'format!("[{{}}]", ({expr}).iter().map(|__d| {inner})'
+                    f'.collect::<Vec<String>>().join(", "))')
+        if isinstance(ty, A.TMap):
+            key = self._display_nested(ty.key, "__k")
+            val = self._display_nested(ty.val, "__v")
+            return (
+                f"{{ let __m = {expr}; "
+                f"let mut __ks: Vec<{rust_type(ty.key)}> = __m.keys().cloned().collect(); "
+                f"__ks.sort_by(|a, b| a.partial_cmp(b)"
+                f".unwrap_or(std::cmp::Ordering::Equal)); "
+                f'format!("{{{{{{}}}}}}", __ks.iter().map(|__k| {{ '
+                f"let __v = &__m[__k]; "
+                f'format!("{{}}: {{}}", {key}, {val}) }})'
+                f'.collect::<Vec<String>>().join(", ")) }}')
+        if isinstance(ty, A.TRecord):
+            fields = dict(self.records[ty.name].fields)
+            parts = ", ".join(
+                f'format!("{name}: {{}}", {self._display_nested(fty, f"&({expr}).{safe(name)}")})'
+                for name, fty in fields.items())
+            return f'format!("{camel(ty.name)} {{{{ {{}} }}}}", vec![{parts}].join(", "))'
+        if isinstance(ty, A.TMaybe):
+            inner = self._display_nested(ty.elem, "__s")
+            return (f"match {expr} {{ Some(__s) => {inner}, "
+                    f'None => "nothing".to_string() }}')
+        return f'format!("{{:?}}", {expr})'
 
     def _value(self, e: A.Expr) -> str:
         ty = e.ty
@@ -669,6 +814,10 @@ class Emitter:
             return "None"
         if isinstance(e, A.TheError):
             return "parley_last_error()"
+        if isinstance(e, A.TheArguments):
+            return "parley_arguments()"
+        if isinstance(e, A.TheInput):
+            return "parley_input_lines()"
         if isinstance(e, A.Str):
             if e.is_plain:
                 return f'"{rust_str_lit(e.plain_text())}".to_string()'
@@ -712,6 +861,22 @@ class Emitter:
                 f"({self.borrow(e.old)}).as_str(), "
                 f"({self.borrow(e.new)}).as_str())"
             )
+        if isinstance(e, A.SortedBy):
+            # sort_by is stable, so equal keys keep source order — the same
+            # determinism guarantee as every other Parley ordering.
+            f = safe(e.field_name)
+            return (
+                f"{{ let mut __s = {self.value(e.value)}; "
+                f"__s.sort_by(|a, b| a.{f}.partial_cmp(&b.{f})"
+                f".unwrap_or(std::cmp::Ordering::Equal)); __s }}"
+            )
+        if isinstance(e, A.Otherwise):
+            # `match` rather than `unwrap_or` so the fallback is only
+            # evaluated when it is actually needed.
+            return (
+                f"(match ({self.value(e.value)}) {{ "
+                f"Some(__v) => __v, None => {self.value(e.fallback, e.ty)} }})"
+            )
         if isinstance(e, A.PositionOf):
             return f"parley_position(&({self.borrow(e.needle)}), &({self.borrow(e.value)}))"
         if isinstance(e, A.CountOf):
@@ -722,13 +887,22 @@ class Emitter:
             return f"parley_rem({self.value(e.left)}, {self.value(e.right)})"
         if isinstance(e, A.ItemOf):
             cty = e.container.ty
+            kind = "_maybe" if e.safe else ""
             if isinstance(cty, A.TMap):
-                return f"parley_get(&({self.borrow(e.container)}), &({self.value(e.index, cty.key)}))"
+                return (f"parley{kind}_get(&({self.borrow(e.container)}), "
+                        f"&({self.value(e.index, cty.key)}))")
             if isinstance(cty, A.TText):
-                return f"parley_text_item(&({self.borrow(e.container)}), {self.value(e.index)})"
-            return f"parley_item(&({self.borrow(e.container)}), {self.value(e.index)})"
+                return (f"parley{kind}_text_item(&({self.borrow(e.container)}), "
+                        f"{self.value(e.index)})")
+            return f"parley{kind}_item(&({self.borrow(e.container)}), {self.value(e.index)})"
         if isinstance(e, A.ReadFile):
             return f"parley_read_file(&({self.borrow(e.path)}))"
+        if isinstance(e, A.FilesIn):
+            return f"parley_files_in(&({self.borrow(e.path)}))"
+        if isinstance(e, A.Setting):
+            return f"parley_setting(&({self.borrow(e.name)}))"
+        if isinstance(e, A.TheTime):
+            return "parley_current_time()"
         if isinstance(e, A.Ask):
             fn = "parley_ask_num" if e.numeric else "parley_ask"
             return f"{fn}(&({self.borrow(e.prompt)}))"

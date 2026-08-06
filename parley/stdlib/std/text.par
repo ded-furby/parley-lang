@@ -562,3 +562,27 @@ to words_of with t as text giving list of text:
     if current is not "":
         add current to out
     give back out
+
+note: fixed_decimal renders a decimal with an exact number of places, which
+note: Parley's default rendering cannot do (it drops trailing zeros, so a
+note: money column prints "200" next to "165.5"). Whole-number arithmetic keeps
+note: the digits exact; the one division is by construction a whole multiple,
+note: so it is exact for every magnitude a decimal can hold to that precision.
+to fixed_decimal with value as decimal, places as number giving text:
+    if places is less than 0:
+        fail "fixed_decimal needs a places count of 0 or more"
+    let scale be 1
+    repeat places times:
+        set scale to scale times 10
+    let scaled be rounded (value times (decimal from scale))
+    let negative be scaled is less than 0
+    let magnitude be absolute of scaled
+    let fraction be magnitude modulo scale
+    let whole be number from ((decimal from (magnitude minus fraction)) divided by (decimal from scale))
+    let sign be ""
+    if negative:
+        set sign to "-"
+    if places is 0:
+        give back "{sign}{whole}"
+    let digits be (padded_left with "{fraction}", places, "0")
+    give back "{sign}{whole}.{digits}"

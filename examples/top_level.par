@@ -1,0 +1,17 @@
+note: top_level — statements at the top level are the program body
+
+to band with score as number giving text:
+    if score is at least 90:
+        give back "gold"
+    if score is at least 50:
+        give back "pass"
+    give back "retry"
+
+let scores be a list of 95, 60, 12
+for each s in scores:
+    say "{s}: {(band with s)}"
+
+note: `otherwise` supplies the value to use when a maybe is nothing,
+note: so a missing or unreadable input never stops the program.
+let entered be (number from "not a number") otherwise 0
+say "entered: {entered}"

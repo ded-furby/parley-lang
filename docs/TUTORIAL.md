@@ -8,14 +8,28 @@ check that Rust, the bundled stdlib, and local package support are available.
 ## 1. Say hello
 
 ```parley
+say "Hello!"
+```
+
+That is the whole program. Statements written at the top level of the file you
+run *are* the program body, in order.
+
+The same program can name its starting point explicitly:
+
+```parley
 to main:
     say "Hello!"
 ```
 
-Every normal command program starts at `to main:`. Typed web projects select
-checked functions through `parley.web.json` and are covered in
-[WEB.md](WEB.md). Blocks are indentation (4 spaces), exactly
-like Python. `say` prints anything.
+Both forms mean exactly the same thing, and a file uses one or the other — top-level
+statements alongside a `to main:` line is an error (P212). Reach for `to main:`
+when a program has enough functions that naming the entry point helps a reader;
+the rest of this guide uses it so each snippet shows where execution starts.
+Files you `include` hold only functions, records, and enums (P213).
+
+Typed web projects select checked functions through `parley.web.json` and are
+covered in [WEB.md](WEB.md). Blocks are indentation (4 spaces), exactly like
+Python. `say` prints anything.
 
 ## 2. Variables
 
@@ -48,7 +62,9 @@ to main:
 ```
 
 Anything inside `{…}` in a string is a normal expression. Use `{{` and `}}`
-for literal braces.
+for literal braces. An interpolated expression can hold text of its own if you
+escape the quotes — `"{name otherwise \"none\"}"` — because an unescaped quote
+would end the outer string.
 
 ## 4. Math, in words or symbols
 
@@ -174,6 +190,25 @@ to main:
 A record bundles named fields. Read fields with `'s`. Records are **copied**
 when stored. Function calls preserve value semantics too: the generated Rust
 borrows read-only records and clones only if the callee mutates its local copy.
+
+Order a list of records by one of their fields:
+
+```parley
+a person has name as text, age as number
+
+to main:
+    let people be an empty list of person
+    add (a person with name "ada", age 36) to people
+    add (a person with name "bob", age 24) to people
+    sort people by age
+    for each p in people:
+        say "{p's name} is {p's age}"
+```
+
+`sorted people by age` is the expression form. The order is ascending and
+stable — records with the same field value keep the order you added them — so
+`reversed (sorted people by age)` gives you oldest first. The field must be a
+number, decimal, text, or yesno (P316).
 
 ## 11. Kinds (enums) and `when`
 
@@ -304,10 +339,26 @@ to main:
         say value of fallback
 ```
 
+When any value will do for the missing case, say so on the same line with
+`otherwise`:
+
+```parley
+to main:
+    let count be ask for a number "how many? " otherwise 0
+    say "{count} cats"
+```
+
+`x otherwise y` gives `x`'s inner value when it is there and `y` when it is
+nothing. It never stops the program, and `y` is only evaluated when it is
+actually needed. Use it instead of the `let raw be …` / `let x be value of raw`
+pair whenever a default is the right answer; keep the explicit `is nothing`
+check when the two cases need different code.
+
 `ask for a number`, `number from text`, `decimal from text`, and `read file`
 all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 `value of`. Use `some value` when your own function needs to give back a
-present maybe value. (Unwrapping nothing stops the program — check first.)
+present maybe value. (Unwrapping nothing stops the program — check first, or
+use `otherwise`.)
 The natural aliases `has no value` and `has value` / `has a value` mean
 `is nothing` and `is not nothing` respectively.
 For trusted numeric text, `raw as number` is a checked shorthand that unwraps
@@ -341,13 +392,52 @@ invalid state. The message must be text.
 to main:
     write "first line" to file "notes.txt"
     append "\nsecond line" to file "notes.txt"
-    let content be read file "notes.txt"
-    if content is not nothing:
-        say value of content
+    let content be read file "notes.txt" otherwise "(no notes yet)"
+    say content
     let name be ask "your name: "
     let roll be a random number from 1 to 6
     say "{name} rolled {roll}"
 ```
+
+A program also gets two things from the outside world, both plain
+`list of text`:
+
+```parley
+let name be (maybe item 1 of the arguments) otherwise "world"
+say "hello {name}"
+
+for each line in the input:
+    say uppercase of line
+```
+
+```bash
+$ echo "one" | parley run greet.par ada
+hello ada
+ONE
+```
+
+`the arguments` is the command-line words after the program name, and
+`parley run file.par ARG…` forwards everything after the filename — flags
+included — so a program behaves the same before and after `parley build`.
+
+`the input` is every line of standard input. It names a value, not a stream:
+stdin is read once and every later mention sees the same lines. Use `the input`
+*or* `ask`, not both — `ask` is for interactive prompting, `the input` is for
+filters.
+
+To work through a folder, `files in "dir"` gives the sorted paths of the
+regular files in it (subdirectories are not listed), or `nothing` if the
+directory cannot be read:
+
+```parley
+for each path in (files in "logs") otherwise (an empty list of text):
+    say "{path}: {length of ((read file path) otherwise \"\")} characters"
+```
+
+`maybe item i of xs` is `item i of xs` with the failure turned into `nothing`,
+so it never stops the program. It works on lists, text, and maps, and pairs
+with `otherwise` for the one-line safe read above. Use plain `item` when a
+missing value really is a bug worth stopping for.
 
 ## 16. Many files
 

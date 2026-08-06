@@ -1,0 +1,27 @@
+note: total revenue per region from a CSV: `csvsum FILE`
+include "std/text"
+
+a region_total has name as text, revenue as decimal
+
+let path be (maybe item 1 of the arguments) otherwise "orders.csv"
+let body be (read file path) otherwise ""
+if length of body is 0:
+    fail "cannot read {path}"
+
+let totals be a map from text to decimal
+let row_number be 0
+for each line in body split by "\n":
+    set row_number to row_number plus 1
+    if row_number is more than 1 and length of (trimmed line) is more than 0:
+        let cells be line split by ","
+        let region be (maybe item 1 of cells) otherwise "?"
+        let raw be (maybe item 3 of cells) otherwise "0"
+        let amount be (decimal from raw) otherwise 0.0
+        set item region of totals to ((maybe item region of totals) otherwise 0.0) plus amount
+
+let rows be an empty list of region_total
+for each name in keys of totals:
+    add (a region_total with name name, revenue (item name of totals)) to rows
+
+for each row in reversed (sorted rows by revenue):
+    say "{row's name}  {(fixed_decimal with row's revenue, 2)}"

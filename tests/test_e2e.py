@@ -20,6 +20,77 @@ def test_hello(workdir):
     assert proc.stdout == "Hello, world!\nTwo plus two is 4.\n"
 
 
+def test_fixed_decimal_renders_exact_places(workdir):
+    src = '''include "std/text"
+
+let vals be a list of 165.5, 200.0, 0.0, 19.75, 0.1, 123456.789
+for each v in vals:
+    say (fixed_decimal with v, 2)
+say (fixed_decimal with 0.0 minus 3.456, 2)
+say (fixed_decimal with 7.0, 0)
+say (fixed_decimal with 2.5, 4)
+'''
+    proc = run_program(workdir, "fixed_decimal", src)
+    # Parley's default rendering drops trailing zeros, so a money column needs
+    # this to line up: 200 and 165.5 must print as 200.00 and 165.50.
+    assert proc.stdout == (
+        "165.50\n200.00\n0.00\n19.75\n0.10\n123456.79\n"
+        "-3.46\n7\n2.5000\n")
+
+
+def test_logreport_example(workdir):
+    logs = workdir / "logs"
+    logs.mkdir(exist_ok=True)
+    (logs / "app.log").write_text("INFO start\nERROR bad thing\nWARN slow\nERROR worse\n")
+    (logs / "web.log").write_text("INFO ok\nWARN careful\n")
+
+    proc = run_cli(["run", str(EXAMPLES / "logreport.par"), "logs"], cwd=workdir)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == (
+        "file                      lines  warn  error\n"
+        "logs/app.log              4      1     2\n"
+        "logs/web.log              2      1     0\n")
+
+    missing = run_cli(["run", str(EXAMPLES / "logreport.par"), "no_such_dir"],
+                      cwd=workdir)
+    assert missing.returncode == 1
+    assert "no readable files in no_such_dir" in missing.stderr
+
+
+def test_csvsum_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "csvsum.par"), str(EXAMPLES / "orders.csv")],
+                   cwd=workdir)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "amer  200.00\nemea  165.50\napac  100.00\n"
+
+
+def test_wordcount_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "wordcount.par"), "3"], cwd=workdir,
+                   stdin="the quick brown fox\nthe lazy dog the fox\nquick quick\n")
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == "3  the\n3  quick\n2  fox\n"
+
+    # No argument falls back to the built-in default rather than stopping.
+    default = run_cli(["run", str(EXAMPLES / "wordcount.par")], cwd=workdir,
+                      stdin="a a b\n")
+    assert default.stdout == "2  a\n1  b\n"
+
+
+def test_leaderboard_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "leaderboard.par")], cwd=workdir)
+    assert proc.returncode == 0
+    assert proc.stdout == (
+        "by score:\n  ada 42\n  cara 42\n  bob 91\n"
+        "top first:\n  bob 91\n  cara 42\n  ada 42\n"
+        '{"ada": yes, "bob": no, "cara": yes}\n')
+
+
+def test_top_level_example(workdir):
+    proc = run_cli(["run", str(EXAMPLES / "top_level.par")], cwd=workdir)
+    assert proc.returncode == 0
+    assert proc.stdout == "95: gold\n60: pass\n12: retry\nentered: 0\n"
+
+
 def test_agent_natural_aliases_run(workdir):
     src = '''to character_count with line as text giving number:
     set characters to line split by ""
@@ -136,6 +207,243 @@ def test_todo(workdir):
 
 
 # ------------------------------------------------------------------ features
+
+def test_overflow_stops_in_both_run_and_build(workdir):
+    src = ('let n be ask for a number "" otherwise 0\n'
+           'say n plus 9223372036854775807\n')
+    f = workdir / "overflowing.par"
+    f.write_text(src)
+    ran = run_cli(["run", f.name], cwd=workdir, stdin="1\n")
+    assert ran.returncode == 1
+    assert "past the largest value" in ran.stderr
+
+    # Release builds wrap on overflow unless the profile asks for the checks,
+    # which would make `build` disagree with `run` about the same program.
+    built = run_cli(["build", f.name, "-o", "overflowing"], cwd=workdir)
+    assert built.returncode == 0, built.stderr
+    import subprocess
+    out = subprocess.run([str(workdir / "overflowing")], input="1\n",
+                         capture_output=True, text=True)
+    assert out.returncode == 1
+    assert "past the largest value" in out.stderr
+
+
+def test_literal_overflow_is_p317_not_a_backend_bug_report(workdir):
+    f = workdir / "const_overflow.par"
+    f.write_text("say 9223372036854775807 plus 1\n")
+    proc = run_cli(["run", f.name], cwd=workdir)
+    assert proc.returncode == 1
+    combined = proc.stdout + proc.stderr
+    assert "P317" in combined
+    assert "P901" not in combined
+
+
+def test_composite_display_is_ordered_and_uses_yes_no(workdir):
+    src = '''a person has name as text, age as number, active as yesno
+
+let m be a map from text to number
+set item "e" of m to 5
+set item "b" of m to 2
+set item "d" of m to 4
+set item "a" of m to 1
+set item "c" of m to 3
+say m
+let nm be a map from number to text
+set item 10 of nm to "ten"
+set item 2 of nm to "two"
+say nm
+say (a list of yes, no)
+say (a person with name "ada", age 3, active yes)
+let nested be a map from text to list of yesno
+set item "z" of nested to (a list of yes, no)
+set item "a" of nested to (a list of no)
+say nested
+let maybes be an empty list of maybe yesno
+add some yes to maybes
+add nothing to maybes
+say maybes
+note: shapes Rust Debug already renders correctly must not change
+say (a list of 1, 2, 3)
+say (a list of "a", "b")
+'''
+    proc = run_program(workdir, "composite_display", src)
+    assert proc.stdout == (
+        '{"a": 1, "b": 2, "c": 3, "d": 4, "e": 5}\n'
+        '{2: "two", 10: "ten"}\n'
+        "[yes, no]\n"
+        'Person { name: "ada", age: 3, active: yes }\n'
+        '{"a": [no], "z": [yes, no]}\n'
+        "[yes, nothing]\n"
+        "[1, 2, 3]\n"
+        '["a", "b"]\n')
+
+
+def test_map_display_is_stable_across_runs(workdir):
+    src = ('let m be a map from text to number\n'
+           'set item "e" of m to 5\n'
+           'set item "b" of m to 2\n'
+           'set item "d" of m to 4\n'
+           'set item "a" of m to 1\n'
+           'set item "c" of m to 3\n'
+           'say m\n')
+    # HashMap's Debug order is randomised per process, so the same binary run
+    # repeatedly is what actually catches a regression here.
+    first = run_program(workdir, "map_display_stable", src).stdout
+    for _ in range(4):
+        again = run_cli(["run", "map_display_stable.par"], cwd=workdir)
+        assert again.stdout == first
+    assert first == '{"a": 1, "b": 2, "c": 3, "d": 4, "e": 5}\n'
+
+
+def test_sort_records_by_field(workdir):
+    src = '''a person has name as text, age as number, active as yesno
+
+let people be an empty list of person
+add (a person with name "cara", age 41, active yes) to people
+add (a person with name "ada", age 36, active no) to people
+add (a person with name "bob", age 24, active yes) to people
+add (a person with name "dee", age 24, active yes) to people
+
+sort people by age
+for each p in people:
+    say "{p's name} {p's age}"
+say "-"
+for each p in sorted people by name:
+    say p's name
+say "-"
+for each p in sorted people by active:
+    say "{p's name} {p's active}"
+'''
+    proc = run_program(workdir, "sort_records_by_field", src)
+    # bob before dee at age 24: sort_by is stable, so equal keys keep order.
+    assert proc.stdout == (
+        "bob 24\ndee 24\nada 36\ncara 41\n-\n"
+        "ada\nbob\ncara\ndee\n-\n"
+        "ada no\nbob yes\ndee yes\ncara yes\n")
+
+
+def test_program_arguments_and_input(workdir):
+    src = ('let name be (maybe item 1 of the arguments) otherwise "world"\n'
+           'say "hello {name}"\n'
+           'for each line in the input:\n'
+           '    say uppercase of line\n'
+           'say "lines: {length of the input}"\n')
+    f = workdir / "argsinput.par"
+    f.write_text(src)
+    built = run_cli(["build", f.name, "-o", "argsinput"], cwd=workdir)
+    assert built.returncode == 0, built.stderr
+
+    import subprocess
+    out = subprocess.run([str(workdir / "argsinput"), "ada"],
+                         input="one\ntwo\n", capture_output=True, text=True)
+    # `the input` names a value, so the second mention still sees both lines.
+    assert out.stdout == "hello ada\nONE\nTWO\nlines: 2\n"
+
+    default = subprocess.run([str(workdir / "argsinput")],
+                             input="", capture_output=True, text=True)
+    assert default.stdout == "hello world\nlines: 0\n"
+
+    # `parley run` forwards trailing arguments, flags included.
+    forwarded = run_cli(["run", f.name, "ada"], cwd=workdir, stdin="x\n")
+    assert forwarded.stdout == "hello ada\nX\nlines: 1\n"
+
+
+def test_setting_and_current_time(workdir):
+    src = ('let who be (the setting "PARLEY_TEST_USER") otherwise "nobody"\n'
+           'say "user: {who}"\n'
+           'let started be the current time\n'
+           'say started is more than 1700000000\n')
+    f = workdir / "settings.par"
+    f.write_text(src)
+    built = run_cli(["build", f.name, "-o", "settings"], cwd=workdir)
+    assert built.returncode == 0, built.stderr
+
+    import os
+    import subprocess
+    with_env = subprocess.run([str(workdir / "settings")], capture_output=True,
+                              text=True, env={**os.environ, "PARLEY_TEST_USER": "ada"})
+    assert with_env.stdout == "user: ada\nyes\n"
+
+    bare = dict(os.environ)
+    bare.pop("PARLEY_TEST_USER", None)
+    without = subprocess.run([str(workdir / "settings")], capture_output=True,
+                             text=True, env=bare)
+    assert without.stdout == "user: nobody\nyes\n"
+
+
+def test_files_in_lists_regular_files_in_order(workdir):
+    root = workdir / "listing"
+    (root / "sub").mkdir(parents=True, exist_ok=True)
+    (root / "b.txt").write_text("second")
+    (root / "a.txt").write_text("first")
+    (root / "sub" / "deep.txt").write_text("ignored")
+
+    src = ('let found be (files in "listing") otherwise (an empty list of text)\n'
+           'say "count {length of found}"\n'
+           'for each path in found:\n'
+           '    let body be (read file path) otherwise "?"\n'
+           '    say body\n'
+           'let missing be (files in "no_such_dir") otherwise (an empty list of text)\n'
+           'say "missing {length of missing}"\n')
+    proc = run_program(workdir, "files_in", src)
+    # Sorted, regular files only: the subdirectory is not listed.
+    assert proc.stdout == "count 2\nfirst\nsecond\nmissing 0\n"
+
+
+def test_maybe_item_never_stops_the_program(workdir):
+    src = ('let xs be a list of 10, 20\n'
+           'say (maybe item 1 of xs) otherwise 0\n'
+           'say (maybe item 9 of xs) otherwise -1\n'
+           'let m be a map from text to text\n'
+           'set item "k" of m to "v"\n'
+           'say (maybe item "k" of m) otherwise "?"\n'
+           'say (maybe item "zz" of m) otherwise "?"\n'
+           'say (maybe item 2 of "abc") otherwise "?"\n'
+           'say (maybe item 9 of "abc") otherwise "?"\n')
+    proc = run_program(workdir, "maybe_item", src)
+    assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
+
+
+def test_top_level_program(workdir):
+    src = '''to shout with t as text giving text:
+    give back uppercase of t
+
+let parts be an empty list of text
+add (shout with "one") to parts
+add (shout with "two") to parts
+say parts joined with "-"
+for each i from 1 to 2:
+    say i
+'''
+    proc = run_program(workdir, "top_level_program", src)
+    assert proc.stdout == "ONE-TWO\n1\n2\n"
+
+
+def test_otherwise_fallback(workdir):
+    src = '''to found with n as number giving maybe text:
+    if n is 1:
+        give back some "hit"
+    give back nothing
+
+to loud giving text:
+    say "fallback ran"
+    give back "miss"
+
+to main:
+    say (found with 1) otherwise "miss"
+    say (found with 2) otherwise "miss"
+    say (found with 1) otherwise (loud)
+    say (found with 2) otherwise (loud)
+    let d be some 2.5
+    say d otherwise 1
+    let parsed be number from "x"
+    say parsed otherwise 0
+    say (number from "12") otherwise 0
+'''
+    proc = run_program(workdir, "otherwise_fallback", src)
+    assert proc.stdout == (
+        "hit\nmiss\nhit\nfallback ran\nmiss\n2.5\n0\n12\n")
+
 
 def test_text_toolbox(workdir):
     src = '''to main:
@@ -3136,6 +3444,18 @@ def test_build_produces_native_binary(workdir):
     import subprocess
     out = subprocess.run([str(workdir / "binme")], capture_output=True, text=True)
     assert out.stdout == "compiled!\n"
+
+
+def test_build_reports_unwritable_output_as_a_diagnostic(workdir):
+    f = workdir / "unwritable.par"
+    f.write_text('to main:\n    say "hi"\n')
+    blocked = workdir / "blocked_dir"
+    blocked.mkdir(exist_ok=True)
+    # An existing directory can never be overwritten by the binary.
+    proc = run_cli(["build", f.name, "-o", "blocked_dir"], cwd=workdir)
+    assert proc.returncode == 1
+    assert "P903" in proc.stdout + proc.stderr
+    assert "Traceback" not in proc.stderr
 
 
 def test_check_json_clean(workdir):

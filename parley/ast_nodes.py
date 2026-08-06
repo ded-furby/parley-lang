@@ -164,6 +164,8 @@ class FuncDef(Node):
     params: list[Param]
     ret: Optional[Type]
     body: list["Stmt"]
+    # True when the parser built this `main` from top-level statements.
+    implicit_main: bool = False
 
 
 @dataclass
@@ -430,6 +432,47 @@ class ReplacingWith(Expr):
 
 
 @dataclass
+class TheArguments(Expr):
+    """`the arguments` — the command-line words after the program name."""
+
+
+@dataclass
+class TheTime(Expr):
+    """`the current time` — whole seconds since 1970-01-01 UTC."""
+
+
+@dataclass
+class Setting(Expr):
+    """`setting "NAME"` — an environment variable, or nothing."""
+    name: Expr
+
+
+@dataclass
+class FilesIn(Expr):
+    """`files in "dir"` — sorted paths of the regular files in a directory."""
+    path: Expr
+
+
+@dataclass
+class TheInput(Expr):
+    """`the input` — every line of standard input, read once."""
+
+
+@dataclass
+class SortedBy(Expr):
+    """`sorted people by age` — a list of records ordered by one field."""
+    value: Expr
+    field_name: str
+
+
+@dataclass
+class Otherwise(Expr):
+    """`maybe_value otherwise fallback` — unwrap with a default."""
+    value: Expr
+    fallback: Expr
+
+
+@dataclass
 class PositionOf(Expr):
     needle: Expr
     value: Expr
@@ -458,6 +501,8 @@ class Remainder(Expr):
 class ItemOf(Expr):
     index: Expr
     container: Expr
+    # `maybe item i of xs` gives `nothing` instead of stopping the program.
+    safe: bool = False
 
 
 @dataclass

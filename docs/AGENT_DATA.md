@@ -21,7 +21,10 @@ generate unfamiliar output.
 5. Refuse silent replacement and optionally write a SHA-256 measurement report.
 
 The semantic contract therefore remains JSON even when the delivered bytes are
-TOON. `--format toon` can require TOON, but it fails instead of approximating an
+TOON. `unpack` and `check` accept either delivered representation, so the
+pack → unpack round trip is total: a shape that falls back to compact JSON
+restores exactly like one that packed as TOON, and `check --json` reports which
+of the two the artifact holds in its `format` field. `--format toon` can require TOON, but it fails instead of approximating an
 unsupported value. `--format json` always produces compact JSON.
 
 ```bash

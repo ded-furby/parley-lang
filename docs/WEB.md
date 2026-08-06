@@ -59,7 +59,11 @@ the defaults.
 
 Entrypoints and static directories must stay within the project. Routes are
 exact method/path pairs in this first contract; dynamic parameters and
-middleware are deliberately not implied.
+middleware are deliberately not implied. The one exception is `HEAD`, which
+RFC 9110 requires wherever `GET` is answered: a `HEAD` request is dispatched
+as `GET` and the response is sent without its body, so headers — including
+`Content-Length` — match the `GET` exactly. A path with no `GET` route stays
+404 for `HEAD`.
 
 ## Typed JSON routes
 

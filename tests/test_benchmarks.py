@@ -28,6 +28,11 @@ from benchmarks.bundle_runner import (
 
 BENCHMARKS = REPO / "benchmarks"
 
+# The agent-facing skill that protocols 017-030 were frozen against, preserved
+# byte-for-byte. Those protocols record its SHA, so they must keep checking the
+# artifact their sessions actually ran with — not whatever SKILL.md says today.
+FROZEN_SKILL = REPO / "skill" / "parley" / "references" / "core-v0.3.149.md"
+
 
 def run_measure(*args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
     return subprocess.run(
@@ -454,7 +459,7 @@ def test_bundle_protocol_predeclares_complete_scale_matrix():
     assert config["parley_version"] == "parley 0.3.151"
     assert config["parley_skill_chars"] == 1_519
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert len(plan) == 30
     assert sum(bundle["bundle_size"] for bundle in plan) == 64
@@ -557,7 +562,7 @@ def test_bundle_protocol_023_freezes_new_application_matrix():
         (BENCHMARKS / "agent_tasks_application_023.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [8]
     assert config["replicates"] == 6
@@ -583,7 +588,7 @@ def test_bundle_protocol_024_freezes_seeded_maintenance_matrix():
         (BENCHMARKS / "agent_tasks_maintenance_024.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [4]
     assert config["replicates"] == 6
@@ -612,7 +617,7 @@ def test_bundle_protocol_025_freezes_repository_matrix():
         (BENCHMARKS / "agent_tasks_repositories_025.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [4]
     assert config["replicates"] == 6
@@ -640,7 +645,7 @@ def test_bundle_protocol_026_freezes_eight_repository_matrix():
         (BENCHMARKS / "agent_tasks_repositories_026.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [8]
     assert config["replicates"] == 6
@@ -670,7 +675,7 @@ def test_bundle_protocol_027_freezes_sixteen_repository_matrix():
         (BENCHMARKS / "agent_tasks_repositories_027.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [16]
     assert config["replicates"] == 6
@@ -703,7 +708,7 @@ def test_bundle_protocol_028_freezes_project_diagnostic_matrix():
         (BENCHMARKS / "agent_tasks_diagnostic_028.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [4]
     assert config["replicates"] == 6
@@ -743,7 +748,7 @@ def test_bundle_protocol_029_freezes_historical_diagnostic_matrix():
         (BENCHMARKS / "agent_tasks_historical_029.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [8]
     assert config["replicates"] == 6
@@ -785,7 +790,7 @@ def test_bundle_protocol_030_freezes_ninety_session_scale_curve():
         (BENCHMARKS / "agent_tasks_historical_029.json").read_bytes()
     ).hexdigest()
     assert config["parley_skill_sha256"] == hashlib.sha256(
-        (REPO / "skill" / "parley" / "SKILL.md").read_bytes()
+        FROZEN_SKILL.read_bytes()
     ).hexdigest()
     assert config["bundle_sizes"] == [1, 2, 4, 8]
     assert config["replicates"] == 2
@@ -2113,15 +2118,20 @@ def test_agent_command_protocol_allows_only_exact_public_check():
 def test_parley_core_skill_restores_proven_reliability_contract():
     skill = (REPO / "skill" / "parley" / "SKILL.md").read_text()
 
-    assert len(skill) == 1_519
+    assert len(skill) == 1_879
     assert hashlib.sha256(skill.encode()).hexdigest() == (
-        "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c"
+        "bc5d393ce676a29c1f8561a4aab12ef547da40b50dfee0fb4d414d219cf5b358"
     )
+    # v0.4.1 teaches the two token-cutting shapes: top-level statements
+    # instead of a `to main:` wrapper, and one-line maybe fallbacks.
+    example = skill.split("```parley\n", 1)[1].split("```", 1)[0]
+    assert "to main:" not in example
     for required in [
         "to valid with line as text giving yesno:",
-        'let count_input be ask for a number ""',
-        "if count_input is nothing:",
-        "let count be value of count_input",
+        'let count be ask for a number "" otherwise 0',
+        "Top-level statements are the program body",
+        "`m otherwise default`",
+        "`the arguments` and `the input`",
         "if (valid with line):",
         "an empty list of text",
         'Literal braces are `"{{"` / `"}}"`',
@@ -2129,7 +2139,7 @@ def test_parley_core_skill_restores_proven_reliability_contract():
         "Use only `./check`",
         "`let x be value` creates",
         "`set x to value` mutates or creates",
-        "Numeric input uses `ask for a number`",
+        "`ask for a number`",
         "`x as number`",
         "`say` emits one full line",
         "`line split by \"\"`",
@@ -2193,6 +2203,17 @@ def test_parley_reliability_core_is_preserved_unchanged():
     assert len(reference) == 1_519
     assert hashlib.sha256(reference.encode()).hexdigest() == (
         "6ca098e4c86161b8f688534a2d0de11f11f28ee55f92d713872378a942f6f20c"
+    )
+
+
+def test_parley_v043_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.4.3.md"
+    ).read_text()
+
+    assert len(reference) == 1_879
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "bc5d393ce676a29c1f8561a4aab12ef547da40b50dfee0fb4d414d219cf5b358"
     )
 
 

@@ -38,6 +38,8 @@ serde_json = "=1.0.151"
 
 [profile.release]
 strip = true
+# Same promise as the command target: overflow stops, never wraps.
+overflow-checks = true
 """
 
 WASM_CARGO_TOML = """\
@@ -54,6 +56,7 @@ opt-level = "s"
 lto = true
 panic = "abort"
 strip = true
+overflow-checks = true
 """
 
 
@@ -662,7 +665,10 @@ fn parley_read_request(stream: &mut std::net::TcpStream) -> Result<ParleyHttpReq
 }
 
 fn parley_dispatch(request: &ParleyHttpRequest) -> ParleyHttpResponse {
-    match (request.method.as_str(), request.path.as_str()) {
+    // RFC 9110: a server that answers GET for a resource must answer HEAD for
+    // it too, with the same headers. parley_write_response drops the body.
+    let method = if request.method == "HEAD" { "GET" } else { request.method.as_str() };
+    match (method, request.path.as_str()) {
 __ROUTES__
         _ => {
             if matches!(request.method.as_str(), "GET" | "HEAD") {

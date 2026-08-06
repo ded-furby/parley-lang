@@ -1,0 +1,29 @@
+note: logreport — summarise every log file in a folder: `logreport DIR`
+
+include "std/text"
+
+a summary has name as text, errors as number, warnings as number, lines as number
+
+let dir be (maybe item 1 of the arguments) otherwise "."
+let paths be (files in dir) otherwise (an empty list of text)
+if length of paths is 0:
+    fail "no readable files in {dir}"
+
+let rows be an empty list of summary
+for each path in paths:
+    let body be (read file path) otherwise ""
+    let errors be 0
+    let warnings be 0
+    let count be 0
+    for each line in body split by "\n":
+        if length of (trimmed line) is more than 0:
+            set count to count plus 1
+            if line contains "ERROR":
+                set errors to errors plus 1
+            if line contains "WARN":
+                set warnings to warnings plus 1
+    add (a summary with name path, errors errors, warnings warnings, lines count) to rows
+
+say "file                      lines  warn  error"
+for each row in reversed (sorted rows by errors):
+    say "{(padded_right with row's name, 24, \" \")}  {row's lines}      {row's warnings}     {row's errors}"

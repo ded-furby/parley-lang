@@ -190,6 +190,42 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.
 
+## P212 — Top-level statements and `to main:` in one file
+
+**What it means:** Statements written at the top level are the body of `main`, so a file that uses them cannot also define `to main:`.
+
+**How to fix it:** Pick one shape: keep the top-level statements and delete the `to main:` line, or move every top-level statement inside `to main:`.
+
+## P213 — Loose statements in an included file
+
+**What it means:** An included file may define functions, records, and enums. Top-level statements belong to the file you actually run.
+
+**How to fix it:** Move the statements into a `to name:` function in the included file and call it from the entrypoint.
+
+## P316 — Cannot sort by that
+
+**What it means:** `sorted xs by field` orders a list of records by one of their fields, and the field must be a number, decimal, text, or yesno.
+
+**How to fix it:** Sort a list of records by an ordered field, or use plain `sorted xs` for a list of numbers, decimals, or text.
+
+## P317 — Arithmetic goes past the number range
+
+**What it means:** A whole number in Parley is a 64-bit signed integer, and this expression's result provably falls outside it.
+
+**How to fix it:** Keep whole-number arithmetic between -9223372036854775808 and 9223372036854775807, or use `decimal` values when a wider range matters. At runtime, an overflow stops the program rather than wrapping.
+
+## P903 — Cannot write the built binary
+
+**What it means:** The program compiled, but the finished binary could not be copied to the requested output path.
+
+**How to fix it:** Choose an output path in a directory you can write to, and make sure the name is not an existing directory or a protected device file.
+
+## P315 — `otherwise` fallback on a value that is always there
+
+**What it means:** `x otherwise y` supplies the value to use when `x` is nothing, so `x` must be a maybe.
+
+**How to fix it:** Remove the `otherwise …` when the value is not a maybe. Use it on results that can be nothing, such as `ask for a number`, a maybe lookup, or a function that gives back `nothing`.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.

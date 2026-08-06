@@ -236,6 +236,26 @@ def test_native_web_bundle_serves_static_and_strict_typed_json(tmp_path):
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/") as response:
             assert response.headers["content-type"].startswith("text/html")
             assert b"fixture" in response.read()
+
+        # RFC 9110: HEAD must answer wherever GET does, with the same headers
+        # and no body. A typed GET route is not a static file, so this only
+        # works if dispatch treats HEAD as GET.
+        head = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/health", method="HEAD")
+        with urllib.request.urlopen(head) as response:
+            assert response.status == 200
+            assert response.read() == b""
+            with urllib.request.urlopen(
+                    f"http://127.0.0.1:{port}/api/health") as via_get:
+                assert (response.headers["content-length"]
+                        == via_get.headers["content-length"])
+
+        # A route with no GET stays 404 for HEAD.
+        head_post_only = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/hello", method="HEAD")
+        with pytest.raises(urllib.error.HTTPError) as caught:
+            urllib.request.urlopen(head_post_only)
+        assert caught.value.code == 404
     finally:
         server.terminate()
         server.wait(timeout=10)

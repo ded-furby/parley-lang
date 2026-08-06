@@ -4,7 +4,7 @@ import pytest
 
 import parley.ast_nodes as A
 from parley.diagnostics import ParleyError
-from parley.parser import load_program, parse
+from parley.parser import load_program, parse, parse_program
 
 
 def test_all_constructs_parse():
@@ -102,6 +102,140 @@ def test_text_replacement_expression_parse():
     assert isinstance(expr.value, A.Str)
     assert isinstance(expr.old, A.Str)
     assert isinstance(expr.new, A.Str)
+
+
+@pytest.mark.parametrize("src,expected_hint", [
+    # A value position says "a value" instead of listing every way to spell one.
+    ('to main:\n    let y be\n', "Expected a value."),
+    ('to main:\n    say 1 plus\n', "Expected a value."),
+    # Layout expectations outrank operator continuations.
+    ('to main:\n    sort_number xs\n', "Expected the end of the line or 'with'."),
+])
+def test_parse_hint_is_short_and_useful(src, expected_hint):
+    with pytest.raises(ParleyError) as ei:
+        parse(src)
+    assert ei.value.diagnostics[0].hint.startswith(expected_hint)
+
+
+@pytest.mark.parametrize("src", [
+    'to main:\n    let n be some "x"\n    say "name: {n otherwise "unknown"}"\n',
+    'to main:\n    let n be some "x"\n    say "name: {n otherwise "?"}"\n',
+])
+def test_nested_quote_inside_interpolation_names_the_real_mistake(src):
+    with pytest.raises(ParleyError) as ei:
+        parse(src)
+    assert "Escape quotes inside" in ei.value.diagnostics[0].hint
+
+
+def test_parse_hint_never_leaks_internal_terminal_names():
+    with pytest.raises(ParleyError) as ei:
+        parse("to f with x as number\n    give back x\n")
+    hint = ei.value.diagnostics[0].hint
+    assert "param and" not in hint
+
+
+def test_parse_error_names_the_line_end_not_whitespace():
+    with pytest.raises(ParleyError) as ei:
+        parse("to main:\n    if yes\n        say 1\n")
+    assert "the end of the line" in ei.value.diagnostics[0].message
+
+
+def test_top_level_statements_become_main():
+    prog = parse('say "hi"\nlet n be 2\nsay "{n}"\n')
+    assert [f.name for f in prog.funcs] == ["main"]
+    main = prog.funcs[0]
+    assert main.implicit_main is True
+    assert main.params == [] and main.ret is None
+    assert len(main.body) == 3
+
+
+def test_explicit_main_is_not_marked_implicit():
+    prog = parse('to main:\n    say "hi"\n')
+    assert prog.funcs[0].implicit_main is False
+
+
+def test_top_level_statements_coexist_with_functions():
+    prog = parse('to twice with n as number giving number:\n'
+                 '    give back n times 2\n'
+                 'say (twice with 3)\n')
+    assert sorted(f.name for f in prog.funcs) == ["main", "twice"]
+
+
+def test_program_inputs_parse_as_expressions():
+    prog = parse('to main:\n    say the arguments\n    say the input\n')
+    body = prog.funcs[0].body
+    assert isinstance(body[0].value, A.TheArguments)
+    assert isinstance(body[1].value, A.TheInput)
+
+
+def test_maybe_item_parses_as_a_safe_item_access():
+    prog = parse('to main:\n    say maybe item 1 of xs\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.ItemOf)
+    assert expr.safe is True
+    plain = parse('to main:\n    say item 1 of xs\n').funcs[0].body[0].value
+    assert plain.safe is False
+
+
+def test_sorted_by_field_expression_parse():
+    prog = parse('to main:\n    say sorted people by age\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.SortedBy)
+    assert expr.field_name == "age"
+    assert isinstance(expr.value, A.Var)
+
+
+def test_sort_by_statement_desugars_to_assignment():
+    prog = parse('to main:\n    sort people by age\n')
+    stmt = prog.funcs[0].body[0]
+    assert isinstance(stmt, A.SetVar)
+    assert stmt.target.base == "people"
+    assert isinstance(stmt.value, A.SortedBy)
+    assert stmt.value.field_name == "age"
+
+
+def test_plain_sort_statement_is_unchanged():
+    prog = parse('to main:\n    sort xs\n')
+    stmt = prog.funcs[0].body[0]
+    assert isinstance(stmt.value, A.PrefixOp)
+    assert stmt.value.op == "sorted"
+
+
+@pytest.mark.parametrize("name", ["setting", "files", "input", "time", "arguments"])
+def test_new_phrase_words_are_still_usable_as_names(name):
+    # A one-word operator keyword would break existing programs: the historical
+    # 029 corpus binds `let setting be …`. Every phrase added for program input
+    # is therefore multi-word (`the setting`, `files in`, `the current time`).
+    prog = parse(f'to main:\n    let {name} be 1\n    say {name}\n')
+    assert prog.funcs[0].body[0].name == name
+
+
+def test_by_is_still_usable_as_a_name():
+    prog = parse('to main:\n    let by be 5\n    say by\n')
+    assert prog.funcs[0].body[0].name == "by"
+
+
+def test_otherwise_fallback_expression_parse():
+    prog = parse('to main:\n    say number from "5" otherwise 0\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.Otherwise)
+    assert isinstance(expr.value, A.PrefixOp)
+    assert expr.value.op == "number_from"
+    assert isinstance(expr.fallback, A.Num)
+
+
+def test_otherwise_binds_tighter_than_comparison():
+    prog = parse('to main:\n    say ask for a number "" otherwise 0 is more than 5\n')
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.Compare)
+    assert isinstance(expr.left, A.Otherwise)
+
+
+def test_otherwise_keeps_if_otherwise_block():
+    prog = parse('to main:\n    if yes:\n        say "a"\n    otherwise:\n        say "b"\n')
+    stmt = prog.funcs[0].body[0]
+    assert isinstance(stmt, A.If)
+    assert stmt.otherwise is not None
 
 
 def test_text_position_expression_parse():
@@ -349,6 +483,29 @@ def test_includes(tmp_path):
     assert [f.name for f in prog.funcs] == ["double", "main"]
     # line 1 of the combined text comes from util.par
     assert srcmap.loc(1)[0].endswith("util.par")
+
+
+def test_included_file_may_not_hold_top_level_statements(tmp_path):
+    (tmp_path / "util.par").write_text(
+        'say "loose"\nto double with n as number giving number:\n'
+        '    give back n times 2\n')
+    (tmp_path / "main.par").write_text(
+        'include "util.par"\n\nsay (double with 21)\n')
+    with pytest.raises(ParleyError) as ei:
+        parse_program(tmp_path / "main.par")
+    diag = ei.value.diagnostics[0]
+    assert diag.code == "P213"
+    assert diag.file.endswith("util.par")
+
+
+def test_entrypoint_top_level_statements_survive_includes(tmp_path):
+    (tmp_path / "util.par").write_text(
+        'to double with n as number giving number:\n    give back n times 2\n')
+    (tmp_path / "main.par").write_text(
+        'include "util.par"\n\nsay (double with 21)\n')
+    prog, _ = parse_program(tmp_path / "main.par")
+    assert sorted(f.name for f in prog.funcs) == ["double", "main"]
+    assert next(f for f in prog.funcs if f.name == "main").implicit_main
 
 
 def test_include_cycle(tmp_path):

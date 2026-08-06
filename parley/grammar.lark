@@ -13,9 +13,13 @@
 
 start: _NL* item*
 
+// A file may declare functions, or write statements straight out at the top
+// level, or both. Top-level statements are the body of `main`, so a file that
+// uses them cannot also define `to main:` (P212).
 item: record_def
     | enum_def
     | func_def
+    | stmt
 
 record_def: _A NAME "has" field ("," field)* _NL
 field: NAME "as" type
@@ -66,7 +70,7 @@ let_stmt: "let" NAME "be" closure_lit
 set_stmt: "set" lvalue _TO rhs _NL
 set_item_stmt: "set" _ITEM item_index _OF lvalue _TO rhs _NL
 say_stmt: ("say" | "print") expr _NL
-sort_stmt: "sort" NAME _NL
+sort_stmt: "sort" NAME [_BY NAME] _NL
 give_stmt: (_GIVE_BACK | "return") closure_lit
          | (_GIVE_BACK | "return") [rhs] _NL
 stop_stmt: "stop" _NL
@@ -82,7 +86,7 @@ args: ["with" expr ("," expr)*]
 
 if_stmt: "if" expr ":" block elif_* [else_]
 elif_: _OTHERWISE_IF expr ":" block
-else_: "otherwise" ":" block
+else_: _OTHERWISE ":" block
 
 when_stmt: "when" expr ":" _NL _INDENT when_arm+ [else_] _DEDENT
 when_arm: _IS pattern ("," pattern)* ["or" pattern] ":" block
@@ -148,6 +152,7 @@ closure_param: NAME "as" type
       | link_e _STARTS_WITH link_e   -> startswith
       | link_e _ENDS_WITH link_e     -> endswith
 ?link_e: sum_e
+       | link_e _OTHERWISE sum_e     -> otherwise_op
        | link_e _AS_NUMBER            -> as_number
        | link_e _AS_TEXT              -> as_text
        | link_e _SPLIT_BY sum_e      -> split_by
@@ -183,13 +188,17 @@ closure_param: NAME "as" type
       | _TEXT_FROM unary        -> text_from
       | _NUMBER_FROM unary      -> number_from
       | _DECIMAL_FROM unary     -> decimal_from
+      | _SORTED unary _BY NAME  -> sorted_by
       | _SORTED unary           -> sorted_of
       | _REVERSED unary         -> reversed_of
       | _TRIMMED unary          -> trimmed_of
       | _ROUNDED unary          -> rounded_of
       | _REMAINDER_OF unary _DIV unary -> remainder
+      | _MAYBE_ITEM item_index _OF unary -> maybe_item_of
       | _ITEM item_index _OF unary -> item_of
       | _READ_FILE unary        -> read_file
+      | _FILES_IN unary         -> files_in
+      | _THE_SETTING unary      -> setting_of
       | _ASK_NUM unary          -> ask_number
       | _ASK unary              -> ask_text
       | _RANDOM_FROM sum_e _TO unary -> random_from
@@ -219,6 +228,9 @@ closure_param: NAME "as" type
      | "no"                     -> no_lit
      | "nothing"                -> nothing_lit
      | _THE_ERROR               -> the_error
+     | _THE_ARGUMENTS           -> the_arguments
+     | _THE_INPUT               -> the_input
+     | _THE_TIME                -> the_time
      | NAME                     -> var
      | _LPAR rhs _RPAR          -> paren
      | _LPAR NAME "with" expr ("," expr)* _RPAR -> call_expr
@@ -246,9 +258,11 @@ _POW.2: /to +the +power +of\b/
 _GIVE_BACK.2: /give +back\b/
 _FOR_EACH.2: /for +each\b/
 _OTHERWISE_IF.2: /otherwise +if\b/
+_OTHERWISE.2: /otherwise\b/
 _IF_IT_FAILED.2: /if +it +failed\b/
 _TO_FILE.2: /to +file\b/
 _TO.2: /to\b/
+_MAYBE_ITEM.3: /maybe +item\b/
 _ITEM.2: /item\b/
 _OF.2: /of\b/
 _A.2: /an?\b/
@@ -279,14 +293,20 @@ _AS_NUMBER.2: /as +number\b/
 _AS_TEXT.2: /as +text\b/
 _REMAINDER_OF.2: /remainder +of\b/
 _SORTED.2: /sorted\b/
+_BY.2: /by\b/
 _REVERSED.2: /reversed\b/
 _TRIMMED.2: /trimmed\b/
 _ROUNDED.2: /rounded\b/
 _READ_FILE.2: /read +file\b/
+_FILES_IN.2: /files +in\b/
 _ASK_NUM.2: /ask +for +a +number\b/
 _ASK.2: /ask\b/
 _RANDOM_FROM.2: /a +random +number +from\b/
 _THE_ERROR.2: /the +error\b/
+_THE_ARGUMENTS.2: /the +arguments\b/
+_THE_INPUT.2: /the +input\b/
+_THE_TIME.2: /the +current +time\b/
+_THE_SETTING.2: /the +setting\b/
 _THE_FUNCTION.2: /the +function\b/
 _A_FUNCTION.3: /a +function\b/
 _FUNCTION.2: /function\b/

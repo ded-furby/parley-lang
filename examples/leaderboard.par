@@ -1,0 +1,24 @@
+note: leaderboard — ordering records, and printing containers
+
+a player has name as text, score as number, online as yesno
+
+let players be an empty list of player
+add (a player with name "ada", score 42, online yes) to players
+add (a player with name "bob", score 91, online no) to players
+add (a player with name "cara", score 42, online yes) to players
+
+note: ascending and stable — ada stays ahead of cara on an equal score
+say "by score:"
+for each p in sorted players by score:
+    say "  {p's name} {p's score}"
+
+note: reverse the sorted copy for highest first
+say "top first:"
+for each p in reversed (sorted players by score):
+    say "  {p's name} {p's score}"
+
+note: a map always prints in sorted-key order, and yesno prints yes/no
+let seen be a map from text to yesno
+for each p in players:
+    set item p's name of seen to p's online
+say seen

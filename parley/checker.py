@@ -223,9 +223,20 @@ class Checker:
         # resolve record field types after all type names are known
         for r in self.records.values():
             r.fields = [(fn, self.resolve_type(ft, r)) for fn, ft in r.fields]
+        implicit_main = next((f for f in p.funcs
+                              if f.name == "main" and f.implicit_main), None)
         for f in p.funcs:
             if f.name != "main":
                 self.check_name_ok(f.name, f, "function")
+            if (implicit_main is not None and f.name == "main"
+                    and not f.implicit_main):
+                self.err("P212",
+                         "This file writes statements at the top level, so it "
+                         "already has a `main`.", implicit_main,
+                         hint="Either move every top-level statement into "
+                              "`to main:`, or delete the `to main:` line and "
+                              "unindent its body.")
+                continue
             if f.name in self.funcs or f.name in self.records or f.name in self.enums:
                 self.err("P207", f'There are two definitions called "{f.name}".', f)
                 continue
@@ -768,6 +779,8 @@ class Checker:
             return TNothing()
         if isinstance(e, A.TheError):
             return A.TText()
+        if isinstance(e, (A.TheArguments, A.TheInput)):
+            return A.TList(A.TText())
         if isinstance(e, A.Str):
             for p in e.parts:
                 if isinstance(p, A.Expr):
@@ -823,6 +836,48 @@ class Checker:
                 if not isinstance(ty, (A.TText, TErr)):
                     self.type_mismatch(A.TText(), ty, part, what)
             return A.TText()
+        if isinstance(e, A.SortedBy):
+            vty = self.infer(e.value)
+            if isinstance(vty, TErr):
+                return vty
+            if not (isinstance(vty, A.TList) and isinstance(vty.elem, A.TRecord)):
+                self.err("P316",
+                         f"`sorted … by` orders a list of records, but this is {vty}.",
+                         e, hint="Use `sorted xs` for a list of numbers, decimals, or text.")
+                return TErr()
+            record = self.records[vty.elem.name]
+            fields = dict(record.fields)
+            fty = fields.get(e.field_name)
+            if fty is None:
+                s = _suggest(e.field_name, fields)
+                self.err("P204",
+                         f'"{e.field_name}" is not a field of {vty.elem.name}.', e,
+                         hint=f'Did you mean "{s}"?' if s else
+                              f"Its fields are: {', '.join(fields) or 'none'}.")
+                return TErr()
+            if not isinstance(fty, (_ORDERED + (A.TBool,))):
+                self.err("P316",
+                         f'Sorting needs an ordered field, but "{e.field_name}" is {fty}.',
+                         e, hint="Sort by a number, decimal, text, or yesno field.")
+                return TErr()
+            return vty
+        if isinstance(e, A.Otherwise):
+            vty = self.infer(e.value)
+            fty = self.infer(e.fallback)
+            if isinstance(vty, TErr):
+                return fty
+            if isinstance(vty, TNothing):
+                # `nothing otherwise 3` is pointless but well-typed; the
+                # fallback is the only value it can ever produce.
+                return fty
+            if not isinstance(vty, A.TMaybe):
+                self.err("P315",
+                         f"`otherwise` supplies a fallback for a maybe, but this is already {vty}.",
+                         e, hint="Drop the `otherwise …` — this value is always there.")
+                return vty
+            if not self.assignable(vty.elem, fty):
+                self.type_mismatch(vty.elem, fty, e.fallback, "The `otherwise` fallback")
+            return vty.elem
         if isinstance(e, A.PositionOf):
             checks = (
                 (e.needle, "The text to find"),
@@ -858,6 +913,18 @@ class Checker:
             if not isinstance(ty, (A.TText, TErr)):
                 self.type_mismatch(A.TText(), ty, e.path, "The file path")
             return A.TMaybe(A.TText())
+        if isinstance(e, A.FilesIn):
+            ty = self.infer(e.path)
+            if not isinstance(ty, (A.TText, TErr)):
+                self.type_mismatch(A.TText(), ty, e.path, "The directory path")
+            return A.TMaybe(A.TList(A.TText()))
+        if isinstance(e, A.Setting):
+            ty = self.infer(e.name)
+            if not isinstance(ty, (A.TText, TErr)):
+                self.type_mismatch(A.TText(), ty, e.name, "The setting name")
+            return A.TMaybe(A.TText())
+        if isinstance(e, A.TheTime):
+            return A.TNum()
         if isinstance(e, A.Ask):
             ty = self.infer(e.prompt)
             if not isinstance(ty, (A.TText, TErr)):
@@ -1164,33 +1231,43 @@ class Checker:
                 return A.TDec()
             self.err("P306", f"`decimal from` works on text and numbers, not {ty}.", e)
             return TErr()
-        if op in ("sorted", "reversed"):
+        if op == "reversed":
+            # Reversing never compares items, so any list will do.
+            if isinstance(ty, (A.TList, A.TText)):
+                return ty
+            self.err("P306", f"`reversed` needs a list or text, but this is {ty}.", e)
+            return TErr()
+        if op == "sorted":
             if isinstance(ty, A.TList) and isinstance(ty.elem, _ORDERED):
                 return ty
-            if op == "reversed" and isinstance(ty, A.TText):
-                return A.TText()
-            self.err("P306", f"`{op}` needs a list of numbers or text"
-                     + (" (or text)" if op == "reversed" else "") + f", but this is {ty}.", e)
+            hint = None
+            if isinstance(ty, A.TList) and isinstance(ty.elem, A.TRecord):
+                hint = f"Order records by a field: `sorted xs by field`."
+            self.err("P306",
+                     f"`sorted` needs a list of numbers, decimals, or text, "
+                     f"but this is {ty}.", e, hint=hint)
             return TErr()
         raise AssertionError(f"unknown prefix op {op}")
 
     def _infer_item(self, e: A.ItemOf) -> A.Type:
         cty = self.infer(e.container)
         ity = self.infer(e.index)
+        wrap = (lambda t: A.TMaybe(t)) if e.safe else (lambda t: t)
         if isinstance(cty, A.TList):
             if not self.assignable(A.TNum(), ity):
                 self.type_mismatch(A.TNum(), ity, e.index, "A list position")
-            return cty.elem
+            return wrap(cty.elem)
         if isinstance(cty, A.TMap):
             if not self.assignable(cty.key, ity):
                 self.type_mismatch(cty.key, ity, e.index, "This map's keys")
-            return cty.val
+            return wrap(cty.val)
         if isinstance(cty, A.TText):
             if not self.assignable(A.TNum(), ity):
                 self.type_mismatch(A.TNum(), ity, e.index, "A text position")
-            return A.TText()
+            return wrap(A.TText())
         if not isinstance(cty, TErr):
-            self.err("P306", f"`item … of …` works on lists and maps, not {cty}.", e)
+            what = "maybe item … of …" if e.safe else "item … of …"
+            self.err("P306", f"`{what}` works on lists and maps, not {cty}.", e)
         return TErr()
 
     def _infer_list(self, e: A.ListLit) -> A.Type:

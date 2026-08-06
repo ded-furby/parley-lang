@@ -14,8 +14,9 @@ For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
 3. **No prose-parsing.** Every tool surface (checker, build errors, runtime
    failures) is available as structured JSON with stable codes.
 4. **Determinism.** Same program, same behaviour: map key/value iteration is
-   sorted by key, integer overflow and division by zero are defined (they stop
-   the program), there is no undefined behaviour.
+   sorted by key, printing a map orders it by key too, integer overflow and
+   division by zero are defined (they stop the program), there is no
+   undefined behaviour.
 
 ## 2. Lexical structure
 
@@ -37,10 +38,16 @@ For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
   parentheses when the index itself is a search expression: `item (position
   of needle in text) of values`. Words that are complete tokens by themselves
   (`is`, `of`, `item`, `a`, `sorted`, …) are reserved; the checker rejects
-  them as names (P209).
+  them as names (P209). Operators added after v0.4 are therefore multi-word
+  phrases (`the setting`, `the current time`, `files in`, `maybe item`): a
+  single new keyword would silently break any existing program that already
+  uses that word as a variable name.
 * Literals: `INT /\d+/`, `FLOAT /\d+\.\d+/`, strings
   `"(\\.|[^"\\\n])*"` with escapes `\n \t \r \" \\` and `{expr}`
-  interpolation (`{{`/`}}` for literal braces).
+  interpolation (`{{`/`}}` for literal braces). An interpolated expression may
+  contain text literals, written with escaped quotes:
+  `"{name otherwise \"none\"}"`. An unescaped quote closes the string, so the
+  error then lands on whatever followed it.
 
 ## 3. Grammar
 
@@ -67,12 +74,26 @@ function (P210). The typed web target checks a module without requiring
 `main`; its manifest-selected route and browser entry functions are separately
 validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 
+* **Program body.** Statements at the top level of a file are collected, in
+  source order, into a synthesized `main`. A file that has top-level statements
+  cannot also define `to main:` (P212), so a program has exactly one entry
+  point either way. Includes are spliced textually before parsing, so an
+  included file may contain only functions, records, and enums; top-level
+  statements in an included file are rejected against that file and line
+  (P213).
+
 * **Variable introduction.** `let name be value` always creates a variable.
   `set name to value` creates it when absent and mutates it when present;
   field targets still require an existing base variable.
 * **Natural statement aliases.** `print` is `say`, `return` is `give back`,
-  and `sort xs` replaces an existing list with its sorted copy. `stop` outside
-  a loop is valid only in `main`, where it returns from the program.
+  and `sort xs` replaces an existing list with its sorted copy.
+  `sorted xs by field` orders a `list of R` for a record `R` by one of its
+  fields, which must be number, decimal, text, or yesno (P316); an unknown
+  field is P204. The sort is stable and ascending, so equal keys keep source
+  order and `reversed` gives the descending order. `sort xs by field` is the
+  statement spelling of the same operation.
+  `stop` outside a loop is valid only in `main`, where it returns from the
+  program.
 * **Types** as in REFERENCE.md. No implicit conversions except
   number → decimal promotion (at assignment, argument, return and mixed
   arithmetic positions). Division always yields decimal.
@@ -117,7 +138,12 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   retain value semantics unless `changing` is explicit.
 * **Maybe values.** `nothing` is assignable to any `maybe T`; `some expr`
   constructs a `maybe` containing `expr`'s type. `value of` unwraps a maybe
-  and is a checked runtime operation. `has no value` aliases `is nothing`;
+  and is a checked runtime operation. `expr otherwise fallback` requires
+  `expr` to be `maybe T` (P315) and `fallback` to be assignable to `T`; it
+  gives `T`, never stops the program, and evaluates `fallback` only when
+  `expr` is nothing. It binds tighter than comparison and looser than
+  arithmetic, so `x otherwise 0 is more than 5` groups as
+  `(x otherwise 0) is more than 5`. `has no value` aliases `is nothing`;
   `has value` and `has a value` alias `is not nothing`.
   For text, `expr as number` is exactly the checked composition
   `value of (number from expr)` and therefore stops on invalid input.
@@ -145,8 +171,11 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 * **Text joining.** `plus` with text on either side formats the other value
   using the same rules as interpolation and returns text. Adding a non-text
   value to a `list of text` applies the same destination-aware formatting.
-* **Numbers** are 64-bit (`i64`/`f64`). Integer overflow stops the program in
-  debug builds (`parley run`); release builds (`parley build`) wrap.
+* **Numbers** are 64-bit (`i64`/`f64`). Integer overflow stops the program with
+  an English runtime failure, in every build: the generated release profile
+  sets `overflow-checks = true`, so `parley build` and `parley run` agree and
+  release binaries never wrap. When the operands are literals, rustc proves the
+  overflow up front and it is reported as P317 before the binary exists.
   `a divided by b` is IEEE-754 division after promotion, with `b = 0`
   stopping the program.
   Bundled `std/math` includes `factorial`, returning `1` for `0`, multiplying
@@ -415,6 +444,39 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 * **I/O.** `say` writes a line to stdout. `ask` prompts on stdout and reads
   one line from stdin. File operations are whole-file. `a random number` is
   a non-cryptographic xorshift seeded from the clock.
+* **Program inputs.** `the arguments` is the `list of text` of command-line
+  words after the program name; `parley run file.par ARG…` forwards its
+  trailing arguments unchanged, flags included. `the input` is the `list of
+  text` of every line of standard input, with a trailing newline and any `\r`
+  removed and empty input giving an empty list. Both name values, not streams:
+  `the input` drains stdin at most once and every later mention sees the same
+  lines. A program should therefore use `the input` or `ask`, not both.
+* **Environment and clock.** `the setting "NAME"` gives `maybe text` for an
+  environment variable. `the current time` gives whole seconds since the Unix
+  epoch; like `a random number` it is a deliberate exception to design goal 4,
+  and a program that wants reproducible output must not print it directly.
+* **Directory listing.** `files in path` gives `maybe list of text`: the
+  sorted paths of the regular files directly in that directory, excluding
+  subdirectories, or `nothing` when the directory cannot be read. Sorting is
+  what makes a program that walks a directory produce the same output twice.
+* **Non-failing access.** `maybe item i of x` is `item i of x` with the failure
+  turned into `nothing`: it gives `maybe T` for a `list of T`, `maybe text` for
+  text, and `maybe V` for a `map from K to V`, and never stops the program.
+  With `otherwise` it is the one-line safe-access form for every container.
+* **Decimal rendering.** A `decimal` renders with Rust's shortest
+  round-tripping `f64` Display, so `1.0` and `7 divided by 7` both print `1`
+  with no fractional part, and `0.1 plus 0.2` prints `0.30000000000000004`.
+  Output therefore does not distinguish a whole-valued `decimal` from a
+  `number`; use `"{d}"` with an explicit format of your own if a program needs
+  the distinction on stdout.
+* **Rendering.** A said or interpolated value renders by its static type, and
+  the rendering is total and deterministic. Text and numbers print bare at the
+  top level and quoted/Debug-shaped inside a container. A `yesno` prints
+  `yes`/`no` at every depth — inside lists, maps, records, and maybes, not only
+  as a bare value. A `maybe` prints `nothing` or its inner value. A map prints
+  its entries in sorted-key order, so a program's output never depends on hash
+  iteration order. Lists keep source order; records print `Name { field: value,
+  … }` in declaration order.
 
 ## 6. Compilation model
 

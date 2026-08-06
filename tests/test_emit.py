@@ -110,6 +110,62 @@ def test_text_replacement_emits_rust_replace():
     assert ').as_str(), (' in rust
 
 
+def test_program_inputs_emit_their_helpers():
+    rust = emit_text('to main:\n    say the arguments\n    say the input\n')
+    assert "std::env::args().skip(1)" in rust
+    # `the input` is a value: stdin is drained once and cached.
+    assert "INPUT_LINES" in rust
+    assert "read_to_string" in rust
+
+
+def test_maybe_item_uses_the_non_failing_helpers():
+    rust = emit_text('to main:\n'
+                     '    let xs be a list of 1, 2\n'
+                     '    say (maybe item 9 of xs) otherwise 0\n')
+    assert "parley_maybe_item(" in rust
+    assert "fn parley_maybe_item" in rust
+
+
+def test_map_display_sorts_keys_instead_of_using_debug():
+    rust = emit_text('to main:\n'
+                     '    let m be a map from text to number\n'
+                     '    say m\n')
+    assert "__ks.sort_by" in rust
+    assert '"{:?}", &(m)' not in rust
+
+
+def test_list_of_numbers_still_uses_rust_debug():
+    rust = emit_text('to main:\n    say (a list of 1, 2)\n')
+    assert "{:?}" in rust
+    assert "__ks.sort_by" not in rust
+
+
+def test_sorted_by_emits_stable_sort_on_the_field():
+    rust = emit_text('a person has name as text, age as number\n'
+                     'to main:\n'
+                     '    let people be an empty list of person\n'
+                     '    sort people by age\n')
+    assert "__s.sort_by(|a, b| a.age.partial_cmp(&b.age)" in rust
+    # sort_by, not sort_unstable_by: equal keys must keep source order.
+    assert "sort_unstable" not in rust
+
+
+def test_otherwise_emits_lazy_match():
+    rust = emit_text('to main:\n    say (number from "5") otherwise 0\n')
+    assert "Some(__v) => __v, None => 0i64" in rust
+
+
+def test_otherwise_clones_a_place_instead_of_moving_it():
+    rust = emit_text('to main:\n    let s be some "x"\n'
+                     '    say s otherwise "y"\n    say s otherwise "z"\n')
+    assert rust.count("match (s.clone())") == 2
+
+
+def test_otherwise_promotes_whole_number_fallback():
+    rust = emit_text('to main:\n    let d be some 2.5\n    say d otherwise 1\n')
+    assert "None => ((1i64) as f64)" in rust
+
+
 def test_text_position_emits_utf8_safe_helper():
     rust = emit_text('to main:\n    say position of "c" in "écart"\n')
     assert "fn parley_position" in rust

@@ -55,6 +55,7 @@ from .agent_data import (
     compare_value,
     compact_json,
     load_json_file,
+    load_json_text,
     packed_text,
     pretty_json,
     toon_decode,
@@ -85,6 +86,10 @@ edition = "2021"
 
 [profile.release]
 strip = true
+# Rust wraps on overflow in release by default. Parley promises the same
+# behaviour from `run` and `build` — overflow stops the program — so the
+# release profile keeps the checks debug builds already have.
+overflow-checks = true
 """
 
 NEW_TEMPLATE = """\
@@ -190,10 +195,21 @@ def _map_rustc_errors(stdout: str, linemap: dict[int, int], srcmap: SourceMap) -
                         par_line = linemap[ln]
                         break
                 break
-        d = Diagnostic("P901", f"The Rust backend rejected this line: {text}",
-                       line=par_line,
-                       hint="This usually means a Parley checker gap. Simplify the line, "
-                            "and please report it: https://github.com/ded-furby/parley-lang/issues")
+        if "will overflow" in text:
+            # Not a checker gap: the author wrote arithmetic on literals whose
+            # result cannot be a whole number, and rustc proved it up front.
+            d = Diagnostic(
+                "P317",
+                "This arithmetic goes past the largest value a number can hold.",
+                line=par_line,
+                hint="Whole numbers run from -9223372036854775808 to "
+                     "9223372036854775807. Use `decimal` values if you need a "
+                     "wider range.")
+        else:
+            d = Diagnostic("P901", f"The Rust backend rejected this line: {text}",
+                           line=par_line,
+                           hint="This usually means a Parley checker gap. Simplify the line, "
+                                "and please report it: https://github.com/ded-furby/parley-lang/issues")
         diags.append(d)
     if not diags:
         diags.append(Diagnostic("P901", "The Rust backend rejected the program.",
@@ -240,7 +256,8 @@ def cmd_run(args) -> int:
         binary = cargo_build(path, rust, linemap, srcmap, release=False)
     except ParleyError as e:
         return _fail(e, None)
-    proc = subprocess.run([str(binary)])
+    forwarded = [a for a in getattr(args, "program_args", []) if a != "--"]
+    proc = subprocess.run([str(binary), *forwarded])
     return proc.returncode if proc.returncode >= 0 else 1
 
 def cmd_build(args) -> int:
@@ -251,8 +268,20 @@ def cmd_build(args) -> int:
     except ParleyError as e:
         return _fail(e, None)
     out = Path(args.output or path.stem)
-    shutil.copy2(binary, out)
-    print(f"Built ./{out} ({out.stat().st_size // 1024} KiB)")
+    try:
+        # copy2 into a directory silently writes a differently-named file and
+        # then reports the directory's size, so refuse that up front.
+        if out.is_dir():
+            raise IsADirectoryError(21, "Is a directory")
+        shutil.copy2(binary, out)
+    except OSError as e:
+        return _fail(ParleyError([Diagnostic(
+            "P903", f'Cannot write the binary to "{out}": {e.strerror or e}.',
+            file=str(path), line=1,
+            hint="Pick an output path in a writable directory, "
+                 "e.g. `-o ./program`.")]), None)
+    shown = out if out.is_absolute() else f"./{out}"
+    print(f"Built {shown} ({out.stat().st_size // 1024} KiB)")
     return 0
 
 
@@ -959,6 +988,22 @@ def cmd_data_pack(args) -> int:
     return 0
 
 
+def _decode_packed(source: str, *, with_format: bool = False):
+    """Read whichever representation `pack` delivered.
+
+    Automatic packing falls back to compact JSON for nested, mixed, or
+    unhelpful shapes, so unpack and check must accept their own output. No
+    TOON document the encoder emits parses as JSON, so JSON is tried first.
+    """
+    try:
+        value = load_json_text(source)
+        delivered = "json"
+    except AgentDataError:
+        value = toon_decode(source)
+        delivered = "toon"
+    return (value, delivered) if with_format else value
+
+
 def cmd_data_unpack(args) -> int:
     input_path = Path(args.input)
     try:
@@ -966,7 +1011,7 @@ def cmd_data_unpack(args) -> int:
             source = input_path.read_text(encoding="utf-8")
         except (OSError, UnicodeError) as exc:
             raise AgentDataError(f"could not read UTF-8 TOON from {input_path}: {exc}") from exc
-        value = toon_decode(source)
+        value = _decode_packed(source)
         content = pretty_json(value).rstrip("\n") if args.pretty else compact_json(value)
         output_path = _data_output_path(args.output, input_path, force=args.force)
         _write_data_text(output_path, content)
@@ -984,11 +1029,11 @@ def cmd_data_check(args) -> int:
             source = input_path.read_text(encoding="utf-8")
         except (OSError, UnicodeError) as exc:
             raise AgentDataError(f"could not read UTF-8 TOON from {input_path}: {exc}") from exc
-        value = toon_decode(source)
-        canonical = packed_text(value, {"selected_format": "toon"}, "toon")
+        value, delivered = _decode_packed(source, with_format=True)
+        canonical = packed_text(value, {"selected_format": delivered}, delivered)
         details = {
             "ok": True,
-            "format": "toon",
+            "format": delivered,
             "profile": "parley-safe-subset-v1",
             "canonical": source.rstrip("\n") == canonical,
             "sha256": hashlib.sha256(source.encode("utf-8")).hexdigest(),
@@ -999,7 +1044,8 @@ def cmd_data_check(args) -> int:
         print(json.dumps(details, ensure_ascii=False, indent=2))
     else:
         status = "canonical" if details["canonical"] else "valid but non-canonical"
-        print(f"✓ {args.input}: valid {details['profile']} TOON ({status}).")
+        shape = "TOON" if details["format"] == "toon" else "JSON"
+        print(f"✓ {args.input}: valid {details['profile']} {shape} ({status}).")
     return 0
 
 
@@ -1809,6 +1855,9 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("run", help="compile and run a program")
     p.add_argument("file")
+    p.add_argument("program_args", nargs=argparse.REMAINDER,
+                   metavar="ARG",
+                   help="arguments passed through to the program as `the arguments`")
     p.set_defaults(fn=cmd_run)
 
     p = sub.add_parser("build", help="build a native binary (release)")

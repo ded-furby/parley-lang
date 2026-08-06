@@ -25,9 +25,9 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language/toolchain v0.4.0** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 394/394, including e2e tests that
-  compile every feature to a native binary and assert stdout. Eleven examples in
+- **Language/toolchain v0.4.3** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 457/457, including e2e tests that
+  compile every feature to a native binary and assert stdout. Sixteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
@@ -76,6 +76,152 @@ Update it whenever you finish or start a work item.
   a typed native route; valid, malformed, wrong-content-type, unknown-field,
   MIME, static, and traversal behavior are covered. Limits and security
   boundaries are explicit in `docs/WEB.md`; no language syntax was added.
+- **v0.4.3 Parley can be a real command-line tool.** Found by trying to write
+  tasks a user would actually assign and recording what blocked. Before this,
+  the entire outside-world surface was `ask`, `read file`, `write to file`, and
+  `a random number` — so a program could not read its own arguments, could not
+  loop over stdin without wrapping `ask` in an `attempt:` block and treating
+  EOF as a failure, and could not look at a directory at all.
+  - `the arguments` — `list of text` of the words after the program name.
+    `parley run file.par ARG…` forwards them, flags included, so behaviour
+    matches the built binary.
+  - `the input` — `list of text` of every line of stdin, trailing newline and
+    `\r` removed, empty input giving an empty list. It names a *value*: stdin
+    is drained once and cached, so a second mention sees the same lines
+    instead of nothing. Use `the input` or `ask`, not both.
+  - `maybe item i of x` — `item` with the failure turned into `nothing`, for
+    lists, text, and maps. With `otherwise` this is the one-line safe read the
+    language was missing, and it generalises about a dozen per-type
+    `maybe_item_*` / `maybe_lookup_*` stdlib helpers into one form.
+  - `files in "dir"` — `maybe list of text`, the sorted paths of the regular
+    files in a directory (subdirectories excluded), `nothing` if unreadable.
+    Sorted so a directory walk prints the same thing twice.
+  - Nested quotes inside an interpolation (`"{n otherwise "unknown"}"`) closed
+    the string early and reported whatever followed — `I didn't expect
+    'unknown' here`. Every `{…}` region on a failing line is now scanned and
+    the hint names the real mistake. Worth noting that a tutorial snippet
+    written during this work hit the same trap, which is the evidence it
+    needed fixing.
+  - `the setting "NAME"` (`maybe text`, an environment variable) and
+    `the current time` (whole seconds since the Unix epoch). Both are
+    deliberate exceptions to design goal 4, documented beside `a random
+    number`.
+  - **Lesson worth keeping:** the first spelling was a bare `setting`, which
+    broke `config_recovery_project` in the frozen 029 corpus — that program
+    binds `let setting be item 2 of parts`. A one-word operator keyword
+    silently breaks any program already using that word as a name, so every
+    phrase added here is multi-word (`the setting`, `the current time`,
+    `files in`, `maybe item`). `test_new_phrase_words_are_still_usable_as_names`
+    now pins that, and SPEC §2 records the rule.
+  - `std/text` gained `fixed_decimal with value, places`. Default rendering
+    drops trailing zeros, so a money column printed `200` beside `165.5`;
+    there was no way to format a decimal to fixed places anywhere in the
+    language. It is written in ordinary Parley — whole-number arithmetic
+    plus `padded_left` — so it needed no compiler change.
+  - `examples/wordcount.par`, `examples/logreport.par`, and
+    `examples/csvsum.par` are the proof: `wordcount [TOP_N] < file` reads
+    stdin, takes an optional argument with a default, tallies into a map, and
+    ranks with `sorted … by`, deterministically.
+- **v0.4.2 capability and correctness fixes** (all found by probing the
+  language against its own SPEC, not by a report):
+  - **`run` and `build` disagreed about overflow.** Rust checks integer
+    overflow in debug and wraps in release, so `parley run` stopped the program
+    while the shipped `parley build` binary silently printed a wrapped value —
+    the same source, two answers, with the wrong one in the artifact users
+    ship. SPEC design goal 4 already promised overflow stops; SPEC §5 separately
+    documented the wrapping. The generated release profiles (command, web, and
+    wasm) now set `overflow-checks = true`, so both agree; the binary is still
+    345 KiB. Rust's own panic text is translated into Parley's English voice,
+    and a provable literal overflow is now **P317** instead of P901 telling the
+    author to file a compiler bug. **This is a deliberate behaviour change for
+    release builds** — anything that relied on wrapping now stops instead.
+  - **`parley data unpack` could not read its own output.** Packing falls back
+    to compact JSON for nested, mixed, or unhelpful shapes — documented, correct
+    behaviour — but `unpack` and `check` only accepted TOON, so the documented
+    `pack` → `unpack` round trip died on those artifacts with
+    `unsupported or invalid key '{"rows"'`. Both now try strict JSON first (no
+    TOON the encoder emits parses as JSON) and fall back to the TOON decoder;
+    `check --json` reports the delivered `format`.
+  - **`HEAD` returned 404 on typed `GET` routes.** The generated server matched
+    exact `(method, path)` pairs, so a health check or CDN probe against a live
+    `GET` route got a 404, though RFC 9110 requires HEAD wherever GET is
+    answered and `parley_write_response` already dropped HEAD bodies. Dispatch
+    now maps HEAD to GET; headers including `Content-Length` match the GET
+    exactly, and a path with no GET route still 404s.
+  - **Records could not be sorted at all.** `sorted xs by field` / `sort xs by
+    field` order a `list of R` by one record field (number, decimal, text, or
+    yesno; P316 otherwise, P204 with a did-you-mean for an unknown field). The
+    statement form reuses the existing `sort xs` desugaring, so it is one
+    parser line plus a checker rule and an emitter case. Rust `sort_by` is
+    stable, so equal keys keep source order and `reversed (sorted xs by f)`
+    is a well-defined descending order.
+  - **`reversed` rejected every list it could not compare.** Reversing never
+    compares items, so the checker's `_ORDERED` element test was simply too
+    strict; `reversed` now accepts any list (records, enums, maybes, lists of
+    lists) and text. `sorted` keeps the restriction and now hints at
+    `sorted xs by field` when handed records.
+  - **Printing a map was nondeterministic.** `say m` rendered a `HashMap` with
+    Rust's derived Debug, which iterates in hash order — randomised per
+    process — so the same binary printed a different order on every run,
+    contradicting SPEC design goal 4. In the same place, a `yesno` inside any
+    container printed Rust's `true`/`false`. Both had one cause: `{:?}` on
+    composite types. `say`/interpolation now render composites from the static
+    type, sorting map keys and spelling yesno at any depth; shapes Debug
+    already got right (lists of numbers, text, records without yesno) keep
+    byte-identical output, and `_needs_parley_display` guards a self-
+    referential record. `tests/test_e2e.py::test_map_display_is_stable_across_runs`
+    re-runs one binary five times, which is what actually catches a regression.
+- **v0.4.1 measured source-token cuts:** two shapes, both chosen from
+  measurement rather than taste. (1) Statements at the top level of the file
+  you run are the body of `main`; a file cannot also define `to main:` (P212)
+  and an included file may hold only definitions (P213). (2) `x otherwise y`
+  unwraps a `maybe` with a fallback, is lazy in `y`, never stops the program,
+  and rejects a non-maybe left side (P315). Method: all 64 paired
+  Parley/Python/Rust programs in `benchmarks/agent_tasks_*.json` were
+  tokenized with `o200k_base`, the excess over Python attributed by phrase,
+  then rewritten to the new shapes and re-measured. Parley source falls
+  10,632 → 9,811 tokens, from **+40.4% to +29.5% versus Python** (and stays
+  27.7% below Rust). Of the 32 tasks with public cases, the 26 whose seed runs
+  cleanly produce **byte-identical output** before and after; the other six are
+  seeded-defect programs that crash on their own public case, where `value of`
+  (stops) and `otherwise` (defaults) legitimately differ. **Bound the claim:**
+  this is a source-token result only. Report 030 measured the Parley/Python
+  session gap as ~2,010 fixed tokens/session plus ~74 residual tokens/task, so
+  a 7.7% source cut is not a 7.7% session cut and no fresh-agent claim follows.
+  The skill is v0.4.3 (1,879 chars / 520 `o200k` tokens, SHA `bc5d393c…`),
+  preserved at `skill/parley/references/core-v0.4.3.md`; the skill that protocols 017–030
+  ran against is preserved unchanged at `core-v0.3.149.md`, and those protocol
+  tests now verify that artifact instead of the live file so the agent contract
+  can evolve without breaking a frozen record.
+- **Skill token accounting (v0.4.1):** teaching the two new shapes costs
+  +103 bytes / +38 `o200k` tokens per session (409 → 447), after merging the
+  duplicated `ask for a number` bullet and dropping four example lines. Every
+  distinct rule from the frozen reliability core is still present; only wording
+  merged, so `test_parley_core_skill_restores_proven_reliability_contract` now
+  pins the rule (`ask for a number`) rather than its old sentence. Break-even
+  is roughly 2.6 tasks per session, using report 030's size-8 median of 191
+  rough source tokens per repository against a 7.72% source cut. Single-task
+  sessions therefore pay slightly more than they save; multi-task sessions win.
+  This is arithmetic on frozen medians, not a measured session result.
+- **v0.4.1 diagnostics quality:** parse hints stopped dumping up to eight
+  alphabetically-sorted terminals. A value position now reports "Expected a
+  value." instead of listing every way to begin one; layout expectations
+  (`:`, end of line, `,`, `)`) outrank operator continuations; internal
+  terminal names (`param and`, `div`, `pow`, `mod`) map to what an author
+  actually types; and a whitespace token is reported as "the end of the line"
+  rather than a raw newline. `parley build` gained P903: writing the binary to
+  an unwritable path used to raise a bare Python `PermissionError`, and `-o
+  some_directory` used to copy the binary *into* the directory and then print
+  `Built ./some_directory (0 KiB)` as a success.
+- **Measured and declined (v0.4.1):** a conditional expression
+  (`A if C otherwise B`) collapses 41 guard-clause pairs in the same corpus but
+  is worth only 157 tokens (1.48%), and the condition slot would greedily
+  consume the maybe-fallback `otherwise`, so it needs a duplicated
+  no-`otherwise` expression chain in the LALR grammar. Not worth that
+  complexity at that size. Revisit only if the guard-clause shape dominates a
+  future corpus. `give back` → `return` is worth 173 tokens (1.6%) and needs no
+  compiler change at all — `return` is already an alias — but flipping the
+  documented spelling is a brand decision, so it is left to Arjun.
 - **Iteration 033 agent-data result:** the 12-case corpus and 5% gate were
   committed at `87e6487` before broad measurement. All seven supported TOON
   candidates round-trip exactly, automatic selection never increases tokens,

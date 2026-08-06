@@ -85,6 +85,23 @@ CASES = [
     ("position_text_needs_text", in_main('say position of "a" in 5'), "P301", "needs text"),
     ("count_needle_needs_text", in_main('say count of 1 in "abc"'), "P301", "needs text"),
     ("count_text_needs_text", in_main('say count of "a" in 5'), "P301", "needs text"),
+    ("top_level_and_explicit_main", 'say "a"\nto main:\n    say "b"\n',
+     "P212", "already has a `main`"),
+    ("maybe_item_on_a_number",
+     in_main("let n be 5", "say maybe item 1 of n"), "P306", "maybe item"),
+    ("sort_by_on_scalar_list", in_main("let xs be a list of 1, 2", "sort xs by age"),
+     "P316", "list of records"),
+    ("sort_by_unordered_field",
+     'a p has tags as list of text\nto main:\n    let ps be an empty list of p\n    sort ps by tags\n',
+     "P316", "ordered field"),
+    ("sort_by_unknown_field",
+     'a p has n as text\nto main:\n    let ps be an empty list of p\n    sort ps by nam\n',
+     "P204", "not a field"),
+    ("otherwise_on_plain_value", in_main("say 5 otherwise 1"), "P315", "already number"),
+    ("otherwise_fallback_type",
+     in_main('let n be number from "5"', 'say n otherwise "zero"'), "P301", "fallback"),
+    ("otherwise_cannot_narrow_decimal",
+     in_main("let d be some 3", "say d otherwise 1.5"), "P301", "fallback"),
 ]
 
 

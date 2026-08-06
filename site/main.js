@@ -158,7 +158,9 @@ function init(renderer) {
       }
     }
     const visW = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(21)) * camera.aspect;
-    const worldW = Math.min(7.4, visW * 0.84);
+    // A zero-height viewport (some webviews, hidden iframes) makes aspect NaN,
+    // which would poison every particle position and erase the headline.
+    const worldW = Number.isFinite(visW) ? Math.min(7.4, visW * 0.84) : 7.4;
     const s = worldW / cv.width;
     const out = new Float32Array(n * 3);
     const m = pts.length / 2;

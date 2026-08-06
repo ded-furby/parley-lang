@@ -14,14 +14,14 @@ a cat has name as text, lives as number
 to describe with c as cat giving text:
     give back "{c's name} has {c's lives} lives left"
 
-to main:
-    let felix be a cat with name "Felix", lives 9
-    say (describe with felix)
-    let tally be a map from text to number
-    set item "naps today" of tally to 4
-    for each key in keys of tally:
-        say "{key}: {item key of tally}"
-    say "total: {sum of values of tally}"
+let felix be a cat with name "Felix", lives 9
+say (describe with felix)
+
+let tally be a map from text to number
+set item "naps today" of tally to 4
+for each key in keys of tally:
+    say "{key}: {item key of tally}"
+say "total: {sum of values of tally}"
 ```
 
 ```
@@ -73,6 +73,29 @@ pip install git+https://github.com/ded-furby/parley-lang
 parley doctor
 parley new hello && parley run hello/main.par
 ```
+
+## Write an actual command-line tool
+
+A program's two inputs are plain `list of text`, so a real filter is a few
+lines and the same source behaves identically under `run` and `build`:
+
+```parley
+let top_n be (number from ((maybe item 1 of the arguments) otherwise "5")) otherwise 5
+
+for each line in the input:
+    say "{top_n}: {uppercase of line}"
+```
+
+```bash
+$ echo "hello" | parley run tool.par 3
+3: HELLO
+```
+
+`the arguments` is the command-line words after the program name (and
+`parley run file.par ARG…` forwards them, flags included); `the input` is every
+line of stdin, read once. `maybe item i of x` is non-failing access for lists,
+text, and maps, so `… otherwise default` is the one-line safe read. See
+[`examples/wordcount.par`](examples/wordcount.par) for a complete tool.
 
 ## Build something real: Parley Workflows
 
@@ -447,6 +470,10 @@ the plan:
 - [x] Release Steward and checksummed three-product workflow catalog — v0.3.158
 - [x] verified adaptive JSON/TOON agent-context packing — v0.3.159
 - [x] typed HTTP/JSON and deterministic browser/WASM full-stack foundation — v0.4.0
+- [x] measured token cuts: top-level program body and `otherwise` maybe fallback — v0.4.1
+- [x] record sorting, generic `reversed`, and deterministic yes/no-aware printing — v0.4.2
+- [x] real command-line programs: arguments, stdin, `maybe item`, `files in`,
+      `the setting`, `the current time`, `fixed_decimal` — v0.4.3
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

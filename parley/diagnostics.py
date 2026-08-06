@@ -121,6 +121,16 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An expression or field update refers to a variable that does not exist in this scope.",
         "fix": "Create it first with `let name be …` or `set name to …`.",
     },
+    "P212": {
+        "title": "Top-level statements and `to main:` in one file",
+        "explain": "Statements written at the top level are the body of `main`, so a file that uses them cannot also define `to main:`.",
+        "fix": "Pick one shape: keep the top-level statements and delete the `to main:` line, or move every top-level statement inside `to main:`.",
+    },
+    "P213": {
+        "title": "Loose statements in an included file",
+        "explain": "An included file may define functions, records, and enums. Top-level statements belong to the file you actually run.",
+        "fix": "Move the statements into a `to name:` function in the included file and call it from the entrypoint.",
+    },
     # --- type errors (P3xx)
     "P301": {
         "title": "Type mismatch",
@@ -192,6 +202,21 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An anonymous function captures outside variables by value when it is created.",
         "fix": "Read the captured value, store a new local value inside the function, or give back the changed value and assign it outside.",
     },
+    "P315": {
+        "title": "`otherwise` fallback on a value that is always there",
+        "explain": "`x otherwise y` supplies the value to use when `x` is nothing, so `x` must be a maybe.",
+        "fix": "Remove the `otherwise …` when the value is not a maybe. Use it on results that can be nothing, such as `ask for a number`, a maybe lookup, or a function that gives back `nothing`.",
+    },
+    "P316": {
+        "title": "Cannot sort by that",
+        "explain": "`sorted xs by field` orders a list of records by one of their fields, and the field must be a number, decimal, text, or yesno.",
+        "fix": "Sort a list of records by an ordered field, or use plain `sorted xs` for a list of numbers, decimals, or text.",
+    },
+    "P317": {
+        "title": "Arithmetic goes past the number range",
+        "explain": "A whole number in Parley is a 64-bit signed integer, and this expression's result provably falls outside it.",
+        "fix": "Keep whole-number arithmetic between -9223372036854775808 and 9223372036854775807, or use `decimal` values when a wider range matters. At runtime, an overflow stops the program rather than wrapping.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",
@@ -258,6 +283,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "title": "Build tooling problem",
         "explain": "cargo/rustc could not be run.",
         "fix": "Install Rust from https://rustup.rs and make sure `cargo` is on PATH.",
+    },
+    "P903": {
+        "title": "Cannot write the built binary",
+        "explain": "The program compiled, but the finished binary could not be copied to the requested output path.",
+        "fix": "Choose an output path in a directory you can write to, and make sure the name is not an existing directory or a protected device file.",
     },
 }
 

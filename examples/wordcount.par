@@ -1,0 +1,23 @@
+note: wordcount — a real command-line tool: `wordcount [TOP_N] < file`
+
+a tally has word as text, count as number
+
+let top_n be (number from ((maybe item 1 of the arguments) otherwise "5")) otherwise 5
+
+let counts be a map from text to number
+for each line in the input:
+    for each word in (lowercase of line) split by " ":
+        let clean be trimmed word
+        if length of clean is more than 0:
+            set item clean of counts to ((maybe item clean of counts) otherwise 0) plus 1
+
+let rows be an empty list of tally
+for each key in keys of counts:
+    add (a tally with word key, count (item key of counts)) to rows
+
+note: ties keep sorted-key order, so the output is the same on every run
+let shown be 0
+for each row in reversed (sorted rows by count):
+    if shown is less than top_n:
+        say "{row's count}  {row's word}"
+        set shown to shown plus 1

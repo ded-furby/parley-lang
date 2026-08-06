@@ -6,9 +6,16 @@ prints (minus mechanical details like `i64` suffixes and helper plumbing).
 
 ## Program shape
 
-A program is records, kinds (enums) and functions at the top level, with
-indentation-based blocks (4 spaces). Normal command programs start at
-`to main:`. A `parley web` entrypoint is a checked function module whose route
+A program is records, kinds (enums), functions, and statements at the top
+level, with indentation-based blocks (4 spaces). Top-level statements are the
+body of `main`, in source order; writing them and `to main:` in one file is an
+error (P212), and an included file may hold only definitions (P213).
+
+```parley
+say "this is a whole program"
+```
+
+A `parley web` entrypoint is a checked function module whose route
 and browser entry functions are selected by `parley.web.json`, so it does not
 need a synthetic `main`; see [WEB.md](WEB.md).
 Comments: `note: …` or `# …` to end of line.
@@ -31,7 +38,7 @@ item index.
 | `yesno` | `bool` | literals `yes` / `no` |
 | `list of T` | `Vec<T>` | items count from 1 |
 | `map from K to V` | `HashMap<K, V>` | K is `number` or `text`; `keys of` and `values of` are sorted by key |
-| `maybe T` | `Option<T>` | `some x` or `nothing`; unwrap with `value of` |
+| `maybe T` | `Option<T>` | `some x` or `nothing`; unwrap with `value of` or `otherwise` |
 | record | `struct` (derive Clone, Debug, PartialEq) | |
 | kind | `enum` (derive Clone, Copy, Debug, PartialEq) | |
 | `(function taking A, B giving R)` | `Rc<dyn Fn(A, B) -> R>` | a cloneable function value; both clauses optional |
@@ -62,7 +69,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `let x be 5` | `let mut x: i64 = 5;` |
 | `set x to 6` | creates `x` if absent; otherwise `x = 6;` |
 | `set p's x to 6` | `p.x = 6;` |
-| `say expr` / `print expr` | `println!(…)` (yesno prints `yes`/`no`, maybe prints `nothing` or the value) |
+| `say expr` / `print expr` | `println!(…)` — yesno prints `yes`/`no` at any depth, maybe prints `nothing` or the value, and a map prints in sorted-key order |
 | `if c:` / `otherwise if c:` / `otherwise:` | `if c { } else if c { } else { }` |
 | `when x:` with `is v:` arms | `match` (enums) / `if`-chain (numbers, text, yesno) |
 | `is 1, 2 or 3:` (multi-value arm) | `1 \| 2 \| 3 =>` / chained `\|\|` |
@@ -74,6 +81,7 @@ Variant names share one global namespace (so `happy` alone is unambiguous).
 | `stop` / `skip` | `break;` / `continue;`; outside a loop, `stop` leaves `main` |
 | `give back expr` / `return expr` | `return expr;` |
 | `sort xs` | replaces `xs` with a sorted copy |
+| `sort xs by field` | replaces a list of records with a copy ordered by one field |
 | `assert condition` / `assert condition, message` | catchable runtime check |
 | `fail "message"` | catchable runtime failure |
 | `add x to xs` | `xs.push(x);` (a text list formats non-text values) |
@@ -114,6 +122,7 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `position of needle in t` | UTF-8-safe substring search | maybe number |
 | `count of needle in t` | non-overlapping substring count | number |
 | `"{x} and {y}"` | `format!("{} and {}", x, y)` | text |
+| `"{name otherwise \"none\"}"` | quotes inside `{…}` are escaped with `\"` | text |
 | `(f with a, b)` | `f(a, b)` — calls in expressions take parens | |
 | `bob's name` | `bob.name` | field type |
 | `item i of xs` / `item i of t` / `item k of m` | bounds/presence-checked access (1-based) | element/text/value |
@@ -125,8 +134,15 @@ Precedence, loosest to tightest: `or` · `and` · `not` · comparisons ·
 | `t as number` | checked parse and unwrap | number |
 | `x as text` | formats like interpolation / `text from x` | text |
 | `some x` | `Some(x)` | maybe of x's type |
-| `value of m` | checked unwrap | inner type |
+| `value of m` | checked unwrap (stops on nothing) | inner type |
+| `m otherwise d` | unwrap with a fallback (never stops) | inner type |
 | `the error` | last runtime error text | text |
+| `the arguments` | `std::env::args().skip(1)` | list of text |
+| `the input` | every line of stdin, read once and cached | list of text |
+| `files in "dir"` | sorted paths of the regular files in a directory | maybe list of text |
+| `the setting "NAME"` | an environment variable | maybe text |
+| `the current time` | whole seconds since 1970-01-01 UTC | number |
+| `maybe item i of xs` / `of t` / `of m` | non-failing access | maybe element/text/value |
 | `the function f` | `Rc::new(move |…| f(…))` | a named function value (no `changing` params) |
 | `a function taking x as number giving number: ...` | `Rc::new(move |x: i64| -> i64 { ... })` | anonymous closure with captured values |
 
@@ -154,6 +170,7 @@ value and assign it outside if you need that flow.
 | `sum of xs` | list of number/decimal | same |
 | `smallest of xs` / `largest of xs` | list of number/decimal/text | element |
 | `sorted xs` / `reversed xs` | list (reversed also text) | same |
+| `sorted xs by field` | list of records | same; stable, ascending by that field |
 | `uppercase of t` / `lowercase of t` / `trimmed t` | text | text |
 | `absolute of n` | number/decimal | same |
 | `rounded x` / `floor of x` / `ceiling of x` | decimal (number passes through) | number |
@@ -170,9 +187,10 @@ value and assign it outside if you need that flow.
 
 ## Errors
 
-Runtime failures (`assert`, `fail`, divide by zero, item out of range,
-`value of` nothing, file write trouble, end of input) **stop the program**
-with a one-line English message on stderr and exit code 1 — unless wrapped:
+Runtime failures (`assert`, `fail`, divide by zero, whole-number overflow,
+item out of range, `value of` nothing, file write trouble, end of input)
+**stop the program** with a one-line English message on stderr and exit code 1
+— unless wrapped:
 
 ```parley
 attempt:
@@ -337,6 +355,7 @@ Use `include "std/text"` for small text helpers:
 | `left_trimmed with t` / `right_trimmed with t` | text with leading or trailing whitespace removed |
 | `left_trimmed_of with t, chars` / `right_trimmed_of with t, chars` / `trimmed_of with t, chars` | text with explicit leading/trailing characters removed; empty `chars` leaves text unchanged |
 | `padded_left with t, width, fill` / `padded_right with t, width, fill` | text padded to at least `width` characters with repeated `fill` |
+| `fixed_decimal with value, places` | a decimal as text with exactly `places` digits after the point (default rendering drops trailing zeros) |
 | `zero_filled with t, width` | text padded on the left with `0`, preserving an initial `+` or `-` before the zeroes |
 | `tabs_expanded with t, tab_size` | text with tabs replaced by spaces up to the next tab stop; non-positive tab size removes tabs |
 | `padded_center with t, width, fill` | text centered to at least `width` characters with repeated `fill`; odd gaps place the extra fill on the right |
