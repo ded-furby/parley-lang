@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "experiment_id": "037",
-  "generated_at": "2026-08-12T17:40:38.045311Z",
-  "protocol_sha256": "ca703e67934fbeb3d6366702f4d7ba23ea8ad893b6b5d4ba9e84af59a749bc7f",
+  "generated_at": "2026-08-12T17:58:28.288392Z",
+  "protocol_sha256": "83fd7ad152068e436a253f6f5992ae9d2214db646ceb7923c29734d2786e0080",
   "provenance_file": "/private/tmp/parley-fullstack-037-provenance.json",
   "provenance_sha256": "8f03c10b402c5a995e169ffc27b1afc919063907eaa303ec3fd9bc187dc52040",
   "cells": [
