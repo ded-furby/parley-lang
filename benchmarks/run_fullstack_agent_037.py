@@ -174,14 +174,14 @@ def load_protocol(path: Path = PROTOCOL_PATH) -> dict[str, Any]:
             raise ValueError(f"{field} must be a positive integer")
     execution = protocol.get("execution_freeze")
     if execution is not None:
-        for file_key, sha_key in (
-            ("runner_file", "runner_sha256"),
-            ("scaffolds_file", "scaffolds_sha256"),
-            ("preparer_file", "preparer_sha256"),
-            ("amendment_file", "amendment_sha256"),
-        ):
-            if digest(REPO / execution[file_key]) != execution[sha_key]:
-                raise ValueError(f"execution freeze mismatch for {execution[file_key]}")
+        files = execution.get("files")
+        if not isinstance(files, list) or not files:
+            raise ValueError("execution freeze must name every transitive harness file")
+        for item in files:
+            if set(item) != {"file", "sha256"}:
+                raise ValueError("invalid execution-freeze file record")
+            if digest(REPO / item["file"]) != item["sha256"]:
+                raise ValueError(f"execution freeze mismatch for {item['file']}")
     return protocol
 
 
@@ -436,6 +436,7 @@ def workspace_paths(workspace: Path) -> list[str]:
                     paths.append(relative)
             elif not _ignored_workspace_path(relative):
                 kept_directories.append(directory)
+                paths.append(relative + "/")
         directories[:] = kept_directories
         for filename in filenames:
             relative = (root_path / filename).relative_to(workspace).as_posix()
@@ -957,7 +958,9 @@ def command_protocol(events: list[dict[str, Any]]) -> dict[str, Any]:
 
 def _integrity(workspace: Path, hashes: dict[str, str]) -> bool:
     return all(
-        (workspace / name).is_file() and digest(workspace / name) == expected
+        (workspace / name).is_file()
+        and not (workspace / name).is_symlink()
+        and digest(workspace / name) == expected
         for name, expected in hashes.items()
     )
 
@@ -1069,6 +1072,7 @@ def failure_row(
         "transport_integrity_ok": False,
         "attempt_record_integrity_ok": False,
         "public_execution_ok": False,
+        "editable_file_integrity_ok": False,
         "workspace_integrity_ok": False,
         "unexpected_files": [],
         "command_protocol": {"compliant": False, "commands": [], "violations": [error]},
@@ -1412,6 +1416,10 @@ def run_cell(
     protected_integrity = _integrity(workspace, written["protected_hashes"])
     read_only_integrity = _integrity(workspace, written["read_only_hashes"])
     symlink_integrity = _symlink_integrity(workspace, written["symlinks"])
+    editable_file_integrity = all(
+        (workspace / name).is_file() and not (workspace / name).is_symlink()
+        for name in written["source"]["editable_files"]
+    )
     transport_integrity = broker.integrity()
     transport_integrity_ok = bool(
         transport_integrity["ok"]
@@ -1422,6 +1430,7 @@ def run_cell(
         protected_integrity
         and read_only_integrity
         and symlink_integrity
+        and editable_file_integrity
         and transport_integrity_ok
         and attempt_record_integrity
         and not broker_error
@@ -1473,6 +1482,7 @@ def run_cell(
         "transport_integrity_ok": transport_integrity_ok,
         "attempt_record_integrity_ok": attempt_record_integrity,
         "public_execution_ok": public_execution_ok,
+        "editable_file_integrity_ok": editable_file_integrity,
         "parent_attempt_records": [
             {"file": str(path), "sha256": digest(path)} for path in attempt_files
         ],
@@ -1590,6 +1600,7 @@ def summarize(
         and all(row.get("attempt_record_integrity_ok") for row in results)
         and all(persisted_attempts_ok(row) for row in results)
         and all(row.get("public_execution_ok") for row in results)
+        and all(row.get("editable_file_integrity_ok") for row in results)
         and all(row.get("workspace_integrity_ok") for row in results)
         and all(not row.get("unexpected_files") for row in results)
         and all(row.get("command_protocol", {}).get("compliant") for row in results)

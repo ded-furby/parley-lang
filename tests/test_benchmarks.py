@@ -45,9 +45,11 @@ from benchmarks.fullstack_agent_037_scaffolds import (
     scaffold_files as fullstack_037_scaffold_files,
 )
 from benchmarks.run_fullstack_agent_037 import (
+    _integrity as fullstack_037_integrity,
     build_plan as build_fullstack_037_plan,
     command_protocol as fullstack_037_command_protocol,
     validate_corpus as validate_fullstack_037_corpus,
+    workspace_paths as fullstack_037_workspace_paths,
 )
 from benchmarks.run_fullstack_agent_036 import (
     FROZEN_PARLEY_COMMIT,
@@ -2729,6 +2731,28 @@ def test_fullstack_037_numeric_guard_and_command_limit_are_exact():
     )
     assert excessive["compliant"] is False
     assert "public check limit exceeded" in excessive["violations"][-1]
+
+
+def test_fullstack_037_integrity_rejects_symlinks_and_added_empty_directories(
+    tmp_path,
+):
+    protected = tmp_path / "protected.txt"
+    protected.write_text("frozen\n")
+    expected = {"protected.txt": hashlib.sha256(protected.read_bytes()).hexdigest()}
+    initial = fullstack_037_workspace_paths(tmp_path)
+    assert fullstack_037_integrity(tmp_path, expected) is True
+
+    target = tmp_path / "same-content.txt"
+    target.write_text("frozen\n")
+    protected.unlink()
+    protected.symlink_to(target)
+    assert fullstack_037_integrity(tmp_path, expected) is False
+
+    added = tmp_path / "unexpected-empty"
+    added.mkdir()
+    assert "unexpected-empty/" in set(fullstack_037_workspace_paths(tmp_path)) - set(
+        initial
+    )
 
 
 def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
