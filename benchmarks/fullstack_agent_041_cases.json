@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "experiment_id": "041",
+  "tasks": {
+    "observatory_schedule_build": [
+      {
+        "id": "observatory_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/observatory-ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Observatory Schedule", "ready": true}
+      },
+      {
+        "id": "observatory_outreach_day",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/observatory-schedule",
+        "json": {"public_talks": 4, "research_tracks": 2, "dome_sections": 3, "cloud_monitoring": false},
+        "expected_status": 200,
+        "expected_json": {"session_total": 6, "open_minutes": 150, "weather_minutes": 0, "scheduled_minutes": 150, "staff_minutes": 450, "rest_breaks": 1, "coordination_score": 493, "observatory_mode": "outreach"}
+      },
+      {
+        "id": "observatory_wrong_monitoring_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/observatory-schedule",
+        "json": {"public_talks": 4, "research_tracks": 2, "dome_sections": 3, "cloud_monitoring": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "observatory_browser_outreach",
+        "visibility": "public",
+        "target": "browser",
+        "export": "observatory_coordination_score",
+        "args": [4, 2, 3, false],
+        "expected": 493
+      },
+      {
+        "id": "observatory_research_clouds",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/observatory-schedule",
+        "json": {"public_talks": 1, "research_tracks": 4, "dome_sections": 2, "cloud_monitoring": true},
+        "expected_status": 200,
+        "expected_json": {"session_total": 5, "open_minutes": 146, "weather_minutes": 14, "scheduled_minutes": 160, "staff_minutes": 320, "rest_breaks": 1, "coordination_score": 358, "observatory_mode": "research_first"}
+      },
+      {
+        "id": "observatory_standby_watch",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/observatory-schedule",
+        "json": {"public_talks": 0, "research_tracks": 0, "dome_sections": 4, "cloud_monitoring": true},
+        "expected_status": 200,
+        "expected_json": {"session_total": 0, "open_minutes": 0, "weather_minutes": 28, "scheduled_minutes": 28, "staff_minutes": 112, "rest_breaks": 0, "coordination_score": 112, "observatory_mode": "standby"}
+      },
+      {
+        "id": "observatory_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/observatory-schedule",
+        "json": {"public_talks": 4, "research_tracks": 2, "dome_sections": 3, "cloud_monitoring": false, "mirror_count": 2},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "observatory_browser_research",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "observatory_coordination_score",
+        "args": [1, 4, 2, true],
+        "expected": 358
+      },
+      {
+        "id": "observatory_browser_standby",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "observatory_coordination_score",
+        "args": [0, 0, 4, true],
+        "expected": 112
+      }
+    ],
+    "reef_nursery_build": [
+      {
+        "id": "reef_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/reef-ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Reef Nursery", "ready": true}
+      },
+      {
+        "id": "reef_balanced_day",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/reef-nursery",
+        "json": {"coral_trays": 2, "algae_trays": 4, "circulation_pumps": 3, "night_cycle": false},
+        "expected_status": 200,
+        "expected_json": {"nursery_trays": 6, "base_flow_liters": 52, "night_flush_liters": 0, "required_flow_liters": 52, "pump_capacity_liters": 60, "served_flow_liters": 52, "overflow_flow_liters": 0, "reef_index": 58, "nursery_state": "balanced"}
+      },
+      {
+        "id": "reef_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/reef-nursery",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "reef_browser_balanced",
+        "visibility": "public",
+        "target": "browser",
+        "export": "reef_nursery_index",
+        "args": [2, 4, 3, false],
+        "expected": 58
+      },
+      {
+        "id": "reef_night_overflow",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/reef-nursery",
+        "json": {"coral_trays": 4, "algae_trays": 3, "circulation_pumps": 2, "night_cycle": true},
+        "expected_status": 200,
+        "expected_json": {"nursery_trays": 7, "base_flow_liters": 69, "night_flush_liters": 10, "required_flow_liters": 79, "pump_capacity_liters": 40, "served_flow_liters": 40, "overflow_flow_liters": 39, "reef_index": 403, "nursery_state": "night_overflow"}
+      },
+      {
+        "id": "reef_night_balanced",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/reef-nursery",
+        "json": {"coral_trays": 1, "algae_trays": 1, "circulation_pumps": 2, "night_cycle": true},
+        "expected_status": 200,
+        "expected_json": {"nursery_trays": 2, "base_flow_liters": 19, "night_flush_liters": 10, "required_flow_liters": 29, "pump_capacity_liters": 40, "served_flow_liters": 29, "overflow_flow_liters": 0, "reef_index": 32, "nursery_state": "balanced"}
+      },
+      {
+        "id": "reef_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/reef-nursery",
+        "json": {"coral_trays": 2, "algae_trays": 4, "circulation_pumps": 3, "night_cycle": false, "salinity": 7},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "reef_browser_overflow",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "reef_nursery_index",
+        "args": [4, 3, 2, true],
+        "expected": 403
+      },
+      {
+        "id": "reef_browser_night_balanced",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "reef_nursery_index",
+        "args": [1, 1, 2, true],
+        "expected": 32
+      }
+    ],
+    "rescue_shelter_repair": [
+      {
+        "id": "shelter_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/shelter-ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Rescue Shelter", "ready": true}
+      },
+      {
+        "id": "shelter_lockdown_capacity",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/rescue-shelter",
+        "json": {"arriving_hikers": 5, "injured_hikers": 2, "heater_packs": 3, "storm_lockdown": true},
+        "expected_status": 200,
+        "expected_json": {"hiker_total": 7, "baseline_warmth": 27, "lockdown_reduction": 6, "required_warmth": 21, "pack_capacity": 24, "delivered_warmth": 21, "uncovered_warmth": 0, "unused_capacity": 3, "shelter_state": "covered"}
+      },
+      {
+        "id": "shelter_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/rescue-shelter",
+        "json": {"arriving_hikers": 5, "injured_hikers": 2, "heater_packs": 3},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "shelter_browser_lockdown",
+        "visibility": "public",
+        "target": "browser",
+        "export": "shelter_unused_capacity",
+        "args": [5, 2, 3, true],
+        "expected": 3
+      },
+      {
+        "id": "shelter_open_supply_gap",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/rescue-shelter",
+        "json": {"arriving_hikers": 7, "injured_hikers": 3, "heater_packs": 2, "storm_lockdown": false},
+        "expected_status": 200,
+        "expected_json": {"hiker_total": 10, "baseline_warmth": 39, "lockdown_reduction": 0, "required_warmth": 39, "pack_capacity": 16, "delivered_warmth": 16, "uncovered_warmth": 23, "unused_capacity": 0, "shelter_state": "supply_gap"}
+      },
+      {
+        "id": "shelter_lockdown_covered",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/rescue-shelter",
+        "json": {"arriving_hikers": 2, "injured_hikers": 1, "heater_packs": 2, "storm_lockdown": true},
+        "expected_status": 200,
+        "expected_json": {"hiker_total": 3, "baseline_warmth": 12, "lockdown_reduction": 4, "required_warmth": 8, "pack_capacity": 16, "delivered_warmth": 8, "uncovered_warmth": 0, "unused_capacity": 8, "shelter_state": "covered"}
+      },
+      {
+        "id": "shelter_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/rescue-shelter",
+        "json": {"arriving_hikers": 5, "injured_hikers": 2, "heater_packs": 3, "storm_lockdown": true, "trail_marker": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "shelter_browser_supply_gap",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "shelter_unused_capacity",
+        "args": [7, 3, 2, false],
+        "expected": 0
+      },
+      {
+        "id": "shelter_browser_covered",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "shelter_unused_capacity",
+        "args": [2, 1, 2, true],
+        "expected": 8
+      }
+    ],
+    "aviary_feeding_repair": [
+      {
+        "id": "aviary_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/aviary-ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Aviary Feeding", "ready": true}
+      },
+      {
+        "id": "aviary_winter_rehab",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/aviary-feeding",
+        "json": {"resident_birds": 4, "rehab_birds": 3, "feed_bins": 2, "winter_ration": true},
+        "expected_status": 200,
+        "expected_json": {"bird_total": 7, "resident_scoops": 8, "rehab_scoops": 9, "winter_scoops": 7, "required_scoops": 24, "available_scoops": 20, "served_scoops": 20, "shortage_scoops": 4, "feed_state": "winter_shortage"}
+      },
+      {
+        "id": "aviary_wrong_numeric_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/aviary-feeding",
+        "json": {"resident_birds": "4", "rehab_birds": 3, "feed_bins": 2, "winter_ration": true},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "aviary_browser_winter",
+        "visibility": "public",
+        "target": "browser",
+        "export": "aviary_required_scoops",
+        "args": [4, 3, 2, true],
+        "expected": 24
+      },
+      {
+        "id": "aviary_plain_shortage",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/aviary-feeding",
+        "json": {"resident_birds": 5, "rehab_birds": 1, "feed_bins": 1, "winter_ration": false},
+        "expected_status": 200,
+        "expected_json": {"bird_total": 6, "resident_scoops": 10, "rehab_scoops": 3, "winter_scoops": 0, "required_scoops": 13, "available_scoops": 10, "served_scoops": 10, "shortage_scoops": 3, "feed_state": "shortage"}
+      },
+      {
+        "id": "aviary_winter_stocked",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/aviary-feeding",
+        "json": {"resident_birds": 2, "rehab_birds": 2, "feed_bins": 2, "winter_ration": true},
+        "expected_status": 200,
+        "expected_json": {"bird_total": 4, "resident_scoops": 4, "rehab_scoops": 6, "winter_scoops": 4, "required_scoops": 14, "available_scoops": 20, "served_scoops": 14, "shortage_scoops": 0, "feed_state": "stocked"}
+      },
+      {
+        "id": "aviary_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v5/aviary-feeding",
+        "json": {"resident_birds": 4, "rehab_birds": 3, "feed_bins": 2, "winter_ration": true, "perch_rows": 3},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "aviary_browser_plain",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "aviary_required_scoops",
+        "args": [5, 1, 1, false],
+        "expected": 13
+      },
+      {
+        "id": "aviary_browser_winter_stocked",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "aviary_required_scoops",
+        "args": [2, 2, 2, true],
+        "expected": 14
+      }
+    ]
+  }
+}

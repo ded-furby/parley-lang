@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "experiment_id": "041",
+  "description": "Two independent full-stack implementation assignments and two maintenance assignments, frozen after the post-040 scratch-control checkpoint and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "observatory_schedule_build",
+      "kind": "implementation",
+      "title": "Build an observatory schedule across HTTP and browser targets",
+      "statement": "Implement the frozen Observatory Schedule contract in the supplied stack. session_total is public_talks + research_tracks. open_minutes is public_talks * 22 + research_tracks * 31. weather_minutes is dome_sections * 7 during cloud_monitoring and zero otherwise. scheduled_minutes is open_minutes + weather_minutes. staff_minutes is scheduled_minutes * dome_sections. rest_breaks is scheduled_minutes divided by 90 using floor division. coordination_score is staff_minutes + rest_breaks * 13 + session_total * 5. observatory_mode is research_first when research_tracks is greater than public_talks, outreach when any public talks remain, and standby otherwise. The browser export returns coordination_score.",
+      "service": "Observatory Schedule",
+      "status_route": "/status/observatory-ready",
+      "post_route": "/api/v5/observatory-schedule",
+      "browser_export": "observatory_coordination_score",
+      "shared_result_field": "coordination_score",
+      "request_fields": {
+        "public_talks": "number",
+        "research_tracks": "number",
+        "dome_sections": "number",
+        "cloud_monitoring": "yesno"
+      },
+      "response_fields": {
+        "session_total": "number",
+        "open_minutes": "number",
+        "weather_minutes": "number",
+        "scheduled_minutes": "number",
+        "staff_minutes": "number",
+        "rest_breaks": "number",
+        "coordination_score": "number",
+        "observatory_mode": "text"
+      },
+      "public_case_ids": [
+        "observatory_status",
+        "observatory_outreach_day",
+        "observatory_wrong_monitoring_type",
+        "observatory_browser_outreach"
+      ],
+      "hidden_case_ids": [
+        "observatory_research_clouds",
+        "observatory_standby_watch",
+        "observatory_unknown_field",
+        "observatory_browser_research",
+        "observatory_browser_standby"
+      ],
+      "independence": "New observatory scheduling domain, v5 route, floor-break and staff-load formulas, vocabulary, fixtures, and browser export selected after the scratch-control checkpoint and before any 041 scaffold or model output."
+    },
+    {
+      "id": "reef_nursery_build",
+      "kind": "implementation",
+      "title": "Build a reef nursery flow planner across HTTP and browser targets",
+      "statement": "Implement the frozen Reef Nursery contract in the supplied stack. nursery_trays is coral_trays + algae_trays. base_flow_liters is coral_trays * 12 + algae_trays * 7. night_flush_liters is circulation_pumps * 5 during a night_cycle and zero otherwise. required_flow_liters is base_flow_liters + night_flush_liters. pump_capacity_liters is circulation_pumps * 20. served_flow_liters is min(required_flow_liters, pump_capacity_liters). overflow_flow_liters is max(required_flow_liters - pump_capacity_liters, 0). reef_index is served_flow_liters + overflow_flow_liters * 9 + coral_trays * 3. nursery_state is balanced when overflow_flow_liters is zero, night_overflow when overflow remains during a night cycle, and daytime_overflow otherwise. The browser export returns reef_index.",
+      "service": "Reef Nursery",
+      "status_route": "/status/reef-ready",
+      "post_route": "/api/v5/reef-nursery",
+      "browser_export": "reef_nursery_index",
+      "shared_result_field": "reef_index",
+      "request_fields": {
+        "coral_trays": "number",
+        "algae_trays": "number",
+        "circulation_pumps": "number",
+        "night_cycle": "yesno"
+      },
+      "response_fields": {
+        "nursery_trays": "number",
+        "base_flow_liters": "number",
+        "night_flush_liters": "number",
+        "required_flow_liters": "number",
+        "pump_capacity_liters": "number",
+        "served_flow_liters": "number",
+        "overflow_flow_liters": "number",
+        "reef_index": "number",
+        "nursery_state": "text"
+      },
+      "public_case_ids": [
+        "reef_status",
+        "reef_balanced_day",
+        "reef_wrong_media",
+        "reef_browser_balanced"
+      ],
+      "hidden_case_ids": [
+        "reef_night_overflow",
+        "reef_night_balanced",
+        "reef_unknown_field",
+        "reef_browser_overflow",
+        "reef_browser_night_balanced"
+      ],
+      "independence": "New reef-nursery domain, v5 route, flow/capacity formulas, vocabulary, fixtures, and browser export selected before any 041 scaffold or model output."
+    },
+    {
+      "id": "rescue_shelter_repair",
+      "kind": "maintenance",
+      "title": "Repair storm-adjusted mountain shelter warming",
+      "statement": "Repair the supplied Rescue Shelter application. hiker_total is arriving_hikers + injured_hikers. baseline_warmth is arriving_hikers * 3 + injured_hikers * 6. lockdown_reduction is heater_packs * 2 during storm_lockdown and zero otherwise. required_warmth is max(baseline_warmth - lockdown_reduction, 0). pack_capacity is heater_packs * 8. delivered_warmth is min(required_warmth, pack_capacity). uncovered_warmth is max(required_warmth - delivered_warmth, 0). unused_capacity is max(pack_capacity - delivered_warmth, 0). shelter_state is covered when uncovered_warmth is zero, storm_gap when uncovered warmth remains during storm lockdown, and supply_gap otherwise. The HTTP response and browser export must use the same rule; the browser export returns unused_capacity.",
+      "service": "Rescue Shelter",
+      "status_route": "/status/shelter-ready",
+      "post_route": "/api/v5/rescue-shelter",
+      "browser_export": "shelter_unused_capacity",
+      "shared_result_field": "unused_capacity",
+      "request_fields": {
+        "arriving_hikers": "number",
+        "injured_hikers": "number",
+        "heater_packs": "number",
+        "storm_lockdown": "yesno"
+      },
+      "response_fields": {
+        "hiker_total": "number",
+        "baseline_warmth": "number",
+        "lockdown_reduction": "number",
+        "required_warmth": "number",
+        "pack_capacity": "number",
+        "delivered_warmth": "number",
+        "uncovered_warmth": "number",
+        "unused_capacity": "number",
+        "shelter_state": "text"
+      },
+      "public_case_ids": [
+        "shelter_status",
+        "shelter_lockdown_capacity",
+        "shelter_missing_field",
+        "shelter_browser_lockdown"
+      ],
+      "hidden_case_ids": [
+        "shelter_open_supply_gap",
+        "shelter_lockdown_covered",
+        "shelter_unknown_field",
+        "shelter_browser_supply_gap",
+        "shelter_browser_covered"
+      ],
+      "predeclared_defect": "The application-logic module chooses delivered_warmth from baseline_warmth before applying lockdown_reduction, so storm requests can over-deliver and understate unused capacity.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic adjustment-before-allocation ordering defect",
+      "adaptation_boundary": "The lockdown mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    },
+    {
+      "id": "aviary_feeding_repair",
+      "kind": "maintenance",
+      "title": "Repair winter rationing for rehabilitation birds",
+      "statement": "Repair the supplied Aviary Feeding application. bird_total is resident_birds + rehab_birds. resident_scoops is resident_birds * 2. rehab_scoops is rehab_birds * 3. winter_scoops is bird_total during winter_ration and zero otherwise. required_scoops is resident_scoops + rehab_scoops + winter_scoops. available_scoops is feed_bins * 10. served_scoops is min(required_scoops, available_scoops). shortage_scoops is max(required_scoops - available_scoops, 0). feed_state is stocked when shortage_scoops is zero, winter_shortage when shortage remains during winter rationing, and shortage otherwise. The HTTP response and browser export must use the same rule; the browser export returns required_scoops.",
+      "service": "Aviary Feeding",
+      "status_route": "/status/aviary-ready",
+      "post_route": "/api/v5/aviary-feeding",
+      "browser_export": "aviary_required_scoops",
+      "shared_result_field": "required_scoops",
+      "request_fields": {
+        "resident_birds": "number",
+        "rehab_birds": "number",
+        "feed_bins": "number",
+        "winter_ration": "yesno"
+      },
+      "response_fields": {
+        "bird_total": "number",
+        "resident_scoops": "number",
+        "rehab_scoops": "number",
+        "winter_scoops": "number",
+        "required_scoops": "number",
+        "available_scoops": "number",
+        "served_scoops": "number",
+        "shortage_scoops": "number",
+        "feed_state": "text"
+      },
+      "public_case_ids": [
+        "aviary_status",
+        "aviary_winter_rehab",
+        "aviary_wrong_numeric_type",
+        "aviary_browser_winter"
+      ],
+      "hidden_case_ids": [
+        "aviary_plain_shortage",
+        "aviary_winter_stocked",
+        "aviary_unknown_field",
+        "aviary_browser_plain",
+        "aviary_browser_winter_stocked"
+      ],
+      "predeclared_defect": "The application-logic module computes winter_scoops from resident_birds only, omitting the additional ration owed to rehabilitation birds.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic conditional subset-omission defect",
+      "adaptation_boundary": "The winter-ration mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    }
+  ]
+}

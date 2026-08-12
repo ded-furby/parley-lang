@@ -4164,3 +4164,34 @@ Decision: bind this module and a clean-room peak-size calibration in the 041
 protocol before implementing its runner. Per-cell workspace reclamation must
 occur only after the finished record is durable; any cleanup/capacity failure
 stops new scheduling and never authorizes rerunning a started cell.
+
+### 041 independent corpus frozen after scratch controls
+
+- Frozen: 2026-08-13
+- Preceding infrastructure commit: `85acd3e`
+- Tasks: `benchmarks/fullstack_agent_041_tasks.json`
+- Task SHA-256:
+  `4407b9d6cf2642c67d969a6a7e2fd8ff374077e418f1e41ee6e83f94d9194abc`
+- Cases: `benchmarks/fullstack_agent_041_cases.json`
+- Case SHA-256:
+  `49b22a45c2de8c3c9aef92109558e6879a1eab87258e349b3812ac0ea74c9977`
+- Design record: `benchmarks/FULLSTACK_AGENT_041.md`
+
+The new population contains observatory-schedule and reef-nursery
+implementations plus rescue-shelter and aviary-feeding repairs. It has 36
+cases: four public and five hidden cases per task, with one public and two
+hidden real-browser judgments per task. An independent Python oracle recomputes
+every successful HTTP response and browser scalar.
+
+Automated independence checks prove that task IDs, case IDs, request fields,
+response fields, status and POST routes, and browser exports are disjoint from
+036–040. The shelter's adjustment-before-allocation defect and aviary's
+conditional subset-omission defect are new and publicly observable. The
+corpus mixes floor division, multiplication, clamps, boolean adjustments,
+capacity allocation, and three-way states.
+
+This checkpoint contains no 041 scaffold, reference implementation, protocol,
+model configuration, threshold, agent prompt, or measured session. Next:
+commit this semantics-only boundary, then preregister the balanced matrix,
+scratch budget, evidence cleanup order, and exact execution controls before
+implementing any stack.

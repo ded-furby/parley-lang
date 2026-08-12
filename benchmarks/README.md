@@ -399,6 +399,15 @@ reserve plus every worker's peak allocation. It keeps work and evidence roots
 disjoint and permits per-cell cleanup only after a finished journal identifies
 the exact immediate-child workspace. Frozen runners through 040 are unchanged.
 
+Iteration 041 now has a semantics-only independent corpus in
+`fullstack_agent_041_tasks.json` and `fullstack_agent_041_cases.json`. It adds
+observatory scheduling and reef nursery implementations plus shelter warming
+and aviary ration repairs. Its 36 case IDs, task IDs, request/response fields,
+status and POST routes, and browser exports are disjoint from 036–040. The
+oracle-checked task/case boundary follows the scratch-control checkpoint and
+precedes every 041 protocol, scaffold, threshold, or model output; see
+`FULLSTACK_AGENT_041.md`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
