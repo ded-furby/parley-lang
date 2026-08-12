@@ -3436,3 +3436,178 @@ def test_exact_build_freeze_038_smoke_proves_positive_and_negative_controls():
     assert negative["ok"] is False
     assert negative["commands"][0]["returncode"] == 0
     assert set(negative["read_only_changes"]) == {"Cargo.lock"}
+
+
+def _fullstack_038_oracle(task_id, value):
+    if task_id == "ferry_manifest_build":
+        travellers = value["adult_count"] + value["youth_count"]
+        passenger = value["adult_count"] * 1100 + value["youth_count"] * 650
+        vehicle = value["vehicle_count"] * 2400
+        peak = (
+            travellers * 125 + value["vehicle_count"] * 350
+            if value["peak_departure"]
+            else 0
+        )
+        if value["vehicle_count"] > 0 and travellers > 0:
+            mode = "mixed"
+        elif value["vehicle_count"] > 0:
+            mode = "vehicle"
+        else:
+            mode = "foot"
+        return {
+            "traveller_total": travellers,
+            "passenger_charge_cents": passenger,
+            "vehicle_charge_cents": vehicle,
+            "peak_charge_cents": peak,
+            "manifest_charge_cents": passenger + vehicle + peak,
+            "boarding_load": travellers + value["vehicle_count"] * 3,
+            "travel_mode": mode,
+        }
+    if task_id == "archive_retention_build":
+        pages = value["document_count"] * value["pages_each"]
+        base = value["requested_years"] * 12
+        retained = max(base, 84) if value["legal_hold"] else base
+        batches = 0 if pages == 0 else (pages + 199) // 200
+        return {
+            "page_total": pages,
+            "base_months": base,
+            "retained_months": retained,
+            "review_batches": batches,
+            "retention_score": retained + batches * 3,
+            "retention_class": "held" if value["legal_hold"] else "standard",
+        }
+    if task_id == "loyalty_stamps_repair":
+        base = value["purchase_count"] * value["stamps_each"]
+        bonus = value["purchase_count"] if value["double_day"] else 0
+        spendable = max(base + bonus - value["claimed_stamps"], 0)
+        rewards = spendable // 10
+        return {
+            "base_stamps": base,
+            "bonus_stamps": bonus,
+            "spendable_stamps": spendable,
+            "reward_count": rewards,
+            "leftover_stamps": spendable % 10,
+            "reward_stage": "ready" if rewards > 0 else "collecting",
+        }
+    if task_id == "cold_storage_repair":
+        corrected = value["measured_degrees"] + (2 if value["door_open"] else 0)
+        gap = abs(corrected - value["target_degrees"])
+        excess = max(
+            corrected - value["target_degrees"] - value["allowed_drift"], 0
+        )
+        steps = 0 if excess == 0 else (excess + 2) // 3
+        safe = gap <= value["allowed_drift"]
+        condition = (
+            "stable"
+            if safe
+            else "cooling"
+            if corrected > value["target_degrees"]
+            else "warming"
+        )
+        return {
+            "corrected_degrees": corrected,
+            "temperature_gap": gap,
+            "excess_heat": excess,
+            "cooling_steps": steps,
+            "safe_flag": safe,
+            "storage_condition": condition,
+        }
+    raise AssertionError(f"unknown 038 task: {task_id}")
+
+
+def test_fullstack_038_corpus_is_independent_complete_and_oracle_checked():
+    task_path = BENCHMARKS / "fullstack_agent_038_tasks.json"
+    case_path = BENCHMARKS / "fullstack_agent_038_cases.json"
+    task_document = json.loads(task_path.read_text())
+    case_document = json.loads(case_path.read_text())
+
+    assert task_document["schema_version"] == 1
+    assert task_document["experiment_id"] == "038"
+    assert case_document["schema_version"] == 1
+    assert case_document["experiment_id"] == "038"
+    tasks = task_document["tasks"]
+    assert len(tasks) == 4
+    assert [task["kind"] for task in tasks] == [
+        "implementation",
+        "implementation",
+        "maintenance",
+        "maintenance",
+    ]
+    assert set(case_document["tasks"]) == {task["id"] for task in tasks}
+
+    prior_tasks = []
+    prior_cases = []
+    for experiment in ("036", "037"):
+        old_tasks = json.loads(
+            (BENCHMARKS / f"fullstack_agent_{experiment}_tasks.json").read_text()
+        )["tasks"]
+        old_cases = json.loads(
+            (BENCHMARKS / f"fullstack_agent_{experiment}_cases.json").read_text()
+        )["tasks"]
+        prior_tasks.extend(old_tasks)
+        prior_cases.extend(case for cases in old_cases.values() for case in cases)
+
+    def fields(rows, name):
+        return {field for row in rows for field in row[name]}
+
+    assert {task["id"] for task in tasks}.isdisjoint(
+        task["id"] for task in prior_tasks
+    )
+    assert fields(tasks, "request_fields").isdisjoint(
+        fields(prior_tasks, "request_fields")
+    )
+    assert fields(tasks, "response_fields").isdisjoint(
+        fields(prior_tasks, "response_fields")
+    )
+    assert {task["post_route"] for task in tasks}.isdisjoint(
+        task["post_route"] for task in prior_tasks
+    )
+    assert {task["browser_export"] for task in tasks}.isdisjoint(
+        task["browser_export"] for task in prior_tasks
+    )
+
+    all_case_ids = []
+    for task in tasks:
+        cases = case_document["tasks"][task["id"]]
+        public = [case for case in cases if case["visibility"] == "public"]
+        hidden = [case for case in cases if case["visibility"] == "hidden"]
+        all_case_ids.extend(case["id"] for case in cases)
+
+        assert len(cases) == 9
+        assert len(public) == 4 and len(hidden) == 5
+        assert sum(case["target"] == "browser" for case in public) == 1
+        assert sum(case["target"] == "browser" for case in hidden) == 2
+        assert task["public_case_ids"] == [case["id"] for case in public]
+        assert task["hidden_case_ids"] == [case["id"] for case in hidden]
+
+        field_order = list(task["request_fields"])
+        for case in cases:
+            if case["target"] == "browser":
+                values = dict(zip(field_order, case["args"], strict=True))
+                result = _fullstack_038_oracle(task["id"], values)
+                assert case["export"] == task["browser_export"]
+                assert case["expected"] == result[task["shared_result_field"]]
+            elif case["method"] == "GET":
+                assert case["path"] == task["status_route"]
+                assert case["expected_json"] == {
+                    "service": task["service"],
+                    "ready": True,
+                }
+            elif case["expected_status"] == 200:
+                assert case["path"] == task["post_route"]
+                assert case["expected_json"] == _fullstack_038_oracle(
+                    task["id"], case["json"]
+                )
+            else:
+                assert case["expected_error"] in {
+                    "invalid_json",
+                    "json_content_type_required",
+                }
+
+    assert len(all_case_ids) == len(set(all_case_ids)) == 36
+    assert set(all_case_ids).isdisjoint(case["id"] for case in prior_cases)
+    assert all(
+        task["predeclared_defect"] and task["root_cause_role"] == "application_logic"
+        for task in tasks
+        if task["kind"] == "maintenance"
+    )

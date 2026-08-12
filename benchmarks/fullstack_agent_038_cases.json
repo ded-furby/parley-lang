@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "experiment_id": "038",
+  "tasks": {
+    "ferry_manifest_build": [
+      {
+        "id": "ferry_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/live",
+        "expected_status": 200,
+        "expected_json": {"service": "Ferry Manifest", "ready": true}
+      },
+      {
+        "id": "ferry_mixed_offpeak",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/ferry-manifest",
+        "json": {"adult_count": 2, "youth_count": 1, "vehicle_count": 1, "peak_departure": false},
+        "expected_status": 200,
+        "expected_json": {"traveller_total": 3, "passenger_charge_cents": 2850, "vehicle_charge_cents": 2400, "peak_charge_cents": 0, "manifest_charge_cents": 5250, "boarding_load": 6, "travel_mode": "mixed"}
+      },
+      {
+        "id": "ferry_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/ferry-manifest",
+        "json": {"adult_count": "2", "youth_count": 1, "vehicle_count": 1, "peak_departure": false},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "ferry_browser_offpeak",
+        "visibility": "public",
+        "target": "browser",
+        "export": "manifest_charge",
+        "args": [2, 1, 1, false],
+        "expected": 5250
+      },
+      {
+        "id": "ferry_peak_convoy",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/ferry-manifest",
+        "json": {"adult_count": 1, "youth_count": 2, "vehicle_count": 2, "peak_departure": true},
+        "expected_status": 200,
+        "expected_json": {"traveller_total": 3, "passenger_charge_cents": 2400, "vehicle_charge_cents": 4800, "peak_charge_cents": 1075, "manifest_charge_cents": 8275, "boarding_load": 9, "travel_mode": "mixed"}
+      },
+      {
+        "id": "ferry_peak_foot",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/ferry-manifest",
+        "json": {"adult_count": 0, "youth_count": 4, "vehicle_count": 0, "peak_departure": true},
+        "expected_status": 200,
+        "expected_json": {"traveller_total": 4, "passenger_charge_cents": 2600, "vehicle_charge_cents": 0, "peak_charge_cents": 500, "manifest_charge_cents": 3100, "boarding_load": 4, "travel_mode": "foot"}
+      },
+      {
+        "id": "ferry_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/ferry-manifest",
+        "json": {"adult_count": 2, "youth_count": 1, "vehicle_count": 1, "peak_departure": false, "deck": 3},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "ferry_browser_convoy",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "manifest_charge",
+        "args": [1, 2, 2, true],
+        "expected": 8275
+      },
+      {
+        "id": "ferry_browser_foot",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "manifest_charge",
+        "args": [0, 4, 0, true],
+        "expected": 3100
+      }
+    ],
+    "archive_retention_build": [
+      {
+        "id": "archive_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/live",
+        "expected_status": 200,
+        "expected_json": {"service": "Archive Retention", "ready": true}
+      },
+      {
+        "id": "archive_short_hold",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/archive-retention",
+        "json": {"document_count": 12, "pages_each": 50, "requested_years": 3, "legal_hold": true},
+        "expected_status": 200,
+        "expected_json": {"page_total": 600, "base_months": 36, "retained_months": 84, "review_batches": 3, "retention_score": 93, "retention_class": "held"}
+      },
+      {
+        "id": "archive_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/archive-retention",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "archive_browser_short_hold",
+        "visibility": "public",
+        "target": "browser",
+        "export": "retention_index",
+        "args": [12, 50, 3, true],
+        "expected": 93
+      },
+      {
+        "id": "archive_long_standard",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/archive-retention",
+        "json": {"document_count": 5, "pages_each": 120, "requested_years": 10, "legal_hold": false},
+        "expected_status": 200,
+        "expected_json": {"page_total": 600, "base_months": 120, "retained_months": 120, "review_batches": 3, "retention_score": 129, "retention_class": "standard"}
+      },
+      {
+        "id": "archive_long_hold",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/archive-retention",
+        "json": {"document_count": 2, "pages_each": 75, "requested_years": 10, "legal_hold": true},
+        "expected_status": 200,
+        "expected_json": {"page_total": 150, "base_months": 120, "retained_months": 120, "review_batches": 1, "retention_score": 123, "retention_class": "held"}
+      },
+      {
+        "id": "archive_missing_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/archive-retention",
+        "json": {"document_count": 5, "pages_each": 120, "requested_years": 10},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "archive_browser_standard",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "retention_index",
+        "args": [5, 120, 10, false],
+        "expected": 129
+      },
+      {
+        "id": "archive_browser_long_hold",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "retention_index",
+        "args": [2, 75, 10, true],
+        "expected": 123
+      }
+    ],
+    "loyalty_stamps_repair": [
+      {
+        "id": "loyalty_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/live",
+        "expected_status": 200,
+        "expected_json": {"service": "Loyalty Stamps", "ready": true}
+      },
+      {
+        "id": "loyalty_claim_crosses_reward",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/loyalty-stamps",
+        "json": {"purchase_count": 6, "stamps_each": 2, "claimed_stamps": 4, "double_day": false},
+        "expected_status": 200,
+        "expected_json": {"base_stamps": 12, "bonus_stamps": 0, "spendable_stamps": 8, "reward_count": 0, "leftover_stamps": 8, "reward_stage": "collecting"}
+      },
+      {
+        "id": "loyalty_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/loyalty-stamps",
+        "json": {"purchase_count": 6, "stamps_each": 2, "claimed_stamps": 4},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "loyalty_browser_claimed",
+        "visibility": "public",
+        "target": "browser",
+        "export": "claimable_rewards",
+        "args": [6, 2, 4, false],
+        "expected": 0
+      },
+      {
+        "id": "loyalty_double_ready",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/loyalty-stamps",
+        "json": {"purchase_count": 7, "stamps_each": 1, "claimed_stamps": 3, "double_day": true},
+        "expected_status": 200,
+        "expected_json": {"base_stamps": 7, "bonus_stamps": 7, "spendable_stamps": 11, "reward_count": 1, "leftover_stamps": 1, "reward_stage": "ready"}
+      },
+      {
+        "id": "loyalty_fully_claimed",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/loyalty-stamps",
+        "json": {"purchase_count": 3, "stamps_each": 2, "claimed_stamps": 20, "double_day": false},
+        "expected_status": 200,
+        "expected_json": {"base_stamps": 6, "bonus_stamps": 0, "spendable_stamps": 0, "reward_count": 0, "leftover_stamps": 0, "reward_stage": "collecting"}
+      },
+      {
+        "id": "loyalty_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/loyalty-stamps",
+        "json": {"purchase_count": 6, "stamps_each": 2, "claimed_stamps": 4, "double_day": false, "member_tier": "gold"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "loyalty_browser_double",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "claimable_rewards",
+        "args": [7, 1, 3, true],
+        "expected": 1
+      },
+      {
+        "id": "loyalty_browser_empty",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "claimable_rewards",
+        "args": [3, 2, 20, false],
+        "expected": 0
+      }
+    ],
+    "cold_storage_repair": [
+      {
+        "id": "cold_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/live",
+        "expected_status": 200,
+        "expected_json": {"service": "Cold Storage", "ready": true}
+      },
+      {
+        "id": "cold_open_requires_cooling",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/cold-storage",
+        "json": {"measured_degrees": 7, "target_degrees": 5, "allowed_drift": 3, "door_open": true},
+        "expected_status": 200,
+        "expected_json": {"corrected_degrees": 9, "temperature_gap": 4, "excess_heat": 1, "cooling_steps": 1, "safe_flag": false, "storage_condition": "cooling"}
+      },
+      {
+        "id": "cold_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/cold-storage",
+        "json": {"measured_degrees": 7, "target_degrees": 5, "allowed_drift": 3, "door_open": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cold_browser_open",
+        "visibility": "public",
+        "target": "browser",
+        "export": "required_cooling",
+        "args": [7, 5, 3, true],
+        "expected": 1
+      },
+      {
+        "id": "cold_closed_warming",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/cold-storage",
+        "json": {"measured_degrees": 3, "target_degrees": 5, "allowed_drift": 1, "door_open": false},
+        "expected_status": 200,
+        "expected_json": {"corrected_degrees": 3, "temperature_gap": 2, "excess_heat": 0, "cooling_steps": 0, "safe_flag": false, "storage_condition": "warming"}
+      },
+      {
+        "id": "cold_open_boundary",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/cold-storage",
+        "json": {"measured_degrees": 4, "target_degrees": 5, "allowed_drift": 1, "door_open": true},
+        "expected_status": 200,
+        "expected_json": {"corrected_degrees": 6, "temperature_gap": 1, "excess_heat": 0, "cooling_steps": 0, "safe_flag": true, "storage_condition": "stable"}
+      },
+      {
+        "id": "cold_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v2/cold-storage",
+        "json": {"measured_degrees": 7, "target_degrees": 5, "allowed_drift": 3, "door_open": true, "zone": "north"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cold_browser_warming",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "required_cooling",
+        "args": [3, 5, 1, false],
+        "expected": 0
+      },
+      {
+        "id": "cold_browser_boundary",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "required_cooling",
+        "args": [4, 5, 1, true],
+        "expected": 0
+      }
+    ]
+  }
+}

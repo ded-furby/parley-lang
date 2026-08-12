@@ -318,6 +318,15 @@ canonicalizes a deliberately displaced root block and that
 threat boundary. This validates execution plumbing only and must precede a
 separate independent-corpus freeze.
 
+The independent 038 corpus is now frozen in
+`fullstack_agent_038_tasks.json` and `fullstack_agent_038_cases.json`. It adds
+ferry manifest, archive retention, loyalty redemption, and cold-storage
+correction assignments with 36 new case IDs. Automated oracles validate every
+success fixture and enforce disjoint task IDs, request/response fields, POST
+routes, browser exports, and case IDs from both 036 and 037. No scaffold,
+reference implementation, protocol threshold, or measured session exists at
+this checkpoint; see `FULLSTACK_AGENT_038.md` for the claim boundary.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

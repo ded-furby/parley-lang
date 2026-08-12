@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "experiment_id": "038",
+  "description": "Two independent full-stack implementation assignments and two maintenance assignments, frozen after exact-build validation and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "ferry_manifest_build",
+      "kind": "implementation",
+      "title": "Build a ferry manifest charge service across HTTP and browser targets",
+      "statement": "Implement the frozen Ferry Manifest contract in the supplied stack. traveller_total is adult_count + youth_count. passenger_charge_cents is adult_count * 1100 + youth_count * 650. vehicle_charge_cents is vehicle_count * 2400. peak_charge_cents is traveller_total * 125 + vehicle_count * 350 during a peak_departure and zero otherwise. manifest_charge_cents is the sum of passenger, vehicle, and peak charges. boarding_load is traveller_total + vehicle_count * 3. travel_mode is mixed when both travellers and vehicles are present, vehicle when only vehicles are present, and foot otherwise. The browser export returns manifest_charge_cents.",
+      "service": "Ferry Manifest",
+      "status_route": "/health/live",
+      "post_route": "/api/v2/ferry-manifest",
+      "browser_export": "manifest_charge",
+      "shared_result_field": "manifest_charge_cents",
+      "request_fields": {
+        "adult_count": "number",
+        "youth_count": "number",
+        "vehicle_count": "number",
+        "peak_departure": "yesno"
+      },
+      "response_fields": {
+        "traveller_total": "number",
+        "passenger_charge_cents": "number",
+        "vehicle_charge_cents": "number",
+        "peak_charge_cents": "number",
+        "manifest_charge_cents": "number",
+        "boarding_load": "number",
+        "travel_mode": "text"
+      },
+      "public_case_ids": [
+        "ferry_status",
+        "ferry_mixed_offpeak",
+        "ferry_wrong_type",
+        "ferry_browser_offpeak"
+      ],
+      "hidden_case_ids": [
+        "ferry_peak_convoy",
+        "ferry_peak_foot",
+        "ferry_unknown_field",
+        "ferry_browser_convoy",
+        "ferry_browser_foot"
+      ],
+      "independence": "New ferry domain, v2 route, charge composition, field vocabulary, fixtures, and browser export selected after the task-free 038 execution-mechanism commit and before any scaffold or model output."
+    },
+    {
+      "id": "archive_retention_build",
+      "kind": "implementation",
+      "title": "Build an archive retention index across HTTP and browser targets",
+      "statement": "Implement the frozen Archive Retention contract in the supplied stack. page_total is document_count * pages_each. base_months is requested_years * 12. retained_months is max(base_months, 84) during a legal_hold and base_months otherwise. review_batches divides page_total into 200-page batches using ceiling division, with zero pages producing zero batches. retention_score is retained_months + review_batches * 3. retention_class is held during a legal_hold and standard otherwise. The browser export returns retention_score.",
+      "service": "Archive Retention",
+      "status_route": "/health/live",
+      "post_route": "/api/v2/archive-retention",
+      "browser_export": "retention_index",
+      "shared_result_field": "retention_score",
+      "request_fields": {
+        "document_count": "number",
+        "pages_each": "number",
+        "requested_years": "number",
+        "legal_hold": "yesno"
+      },
+      "response_fields": {
+        "page_total": "number",
+        "base_months": "number",
+        "retained_months": "number",
+        "review_batches": "number",
+        "retention_score": "number",
+        "retention_class": "text"
+      },
+      "public_case_ids": [
+        "archive_status",
+        "archive_short_hold",
+        "archive_wrong_media",
+        "archive_browser_short_hold"
+      ],
+      "hidden_case_ids": [
+        "archive_long_standard",
+        "archive_long_hold",
+        "archive_missing_field",
+        "archive_browser_standard",
+        "archive_browser_long_hold"
+      ],
+      "independence": "New archive domain, v2 route, retention floor and batch score, field vocabulary, fixtures, and browser export selected before any 038 scaffold or model output."
+    },
+    {
+      "id": "loyalty_stamps_repair",
+      "kind": "maintenance",
+      "title": "Repair reward derivation after claimed loyalty stamps",
+      "statement": "Repair the supplied Loyalty Stamps application. base_stamps is purchase_count * stamps_each. bonus_stamps is purchase_count during a double_day and zero otherwise. spendable_stamps is max(base_stamps + bonus_stamps - claimed_stamps, 0). reward_count is spendable_stamps divided by 10 using floor division. leftover_stamps is spendable_stamps modulo 10. reward_stage is ready when reward_count is positive and collecting otherwise. The HTTP response and browser export must use the same rule; the browser export returns reward_count.",
+      "service": "Loyalty Stamps",
+      "status_route": "/health/live",
+      "post_route": "/api/v2/loyalty-stamps",
+      "browser_export": "claimable_rewards",
+      "shared_result_field": "reward_count",
+      "request_fields": {
+        "purchase_count": "number",
+        "stamps_each": "number",
+        "claimed_stamps": "number",
+        "double_day": "yesno"
+      },
+      "response_fields": {
+        "base_stamps": "number",
+        "bonus_stamps": "number",
+        "spendable_stamps": "number",
+        "reward_count": "number",
+        "leftover_stamps": "number",
+        "reward_stage": "text"
+      },
+      "public_case_ids": [
+        "loyalty_status",
+        "loyalty_claim_crosses_reward",
+        "loyalty_missing_field",
+        "loyalty_browser_claimed"
+      ],
+      "hidden_case_ids": [
+        "loyalty_double_ready",
+        "loyalty_fully_claimed",
+        "loyalty_unknown_field",
+        "loyalty_browser_double",
+        "loyalty_browser_empty"
+      ],
+      "predeclared_defect": "The application-logic module derives reward_count and leftover_stamps from earned stamps before subtracting claimed_stamps.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic redemption-order defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    },
+    {
+      "id": "cold_storage_repair",
+      "kind": "maintenance",
+      "title": "Repair door-open correction in a cold-storage evaluator",
+      "statement": "Repair the supplied Cold Storage application. corrected_degrees is measured_degrees + 2 when door_open is true and measured_degrees otherwise. temperature_gap is the absolute difference between corrected_degrees and target_degrees. excess_heat is max(corrected_degrees - target_degrees - allowed_drift, 0). cooling_steps divides excess_heat into three-degree steps using ceiling division, with zero excess heat producing zero steps. safe_flag is true when temperature_gap is at most allowed_drift. storage_condition is stable when safe_flag is true, cooling when corrected_degrees is above target_degrees, and warming otherwise. The HTTP response and browser export must use the same rule; the browser export returns cooling_steps.",
+      "service": "Cold Storage",
+      "status_route": "/health/live",
+      "post_route": "/api/v2/cold-storage",
+      "browser_export": "required_cooling",
+      "shared_result_field": "cooling_steps",
+      "request_fields": {
+        "measured_degrees": "number",
+        "target_degrees": "number",
+        "allowed_drift": "number",
+        "door_open": "yesno"
+      },
+      "response_fields": {
+        "corrected_degrees": "number",
+        "temperature_gap": "number",
+        "excess_heat": "number",
+        "cooling_steps": "number",
+        "safe_flag": "yesno",
+        "storage_condition": "text"
+      },
+      "public_case_ids": [
+        "cold_status",
+        "cold_open_requires_cooling",
+        "cold_wrong_type",
+        "cold_browser_open"
+      ],
+      "hidden_case_ids": [
+        "cold_closed_warming",
+        "cold_open_boundary",
+        "cold_unknown_field",
+        "cold_browser_warming",
+        "cold_browser_boundary"
+      ],
+      "predeclared_defect": "The application-logic module ignores the two-degree door-open correction and derives every downstream field from measured_degrees.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic sensor-correction propagation defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    }
+  ]
+}

@@ -3717,3 +3717,31 @@ This is not a rerun of any 037 agent cell and contains no language-performance
 evidence. Next, commit this mechanism checkpoint. Only afterward may new 038
 task/case semantics be designed and frozen; the eventual reference validator
 must invoke these post-build hash checks on its exact measured command sequence.
+
+### 038 independent corpus frozen after the mechanism checkpoint
+
+- Frozen: 2026-08-13
+- Exact-build mechanism commit: `6e50439dd2f47cae4c7bb4d5356bae7cf5dd0937`
+- Tasks: `benchmarks/fullstack_agent_038_tasks.json`
+- Task SHA-256:
+  `a9ca6da5685f6a826bd6ddd0a67c49de161441cbb4e58a71a3546369cba309ed`
+- Cases: `benchmarks/fullstack_agent_038_cases.json`
+- Case SHA-256:
+  `3ef5265b181f2b22fea5ba7618a034dfa9fe007141a3729e692abe2f961f674c`
+- Design record: `benchmarks/FULLSTACK_AGENT_038.md`
+
+The frozen population contains two implementations (ferry manifest charging
+and archive retention indexing) and two maintenance tasks (claimed loyalty
+stamps and door-open cold-storage correction). Every task has four public cases
+and five hidden cases; each visibility set includes real-browser judgment. An
+independent Python oracle verifies all successful HTTP and browser fixtures.
+
+Automated independence checks establish that 038 task IDs, request fields,
+response fields, POST routes, browser exports, and case IDs are disjoint from
+both 036 and 037. The product domains, formulas, fixture values, and both defect
+mechanisms are also new. No prior transcript or solution informed them.
+
+This checkpoint contains no scaffold, reference implementation, protocol
+threshold, agent prompt, or measured session. Next, commit the corpus boundary,
+then preregister the balanced matrix and exact execution controls in a separate
+protocol before implementing any 038 stack.
