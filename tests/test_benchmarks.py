@@ -11,6 +11,7 @@ import pytest
 
 import benchmarks.run_fullstack_agent_036 as fullstack_036_runner
 import benchmarks.run_fullstack_agent_038 as fullstack_038_runner
+import benchmarks.run_fullstack_agent_039 as fullstack_039_runner
 from conftest import REPO
 from benchmarks.agent_runner import (
     command_protocol,
@@ -54,6 +55,15 @@ from benchmarks.fullstack_agent_038_scaffolds import (
     load_task_map as load_fullstack_038_task_map,
     scaffold_files as fullstack_038_scaffold_files,
 )
+from benchmarks.fullstack_agent_039_guard import (
+    invalid_numeric_domain as invalid_numeric_domain_039,
+)
+from benchmarks.fullstack_agent_039_scaffolds import (
+    LANGUAGES as FULLSTACK_039_LANGUAGES,
+    ROOT_FILES as FULLSTACK_039_ROOT_FILES,
+    load_task_map as load_fullstack_039_task_map,
+    scaffold_files as fullstack_039_scaffold_files,
+)
 from benchmarks.run_fullstack_agent_037 import (
     _integrity as fullstack_037_integrity,
     build_plan as build_fullstack_037_plan,
@@ -65,6 +75,11 @@ from benchmarks.run_fullstack_agent_038 import (
     build_plan as build_fullstack_038_plan,
     command_protocol as fullstack_038_command_protocol,
     validate_corpus as validate_fullstack_038_corpus,
+)
+from benchmarks.run_fullstack_agent_039 import (
+    build_plan as build_fullstack_039_plan,
+    command_protocol as fullstack_039_command_protocol,
+    validate_corpus as validate_fullstack_039_corpus,
 )
 from benchmarks.run_fullstack_agent_036 import (
     FROZEN_PARLEY_COMMIT,
@@ -4038,3 +4053,154 @@ def test_fullstack_039_protocol_preregisters_independent_compact_context_study()
         "maintainability",
         "verdict",
     }
+
+
+def test_fullstack_039_scaffolds_plan_and_validation_preserve_boundaries():
+    tasks = load_fullstack_039_task_map()
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_039_protocol.json").read_text()
+    )
+    config = protocol["frozen_config"]
+
+    assert validate_fullstack_039_corpus() == {
+        "tasks": 4,
+        "cases": 36,
+        "public_cases": 16,
+        "hidden_cases": 20,
+        "sessions": 96,
+    }
+    plan = build_fullstack_039_plan(
+        list(tasks.values()),
+        config["languages"],
+        config["agent_configurations"],
+        config["replicates_per_task_language_configuration"],
+        config["seed"],
+    )
+    assert len(plan) == len({row["cell_id"] for row in plan}) == 96
+    assert all(
+        sum(row["language"] == language for row in plan) == 24
+        for language in FULLSTACK_039_LANGUAGES
+    )
+
+    for task in tasks.values():
+        for language in FULLSTACK_039_LANGUAGES:
+            seed = fullstack_039_scaffold_files(task, language, "seed")
+            reference = fullstack_039_scaffold_files(task, language, "reference")
+            assert set(seed) == set(reference)
+            assert all(spec.text.endswith("\n") for spec in seed.values())
+            assert seed["CONTRACT.md"].editable is False
+            changed = sorted(
+                name for name in seed if seed[name].text != reference[name].text
+            )
+            if task["kind"] == "maintenance":
+                assert changed == list(FULLSTACK_039_ROOT_FILES[language])
+            else:
+                assert changed
+
+    rust_manifest = (BENCHMARKS / "fullstack_039/rust/Cargo.toml").read_text()
+    rust_lock = (BENCHMARKS / "fullstack_039/rust/Cargo.lock").read_text()
+    assert 'name = "fullstack-agent-039"' in rust_manifest
+    assert 'name = "fullstack-agent-039"' in rust_lock
+    assert 'name = "fullstack-agent-038"' not in rust_lock
+
+    validation = json.loads(
+        (BENCHMARKS / "fullstack_agent_039_validation.json").read_text()
+    )
+    assert validation["protocol_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_agent_039_protocol.json").read_bytes()
+    ).hexdigest()
+    assert validation["reference_cells_passed"] == 16
+    assert validation["seed_cells_built"] == 16
+    assert validation["seed_cells_correct"] == 0
+    assert validation["maintenance_root_boundaries_passed"] == 8
+    assert len(validation["cells"]) == 16
+    assert all(cell["reference_cases"] == 9 for cell in validation["cells"])
+    assert all(cell["reference_post_build_integrity"] for cell in validation["cells"])
+    assert all(cell["seed_post_build_integrity"] for cell in validation["cells"])
+    expected_commands = {"parley": 1, "python": 2, "typescript": 1, "rust": 2}
+    assert all(
+        cell["reference_exact_build_commands"] == expected_commands[cell["language"]]
+        and cell["seed_exact_build_commands"] == expected_commands[cell["language"]]
+        for cell in validation["cells"]
+    )
+
+
+def test_fullstack_039_orchestration_smoke_covers_parent_and_hidden_paths():
+    smoke = json.loads(
+        (BENCHMARKS / "fullstack_agent_039_orchestration_smoke.json").read_text()
+    )
+
+    assert smoke["experiment_id"] == "039"
+    assert smoke["task_id"] == "festival_power_build"
+    assert smoke["protocol_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_agent_039_protocol.json").read_bytes()
+    ).hexdigest()
+    assert smoke["commands"] == [
+        {"command": "./sources", "returncode": 0},
+        {"command": "./check", "returncode": 1},
+    ]
+    assert smoke["attempt_count"] == 1
+    assert smoke["public"] == {
+        "semantic_pass": False,
+        "build_pass": True,
+        "post_build_integrity": True,
+        "exact_build_commands": 2,
+        "case_count": 4,
+        "http_cases": 3,
+        "browser_cases": 1,
+        "cross_target_executed": True,
+    }
+    assert smoke["hidden"] == {
+        "semantic_pass": False,
+        "build_pass": True,
+        "post_build_integrity": True,
+        "exact_build_commands": 2,
+        "case_count": 5,
+        "http_cases": 3,
+        "browser_cases": 2,
+        "cross_target_executed": True,
+    }
+    assert smoke["protected_integrity"] is True
+    assert smoke["read_only_integrity"] is True
+    assert smoke["transport_integrity"] is True
+    assert smoke["unexpected_files"] == []
+    assert smoke["pass"] is True
+
+
+def test_fullstack_039_numeric_guard_command_limit_and_post_build_checks():
+    task = load_fullstack_039_task_map()["festival_power_build"]
+    assert invalid_numeric_domain_039(
+        task,
+        b'{"speaker_towers":-1,"watts_each":600,"light_rigs":2,"weather_cover":false}',
+    )
+    assert not invalid_numeric_domain_039(task, b'{"speaker_towers":"-1"}')
+    assert fullstack_039_command_protocol(
+        [{"command": "./sources"}, {"command": "./check"}]
+    )["compliant"] is True
+    assert fullstack_039_command_protocol(
+        [{"command": "./sources"}] + [{"command": "./check"}] * 13
+    )["compliant"] is False
+
+
+def test_fullstack_039_runner_checks_hashes_immediately_after_build(
+    tmp_path, monkeypatch
+):
+    lock = tmp_path / "Cargo.lock"
+    lock.write_text("frozen\n")
+    expected = hashlib.sha256(lock.read_bytes()).hexdigest()
+
+    def mutating_build(command, *, cwd, env=None, timeout=300):
+        lock.write_text("canonicalized\n")
+
+    monkeypatch.setattr(fullstack_039_runner, "run", mutating_build)
+    result = fullstack_039_runner.build_application(
+        tmp_path,
+        "rust",
+        "/unused/parley",
+        {"Cargo.lock": expected},
+    )
+
+    assert result["ok"] is False
+    assert result["protected_read_only_ok"] is False
+    assert len(result["protected_read_only_checks"]) == 1
+    assert set(result["protected_read_only_checks"][0]["changes"]) == {"Cargo.lock"}
