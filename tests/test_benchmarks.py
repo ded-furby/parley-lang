@@ -5,9 +5,11 @@ import py_compile
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
+import benchmarks.run_fullstack_agent_036 as fullstack_036_runner
 from conftest import REPO
 from benchmarks.agent_runner import (
     command_protocol,
@@ -32,13 +34,25 @@ from benchmarks.fullstack_agent_036_scaffolds import (
     scaffold_files as fullstack_036_scaffold_files,
 )
 from benchmarks.run_fullstack_agent_036 import (
+    FROZEN_PARLEY_COMMIT,
+    FROZEN_PARLEY_TREE,
+    FROZEN_PARLEY_VERSION,
+    _integrity as fullstack_036_integrity,
+    atomic_write_json as atomic_write_fullstack_036_json,
     build_plan as build_fullstack_036_plan,
     command_protocol as fullstack_036_command_protocol,
+    digest as fullstack_036_digest,
+    initialize_journal as initialize_fullstack_036_journal,
     load_cases as load_fullstack_036_cases,
+    load_provenance as load_fullstack_036_provenance,
     load_protocol as load_fullstack_036_protocol,
     render_prompt as render_fullstack_036_prompt,
+    rough_token_edit_count as fullstack_036_edit_tokens,
+    source_metrics as fullstack_036_source_metrics,
     summarize as summarize_fullstack_036,
     validate_corpus as validate_fullstack_036_corpus,
+    workspace_paths as fullstack_036_workspace_paths,
+    write_workspace as write_fullstack_036_workspace,
 )
 
 BENCHMARKS = REPO / "benchmarks"
@@ -2330,9 +2344,19 @@ def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
         "sessions": 96,
     }
     protocol = load_fullstack_036_protocol()
+    assert protocol["protocol_revision"] == 2
     assert protocol["frozen_product"]["product_commit"] == "02cd809"
     assert protocol["frozen_product"]["corpus_commit"].startswith("0d26bb9")
     assert protocol["matrix"]["fresh_sessions"] == 96
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_amendment"] == 0
+    for file_key, sha_key in (
+        ("runner_file", "runner_sha256"),
+        ("scaffolds_file", "scaffolds_sha256"),
+        ("preparer_file", "preparer_sha256"),
+        ("amendment_file", "amendment_sha256"),
+    ):
+        assert fullstack_036_digest(REPO / execution[file_key]) == execution[sha_key]
 
 
 def test_fullstack_036_plan_is_deterministic_complete_and_balanced():
@@ -2435,6 +2459,211 @@ def test_fullstack_036_command_protocol_requires_one_sources_then_checks():
     assert "first shell command was not ./sources" in reconnaissance["violations"]
 
 
+def test_fullstack_036_source_metrics_include_o200k_and_seed_edit_size():
+    before = "to total with x Int -> Int:\n    return x + 1\n"
+    after = "to total with x Int -> Int:\n    return x + 2\n"
+
+    metrics = fullstack_036_source_metrics(after)
+
+    assert metrics["bytes"] == len(after.encode())
+    assert metrics["rough_tokens"] > 0
+    assert metrics["o200k_base_tokens"] > 0
+    assert fullstack_036_edit_tokens(before, after) == 2
+
+
+def test_fullstack_036_workspace_tracks_read_only_hashes_and_added_files(tmp_path):
+    task = load_fullstack_036_task_map()["shipping_quote_build"]
+    written = write_fullstack_036_workspace(tmp_path, task, "parley", "/tmp/parley")
+    initial = fullstack_036_workspace_paths(tmp_path)
+
+    assert written["read_only_hashes"]
+    assert fullstack_036_integrity(tmp_path, written["read_only_hashes"]) is True
+
+    (tmp_path / "extra.par").write_text("to evade:\n    return 1\n")
+    assert sorted(set(fullstack_036_workspace_paths(tmp_path)) - set(initial)) == ["extra.par"]
+
+    read_only = next(iter(written["read_only_hashes"]))
+    (tmp_path / read_only).write_text("tampered\n")
+    assert fullstack_036_integrity(tmp_path, written["read_only_hashes"]) is False
+
+
+def test_fullstack_036_provenance_binds_exact_release_and_executable(
+    tmp_path, monkeypatch
+):
+    executable = tmp_path / "parley"
+    executable.write_text("#!/bin/sh\necho parley 0.5.0\n")
+    executable.chmod(0o755)
+    parley_python = tmp_path / "python"
+    parley_python.write_text("parley python\n")
+    python_runtime = tmp_path / "runtime-python"
+    python_runtime.write_text("python runtime\n")
+    typescript_root = tmp_path / "typescript"
+    typescript_modules = typescript_root / "node_modules"
+    typescript_modules.mkdir(parents=True)
+    typescript_compiler = typescript_modules / ".bin/tsc"
+    typescript_compiler.parent.mkdir()
+    typescript_compiler.write_text("typescript compiler\n")
+    host_python = tmp_path / "host-python"
+    host_python.write_text("host python\n")
+    browser = tmp_path / "chromium"
+    browser.write_text("chromium\n")
+    source_root = tmp_path / "source"
+    source_root.mkdir()
+    (source_root / "pyproject.toml").write_text("[project]\nname='parley'\n")
+    package_root = tmp_path / "package"
+    package_root.mkdir()
+    (package_root / "__init__.py").write_text("VERSION = '0.5.0'\n")
+    parley_site_packages = tmp_path / "parley-site-packages"
+    parley_site_packages.mkdir()
+    (parley_site_packages / "parley.dist-info").write_text("frozen\n")
+    python_site_packages = tmp_path / "python-site-packages"
+    python_site_packages.mkdir()
+    (python_site_packages / "fastapi.dist-info").write_text("frozen\n")
+    monkeypatch.setattr(fullstack_036_runner, "PYTHON_RUNTIME", python_runtime)
+    monkeypatch.setattr(fullstack_036_runner, "TS_DEPENDENCY_ROOT", typescript_root)
+    monkeypatch.setattr(fullstack_036_runner, "TS_MODULES", typescript_modules)
+    monkeypatch.setattr(fullstack_036_runner, "TS_COMPILER", typescript_compiler)
+    monkeypatch.setattr(
+        fullstack_036_runner,
+        "frozen_source_archive_sha256",
+        lambda: "archive-sha",
+    )
+
+    versions = {
+        str(executable): FROZEN_PARLEY_VERSION,
+        str(python_runtime): "Python test",
+        str(typescript_compiler): "Version test",
+        "node": "vtest",
+        "npm": "10.test",
+        "rustc": "rustc test",
+        "cargo": "cargo test",
+    }
+
+    def fake_run(command, **kwargs):
+        if "freeze" in command:
+            stdout = "frozen==1\n"
+        elif command[:3] == ["npm", "ls", "--all"]:
+            stdout = "{}\n"
+        else:
+            stdout = versions[str(command[0])] + "\n"
+        return subprocess.CompletedProcess(command, 0, stdout, "")
+
+    monkeypatch.setattr(fullstack_036_runner, "run", fake_run)
+    provenance = {
+        "schema_version": 1,
+        "experiment_id": "036",
+        "parley": {
+            "source_commit": FROZEN_PARLEY_COMMIT,
+            "source_tree": FROZEN_PARLEY_TREE,
+            "reported_version": FROZEN_PARLEY_VERSION,
+            "source_archive_sha256": "archive-sha",
+            "source_root": str(source_root),
+            "source_tree_sha256": fullstack_036_runner.tree_digest(source_root),
+            "package_root": str(package_root),
+            "package_tree_sha256": fullstack_036_runner.tree_digest(package_root),
+            "site_packages_root": str(parley_site_packages),
+            "site_packages_tree_sha256": fullstack_036_runner.tree_digest(
+                parley_site_packages
+            ),
+            "executable": str(executable.resolve()),
+            "executable_sha256": fullstack_036_digest(executable),
+            "pip_freeze": "frozen==1\n",
+        },
+        "environment": {
+            "platform": fullstack_036_runner.platform.platform(),
+            "machine": fullstack_036_runner.platform.machine(),
+            "host_python_executable": str(host_python),
+            "host_python_executable_sha256": fullstack_036_digest(host_python),
+            "python_runtime": str(python_runtime),
+            "python_runtime_version": "Python test",
+            "python_runtime_executable_sha256": fullstack_036_digest(python_runtime),
+            "python_pip_freeze": "frozen==1\n",
+            "python_site_packages": str(python_site_packages),
+            "python_site_packages_tree_sha256": fullstack_036_runner.tree_digest(
+                python_site_packages
+            ),
+            "typescript_modules": str(typescript_modules),
+            "typescript_version": "Version test",
+            "typescript_compiler_sha256": fullstack_036_digest(typescript_compiler),
+            "typescript_npm_tree_sha256": hashlib.sha256(b"{}\n").hexdigest(),
+            "typescript_modules_tree_sha256": fullstack_036_runner.tree_digest(
+                typescript_modules
+            ),
+            "node_version": "vtest",
+            "npm_version": "10.test",
+            "rustc_version": "rustc test",
+            "cargo_version": "cargo test",
+            "playwright_version": fullstack_036_runner.importlib.metadata.version(
+                "playwright"
+            ),
+            "browser_executable": str(browser),
+            "browser_executable_sha256": fullstack_036_digest(browser),
+            "python_requirements_lock_sha256": fullstack_036_digest(
+                BENCHMARKS / "fullstack_035/python/requirements.lock.txt"
+            ),
+            "typescript_lock_sha256": fullstack_036_digest(
+                BENCHMARKS / "fullstack_035/typescript/package-lock.json"
+            ),
+            "rust_lock_sha256": fullstack_036_digest(
+                BENCHMARKS / "fullstack_035/rust/Cargo.lock"
+            ),
+        },
+    }
+    path = tmp_path / "provenance.json"
+    path.write_text(json.dumps(provenance))
+
+    assert load_fullstack_036_provenance(path, str(executable)) == provenance
+
+    provenance["parley"]["source_commit"] = "wrong"
+    path.write_text(json.dumps(provenance))
+    with pytest.raises(ValueError, match="source_commit"):
+        load_fullstack_036_provenance(path, str(executable))
+
+
+def test_fullstack_036_resume_marks_started_cell_failed_without_rerun(tmp_path):
+    protocol = load_fullstack_036_protocol()
+    config = protocol["frozen_config"]
+    plan = build_fullstack_036_plan(
+        list(load_fullstack_036_task_map().values()),
+        config["languages"],
+        config["agent_configurations"],
+        config["replicates_per_task_language_configuration"],
+        config["seed"],
+    )[:1]
+    cell = plan[0]
+    journal = tmp_path / "journal"
+    journal.mkdir()
+    started = journal / f"{cell['cell_id']}.started.json"
+    atomic_write_fullstack_036_json(
+        started,
+        {
+            "schema_version": 1,
+            "experiment_id": "036",
+            "status": "started",
+            "cell": {
+                key: cell[key]
+                for key in (
+                    "cell_id",
+                    "plan_index",
+                    "task_id",
+                    "task_kind",
+                    "language",
+                    "configuration_id",
+                    "replicate",
+                )
+            },
+        },
+    )
+
+    completed, pending = initialize_fullstack_036_journal(plan, journal, resume=True)
+
+    assert pending == []
+    assert len(completed) == 1
+    assert completed[0]["interrupted_before_completion"] is True
+    assert completed[0]["journal_attempt"] == 1
+    assert (journal / f"{cell['cell_id']}.finished.json").is_file()
+
+
 def _fullstack_036_passing_rows():
     protocol = load_fullstack_036_protocol()
     rows = []
@@ -2449,7 +2678,10 @@ def _fullstack_036_passing_rows():
             for configuration in protocol["frozen_config"]["agent_configurations"]:
                 for replicate in range(1, 4):
                     tokens, elapsed = values[language]
+                    cell_id = f"{task['id']}__{language}__{configuration['id']}__r{replicate}"
                     rows.append({
+                        "cell_id": cell_id,
+                        "plan_index": len(rows) + 1,
                         "task_id": task["id"],
                         "task_kind": task["kind"],
                         "language": language,
@@ -2459,7 +2691,16 @@ def _fullstack_036_passing_rows():
                             f"{task['id']}-{language}-{configuration['id']}-{replicate}"
                         ),
                         "checker_integrity_ok": True,
+                        "read_only_integrity_ok": True,
+                        "symlink_integrity_ok": True,
+                        "workspace_integrity_ok": True,
+                        "unexpected_files": [],
                         "command_protocol": {"compliant": True},
+                        "fresh_ephemeral_session": True,
+                        "journal_attempt": 1,
+                        "agent_returncode": 0,
+                        "agent_timed_out": False,
+                        "agent_errors": [],
                         "hidden_success": True,
                         "first_public_check_success": True,
                         "exact_root": True,
@@ -2491,6 +2732,27 @@ def test_fullstack_036_summary_applies_all_six_preregistered_conditions():
     failed = summarize_fullstack_036(rows, protocol)
     assert failed["primary_gate"]["conditions"]["tokens"] is False
     assert failed["primary_gate"]["passed"] is False
+
+
+def test_fullstack_036_root_rate_uses_only_hidden_correct_maintenance_rows():
+    protocol = load_fullstack_036_protocol()
+    rows = _fullstack_036_passing_rows()
+    excluded = next(
+        row
+        for row in rows
+        if row["language"] == "parley" and row["task_kind"] == "maintenance"
+    )
+    excluded["hidden_success"] = False
+    excluded["exact_root"] = False
+
+    summary = summarize_fullstack_036(rows, protocol)
+    maintenance = summary["by_kind"]["maintenance"]["parley"]
+
+    assert maintenance["hidden_correct_maintenance_rows"] == 11
+    assert maintenance["exact_root_successes"] == 11
+    assert maintenance["exact_root_rate"] == 1.0
+    assert summary["primary_gate"]["conditions"]["maintainability"] is True
+    assert summary["primary_gate"]["conditions"]["correctness"] is False
 
 
 def test_fullstack_036_reference_validation_artifact_is_complete():

@@ -66,3 +66,12 @@ parity, or performance superiority.
 
 The complete matrix is published whether positive, mixed, or negative. No
 cell may be selectively rerun, removed, replaced, or tuned.
+
+## Execution amendment
+
+Before the first measured cell, an execution-integrity audit found provenance,
+workspace-integrity, metric-capture, aggregation, and interruption-recovery
+omissions in the initial runner. Protocol revision 2 freezes an execution-only
+correction; no task, case, model, metric definition, threshold, or gate changed.
+See `FULLSTACK_AGENT_036_AMENDMENT.md` for the preserved checkpoints, exact
+changes, and zero-session boundary.

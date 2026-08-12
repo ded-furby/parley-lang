@@ -5,10 +5,13 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import difflib
 import hashlib
 import http.client
+import importlib.metadata
 import json
 import os
+import platform
 import random
 import re
 import shutil
@@ -20,6 +23,8 @@ import tempfile
 import time
 from pathlib import Path
 from typing import Any
+
+import tiktoken
 
 try:
     from .agent_runner import parse_codex_events, utc_now
@@ -48,6 +53,10 @@ CASES_PATH = BENCHMARKS / "fullstack_agent_036_cases.json"
 SKILL_PATH = REPO / "skill/parley/SKILL.md"
 WEB_REFERENCE_PATH = REPO / "docs/WEB.md"
 ATTEMPT_LOG = ".benchmark_attempts.jsonl"
+GENERATED_PARTS = {".benchmark_build", ".parley-build", "__pycache__"}
+FROZEN_PARLEY_COMMIT = "02cd809f35dfa9f93468e59cfc8a38d97abb41ee"
+FROZEN_PARLEY_TREE = "d36495b9d868ef5ef485c58b30e80a1a06e2328a"
+FROZEN_PARLEY_VERSION = "parley 0.5.0"
 PYTHON_RUNTIME = Path(
     os.environ.get(
         "FULLSTACK_036_PYTHON",
@@ -63,10 +72,37 @@ ROUGH_TOKEN_RE = re.compile(
     r"[A-Za-z_][A-Za-z0-9_']*|\d+\.\d+|\d+|==|!=|<=|>=|[^\s]",
     re.ASCII,
 )
+O200K = tiktoken.get_encoding("o200k_base")
 
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def tree_digest(root: Path) -> str:
+    checksum = hashlib.sha256()
+    for path in sorted(
+        candidate
+        for candidate in root.rglob("*")
+        if candidate.is_file()
+        and "__pycache__" not in candidate.parts
+        and candidate.suffix != ".pyc"
+    ):
+        checksum.update(path.relative_to(root).as_posix().encode())
+        checksum.update(b"\0")
+        checksum.update(path.read_bytes())
+        checksum.update(b"\0")
+    return checksum.hexdigest()
+
+
+def frozen_source_archive_sha256() -> str:
+    archive = subprocess.run(
+        ["git", "archive", "--format=tar", FROZEN_PARLEY_COMMIT],
+        cwd=REPO,
+        capture_output=True,
+        check=True,
+    ).stdout
+    return hashlib.sha256(archive).hexdigest()
 
 
 def run(
@@ -123,7 +159,128 @@ def load_protocol(path: Path = PROTOCOL_PATH) -> dict[str, Any]:
     ):
         if not isinstance(config[field], int) or config[field] < 1:
             raise ValueError(f"{field} must be a positive integer")
+    execution = protocol.get("execution_freeze")
+    if execution is not None:
+        for file_key, sha_key in (
+            ("runner_file", "runner_sha256"),
+            ("scaffolds_file", "scaffolds_sha256"),
+            ("preparer_file", "preparer_sha256"),
+            ("amendment_file", "amendment_sha256"),
+        ):
+            if digest(REPO / execution[file_key]) != execution[sha_key]:
+                raise ValueError(f"execution freeze mismatch for {execution[file_key]}")
     return protocol
+
+
+def load_provenance(path: Path, parley_command: str) -> dict[str, Any]:
+    provenance = json.loads(path.read_text(encoding="utf-8"))
+    if provenance.get("schema_version") != 1 or provenance.get("experiment_id") != "036":
+        raise ValueError("Parley provenance must be schema 1 / experiment 036")
+    parley = provenance.get("parley", {})
+    expected = {
+        "source_commit": FROZEN_PARLEY_COMMIT,
+        "source_tree": FROZEN_PARLEY_TREE,
+        "reported_version": FROZEN_PARLEY_VERSION,
+    }
+    for field, value in expected.items():
+        if parley.get(field) != value:
+            raise ValueError(
+                f"frozen Parley provenance mismatch for {field}: "
+                f"{parley.get(field)!r} != {value!r}"
+            )
+    if parley.get("source_archive_sha256") != frozen_source_archive_sha256():
+        raise ValueError("frozen Parley source archive hash mismatch")
+    source_root = Path(parley.get("source_root", ""))
+    package_root = Path(parley.get("package_root", ""))
+    for field, root in (
+        ("source_tree_sha256", source_root),
+        ("package_tree_sha256", package_root),
+        ("site_packages_tree_sha256", Path(parley.get("site_packages_root", ""))),
+    ):
+        if not root.is_dir() or parley.get(field) != tree_digest(root):
+            raise ValueError(f"frozen Parley tree mismatch for {field}")
+    executable = Path(parley_command).resolve()
+    if Path(parley.get("executable", "")).resolve() != executable:
+        raise ValueError("--parley-command does not match the frozen provenance executable")
+    if not executable.is_file() or digest(executable) != parley.get("executable_sha256"):
+        raise ValueError("frozen Parley executable hash mismatch")
+    version = run(
+        [str(executable), "--version"], cwd=executable.parent.parent
+    ).stdout.strip()
+    if version != FROZEN_PARLEY_VERSION:
+        raise ValueError(f"frozen Parley version mismatch: {version!r}")
+    environment = provenance.get("environment", {})
+    if Path(environment.get("python_runtime", "")).absolute() != PYTHON_RUNTIME.absolute():
+        raise ValueError("Python runtime does not match provenance")
+    if Path(environment.get("typescript_modules", "")).resolve() != TS_MODULES.resolve():
+        raise ValueError("TypeScript dependency root does not match provenance")
+    lock_checks = (
+        ("python_requirements_lock_sha256", BENCHMARKS / "fullstack_035/python/requirements.lock.txt"),
+        ("typescript_lock_sha256", BENCHMARKS / "fullstack_035/typescript/package-lock.json"),
+        ("rust_lock_sha256", BENCHMARKS / "fullstack_035/rust/Cargo.lock"),
+    )
+    for field, lock_path in lock_checks:
+        if environment.get(field) != digest(lock_path):
+            raise ValueError(f"dependency lock mismatch for {lock_path}")
+    artifact_checks = (
+        (
+            "host_python_executable_sha256",
+            Path(environment.get("host_python_executable", "")),
+        ),
+        ("python_runtime_executable_sha256", PYTHON_RUNTIME.resolve()),
+        ("typescript_compiler_sha256", TS_COMPILER.resolve()),
+        (
+            "browser_executable_sha256",
+            Path(environment.get("browser_executable", "")),
+        ),
+    )
+    for field, artifact in artifact_checks:
+        if not artifact.is_file() or environment.get(field) != digest(artifact):
+            raise ValueError(f"environment artifact mismatch for {field}")
+
+    def actual_version(command: list[str]) -> str:
+        completed = run(command, cwd=REPO)
+        return (completed.stdout or completed.stderr).strip().splitlines()[-1]
+
+    version_checks = (
+        ("python_runtime_version", [str(PYTHON_RUNTIME), "--version"]),
+        ("typescript_version", [str(TS_COMPILER), "--version"]),
+        ("node_version", ["node", "--version"]),
+        ("npm_version", ["npm", "--version"]),
+        ("rustc_version", ["rustc", "--version"]),
+        ("cargo_version", ["cargo", "--version"]),
+    )
+    for field, command in version_checks:
+        if environment.get(field) != actual_version(command):
+            raise ValueError(f"environment version mismatch for {field}")
+    python_freeze = run(
+        [str(PYTHON_RUNTIME), "-m", "pip", "freeze", "--all"], cwd=REPO
+    ).stdout
+    if environment.get("python_pip_freeze") != python_freeze:
+        raise ValueError("frozen Python package environment mismatch")
+    python_site_packages = Path(environment.get("python_site_packages", ""))
+    if (
+        not python_site_packages.is_dir()
+        or environment.get("python_site_packages_tree_sha256")
+        != tree_digest(python_site_packages)
+    ):
+        raise ValueError("frozen Python site-packages tree mismatch")
+    npm_tree = run(["npm", "ls", "--all", "--json"], cwd=TS_DEPENDENCY_ROOT).stdout
+    if environment.get("typescript_npm_tree_sha256") != hashlib.sha256(npm_tree.encode()).hexdigest():
+        raise ValueError("frozen TypeScript package environment mismatch")
+    if environment.get("typescript_modules_tree_sha256") != tree_digest(TS_MODULES):
+        raise ValueError("frozen TypeScript module tree mismatch")
+    parley_python = executable.parent / "python"
+    parley_freeze = run(
+        [str(parley_python), "-m", "pip", "freeze", "--all"], cwd=REPO
+    ).stdout
+    if parley.get("pip_freeze") != parley_freeze:
+        raise ValueError("frozen Parley package environment mismatch")
+    if environment.get("playwright_version") != importlib.metadata.version("playwright"):
+        raise ValueError("Playwright package version mismatch")
+    if environment.get("platform") != platform.platform() or environment.get("machine") != platform.machine():
+        raise ValueError("host platform differs from provenance")
+    return provenance
 
 
 def load_cases() -> dict[str, list[dict[str, Any]]]:
@@ -203,7 +360,71 @@ def build_plan(
         for replicate in range(1, replicates + 1)
     ]
     random.Random(seed).shuffle(cells)
+    for index, cell in enumerate(cells, 1):
+        cell["plan_index"] = index
+        cell["cell_id"] = cell_id(cell)
     return cells
+
+
+def cell_id(cell: dict[str, Any]) -> str:
+    return (
+        f"{cell['task_id']}__{cell['language']}__"
+        f"{cell['configuration_id']}__r{cell['replicate']}"
+    )
+
+
+def source_metrics(text: str) -> dict[str, Any]:
+    encoded = text.encode()
+    return {
+        "text": text,
+        "sha256": hashlib.sha256(encoded).hexdigest(),
+        "bytes": len(encoded),
+        "lines": len(text.splitlines()),
+        "rough_tokens": len(ROUGH_TOKEN_RE.findall(text)),
+        "o200k_base_tokens": len(O200K.encode(text)),
+    }
+
+
+def rough_token_edit_count(before: str, after: str) -> int:
+    """Count inserted and deleted rough tokens in a seed-to-final edit."""
+    before_tokens = ROUGH_TOKEN_RE.findall(before)
+    after_tokens = ROUGH_TOKEN_RE.findall(after)
+    matcher = difflib.SequenceMatcher(a=before_tokens, b=after_tokens, autojunk=False)
+    return sum(
+        (i2 - i1) + (j2 - j1)
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes()
+        if tag != "equal"
+    )
+
+
+def _ignored_workspace_path(relative: str) -> bool:
+    parts = Path(relative).parts
+    return (
+        relative == ATTEMPT_LOG
+        or "node_modules" in parts
+        or any(part in GENERATED_PARTS for part in parts)
+    )
+
+
+def workspace_paths(workspace: Path) -> list[str]:
+    paths: list[str] = []
+    for root, directories, filenames in os.walk(workspace, followlinks=False):
+        root_path = Path(root)
+        kept_directories = []
+        for directory in directories:
+            path = root_path / directory
+            relative = path.relative_to(workspace).as_posix()
+            if path.is_symlink():
+                if not _ignored_workspace_path(relative):
+                    paths.append(relative)
+            elif not _ignored_workspace_path(relative):
+                kept_directories.append(directory)
+        directories[:] = kept_directories
+        for filename in filenames:
+            relative = (root_path / filename).relative_to(workspace).as_posix()
+            if not _ignored_workspace_path(relative):
+                paths.append(relative)
+    return sorted(paths)
 
 
 def _write_files(workspace: Path, files: dict[str, ScaffoldFile]) -> None:
@@ -270,6 +491,21 @@ def write_workspace(
             name: hashlib.sha256(spec.text.encode()).hexdigest()
             for name, spec in files.items()
         },
+        "seed_source": {
+            name: source_metrics(spec.text)
+            for name, spec in files.items()
+            if spec.editable
+        },
+        "read_only_hashes": {
+            name: hashlib.sha256(spec.text.encode()).hexdigest()
+            for name, spec in files.items()
+            if not spec.editable
+        },
+        "symlinks": (
+            {"node_modules": str(TS_MODULES.resolve())}
+            if language == "typescript"
+            else {}
+        ),
     }
 
 
@@ -288,7 +524,9 @@ for name in config["visible_files"]:
 
 
 def _reset(path: Path) -> None:
-    if path.exists():
+    if path.is_symlink() or path.is_file():
+        path.unlink()
+    elif path.exists():
         shutil.rmtree(path)
     path.mkdir(parents=True)
 
@@ -304,6 +542,7 @@ def build_application(
     env = {**os.environ, "CARGO_NET_OFFLINE": "true"}
     try:
         if language == "parley":
+            _reset(workspace / ".parley-build")
             run(
                 [parley_command, "web", "build", str(workspace), "-o", str(output / "bundle")],
                 cwd=workspace,
@@ -541,17 +780,18 @@ def source_snapshot(workspace: Path) -> dict[str, Any]:
     for name in config["editable_files"]:
         path = workspace / name
         text = path.read_text(encoding="utf-8") if path.is_file() else ""
-        files[name] = {
-            "text": text,
-            "sha256": hashlib.sha256(text.encode()).hexdigest(),
-            "bytes": len(text.encode()),
-            "lines": len(text.splitlines()),
-            "rough_tokens": len(ROUGH_TOKEN_RE.findall(text)),
-        }
-    return {"editable_files": files}
+        files[name] = {"exists": path.is_file(), **source_metrics(text)}
+    return {
+        "editable_files": files,
+        "totals": {
+            metric: sum(int(row[metric]) for row in files.values())
+            for metric in ("bytes", "lines", "rough_tokens", "o200k_base_tokens")
+        },
+    }
 
 
 def internal_check(workspace: Path, visibility: str) -> int:
+    load_protocol()
     config = json.loads((workspace / ".benchmark_config.json").read_text())
     task = load_task_map()[config["task_id"]]
     rows = [
@@ -681,6 +921,329 @@ def _integrity(workspace: Path, hashes: dict[str, str]) -> bool:
     )
 
 
+def _symlink_integrity(workspace: Path, symlinks: dict[str, str]) -> bool:
+    return all(
+        (workspace / name).is_symlink()
+        and str((workspace / name).resolve()) == expected
+        for name, expected in symlinks.items()
+    )
+
+
+def source_edits(
+    seed: dict[str, dict[str, Any]],
+    final: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    per_file = {
+        name: {
+            "changed": seed.get(name, {}).get("sha256") != final.get(name, {}).get("sha256"),
+            "rough_token_edit_count": rough_token_edit_count(
+                str(seed.get(name, {}).get("text", "")),
+                str(final.get(name, {}).get("text", "")),
+            ),
+        }
+        for name in sorted(set(seed) | set(final))
+    }
+    return {
+        "files": per_file,
+        "rough_token_edit_count": sum(
+            int(row["rough_token_edit_count"]) for row in per_file.values()
+        ),
+    }
+
+
+def command_path(command: str) -> Path:
+    resolved = shutil.which(command) if os.sep not in command else command
+    if not resolved:
+        raise ValueError(f"command not found: {command}")
+    path = Path(resolved).resolve()
+    if not path.is_file():
+        raise ValueError(f"command is not a file: {path}")
+    return path
+
+
+def repository_state() -> dict[str, Any]:
+    def git(*args: str) -> str:
+        return run(["git", *args], cwd=REPO).stdout.strip()
+
+    return {
+        "commit": git("rev-parse", "HEAD"),
+        "tree": git("rev-parse", "HEAD^{tree}"),
+        "branch": git("branch", "--show-current"),
+        "status_porcelain": git("status", "--porcelain=v1", "--untracked-files=all"),
+    }
+
+
+def execution_environment(codex_command: str) -> dict[str, Any]:
+    codex = command_path(codex_command)
+    return {
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "python": platform.python_version(),
+        "tiktoken": importlib.metadata.version("tiktoken"),
+        "playwright": importlib.metadata.version("playwright"),
+        "codex_executable": str(codex),
+        "codex_executable_sha256": digest(codex),
+        "codex_version": run([str(codex), "--version"], cwd=REPO).stdout.strip(),
+    }
+
+
+def atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def journal_paths(journal_root: Path, identifier: str) -> tuple[Path, Path]:
+    return (
+        journal_root / f"{identifier}.started.json",
+        journal_root / f"{identifier}.finished.json",
+    )
+
+
+def failure_row(
+    cell: dict[str, Any],
+    error: str,
+    *,
+    interrupted_before_completion: bool = False,
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "recorded_at": utc_now(),
+        "cell_id": cell["cell_id"],
+        "plan_index": cell["plan_index"],
+        "task_id": cell["task_id"],
+        "task_kind": cell["task_kind"],
+        "language": cell["language"],
+        "configuration_id": cell["configuration_id"],
+        "model": cell["configuration"]["model"],
+        "reasoning": cell["configuration"]["reasoning"],
+        "replicate": cell["replicate"],
+        "runner_error": error,
+        "interrupted_before_completion": interrupted_before_completion,
+        "thread_id": None,
+        "checker_integrity_ok": False,
+        "read_only_integrity_ok": False,
+        "symlink_integrity_ok": False,
+        "workspace_integrity_ok": False,
+        "unexpected_files": [],
+        "command_protocol": {"compliant": False, "commands": [], "violations": [error]},
+        "hidden_success": False,
+        "first_public_check_success": False,
+        "root_quality_eligible": False,
+        "exact_root": False,
+        "usage": {
+            "input_tokens": 0,
+            "cached_input_tokens": 0,
+            "uncached_input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_output_tokens": 0,
+        },
+        "total_tokens": 0,
+        "elapsed_seconds": 0,
+        "repair_turns": 0,
+    }
+
+
+def execute_journaled_cell(
+    cell: dict[str, Any],
+    *,
+    journal_root: Path,
+    codex_command: str,
+    parley_command: str,
+    work_root: Path,
+    timeout: int,
+) -> dict[str, Any]:
+    started_path, finished_path = journal_paths(journal_root, cell["cell_id"])
+    if started_path.exists() or finished_path.exists():
+        raise RuntimeError(f"cell already journaled: {cell['cell_id']}")
+    atomic_write_json(
+        started_path,
+        {
+            "schema_version": 1,
+            "experiment_id": "036",
+            "status": "started",
+            "recorded_at": utc_now(),
+            "cell": {
+                key: cell[key]
+                for key in (
+                    "cell_id",
+                    "plan_index",
+                    "task_id",
+                    "task_kind",
+                    "language",
+                    "configuration_id",
+                    "replicate",
+                )
+            },
+        },
+    )
+    try:
+        row = run_cell(
+            cell,
+            codex_command=codex_command,
+            parley_command=parley_command,
+            work_root=work_root,
+            timeout=timeout,
+        )
+    except Exception as exc:
+        row = failure_row(cell, repr(exc))
+    row["journal_attempt"] = 1
+    atomic_write_json(
+        finished_path,
+        {
+            "schema_version": 1,
+            "experiment_id": "036",
+            "status": "finished",
+            "recorded_at": utc_now(),
+            "result": row,
+        },
+    )
+    return row
+
+
+def initialize_journal(
+    plan: list[dict[str, Any]],
+    journal_root: Path,
+    *,
+    resume: bool,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    identifiers = {cell["cell_id"] for cell in plan}
+    if not resume:
+        if journal_root.exists() and any(journal_root.iterdir()):
+            raise RuntimeError(f"fresh run refuses non-empty journal: {journal_root}")
+        journal_root.mkdir(parents=True, exist_ok=True)
+        return [], plan
+    if not journal_root.is_dir():
+        raise RuntimeError(f"resume journal does not exist: {journal_root}")
+    expected_names = {
+        name
+        for identifier in identifiers
+        for name in (
+            f"{identifier}.started.json",
+            f"{identifier}.finished.json",
+        )
+    } | {"run_manifest.json"}
+    unknown = sorted(path.name for path in journal_root.glob("*.json") if path.name not in expected_names)
+    if unknown:
+        raise RuntimeError(f"journal contains unknown records: {unknown}")
+    completed: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    for cell in plan:
+        started_path, finished_path = journal_paths(journal_root, cell["cell_id"])
+        if finished_path.is_file():
+            if not started_path.is_file():
+                raise RuntimeError(f"finished journal has no start record: {finished_path}")
+            started_payload = json.loads(started_path.read_text(encoding="utf-8"))
+            payload = json.loads(finished_path.read_text(encoding="utf-8"))
+            row = payload.get("result", {})
+            expected_cell = {
+                key: cell[key]
+                for key in (
+                    "cell_id",
+                    "plan_index",
+                    "task_id",
+                    "task_kind",
+                    "language",
+                    "configuration_id",
+                    "replicate",
+                )
+            }
+            if (
+                started_payload.get("status") != "started"
+                or started_payload.get("cell") != expected_cell
+                or payload.get("status") != "finished"
+                or row.get("cell_id") != cell["cell_id"]
+                or row.get("plan_index") != cell["plan_index"]
+                or row.get("journal_attempt") != 1
+            ):
+                raise RuntimeError(f"invalid finished journal: {finished_path}")
+            completed.append(row)
+        elif started_path.is_file():
+            started_payload = json.loads(started_path.read_text(encoding="utf-8"))
+            expected_cell = {
+                key: cell[key]
+                for key in (
+                    "cell_id",
+                    "plan_index",
+                    "task_id",
+                    "task_kind",
+                    "language",
+                    "configuration_id",
+                    "replicate",
+                )
+            }
+            if (
+                started_payload.get("status") != "started"
+                or started_payload.get("cell") != expected_cell
+            ):
+                raise RuntimeError(f"invalid started journal: {started_path}")
+            row = failure_row(
+                cell,
+                "process interrupted after cell start; selective rerun forbidden",
+                interrupted_before_completion=True,
+            )
+            row["journal_attempt"] = 1
+            atomic_write_json(
+                finished_path,
+                {
+                    "schema_version": 1,
+                    "experiment_id": "036",
+                    "status": "finished",
+                    "recorded_at": utc_now(),
+                    "result": row,
+                },
+            )
+            completed.append(row)
+        else:
+            pending.append(cell)
+    return completed, pending
+
+
+def ensure_run_manifest(
+    journal_root: Path,
+    identity: dict[str, Any],
+    *,
+    resume: bool,
+) -> Path:
+    path = journal_root / "run_manifest.json"
+    if resume:
+        if not path.is_file():
+            raise RuntimeError("resume journal is missing run_manifest.json")
+        existing = json.loads(path.read_text(encoding="utf-8"))
+        if existing.get("identity") != identity:
+            raise RuntimeError("resume environment differs from the frozen run manifest")
+    else:
+        if path.exists():
+            raise RuntimeError(f"fresh run refuses existing manifest: {path}")
+        atomic_write_json(
+            path,
+            {
+                "schema_version": 1,
+                "experiment_id": "036",
+                "created_at": utc_now(),
+                "identity": identity,
+            },
+        )
+    return path
+
+
+def journal_manifest(plan: list[dict[str, Any]], journal_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for cell in plan:
+        started, finished = journal_paths(journal_root, cell["cell_id"])
+        rows.append(
+            {
+                "cell_id": cell["cell_id"],
+                "started_file": str(started),
+                "started_sha256": digest(started),
+                "finished_file": str(finished),
+                "finished_sha256": digest(finished),
+            }
+        )
+    return rows
+
+
 def run_cell(
     cell: dict[str, Any],
     *,
@@ -689,6 +1252,7 @@ def run_cell(
     work_root: Path,
     timeout: int,
 ) -> dict[str, Any]:
+    load_protocol()
     task = cell["task"]
     language = cell["language"]
     config = cell["configuration"]
@@ -707,12 +1271,15 @@ def run_cell(
         WEB_REFERENCE_PATH.read_text(),
     )
     (workspace / "prompt.md").write_text(prompt, encoding="utf-8")
+    written["protected_hashes"]["prompt.md"] = hashlib.sha256(prompt.encode()).hexdigest()
+    initial_paths = workspace_paths(workspace)
     command = [
         codex_command,
         "exec",
         "--ephemeral",
         "--ignore-user-config",
         "--ignore-rules",
+        "--strict-config",
         "--disable", "plugins",
         "--disable", "apps",
         "--disable", "browser_use",
@@ -724,6 +1291,7 @@ def run_cell(
         "-c", f'model_reasoning_effort="{config["reasoning"]}"',
         "-c", 'approval_policy="never"',
         "-c", 'shell_environment_policy.inherit="all"',
+        "-c", "sandbox_workspace_write.network_access=false",
         "--json",
         "-C", str(workspace),
         prompt,
@@ -752,6 +1320,16 @@ def run_cell(
     hidden_cases = [row for row in load_cases()[task["id"]] if row["visibility"] == "hidden"]
     hidden = evaluate_application(workspace, task, language, hidden_cases, parley_command)
     final = source_snapshot(workspace)
+    unexpected_files = sorted(set(workspace_paths(workspace)) - set(initial_paths))
+    protected_integrity = _integrity(workspace, written["protected_hashes"])
+    read_only_integrity = _integrity(workspace, written["read_only_hashes"])
+    symlink_integrity = _symlink_integrity(workspace, written["symlinks"])
+    workspace_integrity = (
+        protected_integrity
+        and read_only_integrity
+        and symlink_integrity
+        and not unexpected_files
+    )
     seed_files = written["source"]["editable_files"]
     changed = sorted(
         name
@@ -759,7 +1337,21 @@ def run_cell(
         if final["editable_files"].get(name, {}).get("sha256") != written["seed_hashes"][name]
     )
     expected_root = list(ROOT_FILES[language]) if task["kind"] == "maintenance" else []
-    usage = parsed["usage"]
+    edits = source_edits(written["seed_source"], final["editable_files"])
+    root_eligible = task["kind"] == "maintenance" and bool(hidden["ok"])
+    exact_root = bool(
+        root_eligible
+        and changed == expected_root
+        and workspace_integrity
+    )
+    usage = {
+        **parsed["usage"],
+        "uncached_input_tokens": max(
+            int(parsed["usage"]["input_tokens"])
+            - int(parsed["usage"]["cached_input_tokens"]),
+            0,
+        ),
+    }
     return {
         "schema_version": 1,
         "recorded_at": utc_now(),
@@ -775,7 +1367,13 @@ def run_cell(
         "agent_returncode": returncode,
         "agent_timed_out": timed_out,
         "elapsed_seconds": elapsed,
-        "checker_integrity_ok": _integrity(workspace, written["protected_hashes"]),
+        "cell_id": cell["cell_id"],
+        "plan_index": cell["plan_index"],
+        "checker_integrity_ok": protected_integrity,
+        "read_only_integrity_ok": read_only_integrity,
+        "symlink_integrity_ok": symlink_integrity,
+        "workspace_integrity_ok": workspace_integrity,
+        "unexpected_files": unexpected_files,
         "command_protocol": compliance,
         "public_attempts": attempts,
         "public_check_attempts": len(attempts),
@@ -789,9 +1387,18 @@ def run_cell(
         "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
         "prompt_chars": len(prompt),
         "source": final,
+        "seed_source": {
+            "editable_files": written["seed_source"],
+            "totals": {
+                metric: sum(int(row[metric]) for row in written["seed_source"].values())
+                for metric in ("bytes", "lines", "rough_tokens", "o200k_base_tokens")
+            },
+        },
+        "source_edits": edits,
         "changed_files": changed,
         "expected_root_files": expected_root,
-        "exact_root": task["kind"] != "maintenance" or changed == expected_root,
+        "root_quality_eligible": root_eligible,
+        "exact_root": exact_root,
         "agent_messages": parsed["agent_messages"],
         "agent_errors": parsed["errors"],
         "command_events": parsed["command_events"],
@@ -804,21 +1411,33 @@ def run_cell(
 def _aggregate(rows: list[dict[str, Any]]) -> dict[str, Any]:
     if not rows:
         return {}
+    root_rows = [
+        row
+        for row in rows
+        if row.get("task_kind") == "maintenance" and row.get("hidden_success")
+    ]
+    root_successes = sum(bool(row.get("exact_root")) for row in root_rows)
     return {
         "sessions": len(rows),
         "hidden_successes": sum(bool(row.get("hidden_success")) for row in rows),
         "hidden_success_rate": sum(bool(row.get("hidden_success")) for row in rows) / len(rows),
         "first_check_successes": sum(bool(row.get("first_public_check_success")) for row in rows),
         "first_check_success_rate": sum(bool(row.get("first_public_check_success")) for row in rows) / len(rows),
-        "exact_root_successes": sum(bool(row.get("exact_root")) for row in rows),
-        "exact_root_rate": sum(bool(row.get("exact_root")) for row in rows) / len(rows),
+        "hidden_correct_maintenance_rows": len(root_rows),
+        "exact_root_successes": root_successes,
+        "exact_root_rate": root_successes / len(root_rows) if root_rows else 0.0,
         "median_total_tokens": statistics.median(float(row.get("total_tokens", 0)) for row in rows),
         "median_elapsed_seconds": statistics.median(float(row.get("elapsed_seconds", 0)) for row in rows),
         "repair_turns": sum(int(row.get("repair_turns", 0)) for row in rows),
     }
 
 
-def summarize(results: list[dict[str, Any]], protocol: dict[str, Any]) -> dict[str, Any]:
+def summarize(
+    results: list[dict[str, Any]],
+    protocol: dict[str, Any],
+    *,
+    execution_context_ok: bool = True,
+) -> dict[str, Any]:
     by_language = {language: _aggregate([row for row in results if row["language"] == language]) for language in LANGUAGES}
     by_configuration = {
         config["id"]: {
@@ -837,12 +1456,24 @@ def summarize(results: list[dict[str, Any]], protocol: dict[str, Any]) -> dict[s
     expected = protocol["matrix"]["fresh_sessions"]
     thread_ids = [row.get("thread_id") for row in results]
     integrity = (
+        execution_context_ok
+        and
         len(results) == expected
+        and len({row.get("cell_id") for row in results}) == expected
         and all(thread_ids)
         and len(set(thread_ids)) == expected
         and all(row.get("checker_integrity_ok") for row in results)
+        and all(row.get("read_only_integrity_ok") for row in results)
+        and all(row.get("symlink_integrity_ok") for row in results)
+        and all(row.get("workspace_integrity_ok") for row in results)
+        and all(not row.get("unexpected_files") for row in results)
         and all(row.get("command_protocol", {}).get("compliant") for row in results)
         and all(not row.get("runner_error") for row in results)
+        and all(row.get("fresh_ephemeral_session") for row in results)
+        and all(row.get("journal_attempt") == 1 for row in results)
+        and all(row.get("agent_returncode") == 0 for row in results)
+        and all(not row.get("agent_timed_out") for row in results)
+        and all(not row.get("agent_errors") for row in results)
     )
     baselines = [by_language[name] for name in LANGUAGES if name != "parley"]
     parley = by_language["parley"]
@@ -899,7 +1530,11 @@ def summarize(results: list[dict[str, Any]], protocol: dict[str, Any]) -> dict[s
     }
 
 
-def validate_references(parley_command: str, work_root: Path) -> dict[str, Any]:
+def validate_references(
+    parley_command: str,
+    work_root: Path,
+    provenance_path: Path | None = None,
+) -> dict[str, Any]:
     task_map = load_task_map()
     cases = load_cases()
     rows = []
@@ -945,6 +1580,8 @@ def validate_references(parley_command: str, work_root: Path) -> dict[str, Any]:
         "experiment_id": "036",
         "generated_at": utc_now(),
         "protocol_sha256": digest(PROTOCOL_PATH),
+        "provenance_file": str(provenance_path.resolve()) if provenance_path else None,
+        "provenance_sha256": digest(provenance_path) if provenance_path else None,
         "cells": rows,
         "reference_cells_passed": sum(row["reference_pass"] for row in rows),
         "seed_cells_built": sum(row["seed_build_pass"] for row in rows),
@@ -961,6 +1598,7 @@ def main(argv: list[str] | None = None) -> int:
     subparsers.add_parser("validate-corpus")
     validate = subparsers.add_parser("validate-references")
     validate.add_argument("--parley-command", required=True)
+    validate.add_argument("--provenance", type=Path, required=True)
     validate.add_argument("--work-root", type=Path)
     validate.add_argument("--output", type=Path)
     internal = subparsers.add_parser("internal-check")
@@ -968,9 +1606,12 @@ def main(argv: list[str] | None = None) -> int:
     internal.add_argument("--visibility", choices=("public", "hidden"), required=True)
     execute = subparsers.add_parser("run")
     execute.add_argument("--parley-command", required=True)
+    execute.add_argument("--provenance", type=Path, required=True)
     execute.add_argument("--codex-command", default=shutil.which("codex") or "codex")
-    execute.add_argument("--work-root", type=Path)
+    execute.add_argument("--work-root", type=Path, required=True)
+    execute.add_argument("--journal-root", type=Path, required=True)
     execute.add_argument("--output", type=Path, required=True)
+    execute.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
 
     if args.command == "validate-corpus":
@@ -980,18 +1621,28 @@ def main(argv: list[str] | None = None) -> int:
         return internal_check(args.workspace.resolve(), args.visibility)
     if args.command == "validate-references":
         validate_corpus()
+        load_provenance(args.provenance, args.parley_command)
         work_root = args.work_root or Path(tempfile.mkdtemp(prefix="parley-fullstack-036-validation-"))
         work_root.mkdir(parents=True, exist_ok=True)
-        result = validate_references(args.parley_command, work_root)
+        result = validate_references(args.parley_command, work_root, args.provenance)
         rendered = json.dumps(result, indent=2) + "\n"
         if args.output:
-            args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(rendered, encoding="utf-8")
+            atomic_write_json(args.output, result)
         print(rendered, end="")
         return 0
 
+    if args.output.exists():
+        raise RuntimeError(f"measured output already exists; refusing rerun: {args.output}")
     protocol = load_protocol()
     validate_corpus()
+    provenance = load_provenance(args.provenance, args.parley_command)
+    repo_state = repository_state()
+    if repo_state["status_porcelain"]:
+        raise RuntimeError(
+            "measured execution requires a clean repository; commit the frozen harness first:\n"
+            + repo_state["status_porcelain"]
+        )
+    executor = execution_environment(args.codex_command)
     config = protocol["frozen_config"]
     tasks = list(load_task_map().values())
     plan = build_plan(
@@ -1001,46 +1652,69 @@ def main(argv: list[str] | None = None) -> int:
         config["replicates_per_task_language_configuration"],
         config["seed"],
     )
-    work_root = args.work_root or Path(tempfile.mkdtemp(prefix="parley-fullstack-agent-036-"))
+    work_root = args.work_root
     work_root.mkdir(parents=True, exist_ok=True)
-    results = []
+    run_identity = {
+        "protocol_sha256": digest(PROTOCOL_PATH),
+        "runner_sha256": digest(Path(__file__)),
+        "preparer_sha256": digest(BENCHMARKS / "prepare_fullstack_agent_036.py"),
+        "scaffolds_sha256": digest(BENCHMARKS / "fullstack_agent_036_scaffolds.py"),
+        "provenance_sha256": digest(args.provenance),
+        "repository": repo_state,
+        "execution_environment": executor,
+        "plan_cell_ids": [cell["cell_id"] for cell in plan],
+    }
+    if args.resume:
+        run_manifest_path = ensure_run_manifest(
+            args.journal_root,
+            run_identity,
+            resume=True,
+        )
+        results, pending = initialize_journal(plan, args.journal_root, resume=True)
+    else:
+        results, pending = initialize_journal(plan, args.journal_root, resume=False)
+        run_manifest_path = ensure_run_manifest(
+            args.journal_root,
+            run_identity,
+            resume=False,
+        )
     with concurrent.futures.ThreadPoolExecutor(max_workers=config["max_workers"]) as pool:
         futures = {
             pool.submit(
-                run_cell,
+                execute_journaled_cell,
                 cell,
+                journal_root=args.journal_root,
                 codex_command=args.codex_command,
                 parley_command=args.parley_command,
                 work_root=work_root,
                 timeout=config["timeout_seconds"],
             ): cell
-            for cell in plan
+            for cell in pending
         }
         for future in concurrent.futures.as_completed(futures):
-            cell = futures[future]
-            try:
-                row = future.result()
-            except Exception as exc:
-                row = {
-                    "task_id": cell["task_id"],
-                    "task_kind": cell["task_kind"],
-                    "language": cell["language"],
-                    "configuration_id": cell["configuration_id"],
-                    "replicate": cell["replicate"],
-                    "runner_error": repr(exc),
-                    "hidden_success": False,
-                    "first_public_check_success": False,
-                    "exact_root": False,
-                    "total_tokens": 0,
-                    "elapsed_seconds": 0,
-                }
+            row = future.result()
             results.append(row)
             print(
                 f"completed {row['task_id']} {row['language']} {row['configuration_id']} "
                 f"r{row['replicate']}: hidden={row.get('hidden_success', False)}",
                 flush=True,
             )
-    results.sort(key=lambda row: (row["task_id"], row["language"], row["configuration_id"], row["replicate"]))
+    results.sort(key=lambda row: int(row["plan_index"]))
+    if len(results) != len(plan) or len({row["cell_id"] for row in results}) != len(plan):
+        raise RuntimeError("journal did not produce exactly one result for every frozen cell")
+    repo_state_after = repository_state()
+    provenance_after_error = ""
+    try:
+        load_provenance(args.provenance, args.parley_command)
+    except Exception as exc:
+        provenance_after_error = repr(exc)
+    execution_context_ok = (
+        repo_state_after["commit"] == repo_state["commit"]
+        and repo_state_after["tree"] == repo_state["tree"]
+        and repo_state_after["branch"] == repo_state["branch"]
+        and not repo_state_after["status_porcelain"]
+        and not provenance_after_error
+    )
     report = {
         "schema_version": 1,
         "experiment_id": "036",
@@ -1048,18 +1722,42 @@ def main(argv: list[str] | None = None) -> int:
         "protocol": protocol,
         "protocol_sha256": digest(PROTOCOL_PATH),
         "runner_sha256": digest(Path(__file__)),
+        "preparer_sha256": digest(BENCHMARKS / "prepare_fullstack_agent_036.py"),
+        "scaffolds_sha256": digest(BENCHMARKS / "fullstack_agent_036_scaffolds.py"),
+        "provenance": provenance,
+        "provenance_file": str(args.provenance.resolve()),
+        "provenance_sha256": digest(args.provenance),
+        "provenance_after_execution_error": provenance_after_error,
+        "repository": repo_state,
+        "repository_after": repo_state_after,
+        "execution_environment": executor,
+        "journal_root": str(args.journal_root.resolve()),
+        "run_manifest_file": str(run_manifest_path.resolve()),
+        "run_manifest_sha256": digest(run_manifest_path),
+        "journal": journal_manifest(plan, args.journal_root),
         "plan": [
             {
                 key: cell[key]
-                for key in ("task_id", "task_kind", "language", "configuration_id", "replicate")
+                for key in (
+                    "cell_id",
+                    "plan_index",
+                    "task_id",
+                    "task_kind",
+                    "language",
+                    "configuration_id",
+                    "replicate",
+                )
             }
             for cell in plan
         ],
-        "summary": summarize(results, protocol),
+        "summary": summarize(
+            results,
+            protocol,
+            execution_context_ok=execution_context_ok,
+        ),
         "results": results,
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    atomic_write_json(args.output, report)
     print(json.dumps(report["summary"], indent=2))
     print(f"wrote {args.output}")
     return 0
