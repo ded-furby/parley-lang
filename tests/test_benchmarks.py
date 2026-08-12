@@ -3972,3 +3972,69 @@ def test_fullstack_038_runner_checks_hashes_immediately_after_build(
     assert result["protected_read_only_ok"] is False
     assert len(result["protected_read_only_checks"]) == 1
     assert set(result["protected_read_only_checks"][0]["changes"]) == {"Cargo.lock"}
+
+
+def test_fullstack_039_protocol_preregisters_independent_compact_context_study():
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_039_protocol.json").read_text()
+    )
+    product = protocol["frozen_product"]
+
+    assert protocol["experiment_id"] == "039"
+    assert protocol["protocol_revision"] == 1
+    assert product["parley_version"] == "parley 0.5.1"
+    assert product["product_commit"] == "b08952cfb69e10f406af082d899d8556fa75ef15"
+    assert product["product_tree"] == "0f424ad0b03ba724011b8f2ecb05c5a7c277cafc"
+    assert product["corpus_commit"] == "1db9d08ebd73c987e54204d63b7ba37ed9d1eaf4"
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_skill_file", "parley_skill_sha256"),
+        ("parley_web_reference_file", "parley_web_reference_sha256"),
+    ):
+        assert hashlib.sha256((REPO / product[file_key]).read_bytes()).hexdigest() == (
+            product[hash_key]
+        )
+    assert product["combined_parley_context_bytes"] == 4_368
+    assert product["combined_parley_context_o200k_tokens"] == 1_168
+    assert product["combined_parley_context_bytes"] < product[
+        "prior_038_combined_context_bytes"
+    ]
+    assert product["combined_parley_context_o200k_tokens"] < product[
+        "prior_038_combined_context_o200k_tokens"
+    ]
+
+    tasks = json.loads((REPO / product["tasks_file"]).read_text())["tasks"]
+    cases = json.loads((REPO / product["cases_file"]).read_text())["tasks"]
+    assert [task["kind"] for task in tasks] == [
+        "implementation", "implementation", "maintenance", "maintenance"
+    ]
+    assert "multiplied by" not in " ".join(task["statement"] for task in tasks)
+    assert set(cases) == {task["id"] for task in tasks}
+    assert all(len(rows) == 9 for rows in cases.values())
+    assert sum(
+        case["visibility"] == "public"
+        for rows in cases.values()
+        for case in rows
+    ) == 16
+    assert sum(
+        case["visibility"] == "hidden"
+        for rows in cases.values()
+        for case in rows
+    ) == 20
+    assert sum(
+        case["target"] == "browser"
+        for rows in cases.values()
+        for case in rows
+    ) == 12
+    assert protocol["matrix"]["fresh_sessions"] == 96
+    assert protocol["frozen_config"]["selective_reruns"] == "forbidden"
+    assert set(protocol["primary_gate"]) == {
+        "execution_integrity",
+        "correctness",
+        "first_check",
+        "tokens",
+        "elapsed",
+        "maintainability",
+        "verdict",
+    }
