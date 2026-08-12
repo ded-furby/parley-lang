@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-12T17:02:57.606270Z",
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "reasoning": "medium",
+  "network_policy": "sandbox_workspace_write.network_access=false",
+  "workspace": "/private/tmp/parley-agent-check-transport-smoke-037-terra-final",
+  "elapsed_seconds": 13.6999,
+  "agent_returncode": 0,
+  "thread_id": "019ff6ed-246f-77b1-94e5-ad89fd137ea5",
+  "usage": {
+    "input_tokens": 38538,
+    "cached_input_tokens": 29952,
+    "output_tokens": 174,
+    "reasoning_output_tokens": 26
+  },
+  "command_protocol": {
+    "commands": [
+      "/bin/zsh -lc ./sources",
+      "/bin/zsh -lc ./check"
+    ],
+    "compliant": true
+  },
+  "parent_attempts": [
+    {
+      "attempt": 1,
+      "request_id": "debab4855f5cf6a0fd2bac4eb81ba300",
+      "elapsed_seconds": 0.9908,
+      "ok": true,
+      "stdout": "parent HTTP and Chromium checks passed\n",
+      "stderr": "",
+      "build": {
+        "ok": true,
+        "returncode": 0
+      },
+      "http": {
+        "status": 200,
+        "json": {
+          "service": "parent-check-transport",
+          "ready": true
+        }
+      },
+      "browser": {
+        "text": "42",
+        "title": "Transport smoke"
+      }
+    }
+  ],
+  "protected_integrity_ok": true,
+  "transport_integrity": {
+    "ok": true,
+    "expected": {
+      ".benchmark_check_request": {
+        "device": 16777233,
+        "inode": 152194769,
+        "mode": 4480,
+        "uid": 501
+      },
+      ".benchmark_check_response": {
+        "device": 16777233,
+        "inode": 152194770,
+        "mode": 4480,
+        "uid": 501
+      }
+    },
+    "actual": {
+      ".benchmark_check_request": {
+        "device": 16777233,
+        "inode": 152194769,
+        "mode": 4480,
+        "uid": 501
+      },
+      ".benchmark_check_response": {
+        "device": 16777233,
+        "inode": 152194770,
+        "mode": 4480,
+        "uid": 501
+      }
+    },
+    "protocol_errors": []
+  },
+  "agent_messages": [
+    "I\u2019ll run the prescribed source and checker commands only.",
+    "transport passed"
+  ],
+  "agent_errors": [],
+  "codex_stdout": "{\"type\":\"thread.started\",\"thread_id\":\"019ff6ed-246f-77b1-94e5-ad89fd137ea5\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"I\u2019ll run the prescribed source and checker commands only.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"===== app.py [read-only] =====\\n#!/usr/bin/env python3\\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\\nimport json\\nimport os\\n\\nPORT = int(os.environ[\\\"TRANSPORT_SMOKE_PORT\\\"])\\nINDEX = b'''<!doctype html><meta charset=\\\"utf-8\\\"><title>Transport smoke</title><p id=\\\"result\\\">loading</p><script type=\\\"module\\\">import { answer } from \\\"/app.js\\\"; document.querySelector(\\\"#result\\\").textContent = String(answer());</script>'''\\nMODULE = b'''export function answer() { return 42; }'''\\n\\nclass Handler(BaseHTTPRequestHandler):\\n    def do_GET(self):\\n        if self.path == \\\"/status\\\":\\n            body = json.dumps({\\\"service\\\": \\\"parent-check-transport\\\", \\\"ready\\\": True}).encode()\\n            content_type = \\\"application/json\\\"\\n        elif self.path == \\\"/app.js\\\":\\n            body = MODULE\\n            content_type = \\\"text/javascript\\\"\\n        elif self.path == \\\"/\\\":\\n            body = INDEX\\n            content_type = \\\"text/html\\\"\\n        else:\\n            self.send_response(404)\\n            self.end_headers()\\n            return\\n        self.send_response(200)\\n        self.send_header(\\\"content-type\\\", content_type)\\n        self.send_header(\\\"content-length\\\", str(len(body)))\\n        self.end_headers()\\n        self.wfile.write(body)\\n\\n    def log_message(self, format, *args):\\n        pass\\n\\nThreadingHTTPServer((\\\"127.0.0.1\\\", PORT), Handler).serve_forever()\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_2\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_2\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"parent HTTP and Chromium checks passed\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_3\",\"type\":\"agent_message\",\"text\":\"transport passed\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":38538,\"cached_input_tokens\":29952,\"cache_write_input_tokens\":0,\"output_tokens\":174,\"reasoning_output_tokens\":26}}\n",
+  "codex_stderr": "Reading additional input from stdin...\n2026-08-12T17:02:43.965207Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 94 column 5\n2026-08-12T17:02:44.349030Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.355523Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.360050Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.363665Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.367450Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.371112Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.374278Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.376642Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.379321Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.381459Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.383947Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.386578Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.388587Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.390824Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.393260Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.395438Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.397814Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.399861Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.401912Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.403885Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.405593Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.407283Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.409502Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.411158Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.412796Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.414703Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.416322Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.418160Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.420567Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.423561Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.426144Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.427851Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.429796Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.431467Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.433669Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.436420Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.438157Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.439773Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.442153Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.444431Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.447159Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.449241Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.451328Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.453100Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.455066Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.457483Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.459487Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.461577Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.463977Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.465719Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.467479Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.469987Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.471728Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.474419Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.476344Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.478334Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.480597Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-12T17:02:44.482307Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n"
+}

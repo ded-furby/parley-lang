@@ -3451,3 +3451,41 @@ read-only hash during reference validation. Only after those execution tests
 pass should new unseen task/case semantics be frozen and a new balanced matrix
 preregistered. Do not reuse the 036 task names, fields, formulas, cases, or
 transcripts for tuning.
+
+## 037 — Parent-owned public-check transport validated before corpus design
+
+- Completed: 2026-08-13
+- Scope: execution-mechanism preflight only; no 037 task or case semantics had
+  been created when these checks ran
+- Implementation: `benchmarks/agent_check_transport.py`
+- Smoke driver: `benchmarks/smoke_agent_check_transport.py`
+- Terra evidence: `benchmarks/agent_check_transport_smoke.json`
+- Sol evidence: `benchmarks/agent_check_transport_smoke_sol.json`
+- Design and threat boundary: `benchmarks/AGENT_CHECK_TRANSPORT.md`
+
+The transport replaces the invalid 036 in-sandbox loopback design. The Codex
+session still runs with `sandbox_workspace_write.network_access=false`, but
+`./check` now communicates with an already-running parent broker through two
+protected POSIX FIFOs. The parent—not the sandboxed agent—builds the candidate,
+binds an allocated loopback port, executes frozen public HTTP cases, drives
+real Chromium, saves the full attempt outside the workspace, and returns only
+bounded public feedback.
+
+Both `gpt-5.6-terra` medium and `gpt-5.6-sol` medium independently completed
+the exact two-command smoke (`./sources`, then `./check`) with no edits. In each
+run the parent observed HTTP 200 with the expected JSON, Chromium imported the
+fixture JavaScript module and rendered `42`, the page title matched, the
+generated checker/client hashes remained intact, and both FIFO identities
+remained unchanged. Each smoke used a unique ephemeral thread and one parent
+attempt.
+
+This validates only the checker boundary. It is not a Parley result and it
+cannot support a language comparison. The nonce authenticates ordinary client
+requests but is readable inside the workspace, so the real measurement
+controls remain command-event validation, attempt limits, protected hashes,
+unexpected-file checks, and invalidation on any violation. Hidden cases never
+use the public transport.
+
+With the mechanism preflight complete, the next frozen boundary is an
+independently designed 037 task/case corpus that does not reuse 036 names,
+fields, formulas, cases, or transcripts.

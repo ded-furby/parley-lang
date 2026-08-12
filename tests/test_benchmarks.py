@@ -19,6 +19,10 @@ from benchmarks.agent_runner import (
     run_cases,
     summarize,
 )
+from benchmarks.agent_check_transport import (
+    ParentCheckBroker,
+    fifo_identity,
+)
 from benchmarks.bundle_runner import (
     build_bundle_plan,
     load_protocol,
@@ -92,6 +96,105 @@ def run_runlog(*args: str) -> subprocess.CompletedProcess:
         text=True,
         timeout=120,
     )
+
+
+def test_parent_check_broker_round_trips_without_tcp_and_preserves_attempt(tmp_path):
+    workspace = tmp_path / "workspace"
+    attempt_root = tmp_path / "attempts"
+    evaluations = []
+
+    def evaluate(number, request_id):
+        evaluations.append((number, request_id))
+        return {
+            "ok": True,
+            "stdout": "public parent check passed\n",
+            "stderr": "",
+            "judgment": {"cases": 3, "browser": True},
+        }
+
+    broker = ParentCheckBroker(workspace, evaluate, attempt_root=attempt_root)
+    installed = broker.install()
+    broker.start()
+    completed = subprocess.run(
+        ["./check"],
+        cwd=workspace,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    broker.stop()
+
+    assert completed.returncode == 0
+    assert completed.stdout == "public parent check passed\n"
+    assert completed.stderr == ""
+    assert len(evaluations) == len(broker.attempts) == 1
+    assert len(evaluations[0][1]) == 32
+    assert broker.attempts[0]["judgment"] == {"cases": 3, "browser": True}
+    assert json.loads((attempt_root / "attempt-001.json").read_text())["ok"] is True
+    assert broker.integrity()["ok"] is True
+    assert Path(installed["request_fifo"]).is_fifo()
+    assert Path(installed["response_fifo"]).is_fifo()
+
+
+def test_parent_check_broker_returns_evaluator_failures_and_detects_fifo_replacement(
+    tmp_path,
+):
+    workspace = tmp_path / "workspace"
+
+    def evaluate(number, request_id):
+        raise RuntimeError("controlled evaluator failure")
+
+    broker = ParentCheckBroker(workspace, evaluate)
+    broker.install()
+    broker.start()
+    completed = subprocess.run(
+        ["./check"],
+        cwd=workspace,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    broker.stop()
+
+    assert completed.returncode == 1
+    assert "controlled evaluator failure" in completed.stderr
+    assert broker.attempts[0]["ok"] is False
+    assert "evaluator_error" in broker.attempts[0]
+
+    request = workspace / ".benchmark_check_request"
+    original = fifo_identity(request)
+    request.unlink()
+    os.mkfifo(request, mode=0o600)
+    assert fifo_identity(request).inode != original.inode
+    assert broker.integrity()["ok"] is False
+
+
+def test_parent_check_transport_smokes_cover_both_model_strata():
+    expected = {
+        "agent_check_transport_smoke.json": "gpt-5.6-terra",
+        "agent_check_transport_smoke_sol.json": "gpt-5.6-sol",
+    }
+
+    for filename, model in expected.items():
+        result = json.loads((BENCHMARKS / filename).read_text())
+        assert result["ok"] is True
+        assert result["model"] == model
+        assert result["reasoning"] == "medium"
+        assert result["network_policy"].endswith("network_access=false")
+        assert result["agent_returncode"] == 0
+        assert result["command_protocol"]["compliant"] is True
+        assert len(result["parent_attempts"]) == 1
+        assert result["parent_attempts"][0]["ok"] is True
+        assert result["parent_attempts"][0]["http"] == {
+            "status": 200,
+            "json": {"service": "parent-check-transport", "ready": True},
+        }
+        assert result["parent_attempts"][0]["browser"] == {
+            "text": "42",
+            "title": "Transport smoke",
+        }
+        assert result["protected_integrity_ok"] is True
+        assert result["transport_integrity"]["ok"] is True
 
 
 def test_benchmark_tasks_reference_existing_examples():

@@ -230,6 +230,23 @@ new tasks in iteration 037 after a complete in-sandbox public HTTP/browser
 smoke passes. See `FULLSTACK_AGENT_036.md` and the canonical report artifact in
 `benchmarks/reports/036-unseen-fullstack-study-invalid.artifact.json`.
 
+## Parent-owned public checker for iteration 037
+
+The replacement checker transport is implemented in
+`agent_check_transport.py`. The agent keeps outbound and loopback networking
+disabled; its protected `./check` wrapper sends a bounded request over POSIX
+FIFOs to the parent runner, which performs public HTTP and real-Chromium checks
+outside the sandbox and returns only public feedback. Complete attempts are
+written atomically outside the agent workspace, and FIFO identity plus client
+hashes are checked for every cell.
+
+Before any 037 task semantics were frozen, independent terra-medium and
+sol-medium Codex smokes both passed the full compile, HTTP, JavaScript-module,
+and browser-render path with exactly `./sources` then `./check`. See
+`AGENT_CHECK_TRANSPORT.md` and the two
+`agent_check_transport_smoke*.json` evidence artifacts. These smokes validate
+the execution mechanism only; they are not language results.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
