@@ -204,18 +204,31 @@ boundary, then run the matrix from the committed checkpoint:
 python3 benchmarks/prepare_fullstack_agent_036.py
 python3 benchmarks/run_fullstack_agent_036.py validate-corpus
 python3 benchmarks/run_fullstack_agent_036.py validate-references \
-  --parley-command /absolute/path/to/parley \
+  --parley-command /private/tmp/parley-fullstack-036-parley/bin/parley \
+  --provenance /private/tmp/parley-fullstack-036-provenance.json \
   --output benchmarks/fullstack_agent_036_validation.json
 python3 benchmarks/run_fullstack_agent_036.py run \
-  --parley-command /absolute/path/to/parley \
-  --output benchmarks/results/fullstack_agent_036_v0.5.0.json
+  --parley-command /private/tmp/parley-fullstack-036-parley/bin/parley \
+  --provenance /private/tmp/parley-fullstack-036-provenance.json \
+  --work-root /private/tmp/parley-fullstack-036-work \
+  --journal-root /private/tmp/parley-fullstack-036-journal \
+  --output benchmarks/results/fullstack_agent_036_raw.json
 ```
 
 `./sources` is allowed exactly once in every agent cell; all later shell
 activity must be exactly `./check`. The public checker builds and runs the real
 HTTP/browser application. Hidden cases remain in the parent runner. The frozen
 six-condition gate and no-rerun rule are in
-`fullstack_agent_036_protocol.json`. No measured cell has run yet.
+`fullstack_agent_036_protocol.json`.
+
+The 96-cell matrix has now run exactly once. Its strict gate failed, and a
+post-run audit classified the execution as invalid for the intended public
+feedback loop: sandbox network denial also blocked localhost in all 179 public
+checks, while Cargo rewrote the stale root package entry in all 24 Rust
+lockfiles. Do not rerun or tune iteration 036. Preserve its raw result and use
+new tasks in iteration 037 after a complete in-sandbox public HTTP/browser
+smoke passes. See `FULLSTACK_AGENT_036.md` and the canonical report artifact in
+`benchmarks/reports/036-unseen-fullstack-study-invalid.artifact.json`.
 
 ## Versioned benchmark reports
 

@@ -2765,3 +2765,80 @@ def test_fullstack_036_reference_validation_artifact_is_complete():
     assert validation["seed_cells_correct"] == 0
     assert validation["maintenance_root_boundaries_passed"] == 8
     assert all(row["reference_cases"] == 8 for row in validation["cells"])
+
+
+def test_fullstack_036_raw_result_and_canonical_report_preserve_invalid_run():
+    raw_path = BENCHMARKS / "results/fullstack_agent_036_raw.json"
+    raw = json.loads(raw_path.read_text())
+
+    assert hashlib.sha256(raw_path.read_bytes()).hexdigest() == (
+        "bb644554d9cf135198e31330c6a8d6a2e5876de6633a487335679947aaced096"
+    )
+    assert len(raw["results"]) == 96
+    assert len({row["cell_id"] for row in raw["results"]}) == 96
+    assert len({row["thread_id"] for row in raw["results"]}) == 96
+    assert all(row["journal_attempt"] == 1 for row in raw["results"])
+    assert raw["summary"]["primary_gate"]["passed"] is False
+    assert raw["summary"]["primary_gate"]["conditions"] == {
+        "execution_integrity": False,
+        "correctness": True,
+        "first_check": True,
+        "tokens": False,
+        "elapsed": False,
+        "maintainability": True,
+    }
+
+    attempts = [
+        attempt
+        for row in raw["results"]
+        for attempt in row["public_attempts"]
+    ]
+    assert len(attempts) == 179
+    assert all(attempt["build"]["ok"] for attempt in attempts)
+    assert all(
+        attempt.get("runtime_error") == "[Errno 1] Operation not permitted"
+        for attempt in attempts
+    )
+    assert all(not attempt["cases"] for attempt in attempts)
+    assert sum(len(row["hidden_judgment"]["cases"]) for row in raw["results"]) == 480
+
+    rust = [row for row in raw["results"] if row["language"] == "rust"]
+    assert len(rust) == 24
+    assert all(not row["read_only_integrity_ok"] for row in rust)
+    assert all(row["checker_integrity_ok"] for row in rust)
+    assert all(
+        row["read_only_integrity_ok"]
+        for row in raw["results"]
+        if row["language"] != "rust"
+    )
+
+    report_path = BENCHMARKS / "reports/036-unseen-fullstack-study-invalid.artifact.json"
+    report = json.loads(report_path.read_text())
+    assert report["surface"] == "report"
+    assert report["manifest"]["title"] == "Unseen Full-Stack Agent Study — Iteration 036"
+    assert report["snapshot"]["status"] == "ready"
+    assert len(report["snapshot"]["datasets"]["languages"]) == 4
+    assert len(report["snapshot"]["datasets"]["configurations"]) == 8
+    first_check = next(
+        row
+        for row in report["snapshot"]["datasets"]["gates"]
+        if row["condition"] == "First public check"
+    )
+    assert first_check["raw_result"] == "PASS"
+    assert first_check["interpretation"] == "NOT INTERPRETABLE"
+
+
+def test_fullstack_036_report_builder_is_deterministic():
+    report = BENCHMARKS / "reports/036-unseen-fullstack-study-invalid.artifact.json"
+    before = hashlib.sha256(report.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_036_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(report.read_bytes()).hexdigest() == before

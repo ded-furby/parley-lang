@@ -1,8 +1,10 @@
 # Versioned agent benchmark reports
 
 These reports are immutable snapshots. Never replace or delete an existing
-numbered HTML file; create the next number with its canonical artifact, SQL
-transformation, and chart-map notes.
+numbered report; create the next number with its canonical artifact, SQL
+transformation, and chart-map notes. Generate HTML through the shared portable
+artifact renderer when it succeeds; preserve and disclose a renderer blocker
+instead of hand-building a replacement.
 
 | Version | Compiler | Result | Report |
 | --- | --- | --- | --- |
@@ -41,6 +43,7 @@ transformation, and chart-map notes.
 | 033 | Parley 0.3.159 | Adaptive agent-data packing was lossless but missed the frozen 5% aggregate gate | [HTML](033-adaptive-agent-data-gate-not-met.html) |
 | 034 | Parley 0.3.159 | Paired 90-session confirmation saved tokens in all 45 pairs without accuracy loss | [HTML](034-verified-toon-context-efficiency-win.html) |
 | 035 | Parley 0.4.0 | Release Radar passed 60/60 cross-language checks and used 40.37% fewer authored tokens than the nearest baseline | [HTML](035-release-radar-fullstack-compactness-proof.html) |
+| 036 | Parley 0.5.0 | Strict run invalid: 24/24 Parley hidden judgments passed, but public loopback feedback was blocked and token/time superiority failed | [Artifact](036-unseen-fullstack-study-invalid.artifact.json) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

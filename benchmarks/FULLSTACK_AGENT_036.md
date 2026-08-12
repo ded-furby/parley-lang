@@ -75,3 +75,32 @@ omissions in the initial runner. Protocol revision 2 freezes an execution-only
 correction; no task, case, model, metric definition, threshold, or gate changed.
 See `FULLSTACK_AGENT_036_AMENDMENT.md` for the preserved checkpoints, exact
 changes, and zero-session boundary.
+
+## Result
+
+Iteration 036 completed all 96 frozen cells exactly once at committed checkpoint
+`42bb923`. The strict overall gate failed and the execution is not valid for the
+intended public-feedback claim.
+
+The parent-run hidden judgment is still complete descriptive evidence: Parley,
+TypeScript, and Rust each passed 24/24 assignments; Python passed 12/24, split
+between 0/12 implementations and 12/12 repairs. Parley changed exactly its
+predeclared root in all 12 hidden-correct maintenance rows. Its 82,903 median
+complete-session tokens nevertheless exceeded Python's 74,064.5, and its
+38.442-second median exceeded TypeScript's 37.021 seconds.
+
+Two execution defects make the strict run invalid:
+
+1. The network-disabled Codex sandbox also denied loopback socket binding.
+   All 179 public checks built, then failed with `Operation not permitted`
+   before running an HTTP or browser case. First-check, final-public, and
+   repair-feedback metrics are therefore uninterpretable.
+2. Cargo deterministically rewrote the reused `release-radar-035` root package
+   entry in every Rust `Cargo.lock` to the actual `fullstack-agent-036` package,
+   failing read-only integrity in all 24 Rust cells.
+
+The no-rerun rule remains binding. The raw result is preserved at
+`benchmarks/results/fullstack_agent_036_raw.json`; the canonical technical
+report source is
+`benchmarks/reports/036-unseen-fullstack-study-invalid.artifact.json`. A newly
+frozen iteration 037 must use new tasks and a loopback-safe checker architecture.

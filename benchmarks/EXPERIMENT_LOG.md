@@ -3376,3 +3376,78 @@ before the successful complete validation and before this harness checkpoint.
 **No measured 036 agent session has run.** The next action is to rerun the
 committed validator, execute all 96 cells once, and preserve the complete raw
 result without tuning or selective reruns.
+
+### 036 result — strict run invalid; hidden correctness retained descriptively
+
+- Completed: 2026-08-13
+- Measurement checkpoint: `42bb923f6085ef19749138f5a8204299ca8cf0e1`
+- Sessions: 96/96, each with one immutable journal attempt and one unique
+  ephemeral thread
+- Raw result: `benchmarks/results/fullstack_agent_036_raw.json`
+- Raw SHA-256:
+  `bb644554d9cf135198e31330c6a8d6a2e5876de6633a487335679947aaced096`
+- Protocol SHA-256:
+  `4dba0ba9eb845e2b7ad37c6ff979f6492bd6a20b1f3a7dc63d3fc39df4bdbecf`
+- Canonical report:
+  `benchmarks/reports/036-unseen-fullstack-study-invalid.artifact.json`
+- Report builder: `benchmarks/reports/build_036_report.py`
+- SQL transformation:
+  `benchmarks/reports/036-unseen-fullstack-study-invalid.sql`
+- Chart map:
+  `benchmarks/reports/036-unseen-fullstack-study-invalid.chart-map.md`
+
+The frozen primary gate did **not** pass. The raw runner conditions are:
+
+| Condition | Result | Evidence |
+| --- | --- | --- |
+| Execution integrity | Fail | 96 unique cells completed, but all 24 Rust lockfiles changed and public loopback failed in all 179 attempts |
+| Hidden correctness | Pass | Parley 24/24, TypeScript 24/24, Rust 24/24, Python 12/24 |
+| First check | Mechanical pass, not interpretable | Every language is 0/24 because no public runtime case executed |
+| Complete session tokens | Fail | Parley median 82,903 versus Python 74,064.5 |
+| Elapsed | Fail | Parley median 38.442 s versus TypeScript 37.021 s |
+| Maintainability | Pass | Parley 12/12 exact-root among hidden-correct repairs; Python 12/12, TypeScript 11/12, Rust 0/12 under frozen integrity rule |
+
+The parent process did execute all 480 withheld cases and all 96 browser/server
+cross-target checks. Parley, TypeScript, and Rust were hidden-correct in all 24
+sessions. Python passed every maintenance task (12/12) and no implementation
+task (0/12). Parley's median final editable source was 501.5 o200k tokens,
+below TypeScript 801, Python 854, and Rust 1,252.5. This preserves descriptive
+evidence that Parley can express the frozen solutions compactly and that agents
+produced correct final Parley applications from the visible contract.
+
+It does **not** validate the intended fresh-agent feedback protocol. The
+execution amendment explicitly set
+`sandbox_workspace_write.network_access=false`. Inside that sandbox, every one
+of 179 `./check` attempts compiled successfully and then failed with
+`[Errno 1] Operation not permitted` before binding the localhost service. Zero
+public HTTP/browser cases ran. First-check, final-public, and repair-turn
+metrics are invalid, and session token/time measurements describe agents
+working without the promised semantic feedback.
+
+The separate integrity failure is deterministic scaffold behavior. The reused
+035 Rust lockfile named its root package `release-radar-035`, while the 036
+manifest names `fullstack-agent-036`. Cargo replaced that one root entry during
+every Rust build. Checkers, command policy, thread uniqueness, journal count,
+unexpected-file checks, repository state, and frozen compiler/dependency
+provenance otherwise remained intact. The preregistered integrity verdict still
+stays false; no row is repaired or rerun.
+
+The canonical artifact passed Data Analytics report validation and rendered in
+the MCP report reader. The shared portable HTML builder failed twice during
+`static_charts` with `reader_timeout` and immediate `state: fallback` (including
+a targeted 15-second retry). No bespoke HTML was substituted; the canonical
+artifact, SQL, chart map, builder, and exact raw snapshot are the durable report
+package.
+
+Decision: iteration 036 is closed as an invalid strict run. It provides useful
+hidden-final-artifact evidence but cannot support a superiority claim or
+language tuning. Its no-rerun rule remains binding.
+
+Next experiment: iteration 037 must be independent. Before freezing new tasks,
+build a loopback-safe public checker boundary and prove it with a complete
+in-sandbox HTTP plus real-browser smoke, not a one-line model smoke. Generate a
+Rust lockfile whose root package already matches its manifest and assert every
+read-only hash during reference validation. Only after those execution tests
+pass should new unseen task/case semantics be frozen and a new balanced matrix
+preregistered. Do not reuse the 036 task names, fields, formulas, cases, or
+transcripts for tuning.
