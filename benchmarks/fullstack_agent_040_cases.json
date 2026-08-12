@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "experiment_id": "040",
+  "tasks": {
+    "museum_rotation_build": [
+      {
+        "id": "museum_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/operational",
+        "expected_status": 200,
+        "expected_json": {"service": "Museum Rotation", "ready": true}
+      },
+      {
+        "id": "museum_blended_day",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/museum-rotation",
+        "json": {"permanent_pieces": 8, "borrowed_pieces": 4, "room_count": 3, "late_opening": false},
+        "expected_status": 200,
+        "expected_json": {"collection_size": 12, "viewing_minutes": 128, "late_minutes": 0, "program_minutes": 128, "tour_blocks": 3, "label_points": 32, "rotation_index": 181, "exhibit_mode": "blended"}
+      },
+      {
+        "id": "museum_wrong_flag",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/museum-rotation",
+        "json": {"permanent_pieces": 8, "borrowed_pieces": 4, "room_count": 3, "late_opening": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "museum_browser_blended",
+        "visibility": "public",
+        "target": "browser",
+        "export": "museum_rotation_index",
+        "args": [8, 4, 3, false],
+        "expected": 181
+      },
+      {
+        "id": "museum_loan_late",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/museum-rotation",
+        "json": {"permanent_pieces": 3, "borrowed_pieces": 7, "room_count": 2, "late_opening": true},
+        "expected_status": 200,
+        "expected_json": {"collection_size": 10, "viewing_minutes": 125, "late_minutes": 40, "program_minutes": 165, "tour_blocks": 3, "label_points": 43, "rotation_index": 229, "exhibit_mode": "loan_focus"}
+      },
+      {
+        "id": "museum_permanent_late",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/museum-rotation",
+        "json": {"permanent_pieces": 6, "borrowed_pieces": 0, "room_count": 1, "late_opening": true},
+        "expected_status": 200,
+        "expected_json": {"collection_size": 6, "viewing_minutes": 54, "late_minutes": 20, "program_minutes": 74, "tour_blocks": 2, "label_points": 4, "rotation_index": 92, "exhibit_mode": "permanent"}
+      },
+      {
+        "id": "museum_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/museum-rotation",
+        "json": {"permanent_pieces": 8, "borrowed_pieces": 4, "room_count": 3, "late_opening": false, "wing": 2},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "museum_browser_loan",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "museum_rotation_index",
+        "args": [3, 7, 2, true],
+        "expected": 229
+      },
+      {
+        "id": "museum_browser_permanent",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "museum_rotation_index",
+        "args": [6, 0, 1, true],
+        "expected": 92
+      }
+    ],
+    "harbor_signal_build": [
+      {
+        "id": "harbor_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/operational",
+        "expected_status": 200,
+        "expected_json": {"service": "Harbor Signal", "ready": true}
+      },
+      {
+        "id": "harbor_congested_clear_weather",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/harbor-signal",
+        "json": {"freight_arrivals": 10, "service_boats": 3, "channel_crews": 2, "fog_alert": false},
+        "expected_status": 200,
+        "expected_json": {"vessel_count": 13, "base_beacons": 12, "fog_beacons": 0, "active_beacons": 12, "unsignaled_vessels": 1, "crew_load": 36, "signal_index": 47, "harbor_state": "congested"}
+      },
+      {
+        "id": "harbor_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/harbor-signal",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "harbor_browser_congested",
+        "visibility": "public",
+        "target": "browser",
+        "export": "harbor_signal_index",
+        "args": [10, 3, 2, false],
+        "expected": 47
+      },
+      {
+        "id": "harbor_fog_hold",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/harbor-signal",
+        "json": {"freight_arrivals": 8, "service_boats": 4, "channel_crews": 2, "fog_alert": true},
+        "expected_status": 200,
+        "expected_json": {"vessel_count": 12, "base_beacons": 12, "fog_beacons": 4, "active_beacons": 8, "unsignaled_vessels": 4, "crew_load": 24, "signal_index": 68, "harbor_state": "fog_hold"}
+      },
+      {
+        "id": "harbor_fog_clear",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/harbor-signal",
+        "json": {"freight_arrivals": 2, "service_boats": 1, "channel_crews": 1, "fog_alert": true},
+        "expected_status": 200,
+        "expected_json": {"vessel_count": 3, "base_beacons": 6, "fog_beacons": 2, "active_beacons": 4, "unsignaled_vessels": 0, "crew_load": 9, "signal_index": 9, "harbor_state": "clear"}
+      },
+      {
+        "id": "harbor_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/harbor-signal",
+        "json": {"freight_arrivals": 10, "service_boats": 3, "channel_crews": 2, "fog_alert": false, "dock": 7},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "harbor_browser_fog_hold",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "harbor_signal_index",
+        "args": [8, 4, 2, true],
+        "expected": 68
+      },
+      {
+        "id": "harbor_browser_clear",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "harbor_signal_index",
+        "args": [2, 1, 1, true],
+        "expected": 9
+      }
+    ],
+    "rooftop_battery_repair": [
+      {
+        "id": "rooftop_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/operational",
+        "expected_status": 200,
+        "expected_json": {"service": "Rooftop Battery", "ready": true}
+      },
+      {
+        "id": "rooftop_reserve_preserved",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/rooftop-battery",
+        "json": {"solar_units": 2, "household_units": 10, "stored_units": 10, "reserve_enabled": true},
+        "expected_status": 200,
+        "expected_json": {"energy_gap": 8, "protected_units": 4, "discharge_ceiling": 6, "battery_delivery": 6, "utility_units": 2, "storage_balance": 4, "reserve_margin": 0, "supply_state": "grid"}
+      },
+      {
+        "id": "rooftop_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/rooftop-battery",
+        "json": {"solar_units": 2, "household_units": 10, "stored_units": 10},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "rooftop_browser_reserve",
+        "visibility": "public",
+        "target": "browser",
+        "export": "rooftop_utility_draw",
+        "args": [2, 10, 10, true],
+        "expected": 2
+      },
+      {
+        "id": "rooftop_no_reserve",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/rooftop-battery",
+        "json": {"solar_units": 1, "household_units": 8, "stored_units": 3, "reserve_enabled": false},
+        "expected_status": 200,
+        "expected_json": {"energy_gap": 7, "protected_units": 0, "discharge_ceiling": 3, "battery_delivery": 3, "utility_units": 4, "storage_balance": 0, "reserve_margin": 0, "supply_state": "grid"}
+      },
+      {
+        "id": "rooftop_battery_covers_gap",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/rooftop-battery",
+        "json": {"solar_units": 5, "household_units": 8, "stored_units": 10, "reserve_enabled": true},
+        "expected_status": 200,
+        "expected_json": {"energy_gap": 3, "protected_units": 4, "discharge_ceiling": 6, "battery_delivery": 3, "utility_units": 0, "storage_balance": 7, "reserve_margin": 3, "supply_state": "battery"}
+      },
+      {
+        "id": "rooftop_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/rooftop-battery",
+        "json": {"solar_units": 2, "household_units": 10, "stored_units": 10, "reserve_enabled": true, "meter": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "rooftop_browser_grid",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "rooftop_utility_draw",
+        "args": [1, 8, 3, false],
+        "expected": 4
+      },
+      {
+        "id": "rooftop_browser_battery",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "rooftop_utility_draw",
+        "args": [5, 8, 10, true],
+        "expected": 0
+      }
+    ],
+    "bookmobile_loading_repair": [
+      {
+        "id": "bookmobile_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/operational",
+        "expected_status": 200,
+        "expected_json": {"service": "Bookmobile Loading", "ready": true}
+      },
+      {
+        "id": "bookmobile_lift_frees_capacity",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/bookmobile-loading",
+        "json": {"requested_crates": 35, "damaged_crates": 3, "truck_count": 2, "lift_assist": true},
+        "expected_status": 200,
+        "expected_json": {"sound_crates": 32, "deck_slots": 32, "lift_slots": 4, "loading_slots": 36, "deferred_crates": 0, "boarded_crates": 32, "empty_slots": 4, "loading_state": "loaded"}
+      },
+      {
+        "id": "bookmobile_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/bookmobile-loading",
+        "json": {"requested_crates": "35", "damaged_crates": 3, "truck_count": 2, "lift_assist": true},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "bookmobile_browser_lift",
+        "visibility": "public",
+        "target": "browser",
+        "export": "bookmobile_deferred_crates",
+        "args": [35, 3, 2, true],
+        "expected": 0
+      },
+      {
+        "id": "bookmobile_plain_overflow",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/bookmobile-loading",
+        "json": {"requested_crates": 40, "damaged_crates": 2, "truck_count": 2, "lift_assist": false},
+        "expected_status": 200,
+        "expected_json": {"sound_crates": 38, "deck_slots": 32, "lift_slots": 0, "loading_slots": 32, "deferred_crates": 6, "boarded_crates": 32, "empty_slots": 0, "loading_state": "deferred"}
+      },
+      {
+        "id": "bookmobile_lift_boundary",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/bookmobile-loading",
+        "json": {"requested_crates": 20, "damaged_crates": 2, "truck_count": 1, "lift_assist": true},
+        "expected_status": 200,
+        "expected_json": {"sound_crates": 18, "deck_slots": 16, "lift_slots": 2, "loading_slots": 18, "deferred_crates": 0, "boarded_crates": 18, "empty_slots": 0, "loading_state": "loaded"}
+      },
+      {
+        "id": "bookmobile_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v4/bookmobile-loading",
+        "json": {"requested_crates": 35, "damaged_crates": 3, "truck_count": 2, "lift_assist": true, "branch": 4},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "bookmobile_browser_plain",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "bookmobile_deferred_crates",
+        "args": [40, 2, 2, false],
+        "expected": 6
+      },
+      {
+        "id": "bookmobile_browser_boundary",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "bookmobile_deferred_crates",
+        "args": [20, 2, 1, true],
+        "expected": 0
+      }
+    ]
+  }
+}

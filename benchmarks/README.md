@@ -358,6 +358,14 @@ achieved 6/12 exact maintenance roots. Its final editable source remained
 result in `results/fullstack_agent_039_raw.json`, and the canonical report in
 `reports/039-independent-fullstack-study-gate-not-met.artifact.json`.
 
+Iteration 040 now has a semantics-only independent corpus in
+`fullstack_agent_040_tasks.json` and `fullstack_agent_040_cases.json`. It adds
+museum rotation, harbor signaling, rooftop reserve, and bookmobile loading
+assignments with 36 new case IDs and disjoint request/response fields, routes,
+and browser exports from 036–039. The oracle-checked task/case boundary follows
+the v0.5.2 product checkpoint and precedes every scaffold, protocol, threshold,
+or model output; see `FULLSTACK_AGENT_040.md`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

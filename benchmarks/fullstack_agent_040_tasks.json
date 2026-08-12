@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "experiment_id": "040",
+  "description": "Two independent full-stack implementation assignments and two maintenance assignments, frozen after Parley v0.5.2 and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "museum_rotation_build",
+      "kind": "implementation",
+      "title": "Build a museum rotation planner across HTTP and browser targets",
+      "statement": "Implement the frozen Museum Rotation contract in the supplied stack. collection_size is permanent_pieces + borrowed_pieces. viewing_minutes is permanent_pieces * 9 + borrowed_pieces * 14. late_minutes is room_count * 20 during a late_opening and zero otherwise. program_minutes is viewing_minutes + late_minutes. tour_blocks divides program_minutes into sixty-minute blocks using ceiling division, with zero minutes producing zero blocks. label_points is borrowed_pieces * 5 + room_count * 4. rotation_index is program_minutes + tour_blocks * 7 + label_points. exhibit_mode is loan_focus when borrowed_pieces is greater than permanent_pieces, blended when any borrowed pieces remain, and permanent otherwise. The browser export returns rotation_index.",
+      "service": "Museum Rotation",
+      "status_route": "/status/operational",
+      "post_route": "/api/v4/museum-rotation",
+      "browser_export": "museum_rotation_index",
+      "shared_result_field": "rotation_index",
+      "request_fields": {
+        "permanent_pieces": "number",
+        "borrowed_pieces": "number",
+        "room_count": "number",
+        "late_opening": "yesno"
+      },
+      "response_fields": {
+        "collection_size": "number",
+        "viewing_minutes": "number",
+        "late_minutes": "number",
+        "program_minutes": "number",
+        "tour_blocks": "number",
+        "label_points": "number",
+        "rotation_index": "number",
+        "exhibit_mode": "text"
+      },
+      "public_case_ids": [
+        "museum_status",
+        "museum_blended_day",
+        "museum_wrong_flag",
+        "museum_browser_blended"
+      ],
+      "hidden_case_ids": [
+        "museum_loan_late",
+        "museum_permanent_late",
+        "museum_unknown_field",
+        "museum_browser_loan",
+        "museum_browser_permanent"
+      ],
+      "independence": "New museum-rotation domain, v4 route, time and label formula, vocabulary, fixtures, and browser export selected after the v0.5.2 product checkpoint and before any 040 scaffold or model output."
+    },
+    {
+      "id": "harbor_signal_build",
+      "kind": "implementation",
+      "title": "Build a harbor signal planner across HTTP and browser targets",
+      "statement": "Implement the frozen Harbor Signal contract in the supplied stack. vessel_count is freight_arrivals + service_boats. base_beacons is channel_crews * 6. fog_beacons is channel_crews * 2 during a fog_alert and zero otherwise. active_beacons is max(base_beacons - fog_beacons, 0). unsignaled_vessels is max(vessel_count - active_beacons, 0). crew_load is min(vessel_count, active_beacons) * 3. signal_index is unsignaled_vessels * 11 + crew_load. harbor_state is clear when unsignaled_vessels is zero, fog_hold when unsignaled vessels remain during a fog alert, and congested otherwise. The browser export returns signal_index.",
+      "service": "Harbor Signal",
+      "status_route": "/status/operational",
+      "post_route": "/api/v4/harbor-signal",
+      "browser_export": "harbor_signal_index",
+      "shared_result_field": "signal_index",
+      "request_fields": {
+        "freight_arrivals": "number",
+        "service_boats": "number",
+        "channel_crews": "number",
+        "fog_alert": "yesno"
+      },
+      "response_fields": {
+        "vessel_count": "number",
+        "base_beacons": "number",
+        "fog_beacons": "number",
+        "active_beacons": "number",
+        "unsignaled_vessels": "number",
+        "crew_load": "number",
+        "signal_index": "number",
+        "harbor_state": "text"
+      },
+      "public_case_ids": [
+        "harbor_status",
+        "harbor_congested_clear_weather",
+        "harbor_wrong_media",
+        "harbor_browser_congested"
+      ],
+      "hidden_case_ids": [
+        "harbor_fog_hold",
+        "harbor_fog_clear",
+        "harbor_unknown_field",
+        "harbor_browser_fog_hold",
+        "harbor_browser_clear"
+      ],
+      "independence": "New harbor-signaling domain, v4 route, beacon and crew-load formula, vocabulary, fixtures, and browser export selected before any 040 scaffold or model output."
+    },
+    {
+      "id": "rooftop_battery_repair",
+      "kind": "maintenance",
+      "title": "Repair protected reserve during rooftop battery discharge",
+      "statement": "Repair the supplied Rooftop Battery application. energy_gap is max(household_units - solar_units, 0). protected_units is min(stored_units, 4) when reserve_enabled is true and zero otherwise. discharge_ceiling is max(stored_units - protected_units, 0). battery_delivery is min(energy_gap, discharge_ceiling). utility_units is max(energy_gap - battery_delivery, 0). storage_balance is max(stored_units - battery_delivery, 0). reserve_margin is max(storage_balance - protected_units, 0). supply_state is self_powered when energy_gap is zero, battery when utility_units is zero, and grid otherwise. The HTTP response and browser export must use the same rule; the browser export returns utility_units.",
+      "service": "Rooftop Battery",
+      "status_route": "/status/operational",
+      "post_route": "/api/v4/rooftop-battery",
+      "browser_export": "rooftop_utility_draw",
+      "shared_result_field": "utility_units",
+      "request_fields": {
+        "solar_units": "number",
+        "household_units": "number",
+        "stored_units": "number",
+        "reserve_enabled": "yesno"
+      },
+      "response_fields": {
+        "energy_gap": "number",
+        "protected_units": "number",
+        "discharge_ceiling": "number",
+        "battery_delivery": "number",
+        "utility_units": "number",
+        "storage_balance": "number",
+        "reserve_margin": "number",
+        "supply_state": "text"
+      },
+      "public_case_ids": [
+        "rooftop_status",
+        "rooftop_reserve_preserved",
+        "rooftop_missing_field",
+        "rooftop_browser_reserve"
+      ],
+      "hidden_case_ids": [
+        "rooftop_no_reserve",
+        "rooftop_battery_covers_gap",
+        "rooftop_unknown_field",
+        "rooftop_browser_grid",
+        "rooftop_browser_battery"
+      ],
+      "predeclared_defect": "The application-logic module chooses battery_delivery from all stored_units before protecting reserve energy, so a reserve-enabled request can consume the protected four units.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic protected-reserve ordering defect",
+      "adaptation_boundary": "The reserve mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    },
+    {
+      "id": "bookmobile_loading_repair",
+      "kind": "maintenance",
+      "title": "Repair lift-assisted bookmobile loading capacity",
+      "statement": "Repair the supplied Bookmobile Loading application. sound_crates is max(requested_crates - damaged_crates, 0). deck_slots is truck_count * 16. lift_slots is truck_count * 2 when lift_assist is true and zero otherwise. loading_slots is deck_slots + lift_slots. deferred_crates is max(sound_crates - loading_slots, 0). boarded_crates is min(sound_crates, loading_slots). empty_slots is max(loading_slots - boarded_crates, 0). loading_state is deferred when deferred_crates is positive, loaded when boarded_crates is positive, and idle otherwise. The HTTP response and browser export must use the same rule; the browser export returns deferred_crates.",
+      "service": "Bookmobile Loading",
+      "status_route": "/status/operational",
+      "post_route": "/api/v4/bookmobile-loading",
+      "browser_export": "bookmobile_deferred_crates",
+      "shared_result_field": "deferred_crates",
+      "request_fields": {
+        "requested_crates": "number",
+        "damaged_crates": "number",
+        "truck_count": "number",
+        "lift_assist": "yesno"
+      },
+      "response_fields": {
+        "sound_crates": "number",
+        "deck_slots": "number",
+        "lift_slots": "number",
+        "loading_slots": "number",
+        "deferred_crates": "number",
+        "boarded_crates": "number",
+        "empty_slots": "number",
+        "loading_state": "text"
+      },
+      "public_case_ids": [
+        "bookmobile_status",
+        "bookmobile_lift_frees_capacity",
+        "bookmobile_wrong_type",
+        "bookmobile_browser_lift"
+      ],
+      "hidden_case_ids": [
+        "bookmobile_plain_overflow",
+        "bookmobile_lift_boundary",
+        "bookmobile_unknown_field",
+        "bookmobile_browser_plain",
+        "bookmobile_browser_boundary"
+      ],
+      "predeclared_defect": "The application-logic module subtracts lift_slots from deck_slots instead of adding them, incorrectly reducing loading capacity when lift assistance is enabled.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic boolean-adjustment polarity defect",
+      "adaptation_boundary": "The lift mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    }
+  ]
+}

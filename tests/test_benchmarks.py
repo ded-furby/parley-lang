@@ -3646,6 +3646,201 @@ def test_fullstack_039_report_builder_is_deterministic():
     assert hashlib.sha256(report.read_bytes()).hexdigest() == before
 
 
+def _fullstack_040_oracle(task_id, value):
+    if task_id == "museum_rotation_build":
+        collection = value["permanent_pieces"] + value["borrowed_pieces"]
+        viewing = value["permanent_pieces"] * 9 + value["borrowed_pieces"] * 14
+        late = value["room_count"] * 20 if value["late_opening"] else 0
+        program = viewing + late
+        blocks = (program + 59) // 60 if program else 0
+        labels = value["borrowed_pieces"] * 5 + value["room_count"] * 4
+        index = program + blocks * 7 + labels
+        mode = (
+            "loan_focus"
+            if value["borrowed_pieces"] > value["permanent_pieces"]
+            else "blended"
+            if value["borrowed_pieces"] > 0
+            else "permanent"
+        )
+        return {
+            "collection_size": collection,
+            "viewing_minutes": viewing,
+            "late_minutes": late,
+            "program_minutes": program,
+            "tour_blocks": blocks,
+            "label_points": labels,
+            "rotation_index": index,
+            "exhibit_mode": mode,
+        }
+    if task_id == "harbor_signal_build":
+        vessels = value["freight_arrivals"] + value["service_boats"]
+        base = value["channel_crews"] * 6
+        fog = value["channel_crews"] * 2 if value["fog_alert"] else 0
+        active = max(base - fog, 0)
+        unsignaled = max(vessels - active, 0)
+        crew = min(vessels, active) * 3
+        state = (
+            "clear"
+            if unsignaled == 0
+            else "fog_hold"
+            if value["fog_alert"]
+            else "congested"
+        )
+        return {
+            "vessel_count": vessels,
+            "base_beacons": base,
+            "fog_beacons": fog,
+            "active_beacons": active,
+            "unsignaled_vessels": unsignaled,
+            "crew_load": crew,
+            "signal_index": unsignaled * 11 + crew,
+            "harbor_state": state,
+        }
+    if task_id == "rooftop_battery_repair":
+        gap = max(value["household_units"] - value["solar_units"], 0)
+        protected = min(value["stored_units"], 4) if value["reserve_enabled"] else 0
+        ceiling = max(value["stored_units"] - protected, 0)
+        delivery = min(gap, ceiling)
+        utility = max(gap - delivery, 0)
+        balance = max(value["stored_units"] - delivery, 0)
+        state = "self_powered" if gap == 0 else "battery" if utility == 0 else "grid"
+        return {
+            "energy_gap": gap,
+            "protected_units": protected,
+            "discharge_ceiling": ceiling,
+            "battery_delivery": delivery,
+            "utility_units": utility,
+            "storage_balance": balance,
+            "reserve_margin": max(balance - protected, 0),
+            "supply_state": state,
+        }
+    if task_id == "bookmobile_loading_repair":
+        sound = max(value["requested_crates"] - value["damaged_crates"], 0)
+        deck = value["truck_count"] * 16
+        lift = value["truck_count"] * 2 if value["lift_assist"] else 0
+        slots = deck + lift
+        deferred = max(sound - slots, 0)
+        boarded = min(sound, slots)
+        state = "deferred" if deferred > 0 else "loaded" if boarded > 0 else "idle"
+        return {
+            "sound_crates": sound,
+            "deck_slots": deck,
+            "lift_slots": lift,
+            "loading_slots": slots,
+            "deferred_crates": deferred,
+            "boarded_crates": boarded,
+            "empty_slots": max(slots - boarded, 0),
+            "loading_state": state,
+        }
+    raise AssertionError(f"unknown 040 task: {task_id}")
+
+
+def test_fullstack_040_corpus_is_independent_complete_and_oracle_checked():
+    task_document = json.loads(
+        (BENCHMARKS / "fullstack_agent_040_tasks.json").read_text()
+    )
+    case_document = json.loads(
+        (BENCHMARKS / "fullstack_agent_040_cases.json").read_text()
+    )
+
+    assert task_document["schema_version"] == case_document["schema_version"] == 1
+    assert task_document["experiment_id"] == case_document["experiment_id"] == "040"
+    tasks = task_document["tasks"]
+    assert [task["kind"] for task in tasks] == [
+        "implementation",
+        "implementation",
+        "maintenance",
+        "maintenance",
+    ]
+    assert set(case_document["tasks"]) == {task["id"] for task in tasks}
+
+    prior_tasks = []
+    prior_cases = []
+    for experiment in ("036", "037", "038", "039"):
+        prior_tasks.extend(
+            json.loads(
+                (BENCHMARKS / f"fullstack_agent_{experiment}_tasks.json").read_text()
+            )["tasks"]
+        )
+        prior_cases.extend(
+            case
+            for cases in json.loads(
+                (BENCHMARKS / f"fullstack_agent_{experiment}_cases.json").read_text()
+            )["tasks"].values()
+            for case in cases
+        )
+
+    def fields(rows, name):
+        return {field for row in rows for field in row[name]}
+
+    assert {task["id"] for task in tasks}.isdisjoint(
+        task["id"] for task in prior_tasks
+    )
+    assert fields(tasks, "request_fields").isdisjoint(
+        fields(prior_tasks, "request_fields")
+    )
+    assert fields(tasks, "response_fields").isdisjoint(
+        fields(prior_tasks, "response_fields")
+    )
+    assert {task["status_route"] for task in tasks}.isdisjoint(
+        task["status_route"] for task in prior_tasks
+    )
+    assert {task["post_route"] for task in tasks}.isdisjoint(
+        task["post_route"] for task in prior_tasks
+    )
+    assert {task["browser_export"] for task in tasks}.isdisjoint(
+        task["browser_export"] for task in prior_tasks
+    )
+
+    all_case_ids = []
+    for task in tasks:
+        assert task["shared_result_field"] in task["response_fields"]
+        if task["kind"] == "maintenance":
+            assert task["root_cause_role"] == "application_logic"
+            assert task["predeclared_defect"]
+
+        cases = case_document["tasks"][task["id"]]
+        public = [case for case in cases if case["visibility"] == "public"]
+        hidden = [case for case in cases if case["visibility"] == "hidden"]
+        assert len(cases) == 9
+        assert len(public) == 4 and len(hidden) == 5
+        assert sum(case["target"] == "browser" for case in public) == 1
+        assert sum(case["target"] == "browser" for case in hidden) == 2
+        assert task["public_case_ids"] == [case["id"] for case in public]
+        assert task["hidden_case_ids"] == [case["id"] for case in hidden]
+        all_case_ids.extend(case["id"] for case in cases)
+
+        field_order = list(task["request_fields"])
+        for case in cases:
+            if case["target"] == "browser":
+                assert case["export"] == task["browser_export"]
+                assert len(case["args"]) == len(field_order)
+                values = dict(zip(field_order, case["args"], strict=True))
+                result = _fullstack_040_oracle(task["id"], values)
+                assert case["expected"] == result[task["shared_result_field"]]
+            elif case["method"] == "GET":
+                assert case["path"] == task["status_route"]
+                assert case["expected_json"] == {
+                    "service": task["service"],
+                    "ready": True,
+                }
+            elif case["expected_status"] == 200:
+                assert case["path"] == task["post_route"]
+                assert set(case["json"]) == set(task["request_fields"])
+                assert case["expected_json"] == _fullstack_040_oracle(
+                    task["id"], case["json"]
+                )
+            else:
+                assert case["expected_error"] in {
+                    "invalid_json",
+                    "json_content_type_required",
+                    "body_too_large",
+                }
+
+    assert len(all_case_ids) == len(set(all_case_ids)) == 36
+    assert set(all_case_ids).isdisjoint(case["id"] for case in prior_cases)
+
+
 def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
     from benchmarks.exact_build_freeze import run_frozen_builds
 

@@ -3999,3 +3999,32 @@ Next: commit and preserve v0.5.2 as a product checkpoint. Only afterward may
 iteration 040 task semantics be designed. The successor must use independent
 domains and defect mechanisms and must retain the complete once-run matrix,
 exact-build hashes, external journals, and the same six-condition gate.
+
+### 040 independent corpus frozen after the v0.5.2 checkpoint
+
+- Frozen: 2026-08-13
+- Product commit: `2e44bb092012eba3e9864da9c3e8a1588c2f3fb3`
+- Tasks: `benchmarks/fullstack_agent_040_tasks.json`
+- Task SHA-256:
+  `8f1f56a7f59f6080b239634df1c469f0b83e37432af9d966b94779ec8022e211`
+- Cases: `benchmarks/fullstack_agent_040_cases.json`
+- Case SHA-256:
+  `f21a5f863ba79d13513e9a6bda934cad6ab8358e57f678598840c6046d3c4806`
+- Design record: `benchmarks/FULLSTACK_AGENT_040.md`
+
+The new population contains museum-rotation and harbor-signal implementations,
+plus rooftop-reserve and bookmobile-lift repairs. It has 36 cases: four public
+and five hidden cases per task, with one public and two hidden real-browser
+judgments per task. An independent Python oracle recomputes every successful
+HTTP response and browser scalar.
+
+Automated independence checks prove that task IDs, case IDs, request fields,
+response fields, status and POST routes, and browser exports are disjoint from
+036–039. The reserve-depletion and lift-polarity defects are new. Only museum
+rotation uses ceiling division; the rest exercise multiplication, clamps,
+boolean adjustments, allocation order, and three-way states.
+
+This checkpoint contains no scaffold, reference implementation, protocol,
+model configuration, threshold, agent prompt, or measured session. Next:
+commit this boundary, then preregister the balanced matrix and exact execution
+controls in a separate commit before implementing any stack.
