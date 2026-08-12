@@ -3500,6 +3500,63 @@ def test_fullstack_038_report_builder_is_deterministic():
     assert hashlib.sha256(report.read_bytes()).hexdigest() == before
 
 
+def test_fullstack_039_raw_and_independent_audit_preserve_valid_negative_result():
+    raw_path = BENCHMARKS / "results/fullstack_agent_039_raw.json"
+    raw = json.loads(raw_path.read_text())
+    audit_path = BENCHMARKS / "fullstack_agent_039_audit.json"
+    audit = json.loads(audit_path.read_text())
+
+    assert hashlib.sha256(raw_path.read_bytes()).hexdigest() == (
+        "28ecc96591b4f0bc3561f302e271f392c30439767d220c5a9e5ba73f0b47a3c3"
+    )
+    assert hashlib.sha256(audit_path.read_bytes()).hexdigest() == (
+        "bf2270b79cc238d58dc864a6241a3ed982b31dc5f6ccf632bac72be9d71a1fd6"
+    )
+    assert len(raw["results"]) == 96
+    assert len({row["cell_id"] for row in raw["results"]}) == 96
+    assert len({row["thread_id"] for row in raw["results"]}) == 96
+    assert all(row["journal_attempt"] == 1 for row in raw["results"])
+    assert raw["summary"]["primary_gate"] == {
+        "conditions": {
+            "execution_integrity": True,
+            "correctness": True,
+            "first_check": False,
+            "tokens": False,
+            "elapsed": False,
+            "maintainability": False,
+        },
+        "passed": False,
+    }
+    assert all(
+        row["hidden_success"]
+        for row in raw["results"]
+        if row["language"] != "rust"
+    )
+    assert sum(row["hidden_success"] for row in raw["results"]) == 95
+    assert all(row["workspace_integrity_ok"] for row in raw["results"])
+    assert all(row["post_build_integrity_ok"] for row in raw["results"])
+    assert all(row["final_public_check_success"] for row in raw["results"])
+
+    assert audit["audit_pass"] is True
+    assert audit["external_evidence_verified"] is True
+    assert audit["matrix"]["journal_pairs_verified"] == 96
+    assert audit["matrix"]["attempt_files_verified"] == 99
+    assert audit["exact_build"] == {
+        "commands": 291,
+        "stable_hash_checks": 291,
+        "successful_commands": 288,
+        "failed_commands_with_stable_hashes": 3,
+    }
+    assert audit["first_failure_classes"] == {
+        "redundant_fallback_after_total_conversion": 3,
+    }
+    assert audit["hidden_failure_cells"] == [
+        "event_credit_repair__rust__sol-medium__r1"
+    ]
+    assert len(audit["parley_off_root_maintenance_cells"]) == 6
+    assert audit["primary_gate"] == raw["summary"]["primary_gate"]
+
+
 def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
     from benchmarks.exact_build_freeze import run_frozen_builds
 
