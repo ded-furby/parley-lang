@@ -3782,11 +3782,11 @@ written. Next, commit this boundary and only then implement the harness.
 - Validated: 2026-08-13
 - Reference artifact: `benchmarks/fullstack_agent_038_validation.json`
 - Reference artifact SHA-256:
-  `b12e8802048a5fb0c455eaa5009299d1bc84cec199a3e4fb3617b44c7b9fc249`
+  `f445e2a57652328e42c913ec93908857e03c7b6a3ccc91572a3a3921da4c24f2`
 - Orchestration artifact:
   `benchmarks/fullstack_agent_038_orchestration_smoke.json`
 - Orchestration artifact SHA-256:
-  `72bdab1e1b3ff1aee95768f8c05a42bcce85f9272bf3c1a316cc00d4df8884e4`
+  `8035fcf6d53d72a3702e789b77ea4f6cf2915ad57b825db8a2f4ee638c98f939`
 - Measured sessions: zero
 
 The new task-specific implementations and isolated stack generator passed all

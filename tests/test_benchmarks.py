@@ -3763,6 +3763,9 @@ def test_fullstack_038_scaffolds_plan_and_validation_preserve_frozen_boundaries(
     validation = json.loads(
         (BENCHMARKS / "fullstack_agent_038_validation.json").read_text()
     )
+    assert validation["protocol_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_agent_038_protocol.json").read_bytes()
+    ).hexdigest()
     assert validation["reference_cells_passed"] == 16
     assert validation["seed_cells_built"] == 16
     assert validation["seed_cells_correct"] == 0
@@ -3786,6 +3789,9 @@ def test_fullstack_038_orchestration_smoke_covers_parent_and_hidden_paths():
 
     assert smoke["experiment_id"] == "038"
     assert smoke["purpose"] == "non-model end-to-end orchestration smoke"
+    assert smoke["protocol_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_agent_038_protocol.json").read_bytes()
+    ).hexdigest()
     assert smoke["commands"] == [
         {"command": "./sources", "returncode": 0},
         {"command": "./check", "returncode": 1},

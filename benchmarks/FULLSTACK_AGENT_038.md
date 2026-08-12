@@ -62,7 +62,7 @@ maintenance root boundaries. Every exact build command—one for Parley and
 TypeScript, two for Python and Rust—left every protected/read-only input
 unchanged. The validation artifact is
 `fullstack_agent_038_validation.json` (SHA-256
-`b12e8802048a5fb0c455eaa5009299d1bc84cec199a3e4fb3617b44c7b9fc249`).
+`f445e2a57652328e42c913ec93908857e03c7b6a3ccc91572a3a3921da4c24f2`).
 
 The final Rust manifest generated its own canonical lock. Their SHA-256 hashes
 are `6f14fefca10c3815dc146985433ccdeb2d91fe07284c63e7f210f9d3d5a638f4`
@@ -76,7 +76,7 @@ judgments, Chromium paths, derived cross-target checks, and final integrity
 audit. The incomplete Python seed failed semantics as designed while both
 build phases and every integrity control passed. Its artifact is
 `fullstack_agent_038_orchestration_smoke.json` (SHA-256
-`72bdab1e1b3ff1aee95768f8c05a42bcce85f9272bf3c1a316cc00d4df8884e4`).
+`8035fcf6d53d72a3702e789b77ea4f6cf2915ad57b825db8a2f4ee638c98f939`).
 
 No measured agent session has run. The harness checkpoint is commit `0cc6426`.
 Protocol revision 2 and `FULLSTACK_AGENT_038_EXECUTION_FREEZE.md` now record the
