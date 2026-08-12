@@ -3306,3 +3306,41 @@ same-corpus compiler, syntax, instruction, task, or metric change. The next
 experiment must freeze unseen full-stack implementation and maintenance tasks,
 then measure fresh-agent correctness, first-check rate, repairs, session tokens,
 elapsed time, and maintainability across all four languages.
+
+## 036 — Unseen fresh-agent full-stack study preregistered
+
+- Frozen: 2026-08-13, before stack scaffolds, reference implementations, or
+  measured agent output
+- Parley product checkpoint: `02cd809` (v0.5.0)
+- Corpus checkpoint: `0d26bb9`
+- Protocol: `benchmarks/fullstack_agent_036_protocol.json`
+- Tasks: `benchmarks/fullstack_agent_036_tasks.json`
+- Task SHA-256:
+  `a06b7f0cab56abf496cf780a097580fecaead72d3734a31bb269ebe4aeee3610`
+- Cases: `benchmarks/fullstack_agent_036_cases.json`
+- Case SHA-256:
+  `402451212ceb4c9cb1bd710cdf8143c6a38f35326673965dd884db88abffad77`
+- Matrix: four tasks × four languages × two agent configurations × three
+  repetitions = 96 fresh sessions
+- Agent configurations: `gpt-5.6-sol` medium and `gpt-5.6-terra` medium
+- Seed: `360260813`; concurrency: 4; timeout: 1,800 seconds per cell
+
+The task population is independent of Release Radar: two blank-logic
+implementation assignments (shipping quote and capacity planning) and two
+seeded maintenance assignments (quota carryover and tenant cache isolation).
+Every assignment must build a typed JSON service and deterministic browser
+scalar target, with exact cross-target agreement. There are three public and
+five hidden cases per assignment, including strict JSON-boundary and real
+browser checks.
+
+The strict six-condition gate covers execution integrity, hidden correctness,
+first-check success, complete session tokens, elapsed time, and exact-root
+maintenance quality. Conditions are reported overall and in the frozen model
+and task-kind strata where declared. No cell may be selectively rerun or
+excluded, and no task, case, compiler, skill, prompt, model, metric, or gate may
+change after the corpus checkpoint based on scaffolds, smoke checks, or output.
+
+Next, implement the separate 036 stack scaffolds, integrity validator, and
+runner without modifying historical runners. Validate all 16 reference
+task/language cells and every seeded-defect boundary before launching any of
+the 96 agent sessions.

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "protocol_revision": 1,
+  "experiment_id": "036",
+  "title": "Unseen fresh-agent full-stack implementation and maintenance study",
+  "description": "A frozen 96-session comparison of new server-plus-browser assignments in Parley, Python, TypeScript, and Rust, following product-level comparison 035.",
+  "frozen_product": {
+    "parley_version": "parley 0.5.0",
+    "product_commit": "02cd809",
+    "corpus_commit": "0d26bb9fdf492846bea6b4edf7f329c967c39571",
+    "tasks_file": "benchmarks/fullstack_agent_036_tasks.json",
+    "tasks_sha256": "a06b7f0cab56abf496cf780a097580fecaead72d3734a31bb269ebe4aeee3610",
+    "cases_file": "benchmarks/fullstack_agent_036_cases.json",
+    "cases_sha256": "402451212ceb4c9cb1bd710cdf8143c6a38f35326673965dd884db88abffad77",
+    "parley_skill_file": "skill/parley/SKILL.md",
+    "parley_skill_sha256": "73973a54dcd50aaee245833f4879278ec23a62e50430ffe24964db6fb2fe9743",
+    "parley_skill_bytes": 2328,
+    "parley_web_reference_file": "docs/WEB.md",
+    "parley_web_reference_sha256": "eebcee5baf3a6126128b0ea5558fe7aa7907e87da92d48271d116f6ab537ce26",
+    "parley_web_reference_bytes": 7055
+  },
+  "frozen_config": {
+    "languages": ["parley", "python", "typescript", "rust"],
+    "agent_configurations": [
+      {"id": "sol-medium", "model": "gpt-5.6-sol", "reasoning": "medium"},
+      {"id": "terra-medium", "model": "gpt-5.6-terra", "reasoning": "medium"}
+    ],
+    "replicates_per_task_language_configuration": 3,
+    "seed": 360260813,
+    "timeout_seconds": 1800,
+    "max_workers": 4,
+    "fresh_session_per_cell": true,
+    "public_check_command": "./check",
+    "source_command": "./sources",
+    "source_command_count": 1,
+    "internet": "disabled",
+    "selective_reruns": "forbidden"
+  },
+  "matrix": {
+    "tasks": 4,
+    "implementation_tasks": 2,
+    "maintenance_tasks": 2,
+    "languages": 4,
+    "agent_configurations": 2,
+    "replicates": 3,
+    "fresh_sessions": 96,
+    "sessions_per_language": 24,
+    "sessions_per_language_and_configuration": 12,
+    "sessions_per_task_kind_and_language": 12,
+    "public_cases_per_assignment": 3,
+    "hidden_cases_per_assignment": 5,
+    "public_case_executions": 288,
+    "hidden_case_executions": 480,
+    "derivation": "4 tasks x 4 languages x 2 agent configurations x 3 replicates"
+  },
+  "language_stacks": {
+    "parley": {
+      "version": "0.5.0",
+      "stack": "Generated native HTTP/JSON server and generated browser WebAssembly bindings",
+      "agent_context": "Frozen compact Parley skill plus frozen typed-web reference; both are included in measured input tokens."
+    },
+    "python": {
+      "version": "3.14.6",
+      "stack": "FastAPI 0.141.1, Uvicorn 0.52.1, Pydantic 2.13.4, and a counted browser JavaScript application module"
+    },
+    "typescript": {
+      "version": "7.0.2 on Node.js 22.22.2",
+      "stack": "Hono 4.13.0, @hono/node-server 2.1.0, @hono/zod-validator 0.9.0, and Zod 4.4.3"
+    },
+    "rust": {
+      "version": "rustc/cargo 1.94.0",
+      "stack": "Axum 0.8.9, Tokio 1.53.1, Tower HTTP 0.7.0, Serde 1.0.229, serde_json 1.0.151, and a scalar WebAssembly export"
+    }
+  },
+  "scaffold_protocol": {
+    "purpose": "Supply stable language-appropriate transport, build, and browser wiring so the measured assignment is application implementation or repair rather than framework installation.",
+    "editable": "All task-specific application logic, typed request/response declarations, handlers, browser rule modules, and application manifests required by that language.",
+    "read_only": "Dependency locks, generic launch adapters, shared static shell, frozen contract, source printer, public checker, and benchmark configuration.",
+    "source_visibility": "The first shell command prints every editable and read-only source/context file exactly once. Direct reconnaissance or reading protected checker/case files is forbidden.",
+    "dependency_setup": "Pinned dependencies are installed or fetched before measured sessions. Each check uses only the frozen local dependency store; network time is never part of a cell.",
+    "reference_validation": "Before any agent session, an isolated reference application for every task/language cell must build and pass every public and hidden HTTP/browser case. Seeded maintenance applications must build, fail at least one public semantic case, and pass after changing only the predeclared root file set.",
+    "symmetry": "Every language receives the same English contract and semantic cases. Framework-specific source and configuration may differ, but no language receives a hidden expected value or repair."
+  },
+  "session_protocol": {
+    "runner": "A new iteration-036 runner must create one isolated workspace and one ephemeral Codex thread per cell; it must not modify the historical three-language runners.",
+    "tool_policy": "Disable user configuration, repository rules, plugins, apps, browser-use, computer-use, and multi-agent delegation. Use workspace-write with approval never and no network.",
+    "command_policy": "The first shell command must be exactly ./sources and occur once. Every later shell command must be exactly ./check. At least one ./check is required.",
+    "public_feedback": "Each check records compile/build output and the exact public HTTP/browser verdicts without revealing hidden cases.",
+    "hidden_judgment": "After the agent exits, the parent runner rebuilds the final source and executes all withheld HTTP/browser cases. Hidden inputs and values never enter the workspace.",
+    "attempt_capture": "Preserve every public attempt, source snapshot, file hash, changed-file list, command event, agent message, diagnostic, stdout/stderr, elapsed time, thread ID, and reported token count.",
+    "failure_policy": "Timeouts, agent errors, build failures, protocol violations, checker integrity failures, and missing source are failures and remain in the complete result."
+  },
+  "metrics": {
+    "correctness": "Exact hidden HTTP status/JSON/error and real-browser scalar results, overall and by task, kind, language, model, and replicate.",
+    "first_check": "Whether the first complete public build plus case run passes.",
+    "repairs": "Number of later ./check attempts after the first, with every attempt retained.",
+    "tokens": "Complete reported Codex input, cached input, uncached input, output, reasoning output, and input-plus-output totals. Primary efficiency uses complete input-plus-output tokens per assignment.",
+    "elapsed": "Monotonic wall time for the whole fresh session, including all public builds and repairs but excluding dependency installation.",
+    "maintainability": "Changed editable files, rough token edit size, and whether maintenance patches touch exactly the predeclared defect-root file set.",
+    "source": "Final and seed UTF-8 bytes, physical lines, rough tokens, o200k_base tokens, and per-file SHA-256, reported descriptively rather than substituted for session tokens.",
+    "cross_target": "HTTP/browser equality for the shared scalar contract and successful browser execution."
+  },
+  "primary_gate": {
+    "execution_integrity": "All 96 frozen cells must finish exactly once with unique thread IDs, intact checkers, compliant commands, no runner error, and no selective rerun or exclusion.",
+    "correctness": "Parley must pass 100% of hidden cases and its assignment success rate must be no lower than every baseline overall, within each agent configuration, and within implementation and maintenance tasks.",
+    "first_check": "Parley's first-public-check assignment success rate must be no lower than the highest baseline rate overall and within each task kind.",
+    "tokens": "Parley's median complete input-plus-output tokens per assignment must be no higher than the lowest baseline median overall and separately within each agent configuration.",
+    "elapsed": "Parley's median elapsed seconds per assignment must be no higher than the lowest baseline median overall and separately within each agent configuration.",
+    "maintainability": "Every hidden-correct Parley maintenance assignment must change exactly its predeclared root file set, and its exact-root rate must be no lower than every baseline.",
+    "verdict": "All six conditions must hold for strict unseen full-stack agent parity/efficiency. Report each condition independently even when the overall gate fails."
+  },
+  "secondary_analysis": [
+    "Report full distributions, paired task/configuration/replicate cells, and per-task outcomes; do not replace the primary result with successful or repair-free subsets.",
+    "Report implementation and maintenance separately, including root-file quality and browser/server disagreement classes.",
+    "Report both model configurations separately before any pooled interpretation.",
+    "Compare report 035 only as motivation. Do not combine its authored-source tokens or timing with fresh-session metrics.",
+    "Classify failures after preserving the frozen outcome; classification cannot change a verdict."
+  ],
+  "interpretation_boundary": [
+    "The study covers four small server-plus-browser contracts, two model IDs, one reasoning setting, and one frozen toolchain environment.",
+    "Stack scaffolds test application work, not greenfield framework discovery, dependency selection, deployment, sustained load, authentication, databases, or production operations.",
+    "Framework source and compiler implementations are infrastructure. Their application-facing context is preserved, while complete session tokens remain the primary cost.",
+    "A browser scalar export is a real cross-target behavior check but not a general browser UI or accessibility evaluation.",
+    "Historical grounding supplies only one maintenance mechanism; no upstream source or tests enter the corpus.",
+    "A failed strict gate remains useful evidence and cannot be repaired by same-corpus language, skill, prompt, task, runner, or metric tuning."
+  ],
+  "change_rule": "From the corpus commit onward, no task, case, expected value, language semantics, compiler, skill, web reference, metric, threshold, model, reasoning setting, replicate count, or primary gate may change based on scaffolds, reference code, smoke checks, or measured output. An objective harness defect may be corrected only before measured execution, in a documented amendment that preserves the old commit and demonstrates that no semantic case or gate changed.",
+  "stop_rule": "Run every frozen cell once, preserve and publish the complete result whether positive, mixed, or negative, and make no same-corpus optimization or rerun. Any later language or product change requires independent evidence outside iteration 036."
+}
