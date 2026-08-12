@@ -3610,3 +3610,74 @@ locks, and this freeze record. No semantic or gate field changed.
 The next action remains pre-measurement: commit this revision, regenerate the
 reference artifact so it carries the committed protocol hash, rerun the suite,
 and commit that final preflight. Only then may the 96-cell one-shot matrix begin.
+
+### 037 measured matrix published as an invalid strict result
+
+- Completed: 2026-08-13
+- Measurement commit: `5d38c77dbc99251b1def00da8a6c2e3c79e8778f`
+- Raw snapshot: `benchmarks/results/fullstack_agent_037_raw.json`
+- Raw SHA-256:
+  `541d43b74cf9939d8a6bfc5ce7761dda74825b3d4eb8e8482fa6ef698014549f`
+- Canonical report:
+  `benchmarks/reports/037-unseen-fullstack-study-invalid.artifact.json`
+
+All 96 frozen cells completed exactly once with unique cell IDs, unique thread
+IDs, and one start/finish journal pair. The repository stayed at the committed
+tree and exact compiler/dependency provenance revalidated after execution.
+The parent-owned transport succeeded in its actual purpose: 104 public attempts
+executed 392 named cases, 98 Chromium cases, and 98 derived cross-target checks;
+all 96 final public checks passed. This repairs the principal execution defect
+from iteration 036 and makes 037 first-check and repair feedback interpretable.
+
+The frozen primary gate is false:
+
+| Condition | Result | Evidence |
+| --- | --- | --- |
+| Execution integrity | Fail | All controls passed except the read-only hash: Cargo reordered `Cargo.lock` in 24/24 Rust workspaces |
+| Hidden correctness | Pass | Parley 24/24, Python 24/24, TypeScript 24/24, Rust 22/24; Parley is no lower overall, by model, or by kind |
+| First check | Fail | Parley 18/24 versus Python 23/24 and TypeScript/Rust 24/24; implementation split 6/12 versus best 12/12 |
+| Complete session tokens | Fail | Parley median 66,686.5 versus Python 59,603.5; Parley is 12.22% and 11.24% higher in the two model strata |
+| Elapsed | Fail | Parley median 30.799 s versus TypeScript 23.890 s; Parley is 33.75% and 25.03% higher in the model strata |
+| Maintainability | Pass | Parley/Python/TypeScript 12/12 exact roots; Rust 0/12 because intact workspace is part of eligibility |
+
+All six Parley first-check misses were orchard implementation build failures;
+each passed after one repair and then passed hidden judgment. A Python orchard
+cell ran a second passing check despite already passing its first, so the raw
+aggregate contains eight repair turns but seven first-check failures. Nothing
+is removed from the summaries.
+
+Both hidden failures were terra-medium Rust orchard implementations. Each used
+signed `i64::saturating_sub` as a zero clamp, producing `scheduled_liters=-8`
+and `pump_cycles=1` when rain credit exceeded raw demand. Both final public
+checks passed, while the withheld rain-cancellation HTTP/browser boundary and
+derived agreement check failed. This is retained as a post hoc diagnosis, not
+a reason to rerun or change the corpus.
+
+The Rust integrity failure is deterministic harness behavior. The frozen
+lockfile had the correct root name, version, and dependency list, but the root
+package block remained in the predecessor's noncanonical alphabetical
+position. `cargo metadata --locked --offline` did not rewrite it during
+preflight. The exact measured build moved the unchanged block from after
+`quote` to between `foldhash` and `futures-channel`, changing the hash
+from `35225e916fd2b31a7fc5f75783a90506e46c73e66ada943ec05e6baedeb41bb1`
+to `75baae8e810fc0d455ba6e2610008a27c2a3274b0eed49efd0a5126410e53736`.
+Every other protected, checker, transport, command, journal, provenance, and
+execution control passed. The preregistered no-rerun rule makes this an invalid
+strict run regardless of the narrow cause.
+
+Parley's median final editable source was 552 `o200k_base` tokens, 40.39% below
+Python, 34.21% below TypeScript, and 59.20% below Rust. This is strong secondary
+representation evidence but does not override the complete-session gate, where
+Python was cheaper, or the elapsed gate, where TypeScript was faster. The study
+therefore supports neither universal superiority nor strict full-stack
+efficiency parity.
+
+The canonical Data Analytics artifact passed report validation and rendered in
+the MCP report reader. It preserves the complete gate, language,
+model-stratified, integrity, and hidden-failure audits with five native charts.
+
+Decision: close iteration 037 unchanged. Before any independent 038 corpus is
+frozen, generate Rust locks from their final manifests, run the exact debug and
+release build paths used by measurement during clean-room validation, and
+assert every read-only hash afterward. Then address Parley's independent
+implementation first-build burden without tuning on 037 task semantics.

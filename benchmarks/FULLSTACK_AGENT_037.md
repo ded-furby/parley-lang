@@ -57,14 +57,47 @@ language is universally best, establish production-framework parity, or
 justify claims about unmeasured domains. Every cell and failure will be
 published without selective reruns or exclusions.
 
-## Current state
+## Result
 
-Task and case semantics are frozen, and the balanced 96-cell protocol is
-preregistered in `fullstack_agent_037_protocol.json`. The four stack generators,
-parent evaluator, shared numeric-domain guard, exact Rust lock, provenance
-preparer, journaled runner, and integrity aggregation are implemented. The
-clean-room reference boundary passes 16/16 cells and every broken seed builds
-without incorrectly passing. No measured 037 session exists at this checkpoint;
-the exact transitive harness hashes and zero-session controls are frozen in
-`FULLSTACK_AGENT_037_EXECUTION_FREEZE.md`. The canonical validation artifact is
-regenerated against that committed protocol immediately before measurement.
+Iteration 037 completed all 96 frozen cells exactly once at committed
+checkpoint `5d38c77`. Its strict overall gate failed, and the execution is
+invalid under the preregistered read-only integrity rule.
+
+The replacement public-feedback mechanism did work. The 104 parent-owned
+attempts executed 392 named public cases, including 98 real-Chromium cases and
+98 derived browser/server agreement checks. All 96 final workspaces passed the
+public set. Checker hashes, FIFO identities, attempt-record hashes, symlink and
+command rules, journals, repository state, and exact toolchain provenance also
+remained intact.
+
+The final-artifact evidence is complete. Parley, Python, and TypeScript each
+passed 24/24 hidden assignments; Rust passed 22/24. Both Rust failures were
+independent terra-medium orchard implementations that used signed
+`i64::saturating_sub` as though it clamped at zero. Parley changed exactly its
+predeclared root in all 12 hidden-correct maintenance rows.
+
+Three product conditions still failed. Parley passed 18/24 first public checks
+versus Python 23/24 and TypeScript/Rust 24/24. Its 66,686.5 median complete
+session tokens were 11.88% above Python's 59,603.5, and its 30.799-second median
+was 28.92% above TypeScript's 23.890 seconds. Parley's 552-token median final
+editable source remained materially smaller than TypeScript 839, Python 926,
+and Rust 1,353, but source size is secondary to the frozen session metric.
+
+The integrity failure came from the supplied Rust lockfile. It already named
+the correct `fullstack-agent-037` root with the correct dependencies, but its
+package block was located where the reused predecessor block had appeared.
+`cargo metadata --locked --offline` left the file untouched during preflight;
+the exact measured build moved the block between `foldhash` and
+`futures-channel`. The hash therefore changed from
+`35225e916fd2b31a7fc5f75783a90506e46c73e66ada943ec05e6baedeb41bb1` to
+`75baae8e810fc0d455ba6e2610008a27c2a3274b0eed49efd0a5126410e53736`
+in all 24 Rust workspaces. No content or dependency changed, but the frozen
+integrity verdict remains false and no row may be repaired or rerun.
+
+The complete raw snapshot is
+`results/fullstack_agent_037_raw.json` with SHA-256
+`541d43b74cf9939d8a6bfc5ce7761dda74825b3d4eb8e8482fa6ef698014549f`.
+The canonical technical report, deterministic builder, SQL extraction, and
+chart map are under `reports/`. Iteration 038 must use an independent corpus
+after the preflight runs every measured build path and asserts post-build
+read-only hashes.

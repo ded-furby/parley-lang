@@ -1,0 +1,1223 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Unseen Full-Stack Agent Study \u2014 Iteration 037",
+    "description": "Preregistered 96-session comparison with valid public feedback; strict result invalidated by a noncanonical Rust lock freeze and failed product-efficiency gates.",
+    "generatedAt": "2026-08-12T18:17:47.804085Z",
+    "cards": [
+      {
+        "id": "sessions_card",
+        "description": "All frozen cells completed once.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "sessions",
+            "label": "Sessions",
+            "format": "number",
+            "unit": "of 96"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "hidden_card",
+        "description": "Parley passed every hidden judgment.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "parley_hidden",
+            "label": "Parley hidden-correct",
+            "format": "number",
+            "unit": "of 24"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "first_card",
+        "description": "All six misses were orchard build attempts.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "parley_first",
+            "label": "Parley first checks",
+            "format": "number",
+            "unit": "of 24"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "public_card",
+        "description": "Parent-owned feedback was usable in every final workspace.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "public_final",
+            "label": "Final public passes",
+            "format": "number",
+            "unit": "of 96"
+          },
+          {
+            "field": "public_attempts",
+            "label": "Public attempts",
+            "format": "number",
+            "unit": "total"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "gate_card",
+        "description": "The frozen six-condition claim was not established.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "strict_gate",
+            "label": "Strict gate",
+            "format": "number",
+            "unit": "of 1"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_037"
+      }
+    ],
+    "charts": [
+      {
+        "id": "correctness_chart",
+        "title": "Hidden assignment success rate",
+        "subtitle": "Five withheld cases plus browser/server agreement; 24 sessions per language.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "hidden_success_rate",
+            "type": "quantitative",
+            "label": "Hidden success rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Hidden success rate",
+        "valueFormat": "percent",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "question": "Which language arms passed the complete hidden judgment?",
+        "rationale": "A categorical bar displays the two Rust misses while preserving the three perfect arms.",
+        "comparisonContext": {
+          "unit": "fraction of 24 sessions",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "first_check_chart",
+        "title": "First public check success rate",
+        "subtitle": "First parent-owned HTTP/browser check; higher is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "first_check_success_rate",
+            "type": "quantitative",
+            "label": "First-check rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "First-check rate",
+        "valueFormat": "percent",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "question": "Did Parley match the strongest baseline before repair?",
+        "rationale": "The four rates directly evaluate the frozen first-check condition.",
+        "comparisonContext": {
+          "unit": "fraction of 24 sessions",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "tokens_chart",
+        "title": "Median complete session tokens",
+        "subtitle": "Input plus output tokens across all 24 sessions per language; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_total_tokens",
+            "type": "quantitative",
+            "label": "Median tokens",
+            "format": "compact"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median tokens",
+        "valueFormat": "compact",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "question": "Did Parley match the cheapest complete-session baseline?",
+        "rationale": "A sorted magnitude comparison directly evaluates the primary token threshold.",
+        "comparisonContext": {
+          "unit": "input plus output tokens per session",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "elapsed_chart",
+        "title": "Median fresh-session elapsed time",
+        "subtitle": "Complete wall time across all 24 sessions per language; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_elapsed_seconds",
+            "type": "quantitative",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median seconds",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "question": "Did Parley match the fastest elapsed baseline?",
+        "rationale": "A sorted category comparison exposes the Parley\u2013TypeScript gap.",
+        "comparisonContext": {
+          "unit": "seconds per session",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "source_chart",
+        "title": "Median final editable-source tokens",
+        "subtitle": "o200k_base count over final editable application files; lower is smaller.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_final_o200k_tokens",
+            "type": "quantitative",
+            "label": "Median source tokens",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median source tokens",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "question": "Did Parley retain a source-representation compactness advantage?",
+        "rationale": "This secondary chart separates source size from complete agent cost.",
+        "comparisonContext": {
+          "unit": "o200k_base tokens per final source",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "gate_table",
+        "title": "Frozen six-condition gate",
+        "subtitle": "All conditions are reported independently; one failure is sufficient for the overall false verdict.",
+        "dataset": "gates",
+        "columns": [
+          {
+            "field": "order",
+            "label": "#",
+            "format": "number"
+          },
+          {
+            "field": "condition",
+            "label": "Condition",
+            "type": "text"
+          },
+          {
+            "field": "threshold",
+            "label": "Frozen threshold",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "result",
+            "label": "Result",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "order",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "language_table",
+        "title": "Complete language-level audit",
+        "subtitle": "All 24 sessions per language, including failures and every repair turn.",
+        "dataset": "languages",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_check_successes",
+            "label": "First check",
+            "format": "number"
+          },
+          {
+            "field": "median_total_tokens",
+            "label": "Median tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_elapsed_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          {
+            "field": "median_final_o200k_tokens",
+            "label": "Median source",
+            "format": "number"
+          },
+          {
+            "field": "exact_root_successes",
+            "label": "Exact roots",
+            "format": "number"
+          },
+          {
+            "field": "workspace_integrity_rows",
+            "label": "Intact workspaces",
+            "format": "number"
+          },
+          {
+            "field": "repair_turns",
+            "label": "Repair turns",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "configuration_table",
+        "title": "Model-stratified result",
+        "subtitle": "Twelve sessions per model/language cell; medians include every outcome.",
+        "dataset": "configurations",
+        "columns": [
+          {
+            "field": "configuration",
+            "label": "Configuration",
+            "type": "text"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_check_successes",
+            "label": "First check",
+            "format": "number"
+          },
+          {
+            "field": "median_total_tokens",
+            "label": "Median tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_elapsed_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          {
+            "field": "exact_root_rate",
+            "label": "Exact-root rate",
+            "format": "percent"
+          }
+        ],
+        "defaultSort": {
+          "field": "configuration",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "integrity_table",
+        "title": "Execution and measurement integrity audit",
+        "subtitle": "Valid controls are retained alongside the single deterministic freeze failure.",
+        "dataset": "integrity",
+        "columns": [
+          {
+            "field": "order",
+            "label": "#",
+            "format": "number"
+          },
+          {
+            "field": "check",
+            "label": "Check",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "Status",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "order",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037"
+      },
+      {
+        "id": "failure_table",
+        "title": "Hidden failures",
+        "subtitle": "Both failures are independent Terra/Rust solutions to the orchard implementation task.",
+        "dataset": "hidden_failures",
+        "columns": [
+          {
+            "field": "cell",
+            "label": "Cell",
+            "type": "text"
+          },
+          {
+            "field": "failed_cases",
+            "label": "Failed cases",
+            "type": "text"
+          },
+          {
+            "field": "cause",
+            "label": "Observed cause",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "cell",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037"
+      }
+    ],
+    "sources": [
+      {
+        "id": "fullstack_agent_evidence_037",
+        "label": "Complete frozen iteration 037 raw result and protocol",
+        "path": "benchmarks/results/fullstack_agent_037_raw.json",
+        "query": {
+          "engine": "Python 3.14 and SQLite JSON1",
+          "language": "SQL and Python",
+          "sql": "-- Canonical language-level extraction for iteration 037.\n-- Run from the repository root with SQLite JSON1 available.\nWITH raw AS (\n    SELECT json(readfile('benchmarks/results/fullstack_agent_037_raw.json')) AS body\n),\nlanguages(language) AS (\n    VALUES ('parley'), ('python'), ('typescript'), ('rust')\n)\nSELECT\n    language,\n    json_extract(body, '$.summary.by_language.' || language || '.sessions') AS sessions,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_successes') AS hidden_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_success_rate') AS hidden_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_successes') AS first_check_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_success_rate') AS first_check_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.median_total_tokens') AS median_total_tokens,\n    json_extract(body, '$.summary.by_language.' || language || '.median_elapsed_seconds') AS median_elapsed_seconds,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_correct_maintenance_rows') AS hidden_correct_maintenance_rows,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_successes') AS exact_root_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_rate') AS exact_root_rate\nFROM raw\nCROSS JOIN languages\nORDER BY hidden_success_rate DESC, first_check_success_rate DESC,\n         median_total_tokens ASC;\n",
+          "description": "Deterministic extraction of language, configuration, gate, public-check, source, hidden-failure, and integrity summaries from all 96 sessions.",
+          "executed_at": "2026-08-12T18:17:47.804085Z",
+          "tables_used": [
+            "benchmarks/results/fullstack_agent_037_raw.json",
+            "benchmarks/fullstack_agent_037_protocol.json",
+            "benchmarks/fullstack_agent_037_validation.json"
+          ],
+          "filters": [
+            "All 96 frozen cells; no exclusions, retries, or selective reruns.",
+            "Four tasks, four languages, two model configurations, three replicates.",
+            "All public attempts retained; hidden judgment follows each fresh session.",
+            "Strict execution remains failed when a frozen read-only hash changes."
+          ],
+          "metric_definitions": [
+            "Hidden success: all five withheld cases plus cross-target agreement pass.",
+            "First check: the first parent-owned public HTTP/browser attempt succeeds.",
+            "Complete session tokens: Codex input plus output tokens; medians include all 24 language rows.",
+            "Elapsed seconds: complete fresh-session wall time, excluding dependency preparation.",
+            "Exact root: hidden-correct maintenance output changes exactly the preregistered root set and has intact workspace integrity.",
+            "Source tokens: o200k_base tokens in final editable application files."
+          ]
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Unseen Full-Stack Agent Study \u2014 Iteration 037"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Technical summary\n\n**Iteration 037 restored valid agent-visible public feedback but still does not establish strict parity or superiority.** All **96/96** frozen sessions ran exactly once. Parley passed **24/24** hidden judgments and **12/12** exact-root repairs, while all **96/96** final workspaces passed parent-owned public HTTP and Chromium checks. Its first-check rate was only **18/24**, its **66,686.5** median complete-session tokens were **11.88% above Python**, and its **30.799 s** median elapsed time was **28.92% above TypeScript**. The overall run is additionally invalid under its frozen execution rule because Cargo canonically relocated an otherwise identical root package block in all **24/24** Rust lockfiles. No row was repaired, excluded, or rerun."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "sessions_card",
+          "hidden_card",
+          "first_card",
+          "public_card",
+          "gate_card"
+        ]
+      },
+      {
+        "id": "verdict",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## The transport succeeded; the strict experiment did not\n\nThe parent-owned FIFO checker fixed iteration 036's dominant execution defect. Across **104** public attempts it ran **392** named cases, including **98** real-browser cases and **98** derived cross-target checks; all **96** final public checks passed. The remaining execution failure is narrower but binding: the frozen Rust `Cargo.lock` contained the correct package and dependencies in a noncanonical position. `cargo build` moved that block without changing its content, so read-only integrity failed in every Rust cell. The reference preflight used `cargo metadata --locked --offline`, which did not expose the later build rewrite. Under the preregistered all-six-conditions rule, this is an invalid strict run, not a narrow win."
+      },
+      {
+        "id": "gate_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "gate_table"
+      },
+      {
+        "id": "integrity_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "integrity_table"
+      },
+      {
+        "id": "correctness",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Final correctness was strong and fully measured\n\nParley, Python, and TypeScript each passed **24/24** hidden assignments. Rust passed **22/24**. Both failures were independent Terra orchard implementations that treated signed `i64::saturating_sub` as a clamp to zero: `32 - 40` produced `-8`, leaving one pump cycle active. The public fixtures did not reveal the rain-cancels boundary, while the hidden HTTP, browser, and cross-target checks did. This is valid descriptive evidence about the final artifacts even though the experiment-wide integrity gate is false."
+      },
+      {
+        "id": "correctness_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "correctness_chart"
+      },
+      {
+        "id": "failure_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "failure_table"
+      },
+      {
+        "id": "first",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Parley required more first-pass repair\n\nParley passed **18/24** first public checks, below Python's **23/24** and TypeScript/Rust at **24/24**. All six Parley misses were blank orchard implementations whose first attempt failed to build; each passed after one repair and later passed hidden judgment. One Python orchard session voluntarily ran a second passing check after already passing its first, which is why the report retains **eight** aggregate repair turns despite only **seven** first-check failures."
+      },
+      {
+        "id": "first_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "first_check_chart"
+      },
+      {
+        "id": "language_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "language_table"
+      },
+      {
+        "id": "tokens",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Compact Parley source did not produce the lowest complete-session token cost\n\nParley's **66,686.5** median session tokens were **11.88% above Python's 59,603.5**, failing the frozen best-baseline threshold. The gap repeats under sol-medium (**12.22%**) and terra-medium (**11.24%**). Parley remained below TypeScript by **11.50%** and Rust by **31.83%**, so the result is competitive but not best. Every session and failure remains in the median."
+      },
+      {
+        "id": "tokens_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "tokens_chart"
+      },
+      {
+        "id": "elapsed",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## TypeScript was fastest on the frozen elapsed-time gate\n\nParley's **30.799 s** median was **28.92% above TypeScript's 23.890 s**. The same ordering holds within sol-medium (**33.75%**) and terra-medium (**25.03%**). Python's overall median was 28.694 s and Rust's was 37.740 s. These are local wall-time measurements of the complete working-feedback protocol, not universal runtime-performance results."
+      },
+      {
+        "id": "elapsed_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "elapsed_chart"
+      },
+      {
+        "id": "source",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Parley retained a substantial source-compactness advantage\n\nThe median final editable application contained **552 o200k tokens** in Parley, versus **839 TypeScript, 926 Python, and 1,353 Rust**. That is **34.21%**, **40.39%**, and **59.20%** smaller respectively. It is a real secondary representation result, but it cannot substitute for the preregistered complete-session metric where Python remained cheaper."
+      },
+      {
+        "id": "source_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "source_chart"
+      },
+      {
+        "id": "configuration_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "configuration_table"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Scope and metrics\n\nThe frozen population is two blank-logic implementations and two seeded maintenance tasks, crossed with four languages, two medium-reasoning model configurations, and three replicates. Each cell is one fresh session. Public feedback uses a protected client and parent-owned FIFO broker; successful attempts execute three HTTP cases, one Chromium case, and a derived agreement check. Hidden success requires five withheld cases plus browser/server agreement. Complete tokens are Codex input plus output tokens. Exact-root quality is defined among hidden-correct maintenance rows and requires intact workspace integrity."
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Methodology and frozen boundaries\n\nThe parent transport was independently proven before any task existed. Task/case semantics were then frozen at `b3ddad8`, the balanced protocol at `6ef336a`, the validated harness at `10664d5`, and the zero-session execution boundary at `5d38c77`. Clean-room reference validation passed **16/16** language/task cells, **144/144** named cases plus **16/16** cross-target checks; every broken seed built and failed the public set. The measured matrix ran with four workers, immutable external journals, one unique thread per cell, and post-run repository/provenance revalidation."
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_037",
+        "body": "## Limitations and robustness\n\nThe dominant limitation is the noncanonical Rust lock freeze: all Rust workspace-integrity and exact-root outcomes fail mechanically even though the package contents did not change. The public and hidden evaluators themselves are complete, and checker hashes, FIFO identities, attempt records, symlink policy, command policy, journals, repository state, and toolchain provenance all passed. The shared positive-number guard remains infrastructure applied identically before every candidate stack. Beyond execution, the corpus has four synthetic applications, one machine, two models, one reasoning level, and no production database, authentication, accessibility, load, deployment, package-ecosystem, or long-term evolution evidence."
+      },
+      {
+        "id": "next",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Next phase: make builds prove read-only stability before another freeze\n\n1. Preserve iteration 037 unchanged and never rerun its corpus.\n2. Generate the next Rust lockfile canonically from the final manifest instead of relocating a package block textually.\n3. Extend clean-room validation to hash every protected/read-only file after the exact release and debug build paths used in measurement.\n4. Add a regression that fails on any post-build lock rewrite, even when `cargo metadata --locked --offline` is stable.\n5. Freeze an independent 038 corpus only after the corrected execution mechanism passes, then target the observed Parley orchard first-build burden without training on 037 cases."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Can Parley preserve 24/24 hidden correctness while matching TypeScript's first-check rate on independently named implementation tasks?\n- Which fixed context or build diagnostics explain Parley's approximately 12% complete-token gap to Python?\n- Does Parley's 34\u201359% source compactness advantage persist in larger applications with persistence, authentication, and deployment concerns?\n- Does Rust's signed saturation misconception recur under another model/corpus, or was it specific to this orchard boundary?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-08-12T18:17:47.804085Z",
+    "datasets": {
+      "headline": [
+        {
+          "sessions": 96,
+          "parley_hidden": 24,
+          "parley_first": 18,
+          "public_final": 96,
+          "public_attempts": 104,
+          "strict_gate": 0
+        }
+      ],
+      "languages": [
+        {
+          "language": "Parley",
+          "sessions": 24,
+          "hidden_successes": 24,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 18,
+          "first_check_success_rate": 0.75,
+          "implementation_successes": 12,
+          "maintenance_successes": 12,
+          "median_total_tokens": 66686.5,
+          "median_elapsed_seconds": 30.7986,
+          "median_final_o200k_tokens": 552.0,
+          "median_rough_edit_tokens": 38.0,
+          "exact_root_successes": 12,
+          "hidden_correct_maintenance_rows": 12,
+          "workspace_integrity_rows": 24,
+          "repair_turns": 6
+        },
+        {
+          "language": "Python",
+          "sessions": 24,
+          "hidden_successes": 24,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 23,
+          "first_check_success_rate": 0.9583333333333334,
+          "implementation_successes": 12,
+          "maintenance_successes": 12,
+          "median_total_tokens": 59603.5,
+          "median_elapsed_seconds": 28.69405,
+          "median_final_o200k_tokens": 926.0,
+          "median_rough_edit_tokens": 67.0,
+          "exact_root_successes": 12,
+          "hidden_correct_maintenance_rows": 12,
+          "workspace_integrity_rows": 24,
+          "repair_turns": 2
+        },
+        {
+          "language": "TypeScript",
+          "sessions": 24,
+          "hidden_successes": 24,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 24,
+          "first_check_success_rate": 1.0,
+          "implementation_successes": 12,
+          "maintenance_successes": 12,
+          "median_total_tokens": 75352.5,
+          "median_elapsed_seconds": 23.8898,
+          "median_final_o200k_tokens": 839.0,
+          "median_rough_edit_tokens": 42.0,
+          "exact_root_successes": 12,
+          "hidden_correct_maintenance_rows": 12,
+          "workspace_integrity_rows": 24,
+          "repair_turns": 0
+        },
+        {
+          "language": "Rust",
+          "sessions": 24,
+          "hidden_successes": 22,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 24,
+          "first_check_success_rate": 1.0,
+          "implementation_successes": 10,
+          "maintenance_successes": 12,
+          "median_total_tokens": 97821.5,
+          "median_elapsed_seconds": 37.74015,
+          "median_final_o200k_tokens": 1353.0,
+          "median_rough_edit_tokens": 36.0,
+          "exact_root_successes": 0,
+          "hidden_correct_maintenance_rows": 12,
+          "workspace_integrity_rows": 0,
+          "repair_turns": 0
+        }
+      ],
+      "configurations": [
+        {
+          "configuration": "sol-medium",
+          "language": "Parley",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 9,
+          "first_check_success_rate": 0.75,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 66888.0,
+          "median_elapsed_seconds": 33.89025,
+          "repair_turns": 3
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "Python",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 59603.5,
+          "median_elapsed_seconds": 29.1625,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "TypeScript",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 75497.0,
+          "median_elapsed_seconds": 25.338700000000003,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "Rust",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 0,
+          "exact_root_rate": 0.0,
+          "median_total_tokens": 97821.5,
+          "median_elapsed_seconds": 38.0374,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Parley",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 9,
+          "first_check_success_rate": 0.75,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 66520.0,
+          "median_elapsed_seconds": 27.841749999999998,
+          "repair_turns": 3
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Python",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 11,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 59797.0,
+          "median_elapsed_seconds": 26.61165,
+          "repair_turns": 2
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "TypeScript",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 75253.5,
+          "median_elapsed_seconds": 22.268900000000002,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Rust",
+          "sessions": 12,
+          "hidden_successes": 10,
+          "hidden_success_rate": 0.8333333333333334,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 0,
+          "exact_root_rate": 0.0,
+          "median_total_tokens": 97853.5,
+          "median_elapsed_seconds": 37.52775,
+          "repair_turns": 0
+        }
+      ],
+      "gates": [
+        {
+          "order": 1,
+          "condition": "Execution integrity",
+          "threshold": "96 unique, single-attempt cells with every protected/read-only hash intact and usable public HTTP/browser execution",
+          "observed": "96/96 unique and public transport valid; Cargo.lock reordered in all 24 Rust workspaces",
+          "result": "FAIL"
+        },
+        {
+          "order": 2,
+          "condition": "Hidden correctness",
+          "threshold": "Parley 100% and no lower than every baseline overall, by model, and by kind",
+          "observed": "Parley 24/24; Python 24/24; TypeScript 24/24; Rust 22/24",
+          "result": "PASS"
+        },
+        {
+          "order": 3,
+          "condition": "First public check",
+          "threshold": "Parley no lower than the best baseline overall and by task kind",
+          "observed": "Parley 18/24 vs Python 23/24 and TypeScript/Rust 24/24; implementation 6/12 vs best 12/12",
+          "result": "FAIL"
+        },
+        {
+          "order": 4,
+          "condition": "Complete session tokens",
+          "threshold": "Parley median no higher than the lowest baseline overall and within each model",
+          "observed": "66,686.5 vs Python 59,603.5 overall; Parley also above Python in both model strata",
+          "result": "FAIL"
+        },
+        {
+          "order": 5,
+          "condition": "Elapsed time",
+          "threshold": "Parley median no higher than the lowest baseline overall and within each model",
+          "observed": "30.799 s vs TypeScript 23.890 s overall; Parley also above TypeScript in both model strata",
+          "result": "FAIL"
+        },
+        {
+          "order": 6,
+          "condition": "Maintainability",
+          "threshold": "Every hidden-correct Parley repair has exact root; rate no lower than baselines",
+          "observed": "Parley/Python/TypeScript 12/12; Rust 0/12 under the frozen workspace-integrity rule",
+          "result": "PASS"
+        }
+      ],
+      "integrity": [
+        {
+          "order": 1,
+          "check": "Frozen cells completed",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 2,
+          "check": "Unique cell and thread IDs",
+          "observed": "96/96 cells; 96/96 threads",
+          "status": "PASS"
+        },
+        {
+          "order": 3,
+          "check": "One journal attempt per cell",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 4,
+          "check": "Command protocol compliance",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 5,
+          "check": "Checker and symlink integrity",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 6,
+          "check": "FIFO transport integrity",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 7,
+          "check": "External attempt-record integrity",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 8,
+          "check": "Required public HTTP/browser execution",
+          "observed": "96/96 cells; 104 attempts",
+          "status": "PASS"
+        },
+        {
+          "order": 9,
+          "check": "Final public check",
+          "observed": "96/96",
+          "status": "PASS"
+        },
+        {
+          "order": 10,
+          "check": "Read-only file integrity",
+          "observed": "72/96; all 24 Rust Cargo.lock files reordered",
+          "status": "FAIL"
+        },
+        {
+          "order": 11,
+          "check": "Hidden judgment",
+          "observed": "480/480 cases plus 96/96 cross-target checks",
+          "status": "PASS"
+        },
+        {
+          "order": 12,
+          "check": "Repository and provenance stable",
+          "observed": "commit 5d38c77; post-run revalidation clean",
+          "status": "PASS"
+        }
+      ],
+      "hidden_failures": [
+        {
+          "cell": "orchard_irrigation_build__rust__terra-medium__r3",
+          "language": "Rust",
+          "configuration": "terra-medium",
+          "task": "orchard_irrigation_build",
+          "failed_cases": "orchard_rain_cancels, orchard_browser_idle",
+          "cause": "Signed i64::saturating_sub returned -8 instead of clamping at zero"
+        },
+        {
+          "cell": "orchard_irrigation_build__rust__terra-medium__r2",
+          "language": "Rust",
+          "configuration": "terra-medium",
+          "task": "orchard_irrigation_build",
+          "failed_cases": "orchard_rain_cancels, orchard_browser_idle",
+          "cause": "Signed i64::saturating_sub returned -8 instead of clamping at zero"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "fullstack_agent_evidence_037",
+      "label": "Complete frozen iteration 037 raw result and protocol",
+      "path": "benchmarks/results/fullstack_agent_037_raw.json",
+      "query": {
+        "engine": "Python 3.14 and SQLite JSON1",
+        "language": "SQL and Python",
+        "sql": "-- Canonical language-level extraction for iteration 037.\n-- Run from the repository root with SQLite JSON1 available.\nWITH raw AS (\n    SELECT json(readfile('benchmarks/results/fullstack_agent_037_raw.json')) AS body\n),\nlanguages(language) AS (\n    VALUES ('parley'), ('python'), ('typescript'), ('rust')\n)\nSELECT\n    language,\n    json_extract(body, '$.summary.by_language.' || language || '.sessions') AS sessions,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_successes') AS hidden_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_success_rate') AS hidden_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_successes') AS first_check_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_success_rate') AS first_check_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.median_total_tokens') AS median_total_tokens,\n    json_extract(body, '$.summary.by_language.' || language || '.median_elapsed_seconds') AS median_elapsed_seconds,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_correct_maintenance_rows') AS hidden_correct_maintenance_rows,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_successes') AS exact_root_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_rate') AS exact_root_rate\nFROM raw\nCROSS JOIN languages\nORDER BY hidden_success_rate DESC, first_check_success_rate DESC,\n         median_total_tokens ASC;\n",
+        "description": "Deterministic extraction of language, configuration, gate, public-check, source, hidden-failure, and integrity summaries from all 96 sessions.",
+        "executed_at": "2026-08-12T18:17:47.804085Z",
+        "tables_used": [
+          "benchmarks/results/fullstack_agent_037_raw.json",
+          "benchmarks/fullstack_agent_037_protocol.json",
+          "benchmarks/fullstack_agent_037_validation.json"
+        ],
+        "filters": [
+          "All 96 frozen cells; no exclusions, retries, or selective reruns.",
+          "Four tasks, four languages, two model configurations, three replicates.",
+          "All public attempts retained; hidden judgment follows each fresh session.",
+          "Strict execution remains failed when a frozen read-only hash changes."
+        ],
+        "metric_definitions": [
+          "Hidden success: all five withheld cases plus cross-target agreement pass.",
+          "First check: the first parent-owned public HTTP/browser attempt succeeds.",
+          "Complete session tokens: Codex input plus output tokens; medians include all 24 language rows.",
+          "Elapsed seconds: complete fresh-session wall time, excluding dependency preparation.",
+          "Exact root: hidden-correct maintenance output changes exactly the preregistered root set and has intact workspace integrity.",
+          "Source tokens: o200k_base tokens in final editable application files."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "037-unseen-fullstack-study-invalid.artifact.json",
+    "snapshotPath": "fullstack_agent_037_raw.json",
+    "originUrl": "artifact://parley-fullstack-agent-037"
+  }
+}

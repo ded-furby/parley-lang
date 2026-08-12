@@ -3272,3 +3272,88 @@ def test_fullstack_036_report_builder_is_deterministic():
 
     assert completed.returncode == 0, completed.stderr
     assert hashlib.sha256(report.read_bytes()).hexdigest() == before
+
+
+def test_fullstack_037_raw_result_and_canonical_report_preserve_invalid_run():
+    raw_path = BENCHMARKS / "results/fullstack_agent_037_raw.json"
+    raw = json.loads(raw_path.read_text())
+
+    assert hashlib.sha256(raw_path.read_bytes()).hexdigest() == (
+        "541d43b74cf9939d8a6bfc5ce7761dda74825b3d4eb8e8482fa6ef698014549f"
+    )
+    assert len(raw["results"]) == 96
+    assert len({row["cell_id"] for row in raw["results"]}) == 96
+    assert len({row["thread_id"] for row in raw["results"]}) == 96
+    assert all(row["journal_attempt"] == 1 for row in raw["results"])
+    assert raw["summary"]["primary_gate"] == {
+        "conditions": {
+            "execution_integrity": False,
+            "correctness": True,
+            "first_check": False,
+            "tokens": False,
+            "elapsed": False,
+            "maintainability": True,
+        },
+        "passed": False,
+    }
+
+    attempts = [
+        attempt
+        for row in raw["results"]
+        for attempt in row["public_attempts"]
+    ]
+    assert len(attempts) == 104
+    assert sum(attempt["ok"] for attempt in attempts) == 97
+    assert sum(len(attempt["cases"]) for attempt in attempts) == 392
+    assert sum(
+        case["target"] == "browser"
+        for attempt in attempts
+        for case in attempt["cases"]
+    ) == 98
+    assert all(row["public_execution_ok"] for row in raw["results"])
+    assert all(row["final_public_check_success"] for row in raw["results"])
+    assert sum(len(row["hidden_judgment"]["cases"]) for row in raw["results"]) == 480
+
+    rust = [row for row in raw["results"] if row["language"] == "rust"]
+    assert len(rust) == 24
+    assert all(not row["read_only_integrity_ok"] for row in rust)
+    assert all(not row["workspace_integrity_ok"] for row in rust)
+    assert all(
+        row["workspace_integrity_ok"]
+        for row in raw["results"]
+        if row["language"] != "rust"
+    )
+    assert {
+        row["cell_id"] for row in raw["results"] if not row["hidden_success"]
+    } == {
+        "orchard_irrigation_build__rust__terra-medium__r2",
+        "orchard_irrigation_build__rust__terra-medium__r3",
+    }
+
+    report_path = BENCHMARKS / "reports/037-unseen-fullstack-study-invalid.artifact.json"
+    report = json.loads(report_path.read_text())
+    assert report["surface"] == "report"
+    assert report["manifest"]["title"] == "Unseen Full-Stack Agent Study — Iteration 037"
+    assert report["snapshot"]["status"] == "ready"
+    assert len(report["snapshot"]["datasets"]["languages"]) == 4
+    assert len(report["snapshot"]["datasets"]["configurations"]) == 8
+    assert len(report["snapshot"]["datasets"]["hidden_failures"]) == 2
+    assert [row["result"] for row in report["snapshot"]["datasets"]["gates"]] == [
+        "FAIL", "PASS", "FAIL", "FAIL", "FAIL", "PASS"
+    ]
+
+
+def test_fullstack_037_report_builder_is_deterministic():
+    report = BENCHMARKS / "reports/037-unseen-fullstack-study-invalid.artifact.json"
+    before = hashlib.sha256(report.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_037_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(report.read_bytes()).hexdigest() == before

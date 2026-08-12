@@ -273,16 +273,31 @@ python3 benchmarks/run_fullstack_agent_037.py validate-references \
   --output benchmarks/fullstack_agent_037_validation.json
 ```
 
-The exact-environment validation passes 16/16 references, 144/144 named frozen
+The exact-environment validation passed 16/16 references, 144/144 named frozen
 cases plus 16 derived HTTP/browser agreement checks, 16/16 compiling seeds,
 0/16 incorrectly correct seeds, and 8/8 maintenance root boundaries. The
 numeric-domain guard is a shared parent launch layer applied identically to all
 four stacks; task logic and all successful responses still execute in the
 candidate application. No measured cell may run until the harness hashes are
 committed and added to the final execution freeze. That zero-session freeze is
-now recorded in `FULLSTACK_AGENT_037_EXECUTION_FREEZE.md` and protocol revision
-2; the remaining boundary is a final clean-tree validation artifact whose
-protocol hash matches the committed revision.
+recorded in `FULLSTACK_AGENT_037_EXECUTION_FREEZE.md` and protocol revision 2.
+
+The full 96-cell matrix subsequently ran exactly once at committed checkpoint
+`5d38c77`. The parent-owned transport worked: 104 attempts executed 392 public
+cases, including 98 real-browser cases, and all 96 final workspaces passed.
+Parley, Python, and TypeScript passed 24/24 hidden assignments; Rust passed
+22/24. Parley passed only 18/24 first checks, used 66,686.5 median complete
+tokens versus Python's 59,603.5, and took 30.799 median seconds versus
+TypeScript's 23.890.
+
+The strict result is nevertheless invalid. Every Rust build moved the correct
+`fullstack-agent-037` package block to Cargo's canonical lockfile position,
+changing a frozen read-only hash in 24/24 Rust workspaces. The no-rerun rule is
+binding. Preserve the exact raw result and use an independent iteration 038
+only after reference validation runs the exact measured build paths and proves
+all protected hashes remain stable. See `FULLSTACK_AGENT_037.md` and the
+canonical report artifact in
+`benchmarks/reports/037-unseen-fullstack-study-invalid.artifact.json`.
 
 ## Versioned benchmark reports
 
