@@ -392,6 +392,13 @@ python3 benchmarks/reports/build_040_report.py
 See `reports/040-independent-fullstack-study-invalidated.artifact.json` for
 the validated technical report and exact claim boundary.
 
+Future measured full-stack studies must also follow
+`SCRATCH_SPACE_POLICY.md`. The reusable `scratch_space.py` guard rejects a run
+before any journal starts unless the scratch filesystem has the frozen host
+reserve plus every worker's peak allocation. It keeps work and evidence roots
+disjoint and permits per-cell cleanup only after a finished journal identifies
+the exact immediate-child workspace. Frozen runners through 040 are unchanged.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

@@ -4136,3 +4136,31 @@ Decision: preserve iteration 040 unchanged and do not rerun its population.
 Before an independent 041 corpus is frozen, add task-independent scratch-space
 capacity preflight and cleanup controls with low-space regression tests. Keep
 the same full-matrix, immutable-evidence, no-rerun, and six-condition rules.
+
+### Post-040 generic scratch-space control
+
+- Policy: `benchmarks/SCRATCH_SPACE_POLICY.md`
+- Implementation: `benchmarks/scratch_space.py`
+- Implementation SHA-256:
+  `29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d`
+- Historical runner changes: none
+
+The new guard requires a future protocol to freeze a resolved disposable work
+root, disjoint durable journal/attempt roots, worker count, host reserve, and
+per-worker peak allocation. Its default four-worker policy refuses to start
+below 16 GiB free: 8 GiB remains reserved for the host and 2 GiB is budgeted
+for each active worker. The preflight happens before journal initialization,
+so low capacity cannot create started cells.
+
+Completed-cell cleanup is evidence-gated. It accepts only a real immediate
+child of the declared scratch root and only after a real finished journal
+names that exact workspace. It refuses root/nested targets, symlinks,
+unfinished records, and path mismatches. Journals, attempts, raw results, and
+the repository must remain outside the disposable root. Eight synthetic tests
+cover passing and failing capacity, all overlap shapes, successful cleanup,
+unfinished/mismatched evidence, nested targets, and symlink escape.
+
+Decision: bind this module and a clean-room peak-size calibration in the 041
+protocol before implementing its runner. Per-cell workspace reclamation must
+occur only after the finished record is durable; any cleanup/capacity failure
+stops new scheduling and never authorizes rerunning a started cell.
