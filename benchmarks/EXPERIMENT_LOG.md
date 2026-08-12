@@ -4230,3 +4230,23 @@ No 041 scaffold or reference implementation existed when this protocol was
 written. Next: commit the preregistration, then implement and validate all 16
 reference stack/task cells, maintenance roots, scratch reclamation, resume
 behavior, and orchestration before a final zero-session execution freeze.
+
+### 041 harness validated before execution freeze
+
+All 16 task/language reference cells pass all nine public/hidden cases, for 144
+named case executions plus HTTP/browser agreement. All 16 intentionally broken
+seeds build and fail public semantics. The eight maintenance root boundaries
+pass across Parley, Python, TypeScript, and Rust, and every exact native/WASM
+build leaves protected inputs stable.
+
+The orchestration smoke passes through the actual source printer, FIFO broker,
+public feedback, Python build/server, real Chromium, hidden evaluator,
+cross-target comparison, and final integrity. Scratch tests prove that a
+finished journal precedes bounded cleanup and that cleanup evidence is
+idempotently verified on resume.
+
+The largest retained clean-room reference or seed workspace was approximately
+156 MiB. The preregistered 2 GiB per worker remains more than 13× that observed
+size, in addition to the independent 8 GiB host reserve. No measured session
+exists. Next: commit this harness, then create a revision-2 protocol that binds
+every transitive file and the zero-session validation/smoke evidence.

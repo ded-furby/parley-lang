@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "experiment_id": "041",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "observatory_schedule_build",
+  "language": "python",
+  "protocol_sha256": "611d8dd47c60aa17698547becdb05af5254b469da049d2baef1c70f2043f1d5d",
+  "provenance_sha256": "44a47a137259fc7da1e166b69c7a9fe77ec510190adc9a67ecc9c1689048ac48",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}

@@ -74,3 +74,20 @@ It binds the same 96-cell matrix and six-condition gate plus a 16 GiB
 four-worker preflight, disjoint durable evidence roots, evidence-before-cleanup
 ordering, and no-rerun behavior. No 041 scaffold, validation artifact,
 execution journal, or measured session exists.
+
+## Validated harness checkpoint
+
+The post-protocol harness now passes 16/16 reference stack/task cells and all
+144 named public/hidden cases. All 16 deliberately broken seeds build and fail
+public semantics; all eight maintenance references differ from their seeds
+only at the declared language root. Immediate exact-build checks pass after
+every native and WebAssembly build. The non-model orchestration smoke covers
+the real source printer, FIFO parent feedback, public and hidden HTTP/Chromium
+evaluation, cross-target agreement, and final integrity.
+
+Clean-room workspace calibration found a maximum retained reference/seed
+workspace of approximately 156 MiB, well below the frozen 2 GiB-per-worker
+allowance. The measured runner performs the 16 GiB preflight before journal
+initialization and writes a finished record before evidence-gated per-cell
+cleanup. No measured session exists. A separate revision-2 execution freeze
+must bind the committed harness hashes before any cell starts.
