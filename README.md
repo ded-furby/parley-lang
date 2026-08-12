@@ -526,6 +526,7 @@ the plan:
 - [x] `std/time` civil dates and diamond-safe includes — v0.4.5
 - [x] generic functions: `any name` type variables, monomorphized — v0.5.0
 - [x] evidence-backed arithmetic guidance and natural multiplication alias — v0.5.1
+- [x] total-conversion clarity and repair-locality guidance — v0.5.2
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

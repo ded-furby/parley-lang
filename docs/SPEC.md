@@ -480,7 +480,9 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 * **Whole-number division.** `number from (a divided by b)` is integer
   division: the decimal quotient truncated toward zero. `std/time`'s
   `floor_divide` is the flooring variant, which differs only for negative
-  numerators.
+  numerators. Numeric-to-numeric conversions are total values, not maybes, so
+  a trailing `otherwise` is rejected by P315. Text-to-number conversions remain
+  maybe-producing because parsing can fail.
 * **Environment and clock.** `the setting "NAME"` gives `maybe text` for an
   environment variable. `the current time` gives whole seconds since the Unix
   epoch; like `a random number` it is a deliberate exception to design goal 4,

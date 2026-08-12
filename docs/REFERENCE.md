@@ -184,6 +184,7 @@ value and assign it outside if you need that flow.
 | `text from x` | anything | text |
 | `number from x` | text → **maybe** number; decimal → number truncated toward zero | |
 | `decimal from x` | text → **maybe** decimal; number → decimal | |
+| conversion fallback | only the text forms above are maybe; numeric forms never take `otherwise` | |
 | `ask "prompt"` | — | text (end of input stops the program) |
 | `ask for a number "prompt"` | — | maybe number |
 | `read file "p"` | — | maybe text |

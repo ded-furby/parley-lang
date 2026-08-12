@@ -1061,9 +1061,18 @@ class Checker:
                 # fallback is the only value it can ever produce.
                 return fty
             if not isinstance(vty, A.TMaybe):
+                hint = "Drop the `otherwise …` — this value is always there."
+                if (
+                    isinstance(e.value, A.PrefixOp)
+                    and e.value.op in {"number_from", "decimal_from"}
+                ):
+                    hint = (
+                        "Drop the `otherwise …`. Numeric conversion is total; "
+                        "only `number from text` or `decimal from text` gives a maybe."
+                    )
                 self.err("P315",
                          f"`otherwise` supplies a fallback for a maybe, but this is already {vty}.",
-                         e, hint="Drop the `otherwise …` — this value is always there.")
+                         e, hint=hint)
                 return vty
             if not self.assignable(vty.elem, fty):
                 self.type_mismatch(vty.elem, fty, e.fallback, "The `otherwise` fallback")

@@ -2395,6 +2395,17 @@ def test_parley_v050_core_is_preserved_unchanged():
     )
 
 
+def test_parley_v051_evaluated_core_is_preserved_unchanged():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "core-v0.5.1.md"
+    ).read_text()
+
+    assert len(reference.encode()) == 2_330
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "73973a54dcd50aaee245833f4879278ec23a62e50430ffe24964db6fb2fe9743"
+    )
+
+
 def test_parley_v051_web_reference_is_compact_and_complete():
     reference = (
         REPO / "skill" / "parley" / "references" / "web-v0.5.1.md"
@@ -2416,6 +2427,48 @@ def test_parley_v051_web_reference_is_compact_and_complete():
         "Browser exports are deterministic scalar functions",
         "`number from (a divided by b)`",
         "`multiplied by`",
+        "loadParley",
+    ]:
+        assert required in reference
+
+
+def test_parley_v052_context_is_smaller_and_closes_039_guidance_gaps():
+    core = (
+        REPO / "skill" / "parley" / "references" / "core-v0.5.2.md"
+    ).read_text()
+    reference = (
+        REPO / "skill" / "parley" / "references" / "web-v0.5.2.md"
+    ).read_text()
+
+    assert len(core.encode()) == 2_268
+    assert hashlib.sha256(core.encode()).hexdigest() == (
+        "05d4a2f3582f9014fc3dd97228b483f30cee968acd9183fda453ab6e54da1bec"
+    )
+    assert len(reference.encode()) == 2_082
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "74e3aa40fee867b4f8b970de374d2fdee53a254dab557efd3661fded22ede837"
+    )
+    assert len(core.encode()) + len(reference.encode()) == 4_350
+    assert (
+        len(fullstack_039_runner.O200K.encode(core))
+        + len(fullstack_039_runner.O200K.encode(reference))
+    ) == 1_164
+    for required in [
+        "`number from decimal`",
+        "never add `otherwise`",
+        "smallest owning module",
+        "leave correct callers/entrypoints",
+    ]:
+        assert required in core
+    for required in [
+        "`number from (a divided by b)` truncates and is total",
+        "never add `otherwise`",
+        "Keep each rule in one pure included function",
+        "thin browser wrappers",
+        "do not edit correct callers",
+        '"schema_version": 1',
+        "to update with request as web_request, body as update_request",
+        "Browser exports are deterministic scalar functions",
         "loadParley",
     ]:
         assert required in reference

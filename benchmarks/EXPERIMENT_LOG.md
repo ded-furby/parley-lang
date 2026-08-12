@@ -3963,3 +3963,39 @@ Decision: close iteration 039 unchanged. Make only task-independent changes to
 the total-conversion diagnostic, maintenance-root guidance or module affordance,
 and fixed context/build-loop cost. Commit those changes before freezing an
 independent successor; never rerun or tune on the 039 population.
+
+## 0.5.2 — Generic response to iteration 039
+
+- Prepared: 2026-08-13
+- Evidence source: preserved iteration 039 audit and failure classes
+- Same-corpus reruns: none
+- Previous evaluated context preserved as:
+  `skill/parley/references/core-v0.5.1.md` and
+  `skill/parley/references/web-v0.5.1.md`
+
+The P315 diagnostic now distinguishes total numeric conversions from fallible
+text parsing. When `otherwise` follows `number from` or `decimal from` on a
+numeric value, the hint says to remove the fallback and states that only the
+text-input forms return a maybe. The tutorial, specification, error guide, and
+reference table carry the same distinction.
+
+The versioned v0.5.2 core and typed-web references teach two task-independent
+rules: numeric conversion never needs `otherwise`, and domain behavior belongs
+in one pure included function called by thin handler/browser wrappers. Repair
+guidance asks for the smallest owning module while leaving already-correct
+callers and entrypoints unchanged. The live `SKILL.md` remains byte-identical
+because frozen studies 036–039 bind that exact path; the next protocol must
+explicitly bind `core-v0.5.2.md`. This targets the repeated 039 mechanisms
+without copying any task name, route, field, formula, fixture, or solution.
+
+The combined v0.5.2 always-loaded context is 4,350 bytes and 1,164
+`o200k_base` tokens: 18 bytes and four tokens smaller than the already compact
+039 context. The change adds the missing distinctions without increasing the
+frozen prompt budget. Regression tests pin both legacy v0.5.1 artifacts, the
+new byte/token counts, required web-contract coverage, and the contextual P315
+hint.
+
+Next: commit and preserve v0.5.2 as a product checkpoint. Only afterward may
+iteration 040 task semantics be designed. The successor must use independent
+domains and defect mechanisms and must retain the complete once-run matrix,
+exact-build hashes, external journals, and the same six-condition gate.

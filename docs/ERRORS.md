@@ -224,7 +224,11 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **What it means:** `x otherwise y` supplies the value to use when `x` is nothing, so `x` must be a maybe.
 
-**How to fix it:** Remove the `otherwise …` when the value is not a maybe. Use it on results that can be nothing, such as `ask for a number`, a maybe lookup, or a function that gives back `nothing`.
+**How to fix it:** Remove the `otherwise …` when the value is not a maybe. In
+particular, `number from decimal` and `decimal from number` are total and never
+need a fallback; only their text-input forms return a maybe. Use `otherwise` on
+results that can be nothing, such as `ask for a number`, a maybe lookup, or a
+function that gives back `nothing`.
 
 ## P317 — Value cannot cross JSON
 

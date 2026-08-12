@@ -84,7 +84,8 @@ to main:
 `multiplied by` is an alias for `times`; `+ - * / %` work too. `modulo` and `%` use Rust-style remainder for negative
 numbers (`-5 modulo 3` is `-2`) and stop cleanly on a zero divisor. `rounded`,
 `floor of`, `ceiling of` turn decimals into whole numbers; `number from x`
-truncates a decimal toward zero.
+truncates a decimal toward zero. That numeric conversion is total, so write
+`number from (a divided by b)` without an `otherwise` fallback.
 
 ## 5. Deciding
 
@@ -394,6 +395,8 @@ all give maybes. Check `is nothing` / `is not nothing`, then unwrap with
 `value of`. Use `some value` when your own function needs to give back a
 present maybe value. (Unwrapping nothing stops the program — check first, or
 use `otherwise`.)
+By contrast, `number from decimal` and `decimal from number` always return a
+plain value; attaching `otherwise` to either is P315.
 The natural aliases `has no value` and `has value` / `has a value` mean
 `is nothing` and `is not nothing` respectively.
 For trusted numeric text, `raw as number` is a checked shorthand that unwraps
