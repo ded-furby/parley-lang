@@ -59,5 +59,6 @@ published without selective reruns or exclusions.
 
 ## Current state
 
-Task and case semantics are frozen. No 037 scaffold, reference implementation,
-protocol, or measured session exists at this checkpoint.
+Task and case semantics are frozen, and the balanced 96-cell protocol is
+preregistered in `fullstack_agent_037_protocol.json`. No 037 scaffold,
+reference implementation, or measured session exists at this checkpoint.

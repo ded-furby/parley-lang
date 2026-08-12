@@ -3518,3 +3518,35 @@ This is a corpus checkpoint, not a preregistered experiment. The next action is
 to commit this boundary, then define the balanced matrix, metrics, thresholds,
 stop rule, and exact hashes in a separate protocol before implementing any 037
 stack scaffold or reference application.
+
+### 037 balanced protocol preregistered
+
+- Preregistered: 2026-08-13
+- Corpus commit: `b3ddad835758ee077a35ec318322b5149a25b88f`
+- Protocol: `benchmarks/fullstack_agent_037_protocol.json`
+- Frozen Parley release: v0.5.0 at
+  `02cd809f35dfa9f93468e59cfc8a38d97abb41ee`
+- Validated transport commit:
+  `c833b5fec002fdbedf6fdf5c3e65361afaf4675a`
+- Matrix: four tasks × four languages × two model configurations × three
+  repetitions = 96 fresh sessions
+
+The primary gate retains the six independent conditions from the earlier
+full-stack question: execution integrity, hidden correctness, first-check
+success, complete-session tokens, elapsed time, and maintenance root quality.
+The 037 integrity definition now requires evidence that every successful
+public attempt actually ran HTTP and Chromium cases through the parent,
+unchanged FIFO identities and checker hashes, a matching Rust root lock entry,
+and immutable start/finish journals.
+
+The corpus raises public coverage from three to four cases per assignment so a
+real browser case is visible in every task. Hidden coverage remains five cases
+per assignment. The matrix therefore schedules 384 frozen public case
+executions across first checks and exactly 480 hidden judgments, with any later
+public repair attempts retained rather than collapsed.
+
+No scaffold or reference implementation existed when this protocol was
+written. Next, implement the four stack generators, dependency preparation,
+parent evaluator, hidden judge, integrity checks, metrics, and interruption
+journal. Their hashes and complete clean-room validation must be committed in a
+separate final execution freeze before the first measured cell.

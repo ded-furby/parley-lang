@@ -2578,6 +2578,55 @@ def test_fullstack_037_corpus_is_independent_balanced_and_oracle_checked():
     assert old_case_ids.isdisjoint(all_case_ids)
 
 
+def test_fullstack_037_protocol_freezes_matrix_product_and_transport():
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_037_protocol.json").read_text()
+    )
+    product = protocol["frozen_product"]
+    transport = protocol["validated_transport"]
+    config = protocol["frozen_config"]
+    matrix = protocol["matrix"]
+
+    assert protocol["experiment_id"] == "037"
+    assert protocol["protocol_revision"] == 1
+    assert product["product_commit"] == "02cd809f35dfa9f93468e59cfc8a38d97abb41ee"
+    assert product["corpus_commit"] == "b3ddad835758ee077a35ec318322b5149a25b88f"
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_skill_file", "parley_skill_sha256"),
+        ("parley_web_reference_file", "parley_web_reference_sha256"),
+    ):
+        assert hashlib.sha256((REPO / product[file_key]).read_bytes()).hexdigest() == product[
+            hash_key
+        ]
+    for file_key, hash_key in (
+        ("transport_file", "transport_sha256"),
+        ("terra_smoke_file", "terra_smoke_sha256"),
+        ("sol_smoke_file", "sol_smoke_sha256"),
+    ):
+        assert hashlib.sha256((REPO / transport[file_key]).read_bytes()).hexdigest() == transport[
+            hash_key
+        ]
+
+    assert config["languages"] == ["parley", "python", "typescript", "rust"]
+    assert [item["id"] for item in config["agent_configurations"]] == [
+        "sol-medium",
+        "terra-medium",
+    ]
+    assert config["replicates_per_task_language_configuration"] == 3
+    assert config["max_public_check_attempts"] == 12
+    assert matrix["fresh_sessions"] == 96
+    assert matrix["frozen_public_case_executions_across_first_checks"] == 384
+    assert matrix["hidden_case_executions"] == 480
+    assert "real-Chromium" in protocol["session_protocol"]["public_feedback"]
+    assert any(
+        "cannot prove universal language superiority" in boundary
+        for boundary in protocol["interpretation_boundary"]
+    )
+    assert "no same-corpus optimization or rerun" in protocol["stop_rule"]
+
+
 def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
     summary = validate_fullstack_036_corpus()
 

@@ -255,6 +255,12 @@ oracles verify all success fixtures. No 037 scaffold, reference implementation,
 protocol threshold, or measured session existed at the corpus checkpoint. See
 `FULLSTACK_AGENT_037.md` for the freeze and claim boundaries.
 
+The comparison matrix and six-condition gate are preregistered in
+`fullstack_agent_037_protocol.json`: four languages, two model configurations,
+three repetitions, and 96 fresh sessions. Scaffolds and reference applications
+must be implemented only after this protocol checkpoint and must pass the
+frozen clean-room validation before measurement.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
