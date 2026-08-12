@@ -3862,7 +3862,8 @@ def test_fullstack_040_protocol_preregisters_product_matrix_and_gate():
     )
     product = protocol["frozen_product"]
 
-    assert protocol["schema_version"] == protocol["protocol_revision"] == 1
+    assert protocol["schema_version"] == 1
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "040"
     assert product["parley_version"] == "parley 0.5.2"
     assert product["product_commit"] == (
@@ -3910,7 +3911,7 @@ def test_fullstack_040_protocol_preregisters_product_matrix_and_gate():
         "maintainability",
         "verdict",
     }
-    assert "execution_freeze" not in protocol
+    assert protocol["execution_freeze"]["measured_sessions_before_freeze"] == 0
     assert "implemented only after this protocol commit" in protocol[
         "implementation_rule"
     ]
@@ -4639,8 +4640,7 @@ def test_fullstack_040_protocol_preregisters_v052_confirmation_study():
     product = protocol["frozen_product"]
 
     assert protocol["experiment_id"] == "040"
-    assert protocol["protocol_revision"] == 1
-    assert protocol.get("execution_freeze") is None
+    assert protocol["protocol_revision"] == 2
     assert product["parley_version"] == "parley 0.5.2"
     assert product["product_commit"] == "2e44bb092012eba3e9864da9c3e8a1588c2f3fb3"
     assert product["product_tree"] == "5781929c21e76ebeeab2feb733cd2ff4207a039e"
@@ -4688,6 +4688,16 @@ def test_fullstack_040_protocol_preregisters_v052_confirmation_study():
     ) == 12
     assert protocol["matrix"]["fresh_sessions"] == 96
     assert protocol["frozen_config"]["selective_reruns"] == "forbidden"
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "55c4d1885daeeee18c540e41d9e78b9f49fd8d5a"
+    )
+    assert len(execution["files"]) == 18
+    for item in execution["files"]:
+        assert hashlib.sha256((REPO / item["file"]).read_bytes()).hexdigest() == (
+            item["sha256"]
+        )
     assert set(protocol["primary_gate"]) == {
         "execution_integrity",
         "correctness",

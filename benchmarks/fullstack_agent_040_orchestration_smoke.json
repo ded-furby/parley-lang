@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "museum_rotation_build",
   "language": "python",
-  "protocol_sha256": "cfac96ea73fb24a273b05e7376bb28eb8008b4e3ffff80cd33942370cb54a075",
+  "protocol_sha256": "3f0dc69b18b5f2dcad5a21eaddcefd498a2ebfd81694a7f2cd516e5b6875ed83",
   "provenance_sha256": "5f1382555b0d29c15d3bf0984f2f24f622f73a566c4f35420c91cc93e7a42480",
   "commands": [
     {
