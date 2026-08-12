@@ -270,7 +270,7 @@ _ITEM.2: /item\b/
 _OF.2: /of\b/
 _ANY.3: /any\b/
 _A.2: /an?\b/
-_TIMES.2: /times\b/ | "*"
+_TIMES.2: /times\b/ | /multiplied +by\b/ | "*"
 CHANGING.2: /changing\b/
 PARAM_AND: "and"
 

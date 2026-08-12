@@ -525,6 +525,7 @@ the plan:
 - [x] typed JSON in the core language and key-ordered maps end to end — v0.4.4
 - [x] `std/time` civil dates and diamond-safe includes — v0.4.5
 - [x] generic functions: `any name` type variables, monomorphized — v0.5.0
+- [x] evidence-backed arithmetic guidance and natural multiplication alias — v0.5.1
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85

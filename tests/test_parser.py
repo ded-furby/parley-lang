@@ -292,6 +292,15 @@ def test_modulo_is_a_contextual_multiplicative_operator():
     assert expr.right.left.op == "%"
 
 
+def test_multiplied_by_is_a_multiplication_alias_with_normal_precedence():
+    prog = parse("to main:\n    say 2 plus 3 multiplied by 4\n")
+    expr = prog.funcs[0].body[0].value
+    assert isinstance(expr, A.BinOp)
+    assert expr.op == "+"
+    assert isinstance(expr.right, A.BinOp)
+    assert expr.right.op == "*"
+
+
 def test_position_is_contextual_in_loop_and_item_index():
     prog = parse(
         "to main:\n"

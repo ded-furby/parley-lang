@@ -268,7 +268,10 @@ class Checker:
         if isinstance(expected, A.TText):
             hint = 'To turn a value into text, use interpolation "{x}" or `text from x`.'
         elif isinstance(expected, A.TNum) and isinstance(actual, A.TDec):
-            hint = "Use `rounded x`, `floor of x`, or `ceiling of x` to get a whole number."
+            hint = (
+                "Use `number from x` to truncate toward zero, or `rounded x`, "
+                "`floor of x`, or `ceiling of x` to get a whole number."
+            )
         elif isinstance(expected, A.TNum) and isinstance(actual, A.TMaybe):
             hint = "This is a maybe — check `… is nothing` first, then use `value of x`."
         elif isinstance(expected, A.TMaybe) and self.assignable(expected.elem, actual):

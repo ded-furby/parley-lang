@@ -71,7 +71,9 @@ would end the outer string.
 ```parley
 to main:
     say 7 plus 3 times 2          # 13 — times binds tighter
+    say 7 multiplied by 3         # 21 — the natural multiplication alias
     say 10 divided by 4           # 2.5 — division always gives a decimal
+    say number from (10 divided by 4) # 2 — truncate toward zero
     say remainder of 10 divided by 3
     say 10 modulo 3               # the same guarded whole-number operation
     say 2 to the power of 8
@@ -79,9 +81,10 @@ to main:
     say rounded 2.5
 ```
 
-`+ - * / %` work too. `modulo` and `%` use Rust-style remainder for negative
+`multiplied by` is an alias for `times`; `+ - * / %` work too. `modulo` and `%` use Rust-style remainder for negative
 numbers (`-5 modulo 3` is `-2`) and stop cleanly on a zero divisor. `rounded`,
-`floor of`, `ceiling of` turn decimals into whole numbers.
+`floor of`, `ceiling of` turn decimals into whole numbers; `number from x`
+truncates a decimal toward zero.
 
 ## 5. Deciding
 

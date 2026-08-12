@@ -97,6 +97,8 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
 * **Types** as in REFERENCE.md. No implicit conversions except
   number → decimal promotion (at assignment, argument, return and mixed
   arithmetic positions). Division always yields decimal.
+* **Multiplication spelling.** `a times b`, `a multiplied by b`, and `a * b`
+  are equivalent and have the same precedence.
 * **Whole-number remainder** has three equivalent spellings: `a % b`, `a
   modulo b`, and `remainder of a divided by b`. All use the same guarded
   operation and reject a zero divisor at runtime. Negative operands follow

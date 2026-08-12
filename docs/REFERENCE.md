@@ -176,12 +176,13 @@ value and assign it outside if you need that flow.
 | `sorted xs by field` | list of records | same; stable, ascending by that field |
 | `uppercase of t` / `lowercase of t` / `trimmed t` | text | text |
 | `absolute of n` | number/decimal | same |
+| `a times b` / `a multiplied by b` | number/decimal | promoted numeric type |
 | `rounded x` / `floor of x` / `ceiling of x` | decimal (number passes through) | number |
 | `square root of x` | number/decimal | decimal |
 | `keys of m` | map | sorted list of keys |
 | `values of m` | map | list of values in sorted-key order |
 | `text from x` | anything | text |
-| `number from x` | text → **maybe** number; decimal → number | |
+| `number from x` | text → **maybe** number; decimal → number truncated toward zero | |
 | `decimal from x` | text → **maybe** decimal; number → decimal | |
 | `ask "prompt"` | — | text (end of input stops the program) |
 | `ask for a number "prompt"` | — | maybe number |

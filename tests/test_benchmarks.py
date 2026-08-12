@@ -2380,6 +2380,32 @@ def test_parley_v050_core_is_preserved_unchanged():
     )
 
 
+def test_parley_v051_web_reference_is_compact_and_complete():
+    reference = (
+        REPO / "skill" / "parley" / "references" / "web-v0.5.1.md"
+    ).read_text()
+
+    assert len(reference.encode()) == 2_038
+    assert hashlib.sha256(reference.encode()).hexdigest() == (
+        "825bfc00a281b5fd602bc93e0dd4d264b7e0c0c70bc1288a21de6604653af38b"
+    )
+    for required in [
+        '"schema_version": 1',
+        "to status giving status_response:",
+        "to create with body as create_request giving create_response:",
+        "to inspect with request as web_request giving inspect_response:",
+        "to update with request as web_request, body as update_request",
+        "a web_request has method as text",
+        "Records reject",
+        "unknown or missing required fields",
+        "Browser exports are deterministic scalar functions",
+        "`number from (a divided by b)`",
+        "`multiplied by`",
+        "loadParley",
+    ]:
+        assert required in reference
+
+
 def test_parley_extended_skill_reference_preserves_rare_tooling():
     reference = (
         REPO / "skill" / "parley" / "references" / "extended-reference.md"
