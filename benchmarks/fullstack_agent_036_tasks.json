@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "experiment_id": "036",
+  "description": "Two new full-stack implementation assignments and two new full-stack maintenance assignments, frozen before stack scaffolds, reference implementations, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and non-JSON media types.",
+    "browser": "Expose the declared deterministic scalar browser function and return the exact frozen values in a real browser runtime.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "shipping_quote_build",
+      "kind": "implementation",
+      "title": "Build a shipping quote across HTTP and browser targets",
+      "statement": "Implement the frozen Shipping Quote contract in the supplied stack. The quote subtotal is 500 + weight_units * 120 + zone * 80 cents. Fragile shipments add a 250-cent surcharge. The total is subtotal plus surcharge; service is economy below 1500 cents and tracked otherwise. The browser export returns the same total.",
+      "service": "Shipping Quote",
+      "status_route": "/api/status",
+      "post_route": "/api/quote",
+      "browser_export": "quote_total",
+      "shared_result_field": "total_cents",
+      "request_fields": {
+        "weight_units": "number",
+        "zone": "number",
+        "fragile": "yesno"
+      },
+      "response_fields": {
+        "subtotal_cents": "number",
+        "surcharge_cents": "number",
+        "total_cents": "number",
+        "service": "text"
+      },
+      "public_case_ids": ["shipping_status", "shipping_economy", "shipping_wrong_type"],
+      "hidden_case_ids": ["shipping_minimum", "shipping_tracked", "shipping_unknown_field", "shipping_browser_minimum", "shipping_browser_tracked"],
+      "independence": "New contract, vocabulary, formula, and fixtures; not derived from Release Radar or report 035."
+    },
+    {
+      "id": "capacity_planner_build",
+      "kind": "implementation",
+      "title": "Build a capacity planner across HTTP and browser targets",
+      "statement": "Implement the frozen Capacity Planner contract in the supplied stack. Usable slots are max(slots - reserved, 0). Priority work adds two jobs to requested demand. Accepted jobs are min(usable, demand), overflow is max(demand - usable, 0), and state is clear when overflow is zero or overloaded otherwise. The browser export returns accepted jobs.",
+      "service": "Capacity Planner",
+      "status_route": "/api/status",
+      "post_route": "/api/plan",
+      "browser_export": "accepted_jobs",
+      "shared_result_field": "accepted",
+      "request_fields": {
+        "slots": "number",
+        "reserved": "number",
+        "requested": "number",
+        "priority": "yesno"
+      },
+      "response_fields": {
+        "usable": "number",
+        "demand": "number",
+        "accepted": "number",
+        "overflow": "number",
+        "state": "text"
+      },
+      "public_case_ids": ["capacity_status", "capacity_clear", "capacity_missing_field"],
+      "hidden_case_ids": ["capacity_priority_overflow", "capacity_reserved_overflow", "capacity_unknown_field", "capacity_browser_clear", "capacity_browser_priority"],
+      "independence": "New contract, vocabulary, formula, and fixtures; not derived from Release Radar or report 035."
+    },
+    {
+      "id": "quota_carryover_repair",
+      "kind": "maintenance",
+      "title": "Repair quota carryover agreement across surfaces",
+      "statement": "Repair the supplied Quota Surface application. Effective capacity is limit + carryover. Remaining units are max(effective capacity - used, 0). Remaining percent is zero when effective capacity is zero; otherwise it is remaining * 100 divided by effective capacity using whole-number truncation. The HTTP response and browser export must use the same rule.",
+      "service": "Quota Surface",
+      "status_route": "/api/status",
+      "post_route": "/api/quota",
+      "browser_export": "remaining_percent",
+      "shared_result_field": "remaining_percent",
+      "request_fields": {
+        "used": "number",
+        "limit": "number",
+        "carryover": "number"
+      },
+      "response_fields": {
+        "effective_limit": "number",
+        "remaining": "number",
+        "remaining_percent": "number",
+        "state": "text"
+      },
+      "public_case_ids": ["quota_status", "quota_with_carryover", "quota_wrong_media"],
+      "hidden_case_ids": ["quota_exhausted", "quota_zero_capacity", "quota_unknown_field", "quota_browser_carryover", "quota_browser_zero"],
+      "predeclared_defect": "The application-logic module divides by the base limit instead of effective limit when carryover is present.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "https://github.com/openai/codex/issues/23192",
+      "adaptation_boundary": "Only the cross-surface quota-authority mechanism is adapted; no source, names, formula, fixture, or test is copied."
+    },
+    {
+      "id": "tenant_cache_repair",
+      "kind": "maintenance",
+      "title": "Repair tenant isolation in a browser-visible cache token",
+      "statement": "Repair the supplied Tenant Cache application. The collision-free cache token is tenant_id * 1000000 + resource_id * 1000 + generation. The HTTP response and browser export must use that exact token. The state is isolated.",
+      "service": "Tenant Cache",
+      "status_route": "/api/status",
+      "post_route": "/api/cache-token",
+      "browser_export": "cache_token",
+      "shared_result_field": "token",
+      "request_fields": {
+        "tenant_id": "number",
+        "resource_id": "number",
+        "generation": "number"
+      },
+      "response_fields": {
+        "token": "number",
+        "state": "text"
+      },
+      "public_case_ids": ["cache_status", "cache_tenant_three", "cache_malformed_json"],
+      "hidden_case_ids": ["cache_tenant_one", "cache_tenant_nine", "cache_unknown_field", "cache_browser_one", "cache_browser_nine"],
+      "predeclared_defect": "The application-logic module omits tenant_id, so equal resource/generation pairs alias across tenants.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic multi-tenant isolation defect",
+      "adaptation_boundary": "The mechanism and every fixture are new and were selected before any measured output."
+    }
+  ]
+}

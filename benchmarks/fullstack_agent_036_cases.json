@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "experiment_id": "036",
+  "tasks": {
+    "shipping_quote_build": [
+      {
+        "id": "shipping_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/status",
+        "expected_status": 200,
+        "expected_json": {"service": "Shipping Quote", "ready": true}
+      },
+      {
+        "id": "shipping_economy",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quote",
+        "json": {"weight_units": 3, "zone": 2, "fragile": true},
+        "expected_status": 200,
+        "expected_json": {"subtotal_cents": 1020, "surcharge_cents": 250, "total_cents": 1270, "service": "economy"}
+      },
+      {
+        "id": "shipping_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quote",
+        "json": {"weight_units": "3", "zone": 2, "fragile": true},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "shipping_minimum",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quote",
+        "json": {"weight_units": 0, "zone": 1, "fragile": false},
+        "expected_status": 200,
+        "expected_json": {"subtotal_cents": 580, "surcharge_cents": 0, "total_cents": 580, "service": "economy"}
+      },
+      {
+        "id": "shipping_tracked",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quote",
+        "json": {"weight_units": 8, "zone": 4, "fragile": true},
+        "expected_status": 200,
+        "expected_json": {"subtotal_cents": 1780, "surcharge_cents": 250, "total_cents": 2030, "service": "tracked"}
+      },
+      {
+        "id": "shipping_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quote",
+        "json": {"weight_units": 1, "zone": 1, "fragile": false, "coupon": 10},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "shipping_browser_minimum",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "quote_total",
+        "args": [0, 1, false],
+        "expected": 580
+      },
+      {
+        "id": "shipping_browser_tracked",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "quote_total",
+        "args": [8, 4, true],
+        "expected": 2030
+      }
+    ],
+    "capacity_planner_build": [
+      {
+        "id": "capacity_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/status",
+        "expected_status": 200,
+        "expected_json": {"service": "Capacity Planner", "ready": true}
+      },
+      {
+        "id": "capacity_clear",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/plan",
+        "json": {"slots": 10, "reserved": 2, "requested": 6, "priority": false},
+        "expected_status": 200,
+        "expected_json": {"usable": 8, "demand": 6, "accepted": 6, "overflow": 0, "state": "clear"}
+      },
+      {
+        "id": "capacity_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/plan",
+        "json": {"slots": 10, "reserved": 2, "requested": 6},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "capacity_priority_overflow",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/plan",
+        "json": {"slots": 7, "reserved": 2, "requested": 5, "priority": true},
+        "expected_status": 200,
+        "expected_json": {"usable": 5, "demand": 7, "accepted": 5, "overflow": 2, "state": "overloaded"}
+      },
+      {
+        "id": "capacity_reserved_overflow",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/plan",
+        "json": {"slots": 3, "reserved": 5, "requested": 1, "priority": false},
+        "expected_status": 200,
+        "expected_json": {"usable": 0, "demand": 1, "accepted": 0, "overflow": 1, "state": "overloaded"}
+      },
+      {
+        "id": "capacity_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/plan",
+        "json": {"slots": 4, "reserved": 1, "requested": 2, "priority": false, "owner": "ops"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "capacity_browser_clear",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "accepted_jobs",
+        "args": [10, 2, 6, false],
+        "expected": 6
+      },
+      {
+        "id": "capacity_browser_priority",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "accepted_jobs",
+        "args": [7, 2, 5, true],
+        "expected": 5
+      }
+    ],
+    "quota_carryover_repair": [
+      {
+        "id": "quota_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/status",
+        "expected_status": 200,
+        "expected_json": {"service": "Quota Surface", "ready": true}
+      },
+      {
+        "id": "quota_with_carryover",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quota",
+        "json": {"used": 60, "limit": 100, "carryover": 20},
+        "expected_status": 200,
+        "expected_json": {"effective_limit": 120, "remaining": 60, "remaining_percent": 50, "state": "available"}
+      },
+      {
+        "id": "quota_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quota",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "quota_exhausted",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quota",
+        "json": {"used": 150, "limit": 100, "carryover": 20},
+        "expected_status": 200,
+        "expected_json": {"effective_limit": 120, "remaining": 0, "remaining_percent": 0, "state": "exhausted"}
+      },
+      {
+        "id": "quota_zero_capacity",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quota",
+        "json": {"used": 0, "limit": 0, "carryover": 0},
+        "expected_status": 200,
+        "expected_json": {"effective_limit": 0, "remaining": 0, "remaining_percent": 0, "state": "exhausted"}
+      },
+      {
+        "id": "quota_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/quota",
+        "json": {"used": 60, "limit": 100, "carryover": 20, "window": "weekly"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "quota_browser_carryover",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "remaining_percent",
+        "args": [60, 100, 20],
+        "expected": 50
+      },
+      {
+        "id": "quota_browser_zero",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "remaining_percent",
+        "args": [0, 0, 0],
+        "expected": 0
+      }
+    ],
+    "tenant_cache_repair": [
+      {
+        "id": "cache_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/status",
+        "expected_status": 200,
+        "expected_json": {"service": "Tenant Cache", "ready": true}
+      },
+      {
+        "id": "cache_tenant_three",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/cache-token",
+        "json": {"tenant_id": 3, "resource_id": 42, "generation": 7},
+        "expected_status": 200,
+        "expected_json": {"token": 3042007, "state": "isolated"}
+      },
+      {
+        "id": "cache_malformed_json",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/cache-token",
+        "raw_body": "{\"tenant_id\":",
+        "content_type": "application/json",
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cache_tenant_one",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/cache-token",
+        "json": {"tenant_id": 1, "resource_id": 42, "generation": 7},
+        "expected_status": 200,
+        "expected_json": {"token": 1042007, "state": "isolated"}
+      },
+      {
+        "id": "cache_tenant_nine",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/cache-token",
+        "json": {"tenant_id": 9, "resource_id": 2, "generation": 4},
+        "expected_status": 200,
+        "expected_json": {"token": 9002004, "state": "isolated"}
+      },
+      {
+        "id": "cache_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/cache-token",
+        "json": {"tenant_id": 1, "resource_id": 42, "generation": 7, "shared": true},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cache_browser_one",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "cache_token",
+        "args": [1, 42, 7],
+        "expected": 1042007
+      },
+      {
+        "id": "cache_browser_nine",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "cache_token",
+        "args": [9, 2, 4],
+        "expected": 9002004
+      }
+    ]
+  }
+}
