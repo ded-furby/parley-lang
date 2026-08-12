@@ -4863,3 +4863,77 @@ def test_fullstack_040_runner_checks_hashes_immediately_after_build(
     assert result["protected_read_only_ok"] is False
     assert len(result["protected_read_only_checks"]) == 1
     assert set(result["protected_read_only_checks"][0]["changes"]) == {"Cargo.lock"}
+
+
+def test_fullstack_040_raw_and_audit_preserve_invalidated_negative_result():
+    raw_path = BENCHMARKS / "results/fullstack_agent_040_raw.json"
+    raw = json.loads(raw_path.read_text())
+    audit_path = BENCHMARKS / "fullstack_agent_040_audit.json"
+    audit = json.loads(audit_path.read_text())
+
+    assert hashlib.sha256(raw_path.read_bytes()).hexdigest() == (
+        "37b631af1ca17033ea30fe433699c52e90f7175b42454ac819e7bd2d3ff50914"
+    )
+    assert hashlib.sha256(audit_path.read_bytes()).hexdigest() == (
+        "feffa77e5e9840d9a65bc0d34fb251b280c4dbbab37932cf9ad2fd23b3322904"
+    )
+    assert len(raw["results"]) == 96
+    assert len({row["cell_id"] for row in raw["results"]}) == 96
+    assert len({row["thread_id"] for row in raw["results"] if row["thread_id"]}) == 94
+    assert all(row["journal_attempt"] == 1 for row in raw["results"])
+    assert raw["summary"]["primary_gate"] == {
+        "conditions": {
+            "execution_integrity": False,
+            "correctness": False,
+            "first_check": False,
+            "tokens": False,
+            "elapsed": False,
+            "maintainability": True,
+        },
+        "passed": False,
+    }
+
+    assert audit["audit_pass"] is True
+    assert audit["external_evidence_verified"] is True
+    assert audit["matrix"] == {
+        "cells": 96,
+        "unique_cell_ids": 96,
+        "unique_non_null_thread_ids": 94,
+        "interrupted_cells": 2,
+        "journal_pairs_verified": 96,
+        "attempt_files_verified": 94,
+    }
+    assert audit["hidden"]["named_cases_executed"] == 460
+    assert audit["hidden"]["named_case_passes"] == 460
+    assert audit["hidden"]["semantic_case_failure_cells"] == []
+    assert audit["environment_incident"]["class"] == "host_disk_exhaustion_enospc"
+    assert len(audit["environment_incident"]["affected_cells"]) == 5
+    assert audit["environment_incident"]["selective_reruns"] == 0
+    assert audit["exact_build"] == {
+        "commands": 280,
+        "stable_hash_checks": 280,
+        "successful_commands": 277,
+        "failed_commands_with_stable_hashes": 3,
+    }
+    assert audit["model_failure_classes"] == {
+        "javascript_reserved_identifier_then_repaired": [
+            "rooftop_battery_repair__python__terra-medium__r3"
+        ]
+    }
+    assert audit["primary_gate"] == raw["summary"]["primary_gate"]
+
+
+def test_fullstack_040_audit_is_deterministic():
+    audit = BENCHMARKS / "fullstack_agent_040_audit.json"
+    before = hashlib.sha256(audit.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "audit_fullstack_agent_040.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(audit.read_bytes()).hexdigest() == before
