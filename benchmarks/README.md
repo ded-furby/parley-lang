@@ -408,6 +408,13 @@ oracle-checked task/case boundary follows the scratch-control checkpoint and
 precedes every 041 protocol, scaffold, threshold, or model output; see
 `FULLSTACK_AGENT_041.md`.
 
+The 041 comparison is preregistered in `fullstack_agent_041_protocol.json`:
+96 fresh sessions, the unchanged six-condition gate, and a frozen 16 GiB
+scratch preflight for four workers. Journals and attempts must be outside the
+work root, finished evidence must precede cleanup, and any later capacity or
+cleanup failure stops new scheduling without authorizing reruns. No 041
+scaffold or reference implementation existed at this checkpoint.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

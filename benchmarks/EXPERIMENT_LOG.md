@@ -4195,3 +4195,38 @@ model configuration, threshold, agent prompt, or measured session. Next:
 commit this semantics-only boundary, then preregister the balanced matrix,
 scratch budget, evidence cleanup order, and exact execution controls before
 implementing any stack.
+
+### 041 balanced protocol and scratch boundary preregistered
+
+- Preregistered: 2026-08-13
+- Corpus commit: `16af92c5a02b1c77e50ad0b2253e8556794b508c`
+- Protocol: `benchmarks/fullstack_agent_041_protocol.json`
+- Protocol SHA-256:
+  `611d8dd47c60aa17698547becdb05af5254b469da049d2baef1c70f2043f1d5d`
+- Frozen Parley release: v0.5.2 at
+  `2e44bb092012eba3e9864da9c3e8a1588c2f3fb3`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The language, model, reasoning, replicate, public/hidden case, exact-build,
+parent-owned browser/HTTP, immutable journal, and six-condition gate rules are
+unchanged from 040. The protocol binds the versioned v0.5.2 1,164-token context
+and prohibits same-corpus optimization, exclusions, and reruns.
+
+The new scratch boundary binds control commit `85acd3e`, implementation SHA
+`29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d`,
+an 8 GiB host reserve, 2 GiB per worker, four workers, and therefore 16 GiB
+required free before journal initialization. The disposable work root and
+durable journal/attempt roots must be disjoint real directories. Complete
+finished evidence must be durable before the exact immediate-child workspace
+is reclaimed.
+
+Clean-room harness work may increase—but never reduce—the per-worker scratch
+budget before any measured cell starts. A preflight, boundary, cleanup, or
+later capacity failure stops new scheduling, remains an integrity failure after
+measurement begins, and never authorizes rerunning a started cell.
+
+No 041 scaffold or reference implementation existed when this protocol was
+written. Next: commit the preregistration, then implement and validate all 16
+reference stack/task cells, maintenance roots, scratch reclamation, resume
+behavior, and orchestration before a final zero-session execution freeze.

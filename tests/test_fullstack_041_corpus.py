@@ -1,3 +1,4 @@
+import hashlib
 import json
 from pathlib import Path
 
@@ -245,3 +246,61 @@ def test_fullstack_041_maintenance_defects_are_new_and_publicly_observable():
     assert "subset-omission" in tasks["aviary_feeding_repair"][
         "historical_grounding"
     ]
+
+
+def test_fullstack_041_protocol_preregisters_matrix_gate_and_scratch_boundary():
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_041_protocol.json").read_text()
+    )
+    product = protocol["frozen_product"]
+    scratch = protocol["scratch_space_control"]
+
+    assert protocol["schema_version"] == 1
+    assert protocol["protocol_revision"] == 1
+    assert protocol["experiment_id"] == "041"
+    assert "execution_freeze" not in protocol
+    assert product["parley_version"] == "parley 0.5.2"
+    assert product["corpus_commit"] == (
+        "16af92c5a02b1c77e50ad0b2253e8556794b508c"
+    )
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_skill_file", "parley_skill_sha256"),
+        ("parley_web_reference_file", "parley_web_reference_sha256"),
+    ):
+        assert hashlib.sha256((REPO / product[file_key]).read_bytes()).hexdigest() == (
+            product[hash_key]
+        )
+    for file_key, hash_key in (
+        ("implementation_file", "implementation_sha256"),
+        ("policy_file", "policy_sha256"),
+    ):
+        assert hashlib.sha256((REPO / scratch[file_key]).read_bytes()).hexdigest() == (
+            scratch[hash_key]
+        )
+
+    config = protocol["frozen_config"]
+    assert config["languages"] == ["parley", "python", "typescript", "rust"]
+    assert config["max_workers"] == scratch["max_workers"] == 4
+    assert scratch["reserve_bytes"] == 8 * 1024**3
+    assert scratch["per_worker_bytes"] == 2 * 1024**3
+    assert scratch["required_free_bytes"] == 16 * 1024**3
+    assert "before journal initialization" in scratch["preflight_timing"]
+    assert "before removing" in scratch["cleanup_order"]
+    assert "never authorizes a rerun" in scratch["failure_policy"]
+    assert protocol["matrix"]["fresh_sessions"] == 96
+    assert protocol["matrix"]["hidden_case_executions"] == 480
+    assert set(protocol["primary_gate"]) == {
+        "execution_integrity",
+        "correctness",
+        "first_check",
+        "tokens",
+        "elapsed",
+        "maintainability",
+        "verdict",
+    }
+    assert "implemented only after this protocol commit" in protocol[
+        "implementation_rule"
+    ]
+    assert "Scratch calibration may only increase" in protocol["change_rule"]
