@@ -3900,3 +3900,66 @@ The separate orchestration smoke covered the actual source printer, FIFO
 client, public feedback, hidden evaluator, Chromium, and final integrity.
 No model cell has started. Next, commit the final preflight metadata and run
 the frozen matrix exactly once.
+
+### 039 measured matrix published — arithmetic fixes replicated, strict gate not met
+
+- Completed: 2026-08-13
+- Measurement commit: `11f41b06dc0e6e72aee39c324735749d91a39682`
+- Raw snapshot: `benchmarks/results/fullstack_agent_039_raw.json`
+- Raw SHA-256:
+  `28ecc96591b4f0bc3561f302e271f392c30439767d220c5a9e5ba73f0b47a3c3`
+- Independent audit: `benchmarks/fullstack_agent_039_audit.json`
+- Audit SHA-256:
+  `bf2270b79cc238d58dc864a6241a3ed982b31dc5f6ccf632bac72be9d71a1fd6`
+- Canonical report:
+  `benchmarks/reports/039-independent-fullstack-study-gate-not-met.artifact.json`
+- Report SHA-256:
+  `99eec038542242ea3b7a382098e03e8c16e1ca8b78d747f04ef174ed23c91c1d`
+
+All 96 frozen cells completed exactly once with unique cell and thread IDs,
+stable repository/toolchain provenance, intact workspaces, compliant commands,
+usable parent feedback, and immutable journal pairs. The independent audit
+matched all 99 public attempt files to their embedded rows. Public evaluation
+retained three failed builds and executed 384 named cases, 96 Chromium cases,
+and 96 derived agreement checks. Hidden evaluation executed 480 named cases,
+192 Chromium cases, and 96 agreement checks. All 291 immediate post-build hash
+checks remained stable.
+
+The frozen primary gate is false:
+
+| Condition | Result | Evidence |
+| --- | --- | --- |
+| Execution integrity | Pass | 96/96 once-run cells and 291/291 stable build-hash boundaries |
+| Hidden correctness | Pass | Parley/Python/TypeScript 24/24; Rust 23/24; Parley perfect by model and task kind |
+| First check | Fail | Parley 21/24 versus every baseline 24/24; implementation 9/12 versus 12/12 |
+| Complete session tokens | Fail | Parley median 63,301 versus Python 59,784.5; 6.72% and 5.53% higher by model |
+| Elapsed | Fail | Parley median 28.073 s versus TypeScript 22.469 s; 24.37% and 27.43% higher by model |
+| Maintainability | Fail | Parley 6/12 exact roots versus Python/TypeScript 12/12 and Rust 11/11 hidden-correct |
+
+All three Parley first-check misses were `clinic_queue_build` under sol-medium.
+Each first implementation appended `otherwise 0` to the total
+`number from decimal` conversion, failed to build, then recovered in one repair
+turn. The five decimal-return mismatches and one unsupported multiplication
+spelling observed in 038 did not recur. This independently closes those two
+v0.5.1 target classes while identifying a narrower diagnostic ambiguity.
+
+Every Parley event-credit repair was exact-root. Every seedling-dispatch repair
+also changed `main.par` despite already exposing the needed logic API, so all
+six were hidden-correct but off-root. The one Rust hidden failure was a
+public-passing event-credit repair that mishandled overpayment clamping in two
+withheld HTTP/browser cases. No row was excluded or rerun.
+
+Parley's median final editable source was 669.5 `o200k_base` tokens, 31.47%
+below Python, 21.88% below TypeScript, and 51.73% below Rust. Its median
+complete token gap to Python fell from 11.79% in 038 to 5.88% in 039, consistent
+with the 48.3% smaller frozen context, but the preregistered best-baseline gate
+remains false. TypeScript remained the elapsed baseline.
+
+The canonical Data Analytics artifact passed schema validation and rendered
+successfully with five comparison charts, gate and integrity tables, model
+strata, failure classification, recommendations, and explicit claim limits.
+
+Decision: close iteration 039 unchanged. Make only task-independent changes to
+the total-conversion diagnostic, maintenance-root guidance or module affordance,
+and fixed context/build-loop cost. Commit those changes before freezing an
+independent successor; never rerun or tune on the 039 population.

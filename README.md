@@ -548,11 +548,13 @@ the plan:
 - [ ] confirm token-efficiency parity vs Python/Rust at 10 replicates per cell
       (fresh-session harness and immutable HTML reports exist; optimization continues)
 
-Independent full-stack iteration 038 completed all 96 frozen sessions with
-96/96 hidden correctness and full execution integrity. Its strict gate was not
-met because Parley trailed the best baselines on first check, complete-session
-tokens, and elapsed time; see
-[benchmarks/FULLSTACK_AGENT_038.md](benchmarks/FULLSTACK_AGENT_038.md) for the
+Independent full-stack iteration 039 completed all 96 frozen sessions with
+24/24 Parley hidden correctness and full execution integrity. The v0.5.1
+arithmetic fixes closed both failure classes observed in 038, and the compact
+context halved Parley's token gap to Python from 11.79% to 5.88%. The strict
+gate remains unmet on first check, complete-session tokens, elapsed time, and
+maintenance locality; see
+[benchmarks/FULLSTACK_AGENT_039.md](benchmarks/FULLSTACK_AGENT_039.md) for the
 complete evidence and claim boundary.
 
 ## Development

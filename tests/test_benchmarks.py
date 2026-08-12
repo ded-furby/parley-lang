@@ -3556,6 +3556,42 @@ def test_fullstack_039_raw_and_independent_audit_preserve_valid_negative_result(
     assert len(audit["parley_off_root_maintenance_cells"]) == 6
     assert audit["primary_gate"] == raw["summary"]["primary_gate"]
 
+    report_path = (
+        BENCHMARKS
+        / "reports/039-independent-fullstack-study-gate-not-met.artifact.json"
+    )
+    report = json.loads(report_path.read_text())
+    assert report["surface"] == "report"
+    assert report["manifest"]["title"] == (
+        "Independent Full-Stack Agent Study — Iteration 039"
+    )
+    assert report["snapshot"]["status"] == "ready"
+    assert len(report["snapshot"]["datasets"]["languages"]) == 4
+    assert len(report["snapshot"]["datasets"]["configurations"]) == 8
+    assert len(report["snapshot"]["datasets"]["failure_classes"]) == 3
+    assert [row["result"] for row in report["snapshot"]["datasets"]["gates"]] == [
+        "PASS", "PASS", "FAIL", "FAIL", "FAIL", "FAIL"
+    ]
+
+
+def test_fullstack_039_report_builder_is_deterministic():
+    report = (
+        BENCHMARKS
+        / "reports/039-independent-fullstack-study-gate-not-met.artifact.json"
+    )
+    before = hashlib.sha256(report.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_039_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(report.read_bytes()).hexdigest() == before
+
 
 def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
     from benchmarks.exact_build_freeze import run_frozen_builds

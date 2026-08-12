@@ -335,6 +335,29 @@ validation and measurement. No 038 scaffold or reference existed when it was
 written; harness implementation must be committed in a later zero-session
 execution freeze.
 
+## Independent full-stack iteration 039
+
+Iteration 039 evaluates Parley v0.5.1 and its compact 1,168-token skill/web
+context on four new implementation and repair assignments. The corpus,
+protocol, validated harness, and final execution boundary were frozen in
+separate commits before any measured session. Run the deterministic audit and
+report builder with:
+
+```bash
+python3 benchmarks/audit_fullstack_agent_039.py
+python3 benchmarks/reports/build_039_report.py
+```
+
+All 96 frozen cells ran exactly once. Execution integrity passed, Parley passed
+24/24 hidden assignments, and every one of 291 immediate post-build hashes was
+stable. The strict six-condition gate was not met: Parley passed 21/24 first
+checks versus 24/24 for each baseline, used 63,301 median complete tokens versus
+Python's 59,784.5, took 28.073 median seconds versus TypeScript's 22.469, and
+achieved 6/12 exact maintenance roots. Its final editable source remained
+21.88–51.73% smaller than the baselines. See `FULLSTACK_AGENT_039.md`, the raw
+result in `results/fullstack_agent_039_raw.json`, and the canonical report in
+`reports/039-independent-fullstack-study-gate-not-met.artifact.json`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
