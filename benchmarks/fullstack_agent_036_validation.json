@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "experiment_id": "036",
+  "generated_at": "2026-08-12T15:44:44.968105Z",
+  "protocol_sha256": "b23fa1d5ad0d6bcbe0c3081ac8c27543ca971cf9b1e3269f6a05ad4cef063cd1",
+  "cells": [
+    {"task_id": "shipping_quote_build", "task_kind": "implementation", "language": "parley", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "shipping_quote_build", "task_kind": "implementation", "language": "python", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "shipping_quote_build", "task_kind": "implementation", "language": "typescript", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "shipping_quote_build", "task_kind": "implementation", "language": "rust", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "capacity_planner_build", "task_kind": "implementation", "language": "parley", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "capacity_planner_build", "task_kind": "implementation", "language": "python", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "capacity_planner_build", "task_kind": "implementation", "language": "typescript", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "capacity_planner_build", "task_kind": "implementation", "language": "rust", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "quota_carryover_repair", "task_kind": "maintenance", "language": "parley", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "quota_carryover_repair", "task_kind": "maintenance", "language": "python", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "quota_carryover_repair", "task_kind": "maintenance", "language": "typescript", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "quota_carryover_repair", "task_kind": "maintenance", "language": "rust", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "tenant_cache_repair", "task_kind": "maintenance", "language": "parley", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "tenant_cache_repair", "task_kind": "maintenance", "language": "python", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "tenant_cache_repair", "task_kind": "maintenance", "language": "typescript", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true},
+    {"task_id": "tenant_cache_repair", "task_kind": "maintenance", "language": "rust", "reference_cases": 8, "reference_pass": true, "seed_build_pass": true, "seed_public_pass": false, "root_boundary_pass": true}
+  ],
+  "reference_cells_passed": 16,
+  "seed_cells_built": 16,
+  "seed_cells_correct": 0,
+  "maintenance_root_boundaries_passed": 8
+}

@@ -25,6 +25,21 @@ from benchmarks.bundle_runner import (
     summarize_bundle_results,
     write_bundle_workspace,
 )
+from benchmarks.fullstack_agent_036_scaffolds import (
+    LANGUAGES as FULLSTACK_036_LANGUAGES,
+    ROOT_FILES as FULLSTACK_036_ROOT_FILES,
+    load_task_map as load_fullstack_036_task_map,
+    scaffold_files as fullstack_036_scaffold_files,
+)
+from benchmarks.run_fullstack_agent_036 import (
+    build_plan as build_fullstack_036_plan,
+    command_protocol as fullstack_036_command_protocol,
+    load_cases as load_fullstack_036_cases,
+    load_protocol as load_fullstack_036_protocol,
+    render_prompt as render_fullstack_036_prompt,
+    summarize as summarize_fullstack_036,
+    validate_corpus as validate_fullstack_036_corpus,
+)
 
 BENCHMARKS = REPO / "benchmarks"
 
@@ -2302,3 +2317,189 @@ def test_agent_report_can_be_rejudged_without_rerunning_agent(tmp_path):
     assert rejudged["results"][0]["hidden_success"] is True
     assert rejudged["summary"]["by_language"]["python"]["hidden_success_rate"] == 1.0
     assert rejudged["protocol"]["rejudgments"][0]["note"] == "oracle fix"
+
+
+def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
+    summary = validate_fullstack_036_corpus()
+
+    assert summary == {
+        "tasks": 4,
+        "cases": 32,
+        "public_cases": 12,
+        "hidden_cases": 20,
+        "sessions": 96,
+    }
+    protocol = load_fullstack_036_protocol()
+    assert protocol["frozen_product"]["product_commit"] == "02cd809"
+    assert protocol["frozen_product"]["corpus_commit"].startswith("0d26bb9")
+    assert protocol["matrix"]["fresh_sessions"] == 96
+
+
+def test_fullstack_036_plan_is_deterministic_complete_and_balanced():
+    protocol = load_fullstack_036_protocol()
+    config = protocol["frozen_config"]
+    tasks = list(load_fullstack_036_task_map().values())
+    args = (
+        tasks,
+        config["languages"],
+        config["agent_configurations"],
+        config["replicates_per_task_language_configuration"],
+        config["seed"],
+    )
+
+    first = build_fullstack_036_plan(*args)
+    second = build_fullstack_036_plan(*args)
+
+    assert [row["task_id"] for row in first] == [row["task_id"] for row in second]
+    assert len(first) == 96
+    keys = {
+        (row["task_id"], row["language"], row["configuration_id"], row["replicate"])
+        for row in first
+    }
+    assert len(keys) == 96
+    assert {row["language"] for row in first} == set(FULLSTACK_036_LANGUAGES)
+    assert all(
+        sum(row["language"] == language for row in first) == 24
+        for language in FULLSTACK_036_LANGUAGES
+    )
+
+
+def test_fullstack_036_scaffolds_preserve_maintenance_root_boundaries():
+    tasks = load_fullstack_036_task_map()
+    for task in tasks.values():
+        for language in FULLSTACK_036_LANGUAGES:
+            seed = fullstack_036_scaffold_files(task, language, "seed")
+            reference = fullstack_036_scaffold_files(task, language, "reference")
+            assert set(seed) == set(reference)
+            assert all(value.text.endswith("\n") for value in seed.values())
+            assert "CONTRACT.md" in seed and seed["CONTRACT.md"].editable is False
+            if task["kind"] == "maintenance":
+                changed = sorted(
+                    name for name in seed if seed[name].text != reference[name].text
+                )
+                assert changed == list(FULLSTACK_036_ROOT_FILES[language])
+
+
+def test_fullstack_036_prompt_exposes_public_cases_and_withholds_hidden_values():
+    task = load_fullstack_036_task_map()["shipping_quote_build"]
+    cases = load_fullstack_036_cases()[task["id"]]
+    prompt = render_fullstack_036_prompt(
+        task,
+        cases,
+        "parley",
+        "FROZEN SKILL",
+        "FROZEN WEB REFERENCE",
+    )
+
+    assert "Your first shell command must be exactly `./sources`" in prompt
+    assert "shipping_economy" in prompt
+    assert "shipping_browser_tracked" not in prompt
+    assert "FROZEN SKILL" in prompt
+    assert "FROZEN WEB REFERENCE" in prompt
+
+    python_prompt = render_fullstack_036_prompt(
+        task,
+        cases,
+        "python",
+        "FROZEN SKILL",
+        "FROZEN WEB REFERENCE",
+    )
+    assert "FROZEN SKILL" not in python_prompt
+    assert "FROZEN WEB REFERENCE" not in python_prompt
+    assert "FastAPI/Pydantic" in python_prompt
+
+
+def test_fullstack_036_command_protocol_requires_one_sources_then_checks():
+    compliant = fullstack_036_command_protocol([
+        {"command": "./sources"},
+        {"command": "./check"},
+        {"command": "./check"},
+    ])
+    assert compliant["compliant"] is True
+
+    repeated = fullstack_036_command_protocol([
+        {"command": "./sources"},
+        {"command": "./sources"},
+        {"command": "./check"},
+    ])
+    assert repeated["compliant"] is False
+    assert "expected exactly one ./sources, observed 2" in repeated["violations"]
+
+    reconnaissance = fullstack_036_command_protocol([
+        {"command": "ls"},
+        {"command": "./sources"},
+        {"command": "./check"},
+    ])
+    assert reconnaissance["compliant"] is False
+    assert "ls" in reconnaissance["violations"]
+    assert "first shell command was not ./sources" in reconnaissance["violations"]
+
+
+def _fullstack_036_passing_rows():
+    protocol = load_fullstack_036_protocol()
+    rows = []
+    values = {
+        "parley": (100, 1.0),
+        "python": (120, 2.0),
+        "typescript": (130, 2.5),
+        "rust": (140, 3.0),
+    }
+    for task in load_fullstack_036_task_map().values():
+        for language in FULLSTACK_036_LANGUAGES:
+            for configuration in protocol["frozen_config"]["agent_configurations"]:
+                for replicate in range(1, 4):
+                    tokens, elapsed = values[language]
+                    rows.append({
+                        "task_id": task["id"],
+                        "task_kind": task["kind"],
+                        "language": language,
+                        "configuration_id": configuration["id"],
+                        "replicate": replicate,
+                        "thread_id": (
+                            f"{task['id']}-{language}-{configuration['id']}-{replicate}"
+                        ),
+                        "checker_integrity_ok": True,
+                        "command_protocol": {"compliant": True},
+                        "hidden_success": True,
+                        "first_public_check_success": True,
+                        "exact_root": True,
+                        "total_tokens": tokens,
+                        "elapsed_seconds": elapsed,
+                        "repair_turns": 0,
+                    })
+    return rows
+
+
+def test_fullstack_036_summary_applies_all_six_preregistered_conditions():
+    protocol = load_fullstack_036_protocol()
+    rows = _fullstack_036_passing_rows()
+
+    passing = summarize_fullstack_036(rows, protocol)
+    assert passing["primary_gate"]["passed"] is True
+    assert passing["primary_gate"]["conditions"] == {
+        "execution_integrity": True,
+        "correctness": True,
+        "first_check": True,
+        "tokens": True,
+        "elapsed": True,
+        "maintainability": True,
+    }
+
+    for row in rows:
+        if row["language"] == "parley":
+            row["total_tokens"] = 200
+    failed = summarize_fullstack_036(rows, protocol)
+    assert failed["primary_gate"]["conditions"]["tokens"] is False
+    assert failed["primary_gate"]["passed"] is False
+
+
+def test_fullstack_036_reference_validation_artifact_is_complete():
+    validation = json.loads(
+        (BENCHMARKS / "fullstack_agent_036_validation.json").read_text()
+    )
+    assert len(validation["cells"]) == 16
+    assert validation["reference_cells_passed"] == 16
+    assert validation["seed_cells_built"] == 16
+    assert validation["seed_cells_correct"] == 0
+    assert validation["maintenance_root_boundaries_passed"] == 8
+    assert all(row["reference_cases"] == 8 for row in validation["cells"])
