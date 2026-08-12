@@ -3550,3 +3550,43 @@ written. Next, implement the four stack generators, dependency preparation,
 parent evaluator, hidden judge, integrity checks, metrics, and interruption
 journal. Their hashes and complete clean-room validation must be committed in a
 separate final execution freeze before the first measured cell.
+
+### 037 post-protocol harness implemented and clean-room validated
+
+- Measured sessions at this checkpoint: 0
+- Scaffold generator: `benchmarks/fullstack_agent_037_scaffolds.py`
+- Parent runner: `benchmarks/run_fullstack_agent_037.py`
+- Environment preparer: `benchmarks/prepare_fullstack_agent_037.py`
+- Shared numeric-domain guard: `benchmarks/fullstack_agent_037_guard.py`
+- Validation artifact: `benchmarks/fullstack_agent_037_validation.json`
+- Rust dependency root: `benchmarks/fullstack_037/rust/`
+
+The exact v0.5.0 source archive was rebuilt at the frozen commit, and the
+resulting provenance revalidates the Parley executable/package trees, Python
+environment, TypeScript dependency tree, Rust manifest/lock, host runtimes,
+and Chromium binary. The 037 Cargo lock names `fullstack-agent-037` as its root;
+`cargo metadata --locked --offline` leaves it unchanged.
+
+All 16 task/language reference cells pass all nine named cases (144/144) plus
+one derived HTTP/browser agreement check per cell. All 16 intentionally broken
+seeds build and all 16 fail the public semantic set. The eight language/repair
+combinations differ from their references only in the predeclared root-file
+sets.
+
+A separate non-model orchestration preflight ran one complete Python seed cell:
+exactly `./sources` then FIFO-backed `./check`, one external atomic attempt,
+three HTTP cases plus one real Chromium case, hidden rebuilding, unchanged
+checker/FIFO/read-only state, no unexpected files, and expected public/hidden
+failure from the untouched implementation seed. No model saw 037 task content.
+
+The common numeric-domain guard is applied by the parent to every stack before
+proxying valid traffic to the candidate service. It exists because the frozen
+Parley v0.5.0 typed server validates JSON shapes and types but has no custom 400
+status hook for positive-only fields. This keeps the frozen zero-width case and
+the four-language HTTP contract unchanged without granting a language-specific
+exception; it is infrastructure behavior and must be disclosed separately from
+authored application correctness.
+
+Next, run the full repository suite, commit this executable checkpoint, audit
+the committed hashes and exact validation artifact once more, then add the
+zero-session execution freeze before launching any measured cell.

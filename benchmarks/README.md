@@ -261,6 +261,26 @@ three repetitions, and 96 fresh sessions. Scaffolds and reference applications
 must be implemented only after this protocol checkpoint and must pass the
 frozen clean-room validation before measurement.
 
+The post-protocol harness is now executable. Prepare and validate it with:
+
+```bash
+python3 benchmarks/prepare_fullstack_agent_037.py
+python3 benchmarks/run_fullstack_agent_037.py validate-corpus
+python3 benchmarks/run_fullstack_agent_037.py validate-references \
+  --parley-command /private/tmp/parley-fullstack-037-parley/bin/parley \
+  --provenance /private/tmp/parley-fullstack-037-provenance.json \
+  --work-root /private/tmp/parley-fullstack-037-validation \
+  --output benchmarks/fullstack_agent_037_validation.json
+```
+
+The exact-environment validation passes 16/16 references, 144/144 named frozen
+cases plus 16 derived HTTP/browser agreement checks, 16/16 compiling seeds,
+0/16 incorrectly correct seeds, and 8/8 maintenance root boundaries. The
+numeric-domain guard is a shared parent launch layer applied identically to all
+four stacks; task logic and all successful responses still execute in the
+candidate application. No measured cell may run until the harness hashes are
+committed and added to the final execution freeze.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

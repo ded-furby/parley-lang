@@ -60,5 +60,9 @@ published without selective reruns or exclusions.
 ## Current state
 
 Task and case semantics are frozen, and the balanced 96-cell protocol is
-preregistered in `fullstack_agent_037_protocol.json`. No 037 scaffold,
-reference implementation, or measured session exists at this checkpoint.
+preregistered in `fullstack_agent_037_protocol.json`. The four stack generators,
+parent evaluator, shared numeric-domain guard, exact Rust lock, provenance
+preparer, journaled runner, and integrity aggregation are implemented. The
+clean-room reference boundary passes 16/16 cells and every broken seed builds
+without incorrectly passing. No measured 037 session exists at this checkpoint;
+a final committed execution-hash audit is still required before measurement.

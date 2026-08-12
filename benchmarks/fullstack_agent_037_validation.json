@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "experiment_id": "037",
+  "generated_at": "2026-08-12T17:40:38.045311Z",
+  "protocol_sha256": "ca703e67934fbeb3d6366702f4d7ba23ea8ad893b6b5d4ba9e84af59a749bc7f",
+  "provenance_file": "/private/tmp/parley-fullstack-037-provenance.json",
+  "provenance_sha256": "8f03c10b402c5a995e169ffc27b1afc919063907eaa303ec3fd9bc187dc52040",
+  "cells": [
+    {
+      "task_id": "rail_connection_build",
+      "task_kind": "implementation",
+      "language": "parley",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "rail_connection_build",
+      "task_kind": "implementation",
+      "language": "python",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "rail_connection_build",
+      "task_kind": "implementation",
+      "language": "typescript",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "rail_connection_build",
+      "task_kind": "implementation",
+      "language": "rust",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "orchard_irrigation_build",
+      "task_kind": "implementation",
+      "language": "parley",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "orchard_irrigation_build",
+      "task_kind": "implementation",
+      "language": "python",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "orchard_irrigation_build",
+      "task_kind": "implementation",
+      "language": "typescript",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "orchard_irrigation_build",
+      "task_kind": "implementation",
+      "language": "rust",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "tiered_meter_repair",
+      "task_kind": "maintenance",
+      "language": "parley",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "tiered_meter_repair",
+      "task_kind": "maintenance",
+      "language": "python",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "tiered_meter_repair",
+      "task_kind": "maintenance",
+      "language": "typescript",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "tiered_meter_repair",
+      "task_kind": "maintenance",
+      "language": "rust",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "timeline_bucket_repair",
+      "task_kind": "maintenance",
+      "language": "parley",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "timeline_bucket_repair",
+      "task_kind": "maintenance",
+      "language": "python",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "timeline_bucket_repair",
+      "task_kind": "maintenance",
+      "language": "typescript",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    },
+    {
+      "task_id": "timeline_bucket_repair",
+      "task_kind": "maintenance",
+      "language": "rust",
+      "reference_cases": 9,
+      "reference_pass": true,
+      "seed_build_pass": true,
+      "seed_public_pass": false,
+      "root_boundary_pass": true
+    }
+  ],
+  "reference_cells_passed": 16,
+  "seed_cells_built": 16,
+  "seed_cells_correct": 0,
+  "maintenance_root_boundaries_passed": 8
+}

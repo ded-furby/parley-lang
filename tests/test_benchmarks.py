@@ -37,6 +37,18 @@ from benchmarks.fullstack_agent_036_scaffolds import (
     load_task_map as load_fullstack_036_task_map,
     scaffold_files as fullstack_036_scaffold_files,
 )
+from benchmarks.fullstack_agent_037_guard import invalid_numeric_domain
+from benchmarks.fullstack_agent_037_scaffolds import (
+    LANGUAGES as FULLSTACK_037_LANGUAGES,
+    ROOT_FILES as FULLSTACK_037_ROOT_FILES,
+    load_task_map as load_fullstack_037_task_map,
+    scaffold_files as fullstack_037_scaffold_files,
+)
+from benchmarks.run_fullstack_agent_037 import (
+    build_plan as build_fullstack_037_plan,
+    command_protocol as fullstack_037_command_protocol,
+    validate_corpus as validate_fullstack_037_corpus,
+)
 from benchmarks.run_fullstack_agent_036 import (
     FROZEN_PARLEY_COMMIT,
     FROZEN_PARLEY_TREE,
@@ -2625,6 +2637,98 @@ def test_fullstack_037_protocol_freezes_matrix_product_and_transport():
         for boundary in protocol["interpretation_boundary"]
     )
     assert "no same-corpus optimization or rerun" in protocol["stop_rule"]
+
+
+def test_fullstack_037_scaffolds_and_plan_preserve_frozen_boundaries():
+    tasks = load_fullstack_037_task_map()
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_037_protocol.json").read_text()
+    )
+    config = protocol["frozen_config"]
+
+    assert validate_fullstack_037_corpus() == {
+        "tasks": 4,
+        "cases": 36,
+        "public_cases": 16,
+        "hidden_cases": 20,
+        "sessions": 96,
+    }
+    plan = build_fullstack_037_plan(
+        list(tasks.values()),
+        config["languages"],
+        config["agent_configurations"],
+        config["replicates_per_task_language_configuration"],
+        config["seed"],
+    )
+    assert len(plan) == len({row["cell_id"] for row in plan}) == 96
+    assert all(
+        sum(row["language"] == language for row in plan) == 24
+        for language in FULLSTACK_037_LANGUAGES
+    )
+
+    for task in tasks.values():
+        for language in FULLSTACK_037_LANGUAGES:
+            seed = fullstack_037_scaffold_files(task, language, "seed")
+            reference = fullstack_037_scaffold_files(task, language, "reference")
+            assert set(seed) == set(reference)
+            assert all(spec.text.endswith("\n") for spec in seed.values())
+            assert seed["CONTRACT.md"].editable is False
+            changed = sorted(
+                name for name in seed if seed[name].text != reference[name].text
+            )
+            if task["kind"] == "maintenance":
+                assert changed == list(FULLSTACK_037_ROOT_FILES[language])
+            else:
+                assert changed
+
+    rust_manifest = (BENCHMARKS / "fullstack_037/rust/Cargo.toml").read_text()
+    rust_lock = (BENCHMARKS / "fullstack_037/rust/Cargo.lock").read_text()
+    assert 'name = "fullstack-agent-037"' in rust_manifest
+    assert 'name = "fullstack-agent-037"' in rust_lock
+    assert 'name = "release-radar-035"' not in rust_lock
+
+    validation = json.loads(
+        (BENCHMARKS / "fullstack_agent_037_validation.json").read_text()
+    )
+    assert validation["reference_cells_passed"] == 16
+    assert validation["seed_cells_built"] == 16
+    assert validation["seed_cells_correct"] == 0
+    assert validation["maintenance_root_boundaries_passed"] == 8
+    assert len(validation["cells"]) == 16
+    assert all(cell["reference_cases"] == 9 for cell in validation["cells"])
+
+
+def test_fullstack_037_numeric_guard_and_command_limit_are_exact():
+    tasks = load_fullstack_037_task_map()
+    timeline = tasks["timeline_bucket_repair"]
+    rail = tasks["rail_connection_build"]
+
+    assert invalid_numeric_domain(
+        timeline,
+        b'{"timestamp_second":1060,"origin_second":1000,"bucket_seconds":0}',
+    )
+    assert not invalid_numeric_domain(
+        timeline,
+        b'{"timestamp_second":1060,"origin_second":1000,"bucket_seconds":30}',
+    )
+    assert invalid_numeric_domain(
+        rail,
+        b'{"arrival_minute":-1,"delay_minutes":0,"departure_minute":2,"platform_change":false}',
+    )
+    assert not invalid_numeric_domain(rail, b'{"arrival_minute":"-1"}')
+
+    compliant = fullstack_037_command_protocol(
+        [
+            {"command": "/bin/zsh -lc ./sources"},
+            {"command": "/bin/zsh -lc ./check"},
+        ]
+    )
+    assert compliant["compliant"] is True
+    excessive = fullstack_037_command_protocol(
+        [{"command": "./sources"}] + [{"command": "./check"}] * 13
+    )
+    assert excessive["compliant"] is False
+    assert "public check limit exceeded" in excessive["violations"][-1]
 
 
 def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
