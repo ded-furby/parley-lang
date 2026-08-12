@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "038",
   "title": "Independent fresh-agent full-stack implementation and maintenance study",
   "description": "A preregistered 96-session comparison of four new server-plus-browser assignments in Parley, Python, TypeScript, and Rust using parent-owned public evaluation and exact-build read-only validation.",
@@ -124,6 +124,91 @@
     "integrity": "Hash all protected/read-only files immediately after every exact build and at cell finalization; reject unexpected files and symlinks; compare FIFO device/inode/type/mode/owner; revalidate frozen repository and toolchain provenance; require one start/finish journal record per cell.",
     "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute.",
     "failure_policy": "Timeouts, interruptions, agent errors, nonzero exits, build failures, case failures, protocol violations, checker/FIFO/read-only integrity failures, missing source, and unexpected files are failures and remain in the complete result."
+  },
+  "execution_freeze": {
+    "description": "Post-protocol harness and exact-build execution-integrity controls frozen before the first measured cell; task, case, model, metric, threshold, gate, compiler, skill, and stack semantics are unchanged.",
+    "measured_sessions_before_freeze": 0,
+    "harness_commit": "0cc6426afe6755896395bbfd251f60d5b60affc9",
+    "files": [
+      {
+        "file": "benchmarks/run_fullstack_agent_038.py",
+        "sha256": "f3e51ba8da81d3737c594db57decb3174e3a7b54a221b7319caf04dd6f58f7ab"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_038_scaffolds.py",
+        "sha256": "e507edd409ad79856277ea4e27e00255480dce2f3dc9224b3038c99acdd46fec"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_038_logic.py",
+        "sha256": "874b2ef4257f02e7ac3c6b13d6c798d223e41b8e81bf72f662485d7621c0db79"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_038_guard.py",
+        "sha256": "dacb078d9cc1c058f5428d7d10c61fac4c337d513f4bc4021c70f43ec0667a68"
+      },
+      {
+        "file": "benchmarks/prepare_fullstack_agent_038.py",
+        "sha256": "caeb578cd87c05fccf8081ae944a47affeb1437be19608099f5ca56e50da318d"
+      },
+      {
+        "file": "benchmarks/agent_check_transport.py",
+        "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"
+      },
+      {
+        "file": "benchmarks/agent_runner.py",
+        "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"
+      },
+      {
+        "file": "benchmarks/exact_build_freeze.py",
+        "sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_036_scaffolds.py",
+        "sha256": "ab27f0fc1e6741e78a57a8777339571cbc4c47843dc6a2335d316aa47351879c"
+      },
+      {
+        "file": "benchmarks/fullstack_038/rust/Cargo.toml",
+        "sha256": "6f14fefca10c3815dc146985433ccdeb2d91fe07284c63e7f210f9d3d5a638f4"
+      },
+      {
+        "file": "benchmarks/fullstack_038/rust/Cargo.lock",
+        "sha256": "c12b67da15583397b8f37a56201f8f987b9c66049735b4412f68f2cdc543fcc5"
+      },
+      {
+        "file": "benchmarks/fullstack_038/rust/src/lib.rs",
+        "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.txt",
+        "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.lock.txt",
+        "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package.json",
+        "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package-lock.json",
+        "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+        "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+      },
+      {
+        "file": "benchmarks/FULLSTACK_AGENT_038_EXECUTION_FREEZE.md",
+        "sha256": "00adc07d1d73661396c8f13e5fc3a7dd133f4db11ff9274253869dd4b18176f0"
+      }
+    ],
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "Atomic JSON files outside the agent workspace, revalidated during cell finalization and result aggregation.",
+    "numeric_domain_guard": "Identical parent-owned proxy for all languages; rejects only negative numeric values before forwarding other traffic.",
+    "exact_build_integrity": "Every protected/read-only file is checked before and immediately after each exact build command; any mutation fails the build and cell.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute."
   },
   "metrics": {
     "correctness": "Exact hidden HTTP status/JSON/error and real-browser scalar results, overall and by task, kind, language, model, and replicate.",

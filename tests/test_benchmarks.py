@@ -3639,8 +3639,7 @@ def test_fullstack_038_protocol_freezes_product_matrix_and_execution_controls():
     matrix = protocol["matrix"]
 
     assert protocol["experiment_id"] == "038"
-    assert protocol["protocol_revision"] == 1
-    assert "execution_freeze" not in protocol
+    assert protocol["protocol_revision"] == 2
     assert product["product_commit"] == "02cd809f35dfa9f93468e59cfc8a38d97abb41ee"
     assert product["corpus_commit"] == "b08401e6972822ed211cf33e089b9a59602ea23d"
     for file_key, hash_key in (
@@ -3694,6 +3693,23 @@ def test_fullstack_038_protocol_freezes_product_matrix_and_execution_controls():
         for boundary in protocol["interpretation_boundary"]
     )
     assert "no same-corpus optimization or rerun" in protocol["stop_rule"]
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "0cc6426afe6755896395bbfd251f60d5b60affc9"
+    )
+    assert len(execution["files"]) == 18
+    assert {item["file"] for item in execution["files"]} >= {
+        "benchmarks/run_fullstack_agent_038.py",
+        "benchmarks/fullstack_agent_038_logic.py",
+        "benchmarks/exact_build_freeze.py",
+        "benchmarks/fullstack_038/rust/Cargo.lock",
+        "benchmarks/FULLSTACK_AGENT_038_EXECUTION_FREEZE.md",
+    }
+    for item in execution["files"]:
+        assert hashlib.sha256((REPO / item["file"]).read_bytes()).hexdigest() == (
+            item["sha256"]
+        )
 
 
 def test_fullstack_038_scaffolds_plan_and_validation_preserve_frozen_boundaries():

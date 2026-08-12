@@ -78,8 +78,10 @@ build phases and every integrity control passed. Its artifact is
 `fullstack_agent_038_orchestration_smoke.json` (SHA-256
 `72bdab1e1b3ff1aee95768f8c05a42bcce85f9272bf3c1a316cc00d4df8884e4`).
 
-No measured agent session has run. Next, commit this harness checkpoint, record
-the committed hashes of every transitive execution file in protocol revision
-2, regenerate the validation and orchestration artifacts against that committed
-protocol, and commit the final zero-session preflight. Only then may the frozen
-96-cell matrix execute once.
+No measured agent session has run. The harness checkpoint is commit `0cc6426`.
+Protocol revision 2 and `FULLSTACK_AGENT_038_EXECUTION_FREEZE.md` now record the
+committed hashes of all 18 transitive execution files without changing any
+semantic or gate field. Next, commit that metadata-only freeze, regenerate the
+validation and orchestration artifacts against its committed protocol hash, and
+commit the final zero-session preflight. Only then may the frozen 96-cell matrix
+execute once.

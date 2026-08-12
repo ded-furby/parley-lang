@@ -3807,7 +3807,10 @@ and the hidden evaluator ran five withheld judgments. Both paths executed
 Chromium and derived browser/HTTP agreement, all exact builds preserved frozen
 inputs, transport integrity held, and no unexpected workspace path appeared.
 
-This is still pre-measurement. Next, commit the harness, freeze every transitive
-execution hash in protocol revision 2, regenerate both artifacts against that
-committed protocol, and run the complete repository suite before the one-shot
-96-cell matrix.
+This is still pre-measurement. The validated harness is preserved at commit
+`0cc6426afe6755896395bbfd251f60d5b60affc9`. Protocol revision 2 and
+`benchmarks/FULLSTACK_AGENT_038_EXECUTION_FREEZE.md` bind all 18 transitive
+execution files to that committed implementation. No semantic, model, metric,
+threshold, or gate field changed. Next, commit this metadata-only freeze,
+regenerate both artifacts against its committed protocol, and run the complete
+repository suite before the one-shot 96-cell matrix.
