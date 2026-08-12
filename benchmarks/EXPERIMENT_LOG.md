@@ -3489,3 +3489,32 @@ use the public transport.
 With the mechanism preflight complete, the next frozen boundary is an
 independently designed 037 task/case corpus that does not reuse 036 names,
 fields, formulas, cases, or transcripts.
+
+### 037 independent corpus frozen before scaffolds
+
+- Frozen: 2026-08-13
+- Tasks: `benchmarks/fullstack_agent_037_tasks.json`
+- Task SHA-256:
+  `086aa72f849ee4f55a7896dc930e0d52bd0acf7f9b147a48dd97650addcea78a`
+- Cases: `benchmarks/fullstack_agent_037_cases.json`
+- Case SHA-256:
+  `b4ebe7ea1683062ba2db71b818a96ad0894cc122d6a01f7b34eea96c21e6d24f`
+- Design record: `benchmarks/FULLSTACK_AGENT_037.md`
+
+The frozen population contains two implementation tasks (rail connection and
+orchard irrigation) and two maintenance tasks (tiered usage and timeline
+bucketing). Each task has four public cases and five hidden cases; both
+visibility sets include real-browser judgments. All 36 expected values pass an
+independent Python oracle in the repository tests.
+
+An automated independence audit establishes disjoint 036/037 task IDs, request
+fields, response fields, routes, browser exports, and case IDs. The design
+record also freezes the new product domains, formulas, fixtures, and defect
+mechanisms. The only intentional inheritance is the already-validated
+parent-owned execution transport and the broad four-language comparison
+question.
+
+This is a corpus checkpoint, not a preregistered experiment. The next action is
+to commit this boundary, then define the balanced matrix, metrics, thresholds,
+stop rule, and exact hashes in a separate protocol before implementing any 037
+stack scaffold or reference application.

@@ -2436,6 +2436,148 @@ def test_agent_report_can_be_rejudged_without_rerunning_agent(tmp_path):
     assert rejudged["protocol"]["rejudgments"][0]["note"] == "oracle fix"
 
 
+def _fullstack_037_oracle(task_id, values):
+    if task_id == "rail_connection_build":
+        ready = (
+            values["arrival_minute"]
+            + values["delay_minutes"]
+            + (7 if values["platform_change"] else 3)
+        )
+        margin = values["departure_minute"] - ready
+        return {
+            "ready_minute": ready,
+            "margin_minutes": margin,
+            "wait_minutes": max(margin, 0),
+            "outcome": "make" if margin >= 0 else "miss",
+        }
+    if task_id == "orchard_irrigation_build":
+        raw = values["dryness_points"] * values["tree_rows"] * 2
+        credit = values["tree_rows"] * 5 if values["rain_expected"] else 0
+        scheduled = max(raw - credit, 0)
+        return {
+            "raw_liters": raw,
+            "rain_credit_liters": credit,
+            "scheduled_liters": scheduled,
+            "pump_cycles": (scheduled + 39) // 40,
+            "mode": "idle" if scheduled == 0 else "active",
+        }
+    if task_id == "tiered_meter_repair":
+        standard = min(values["consumed_units"], values["included_units"])
+        excess = max(values["consumed_units"] - values["included_units"], 0)
+        rate = 7 if values["peak_window"] else 4
+        return {
+            "standard_units": standard,
+            "excess_units": excess,
+            "excess_rate": rate,
+            "usage_points": standard * 2 + excess * rate,
+            "band": "included" if excess == 0 else "excess",
+        }
+    if task_id == "timeline_bucket_repair":
+        offset = max(values["timestamp_second"] - values["origin_second"], 0)
+        index = offset // values["bucket_seconds"]
+        start = values["origin_second"] + index * values["bucket_seconds"]
+        position = offset - index * values["bucket_seconds"]
+        return {
+            "offset_seconds": offset,
+            "bucket_index": index,
+            "bucket_start_second": start,
+            "position_second": position,
+            "location": "boundary" if position == 0 else "inside",
+        }
+    raise AssertionError(f"unknown 037 task: {task_id}")
+
+
+def test_fullstack_037_corpus_is_independent_balanced_and_oracle_checked():
+    task_document = json.loads(
+        (BENCHMARKS / "fullstack_agent_037_tasks.json").read_text()
+    )
+    case_document = json.loads(
+        (BENCHMARKS / "fullstack_agent_037_cases.json").read_text()
+    )
+    previous_tasks = json.loads(
+        (BENCHMARKS / "fullstack_agent_036_tasks.json").read_text()
+    )["tasks"]
+    previous_cases = json.loads(
+        (BENCHMARKS / "fullstack_agent_036_cases.json").read_text()
+    )["tasks"]
+    tasks = task_document["tasks"]
+
+    assert task_document["experiment_id"] == case_document["experiment_id"] == "037"
+    assert len(tasks) == 4
+    assert [task["kind"] for task in tasks].count("implementation") == 2
+    assert [task["kind"] for task in tasks].count("maintenance") == 2
+    assert {task["id"] for task in tasks} == set(case_document["tasks"])
+
+    old_ids = {task["id"] for task in previous_tasks}
+    old_request_fields = {
+        field for task in previous_tasks for field in task["request_fields"]
+    }
+    old_response_fields = {
+        field for task in previous_tasks for field in task["response_fields"]
+    }
+    old_routes = {
+        route
+        for task in previous_tasks
+        for route in (task["status_route"], task["post_route"])
+    }
+    old_exports = {task["browser_export"] for task in previous_tasks}
+    old_case_ids = {
+        case["id"] for cases in previous_cases.values() for case in cases
+    }
+    assert old_ids.isdisjoint(task["id"] for task in tasks)
+    assert old_request_fields.isdisjoint(
+        field for task in tasks for field in task["request_fields"]
+    )
+    assert old_response_fields.isdisjoint(
+        field for task in tasks for field in task["response_fields"]
+    )
+    assert old_routes.isdisjoint(
+        route for task in tasks for route in (task["status_route"], task["post_route"])
+    )
+    assert old_exports.isdisjoint(task["browser_export"] for task in tasks)
+
+    all_case_ids = []
+    for task in tasks:
+        cases = case_document["tasks"][task["id"]]
+        public = [case for case in cases if case["visibility"] == "public"]
+        hidden = [case for case in cases if case["visibility"] == "hidden"]
+        all_case_ids.extend(case["id"] for case in cases)
+
+        assert len(cases) == 9
+        assert len(public) == 4 and len(hidden) == 5
+        assert sum(case["target"] == "browser" for case in public) == 1
+        assert sum(case["target"] == "browser" for case in hidden) == 2
+        assert task["public_case_ids"] == [case["id"] for case in public]
+        assert task["hidden_case_ids"] == [case["id"] for case in hidden]
+
+        field_order = list(task["request_fields"])
+        for case in cases:
+            if case["target"] == "browser":
+                values = dict(zip(field_order, case["args"], strict=True))
+                result = _fullstack_037_oracle(task["id"], values)
+                assert case["export"] == task["browser_export"]
+                assert case["expected"] == result[task["shared_result_field"]]
+            elif case["method"] == "GET":
+                assert case["path"] == task["status_route"]
+                assert case["expected_json"] == {
+                    "service": task["service"],
+                    "ready": True,
+                }
+            elif case["expected_status"] == 200:
+                assert case["path"] == task["post_route"]
+                assert case["expected_json"] == _fullstack_037_oracle(
+                    task["id"], case["json"]
+                )
+            else:
+                assert case["expected_error"] in {
+                    "invalid_json",
+                    "json_content_type_required",
+                }
+
+    assert len(all_case_ids) == len(set(all_case_ids)) == 36
+    assert old_case_ids.isdisjoint(all_case_ids)
+
+
 def test_fullstack_036_corpus_hashes_matrix_and_case_visibility_are_frozen():
     summary = validate_fullstack_036_corpus()
 

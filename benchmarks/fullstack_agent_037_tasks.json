@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "experiment_id": "037",
+  "description": "Two new full-stack implementation assignments and two new full-stack maintenance assignments, frozen after checker-transport validation and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers. timeline_bucket_repair additionally requires bucket_seconds to be at least 1.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "rail_connection_build",
+      "kind": "implementation",
+      "title": "Build a rail connection evaluator across HTTP and browser targets",
+      "statement": "Implement the frozen Rail Connection contract in the supplied stack. Transfer buffer is 7 minutes when platform_change is true and 3 minutes otherwise. ready_minute is arrival_minute + delay_minutes + transfer buffer. margin_minutes is departure_minute - ready_minute. wait_minutes is max(margin_minutes, 0). outcome is make when margin_minutes is at least zero and miss otherwise. The browser export returns margin_minutes.",
+      "service": "Rail Connection",
+      "status_route": "/health/ready",
+      "post_route": "/v1/connection",
+      "browser_export": "connection_margin",
+      "shared_result_field": "margin_minutes",
+      "request_fields": {
+        "arrival_minute": "number",
+        "delay_minutes": "number",
+        "departure_minute": "number",
+        "platform_change": "yesno"
+      },
+      "response_fields": {
+        "ready_minute": "number",
+        "margin_minutes": "number",
+        "wait_minutes": "number",
+        "outcome": "text"
+      },
+      "public_case_ids": ["rail_status", "rail_roomy", "rail_wrong_type", "rail_browser_roomy"],
+      "hidden_case_ids": ["rail_exact", "rail_missed", "rail_unknown_field", "rail_browser_exact", "rail_browser_missed"],
+      "independence": "New rail domain, routes, vocabulary, branching rule, field set, fixtures, and browser export, selected before any 037 scaffold or model output."
+    },
+    {
+      "id": "orchard_irrigation_build",
+      "kind": "implementation",
+      "title": "Build an orchard irrigation scheduler across HTTP and browser targets",
+      "statement": "Implement the frozen Orchard Irrigation contract in the supplied stack. raw_liters is dryness_points * tree_rows * 2. rain_credit_liters is tree_rows * 5 when rain_expected is true and zero otherwise. scheduled_liters is max(raw_liters - rain_credit_liters, 0). pump_cycles is scheduled_liters divided into 40-liter cycles using ceiling division, with zero scheduled liters producing zero cycles. mode is idle when scheduled_liters is zero and active otherwise. The browser export returns pump_cycles.",
+      "service": "Orchard Irrigation",
+      "status_route": "/health/ready",
+      "post_route": "/v1/irrigation",
+      "browser_export": "irrigation_cycles",
+      "shared_result_field": "pump_cycles",
+      "request_fields": {
+        "dryness_points": "number",
+        "tree_rows": "number",
+        "rain_expected": "yesno"
+      },
+      "response_fields": {
+        "raw_liters": "number",
+        "rain_credit_liters": "number",
+        "scheduled_liters": "number",
+        "pump_cycles": "number",
+        "mode": "text"
+      },
+      "public_case_ids": ["orchard_status", "orchard_light_rain", "orchard_wrong_media", "orchard_browser_light_rain"],
+      "hidden_case_ids": ["orchard_rain_cancels", "orchard_multiple_cycles", "orchard_unknown_field", "orchard_browser_idle", "orchard_browser_multiple"],
+      "independence": "New irrigation domain, routes, vocabulary, ceiling rule, field set, fixtures, and browser export, selected before any 037 scaffold or model output."
+    },
+    {
+      "id": "tiered_meter_repair",
+      "kind": "maintenance",
+      "title": "Repair tiered usage points across HTTP and browser targets",
+      "statement": "Repair the supplied Tiered Meter application. standard_units is min(consumed_units, included_units). excess_units is max(consumed_units - included_units, 0). excess_rate is 7 during a peak_window and 4 otherwise. usage_points is standard_units * 2 + excess_units * excess_rate. band is included when excess_units is zero and excess otherwise. The HTTP response and browser export must use the same rule; the browser export returns usage_points.",
+      "service": "Tiered Meter",
+      "status_route": "/health/ready",
+      "post_route": "/v1/usage-points",
+      "browser_export": "usage_points",
+      "shared_result_field": "usage_points",
+      "request_fields": {
+        "consumed_units": "number",
+        "included_units": "number",
+        "peak_window": "yesno"
+      },
+      "response_fields": {
+        "standard_units": "number",
+        "excess_units": "number",
+        "excess_rate": "number",
+        "usage_points": "number",
+        "band": "text"
+      },
+      "public_case_ids": ["meter_status", "meter_offpeak_excess", "meter_missing_field", "meter_browser_offpeak"],
+      "hidden_case_ids": ["meter_within_included", "meter_peak_excess", "meter_unknown_field", "meter_browser_included", "meter_browser_peak"],
+      "predeclared_defect": "When excess usage exists, the application-logic module applies the excess rate to every consumed unit instead of preserving the two-point included tier.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic tier-boundary billing defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    },
+    {
+      "id": "timeline_bucket_repair",
+      "kind": "maintenance",
+      "title": "Repair exact-boundary timeline bucketing across HTTP and browser targets",
+      "statement": "Repair the supplied Timeline Bucket application. offset_seconds is max(timestamp_second - origin_second, 0). bucket_index is offset_seconds divided by bucket_seconds using floor division. bucket_start_second is origin_second + bucket_index * bucket_seconds. position_second is offset_seconds - bucket_index * bucket_seconds. location is boundary when position_second is zero and inside otherwise. The HTTP response and browser export must use the same rule; the browser export returns bucket_index.",
+      "service": "Timeline Bucket",
+      "status_route": "/health/ready",
+      "post_route": "/v1/timeline-bucket",
+      "browser_export": "timeline_bucket_index",
+      "shared_result_field": "bucket_index",
+      "request_fields": {
+        "timestamp_second": "number",
+        "origin_second": "number",
+        "bucket_seconds": "number"
+      },
+      "response_fields": {
+        "offset_seconds": "number",
+        "bucket_index": "number",
+        "bucket_start_second": "number",
+        "position_second": "number",
+        "location": "text"
+      },
+      "public_case_ids": ["timeline_status", "timeline_exact_boundary", "timeline_zero_width", "timeline_browser_boundary"],
+      "hidden_case_ids": ["timeline_inside", "timeline_before_origin", "timeline_unknown_field", "timeline_browser_inside", "timeline_browser_before"],
+      "predeclared_defect": "The application-logic module increments bucket_index when position_second is zero, assigning exact-boundary events to the following bucket.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic time-window boundary defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    }
+  ]
+}

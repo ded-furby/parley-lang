@@ -247,6 +247,14 @@ and browser-render path with exactly `./sources` then `./check`. See
 `agent_check_transport_smoke*.json` evidence artifacts. These smokes validate
 the execution mechanism only; they are not language results.
 
+The independent 037 corpus is now frozen in
+`fullstack_agent_037_tasks.json` and `fullstack_agent_037_cases.json`: two new
+implementations, two new repairs, four public cases per task, and five hidden
+cases per task. Every task has an explicit public Chromium case, and automated
+oracles verify all success fixtures. No 037 scaffold, reference implementation,
+protocol threshold, or measured session existed at the corpus checkpoint. See
+`FULLSTACK_AGENT_037.md` for the freeze and claim boundaries.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

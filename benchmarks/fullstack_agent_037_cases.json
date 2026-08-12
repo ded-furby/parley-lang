@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "experiment_id": "037",
+  "tasks": {
+    "rail_connection_build": [
+      {
+        "id": "rail_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Rail Connection", "ready": true}
+      },
+      {
+        "id": "rail_roomy",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/connection",
+        "json": {"arrival_minute": 500, "delay_minutes": 8, "departure_minute": 525, "platform_change": false},
+        "expected_status": 200,
+        "expected_json": {"ready_minute": 511, "margin_minutes": 14, "wait_minutes": 14, "outcome": "make"}
+      },
+      {
+        "id": "rail_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/connection",
+        "json": {"arrival_minute": "500", "delay_minutes": 8, "departure_minute": 525, "platform_change": false},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "rail_browser_roomy",
+        "visibility": "public",
+        "target": "browser",
+        "export": "connection_margin",
+        "args": [500, 8, 525, false],
+        "expected": 14
+      },
+      {
+        "id": "rail_exact",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/connection",
+        "json": {"arrival_minute": 600, "delay_minutes": 5, "departure_minute": 612, "platform_change": true},
+        "expected_status": 200,
+        "expected_json": {"ready_minute": 612, "margin_minutes": 0, "wait_minutes": 0, "outcome": "make"}
+      },
+      {
+        "id": "rail_missed",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/connection",
+        "json": {"arrival_minute": 800, "delay_minutes": 12, "departure_minute": 810, "platform_change": false},
+        "expected_status": 200,
+        "expected_json": {"ready_minute": 815, "margin_minutes": -5, "wait_minutes": 0, "outcome": "miss"}
+      },
+      {
+        "id": "rail_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/connection",
+        "json": {"arrival_minute": 500, "delay_minutes": 8, "departure_minute": 525, "platform_change": false, "carriage": 4},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "rail_browser_exact",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "connection_margin",
+        "args": [600, 5, 612, true],
+        "expected": 0
+      },
+      {
+        "id": "rail_browser_missed",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "connection_margin",
+        "args": [800, 12, 810, false],
+        "expected": -5
+      }
+    ],
+    "orchard_irrigation_build": [
+      {
+        "id": "orchard_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Orchard Irrigation", "ready": true}
+      },
+      {
+        "id": "orchard_light_rain",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/irrigation",
+        "json": {"dryness_points": 4, "tree_rows": 6, "rain_expected": true},
+        "expected_status": 200,
+        "expected_json": {"raw_liters": 48, "rain_credit_liters": 30, "scheduled_liters": 18, "pump_cycles": 1, "mode": "active"}
+      },
+      {
+        "id": "orchard_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/irrigation",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "orchard_browser_light_rain",
+        "visibility": "public",
+        "target": "browser",
+        "export": "irrigation_cycles",
+        "args": [4, 6, true],
+        "expected": 1
+      },
+      {
+        "id": "orchard_rain_cancels",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/irrigation",
+        "json": {"dryness_points": 2, "tree_rows": 8, "rain_expected": true},
+        "expected_status": 200,
+        "expected_json": {"raw_liters": 32, "rain_credit_liters": 40, "scheduled_liters": 0, "pump_cycles": 0, "mode": "idle"}
+      },
+      {
+        "id": "orchard_multiple_cycles",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/irrigation",
+        "json": {"dryness_points": 9, "tree_rows": 11, "rain_expected": false},
+        "expected_status": 200,
+        "expected_json": {"raw_liters": 198, "rain_credit_liters": 0, "scheduled_liters": 198, "pump_cycles": 5, "mode": "active"}
+      },
+      {
+        "id": "orchard_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/irrigation",
+        "json": {"dryness_points": 4, "tree_rows": 6, "rain_expected": true, "soil": "clay"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "orchard_browser_idle",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "irrigation_cycles",
+        "args": [2, 8, true],
+        "expected": 0
+      },
+      {
+        "id": "orchard_browser_multiple",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "irrigation_cycles",
+        "args": [9, 11, false],
+        "expected": 5
+      }
+    ],
+    "tiered_meter_repair": [
+      {
+        "id": "meter_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Tiered Meter", "ready": true}
+      },
+      {
+        "id": "meter_offpeak_excess",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/usage-points",
+        "json": {"consumed_units": 130, "included_units": 100, "peak_window": false},
+        "expected_status": 200,
+        "expected_json": {"standard_units": 100, "excess_units": 30, "excess_rate": 4, "usage_points": 320, "band": "excess"}
+      },
+      {
+        "id": "meter_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/usage-points",
+        "json": {"consumed_units": 130, "included_units": 100},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "meter_browser_offpeak",
+        "visibility": "public",
+        "target": "browser",
+        "export": "usage_points",
+        "args": [130, 100, false],
+        "expected": 320
+      },
+      {
+        "id": "meter_within_included",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/usage-points",
+        "json": {"consumed_units": 75, "included_units": 100, "peak_window": true},
+        "expected_status": 200,
+        "expected_json": {"standard_units": 75, "excess_units": 0, "excess_rate": 7, "usage_points": 150, "band": "included"}
+      },
+      {
+        "id": "meter_peak_excess",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/usage-points",
+        "json": {"consumed_units": 125, "included_units": 80, "peak_window": true},
+        "expected_status": 200,
+        "expected_json": {"standard_units": 80, "excess_units": 45, "excess_rate": 7, "usage_points": 475, "band": "excess"}
+      },
+      {
+        "id": "meter_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/usage-points",
+        "json": {"consumed_units": 130, "included_units": 100, "peak_window": false, "tariff": "night"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "meter_browser_included",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "usage_points",
+        "args": [75, 100, true],
+        "expected": 150
+      },
+      {
+        "id": "meter_browser_peak",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "usage_points",
+        "args": [125, 80, true],
+        "expected": 475
+      }
+    ],
+    "timeline_bucket_repair": [
+      {
+        "id": "timeline_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Timeline Bucket", "ready": true}
+      },
+      {
+        "id": "timeline_exact_boundary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/timeline-bucket",
+        "json": {"timestamp_second": 1060, "origin_second": 1000, "bucket_seconds": 30},
+        "expected_status": 200,
+        "expected_json": {"offset_seconds": 60, "bucket_index": 2, "bucket_start_second": 1060, "position_second": 0, "location": "boundary"}
+      },
+      {
+        "id": "timeline_zero_width",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/timeline-bucket",
+        "json": {"timestamp_second": 1060, "origin_second": 1000, "bucket_seconds": 0},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "timeline_browser_boundary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "timeline_bucket_index",
+        "args": [1060, 1000, 30],
+        "expected": 2
+      },
+      {
+        "id": "timeline_inside",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/timeline-bucket",
+        "json": {"timestamp_second": 1074, "origin_second": 1000, "bucket_seconds": 30},
+        "expected_status": 200,
+        "expected_json": {"offset_seconds": 74, "bucket_index": 2, "bucket_start_second": 1060, "position_second": 14, "location": "inside"}
+      },
+      {
+        "id": "timeline_before_origin",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/timeline-bucket",
+        "json": {"timestamp_second": 900, "origin_second": 1000, "bucket_seconds": 60},
+        "expected_status": 200,
+        "expected_json": {"offset_seconds": 0, "bucket_index": 0, "bucket_start_second": 1000, "position_second": 0, "location": "boundary"}
+      },
+      {
+        "id": "timeline_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/v1/timeline-bucket",
+        "json": {"timestamp_second": 1074, "origin_second": 1000, "bucket_seconds": 30, "timezone": "UTC"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "timeline_browser_inside",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "timeline_bucket_index",
+        "args": [1074, 1000, 30],
+        "expected": 2
+      },
+      {
+        "id": "timeline_browser_before",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "timeline_bucket_index",
+        "args": [900, 1000, 60],
+        "expected": 0
+      }
+    ]
+  }
+}
