@@ -49,9 +49,14 @@ correctness-conditioned efficiency filtering.
 
 ## Current state
 
-Task and case semantics are ready for their independent freeze. No stack
-scaffold, reference application, protocol threshold, prompt, or measured 038
-session exists. After this checkpoint is committed, preregister the balanced
-matrix, metrics, thresholds, exact compiler product, validated transport, exact
-build-freeze mechanism, stop rule, and interpretation boundaries before
-implementing any language harness.
+Task and case semantics are frozen at commit `b08401e`, and the balanced
+96-cell protocol is preregistered in `fullstack_agent_038_protocol.json`. It
+freezes Parley v0.5.0, two medium-reasoning model configurations, three
+replicates, the six-condition gate, the parent-owned transport, and the
+exact-build post-command hash requirement.
+
+No 038 stack scaffold, reference application, runner, agent prompt, or measured
+session exists at this checkpoint. Next, implement those components, generate
+the actual `fullstack-agent-038` lock from its final manifest, run clean-room
+references and broken seeds under the exact measured build commands, and commit
+their hashes in a zero-session execution freeze before measurement.

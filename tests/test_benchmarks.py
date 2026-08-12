@@ -3611,3 +3611,71 @@ def test_fullstack_038_corpus_is_independent_complete_and_oracle_checked():
         for task in tasks
         if task["kind"] == "maintenance"
     )
+
+
+def test_fullstack_038_protocol_freezes_product_matrix_and_execution_controls():
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_038_protocol.json").read_text()
+    )
+    product = protocol["frozen_product"]
+    transport = protocol["validated_transport"]
+    exact_build = protocol["validated_exact_build_freeze"]
+    config = protocol["frozen_config"]
+    matrix = protocol["matrix"]
+
+    assert protocol["experiment_id"] == "038"
+    assert protocol["protocol_revision"] == 1
+    assert "execution_freeze" not in protocol
+    assert product["product_commit"] == "02cd809f35dfa9f93468e59cfc8a38d97abb41ee"
+    assert product["corpus_commit"] == "b08401e6972822ed211cf33e089b9a59602ea23d"
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_skill_file", "parley_skill_sha256"),
+        ("parley_web_reference_file", "parley_web_reference_sha256"),
+    ):
+        assert hashlib.sha256((REPO / product[file_key]).read_bytes()).hexdigest() == (
+            product[hash_key]
+        )
+    for file_key, hash_key in (
+        ("transport_file", "transport_sha256"),
+        ("terra_smoke_file", "terra_smoke_sha256"),
+        ("sol_smoke_file", "sol_smoke_sha256"),
+    ):
+        assert hashlib.sha256((REPO / transport[file_key]).read_bytes()).hexdigest() == (
+            transport[hash_key]
+        )
+    for file_key, hash_key in (
+        ("validator_file", "validator_sha256"),
+        ("smoke_file", "smoke_sha256"),
+        ("evidence_file", "evidence_sha256"),
+    ):
+        assert hashlib.sha256((REPO / exact_build[file_key]).read_bytes()).hexdigest() == (
+            exact_build[hash_key]
+        )
+    assert exact_build["mechanism_commit"] == (
+        "6e50439dd2f47cae4c7bb4d5356bae7cf5dd0937"
+    )
+    assert exact_build["canonical_lock_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_038/rust_smoke/Cargo.lock").read_bytes()
+    ).hexdigest()
+
+    assert config["languages"] == ["parley", "python", "typescript", "rust"]
+    assert [item["id"] for item in config["agent_configurations"]] == [
+        "sol-medium",
+        "terra-medium",
+    ]
+    assert config["replicates_per_task_language_configuration"] == 3
+    assert config["max_public_check_attempts"] == 12
+    assert matrix["fresh_sessions"] == 96
+    assert matrix["frozen_public_case_executions_across_first_checks"] == 384
+    assert matrix["hidden_case_executions"] == 480
+    assert "post-command hash checks" in protocol["scaffold_protocol"][
+        "reference_validation"
+    ]
+    assert "post-build hashes" in protocol["primary_gate"]["execution_integrity"]
+    assert any(
+        "cannot prove universal language superiority" in boundary
+        for boundary in protocol["interpretation_boundary"]
+    )
+    assert "no same-corpus optimization or rerun" in protocol["stop_rule"]

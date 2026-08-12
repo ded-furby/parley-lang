@@ -3745,3 +3745,34 @@ This checkpoint contains no scaffold, reference implementation, protocol
 threshold, agent prompt, or measured session. Next, commit the corpus boundary,
 then preregister the balanced matrix and exact execution controls in a separate
 protocol before implementing any 038 stack.
+
+### 038 balanced protocol preregistered
+
+- Preregistered: 2026-08-13
+- Corpus commit: `b08401e6972822ed211cf33e089b9a59602ea23d`
+- Protocol: `benchmarks/fullstack_agent_038_protocol.json`
+- Protocol SHA-256:
+  `805a1423759b324fa7ab240db045fefc01ea8abf272125135242b6f212b01f72`
+- Frozen Parley release: v0.5.0 at
+  `02cd809f35dfa9f93468e59cfc8a38d97abb41ee`
+- Matrix: four tasks × four languages × two model configurations × three
+  repetitions = 96 fresh sessions
+
+The primary gate remains deliberately strict and unchanged in shape:
+execution integrity, hidden correctness, first-check success, complete-session
+tokens, elapsed time, and maintenance root quality must all pass. Complete
+tokens and elapsed time are compared with the best baseline overall and within
+each model configuration; no correctness-conditioned subset can replace them.
+
+Iteration 038 additionally freezes the pre-corpus exact-build mechanism at
+commit `6e50439`. Reference validation must run the actual measured build argv
+for every stack and check every protected/read-only input immediately after
+each command. The final Rust manifest must generate its own canonical lock, and
+both native-release and WASM-release builds must pass with explicit
+`--locked --offline` plus stable post-command hashes.
+
+The public transport, fresh-thread rule, exact command policy, 12-check limit,
+four-case public set with Chromium, five-case hidden set with two Chromium
+cases, external atomic attempts, immutable journals, and no-rerun rule remain
+frozen. No scaffold or reference implementation existed when this protocol was
+written. Next, commit this boundary and only then implement the harness.

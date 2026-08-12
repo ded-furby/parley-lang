@@ -327,6 +327,14 @@ routes, browser exports, and case IDs from both 036 and 037. No scaffold,
 reference implementation, protocol threshold, or measured session exists at
 this checkpoint; see `FULLSTACK_AGENT_038.md` for the claim boundary.
 
+The comparison is now preregistered in
+`fullstack_agent_038_protocol.json`: 96 fresh sessions across four languages,
+two models, and three replicates, with the same six-condition strict gate. The
+protocol makes exact post-build protected/read-only hashes part of reference
+validation and measurement. No 038 scaffold or reference existed when it was
+written; harness implementation must be committed in a later zero-session
+execution freeze.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
