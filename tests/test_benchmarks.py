@@ -3996,7 +3996,7 @@ def test_fullstack_039_protocol_preregisters_independent_compact_context_study()
     product = protocol["frozen_product"]
 
     assert protocol["experiment_id"] == "039"
-    assert protocol["protocol_revision"] == 1
+    assert protocol["protocol_revision"] == 2
     assert product["parley_version"] == "parley 0.5.1"
     assert product["product_commit"] == "b08952cfb69e10f406af082d899d8556fa75ef15"
     assert product["product_tree"] == "0f424ad0b03ba724011b8f2ecb05c5a7c277cafc"
@@ -4044,6 +4044,16 @@ def test_fullstack_039_protocol_preregisters_independent_compact_context_study()
     ) == 12
     assert protocol["matrix"]["fresh_sessions"] == 96
     assert protocol["frozen_config"]["selective_reruns"] == "forbidden"
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "a93a8cc942712b9d19304b8739fcea73bb49cb75"
+    )
+    assert len(execution["files"]) == 18
+    for item in execution["files"]:
+        assert hashlib.sha256((REPO / item["file"]).read_bytes()).hexdigest() == (
+            item["sha256"]
+        )
     assert set(protocol["primary_gate"]) == {
         "execution_integrity",
         "correctness",

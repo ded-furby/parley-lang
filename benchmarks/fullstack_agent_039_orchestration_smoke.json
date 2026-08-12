@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "festival_power_build",
   "language": "python",
-  "protocol_sha256": "f1aafba067fc0d22bc6ff068b7356a8f992e9151b4c4eb75f3e4ee9cfd18e93e",
+  "protocol_sha256": "e827e55f99af7161931cd0c6c320895afe749217584c87fe2668a36b8170a95b",
   "provenance_sha256": "c8ff5d44aab8dba25cb4b83f3148ccd4f0d8b90a0ca66bad27f2e5867720c8a9",
   "commands": [
     {

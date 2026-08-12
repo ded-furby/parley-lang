@@ -3871,3 +3871,32 @@ Decision: close iteration 038 unchanged. Apply only task-independent changes
 to whole-number division diagnostics/guidance, accepted operator syntax, and
 always-injected context cost. Commit those changes before freezing an
 independent successor corpus; never rerun or tune on the 038 population.
+
+### 039 independent successor frozen and validated
+
+- Frozen: 2026-08-13
+- Parley product commit: `b08952cfb69e10f406af082d899d8556fa75ef15`
+- Corpus commit: `1db9d08ebd73c987e54204d63b7ba37ed9d1eaf4`
+- Harness commit: `a93a8cc942712b9d19304b8739fcea73bb49cb75`
+- Protocol SHA-256:
+  `e827e55f99af7161931cd0c6c320895afe749217584c87fe2668a36b8170a95b`
+
+Study 039 prospectively evaluates Parley v0.5.1 on four new full-stack domains
+and defect mechanisms with disjoint task IDs, case IDs, fields, routes, and
+exports. The strict six-condition gate, two model configurations, three
+replicates, 96 fresh sessions, parent-owned checker, exact-build integrity,
+and no-rerun rule are unchanged.
+
+The always-supplied Parley skill plus typed-web reference is frozen at 4,368
+bytes and 1,168 `o200k_base` tokens versus 9,395 bytes and 2,258 tokens in 038,
+a 53.5% byte and 48.3% token reduction. The compact reference retains every
+manifest, handler, JSON, browser-ABI, and arithmetic shape required by the
+frozen product contract.
+
+The zero-session reference run passed 16/16 stack/task cells, 144/144 named
+cases, 16/16 derived cross-target checks, 16/16 seed builds, 8/8 maintenance
+root boundaries, and all 48 reference plus 48 seed post-build hash checks.
+The separate orchestration smoke covered the actual source printer, FIFO
+client, public feedback, hidden evaluator, Chromium, and final integrity.
+No model cell has started. Next, commit the final preflight metadata and run
+the frozen matrix exactly once.

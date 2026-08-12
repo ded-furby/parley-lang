@@ -49,6 +49,22 @@ correctness-conditioned efficiency filtering.
 
 ## Current state
 
-Task and case semantics are ready for their isolated freeze commit. No 039
-scaffold, reference implementation, protocol, threshold, or model session
-exists yet.
+Task and case semantics are frozen at commit `1db9d08`, and the strict
+96-cell protocol is preregistered in `fullstack_agent_039_protocol.json`.
+Parley v0.5.1 and its 1,168-token combined skill/web context are frozen before
+measurement; the context is 48.3% smaller than iteration 038's.
+
+The zero-session harness is preserved at commit `a93a8cc`. Clean-room
+validation passed all 16 task/language references across 144 cases. All 16
+intentionally wrong seeds built without passing public semantics, all eight
+maintenance root boundaries held, and all 48 reference/seed exact build
+commands preserved protected inputs. The FIFO orchestration smoke also passed
+public and hidden HTTP/browser execution and final integrity.
+
+Protocol revision 2 and `FULLSTACK_AGENT_039_EXECUTION_FREEZE.md` bind all 18
+transitive execution files. No measured 039 session has started. The final
+preflight artifacts have SHA-256 values:
+
+- validation: `24ecb9b640b380f644a69d14d602b662ddc86ad2f5b8acca603951f6637d230b`
+- orchestration smoke: `e13d33fa1f33f330bf7591c86db5542d66f8a6c31a5c9c66a990a27a1b31b6d4`
+- protocol: `e827e55f99af7161931cd0c6c320895afe749217584c87fe2668a36b8170a95b`
