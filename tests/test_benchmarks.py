@@ -3357,3 +3357,82 @@ def test_fullstack_037_report_builder_is_deterministic():
 
     assert completed.returncode == 0, completed.stderr
     assert hashlib.sha256(report.read_bytes()).hexdigest() == before
+
+
+def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
+    from benchmarks.exact_build_freeze import run_frozen_builds
+
+    frozen = tmp_path / "frozen.txt"
+    frozen.write_text("before\n")
+    result = run_frozen_builds(
+        tmp_path,
+        ["frozen.txt"],
+        [[
+            sys.executable,
+            "-c",
+            "from pathlib import Path; Path('frozen.txt').write_text('after\\n')",
+        ]],
+    )
+
+    assert result["ok"] is False
+    assert result["completed_commands"] == 1
+    assert result["commands"][0]["returncode"] == 0
+    assert set(result["read_only_changes"]) == {"frozen.txt"}
+    assert result["read_only_changes"]["frozen.txt"]["before"]["sha256"] != (
+        result["read_only_changes"]["frozen.txt"]["after"]["sha256"]
+    )
+
+
+def test_exact_build_freeze_rejects_symlinked_input(tmp_path):
+    from benchmarks.exact_build_freeze import snapshot_read_only
+
+    target = tmp_path / "target.txt"
+    target.write_text("value\n")
+    (tmp_path / "frozen.txt").symlink_to(target)
+
+    with pytest.raises(ValueError, match="regular non-symlink"):
+        snapshot_read_only(tmp_path, ["frozen.txt"])
+
+
+def test_exact_build_freeze_038_smoke_proves_positive_and_negative_controls():
+    artifact = json.loads(
+        (BENCHMARKS / "exact_build_freeze_038_smoke.json").read_text()
+    )
+    fixture = BENCHMARKS / "fullstack_038/rust_smoke"
+
+    assert artifact["experiment_id"] == "038-execution-mechanism"
+    assert artifact["task_semantics_frozen"] is False
+    assert artifact["fixture"] == {
+        "path": "benchmarks/fullstack_038/rust_smoke",
+        "cargo_toml_sha256": hashlib.sha256(
+            (fixture / "Cargo.toml").read_bytes()
+        ).hexdigest(),
+        "cargo_lock_sha256": hashlib.sha256(
+            (fixture / "Cargo.lock").read_bytes()
+        ).hexdigest(),
+        "lib_sha256": hashlib.sha256(
+            (fixture / "src/lib.rs").read_bytes()
+        ).hexdigest(),
+        "main_sha256": hashlib.sha256(
+            (fixture / "src/main.rs").read_bytes()
+        ).hexdigest(),
+    }
+    assert artifact["gate"] == {
+        "canonical_exact_build_passes": True,
+        "metadata_false_negative_reproduced": True,
+        "exact_build_detects_noncanonical_lock": True,
+        "passed": True,
+    }
+    assert artifact["canonical_exact_build"]["ok"] is True
+    assert artifact["canonical_exact_build"]["read_only_changes"] == {}
+    assert len(artifact["canonical_exact_build"]["commands"]) == 2
+    assert all(
+        row["returncode"] == 0 and row["read_only_changes"] == {}
+        for row in artifact["canonical_exact_build"]["commands"]
+    )
+    assert artifact["noncanonical_metadata_probe"]["ok"] is True
+    assert artifact["noncanonical_metadata_probe"]["lock_unchanged"] is True
+    negative = artifact["noncanonical_exact_build"]
+    assert negative["ok"] is False
+    assert negative["commands"][0]["returncode"] == 0
+    assert set(negative["read_only_changes"]) == {"Cargo.lock"}

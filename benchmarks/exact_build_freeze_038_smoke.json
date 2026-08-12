@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "experiment_id": "038-execution-mechanism",
+  "task_semantics_frozen": false,
+  "purpose": "Prove exact measured builds preserve canonical frozen inputs and expose noncanonical lock ordering that metadata alone misses.",
+  "fixture": {
+    "path": "benchmarks/fullstack_038/rust_smoke",
+    "cargo_toml_sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+    "cargo_lock_sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+    "lib_sha256": "94b533285222b1751523421cd7ab28e8139498bb7ef93e882847a893a98c08e6",
+    "main_sha256": "0e311f8625e8ace9aa562373cff0d7cdeda3abf24c4374b3e0b3b8ed3459b885"
+  },
+  "exact_build_commands": [
+    [
+      "cargo",
+      "build",
+      "--locked",
+      "--offline",
+      "--release"
+    ],
+    [
+      "cargo",
+      "build",
+      "--locked",
+      "--offline",
+      "--release",
+      "--lib",
+      "--target",
+      "wasm32-unknown-unknown"
+    ]
+  ],
+  "iteration_037_build_command": [
+    "cargo",
+    "build",
+    "--release"
+  ],
+  "canonical_exact_build": {
+    "schema_version": 1,
+    "read_only_files": [
+      "Cargo.toml",
+      "Cargo.lock"
+    ],
+    "read_only_before": {
+      "Cargo.lock": {
+        "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550297
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550296
+      }
+    },
+    "read_only_after": {
+      "Cargo.lock": {
+        "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550297
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550296
+      }
+    },
+    "read_only_changes": {},
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "returncode": 0,
+        "timed_out": false,
+        "stdout_tail": "",
+        "stderr_tail": "   Compiling proc-macro2 v1.0.107\n   Compiling quote v1.0.47\n   Compiling unicode-ident v1.0.24\n   Compiling pin-project-lite v0.2.17\n   Compiling itoa v1.0.18\n   Compiling libc v0.2.189\n   Compiling bytes v1.12.1\n   Compiling futures-core v0.3.33\n   Compiling serde_core v1.0.229\n   Compiling once_cell v1.21.4\n   Compiling httparse v1.10.1\n   Compiling tower-service v0.3.3\n   Compiling tracing-core v0.1.36\n   Compiling tower-layer v0.3.3\n   Compiling zmij v1.0.23\n   Compiling unicase v2.9.0\n   Compiling serde v1.0.229\n   Compiling percent-encoding v2.3.2\n   Compiling log v0.4.33\n   Compiling slab v0.4.12\n   Compiling futures-task v0.3.33\n   Compiling mime v0.3.17\n   Compiling http v1.5.0\n   Compiling httpdate v1.0.3\n   Compiling futures-util v0.3.33\n   Compiling tracing v0.1.44\n   Compiling mime_guess v2.0.5\n   Compiling syn v3.0.3\n   Compiling http-body v1.1.0\n   Compiling futures-channel v0.3.33\n   Compiling http-body-util v0.1.3\n   Compiling mio v1.2.2\n   Compiling socket2 v0.6.5\n   Compiling serde_json v1.0.151\n   Compiling sync_wrapper v1.0.2\n   Compiling atomic-waker v1.1.2\n   Compiling smallvec v1.15.2\n   Compiling form_urlencoded v1.2.2\n   Compiling ryu v1.0.23\n   Compiling futures-sink v0.3.33\n   Compiling memchr v2.8.3\n   Compiling axum-core v0.5.6\n   Compiling bitflags v2.13.1\n   Compiling http-range-header v0.4.2\n   Compiling matchit v0.8.4\n   Compiling serde_path_to_error v0.1.20\n   Compiling tokio-macros v2.7.2\n   Compiling serde_derive v1.0.229\n   Compiling tokio v1.53.1\n   Compiling serde_urlencoded v0.7.1\n   Compiling hyper v1.11.0\n   Compiling tokio-util v0.7.19\n   Compiling tower v0.5.3\n   Compiling tower-http v0.7.0\n   Compiling hyper-util v0.1.20\n   Compiling axum v0.8.9\n   Compiling fullstack-freeze-smoke-038 v0.1.0 (/private<workspace>)\n    Finished `release` profile [optimized] target(s) in 6.98s\n",
+        "read_only_after": {
+          "Cargo.lock": {
+            "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+            "bytes": 14313,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550297
+          },
+          "Cargo.toml": {
+            "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+            "bytes": 426,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550296
+          }
+        },
+        "read_only_changes": {},
+        "snapshot_error": "",
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "returncode": 0,
+        "timed_out": false,
+        "stdout_tail": "",
+        "stderr_tail": "   Compiling proc-macro2 v1.0.107\n   Compiling quote v1.0.47\n   Compiling serde_core v1.0.229\n   Compiling serde_json v1.0.151\n   Compiling itoa v1.0.18\n   Compiling memchr v2.8.3\n   Compiling zmij v1.0.23\n   Compiling serde v1.0.229\n   Compiling syn v3.0.3\n   Compiling serde_derive v1.0.229\n   Compiling fullstack-freeze-smoke-038 v0.1.0 (/private<workspace>)\n    Finished `release` profile [optimized] target(s) in 2.75s\n",
+        "read_only_after": {
+          "Cargo.lock": {
+            "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+            "bytes": 14313,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550297
+          },
+          "Cargo.toml": {
+            "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+            "bytes": 426,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550296
+          }
+        },
+        "read_only_changes": {},
+        "snapshot_error": "",
+        "ok": true
+      }
+    ],
+    "completed_commands": 2,
+    "expected_commands": 2,
+    "ok": true
+  },
+  "noncanonical_metadata_probe": {
+    "command": [
+      "cargo",
+      "metadata",
+      "--locked",
+      "--offline",
+      "--format-version",
+      "1"
+    ],
+    "returncode": 0,
+    "stderr_tail": "",
+    "read_only_before": {
+      "Cargo.lock": {
+        "sha256": "88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550303
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550302
+      }
+    },
+    "read_only_after": {
+      "Cargo.lock": {
+        "sha256": "88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550303
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550302
+      }
+    },
+    "lock_unchanged": true,
+    "ok": true
+  },
+  "noncanonical_exact_build": {
+    "schema_version": 1,
+    "read_only_files": [
+      "Cargo.toml",
+      "Cargo.lock"
+    ],
+    "read_only_before": {
+      "Cargo.lock": {
+        "sha256": "88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550303
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550302
+      }
+    },
+    "read_only_after": {
+      "Cargo.lock": {
+        "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+        "bytes": 14313,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550303
+      },
+      "Cargo.toml": {
+        "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+        "bytes": 426,
+        "mode": 420,
+        "device": 16777233,
+        "inode": 152550302
+      }
+    },
+    "read_only_changes": {
+      "Cargo.lock": {
+        "before": {
+          "sha256": "88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a",
+          "bytes": 14313,
+          "mode": 420,
+          "device": 16777233,
+          "inode": 152550303
+        },
+        "after": {
+          "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+          "bytes": 14313,
+          "mode": 420,
+          "device": 16777233,
+          "inode": 152550303
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--release"
+        ],
+        "returncode": 0,
+        "timed_out": false,
+        "stdout_tail": "",
+        "stderr_tail": "   Compiling proc-macro2 v1.0.107\n   Compiling unicode-ident v1.0.24\n   Compiling quote v1.0.47\n   Compiling itoa v1.0.18\n   Compiling pin-project-lite v0.2.17\n   Compiling libc v0.2.189\n   Compiling bytes v1.12.1\n   Compiling futures-core v0.3.33\n   Compiling serde_core v1.0.229\n   Compiling once_cell v1.21.4\n   Compiling tower-service v0.3.3\n   Compiling httparse v1.10.1\n   Compiling serde v1.0.229\n   Compiling log v0.4.33\n   Compiling tracing-core v0.1.36\n   Compiling percent-encoding v2.3.2\n   Compiling zmij v1.0.23\n   Compiling tower-layer v0.3.3\n   Compiling unicase v2.9.0\n   Compiling httpdate v1.0.3\n   Compiling futures-task v0.3.33\n   Compiling slab v0.4.12\n   Compiling http v1.5.0\n   Compiling mime v0.3.17\n   Compiling futures-util v0.3.33\n   Compiling mime_guess v2.0.5\n   Compiling tracing v0.1.44\n   Compiling futures-channel v0.3.33\n   Compiling http-body v1.1.0\n   Compiling socket2 v0.6.5\n   Compiling mio v1.2.2\n   Compiling http-body-util v0.1.3\n   Compiling sync_wrapper v1.0.2\n   Compiling syn v3.0.3\n   Compiling smallvec v1.15.2\n   Compiling atomic-waker v1.1.2\n   Compiling serde_json v1.0.151\n   Compiling form_urlencoded v1.2.2\n   Compiling futures-sink v0.3.33\n   Compiling memchr v2.8.3\n   Compiling ryu v1.0.23\n   Compiling axum-core v0.5.6\n   Compiling bitflags v2.13.1\n   Compiling http-range-header v0.4.2\n   Compiling matchit v0.8.4\n   Compiling serde_path_to_error v0.1.20\n   Compiling tokio-macros v2.7.2\n   Compiling serde_derive v1.0.229\n   Compiling tokio v1.53.1\n   Compiling serde_urlencoded v0.7.1\n   Compiling hyper v1.11.0\n   Compiling tower v0.5.3\n   Compiling tokio-util v0.7.19\n   Compiling tower-http v0.7.0\n   Compiling hyper-util v0.1.20\n   Compiling axum v0.8.9\n   Compiling fullstack-freeze-smoke-038 v0.1.0 (/private<workspace>)\n    Finished `release` profile [optimized] target(s) in 7.04s\n",
+        "read_only_after": {
+          "Cargo.lock": {
+            "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+            "bytes": 14313,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550303
+          },
+          "Cargo.toml": {
+            "sha256": "33b66df1b208b36097ec0eab771759494e4df3060820b21974479b4a45fbee10",
+            "bytes": 426,
+            "mode": 420,
+            "device": 16777233,
+            "inode": 152550302
+          }
+        },
+        "read_only_changes": {
+          "Cargo.lock": {
+            "before": {
+              "sha256": "88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a",
+              "bytes": 14313,
+              "mode": 420,
+              "device": 16777233,
+              "inode": 152550303
+            },
+            "after": {
+              "sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+              "bytes": 14313,
+              "mode": 420,
+              "device": 16777233,
+              "inode": 152550303
+            }
+          }
+        },
+        "snapshot_error": "",
+        "ok": false
+      }
+    ],
+    "completed_commands": 1,
+    "expected_commands": 1,
+    "ok": false
+  },
+  "gate": {
+    "canonical_exact_build_passes": true,
+    "metadata_false_negative_reproduced": true,
+    "exact_build_detects_noncanonical_lock": true,
+    "passed": true
+  }
+}

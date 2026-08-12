@@ -299,6 +299,25 @@ all protected hashes remain stable. See `FULLSTACK_AGENT_037.md` and the
 canonical report artifact in
 `benchmarks/reports/037-unseen-fullstack-study-invalid.artifact.json`.
 
+## Exact-build freeze preflight for iteration 038
+
+Before any 038 task or case is designed, the task-free Rust smoke in
+`fullstack_038/rust_smoke/` closes the lockfile validation gap exposed by 037.
+Run it with:
+
+```bash
+python3 benchmarks/smoke_exact_build_freeze_038.py
+```
+
+The canonical fixture passes native-release and WASM-release builds without
+changing any read-only input. Its negative control passes the old
+`cargo metadata --locked --offline` probe, then proves the 037 build command
+canonicalizes a deliberately displaced root block and that
+`exact_build_freeze.py` rejects the mutation. The committed evidence is
+`exact_build_freeze_038_smoke.json`; see `EXACT_BUILD_FREEZE_038.md` for the
+threat boundary. This validates execution plumbing only and must precede a
+separate independent-corpus freeze.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

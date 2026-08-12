@@ -3681,3 +3681,39 @@ frozen, generate Rust locks from their final manifests, run the exact debug and
 release build paths used by measurement during clean-room validation, and
 assert every read-only hash afterward. Then address Parley's independent
 implementation first-build burden without tuning on 037 task semantics.
+
+## 038 — Exact-build freeze mechanism proven before corpus design
+
+- Completed: 2026-08-13
+- Scope: task-free execution-mechanism preflight only
+- Validator: `benchmarks/exact_build_freeze.py`
+- Smoke: `benchmarks/smoke_exact_build_freeze_038.py`
+- Evidence: `benchmarks/exact_build_freeze_038_smoke.json`
+- Fixture lock SHA-256:
+  `f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740`
+
+No iteration-038 task semantic existed for this preflight. The isolated Rust
+fixture uses the same pinned dependency surface and future native-release plus
+WASM-release build paths needed by the full-stack harness. Its lock was
+generated from its final manifest, not created by text replacement.
+
+Both canonical exact commands completed with return code zero and left
+`Cargo.toml` and `Cargo.lock` byte-for-byte unchanged. The validator snapshots
+each declared read-only file before execution and after every command, rejects
+symlinks and missing/non-regular inputs, and fails on any content, size, mode,
+command, or timeout change.
+
+The negative control recreates the 037 mechanism without using task content.
+A copy with the correct root package block moved to a noncanonical position
+passed `cargo metadata --locked --offline` with no hash change. The
+iteration-037 build command `cargo build --release` then returned zero while
+canonicalizing the lock from
+`88f30a4d6b7143e3f511e91d509c49f7d4f4d61c04a45080ac0fa76a7eecc43a`
+to the reviewed canonical hash. The new validator rejected that successful
+build immediately. This proves the previous false-negative and the replacement
+control in one bounded smoke.
+
+This is not a rerun of any 037 agent cell and contains no language-performance
+evidence. Next, commit this mechanism checkpoint. Only afterward may new 038
+task/case semantics be designed and frozen; the eventual reference validator
+must invoke these post-build hash checks on its exact measured command sequence.
