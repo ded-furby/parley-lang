@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "037",
   "title": "Independent fresh-agent full-stack implementation and maintenance study",
   "description": "A preregistered 96-session comparison of four new server-plus-browser assignments in Parley, Python, TypeScript, and Rust using a parent-owned public evaluator.",
@@ -31,6 +31,34 @@
     "sandbox_network": "sandbox_workspace_write.network_access=false",
     "channel": "Two protected mode-0600 POSIX FIFOs carry bounded request and public-feedback messages; only the parent evaluator binds loopback.",
     "threat_boundary": "The transport is a measurement-integrity mechanism for command-constrained agents, not an isolation boundary against a deliberately hostile workspace process."
+  },
+  "execution_freeze": {
+    "description": "Post-protocol harness and objective execution-integrity controls frozen before the first measured cell; task, case, model, metric, threshold, gate, compiler, skill, and stack semantics are unchanged.",
+    "measured_sessions_before_freeze": 0,
+    "harness_commit": "10664d592d2655bd528374c7f77c4d3226b0d1b7",
+    "files": [
+      {"file": "benchmarks/run_fullstack_agent_037.py", "sha256": "2e2d546d4ec96d9fe140221580e7ead3a6a6304f7b806fa6240787d8a6a0e355"},
+      {"file": "benchmarks/fullstack_agent_037_scaffolds.py", "sha256": "67a91ce0e83462db565201e2923d30f30c831a2e743eaaec6f5eb035c9fda713"},
+      {"file": "benchmarks/fullstack_agent_037_guard.py", "sha256": "b858a01560c75e0577217bf54bd20c9239945f6ee7f5afdfffc448dea38fce2a"},
+      {"file": "benchmarks/prepare_fullstack_agent_037.py", "sha256": "87698f7bc1db98041a9dfa328be8f9694a3d56b82725a177cff1c57fdaf0e9f6"},
+      {"file": "benchmarks/agent_check_transport.py", "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"},
+      {"file": "benchmarks/agent_runner.py", "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"},
+      {"file": "benchmarks/fullstack_agent_036_scaffolds.py", "sha256": "ab27f0fc1e6741e78a57a8777339571cbc4c47843dc6a2335d316aa47351879c"},
+      {"file": "benchmarks/fullstack_037/rust/Cargo.toml", "sha256": "abeaaf3ba6424db7b3302d1ebb77ed2fdf59a426ad779c0a190dcb39081c00eb"},
+      {"file": "benchmarks/fullstack_037/rust/Cargo.lock", "sha256": "35225e916fd2b31a7fc5f75783a90506e46c73e66ada943ec05e6baedeb41bb1"},
+      {"file": "benchmarks/fullstack_037/rust/src/lib.rs", "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"},
+      {"file": "benchmarks/fullstack_035/python/requirements.txt", "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"},
+      {"file": "benchmarks/fullstack_035/python/requirements.lock.txt", "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"},
+      {"file": "benchmarks/fullstack_035/typescript/package.json", "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"},
+      {"file": "benchmarks/fullstack_035/typescript/package-lock.json", "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"},
+      {"file": "benchmarks/fullstack_035/typescript/tsconfig.json", "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"},
+      {"file": "benchmarks/FULLSTACK_AGENT_037_EXECUTION_FREEZE.md", "sha256": "8b500c98e91268e5605584d8cdc95e0afc4b2393b9a3fbf3a1b8eb36c25a5118"}
+    ],
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "Atomic JSON files outside the agent workspace, revalidated during cell finalization and result aggregation.",
+    "numeric_domain_guard": "Identical parent-owned proxy for all languages; rejects only negative numeric values and timeline bucket_seconds zero before forwarding other traffic.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute."
   },
   "frozen_config": {
     "languages": ["parley", "python", "typescript", "rust"],

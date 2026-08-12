@@ -2602,7 +2602,7 @@ def test_fullstack_037_protocol_freezes_matrix_product_and_transport():
     matrix = protocol["matrix"]
 
     assert protocol["experiment_id"] == "037"
-    assert protocol["protocol_revision"] == 1
+    assert protocol["protocol_revision"] == 2
     assert product["product_commit"] == "02cd809f35dfa9f93468e59cfc8a38d97abb41ee"
     assert product["corpus_commit"] == "b3ddad835758ee077a35ec318322b5149a25b88f"
     for file_key, hash_key in (
@@ -2639,6 +2639,14 @@ def test_fullstack_037_protocol_freezes_matrix_product_and_transport():
         for boundary in protocol["interpretation_boundary"]
     )
     assert "no same-corpus optimization or rerun" in protocol["stop_rule"]
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == "10664d592d2655bd528374c7f77c4d3226b0d1b7"
+    assert len(execution["files"]) == 16
+    for item in execution["files"]:
+        assert hashlib.sha256((REPO / item["file"]).read_bytes()).hexdigest() == item[
+            "sha256"
+        ]
 
 
 def test_fullstack_037_scaffolds_and_plan_preserve_frozen_boundaries():

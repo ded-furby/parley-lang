@@ -279,7 +279,10 @@ cases plus 16 derived HTTP/browser agreement checks, 16/16 compiling seeds,
 numeric-domain guard is a shared parent launch layer applied identically to all
 four stacks; task logic and all successful responses still execute in the
 candidate application. No measured cell may run until the harness hashes are
-committed and added to the final execution freeze.
+committed and added to the final execution freeze. That zero-session freeze is
+now recorded in `FULLSTACK_AGENT_037_EXECUTION_FREEZE.md` and protocol revision
+2; the remaining boundary is a final clean-tree validation artifact whose
+protocol hash matches the committed revision.
 
 ## Versioned benchmark reports
 

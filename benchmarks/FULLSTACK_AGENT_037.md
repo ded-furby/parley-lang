@@ -65,4 +65,6 @@ parent evaluator, shared numeric-domain guard, exact Rust lock, provenance
 preparer, journaled runner, and integrity aggregation are implemented. The
 clean-room reference boundary passes 16/16 cells and every broken seed builds
 without incorrectly passing. No measured 037 session exists at this checkpoint;
-a final committed execution-hash audit is still required before measurement.
+the exact transitive harness hashes and zero-session controls are frozen in
+`FULLSTACK_AGENT_037_EXECUTION_FREEZE.md`. The canonical validation artifact is
+regenerated against that committed protocol immediately before measurement.

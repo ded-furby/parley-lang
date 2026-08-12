@@ -3590,3 +3590,23 @@ authored application correctness.
 Next, run the full repository suite, commit this executable checkpoint, audit
 the committed hashes and exact validation artifact once more, then add the
 zero-session execution freeze before launching any measured cell.
+
+### 037 zero-session execution freeze recorded
+
+- Measured sessions before freeze: 0
+- Final audited harness commit:
+  `10664d592d2655bd528374c7f77c4d3226b0d1b7`
+- Protocol revision: 2
+- Freeze record: `benchmarks/FULLSTACK_AGENT_037_EXECUTION_FREEZE.md`
+- Frozen transitive execution files: 16
+
+The final audit additionally rejects protected/read-only or editable files
+replaced by symlinks, detects added empty directories, rejects broker protocol
+errors, and revalidates external attempt JSON at aggregation time. Protocol
+revision 2 records the exact hashes of the runner, generator, guard, preparer,
+transport, event parser, reused generic stack templates, dependency manifests,
+locks, and this freeze record. No semantic or gate field changed.
+
+The next action remains pre-measurement: commit this revision, regenerate the
+reference artifact so it carries the committed protocol hash, rerun the suite,
+and commit that final preflight. Only then may the 96-cell one-shot matrix begin.
