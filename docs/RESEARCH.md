@@ -143,3 +143,20 @@ large fixed Codex context is included. This confirms non-inferior adaptive input
 packing for the selected record-heavy tasks. It does not test model-generated
 TOON, heterogeneous shapes, external model families, or Parley source against
 Python/Rust.
+
+Iteration 035 then separated product compactness from agent cost. All four
+handwritten Release Radar implementations passed 14 HTTP cases and one real
+browser flow. Parley's application surface was 684 `o200k_base` tokens versus
+1,147 for Python, 1,366 for TypeScript, and 1,949 for Rust, while reusing one
+author-owned rule across server and browser. This is one product-source result,
+not fresh-session evidence.
+
+Iteration 036 freezes that missing fresh-agent study before any session output.
+It uses four new server-plus-browser assignments—two implementations and two
+repairs—across Parley, Python, TypeScript, Rust, two model configurations, and
+three repetitions: 96 isolated sessions. Complete session tokens are primary;
+hidden HTTP/browser correctness, first-check rate, repairs, elapsed time, and
+predeclared root-file quality are preserved separately. The executable
+scaffolds and validator pass all 16 reference task/language cells and all 16
+broken-seed build boundaries. No measured cell has run, so the next research
+action is execution of the committed matrix without tuning or selective reruns.

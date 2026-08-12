@@ -189,6 +189,34 @@ comparison needs more held-out tasks, more repetitions, multiple models, a
 predeclared analysis, and an execution sandbox that prevents reads outside
 the per-run workspace rather than relying on the benchmark instruction.
 
+## Unseen full-stack fresh-agent study 036
+
+Iteration 036 is the preregistered fresh-session follow-up to product comparison
+035. It leaves the historical three-language CLI runners untouched and adds a
+separate Parley/Python/TypeScript/Rust harness for four new typed-HTTP plus
+browser assignments. The 96-cell matrix spans two implementation tasks, two
+maintenance tasks, sol-medium, terra-medium, and three repetitions.
+
+Prepare the pinned offline dependency stores, verify every reference/seed
+boundary, then run the matrix from the committed checkpoint:
+
+```bash
+python3 benchmarks/prepare_fullstack_agent_036.py
+python3 benchmarks/run_fullstack_agent_036.py validate-corpus
+python3 benchmarks/run_fullstack_agent_036.py validate-references \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/fullstack_agent_036_validation.json
+python3 benchmarks/run_fullstack_agent_036.py run \
+  --parley-command /absolute/path/to/parley \
+  --output benchmarks/results/fullstack_agent_036_v0.5.0.json
+```
+
+`./sources` is allowed exactly once in every agent cell; all later shell
+activity must be exactly `./check`. The public checker builds and runs the real
+HTTP/browser application. Hidden cases remain in the parent runner. The frozen
+six-condition gate and no-rerun rule are in
+`fullstack_agent_036_protocol.json`. No measured cell has run yet.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

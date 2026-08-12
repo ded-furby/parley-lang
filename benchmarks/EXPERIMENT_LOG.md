@@ -3344,3 +3344,35 @@ Next, implement the separate 036 stack scaffolds, integrity validator, and
 runner without modifying historical runners. Validate all 16 reference
 task/language cells and every seeded-defect boundary before launching any of
 the 96 agent sessions.
+
+### 036 pre-session harness and reference validation complete
+
+- Completed: 2026-08-13, before any measured agent cell
+- Harness checkpoint: `7d96094`
+- Protocol SHA-256:
+  `b23fa1d5ad0d6bcbe0c3081ac8c27543ca971cf9b1e3269f6a05ad4cef063cd1`
+- Runner SHA-256:
+  `5d12a6f8c22d29df7954c69381777def46e48e44e8410d7310078a5456d71b79`
+- Scaffold generator SHA-256:
+  `ab27f0fc1e6741e78a57a8777339571cbc4c47843dc6a2335d316aa47351879c`
+- Dependency preparer SHA-256:
+  `337bc0273213645b23d9d9a940ebec4ed27c3c1b4f6da6a56d90e01fc3e45c14`
+- Validation artifact SHA-256:
+  `9cad0981ef58b74e7cef6f230875e2151e1b40ac9815ae4e06e84224a6c25ae4`
+
+All 16 reference task/language cells build and pass their complete eight-case
+HTTP/browser contract: 128/128 exact. All 16 intentionally broken seeds build,
+and none passes its three public cases. The eight maintenance cells differ from
+their references only in the predeclared language-specific root-file set.
+Real Chromium executes every browser export; Python, TypeScript, and Rust use
+the exact pinned stacks from comparison 035, and Parley uses v0.5.0.
+
+The validator caught two scaffold-only defects before a measured session: an
+unnecessary Parley fallback after an infallible decimal-to-number conversion,
+and ordering of Python's two-file root set. Neither affected a frozen task,
+case, expected value, formula, model, metric, or gate. Both were corrected
+before the successful complete validation and before this harness checkpoint.
+
+**No measured 036 agent session has run.** The next action is to rerun the
+committed validator, execute all 96 cells once, and preserve the complete raw
+result without tuning or selective reruns.

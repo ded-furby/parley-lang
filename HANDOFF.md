@@ -21,7 +21,7 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-08-05)
+## Where things stand (2026-08-13)
 
 ### Done and verified
 
@@ -31,6 +31,19 @@ Update it whenever you finish or start a work item.
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
+- **Iteration 036 unseen full-stack agent study is preregistered and launch-ready.**
+  It is a new four-language harness, not an extension of the frozen CLI runner
+  or Release Radar corpus. Two implementation tasks and two maintenance tasks
+  each require an exact typed JSON service plus a real browser scalar target.
+  The frozen matrix is 96 fresh sessions: Parley, Python, TypeScript, and Rust ×
+  sol-medium and terra-medium × three repetitions. Corpus commit `0d26bb9`,
+  protocol commit `64741b3`, and harness/reference checkpoint `7d96094` are
+  pushed on `agent/unseen-fullstack-study`. Pre-session validation passes all
+  16 reference cells across 128 exact cases, builds all 16 intentionally broken
+  seeds without one false success, and proves all eight maintenance root-file
+  boundaries. **No measured agent cell has run.** Prepare dependencies, rerun
+  the validator from the committed checkpoint, then execute the complete matrix
+  once; never tune or selectively rerun it.
 - **v0.3.156 Parley Workflows:** `parley workflow list/new/run` ships the first
   product layer over the language. Three bundled starters cover text cleanup,
   log summaries, and Markdown checklist reports; normal Parley source can
@@ -1419,11 +1432,13 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Unseen full-stack agent study.** Freeze several new implementation and
-   maintenance tasks before any fresh session. Compare exact behavior,
-   first-check success, repairs, total session tokens, elapsed time, and
-   maintainability across Parley, Python, TypeScript, and Rust. Do not reuse or
-   tune from Release Radar/report 035.
+1. **Execute frozen full-stack agent study 036 once.** The independent task
+   population, 96-cell protocol, stack scaffolds, runner, and reference
+   validation are committed and pushed. Run the complete matrix without a
+   selective rerun, preserve every failure/protocol violation, and publish the
+   exact behavior, first-check, repair, complete-token, elapsed, browser/server,
+   and maintainability result. Do not change the compiler, skill, cases,
+   models, gates, or runner from any output.
 2. **Production web hardening.** Dogfood concurrency, graceful shutdown,
    reverse-proxy semantics, structured observability, and sustained load before
    calling the generated HTTP server production-ready. Add browser strings,
