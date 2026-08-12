@@ -547,6 +547,11 @@ the plan:
 - [ ] confirm token-efficiency parity vs Python/Rust at 10 replicates per cell
       (fresh-session harness and immutable HTML reports exist; optimization continues)
 
+The current independent full-stack iteration is 038. Its 96-cell matrix remains
+unmeasured while the validated zero-session harness is committed and then
+hash-frozen; see [benchmarks/FULLSTACK_AGENT_038.md](benchmarks/FULLSTACK_AGENT_038.md)
+for the evidence boundary and current checkpoint.
+
 ## Development
 
 ```bash

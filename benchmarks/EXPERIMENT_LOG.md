@@ -3776,3 +3776,38 @@ four-case public set with Chromium, five-case hidden set with two Chromium
 cases, external atomic attempts, immutable journals, and no-rerun rule remain
 frozen. No scaffold or reference implementation existed when this protocol was
 written. Next, commit this boundary and only then implement the harness.
+
+### 038 zero-session harness validated
+
+- Validated: 2026-08-13
+- Reference artifact: `benchmarks/fullstack_agent_038_validation.json`
+- Reference artifact SHA-256:
+  `b12e8802048a5fb0c455eaa5009299d1bc84cec199a3e4fb3617b44c7b9fc249`
+- Orchestration artifact:
+  `benchmarks/fullstack_agent_038_orchestration_smoke.json`
+- Orchestration artifact SHA-256:
+  `72bdab1e1b3ff1aee95768f8c05a42bcce85f9272bf3c1a316cc00d4df8884e4`
+- Measured sessions: zero
+
+The new task-specific implementations and isolated stack generator passed all
+16 clean-room task/language cells and all 144 declared cases. All 16 broken
+seeds compiled, no broken seed passed its public semantics, and all eight
+maintenance seeds differed from their references only at the predeclared root.
+Immediate post-command validation covered 24 reference and 24 seed build
+commands and found no protected/read-only changes.
+
+The final `fullstack-agent-038` Cargo manifest generated a canonical lock with
+SHA-256 `c12b67da15583397b8f37a56201f8f987b9c66049735b4412f68f2cdc543fcc5`.
+Native and WASM release builds use `--locked --offline` and preserve it.
+
+The non-model orchestration smoke ran the same parent-owned FIFO client and
+evaluator used in measurement. `./sources` succeeded, the intentionally broken
+Python seed's `./check` returned a semantic failure after four public judgments,
+and the hidden evaluator ran five withheld judgments. Both paths executed
+Chromium and derived browser/HTTP agreement, all exact builds preserved frozen
+inputs, transport integrity held, and no unexpected workspace path appeared.
+
+This is still pre-measurement. Next, commit the harness, freeze every transitive
+execution hash in protocol revision 2, regenerate both artifacts against that
+committed protocol, and run the complete repository suite before the one-shot
+96-cell matrix.

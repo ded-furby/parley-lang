@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "experiment_id": "038",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "ferry_manifest_build",
+  "language": "python",
+  "protocol_sha256": "805a1423759b324fa7ab240db045fefc01ea8abf272125135242b6f212b01f72",
+  "provenance_sha256": "5b2a747ca5213e9ce5f8ddc1cbd6385d9ec9bf1fb0064981966383d67be595d2",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}

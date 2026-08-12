@@ -55,8 +55,31 @@ freezes Parley v0.5.0, two medium-reasoning model configurations, three
 replicates, the six-condition gate, the parent-owned transport, and the
 exact-build post-command hash requirement.
 
-No 038 stack scaffold, reference application, runner, agent prompt, or measured
-session exists at this checkpoint. Next, implement those components, generate
-the actual `fullstack-agent-038` lock from its final manifest, run clean-room
-references and broken seeds under the exact measured build commands, and commit
-their hashes in a zero-session execution freeze before measurement.
+The zero-session harness now exists. Clean-room validation passed all 16
+task/language references across all 144 cases, built all 16 intentionally
+incorrect seeds without any seed passing semantics, and preserved all eight
+maintenance root boundaries. Every exact build command—one for Parley and
+TypeScript, two for Python and Rust—left every protected/read-only input
+unchanged. The validation artifact is
+`fullstack_agent_038_validation.json` (SHA-256
+`b12e8802048a5fb0c455eaa5009299d1bc84cec199a3e4fb3617b44c7b9fc249`).
+
+The final Rust manifest generated its own canonical lock. Their SHA-256 hashes
+are `6f14fefca10c3815dc146985433ccdeb2d91fe07284c63e7f210f9d3d5a638f4`
+and `c12b67da15583397b8f37a56201f8f987b9c66049735b4412f68f2cdc543fcc5`.
+Both `cargo build --locked --offline --release` and the corresponding WASM
+release build preserve that lock in every validated Rust workspace.
+
+A non-model orchestration smoke also exercised the actual `./sources` client,
+parent-owned `./check` FIFO request, four public judgments, five hidden
+judgments, Chromium paths, derived cross-target checks, and final integrity
+audit. The incomplete Python seed failed semantics as designed while both
+build phases and every integrity control passed. Its artifact is
+`fullstack_agent_038_orchestration_smoke.json` (SHA-256
+`72bdab1e1b3ff1aee95768f8c05a42bcce85f9272bf3c1a316cc00d4df8884e4`).
+
+No measured agent session has run. Next, commit this harness checkpoint, record
+the committed hashes of every transitive execution file in protocol revision
+2, regenerate the validation and orchestration artifacts against that committed
+protocol, and commit the final zero-session preflight. Only then may the frozen
+96-cell matrix execute once.
