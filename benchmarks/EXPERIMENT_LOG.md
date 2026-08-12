@@ -4028,3 +4028,31 @@ This checkpoint contains no scaffold, reference implementation, protocol,
 model configuration, threshold, agent prompt, or measured session. Next:
 commit this boundary, then preregister the balanced matrix and exact execution
 controls in a separate commit before implementing any stack.
+
+### 040 balanced protocol preregistered
+
+- Preregistered: 2026-08-13
+- Corpus commit: `3c0d7691959a04c261fbc396fc26307c21a29670`
+- Protocol: `benchmarks/fullstack_agent_040_protocol.json`
+- Protocol SHA-256:
+  `cfac96ea73fb24a273b05e7376bb28eb8008b4e3ffff80cd33942370cb54a075`
+- Frozen Parley release: v0.5.2 at
+  `2e44bb092012eba3e9864da9c3e8a1588c2f3fb3`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The protocol binds `core-v0.5.2.md` and `web-v0.5.2.md`, totaling 4,350 bytes
+and 1,164 `o200k_base` tokens. This is four tokens smaller than the 039 context
+while adding the total-conversion and smallest-owner repair guidance.
+
+The primary gate remains unchanged: execution integrity, hidden correctness,
+first-check success, complete-session tokens, elapsed time, and exact-root
+maintenance quality must all pass. Token and elapsed medians compare Parley
+with the best baseline overall and within each model; all sessions remain in
+the result regardless of correctness or repairs.
+
+The parent-owned FIFO checker, exact post-build hash validation, public and
+hidden Chromium coverage, fresh-thread rule, 12-check limit, external atomic
+attempts, immutable journals, and no-rerun rule remain frozen. No 040 scaffold
+or reference implementation existed when this protocol was written. Next:
+commit this preregistration and only then implement the harness.

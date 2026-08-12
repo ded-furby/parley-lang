@@ -58,5 +58,10 @@ SHA-256 values:
 
 An independent oracle verifies every successful HTTP and browser fixture, the
 4/5 public/hidden split, browser coverage, metadata, and disjointness from all
-four prior fresh-agent corpora. No 040 scaffold, protocol, validation artifact,
-execution journal, or measured session exists.
+four prior fresh-agent corpora. The strict comparison is preregistered in
+`fullstack_agent_040_protocol.json` with SHA-256
+`cfac96ea73fb24a273b05e7376bb28eb8008b4e3ffff80cd33942370cb54a075`.
+It binds Parley v0.5.2, the versioned 1,164-token context, four languages, two
+medium-reasoning model configurations, three replicates, and the unchanged
+six-condition gate. No 040 scaffold, validation artifact, execution journal,
+or measured session exists.

@@ -366,6 +366,13 @@ and browser exports from 036–039. The oracle-checked task/case boundary follow
 the v0.5.2 product checkpoint and precedes every scaffold, protocol, threshold,
 or model output; see `FULLSTACK_AGENT_040.md`.
 
+The 040 comparison is now preregistered in
+`fullstack_agent_040_protocol.json`: 96 fresh sessions across four languages,
+two model configurations, and three replicates. It binds the versioned v0.5.2
+1,164-token context and the same strict six-condition gate, exact-build checks,
+parent-owned browser/HTTP feedback, immutable journals, and no-rerun policy.
+No 040 scaffold or reference implementation existed at this checkpoint.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

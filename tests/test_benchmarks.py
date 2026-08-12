@@ -3841,6 +3841,66 @@ def test_fullstack_040_corpus_is_independent_complete_and_oracle_checked():
     assert set(all_case_ids).isdisjoint(case["id"] for case in prior_cases)
 
 
+def test_fullstack_040_protocol_preregisters_product_matrix_and_gate():
+    protocol = json.loads(
+        (BENCHMARKS / "fullstack_agent_040_protocol.json").read_text()
+    )
+    product = protocol["frozen_product"]
+
+    assert protocol["schema_version"] == protocol["protocol_revision"] == 1
+    assert protocol["experiment_id"] == "040"
+    assert product["parley_version"] == "parley 0.5.2"
+    assert product["product_commit"] == (
+        "2e44bb092012eba3e9864da9c3e8a1588c2f3fb3"
+    )
+    assert product["product_tree"] == "5781929c21e76ebeeab2feb733cd2ff4207a039e"
+    assert product["corpus_commit"] == (
+        "3c0d7691959a04c261fbc396fc26307c21a29670"
+    )
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_skill_file", "parley_skill_sha256"),
+        ("parley_web_reference_file", "parley_web_reference_sha256"),
+    ):
+        assert hashlib.sha256((REPO / product[file_key]).read_bytes()).hexdigest() == (
+            product[hash_key]
+        )
+    assert product["combined_parley_context_bytes"] == 4_350
+    assert product["combined_parley_context_o200k_tokens"] == 1_164
+    assert product["combined_parley_context_bytes"] < product[
+        "prior_039_combined_context_bytes"
+    ]
+    assert product["combined_parley_context_o200k_tokens"] < product[
+        "prior_039_combined_context_o200k_tokens"
+    ]
+
+    config = protocol["frozen_config"]
+    assert config["languages"] == ["parley", "python", "typescript", "rust"]
+    assert config["agent_configurations"] == [
+        {"id": "sol-medium", "model": "gpt-5.6-sol", "reasoning": "medium"},
+        {"id": "terra-medium", "model": "gpt-5.6-terra", "reasoning": "medium"},
+    ]
+    assert config["replicates_per_task_language_configuration"] == 3
+    assert config["fresh_session_per_cell"] is True
+    assert config["selective_reruns"] == "forbidden"
+    assert protocol["matrix"]["fresh_sessions"] == 96
+    assert protocol["matrix"]["hidden_case_executions"] == 480
+    assert set(protocol["primary_gate"]) == {
+        "execution_integrity",
+        "correctness",
+        "first_check",
+        "tokens",
+        "elapsed",
+        "maintainability",
+        "verdict",
+    }
+    assert "execution_freeze" not in protocol
+    assert "implemented only after this protocol commit" in protocol[
+        "implementation_rule"
+    ]
+
+
 def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
     from benchmarks.exact_build_freeze import run_frozen_builds
 
