@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "experiment_id": "039",
+  "description": "Two independent full-stack implementation assignments and two maintenance assignments, frozen after Parley v0.5.1 and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "festival_power_build",
+      "kind": "implementation",
+      "title": "Build a festival power planner across HTTP and browser targets",
+      "statement": "Implement the frozen Festival Power contract in the supplied stack. speaker_watts is speaker_towers * watts_each. lighting_watts is light_rigs * 900. weather_watts is (speaker_towers + light_rigs) * 75 when weather_cover is true and zero otherwise. total_watts is the sum of speaker, lighting, and weather watts. connection_points is speaker_towers * 3 + light_rigs * 5. power_score is total_watts + connection_points * 20. power_mode is mixed when both speakers and lights are present, lighting when only lights are present, and audio otherwise. The browser export returns power_score.",
+      "service": "Festival Power",
+      "status_route": "/health/ready",
+      "post_route": "/api/v3/festival-power",
+      "browser_export": "festival_power_score",
+      "shared_result_field": "power_score",
+      "request_fields": {
+        "speaker_towers": "number",
+        "watts_each": "number",
+        "light_rigs": "number",
+        "weather_cover": "yesno"
+      },
+      "response_fields": {
+        "speaker_watts": "number",
+        "lighting_watts": "number",
+        "weather_watts": "number",
+        "total_watts": "number",
+        "connection_points": "number",
+        "power_score": "number",
+        "power_mode": "text"
+      },
+      "public_case_ids": [
+        "festival_status",
+        "festival_mixed_dry",
+        "festival_wrong_type",
+        "festival_browser_dry"
+      ],
+      "hidden_case_ids": [
+        "festival_mixed_covered",
+        "festival_lighting_covered",
+        "festival_unknown_field",
+        "festival_browser_mixed",
+        "festival_browser_lighting"
+      ],
+      "independence": "New event-power domain, v3 route, load composition, field vocabulary, fixtures, and browser export selected after the v0.5.1 product checkpoint and before any 039 scaffold or model output."
+    },
+    {
+      "id": "clinic_queue_build",
+      "kind": "implementation",
+      "title": "Build a clinic queue pressure service across HTTP and browser targets",
+      "statement": "Implement the frozen Clinic Queue contract in the supplied stack. patient_total is scheduled_count + walk_in_count. urgent_slots is clinician_count * 2 when urgent_open is true and zero otherwise. service_slots is clinician_count * 8 + urgent_slots. overflow_count is max(patient_total - service_slots, 0). waiting_groups divides overflow_count into five-patient groups using ceiling division, with zero overflow producing zero groups. queue_pressure is overflow_count * 4 + waiting_groups * 3. queue_state is clear when overflow_count is zero, urgent when overflow remains and urgent_open is true, and delayed otherwise. The browser export returns queue_pressure.",
+      "service": "Clinic Queue",
+      "status_route": "/health/ready",
+      "post_route": "/api/v3/clinic-queue",
+      "browser_export": "clinic_queue_pressure",
+      "shared_result_field": "queue_pressure",
+      "request_fields": {
+        "scheduled_count": "number",
+        "walk_in_count": "number",
+        "clinician_count": "number",
+        "urgent_open": "yesno"
+      },
+      "response_fields": {
+        "patient_total": "number",
+        "urgent_slots": "number",
+        "service_slots": "number",
+        "overflow_count": "number",
+        "waiting_groups": "number",
+        "queue_pressure": "number",
+        "queue_state": "text"
+      },
+      "public_case_ids": [
+        "clinic_status",
+        "clinic_delayed",
+        "clinic_wrong_media",
+        "clinic_browser_delayed"
+      ],
+      "hidden_case_ids": [
+        "clinic_urgent_clear",
+        "clinic_urgent_overflow",
+        "clinic_missing_field",
+        "clinic_browser_clear",
+        "clinic_browser_urgent"
+      ],
+      "independence": "New healthcare-queue domain, v3 route, capacity and pressure formula, field vocabulary, fixtures, and browser export selected before any 039 scaffold or model output."
+    },
+    {
+      "id": "event_credit_repair",
+      "kind": "maintenance",
+      "title": "Repair prepaid event credit after weekend fees",
+      "statement": "Repair the supplied Event Credit application. full_price_charge_cents is full_price_guests * 1800. concession_charge_cents is concession_guests * 950. weekend_fee_cents is (full_price_guests + concession_guests) * 175 during a weekend_event and zero otherwise. gross_charge_cents is the sum of full-price, concession, and weekend charges. credit_used_cents is min(prepaid_credit_cents, gross_charge_cents). amount_due_cents is max(gross_charge_cents - prepaid_credit_cents, 0). payment_state is covered when amount_due_cents is zero and due otherwise. The HTTP response and browser export must use the same rule; the browser export returns amount_due_cents.",
+      "service": "Event Credit",
+      "status_route": "/health/ready",
+      "post_route": "/api/v3/event-credit",
+      "browser_export": "event_amount_due",
+      "shared_result_field": "amount_due_cents",
+      "request_fields": {
+        "full_price_guests": "number",
+        "concession_guests": "number",
+        "prepaid_credit_cents": "number",
+        "weekend_event": "yesno"
+      },
+      "response_fields": {
+        "full_price_charge_cents": "number",
+        "concession_charge_cents": "number",
+        "weekend_fee_cents": "number",
+        "gross_charge_cents": "number",
+        "credit_used_cents": "number",
+        "amount_due_cents": "number",
+        "payment_state": "text"
+      },
+      "public_case_ids": [
+        "event_status",
+        "event_credit_crosses_fee",
+        "event_missing_field",
+        "event_browser_partial"
+      ],
+      "hidden_case_ids": [
+        "event_weekday_due",
+        "event_weekend_covered",
+        "event_unknown_field",
+        "event_browser_weekday",
+        "event_browser_covered"
+      ],
+      "predeclared_defect": "The application-logic module caps prepaid credit against the adult-plus-youth base before adding the weekend fee, so credit cannot cover that fee.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic clamp-order defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    },
+    {
+      "id": "seedling_dispatch_repair",
+      "kind": "maintenance",
+      "title": "Repair chilled-capacity propagation in seedling dispatch",
+      "statement": "Repair the supplied Seedling Dispatch application. shippable_trays is max(tray_count - reserved_trays, 0). base_capacity is van_count * 24. chill_buffer is van_count * 3 during chilled_transport and zero otherwise. dispatch_capacity is max(base_capacity - chill_buffer, 0). overflow_trays is max(shippable_trays - dispatch_capacity, 0). loaded_trays is min(shippable_trays, dispatch_capacity). space_remaining is max(dispatch_capacity - loaded_trays, 0). dispatch_state is overflow when overflow_trays is positive, loaded when loaded_trays is positive, and idle otherwise. The HTTP response and browser export must use the same rule; the browser export returns overflow_trays.",
+      "service": "Seedling Dispatch",
+      "status_route": "/health/ready",
+      "post_route": "/api/v3/seedling-dispatch",
+      "browser_export": "seedling_overflow",
+      "shared_result_field": "overflow_trays",
+      "request_fields": {
+        "tray_count": "number",
+        "reserved_trays": "number",
+        "van_count": "number",
+        "chilled_transport": "yesno"
+      },
+      "response_fields": {
+        "shippable_trays": "number",
+        "base_capacity": "number",
+        "chill_buffer": "number",
+        "dispatch_capacity": "number",
+        "overflow_trays": "number",
+        "loaded_trays": "number",
+        "space_remaining": "number",
+        "dispatch_state": "text"
+      },
+      "public_case_ids": [
+        "seedling_status",
+        "seedling_chilled_overflow",
+        "seedling_wrong_type",
+        "seedling_browser_overflow"
+      ],
+      "hidden_case_ids": [
+        "seedling_ambient_loaded",
+        "seedling_chilled_boundary",
+        "seedling_unknown_field",
+        "seedling_browser_ambient",
+        "seedling_browser_chilled"
+      ],
+      "predeclared_defect": "The application-logic module reports load, overflow, and remaining space from base_capacity instead of the reduced chilled dispatch_capacity.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic capacity-propagation defect",
+      "adaptation_boundary": "The defect mechanism, source, names, formula, fixtures, and expected repair are new and were selected before any measured output."
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "experiment_id": "039",
+  "tasks": {
+    "festival_power_build": [
+      {
+        "id": "festival_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Festival Power", "ready": true}
+      },
+      {
+        "id": "festival_mixed_dry",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/festival-power",
+        "json": {"speaker_towers": 3, "watts_each": 600, "light_rigs": 2, "weather_cover": false},
+        "expected_status": 200,
+        "expected_json": {"speaker_watts": 1800, "lighting_watts": 1800, "weather_watts": 0, "total_watts": 3600, "connection_points": 19, "power_score": 3980, "power_mode": "mixed"}
+      },
+      {
+        "id": "festival_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/festival-power",
+        "json": {"speaker_towers": 3, "watts_each": 600, "light_rigs": 2, "weather_cover": 1},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "festival_browser_dry",
+        "visibility": "public",
+        "target": "browser",
+        "export": "festival_power_score",
+        "args": [3, 600, 2, false],
+        "expected": 3980
+      },
+      {
+        "id": "festival_mixed_covered",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/festival-power",
+        "json": {"speaker_towers": 2, "watts_each": 750, "light_rigs": 3, "weather_cover": true},
+        "expected_status": 200,
+        "expected_json": {"speaker_watts": 1500, "lighting_watts": 2700, "weather_watts": 375, "total_watts": 4575, "connection_points": 21, "power_score": 4995, "power_mode": "mixed"}
+      },
+      {
+        "id": "festival_lighting_covered",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/festival-power",
+        "json": {"speaker_towers": 0, "watts_each": 500, "light_rigs": 4, "weather_cover": true},
+        "expected_status": 200,
+        "expected_json": {"speaker_watts": 0, "lighting_watts": 3600, "weather_watts": 300, "total_watts": 3900, "connection_points": 20, "power_score": 4300, "power_mode": "lighting"}
+      },
+      {
+        "id": "festival_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/festival-power",
+        "json": {"speaker_towers": 3, "watts_each": 600, "light_rigs": 2, "weather_cover": false, "stage": "east"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "festival_browser_mixed",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "festival_power_score",
+        "args": [2, 750, 3, true],
+        "expected": 4995
+      },
+      {
+        "id": "festival_browser_lighting",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "festival_power_score",
+        "args": [0, 500, 4, true],
+        "expected": 4300
+      }
+    ],
+    "clinic_queue_build": [
+      {
+        "id": "clinic_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Clinic Queue", "ready": true}
+      },
+      {
+        "id": "clinic_delayed",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/clinic-queue",
+        "json": {"scheduled_count": 22, "walk_in_count": 8, "clinician_count": 3, "urgent_open": false},
+        "expected_status": 200,
+        "expected_json": {"patient_total": 30, "urgent_slots": 0, "service_slots": 24, "overflow_count": 6, "waiting_groups": 2, "queue_pressure": 30, "queue_state": "delayed"}
+      },
+      {
+        "id": "clinic_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/clinic-queue",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "clinic_browser_delayed",
+        "visibility": "public",
+        "target": "browser",
+        "export": "clinic_queue_pressure",
+        "args": [22, 8, 3, false],
+        "expected": 30
+      },
+      {
+        "id": "clinic_urgent_clear",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/clinic-queue",
+        "json": {"scheduled_count": 31, "walk_in_count": 9, "clinician_count": 4, "urgent_open": true},
+        "expected_status": 200,
+        "expected_json": {"patient_total": 40, "urgent_slots": 8, "service_slots": 40, "overflow_count": 0, "waiting_groups": 0, "queue_pressure": 0, "queue_state": "clear"}
+      },
+      {
+        "id": "clinic_urgent_overflow",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/clinic-queue",
+        "json": {"scheduled_count": 45, "walk_in_count": 8, "clinician_count": 4, "urgent_open": true},
+        "expected_status": 200,
+        "expected_json": {"patient_total": 53, "urgent_slots": 8, "service_slots": 40, "overflow_count": 13, "waiting_groups": 3, "queue_pressure": 61, "queue_state": "urgent"}
+      },
+      {
+        "id": "clinic_missing_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/clinic-queue",
+        "json": {"scheduled_count": 22, "walk_in_count": 8, "clinician_count": 3},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "clinic_browser_clear",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "clinic_queue_pressure",
+        "args": [31, 9, 4, true],
+        "expected": 0
+      },
+      {
+        "id": "clinic_browser_urgent",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "clinic_queue_pressure",
+        "args": [45, 8, 4, true],
+        "expected": 61
+      }
+    ],
+    "event_credit_repair": [
+      {
+        "id": "event_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Event Credit", "ready": true}
+      },
+      {
+        "id": "event_credit_crosses_fee",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/event-credit",
+        "json": {"full_price_guests": 1, "concession_guests": 1, "prepaid_credit_cents": 2900, "weekend_event": true},
+        "expected_status": 200,
+        "expected_json": {"full_price_charge_cents": 1800, "concession_charge_cents": 950, "weekend_fee_cents": 350, "gross_charge_cents": 3100, "credit_used_cents": 2900, "amount_due_cents": 200, "payment_state": "due"}
+      },
+      {
+        "id": "event_missing_field",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/event-credit",
+        "json": {"full_price_guests": 1, "concession_guests": 1, "prepaid_credit_cents": 2900},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "event_browser_partial",
+        "visibility": "public",
+        "target": "browser",
+        "export": "event_amount_due",
+        "args": [1, 1, 2900, true],
+        "expected": 200
+      },
+      {
+        "id": "event_weekday_due",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/event-credit",
+        "json": {"full_price_guests": 2, "concession_guests": 0, "prepaid_credit_cents": 500, "weekend_event": false},
+        "expected_status": 200,
+        "expected_json": {"full_price_charge_cents": 3600, "concession_charge_cents": 0, "weekend_fee_cents": 0, "gross_charge_cents": 3600, "credit_used_cents": 500, "amount_due_cents": 3100, "payment_state": "due"}
+      },
+      {
+        "id": "event_weekend_covered",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/event-credit",
+        "json": {"full_price_guests": 0, "concession_guests": 3, "prepaid_credit_cents": 4000, "weekend_event": true},
+        "expected_status": 200,
+        "expected_json": {"full_price_charge_cents": 0, "concession_charge_cents": 2850, "weekend_fee_cents": 525, "gross_charge_cents": 3375, "credit_used_cents": 3375, "amount_due_cents": 0, "payment_state": "covered"}
+      },
+      {
+        "id": "event_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/event-credit",
+        "json": {"full_price_guests": 1, "concession_guests": 1, "prepaid_credit_cents": 2900, "weekend_event": true, "venue": "hall"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "event_browser_weekday",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "event_amount_due",
+        "args": [2, 0, 500, false],
+        "expected": 3100
+      },
+      {
+        "id": "event_browser_covered",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "event_amount_due",
+        "args": [0, 3, 4000, true],
+        "expected": 0
+      }
+    ],
+    "seedling_dispatch_repair": [
+      {
+        "id": "seedling_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/health/ready",
+        "expected_status": 200,
+        "expected_json": {"service": "Seedling Dispatch", "ready": true}
+      },
+      {
+        "id": "seedling_chilled_overflow",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/seedling-dispatch",
+        "json": {"tray_count": 60, "reserved_trays": 5, "van_count": 2, "chilled_transport": true},
+        "expected_status": 200,
+        "expected_json": {"shippable_trays": 55, "base_capacity": 48, "chill_buffer": 6, "dispatch_capacity": 42, "overflow_trays": 13, "loaded_trays": 42, "space_remaining": 0, "dispatch_state": "overflow"}
+      },
+      {
+        "id": "seedling_wrong_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/seedling-dispatch",
+        "json": {"tray_count": "60", "reserved_trays": 5, "van_count": 2, "chilled_transport": true},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "seedling_browser_overflow",
+        "visibility": "public",
+        "target": "browser",
+        "export": "seedling_overflow",
+        "args": [60, 5, 2, true],
+        "expected": 13
+      },
+      {
+        "id": "seedling_ambient_loaded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/seedling-dispatch",
+        "json": {"tray_count": 20, "reserved_trays": 2, "van_count": 1, "chilled_transport": false},
+        "expected_status": 200,
+        "expected_json": {"shippable_trays": 18, "base_capacity": 24, "chill_buffer": 0, "dispatch_capacity": 24, "overflow_trays": 0, "loaded_trays": 18, "space_remaining": 6, "dispatch_state": "loaded"}
+      },
+      {
+        "id": "seedling_chilled_boundary",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/seedling-dispatch",
+        "json": {"tray_count": 25, "reserved_trays": 4, "van_count": 1, "chilled_transport": true},
+        "expected_status": 200,
+        "expected_json": {"shippable_trays": 21, "base_capacity": 24, "chill_buffer": 3, "dispatch_capacity": 21, "overflow_trays": 0, "loaded_trays": 21, "space_remaining": 0, "dispatch_state": "loaded"}
+      },
+      {
+        "id": "seedling_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v3/seedling-dispatch",
+        "json": {"tray_count": 60, "reserved_trays": 5, "van_count": 2, "chilled_transport": true, "route": "north"},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "seedling_browser_ambient",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "seedling_overflow",
+        "args": [20, 2, 1, false],
+        "expected": 0
+      },
+      {
+        "id": "seedling_browser_chilled",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "seedling_overflow",
+        "args": [50, 0, 2, true],
+        "expected": 8
+      }
+    ]
+  }
+}
