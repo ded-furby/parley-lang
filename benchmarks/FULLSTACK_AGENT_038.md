@@ -78,10 +78,51 @@ build phases and every integrity control passed. Its artifact is
 `fullstack_agent_038_orchestration_smoke.json` (SHA-256
 `8035fcf6d53d72a3702e789b77ea4f6cf2915ad57b825db8a2f4ee638c98f939`).
 
-No measured agent session has run. The harness checkpoint is commit `0cc6426`.
-Protocol revision 2 and `FULLSTACK_AGENT_038_EXECUTION_FREEZE.md` now record the
-committed hashes of all 18 transitive execution files without changing any
-semantic or gate field. Next, commit that metadata-only freeze, regenerate the
-validation and orchestration artifacts against its committed protocol hash, and
-commit the final zero-session preflight. Only then may the frozen 96-cell matrix
-execute once.
+The harness checkpoint is commit `0cc6426`; protocol revision 2 and
+`FULLSTACK_AGENT_038_EXECUTION_FREEZE.md` bind all 18 transitive execution
+files. The final preflight is commit `b27cac4`. The frozen 96-cell matrix then
+ran exactly once, and its immutable raw snapshot is commit `1fce924` with
+SHA-256 `84a7f30e534098b4fcc864aa08ac601cfe5b6a19d2b22c9350390bde8381a49f`.
+
+## Measured result
+
+The strict six-condition gate is false. Execution integrity, hidden
+correctness, and maintainability pass; first-check success, complete-session
+tokens, and elapsed time fail.
+
+| Language | Hidden | First check | Median tokens | Median seconds | Exact roots |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Parley | 24/24 | 18/24 | 67,715 | 29.669 | 12/12 |
+| Python | 24/24 | 24/24 | 60,571.5 | 29.563 | 12/12 |
+| TypeScript | 24/24 | 24/24 | 75,756 | 22.876 | 12/12 |
+| Rust | 24/24 | 24/24 | 98,230.5 | 38.398 | 12/12 |
+
+All 96 results have unique cell and thread IDs, one journal start/finish pair,
+intact workspaces, compliant commands, final public success, and hidden
+success. The independent audit matched all 96 journal pairs and all 104 public
+attempt files to the raw rows. It verified 388 public named-case executions,
+97 public Chromium cases, 480 hidden named cases, 192 hidden Chromium cases,
+and 297/297 stable exact-build hash boundaries. This closes the deterministic
+Rust lock defect that invalidated 037.
+
+All six Parley first-check misses occurred on the archive implementation. Five
+first builds returned a decimal where the declared result was a whole number;
+one used unsupported `multiplied by` syntax. Every cell recovered and passed
+hidden judgment. A Python cell made an unnecessary second passing check, so the
+complete result retains eight repair turns across six first-check failures.
+
+Parley's complete-session median is 11.79% above Python, and its elapsed median
+is 29.70% above TypeScript. Its median final editable source remains 32.49%
+smaller than Python, 17.79% smaller than TypeScript, and 49.33% smaller than
+Rust. That compactness is useful secondary representation evidence, but it
+cannot substitute for the failed preregistered session-efficiency gates.
+
+The independent audit is `fullstack_agent_038_audit.json` (SHA-256
+`12f86034bdb7ce1a7bb4dd67b05347961d66a0c53db5fd655b726caf483b7a02`).
+The validated and rendered canonical stakeholder report is
+`reports/038-unseen-fullstack-study-gate-not-met.artifact.json` (SHA-256
+`3adbe5e256838f1c7529b7d84d57f36738bac0a8bb3533c39670ee5909b1fe0a`).
+
+Iteration 038 is closed unchanged. The next phase must use task-independent
+improvements to whole-number division/operator guidance and context cost, then
+freeze a new independent corpus. The 038 tasks may not be rerun or tuned.

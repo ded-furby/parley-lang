@@ -45,6 +45,7 @@ instead of hand-building a replacement.
 | 035 | Parley 0.4.0 | Release Radar passed 60/60 cross-language checks and used 40.37% fewer authored tokens than the nearest baseline | [HTML](035-release-radar-fullstack-compactness-proof.html) |
 | 036 | Parley 0.5.0 | Strict run invalid: 24/24 Parley hidden judgments passed, but public loopback feedback was blocked and token/time superiority failed | [Artifact](036-unseen-fullstack-study-invalid.artifact.json) |
 | 037 | Parley 0.5.0 | Public feedback worked and Parley passed 24/24 hidden judgments, but a noncanonical Rust lock freeze invalidated execution and first-check/token/time gates failed | [Artifact](037-unseen-fullstack-study-invalid.artifact.json) |
+| 038 | Parley 0.5.0 | Valid 96-session run reached 96/96 hidden correctness and full integrity, but first-check/token/time gates failed | [Artifact](038-unseen-fullstack-study-gate-not-met.artifact.json) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

@@ -3374,6 +3374,91 @@ def test_fullstack_037_report_builder_is_deterministic():
     assert hashlib.sha256(report.read_bytes()).hexdigest() == before
 
 
+def test_fullstack_038_raw_audit_and_report_preserve_valid_negative_result():
+    raw_path = BENCHMARKS / "results/fullstack_agent_038_raw.json"
+    raw = json.loads(raw_path.read_text())
+    audit_path = BENCHMARKS / "fullstack_agent_038_audit.json"
+    audit = json.loads(audit_path.read_text())
+
+    assert hashlib.sha256(raw_path.read_bytes()).hexdigest() == (
+        "84a7f30e534098b4fcc864aa08ac601cfe5b6a19d2b22c9350390bde8381a49f"
+    )
+    assert hashlib.sha256(audit_path.read_bytes()).hexdigest() == (
+        "12f86034bdb7ce1a7bb4dd67b05347961d66a0c53db5fd655b726caf483b7a02"
+    )
+    assert len(raw["results"]) == 96
+    assert len({row["cell_id"] for row in raw["results"]}) == 96
+    assert len({row["thread_id"] for row in raw["results"]}) == 96
+    assert all(row["journal_attempt"] == 1 for row in raw["results"])
+    assert raw["summary"]["primary_gate"] == {
+        "conditions": {
+            "execution_integrity": True,
+            "correctness": True,
+            "first_check": False,
+            "tokens": False,
+            "elapsed": False,
+            "maintainability": True,
+        },
+        "passed": False,
+    }
+    assert all(row["hidden_success"] for row in raw["results"])
+    assert all(row["workspace_integrity_ok"] for row in raw["results"])
+    assert all(row["post_build_integrity_ok"] for row in raw["results"])
+    assert all(row["final_public_check_success"] for row in raw["results"])
+
+    assert audit["audit_pass"] is True
+    assert audit["external_evidence_verified"] is True
+    assert audit["matrix"]["journal_pairs_verified"] == 96
+    assert audit["matrix"]["attempt_files_verified"] == 104
+    assert audit["exact_build"] == {
+        "commands": 297,
+        "stable_hash_checks": 297,
+        "successful_commands": 290,
+        "failed_commands_with_stable_hashes": 7,
+    }
+    assert audit["first_failure_classes"] == {
+        "decimal_to_number": 5,
+        "unsupported_multiplied_by": 1,
+    }
+    assert audit["primary_gate"] == raw["summary"]["primary_gate"]
+
+    report_path = (
+        BENCHMARKS
+        / "reports/038-unseen-fullstack-study-gate-not-met.artifact.json"
+    )
+    report = json.loads(report_path.read_text())
+    assert report["surface"] == "report"
+    assert report["manifest"]["title"] == (
+        "Unseen Full-Stack Agent Study — Iteration 038"
+    )
+    assert report["snapshot"]["status"] == "ready"
+    assert len(report["snapshot"]["datasets"]["languages"]) == 4
+    assert len(report["snapshot"]["datasets"]["configurations"]) == 8
+    assert len(report["snapshot"]["datasets"]["failure_classes"]) == 2
+    assert [row["result"] for row in report["snapshot"]["datasets"]["gates"]] == [
+        "PASS", "PASS", "FAIL", "FAIL", "FAIL", "PASS"
+    ]
+
+
+def test_fullstack_038_report_builder_is_deterministic():
+    report = (
+        BENCHMARKS
+        / "reports/038-unseen-fullstack-study-gate-not-met.artifact.json"
+    )
+    before = hashlib.sha256(report.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_038_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(report.read_bytes()).hexdigest() == before
+
+
 def test_exact_build_freeze_detects_read_only_mutation(tmp_path):
     from benchmarks.exact_build_freeze import run_frozen_builds
 

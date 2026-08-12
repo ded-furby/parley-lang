@@ -3814,3 +3814,60 @@ execution files to that committed implementation. No semantic, model, metric,
 threshold, or gate field changed. Next, commit this metadata-only freeze,
 regenerate both artifacts against its committed protocol, and run the complete
 repository suite before the one-shot 96-cell matrix.
+
+### 038 measured matrix published — valid run, strict gate not met
+
+- Completed: 2026-08-13
+- Measurement commit: `b27cac4ead4b31982eed0de9f01274dbdf8131a9`
+- Raw snapshot: `benchmarks/results/fullstack_agent_038_raw.json`
+- Raw SHA-256:
+  `84a7f30e534098b4fcc864aa08ac601cfe5b6a19d2b22c9350390bde8381a49f`
+- Independent audit: `benchmarks/fullstack_agent_038_audit.json`
+- Audit SHA-256:
+  `12f86034bdb7ce1a7bb4dd67b05347961d66a0c53db5fd655b726caf483b7a02`
+- Canonical report:
+  `benchmarks/reports/038-unseen-fullstack-study-gate-not-met.artifact.json`
+- Report SHA-256:
+  `3adbe5e256838f1c7529b7d84d57f36738bac0a8bb3533c39670ee5909b1fe0a`
+
+All 96 frozen cells completed exactly once with unique cell IDs, unique thread
+IDs, stable repository/toolchain provenance, intact workspaces, compliant
+commands, usable parent feedback, and one immutable journal pair. The external
+audit matched all 104 attempt files to their embedded rows. Across public and
+hidden evaluation, 868 named cases, 289 Chromium cases, and 193 derived
+browser/server agreement checks executed. All 297 immediate post-build hash
+checks remained stable, including every native and WASM Rust build. Iteration
+037's lockfile-integrity defect is therefore closed.
+
+The frozen primary gate is false:
+
+| Condition | Result | Evidence |
+| --- | --- | --- |
+| Execution integrity | Pass | 96/96 once-run cells and 297/297 stable build-hash boundaries |
+| Hidden correctness | Pass | Every language 24/24 overall and 100% by model and task kind |
+| First check | Fail | Parley 18/24 versus every baseline 24/24; implementation 6/12 versus 12/12 |
+| Complete session tokens | Fail | Parley median 67,715 versus Python 60,571.5; Parley higher in both model strata |
+| Elapsed | Fail | Parley median 29.669 s versus TypeScript 22.876 s; Parley higher in both model strata |
+| Maintainability | Pass | Every language 12/12 exact roots with intact workspaces |
+
+All six Parley first-check misses were archive implementation build failures.
+Five first attempts used division that produced a decimal where a whole-number
+result was declared; one used unsupported `multiplied by` operator wording.
+Every cell repaired successfully and passed hidden judgment. One Python cell
+ran a second passing check after already passing, leaving eight total repair
+turns across six first-check failures. Nothing was excluded or rerun.
+
+Parley's median final editable source was 681.5 `o200k_base` tokens, 32.49%
+below Python, 17.79% below TypeScript, and 49.33% below Rust. This is valid
+secondary representation evidence. It does not rescue the primary session
+cost, where Python was cheaper, or elapsed time, where TypeScript was faster.
+
+The canonical Data Analytics stakeholder artifact passed validation and
+rendered successfully with five native comparison charts, gate and integrity
+tables, model strata, failure classification, recommended next steps, further
+questions, and explicit claim boundaries.
+
+Decision: close iteration 038 unchanged. Apply only task-independent changes
+to whole-number division diagnostics/guidance, accepted operator syntax, and
+always-injected context cost. Commit those changes before freezing an
+independent successor corpus; never rerun or tune on the 038 population.
