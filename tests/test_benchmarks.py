@@ -4937,3 +4937,59 @@ def test_fullstack_040_audit_is_deterministic():
 
     assert completed.returncode == 0, completed.stderr
     assert hashlib.sha256(audit.read_bytes()).hexdigest() == before
+
+
+def test_fullstack_040_report_preserves_invalidated_gate_and_incident():
+    report_path = (
+        BENCHMARKS
+        / "reports/040-independent-fullstack-study-invalidated.artifact.json"
+    )
+    report = json.loads(report_path.read_text())
+
+    assert report["surface"] == "report"
+    assert report["manifest"]["title"] == (
+        "Independent Full-Stack Agent Study — Iteration 040"
+    )
+    assert report["snapshot"]["status"] == "ready"
+    datasets = report["snapshot"]["datasets"]
+    assert len(datasets["languages"]) == 4
+    assert len(datasets["configurations"]) == 8
+    assert len(datasets["incident_cells"]) == 5
+    assert len(datasets["model_failures"]) == 1
+    assert [row["result"] for row in datasets["gates"]] == [
+        "FAIL", "FAIL", "FAIL", "FAIL", "FAIL", "PASS"
+    ]
+    assert datasets["headline"][0] == {
+        "conditions_passed": 1,
+        "conditions_total": 6,
+        "hidden_cases_passed": 460,
+        "hidden_cases_executed": 460,
+        "incident_cells": 5,
+        "interrupted_cells": 2,
+        "token_gap_percent": 4.8113,
+        "elapsed_gap_percent": 22.1262,
+    }
+    claim_boundary = next(
+        block for block in report["manifest"]["blocks"]
+        if block["id"] == "claim_boundary"
+    )
+    assert "neither universal language superiority" in claim_boundary["body"]
+
+
+def test_fullstack_040_report_builder_is_deterministic():
+    report = (
+        BENCHMARKS
+        / "reports/040-independent-fullstack-study-invalidated.artifact.json"
+    )
+    before = hashlib.sha256(report.read_bytes()).hexdigest()
+
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_040_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert hashlib.sha256(report.read_bytes()).hexdigest() == before

@@ -4056,3 +4056,83 @@ hidden Chromium coverage, fresh-thread rule, 12-check limit, external atomic
 attempts, immutable journals, and no-rerun rule remain frozen. No 040 scaffold
 or reference implementation existed when this protocol was written. Next:
 commit this preregistration and only then implement the harness.
+
+### 040 harness frozen after complete zero-session validation
+
+- Harness commit: `55c4d1885daeeee18c540e41d9e78b9f49fd8d5a`
+- Final execution commit: `2820f4eb3bc44578bdc60237559782c07a2511df`
+- Final protocol SHA-256:
+  `3f0dc69b18b5f2dcad5a21eaddcefd498a2ebfd81694a7f2cd516e5b6875ed83`
+- Validation SHA-256:
+  `26193ee74c0a13bf8165f4844443b9ad62fac8d36bc3f62a503164a47fa25420`
+
+The clean-room reference suite passed all nine public/hidden cases for all
+16 task/language cells. All 16 intentionally broken maintenance seeds built
+and failed public semantics, and all eight root-boundary repairs passed after
+changing only their preregistered files. Orchestration smoke covered the real
+source printer, FIFO feedback, public and hidden HTTP/Chromium evaluation,
+cross-target agreement, and final integrity. All exact native and WebAssembly
+build inputs remained hash-stable. Zero measured cells existed at freeze.
+
+### 040 measured matrix published — host incident invalidates the gate
+
+- Completed: 2026-08-13
+- Measurement commit: `2820f4eb3bc44578bdc60237559782c07a2511df`
+- Raw snapshot: `benchmarks/results/fullstack_agent_040_raw.json`
+- Raw SHA-256:
+  `37b631af1ca17033ea30fe433699c52e90f7175b42454ac819e7bd2d3ff50914`
+- Independent audit: `benchmarks/fullstack_agent_040_audit.json`
+- Audit SHA-256:
+  `feffa77e5e9840d9a65bc0d34fb251b280c4dbbab37932cf9ad2fd23b3322904`
+- Canonical report:
+  `benchmarks/reports/040-independent-fullstack-study-invalidated.artifact.json`
+- Report SHA-256:
+  `2c0b3dc05b89076fc79e380a7553a4bd23a27c66d1fa5022d4f1d6e1654fe56a`
+
+Host disk exhaustion affected five of the 96 frozen cells. Two cells started
+but were interrupted before they acquired a completed thread; the frozen
+resume policy sealed both as permanent failures. Three cells retained explicit
+ENOSPC effects in public, hidden, or attempt-record phases. Only never-started
+cells resumed, and no affected cell was selectively rerun.
+
+The independent audit verifies 96 unique cell rows, 96 immutable journal
+pairs, 94 unique non-null thread IDs, 94 external attempt files, stable
+repository provenance, and 280/280 stable exact-build hash boundaries. Public
+evaluation retained 95 attempts and executed 372 named cases, 93 Chromium
+cases, and 93 agreement checks. Hidden evaluation completed 92 assignments,
+184 Chromium cases, and 92 agreement checks. Every one of the 460 hidden named
+cases that actually executed passed; four assignments had no hidden case
+execution. This diagnostic semantic result cannot restore the failed execution
+or correctness conditions.
+
+The frozen primary gate is false and invalidated:
+
+| Condition | Result | Evidence |
+| --- | --- | --- |
+| Execution integrity | Fail | Five ENOSPC-affected cells; 94/96 completed threads and no reruns |
+| Hidden correctness | Fail | Raw Parley 22/24 versus TypeScript 24/24; four assignments lacked hidden execution |
+| First check | Fail | Raw Parley 23/24 versus TypeScript 24/24 |
+| Complete session tokens | Fail | Raw Parley median 63,196 versus Python 60,295, a 4.8113% gap |
+| Elapsed | Fail | Raw Parley median 28.9052 s versus TypeScript 23.6683 s, a 22.1262% gap |
+| Maintainability | Pass | Parley 10/10 exact roots among hidden-correct maintenance rows |
+
+The only non-infrastructure model error was a Python browser module that used
+the strict-mode reserved identifier `protected`; it passed its second public
+check and hidden judgment. No hidden semantic case failed. The v0.5.2
+total-conversion and repair-locality target classes did not recur in completed
+semantic execution, but the invalidated run cannot confirm that improvement.
+
+Parley's median available final editable source was 669 `o200k_base` tokens,
+31.0309% below Python, 24.0636% below TypeScript, and 56.2459% below Rust. This
+remains descriptive representation evidence, not a substitute for the failed
+complete-token gate.
+
+The Data Analytics technical-report artifact passed schema validation and
+rendered successfully with five native comparison charts, exact gate and
+incident tables, model strata, robustness limits, next steps, and an explicit
+claim boundary.
+
+Decision: preserve iteration 040 unchanged and do not rerun its population.
+Before an independent 041 corpus is frozen, add task-independent scratch-space
+capacity preflight and cleanup controls with low-space regression tests. Keep
+the same full-matrix, immutable-evidence, no-rerun, and six-condition rules.

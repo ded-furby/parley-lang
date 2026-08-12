@@ -47,6 +47,7 @@ instead of hand-building a replacement.
 | 037 | Parley 0.5.0 | Public feedback worked and Parley passed 24/24 hidden judgments, but a noncanonical Rust lock freeze invalidated execution and first-check/token/time gates failed | [Artifact](037-unseen-fullstack-study-invalid.artifact.json) |
 | 038 | Parley 0.5.0 | Valid 96-session run reached 96/96 hidden correctness and full integrity, but first-check/token/time gates failed | [Artifact](038-unseen-fullstack-study-gate-not-met.artifact.json) |
 | 039 | Parley 0.5.1 | Valid independent run kept Parley at 24/24 hidden correctness and cut its Python token gap to 5.88%, but first-check/token/time/locality gates failed | [Artifact](039-independent-fullstack-study-gate-not-met.artifact.json) |
+| 040 | Parley 0.5.2 | Host ENOSPC invalidated five cells; all 460 executed hidden cases passed, but only maintainability passed the frozen gate | [Artifact](040-independent-fullstack-study-invalidated.artifact.json) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

@@ -63,5 +63,34 @@ four prior fresh-agent corpora. The strict comparison is preregistered in
 `cfac96ea73fb24a273b05e7376bb28eb8008b4e3ffff80cd33942370cb54a075`.
 It binds Parley v0.5.2, the versioned 1,164-token context, four languages, two
 medium-reasoning model configurations, three replicates, and the unchanged
-six-condition gate. No 040 scaffold, validation artifact, execution journal,
-or measured session exists.
+six-condition gate. That statement records the corpus/protocol checkpoint;
+later commits built and froze the harness without changing task semantics.
+
+## Execution and result
+
+The final protocol revision has SHA-256
+`3f0dc69b18b5f2dcad5a21eaddcefd498a2ebfd81694a7f2cd516e5b6875ed83`.
+Before measurement, 16/16 reference stack/task cells passed all nine cases,
+16/16 broken maintenance seeds built and failed public semantics, 8/8 repair
+root boundaries passed, and orchestration smoke coverage passed. The final
+execution boundary is commit `2820f4eb3bc44578bdc60237559782c07a2511df`.
+
+The 96-row raw result has SHA-256
+`37b631af1ca17033ea30fe433699c52e90f7175b42454ac819e7bd2d3ff50914`.
+Host disk exhaustion affected five frozen cells. Two started cells were
+permanently interrupted under the preregistered resume rule; three other cells
+recorded explicit ENOSPC effects. No affected cell was selectively rerun.
+
+The independent audit has SHA-256
+`feffa77e5e9840d9a65bc0d34fb251b280c4dbbab37932cf9ad2fd23b3322904`.
+It verifies all 96 journal pairs, 94 external attempt files, and 280/280 stable
+post-build hashes. All 460 hidden named cases that actually executed passed,
+but four assignments had no hidden semantic execution. The primary gate is
+therefore invalidated and false: execution integrity, correctness, first
+check, tokens, and elapsed time fail; maintainability alone passes.
+
+The canonical report is
+`reports/040-independent-fullstack-study-invalidated.artifact.json`. Iteration
+040 is closed unchanged. Any successor must first add generic scratch-capacity
+protection, then freeze an independent corpus; it must not rerun or tune on
+these tasks.

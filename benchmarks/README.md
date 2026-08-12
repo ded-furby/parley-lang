@@ -371,7 +371,26 @@ The 040 comparison is now preregistered in
 two model configurations, and three replicates. It binds the versioned v0.5.2
 1,164-token context and the same strict six-condition gate, exact-build checks,
 parent-owned browser/HTTP feedback, immutable journals, and no-rerun policy.
-No 040 scaffold or reference implementation existed at this checkpoint.
+The later zero-session harness passed all reference, maintenance-root, and
+orchestration checks before the final execution freeze.
+
+The measured 040 matrix is preserved unchanged in
+`results/fullstack_agent_040_raw.json` and independently audited by
+`audit_fullstack_agent_040.py`. Host disk exhaustion affected five cells,
+including two permanent interruptions, so execution integrity and the overall
+gate are false. No affected cell was rerun. All 460 hidden named cases that did
+execute passed; maintainability was 10/10 exact-root for hidden-correct Parley
+repairs. Raw Parley medians were 63,196 complete tokens (4.8113% above Python)
+and 28.9052 seconds (22.1262% above TypeScript); its median available final
+source was 669 `o200k_base` tokens. Build the canonical report with:
+
+```bash
+python3 benchmarks/audit_fullstack_agent_040.py
+python3 benchmarks/reports/build_040_report.py
+```
+
+See `reports/040-independent-fullstack-study-invalidated.artifact.json` for
+the validated technical report and exact claim boundary.
 
 ## Versioned benchmark reports
 

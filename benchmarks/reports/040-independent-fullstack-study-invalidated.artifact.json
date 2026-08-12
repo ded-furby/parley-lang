@@ -1,0 +1,1358 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Independent Full-Stack Agent Study \u2014 Iteration 040",
+    "description": "Invalidated preregistered 96-cell comparison: host ENOSPC affected five cells, all 460 executed hidden cases passed, and the strict gate was not met.",
+    "generatedAt": "2026-08-12T22:43:56.752783Z",
+    "cards": [
+      {
+        "id": "gate_card",
+        "description": "The run is invalidated and the strict gate remains false.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "conditions_passed",
+            "label": "Gate conditions passed",
+            "format": "number",
+            "unit": "of 6"
+          },
+          {
+            "field": "conditions_total",
+            "label": "Required",
+            "format": "number",
+            "unit": "conditions"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "semantic_card",
+        "description": "Every hidden named case that actually executed matched its oracle.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "hidden_cases_passed",
+            "label": "Executed hidden cases passed",
+            "format": "number",
+            "unit": "of 460"
+          },
+          {
+            "field": "hidden_cases_executed",
+            "label": "Executed",
+            "format": "number",
+            "unit": "cases"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "incident_card",
+        "description": "Host disk exhaustion contaminated five frozen cells.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "incident_cells",
+            "label": "ENOSPC-affected cells",
+            "format": "number",
+            "unit": "of 96"
+          },
+          {
+            "field": "interrupted_cells",
+            "label": "Permanently interrupted",
+            "format": "number",
+            "unit": "cells"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "efficiency_card",
+        "description": "Raw complete-session medians still missed the best baselines.",
+        "dataset": "headline",
+        "metrics": [
+          {
+            "field": "token_gap_percent",
+            "label": "Parley token gap vs Python",
+            "format": "number",
+            "unit": "%"
+          },
+          {
+            "field": "elapsed_gap_percent",
+            "label": "Parley elapsed gap vs TypeScript",
+            "format": "number",
+            "unit": "%"
+          }
+        ],
+        "sourceId": "fullstack_agent_evidence_040"
+      }
+    ],
+    "charts": [
+      {
+        "id": "correctness_chart",
+        "title": "Raw hidden assignment success rate",
+        "subtitle": "Frozen assignment outcomes include infrastructure-caused failures; 24 rows per language.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "hidden_success_rate",
+            "type": "quantitative",
+            "label": "Raw hidden success rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            },
+            {
+              "field": "infrastructure_affected_cells",
+              "type": "quantitative",
+              "label": "Infrastructure-affected cells"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Raw hidden success rate",
+        "valueFormat": "percent",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "question": "What hidden outcome did the frozen runner record by language?",
+        "rationale": "A categorical bar reports the unmodified assignment outcome while the adjacent text separates missing execution from semantic failure.",
+        "comparisonContext": {
+          "unit": "fraction of 24 frozen rows",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "first_check_chart",
+        "title": "First public check success rate",
+        "subtitle": "Frozen first-attempt outcomes include interrupted and ENOSPC-affected cells; higher is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "first_check_success_rate",
+            "type": "quantitative",
+            "label": "First-check rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            },
+            {
+              "field": "infrastructure_affected_cells",
+              "type": "quantitative",
+              "label": "Infrastructure-affected cells"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "First-check rate",
+        "valueFormat": "percent",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "question": "Did Parley match the strongest raw baseline before repair?",
+        "rationale": "The direct four-arm comparison evaluates the frozen first-check condition without exclusions.",
+        "comparisonContext": {
+          "unit": "fraction of 24 frozen rows",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "descending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "tokens_chart",
+        "title": "Median complete session tokens",
+        "subtitle": "Input plus output tokens across all 24 frozen rows per language; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_total_tokens",
+            "type": "quantitative",
+            "label": "Median tokens",
+            "format": "compact"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            },
+            {
+              "field": "infrastructure_affected_cells",
+              "type": "quantitative",
+              "label": "Infrastructure-affected cells"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median tokens",
+        "valueFormat": "compact",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "question": "Did Parley match the cheapest raw complete-session baseline?",
+        "rationale": "A sorted magnitude comparison reports the frozen token metric while the run-level invalidation remains explicit.",
+        "comparisonContext": {
+          "unit": "input plus output tokens per frozen row",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "elapsed_chart",
+        "title": "Median fresh-session elapsed time",
+        "subtitle": "Complete wall time across all 24 frozen rows per language; lower is better.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_elapsed_seconds",
+            "type": "quantitative",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            },
+            {
+              "field": "infrastructure_affected_cells",
+              "type": "quantitative",
+              "label": "Infrastructure-affected cells"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median seconds",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "question": "Did Parley match the fastest raw elapsed baseline?",
+        "rationale": "A sorted comparison exposes the descriptive Parley\u2013TypeScript gap.",
+        "comparisonContext": {
+          "unit": "seconds per frozen row",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      },
+      {
+        "id": "source_chart",
+        "title": "Median final editable-source tokens",
+        "subtitle": "o200k_base count over available final editable application files; lower is smaller.",
+        "type": "bar",
+        "intent": "comparison",
+        "dataset": "languages",
+        "encodings": {
+          "x": {
+            "field": "language",
+            "type": "nominal",
+            "label": "Language"
+          },
+          "y": {
+            "field": "median_final_o200k_tokens",
+            "type": "quantitative",
+            "label": "Median source tokens",
+            "format": "number"
+          },
+          "tooltip": [
+            {
+              "field": "sessions",
+              "type": "quantitative",
+              "label": "Sessions"
+            },
+            {
+              "field": "hidden_successes",
+              "type": "quantitative",
+              "label": "Hidden successes"
+            },
+            {
+              "field": "first_check_successes",
+              "type": "quantitative",
+              "label": "First checks"
+            },
+            {
+              "field": "median_final_o200k_tokens",
+              "type": "quantitative",
+              "label": "Median final source tokens"
+            },
+            {
+              "field": "infrastructure_affected_cells",
+              "type": "quantitative",
+              "label": "Infrastructure-affected cells"
+            }
+          ]
+        },
+        "xAxisTitle": "Language",
+        "yAxisTitle": "Median source tokens",
+        "valueFormat": "number",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "question": "Did Parley retain a source-representation compactness advantage?",
+        "rationale": "This secondary chart separates available final-source size from complete agent cost and execution validity.",
+        "comparisonContext": {
+          "unit": "o200k_base tokens per available final source",
+          "grain": "language summary across 24 frozen sessions",
+          "denominator": "all 24 sessions per language; no exclusions",
+          "semanticFamily": "fresh-agent full-stack comparison"
+        },
+        "palette": {
+          "kind": "sequential",
+          "name": "blue"
+        },
+        "labels": {
+          "values": "all"
+        },
+        "settings": {
+          "sort": "ascending",
+          "showValues": true
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "gate_table",
+        "title": "Frozen six-condition gate",
+        "subtitle": "Every condition is independent; one failure makes the overall verdict false.",
+        "dataset": "gates",
+        "columns": [
+          {
+            "field": "order",
+            "label": "#",
+            "format": "number"
+          },
+          {
+            "field": "condition",
+            "label": "Condition",
+            "type": "text"
+          },
+          {
+            "field": "threshold",
+            "label": "Frozen threshold",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "result",
+            "label": "Result",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "order",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "incident_table",
+        "title": "Host disk incident impact",
+        "subtitle": "All five affected cells remain in the frozen outcome; none was selectively rerun.",
+        "dataset": "incident_cells",
+        "columns": [
+          {
+            "field": "order",
+            "label": "#",
+            "format": "number"
+          },
+          {
+            "field": "cell",
+            "label": "Cell",
+            "type": "text"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "phase",
+            "label": "Affected phase",
+            "type": "text"
+          },
+          {
+            "field": "effect",
+            "label": "Frozen effect",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "order",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "language_table",
+        "title": "Raw language-level audit",
+        "subtitle": "All 24 frozen rows per language, including interruption and ENOSPC outcomes.",
+        "dataset": "languages",
+        "columns": [
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_check_successes",
+            "label": "First check",
+            "format": "number"
+          },
+          {
+            "field": "median_total_tokens",
+            "label": "Median tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_elapsed_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          {
+            "field": "median_final_o200k_tokens",
+            "label": "Median source",
+            "format": "number"
+          },
+          {
+            "field": "exact_root_successes",
+            "label": "Exact roots",
+            "format": "number"
+          },
+          {
+            "field": "infrastructure_affected_cells",
+            "label": "Infra affected",
+            "format": "number"
+          },
+          {
+            "field": "repair_turns",
+            "label": "Repair turns",
+            "format": "number"
+          }
+        ],
+        "defaultSort": {
+          "field": "language",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "configuration_table",
+        "title": "Model-stratified raw result",
+        "subtitle": "Twelve frozen rows per model/language cell; incident outcomes remain included.",
+        "dataset": "configurations",
+        "columns": [
+          {
+            "field": "configuration",
+            "label": "Configuration",
+            "type": "text"
+          },
+          {
+            "field": "language",
+            "label": "Language",
+            "type": "text"
+          },
+          {
+            "field": "hidden_successes",
+            "label": "Hidden",
+            "format": "number"
+          },
+          {
+            "field": "first_check_successes",
+            "label": "First check",
+            "format": "number"
+          },
+          {
+            "field": "median_total_tokens",
+            "label": "Median tokens",
+            "format": "number"
+          },
+          {
+            "field": "median_elapsed_seconds",
+            "label": "Median seconds",
+            "format": "number"
+          },
+          {
+            "field": "exact_root_rate",
+            "label": "Exact-root rate",
+            "format": "percent"
+          }
+        ],
+        "defaultSort": {
+          "field": "configuration",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "integrity_table",
+        "title": "Execution and measurement integrity audit",
+        "subtitle": "Stable hashes and evidence preservation succeeded, but the session matrix did not complete cleanly.",
+        "dataset": "integrity",
+        "columns": [
+          {
+            "field": "order",
+            "label": "#",
+            "format": "number"
+          },
+          {
+            "field": "check",
+            "label": "Check",
+            "type": "text"
+          },
+          {
+            "field": "observed",
+            "label": "Observed",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "Status",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "order",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      },
+      {
+        "id": "model_failure_table",
+        "title": "Observed model failure class",
+        "subtitle": "The only non-infrastructure model error recovered on its second public check.",
+        "dataset": "model_failures",
+        "columns": [
+          {
+            "field": "category",
+            "label": "Category",
+            "type": "text"
+          },
+          {
+            "field": "count",
+            "label": "Cells",
+            "format": "number"
+          },
+          {
+            "field": "cell",
+            "label": "Cell",
+            "type": "text"
+          },
+          {
+            "field": "cause",
+            "label": "Observed cause",
+            "type": "text"
+          }
+        ],
+        "defaultSort": {
+          "field": "count",
+          "direction": "desc"
+        },
+        "density": "dense",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040"
+      }
+    ],
+    "sources": [
+      {
+        "id": "fullstack_agent_evidence_040",
+        "label": "Complete frozen iteration 040 result, protocol, and independent audit",
+        "path": "benchmarks/results/fullstack_agent_040_raw.json",
+        "query": {
+          "engine": "Python 3.14 and SQLite JSON1",
+          "language": "SQL and Python",
+          "sql": "-- Canonical language-level extraction for iteration 040.\n-- Run from the repository root with SQLite JSON1 available.\nWITH raw AS (\n    SELECT json(readfile('benchmarks/results/fullstack_agent_040_raw.json')) AS body\n),\nlanguages(language) AS (\n    VALUES ('parley'), ('python'), ('typescript'), ('rust')\n)\nSELECT\n    language,\n    json_extract(body, '$.summary.by_language.' || language || '.sessions') AS sessions,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_successes') AS hidden_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_success_rate') AS hidden_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_successes') AS first_check_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_success_rate') AS first_check_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.median_total_tokens') AS median_total_tokens,\n    json_extract(body, '$.summary.by_language.' || language || '.median_elapsed_seconds') AS median_elapsed_seconds,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_correct_maintenance_rows') AS hidden_correct_maintenance_rows,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_successes') AS exact_root_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_rate') AS exact_root_rate\nFROM raw\nCROSS JOIN languages\nORDER BY hidden_success_rate DESC, first_check_success_rate DESC,\n         median_total_tokens ASC;\n",
+          "description": "Deterministic extraction and independent recomputation of language, model, task-kind, gate, execution, token, elapsed, source, incident, and failure summaries from every frozen session.",
+          "executed_at": "2026-08-12T22:43:56.752783Z",
+          "tables_used": [
+            "benchmarks/results/fullstack_agent_040_raw.json",
+            "benchmarks/fullstack_agent_040_protocol.json",
+            "benchmarks/fullstack_agent_040_validation.json",
+            "benchmarks/fullstack_agent_040_audit.json"
+          ],
+          "filters": [
+            "All 96 frozen cells; no exclusions, model-selected subsets, or reruns.",
+            "Four tasks, four languages, two model configurations, three replicates.",
+            "All five ENOSPC-affected cells remain failures under the frozen policy.",
+            "Raw medians retain interrupted zero rows and incident-affected sessions."
+          ],
+          "metric_definitions": [
+            "Raw hidden success: all five withheld cases plus derived browser/server agreement pass; assignments with no hidden execution remain failures.",
+            "Executed hidden case pass: a named withheld case actually ran and matched its exact expected result.",
+            "First check: the first parent-owned public HTTP/browser attempt succeeds; interrupted and ENOSPC attempts remain failures.",
+            "Complete session tokens: Codex input plus output tokens over all 24 frozen rows per language.",
+            "Elapsed seconds: fresh-session wall time, excluding dependency preparation, over all frozen rows.",
+            "Exact root: a hidden-correct maintenance output changes exactly the preregistered defect root with intact workspace integrity.",
+            "Source tokens: o200k_base tokens in final editable application files.",
+            "Strict gate: all six preregistered conditions must pass; one of six passed in 040 and the run is invalidated."
+          ]
+        }
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "layout": "full",
+        "body": "# Independent Full-Stack Agent Study \u2014 Iteration 040"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Technical summary\n\n- **Iteration 040 is invalidated and the strict claim is not established.** Host disk exhaustion affected **5/96** frozen cells, including two permanent interruptions. The raw gate passes only maintainability\u2014**1 of 6** conditions.\n- **No executed hidden semantic case failed.** All **460/460** named hidden cases that actually ran passed, alongside 184 Chromium cases and 92 cross-target checks. Four assignments had no hidden semantic execution, so this diagnostic fact cannot restore correctness or execution-integrity gates.\n- **The raw efficiency thresholds still miss.** Parley's median complete cost was **63,196 tokens**, 4.8113% above Python, and **28.9052 seconds**, 22.1262% above TypeScript.\n- **Compact source and exact-root repair quality persist descriptively.** Parley's median available final source was **669 tokens**, 24.0636\u201356.2459% smaller than the baselines, and its hidden-correct maintenance rows were **10/10** exact-root."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "layout": "full",
+        "cardIds": [
+          "gate_card",
+          "semantic_card",
+          "incident_card",
+          "efficiency_card"
+        ]
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Scope, data, and metrics\n\nThe frozen comparison contains two independent implementation tasks and two independent maintenance tasks in Parley, Python, TypeScript, and Rust. It preregistered 96 fresh cells: four tasks \u00d7 four languages \u00d7 two medium-reasoning model configurations \u00d7 three replicates. Public checks combine builds, HTTP, real Chromium, and browser/server agreement; hidden judgment adds five withheld cases per assignment. Complete tokens are Codex input plus output, elapsed time is whole-session wall time, source size uses `o200k_base`, and exact root requires a hidden-correct maintenance change confined to the preregistered defect root."
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Methodology\n\nThe task/case corpus, six-condition gate, product version, agent contexts, models, stacks, runner, and exact-build controls were frozen in separate commits before measurement. A parent-owned FIFO service evaluated each `./check` outside the agent sandbox and preserved attempts plus immutable start/finish journals. The independent audit recomputed every aggregate from the raw 96-row result and verified external evidence. After disk exhaustion, the frozen resume policy converted started-but-unfinished cells into permanent failures and ran only never-started cells; no affected cell was rerun."
+      },
+      {
+        "id": "verdict",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Key finding: the primary result is failed and invalidated\n\nExecution integrity is a prerequisite, not a caveat to average away. Two cells never acquired a completed thread, three more recorded explicit ENOSPC effects, and required public or hidden execution was incomplete. The once-run policy correctly preserved those outcomes. Therefore the report cannot claim full-stack parity, correctness parity, or efficiency superiority from iteration 040\u2014even though all semantics that actually executed passed."
+      },
+      {
+        "id": "gate_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "gate_table"
+      },
+      {
+        "id": "incident",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## The host incident affected five distinct measurement cells\n\nDisk exhaustion accumulated across disposable native and WebAssembly build workspaces. Two cells were interrupted before completion, two Parley cells lost hidden execution, and one Rust cell lost its public attempt record while later hidden semantics passed. Cleanup removed only inactive scratch build roots from older studies; canonical raw results, journals, attempts, and repository files remained. The incident classification explains the failure but does not erase it."
+      },
+      {
+        "id": "incident_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "incident_table"
+      },
+      {
+        "id": "correctness",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Executed semantics were clean, but assignment correctness was incomplete\n\nThe frozen assignment metric records Parley at **22/24**, Python and Rust at **23/24**, and TypeScript at **24/24**. Those rates mix execution completeness with semantic correctness because missing hidden execution must fail. Separately, the audit found **zero semantic case failure cells**: all 460 named hidden cases that ran passed. This is encouraging evidence for v0.5.2 behavior, but it is not a valid 24/24 comparison and cannot satisfy the preregistered condition."
+      },
+      {
+        "id": "correctness_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "correctness_chart"
+      },
+      {
+        "id": "first",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## First-check outcomes contain one real model error\n\nThe raw first-check rates are Parley **23/24**, Python and Rust **22/24**, and TypeScript **24/24**. Four misses are incident-related or interrupted. The one non-infrastructure model error was Python `rooftop_battery_repair__terra-medium__r3`, whose browser module used the strict-mode reserved identifier `protected`; it passed on the second check and then passed hidden judgment. Parley's v0.5.2 total-conversion and locality target classes did not recur in any completed semantic execution."
+      },
+      {
+        "id": "first_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "first_check_chart"
+      },
+      {
+        "id": "model_failure_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "model_failure_table"
+      },
+      {
+        "id": "language_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "language_table"
+      },
+      {
+        "id": "tokens",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Raw complete-token cost remained above Python\n\nParley's raw median was **63,196** input-plus-output tokens versus Python's **60,295**, a **4.8113%** gap. The gap was also positive in both model strata. Parley remained below TypeScript (**76,178**) and Rust (**102,214.5**). These medians retain every frozen row, including two interrupted zero rows and the ENOSPC-affected sessions; they are published for completeness, not as a valid confirmatory estimate."
+      },
+      {
+        "id": "tokens_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "tokens_chart"
+      },
+      {
+        "id": "elapsed",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Raw elapsed time remained above TypeScript\n\nParley's raw median was **28.9052 seconds** versus TypeScript's **23.6683**, a **22.1262%** gap. Python's median was 27.7607 seconds and Rust's was 52.84495. Parley also trailed TypeScript in both model strata. These are local whole-session measurements on the frozen machine and include incident effects; they are neither application-runtime measurements nor a valid superiority result."
+      },
+      {
+        "id": "elapsed_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "elapsed_chart"
+      },
+      {
+        "id": "source",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Available final Parley source remained the smallest\n\nMedian available final editable source was **669 o200k tokens** in Parley, versus **970 Python, 881 TypeScript, and 1,529 Rust**. Parley was **31.0309%**, **24.0636%**, and **56.2459%** smaller respectively. This is descriptive evidence for representation compactness. It does not substitute for complete-session token cost and cannot restore an invalidated execution."
+      },
+      {
+        "id": "source_chart_block",
+        "type": "chart",
+        "layout": "full",
+        "chartId": "source_chart"
+      },
+      {
+        "id": "maintainability",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Exact-root maintenance passed its frozen condition\n\nEvery hidden-correct Parley maintenance row changed exactly its declared defect root: **10/10**. Python and TypeScript were 12/12; Rust was 11/12 because its ENOSPC-affected bookmobile row passed hidden semantics but did not preserve a qualifying exact-root public result. Maintainability is the sole passing primary condition. The two Parley maintenance rows without hidden execution are excluded only by the condition's preregistered hidden-correct denominator, not from the overall study."
+      },
+      {
+        "id": "configuration_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "configuration_table"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Limitations and robustness\n\nThe audit is reproducible and evidence-complete for what the frozen runner retained: 96 unique cell rows, 96 immutable journal pairs, 94 verified external attempt files, stable repository provenance, and **280/280** stable exact-build hash boundaries. The central limitation is not sampling uncertainty but missing required execution caused by host ENOSPC. The corpus also covers only four small synthetic server-plus-browser contracts, two models, one reasoning setting, one machine, and one toolchain. It does not measure deployment, databases, authentication, accessibility, sustained load, ecosystem breadth, or production maintenance."
+      },
+      {
+        "id": "integrity_block",
+        "type": "table",
+        "layout": "full",
+        "tableId": "integrity_table"
+      },
+      {
+        "id": "next",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Next steps\n\n1. Preserve iteration 040 unchanged; do not rerun, filter, or tune on its population.\n2. Add a generic scratch-capacity preflight, per-cell cleanup policy, and retained-evidence boundary to the benchmark runner before any new measurement.\n3. Regression-test low-space refusal and cleanup using synthetic temporary workspaces, without touching historical evidence.\n4. Freeze a wholly independent iteration 041 corpus only after the runner fix is committed and validated.\n5. Keep the same six-condition gate and publish the full next matrix whether positive, mixed, negative, or invalid."
+      },
+      {
+        "id": "questions",
+        "type": "markdown",
+        "layout": "full",
+        "body": "## Further questions\n\n- Would v0.5.2 preserve complete hidden semantics in an uncontaminated independent run?\n- Which fixed context or build-loop costs explain the remaining 4.8113% raw token gap to Python?\n- Can build artifacts be safely reclaimed per cell while retaining every source snapshot, journal, attempt, and exact-build proof?\n- Does Parley's source compactness persist in larger applications with persistence, authentication, accessibility, deployment, and dependencies?"
+      },
+      {
+        "id": "claim_boundary",
+        "type": "markdown",
+        "layout": "full",
+        "sourceId": "fullstack_agent_evidence_040",
+        "body": "## Claim boundary\n\nIteration 040 establishes neither universal language superiority nor the narrower frozen parity claim. The valid statements are limited to preserved observations: the run was invalidated by host disk exhaustion; all 460 hidden named cases that executed passed; maintainability met its frozen denominator; available Parley source was the smallest; and raw Parley token/time medians still exceeded the best baselines. Even a future clean gate pass would support only its frozen comparison, never \u2018best language in the world for everything.\u2019"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "generatedAt": "2026-08-12T22:43:56.752783Z",
+    "datasets": {
+      "headline": [
+        {
+          "conditions_passed": 1,
+          "conditions_total": 6,
+          "hidden_cases_passed": 460,
+          "hidden_cases_executed": 460,
+          "incident_cells": 5,
+          "interrupted_cells": 2,
+          "token_gap_percent": 4.8113,
+          "elapsed_gap_percent": 22.1262
+        }
+      ],
+      "languages": [
+        {
+          "language": "Parley",
+          "sessions": 24,
+          "hidden_successes": 22,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 23,
+          "first_check_success_rate": 0.9583333333333334,
+          "hidden_correct_maintenance_rows": 10,
+          "exact_root_successes": 10,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 63196.0,
+          "median_elapsed_seconds": 28.9052,
+          "repair_turns": 0,
+          "median_final_o200k_tokens": 669.0,
+          "infrastructure_affected_cells": 2,
+          "workspace_integrity_rows": 24,
+          "post_build_integrity_rows": 24
+        },
+        {
+          "language": "Python",
+          "sessions": 24,
+          "hidden_successes": 23,
+          "hidden_success_rate": 0.9583333333333334,
+          "first_check_successes": 22,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 12,
+          "exact_root_successes": 12,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 60295.0,
+          "median_elapsed_seconds": 27.7607,
+          "repair_turns": 1,
+          "median_final_o200k_tokens": 970.0,
+          "infrastructure_affected_cells": 1,
+          "workspace_integrity_rows": 23,
+          "post_build_integrity_rows": 23
+        },
+        {
+          "language": "TypeScript",
+          "sessions": 24,
+          "hidden_successes": 24,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 24,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 12,
+          "exact_root_successes": 12,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 76178.0,
+          "median_elapsed_seconds": 23.668300000000002,
+          "repair_turns": 0,
+          "median_final_o200k_tokens": 881.0,
+          "infrastructure_affected_cells": 0,
+          "workspace_integrity_rows": 24,
+          "post_build_integrity_rows": 24
+        },
+        {
+          "language": "Rust",
+          "sessions": 24,
+          "hidden_successes": 23,
+          "hidden_success_rate": 0.9583333333333334,
+          "first_check_successes": 22,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 12,
+          "exact_root_successes": 11,
+          "exact_root_rate": 0.9166666666666666,
+          "median_total_tokens": 102214.5,
+          "median_elapsed_seconds": 52.84495,
+          "repair_turns": 0,
+          "median_final_o200k_tokens": 1529.0,
+          "infrastructure_affected_cells": 2,
+          "workspace_integrity_rows": 22,
+          "post_build_integrity_rows": 22
+        }
+      ],
+      "configurations": [
+        {
+          "configuration": "sol-medium",
+          "language": "Parley",
+          "sessions": 12,
+          "hidden_successes": 11,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 5,
+          "exact_root_successes": 5,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 63256.5,
+          "median_elapsed_seconds": 30.637349999999998,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "Python",
+          "sessions": 12,
+          "hidden_successes": 11,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 11,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 59986.5,
+          "median_elapsed_seconds": 26.85145,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "TypeScript",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 76184.0,
+          "median_elapsed_seconds": 24.92915,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "sol-medium",
+          "language": "Rust",
+          "sessions": 12,
+          "hidden_successes": 11,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 10,
+          "first_check_success_rate": 0.8333333333333334,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 5,
+          "exact_root_rate": 0.8333333333333334,
+          "median_total_tokens": 102359.5,
+          "median_elapsed_seconds": 52.185500000000005,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Parley",
+          "sessions": 12,
+          "hidden_successes": 11,
+          "hidden_success_rate": 0.9166666666666666,
+          "first_check_successes": 11,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 5,
+          "exact_root_successes": 5,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 63196.0,
+          "median_elapsed_seconds": 28.073300000000003,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Python",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 11,
+          "first_check_success_rate": 0.9166666666666666,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 60781.5,
+          "median_elapsed_seconds": 28.62665,
+          "repair_turns": 1
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "TypeScript",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 76177.0,
+          "median_elapsed_seconds": 22.5075,
+          "repair_turns": 0
+        },
+        {
+          "configuration": "terra-medium",
+          "language": "Rust",
+          "sessions": 12,
+          "hidden_successes": 12,
+          "hidden_success_rate": 1.0,
+          "first_check_successes": 12,
+          "first_check_success_rate": 1.0,
+          "hidden_correct_maintenance_rows": 6,
+          "exact_root_successes": 6,
+          "exact_root_rate": 1.0,
+          "median_total_tokens": 102207.0,
+          "median_elapsed_seconds": 53.70910000000001,
+          "repair_turns": 0
+        }
+      ],
+      "gates": [
+        {
+          "order": 1,
+          "condition": "Execution integrity",
+          "threshold": "96 unique once-run cells with complete threads, journals, public execution, protected files, exact builds, and transport",
+          "observed": "96 rows and journals, but 94 completed threads; five cells affected by host ENOSPC and no selective reruns",
+          "result": "FAIL"
+        },
+        {
+          "order": 2,
+          "condition": "Hidden correctness",
+          "threshold": "Parley 100% and no lower than every baseline overall, by model, and by kind",
+          "observed": "Raw Parley 22/24 versus TypeScript 24/24; four assignments had no hidden execution, although all 460 executed cases passed",
+          "result": "FAIL"
+        },
+        {
+          "order": 3,
+          "condition": "First public check",
+          "threshold": "Parley no lower than the best baseline overall and by task kind",
+          "observed": "Raw Parley 23/24 versus TypeScript 24/24; the Parley miss was ENOSPC-affected",
+          "result": "FAIL"
+        },
+        {
+          "order": 4,
+          "condition": "Complete session tokens",
+          "threshold": "Parley median no higher than the lowest baseline overall and within each model",
+          "observed": "Raw Parley 63,196 versus Python 60,295 overall, 4.8113% higher; Parley also higher in both model strata",
+          "result": "FAIL"
+        },
+        {
+          "order": 5,
+          "condition": "Elapsed time",
+          "threshold": "Parley median no higher than the lowest baseline overall and within each model",
+          "observed": "Raw Parley 28.9052 s versus TypeScript 23.6683 s overall, 22.1262% higher; Parley also higher in both model strata",
+          "result": "FAIL"
+        },
+        {
+          "order": 6,
+          "condition": "Maintainability",
+          "threshold": "Every hidden-correct Parley repair has exact root; rate no lower than baselines",
+          "observed": "Parley 10/10 exact roots among hidden-correct maintenance rows; Python/TypeScript 12/12 and Rust 11/12",
+          "result": "PASS"
+        }
+      ],
+      "integrity": [
+        {
+          "order": 1,
+          "check": "Frozen result rows",
+          "observed": "96/96 unique cell IDs retained",
+          "status": "PASS"
+        },
+        {
+          "order": 2,
+          "check": "Completed unique threads",
+          "observed": "94/96; two started cells permanently interrupted",
+          "status": "FAIL"
+        },
+        {
+          "order": 3,
+          "check": "Immutable journal pairs",
+          "observed": "96/96 external start/finish pairs hash-verified",
+          "status": "PASS"
+        },
+        {
+          "order": 4,
+          "check": "External public attempt records",
+          "observed": "94/95 embedded attempts hash-verified; one record write hit ENOSPC",
+          "status": "FAIL"
+        },
+        {
+          "order": 5,
+          "check": "Command protocol compliance",
+          "observed": "94/96; interrupted cells never entered a complete command session",
+          "status": "FAIL"
+        },
+        {
+          "order": 6,
+          "check": "Checker and symlink integrity",
+          "observed": "94/96",
+          "status": "FAIL"
+        },
+        {
+          "order": 7,
+          "check": "FIFO transport integrity",
+          "observed": "93/96",
+          "status": "FAIL"
+        },
+        {
+          "order": 8,
+          "check": "Required public execution",
+          "observed": "92/96 assignments; 372 named, 93 Chromium, 93 agreement checks",
+          "status": "FAIL"
+        },
+        {
+          "order": 9,
+          "check": "Final public check",
+          "observed": "92/96",
+          "status": "FAIL"
+        },
+        {
+          "order": 10,
+          "check": "Hidden judgment completeness",
+          "observed": "92/96 assignments; all 460 executed named cases passed",
+          "status": "FAIL"
+        },
+        {
+          "order": 11,
+          "check": "Immediate exact-build hashes",
+          "observed": "280/280 command boundaries stable; 277 commands succeeded",
+          "status": "PASS"
+        },
+        {
+          "order": 12,
+          "check": "Repository and provenance stable",
+          "observed": "commit 2820f4e; post-run state identical",
+          "status": "PASS"
+        }
+      ],
+      "incident_cells": [
+        {
+          "order": 1,
+          "cell": "museum_rotation_build__rust__sol-medium__r2",
+          "language": "Rust",
+          "phase": "Session",
+          "effect": "Started but interrupted; no thread or public/hidden execution"
+        },
+        {
+          "order": 2,
+          "cell": "harbor_signal_build__python__sol-medium__r2",
+          "language": "Python",
+          "phase": "Session",
+          "effect": "Started but interrupted; no thread or public/hidden execution"
+        },
+        {
+          "order": 3,
+          "cell": "bookmobile_loading_repair__parley__sol-medium__r2",
+          "language": "Parley",
+          "phase": "Hidden build",
+          "effect": "Public pass retained; hidden build failed with ENOSPC"
+        },
+        {
+          "order": 4,
+          "cell": "rooftop_battery_repair__parley__terra-medium__r2",
+          "language": "Parley",
+          "phase": "Public and hidden build",
+          "effect": "Both build phases failed with ENOSPC"
+        },
+        {
+          "order": 5,
+          "cell": "bookmobile_loading_repair__rust__sol-medium__r3",
+          "language": "Rust",
+          "phase": "Public record",
+          "effect": "Public broker record hit ENOSPC; later hidden semantics passed"
+        }
+      ],
+      "model_failures": [
+        {
+          "category": "JavaScript reserved identifier, then repaired",
+          "count": 1,
+          "cell": "rooftop_battery_repair__python__terra-medium__r3",
+          "cause": "browser.js used strict-mode reserved identifier `protected`; the second public check and hidden judgment passed"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "fullstack_agent_evidence_040",
+      "label": "Complete frozen iteration 040 result, protocol, and independent audit",
+      "path": "benchmarks/results/fullstack_agent_040_raw.json",
+      "query": {
+        "engine": "Python 3.14 and SQLite JSON1",
+        "language": "SQL and Python",
+        "sql": "-- Canonical language-level extraction for iteration 040.\n-- Run from the repository root with SQLite JSON1 available.\nWITH raw AS (\n    SELECT json(readfile('benchmarks/results/fullstack_agent_040_raw.json')) AS body\n),\nlanguages(language) AS (\n    VALUES ('parley'), ('python'), ('typescript'), ('rust')\n)\nSELECT\n    language,\n    json_extract(body, '$.summary.by_language.' || language || '.sessions') AS sessions,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_successes') AS hidden_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_success_rate') AS hidden_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_successes') AS first_check_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.first_check_success_rate') AS first_check_success_rate,\n    json_extract(body, '$.summary.by_language.' || language || '.median_total_tokens') AS median_total_tokens,\n    json_extract(body, '$.summary.by_language.' || language || '.median_elapsed_seconds') AS median_elapsed_seconds,\n    json_extract(body, '$.summary.by_language.' || language || '.hidden_correct_maintenance_rows') AS hidden_correct_maintenance_rows,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_successes') AS exact_root_successes,\n    json_extract(body, '$.summary.by_language.' || language || '.exact_root_rate') AS exact_root_rate\nFROM raw\nCROSS JOIN languages\nORDER BY hidden_success_rate DESC, first_check_success_rate DESC,\n         median_total_tokens ASC;\n",
+        "description": "Deterministic extraction and independent recomputation of language, model, task-kind, gate, execution, token, elapsed, source, incident, and failure summaries from every frozen session.",
+        "executed_at": "2026-08-12T22:43:56.752783Z",
+        "tables_used": [
+          "benchmarks/results/fullstack_agent_040_raw.json",
+          "benchmarks/fullstack_agent_040_protocol.json",
+          "benchmarks/fullstack_agent_040_validation.json",
+          "benchmarks/fullstack_agent_040_audit.json"
+        ],
+        "filters": [
+          "All 96 frozen cells; no exclusions, model-selected subsets, or reruns.",
+          "Four tasks, four languages, two model configurations, three replicates.",
+          "All five ENOSPC-affected cells remain failures under the frozen policy.",
+          "Raw medians retain interrupted zero rows and incident-affected sessions."
+        ],
+        "metric_definitions": [
+          "Raw hidden success: all five withheld cases plus derived browser/server agreement pass; assignments with no hidden execution remain failures.",
+          "Executed hidden case pass: a named withheld case actually ran and matched its exact expected result.",
+          "First check: the first parent-owned public HTTP/browser attempt succeeds; interrupted and ENOSPC attempts remain failures.",
+          "Complete session tokens: Codex input plus output tokens over all 24 frozen rows per language.",
+          "Elapsed seconds: fresh-session wall time, excluding dependency preparation, over all frozen rows.",
+          "Exact root: a hidden-correct maintenance output changes exactly the preregistered defect root with intact workspace integrity.",
+          "Source tokens: o200k_base tokens in final editable application files.",
+          "Strict gate: all six preregistered conditions must pass; one of six passed in 040 and the run is invalidated."
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "benchmarks/results",
+    "manifestPath": "040-independent-fullstack-study-invalidated.artifact.json",
+    "snapshotPath": "fullstack_agent_040_raw.json",
+    "originUrl": "artifact://parley-fullstack-agent-040"
+  }
+}
