@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "experiment_id": "043",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "wildfire_drone_build",
+  "language": "python",
+  "protocol_sha256": "4027a144f10e346a1505c55c30fb3490c48c5a81ab41d042a2ca2a24d0b14642",
+  "provenance_sha256": "79b5caf25a8da9e47772f3396d3d28ca0efeb6ff03187521e9dc45b30fb4f4a5",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}
