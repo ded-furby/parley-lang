@@ -4792,3 +4792,25 @@ runner change, or measured session.
 
 Next: commit the semantics-only population, then preregister the balanced
 matrix and exact execution controls before building the harness.
+
+### 044 balanced v0.5.5 protocol preregistered
+
+- Corpus commit: `cef46dcdf70183e2c64e235bf9699184ba166eb5`
+- Protocol: `benchmarks/fullstack_agent_044_protocol.json`
+- Protocol SHA-256:
+  `9a2d25d1e8c90e686c972ed18b34096780efde950057fd2b27244408159c3da4`
+- Frozen product: v0.5.5 at
+  `a098996847927c4eb622e2af8d0b7ebee81011c6`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The protocol binds the unchanged token-winning 222-token context and accepted
+70.5496% dependency-free cold-build result without treating the product
+benchmark as an agent outcome. The language, model, reasoning, replicate,
+public/hidden case, exact-build, parent-owned browser/HTTP, immutable journal,
+scratch, six-condition gate, exclusion, and no-rerun rules remain as strict as
+043. No 044 scaffold, reference implementation, runner, or measured session
+exists.
+
+Next: commit the preregistration, then implement and clean-room validate the 16
+stack/task cells before a final zero-session execution freeze.

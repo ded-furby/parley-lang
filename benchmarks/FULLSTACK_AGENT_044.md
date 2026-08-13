@@ -55,3 +55,20 @@ selective reruns or correctness-conditioned efficiency filtering.
 Next: commit this semantics-only boundary, then preregister the balanced
 matrix, strict six-condition gate, v0.5.5 product, context, scratch budget,
 evidence order, and no-rerun behavior before implementing any 044 scaffold.
+
+## Preregistered comparison
+
+Revision 1 of `fullstack_agent_044_protocol.json` is frozen with SHA-256
+`9a2d25d1e8c90e686c972ed18b34096780efde950057fd2b27244408159c3da4`.
+It binds v0.5.5 commit `a098996`, corpus commit `cef46dc`, the unchanged
+222-token context, four languages, sol-medium and terra-medium, three
+replicates, and 96 fresh sessions. It preserves the strict all-six gate overall
+and by its registered model/task-kind strata.
+
+The protocol retains the 8 GiB host reserve plus 2 GiB per worker, four-worker
+16 GiB preflight, durable evidence-before-cleanup ordering, permanent failure
+for started interruptions, parent-owned HTTP/Chromium judgment, immediate
+post-build hashes, and the no-rerun rule. No scaffold, reference application,
+runner, or measured session exists at this checkpoint. Those may now be built
+and validated, but task semantics, compiler/context, models, metrics,
+thresholds, and gate may not change.

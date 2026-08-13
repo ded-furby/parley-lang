@@ -10,6 +10,8 @@ BENCHMARKS = REPO / "benchmarks"
 TASKS = BENCHMARKS / "fullstack_agent_044_tasks.json"
 CASES = BENCHMARKS / "fullstack_agent_044_cases.json"
 BUILDER = BENCHMARKS / "freeze_fullstack_agent_044_corpus.py"
+PROTOCOL = BENCHMARKS / "fullstack_agent_044_protocol.json"
+PROTOCOL_BUILDER = BENCHMARKS / "freeze_fullstack_agent_044_protocol.py"
 
 
 def sha256(path: Path) -> str:
@@ -186,3 +188,57 @@ def test_fullstack_044_corpus_builder_is_deterministic(tmp_path):
     assert completed.returncode == 0, completed.stderr
     assert tasks_output.read_bytes() == TASKS.read_bytes()
     assert cases_output.read_bytes() == CASES.read_bytes()
+
+
+def test_fullstack_044_protocol_preregisters_matrix_gate_and_scratch_boundary():
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    product = protocol["frozen_product"]
+    scratch = protocol["scratch_space_control"]
+
+    assert sha256(PROTOCOL) == "9a2d25d1e8c90e686c972ed18b34096780efde950057fd2b27244408159c3da4"
+    assert protocol["protocol_revision"] == 1
+    assert protocol["experiment_id"] == "044"
+    assert "execution_freeze" not in protocol
+    assert product["parley_version"] == "parley 0.5.5"
+    assert product["product_commit"] == "a098996847927c4eb622e2af8d0b7ebee81011c6"
+    assert product["corpus_commit"] == "cef46dcdf70183e2c64e235bf9699184ba166eb5"
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_context_file", "parley_context_sha256"),
+        ("product_freeze_file", "product_freeze_sha256"),
+        ("build_analysis_file", "build_analysis_sha256"),
+    ):
+        assert sha256(REPO / product[file_key]) == product[hash_key]
+    assert product["parley_context_o200k_tokens"] == 222
+    assert product["frozen_build_improvement_percent"] == 70.5496
+    assert protocol["matrix"]["fresh_sessions"] == 96
+    assert protocol["matrix"]["hidden_case_executions"] == 480
+    assert protocol["frozen_config"]["languages"] == [
+        "parley", "python", "typescript", "rust"
+    ]
+    assert protocol["frozen_config"]["max_workers"] == scratch["max_workers"] == 4
+    assert scratch["required_free_bytes"] == 16 * 1024**3
+    assert "before journal initialization" in scratch["preflight_timing"]
+    assert "before removing" in scratch["cleanup_order"]
+    assert "never authorizes a rerun" in scratch["failure_policy"]
+    assert set(protocol["primary_gate"]) == {
+        "execution_integrity", "correctness", "first_check", "tokens",
+        "elapsed", "maintainability", "verdict",
+    }
+    assert "implemented only after this protocol commit" in protocol["implementation_rule"]
+    assert "outside iteration 044" in protocol["stop_rule"]
+
+
+def test_fullstack_044_protocol_builder_is_deterministic(tmp_path):
+    output = tmp_path / "protocol.json"
+    completed = subprocess.run(
+        [sys.executable, str(PROTOCOL_BUILDER), "--output", str(output)],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == PROTOCOL.read_bytes()
