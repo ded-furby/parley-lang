@@ -492,7 +492,10 @@ lower and 12.5438% faster than Python, with both token and elapsed thresholds
 also passing separately under sol-medium and terra-medium. The independent
 audit verified every external evidence file and all 480 hidden named cases.
 The result remains limited to this frozen synthetic population and does not
-establish universal superiority.
+establish universal superiority. The canonical
+[artifact](reports/044-independent-fullstack-study-gate-passed.artifact.json)
+and [portable report](reports/044-independent-fullstack-study-gate-passed.html)
+preserve the audited result and claim boundary.
 
 ## Versioned benchmark reports
 

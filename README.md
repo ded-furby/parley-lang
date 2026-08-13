@@ -636,7 +636,9 @@ passed 24/24 hidden assignments, Parley passed 24/24 first checks and 12/12
 exact maintenance roots, and its 60,103.5-token / 23.4006-second medians were
 1.0072% lower-token and 12.5438% faster than Python while remaining lower in
 both model strata. This is scoped synthetic full-stack evidence, not a claim
-of universal superiority.
+of universal superiority. See the [study record](benchmarks/FULLSTACK_AGENT_044.md),
+[canonical artifact](benchmarks/reports/044-independent-fullstack-study-gate-passed.artifact.json),
+and [portable report](benchmarks/reports/044-independent-fullstack-study-gate-passed.html).
 
 ## Development
 

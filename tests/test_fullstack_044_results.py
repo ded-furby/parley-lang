@@ -9,6 +9,8 @@ REPO = Path(__file__).resolve().parents[1]
 BENCHMARKS = REPO / "benchmarks"
 RAW = BENCHMARKS / "fullstack_agent_044_raw.json"
 AUDIT = BENCHMARKS / "fullstack_agent_044_audit.json"
+REPORT = BENCHMARKS / "reports/044-independent-fullstack-study-gate-passed.artifact.json"
+PORTABLE = BENCHMARKS / "reports/044-independent-fullstack-study-gate-passed.html"
 
 
 def sha256(path: Path) -> str:
@@ -109,3 +111,56 @@ def test_fullstack_044_committed_audit_verified_external_evidence():
         "median_elapsed_seconds"
     ] == 25.42465
     assert audit["median_final_source"]["parley"]["o200k_base_tokens"] == 779.0
+
+
+def test_fullstack_044_report_preserves_passed_gate_and_claim_boundary():
+    report = json.loads(REPORT.read_text(encoding="utf-8"))
+
+    assert sha256(REPORT) == (
+        "098060de1e65c35d0027aff013a9c7ea0b9b71832527bcc675b0b0f133c68a25"
+    )
+    assert report["surface"] == "report"
+    assert report["snapshot"]["status"] == "ready"
+    assert report["manifest"]["title"] == (
+        "Independent Full-Stack Agent Study — Iteration 044"
+    )
+    datasets = report["snapshot"]["datasets"]
+    assert [row["result"] for row in datasets["gates"]] == ["PASS"] * 6
+    assert datasets["headline"][0] == {
+        "conditions_passed": 6,
+        "conditions_total": 6,
+        "hidden_assignments_passed": 96,
+        "hidden_assignments_total": 96,
+        "parley_first_checks": 24,
+        "parley_first_check_total": 24,
+        "token_advantage_percent": 1.0072,
+        "overall_elapsed_advantage_percent": 12.5438,
+        "terra_elapsed_advantage_percent": 7.961,
+    }
+    limitations = next(
+        block for block in report["manifest"]["blocks"]
+        if block["id"] == "limitations"
+    )
+    assert "does **not** establish universal language superiority" in (
+        limitations["body"]
+    )
+    assert sha256(PORTABLE) == (
+        "1b4f311baf5a34a6e6019bd4c539885a68605ca2992f31bf21a5560e6e5f7fa8"
+    )
+    html = PORTABLE.read_text(encoding="utf-8")
+    assert "Verdict: the frozen six-condition gate passed" in html
+    assert "not proof of universal language superiority" in html
+
+
+def test_fullstack_044_report_builder_is_deterministic():
+    before = sha256(REPORT)
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_044_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert sha256(REPORT) == before

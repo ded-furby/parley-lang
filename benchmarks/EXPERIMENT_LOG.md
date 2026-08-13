@@ -4856,3 +4856,21 @@ zero retained disposable bytes. This is scoped evidence for the frozen 044
 population—not proof of universal language superiority. Next: publish a
 canonical portable report, then select a materially broader independent phase
 without tuning on 044.
+
+### 044 canonical report published
+
+- Artifact:
+  `benchmarks/reports/044-independent-fullstack-study-gate-passed.artifact.json`
+- Artifact SHA-256:
+  `098060de1e65c35d0027aff013a9c7ea0b9b71832527bcc675b0b0f133c68a25`
+- Portable report:
+  `benchmarks/reports/044-independent-fullstack-study-gate-passed.html`
+- Portable report SHA-256:
+  `1b4f311baf5a34a6e6019bd4c539885a68605ca2992f31bf21a5560e6e5f7fa8`
+
+The report exposes all six passed gate conditions, complete language/model
+tables, exact evidence-integrity counts, scratch lifecycle, and the explicit
+non-universal claim boundary. The portable delivery passed schema validation,
+static-chart packaging, source-dialog interaction, and browser verification at
+1440 px and 390 px. Next: keep 044 immutable and freeze a broader independent
+phase before using its outcomes to guide any product change.
