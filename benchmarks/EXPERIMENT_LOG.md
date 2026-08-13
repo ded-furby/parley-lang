@@ -4943,3 +4943,25 @@ release wheel without treating any of them as an agent outcome. No 045 domain,
 route, field, formula, case, scaffold, comparison threshold, or model output
 exists. Next: commit this product freeze, then independently select and hash a
 disjoint 045 semantics-only population.
+
+### 045 dynamic-response semantics-only corpus frozen
+
+- Preceding product-freeze commit:
+  `6b39eeffca34c7a9b05e1596eb8e8b4d3272a8e4`
+- Tasks: `benchmarks/fullstack_agent_045_tasks.json`
+- Tasks SHA-256:
+  `39c76f1a4a5e02d5afde27b8e010bc9fb5f75ea670a04c89063eb1cdb160aebb`
+- Cases: `benchmarks/fullstack_agent_045_cases.json`
+- Cases SHA-256:
+  `99d255b2e49153a99900775ac3d947336abf7fb415ffb4186dc1c7b8710e755b`
+- Design record: `benchmarks/FULLSTACK_AGENT_045.md`
+
+The new artifact-accession, microgrid-bid, trail-permit, and cold-chain
+population has 36 cases spanning dynamic 200/201/202/401/409/422 outcomes,
+generated 400/415 failures, nine application/authentication/location/retry/
+validation/conflict header names, and browser cross-target rules. Task IDs,
+case IDs, fields, routes, exports, and formulas are disjoint from 036--044.
+The two route-handler defects are publicly observable. This checkpoint has no
+045 scaffold, stack implementation, comparison threshold, prompt, or model
+output. Next: commit the corpus, then preregister execution before building the
+harness.

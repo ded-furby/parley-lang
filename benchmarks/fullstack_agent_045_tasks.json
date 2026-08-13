@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "description": "Two dynamic-response implementations and two route-handler repairs, frozen after the v0.5.6 product checkpoint and before scaffolds, reference implementations, protocol thresholds, or model output.",
+  "frozen_on": "2026-08-13",
+  "product_freeze_commit": "6b39eeffca34c7a9b05e1596eb8e8b4d3272a8e4",
+  "product_freeze_sha256": "49e1ee43ce014e3888a193442e426269f7bdf19b0403ab29a2b3a40505596216",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. The POST route uses the frozen dynamic status/header/body response envelope. Request header names are compared case-insensitively.",
+    "request_precedence": "Typed JSON decoding precedes handler authorization and domain decisions. Malformed JSON, missing/unknown fields, and wrong JSON types therefore return the generated 400 invalid_json response before a typed envelope.",
+    "transport_errors": "Return 415 json_content_type_required without application/json and 413 body_too_large above 16384 bytes.",
+    "dynamic_response": "Return the exact task status, JSON body, and custom headers. Content-Type, Content-Length, Connection, and X-Content-Type-Options remain server-owned.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "For an authorized, domain-valid request, the response field named by shared_result_field equals the browser export for the same numeric/boolean inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "body_limit_bytes": 16384,
+    "response_envelope": {
+      "status_field": "status",
+      "headers_field": "headers",
+      "body_field": "body"
+    }
+  },
+  "tasks": [
+    {
+      "id": "artifact_accession_build",
+      "kind": "implementation",
+      "title": "Build an authenticated artifact accession workflow",
+      "statement": "Implement the frozen Artifact Accession contract. The POST route requires Authorization: Bearer accession-045; otherwise return 401 with www-authenticate Bearer realm=artifact-accession and accession_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. A positive artifact_total with zero packing_stations returns 422 with x-validation packing_stations. Otherwise artifact_total is stable_units + fragile_units. packing_units is stable_units * 6 + fragile_units * 11 plus packing_stations * 4 when expedited. capacity_units is packing_stations * 40. overflow_units is max(packing_units - capacity_units, 0). inspection_rounds is artifact_total divided by 5 using floor division. priority_score is packing_units + overflow_units * 5 + inspection_rounds * 7. accession_state is accepted when overflow is zero and queued otherwise. Success returns 201 with location /api/v9/artifact-accessions/{accession_key} and x-accession-state. The browser export returns priority_score. Failure bodies use the request key and zero for all numeric result fields.",
+      "service": "Artifact Accession",
+      "status_route": "/status/artifact-accession-ready",
+      "post_route": "/api/v9/artifact-accessions",
+      "browser_export": "artifact_priority_score",
+      "browser_fields": [
+        "stable_units",
+        "fragile_units",
+        "packing_stations",
+        "expedited"
+      ],
+      "shared_result_field": "priority_score",
+      "request_fields": {
+        "accession_key": "text",
+        "stable_units": "number",
+        "fragile_units": "number",
+        "packing_stations": "number",
+        "expedited": "yesno"
+      },
+      "response_fields": {
+        "accession_key": "text",
+        "artifact_total": "number",
+        "packing_units": "number",
+        "capacity_units": "number",
+        "overflow_units": "number",
+        "inspection_rounds": "number",
+        "priority_score": "number",
+        "accession_state": "text"
+      },
+      "authorization": {
+        "header": "authorization",
+        "value": "Bearer accession-045",
+        "failure_status": 401,
+        "failure_headers": {
+          "www-authenticate": "Bearer realm=artifact-accession"
+        }
+      },
+      "success_status": 201,
+      "independence": "New authenticated artifact-accession workflow, v9 routes, response statuses, headers, formulas, vocabulary, fixtures, and browser export selected after the v0.5.6 product freeze and before any 045 scaffold or model output.",
+      "public_case_ids": [
+        "artifact_accession_status",
+        "artifact_accession_primary",
+        "artifact_accession_wrong_fragile_type",
+        "artifact_accession_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "artifact_accession_unauthorized",
+        "artifact_accession_zero_stations",
+        "artifact_accession_unknown_field",
+        "artifact_accession_browser_hidden_1",
+        "artifact_accession_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "microgrid_bid_build",
+      "kind": "implementation",
+      "title": "Build an authenticated asynchronous microgrid bid workflow",
+      "statement": "Implement the frozen Microgrid Bid contract. The POST route requires x-grid-key: grid-045; otherwise return 401 with www-authenticate GridKey and bid_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. Positive generation with zero interconnects returns 422 with x-validation interconnects. A duplicate_bid returns 409 with x-conflict duplicate_bid. Otherwise generation_units is solar_arrays * 9 + wind_turbines * 13. battery_buffer_units is storage_banks * 7 during emergency_mode and storage_banks * 3 otherwise. grid_required_units is generation + buffer. grid_capacity_units is interconnects * 55. delivered_units is the minimum of required and capacity. shortfall_units is max(required - capacity, 0). dispatch_windows is grid_required_units divided by 31 using floor division. bid_score is delivered_units + shortfall_units * 4 + dispatch_windows * 9. bid_state is accepted when shortfall is zero, emergency_shortfall during emergency mode, and routine_shortfall otherwise. Success returns 202 with location /api/v9/microgrid-bids/{bid_key}, retry-after 3, and x-bid-state. The browser export returns bid_score. Failure bodies use the request key and zero numeric fields.",
+      "service": "Microgrid Bid",
+      "status_route": "/status/microgrid-bid-ready",
+      "post_route": "/api/v9/microgrid-bids",
+      "browser_export": "microgrid_bid_score",
+      "browser_fields": [
+        "solar_arrays",
+        "wind_turbines",
+        "storage_banks",
+        "interconnects",
+        "emergency_mode"
+      ],
+      "shared_result_field": "bid_score",
+      "request_fields": {
+        "bid_key": "text",
+        "solar_arrays": "number",
+        "wind_turbines": "number",
+        "storage_banks": "number",
+        "interconnects": "number",
+        "emergency_mode": "yesno",
+        "duplicate_bid": "yesno"
+      },
+      "response_fields": {
+        "bid_key": "text",
+        "generation_units": "number",
+        "battery_buffer_units": "number",
+        "grid_required_units": "number",
+        "grid_capacity_units": "number",
+        "delivered_units": "number",
+        "shortfall_units": "number",
+        "dispatch_windows": "number",
+        "bid_score": "number",
+        "bid_state": "text"
+      },
+      "authorization": {
+        "header": "x-grid-key",
+        "value": "grid-045",
+        "failure_status": 401,
+        "failure_headers": {
+          "www-authenticate": "GridKey"
+        }
+      },
+      "success_status": 202,
+      "independence": "New authenticated asynchronous microgrid-bid workflow, v9 routes, conflict and validation branches, headers, formulas, vocabulary, fixtures, and browser export selected after the v0.5.6 product freeze.",
+      "public_case_ids": [
+        "microgrid_bid_status",
+        "microgrid_bid_primary",
+        "microgrid_bid_wrong_media",
+        "microgrid_bid_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "microgrid_bid_duplicate",
+        "microgrid_bid_zero_interconnect",
+        "microgrid_bid_unknown_field",
+        "microgrid_bid_browser_hidden_1",
+        "microgrid_bid_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "trail_permit_repair",
+      "kind": "maintenance",
+      "title": "Repair authorization polarity in a trail permit workflow",
+      "statement": "Repair the supplied Trail Permit application. The POST route requires Authorization: Bearer trail-045; otherwise return 401 with www-authenticate Bearer realm=trail-permit and permit_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. Positive visitor_total with zero trail_guides returns 422 with x-validation trail_guides. Otherwise visitor_total is day_hikers + overnight_hikers. trail_units is day_hikers * 5 + overnight_hikers * 12 plus trail_guides * 6 during storm_alert. guide_capacity_units is trail_guides * 38. admitted_units is min(trail_units, capacity). waiting_units is max(trail_units - capacity, 0). permit_score is admitted_units + waiting_units * 6. permit_state is issued when waiting is zero, storm_queue during a storm, and routine_queue otherwise. Success returns 200 with x-permit-state. The browser export returns permit_score. Failure bodies use the request code and zero numeric fields.",
+      "service": "Trail Permit",
+      "status_route": "/status/trail-permit-ready",
+      "post_route": "/api/v9/trail-permits",
+      "browser_export": "trail_permit_score",
+      "browser_fields": [
+        "day_hikers",
+        "overnight_hikers",
+        "trail_guides",
+        "storm_alert"
+      ],
+      "shared_result_field": "permit_score",
+      "request_fields": {
+        "permit_code": "text",
+        "day_hikers": "number",
+        "overnight_hikers": "number",
+        "trail_guides": "number",
+        "storm_alert": "yesno"
+      },
+      "response_fields": {
+        "permit_code": "text",
+        "visitor_total": "number",
+        "trail_units": "number",
+        "guide_capacity_units": "number",
+        "admitted_units": "number",
+        "waiting_units": "number",
+        "permit_score": "number",
+        "permit_state": "text"
+      },
+      "authorization": {
+        "header": "authorization",
+        "value": "Bearer trail-045",
+        "failure_status": 401,
+        "failure_headers": {
+          "www-authenticate": "Bearer realm=trail-permit"
+        }
+      },
+      "success_status": 200,
+      "predeclared_defect": "The route-handler module reverses the bearer-token comparison, denying the correct token and allowing an incorrect token.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic authorization-polarity inversion defect",
+      "adaptation_boundary": "The authorization polarity, trail-permit workflow, v9 routes, statuses, headers, formulas, fixtures, and expected repair were selected only after the v0.5.6 product freeze.",
+      "public_case_ids": [
+        "trail_permit_status",
+        "trail_permit_primary",
+        "trail_permit_missing_guides",
+        "trail_permit_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "trail_permit_unauthorized",
+        "trail_permit_zero_guides",
+        "trail_permit_unknown_field",
+        "trail_permit_browser_hidden_1",
+        "trail_permit_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "cold_chain_booking_repair",
+      "kind": "maintenance",
+      "title": "Repair a server-owned header in a cold-chain booking workflow",
+      "statement": "Repair the supplied Cold-Chain Booking application. Negative numeric inputs return 422 with x-validation nonnegative. A positive shipment_total with zero loading_docks returns 422 with x-validation loading_docks. Otherwise shipment_total is chilled_crates + frozen_crates. cooling_units is chilled_crates * 7 + frozen_crates * 15 plus loading_docks * 5 during rush_load. dock_capacity_units is loading_docks * 44. loaded_units is min(cooling_units, capacity). deferred_units is max(cooling_units - capacity, 0). loading_rounds is shipment_total divided by 6 using floor division. booking_score is loaded_units + deferred_units * 5 + loading_rounds * 8. booking_state is booked when deferred is zero, rush_queue during rush load, and routine_queue otherwise. Success returns 201 with location /api/v9/cold-chain-bookings/{booking_code} and x-booking-state. The browser export returns booking_score. Validation bodies use the request code and zero numeric fields.",
+      "service": "Cold-Chain Booking",
+      "status_route": "/status/cold-chain-booking-ready",
+      "post_route": "/api/v9/cold-chain-bookings",
+      "browser_export": "cold_chain_booking_score",
+      "browser_fields": [
+        "chilled_crates",
+        "frozen_crates",
+        "loading_docks",
+        "rush_load"
+      ],
+      "shared_result_field": "booking_score",
+      "request_fields": {
+        "booking_code": "text",
+        "chilled_crates": "number",
+        "frozen_crates": "number",
+        "loading_docks": "number",
+        "rush_load": "yesno"
+      },
+      "response_fields": {
+        "booking_code": "text",
+        "shipment_total": "number",
+        "cooling_units": "number",
+        "dock_capacity_units": "number",
+        "loaded_units": "number",
+        "deferred_units": "number",
+        "loading_rounds": "number",
+        "booking_score": "number",
+        "booking_state": "text"
+      },
+      "success_status": 201,
+      "predeclared_defect": "The route-handler module writes the generated Location value under the server-owned content-length header, so valid creation responses become 500 invalid_response_headers instead of 201.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic server-owned response-header substitution defect",
+      "adaptation_boundary": "The reserved-header defect, cold-chain workflow, v9 routes, formulas, fixtures, and expected repair were selected only after the v0.5.6 product freeze.",
+      "public_case_ids": [
+        "cold_chain_booking_status",
+        "cold_chain_booking_primary",
+        "cold_chain_wrong_dock_type",
+        "cold_chain_booking_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "cold_chain_negative_crates",
+        "cold_chain_rush_queue",
+        "cold_chain_booking_unknown_field",
+        "cold_chain_booking_browser_hidden_1",
+        "cold_chain_booking_browser_hidden_2"
+      ]
+    }
+  ]
+}

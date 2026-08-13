@@ -1,0 +1,753 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "visibility_policy": "Prompts expose only public case IDs and expected outcomes. Hidden cases remain parent-owned and are never placed in agent workspaces.",
+  "tasks": {
+    "artifact_accession_build": [
+      {
+        "id": "artifact_accession_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/artifact-accession-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Artifact Accession",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "artifact_accession_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/artifact-accessions",
+        "json": {
+          "accession_key": "bronze-lyre",
+          "stable_units": 3,
+          "fragile_units": 2,
+          "packing_stations": 2,
+          "expedited": true
+        },
+        "request_headers": {
+          "authorization": "Bearer accession-045"
+        },
+        "expected_status": 201,
+        "expected_json": {
+          "accession_key": "bronze-lyre",
+          "artifact_total": 5,
+          "packing_units": 48,
+          "capacity_units": 80,
+          "overflow_units": 0,
+          "inspection_rounds": 1,
+          "priority_score": 55,
+          "accession_state": "accepted"
+        },
+        "expected_headers": {
+          "location": "/api/v9/artifact-accessions/bronze-lyre",
+          "x-accession-state": "accepted"
+        }
+      },
+      {
+        "id": "artifact_accession_wrong_fragile_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "accession_key": "bronze-lyre",
+          "stable_units": 3,
+          "fragile_units": true,
+          "packing_stations": 2,
+          "expedited": true
+        },
+        "request_headers": {
+          "authorization": "Bearer accession-045"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "artifact_accession_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "artifact_priority_score",
+        "args": [
+          3,
+          2,
+          2,
+          true
+        ],
+        "expected": 55
+      },
+      {
+        "id": "artifact_accession_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/artifact-accessions",
+        "json": {
+          "accession_key": "bronze-lyre",
+          "stable_units": 3,
+          "fragile_units": 2,
+          "packing_stations": 2,
+          "expedited": true
+        },
+        "request_headers": {},
+        "expected_status": 401,
+        "expected_json": {
+          "accession_key": "bronze-lyre",
+          "artifact_total": 0,
+          "packing_units": 0,
+          "capacity_units": 0,
+          "overflow_units": 0,
+          "inspection_rounds": 0,
+          "priority_score": 0,
+          "accession_state": "authorization_required"
+        },
+        "expected_headers": {
+          "www-authenticate": "Bearer realm=artifact-accession"
+        }
+      },
+      {
+        "id": "artifact_accession_zero_stations",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/artifact-accessions",
+        "json": {
+          "accession_key": "marble-4",
+          "stable_units": 2,
+          "fragile_units": 1,
+          "packing_stations": 0,
+          "expedited": false
+        },
+        "request_headers": {
+          "authorization": "Bearer accession-045"
+        },
+        "expected_status": 422,
+        "expected_json": {
+          "accession_key": "marble-4",
+          "artifact_total": 0,
+          "packing_units": 0,
+          "capacity_units": 0,
+          "overflow_units": 0,
+          "inspection_rounds": 0,
+          "priority_score": 0,
+          "accession_state": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "packing_stations"
+        }
+      },
+      {
+        "id": "artifact_accession_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/artifact-accessions",
+        "json": {
+          "accession_key": "bronze-lyre",
+          "stable_units": 3,
+          "fragile_units": 2,
+          "packing_stations": 2,
+          "expedited": true,
+          "gallery_code": "west"
+        },
+        "request_headers": {
+          "authorization": "Bearer accession-045"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "artifact_accession_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "artifact_priority_score",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 17
+      },
+      {
+        "id": "artifact_accession_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "artifact_priority_score",
+        "args": [
+          6,
+          4,
+          1,
+          true
+        ],
+        "expected": 318
+      }
+    ],
+    "microgrid_bid_build": [
+      {
+        "id": "microgrid_bid_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/microgrid-bid-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Microgrid Bid",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "microgrid_bid_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/microgrid-bids",
+        "json": {
+          "bid_key": "sunset-7",
+          "solar_arrays": 3,
+          "wind_turbines": 2,
+          "storage_banks": 2,
+          "interconnects": 2,
+          "emergency_mode": true,
+          "duplicate_bid": false
+        },
+        "request_headers": {
+          "x-grid-key": "grid-045"
+        },
+        "expected_status": 202,
+        "expected_json": {
+          "bid_key": "sunset-7",
+          "generation_units": 53,
+          "battery_buffer_units": 14,
+          "grid_required_units": 67,
+          "grid_capacity_units": 110,
+          "delivered_units": 67,
+          "shortfall_units": 0,
+          "dispatch_windows": 2,
+          "bid_score": 85,
+          "bid_state": "accepted"
+        },
+        "expected_headers": {
+          "location": "/api/v9/microgrid-bids/sunset-7",
+          "retry-after": "3",
+          "x-bid-state": "accepted"
+        }
+      },
+      {
+        "id": "microgrid_bid_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "request_headers": {
+          "x-grid-key": "grid-045"
+        },
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "microgrid_bid_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "microgrid_bid_score",
+        "args": [
+          3,
+          2,
+          2,
+          2,
+          true
+        ],
+        "expected": 85
+      },
+      {
+        "id": "microgrid_bid_duplicate",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/microgrid-bids",
+        "json": {
+          "bid_key": "sunset-7",
+          "solar_arrays": 3,
+          "wind_turbines": 2,
+          "storage_banks": 2,
+          "interconnects": 2,
+          "emergency_mode": true,
+          "duplicate_bid": true
+        },
+        "request_headers": {
+          "x-grid-key": "grid-045"
+        },
+        "expected_status": 409,
+        "expected_json": {
+          "bid_key": "sunset-7",
+          "generation_units": 0,
+          "battery_buffer_units": 0,
+          "grid_required_units": 0,
+          "grid_capacity_units": 0,
+          "delivered_units": 0,
+          "shortfall_units": 0,
+          "dispatch_windows": 0,
+          "bid_score": 0,
+          "bid_state": "duplicate"
+        },
+        "expected_headers": {
+          "x-conflict": "duplicate_bid"
+        }
+      },
+      {
+        "id": "microgrid_bid_zero_interconnect",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/microgrid-bids",
+        "json": {
+          "bid_key": "island-3",
+          "solar_arrays": 1,
+          "wind_turbines": 2,
+          "storage_banks": 1,
+          "interconnects": 0,
+          "emergency_mode": false,
+          "duplicate_bid": false
+        },
+        "request_headers": {
+          "x-grid-key": "grid-045"
+        },
+        "expected_status": 422,
+        "expected_json": {
+          "bid_key": "island-3",
+          "generation_units": 0,
+          "battery_buffer_units": 0,
+          "grid_required_units": 0,
+          "grid_capacity_units": 0,
+          "delivered_units": 0,
+          "shortfall_units": 0,
+          "dispatch_windows": 0,
+          "bid_score": 0,
+          "bid_state": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "interconnects"
+        }
+      },
+      {
+        "id": "microgrid_bid_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/microgrid-bids",
+        "json": {
+          "bid_key": "sunset-7",
+          "solar_arrays": 3,
+          "wind_turbines": 2,
+          "storage_banks": 2,
+          "interconnects": 2,
+          "emergency_mode": true,
+          "duplicate_bid": false,
+          "market_zone": 4
+        },
+        "request_headers": {
+          "x-grid-key": "grid-045"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "microgrid_bid_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "microgrid_bid_score",
+        "args": [
+          1,
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 25
+      },
+      {
+        "id": "microgrid_bid_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "microgrid_bid_score",
+        "args": [
+          7,
+          5,
+          2,
+          1,
+          true
+        ],
+        "expected": 439
+      }
+    ],
+    "trail_permit_repair": [
+      {
+        "id": "trail_permit_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/trail-permit-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Trail Permit",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "trail_permit_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/trail-permits",
+        "json": {
+          "permit_code": "ridge-12",
+          "day_hikers": 4,
+          "overnight_hikers": 2,
+          "trail_guides": 2,
+          "storm_alert": true
+        },
+        "request_headers": {
+          "authorization": "Bearer trail-045"
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "permit_code": "ridge-12",
+          "visitor_total": 6,
+          "trail_units": 56,
+          "guide_capacity_units": 76,
+          "admitted_units": 56,
+          "waiting_units": 0,
+          "permit_score": 56,
+          "permit_state": "issued"
+        },
+        "expected_headers": {
+          "x-permit-state": "issued"
+        }
+      },
+      {
+        "id": "trail_permit_missing_guides",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "permit_code": "ridge-12",
+          "day_hikers": 4,
+          "overnight_hikers": 2,
+          "storm_alert": true
+        },
+        "request_headers": {
+          "authorization": "Bearer trail-045"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "trail_permit_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "trail_permit_score",
+        "args": [
+          4,
+          2,
+          2,
+          true
+        ],
+        "expected": 56
+      },
+      {
+        "id": "trail_permit_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/trail-permits",
+        "json": {
+          "permit_code": "ridge-12",
+          "day_hikers": 4,
+          "overnight_hikers": 2,
+          "trail_guides": 2,
+          "storm_alert": true
+        },
+        "request_headers": {
+          "authorization": "Bearer wrong"
+        },
+        "expected_status": 401,
+        "expected_json": {
+          "permit_code": "ridge-12",
+          "visitor_total": 0,
+          "trail_units": 0,
+          "guide_capacity_units": 0,
+          "admitted_units": 0,
+          "waiting_units": 0,
+          "permit_score": 0,
+          "permit_state": "authorization_required"
+        },
+        "expected_headers": {
+          "www-authenticate": "Bearer realm=trail-permit"
+        }
+      },
+      {
+        "id": "trail_permit_zero_guides",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/trail-permits",
+        "json": {
+          "permit_code": "valley-2",
+          "day_hikers": 2,
+          "overnight_hikers": 1,
+          "trail_guides": 0,
+          "storm_alert": false
+        },
+        "request_headers": {
+          "authorization": "Bearer trail-045"
+        },
+        "expected_status": 422,
+        "expected_json": {
+          "permit_code": "valley-2",
+          "visitor_total": 0,
+          "trail_units": 0,
+          "guide_capacity_units": 0,
+          "admitted_units": 0,
+          "waiting_units": 0,
+          "permit_score": 0,
+          "permit_state": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "trail_guides"
+        }
+      },
+      {
+        "id": "trail_permit_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/trail-permits",
+        "json": {
+          "permit_code": "ridge-12",
+          "day_hikers": 4,
+          "overnight_hikers": 2,
+          "trail_guides": 2,
+          "storm_alert": true,
+          "ranger_post": 2
+        },
+        "request_headers": {
+          "authorization": "Bearer trail-045"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "trail_permit_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "trail_permit_score",
+        "args": [
+          2,
+          1,
+          2,
+          false
+        ],
+        "expected": 22
+      },
+      {
+        "id": "trail_permit_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "trail_permit_score",
+        "args": [
+          8,
+          4,
+          1,
+          true
+        ],
+        "expected": 374
+      }
+    ],
+    "cold_chain_booking_repair": [
+      {
+        "id": "cold_chain_booking_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/cold-chain-booking-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Cold-Chain Booking",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "cold_chain_booking_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/cold-chain-bookings",
+        "json": {
+          "booking_code": "polar-8",
+          "chilled_crates": 3,
+          "frozen_crates": 2,
+          "loading_docks": 2,
+          "rush_load": false
+        },
+        "request_headers": {},
+        "expected_status": 201,
+        "expected_json": {
+          "booking_code": "polar-8",
+          "shipment_total": 5,
+          "cooling_units": 51,
+          "dock_capacity_units": 88,
+          "loaded_units": 51,
+          "deferred_units": 0,
+          "loading_rounds": 0,
+          "booking_score": 51,
+          "booking_state": "booked"
+        },
+        "expected_headers": {
+          "location": "/api/v9/cold-chain-bookings/polar-8",
+          "x-booking-state": "booked"
+        }
+      },
+      {
+        "id": "cold_chain_wrong_dock_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "booking_code": "polar-8",
+          "chilled_crates": 3,
+          "frozen_crates": 2,
+          "loading_docks": false,
+          "rush_load": false
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cold_chain_booking_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "cold_chain_booking_score",
+        "args": [
+          3,
+          2,
+          2,
+          false
+        ],
+        "expected": 51
+      },
+      {
+        "id": "cold_chain_negative_crates",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/cold-chain-bookings",
+        "json": {
+          "booking_code": "frost-5",
+          "chilled_crates": -1,
+          "frozen_crates": 2,
+          "loading_docks": 1,
+          "rush_load": false
+        },
+        "request_headers": {},
+        "expected_status": 422,
+        "expected_json": {
+          "booking_code": "frost-5",
+          "shipment_total": 0,
+          "cooling_units": 0,
+          "dock_capacity_units": 0,
+          "loaded_units": 0,
+          "deferred_units": 0,
+          "loading_rounds": 0,
+          "booking_score": 0,
+          "booking_state": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "nonnegative"
+        }
+      },
+      {
+        "id": "cold_chain_rush_queue",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/cold-chain-bookings",
+        "json": {
+          "booking_code": "ice-11",
+          "chilled_crates": 5,
+          "frozen_crates": 4,
+          "loading_docks": 1,
+          "rush_load": true
+        },
+        "request_headers": {},
+        "expected_status": 201,
+        "expected_json": {
+          "booking_code": "ice-11",
+          "shipment_total": 9,
+          "cooling_units": 100,
+          "dock_capacity_units": 44,
+          "loaded_units": 44,
+          "deferred_units": 56,
+          "loading_rounds": 1,
+          "booking_score": 332,
+          "booking_state": "rush_queue"
+        },
+        "expected_headers": {
+          "location": "/api/v9/cold-chain-bookings/ice-11",
+          "x-booking-state": "rush_queue"
+        }
+      },
+      {
+        "id": "cold_chain_booking_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v9/cold-chain-bookings",
+        "json": {
+          "booking_code": "polar-8",
+          "chilled_crates": 3,
+          "frozen_crates": 2,
+          "loading_docks": 2,
+          "rush_load": false,
+          "coolant_lane": 3
+        },
+        "request_headers": {},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "cold_chain_booking_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "cold_chain_booking_score",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 22
+      },
+      {
+        "id": "cold_chain_booking_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "cold_chain_booking_score",
+        "args": [
+          6,
+          4,
+          1,
+          true
+        ],
+        "expected": 367
+      }
+    ]
+  }
+}

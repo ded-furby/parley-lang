@@ -520,3 +520,10 @@ operations, and safety boundary needed beyond the earlier 222-token scaffold
 card. It remains 73.11% smaller than the historical full core-plus-web context.
 No 045 task domain, route, formula, case, scaffold, threshold, or model output
 exists at this checkpoint.
+
+The subsequently frozen 045 semantics-only corpus contains artifact-accession
+and microgrid-bid implementations plus authorization-polarity and server-owned
+header repairs. Its 36 cases exercise dynamic status/header/body behavior and
+generated transport/schema failures; every identifier and formula is disjoint
+from 036--044. No scaffold, comparison threshold, or model output existed at
+this boundary. See `FULLSTACK_AGENT_045.md`.
