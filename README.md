@@ -625,7 +625,12 @@ before successor task design in
 The independently selected iteration-044 seismic, museum, canal, and greenhouse
 semantics are subsequently frozen in
 [benchmarks/FULLSTACK_AGENT_044.md](benchmarks/FULLSTACK_AGENT_044.md), before
-any new comparison protocol, scaffold, or model output.
+any new comparison protocol, scaffold, or model output. The clean-room 044
+harness then passed 16/16 reference cells, all 144 cases, all 16 negative
+controls, all eight maintenance boundaries, and the parent-owned browser smoke.
+Revision 2 now binds 19 transitive execution inputs at protocol SHA-256
+`b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`;
+no measured model session existed at that once-run boundary.
 
 ## Development
 

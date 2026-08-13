@@ -72,3 +72,19 @@ post-build hashes, and the no-rerun rule. No scaffold, reference application,
 runner, or measured session exists at this checkpoint. Those may now be built
 and validated, but task semantics, compiler/context, models, metrics,
 thresholds, and gate may not change.
+
+## Final execution freeze
+
+The clean-room harness subsequently passed all 16 task/language reference
+cells and all 144 named cases. Every one of the 16 broken seeds built and
+failed semantics, all eight maintenance root boundaries passed, and the
+parent-owned FIFO/HTTP/Chromium orchestration smoke preserved every protected
+input. Peak retained workspace use was 161,169,608 bytes, 13.324× below the
+frozen 2 GiB per-worker allowance.
+
+Revision 2 binds the 19 transitive harness and dependency files listed in
+`FULLSTACK_AGENT_044_EXECUTION_FREEZE.md`. Its SHA-256 is
+`b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`.
+No measured model session existed at this once-run boundary. The frozen task
+semantics, compiler/context, models, replicates, metrics, thresholds, and
+strict six-condition gate are unchanged from revision 1.

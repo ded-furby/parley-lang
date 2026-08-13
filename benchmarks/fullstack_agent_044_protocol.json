@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "044",
   "title": "Independent dependency-free-build full-stack implementation and maintenance study",
   "description": "A preregistered 96-session comparison of four unseen server-plus-browser assignments in Parley, Python, TypeScript, and Rust using parent-owned public evaluation and exact-build read-only validation.",
@@ -158,6 +158,101 @@
     "integrity": "Hash all protected/read-only files immediately after every exact build and at cell finalization; reject unexpected files and symlinks; compare FIFO device/inode/type/mode/owner; revalidate frozen repository and toolchain provenance; require one start/finish journal record per cell; preserve the initial and renewed scratch checks without binding observed free bytes into resume identity; persist evidence and measured workspace bytes before bounded per-cell cleanup.",
     "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute.",
     "failure_policy": "Timeouts, interruptions, agent errors, nonzero exits, build failures, case failures, protocol violations, checker/FIFO/read-only integrity failures, missing source, unexpected files, scratch-boundary violations, low-space events after start, and cleanup failures are failures and remain in the complete result."
+  },
+  "execution_freeze": {
+    "description": "Post-protocol harness, scratch lifecycle, v0.5.5 compact-context integration, and exact-build execution-integrity controls frozen before the first measured cell; task, case, model, metric, threshold, gate, compiler, context, and stack semantics are unchanged.",
+    "measured_sessions_before_freeze": 0,
+    "harness_commit": "b1690b5719830647a1ed3850956967c8455cde77",
+    "calibrated_max_workspace_bytes": 161169608,
+    "calibrated_per_worker_headroom_multiple": 13.324,
+    "parley_prompt_delta_vs_python_o200k_tokens": 207,
+    "files": [
+      {
+        "file": "benchmarks/run_fullstack_agent_044.py",
+        "sha256": "3a2d0973e71b7428690dd7c9fd52ef4b3bd1107dc17fa327f8b8650d0d03ddbd"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_044_scaffolds.py",
+        "sha256": "8bd7d1fa0e287127abaf4d85aa5f1a8d6ad81bacd4af307d78f64d22f72f7a7f"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_044_logic.py",
+        "sha256": "dce7828e886d94f85868abdec750638a69b8e92d78a4409000ab9f2118ce1355"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_044_guard.py",
+        "sha256": "83bc30a427429d17b88129cfb58b2d797a6da73ab815c045a2f54f3db86a6ff2"
+      },
+      {
+        "file": "benchmarks/prepare_fullstack_agent_044.py",
+        "sha256": "cd57811d71b20f7d09669fb9ef3c9d6cab3341fd4fcd798f6c27ef8ad7621451"
+      },
+      {
+        "file": "benchmarks/agent_check_transport.py",
+        "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"
+      },
+      {
+        "file": "benchmarks/agent_runner.py",
+        "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"
+      },
+      {
+        "file": "benchmarks/exact_build_freeze.py",
+        "sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9"
+      },
+      {
+        "file": "benchmarks/scratch_space.py",
+        "sha256": "29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_036_scaffolds.py",
+        "sha256": "ab27f0fc1e6741e78a57a8777339571cbc4c47843dc6a2335d316aa47351879c"
+      },
+      {
+        "file": "benchmarks/fullstack_044/rust/Cargo.toml",
+        "sha256": "537e3353701a509ca43d4f708ae8ac4c91f2ef97c4763eabd7130613592169ee"
+      },
+      {
+        "file": "benchmarks/fullstack_044/rust/Cargo.lock",
+        "sha256": "a591b7d78162bf6def5efa325145d0d52346fa872e54c63c18a14d047abc6e41"
+      },
+      {
+        "file": "benchmarks/fullstack_044/rust/src/lib.rs",
+        "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.txt",
+        "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.lock.txt",
+        "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package.json",
+        "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package-lock.json",
+        "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+        "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+      },
+      {
+        "file": "benchmarks/FULLSTACK_AGENT_044_EXECUTION_FREEZE.md",
+        "sha256": "dd5292ec47e831572029b0ec3425b532069afa642d792bbad13746e8e6a309c5"
+      }
+    ],
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "Atomic JSON files outside the agent workspace, revalidated during cell finalization and result aggregation.",
+    "scratch_preflight": "17,179,869,184 bytes free required before journal initialization and every scheduling refill with work/journal/attempt roots proven disjoint; observed capacity is evidence rather than resume identity.",
+    "workspace_cleanup": "A separate immutable cleanup record is written only after the complete finished journal; it retains pre-cleanup workspace bytes and proves removal, absence, or a permanent cleanup failure.",
+    "bounded_scheduler": "At most four cells are active and no later cell is queued; a run-level capacity or cleanup failure stops refills and permanently journals all unstarted cells as failed without creating agent sessions.",
+    "numeric_domain_guard": "Identical parent-owned proxy for all languages; rejects only negative numeric values before forwarding other traffic.",
+    "exact_build_integrity": "Every protected/read-only file is checked before and immediately after each exact build command; any mutation fails the build and cell.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; finished evidence is reconciled with cleanup evidence; only never-started cells may execute."
   },
   "metrics": {
     "correctness": "Exact hidden HTTP status/JSON/error and real-browser scalar results, overall and by task, kind, language, model, and replicate.",

@@ -473,6 +473,16 @@ from 2.725720 to 0.802735 seconds, every fixture improved, native binaries
 became smaller, WASM sizes were unchanged, and 609/609 tests passed. See
 `WEB_BUILD_LATENCY_002.md`; this product result does not reinterpret 043.
 
+Iteration 044 independently evaluates v0.5.5 on frozen seismic, museum, canal,
+and greenhouse assignments. Its clean-room harness passed 16/16
+task/language references, all 144 cases, all 16 broken-seed controls, all eight
+maintenance boundaries, and the parent-owned HTTP/Chromium orchestration
+smoke. Peak workspace use was 161,169,608 bytes, 13.324× below the frozen
+per-worker allowance. Revision 2 binds all 19 transitive execution inputs in
+`FULLSTACK_AGENT_044_EXECUTION_FREEZE.md`; no measured session existed at this
+once-run boundary. The frozen protocol SHA-256 is
+`b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
