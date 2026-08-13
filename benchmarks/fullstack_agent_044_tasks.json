@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "experiment_id": "044",
+  "description": "Two new full-stack implementation assignments and two new maintenance assignments, frozen after the v0.5.5 product checkpoint and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "product_freeze_commit": "cbe2d8aceba3733cebe61af39815d7781e9cc18b",
+  "product_freeze_sha256": "181e26d1204765f3e14a1a24dfe9d82a545d271b3da900785716e509e1551e89",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "seismic_array_build",
+      "kind": "implementation",
+      "title": "Build a seismic sensor array planner across HTTP and browser targets",
+      "statement": "Implement the frozen Seismic Array contract in the supplied stack. sensor_total is short_sensors + deep_sensors. short_scan_seconds is short_sensors * 12. deep_scan_seconds is deep_sensors * 20. ash_sync_seconds is relay_towers * 7 during an ash_warning and zero otherwise. array_required_seconds is short_scan_seconds + deep_scan_seconds + ash_sync_seconds. relay_capacity_seconds is relay_towers * 48. processed_seconds is min(array_required_seconds, relay_capacity_seconds). backlogged_seconds is max(array_required_seconds - relay_capacity_seconds, 0). scan_rounds is array_required_seconds divided by 37 using floor division. array_score is processed_seconds + backlogged_seconds * 6 + scan_rounds * 10. array_state is aligned when backlogged_seconds is zero, ash_backlog when backlog remains during an ash warning, and routine_backlog otherwise. The browser export returns array_score.",
+      "service": "Seismic Array",
+      "status_route": "/status/seismic-array-ready",
+      "post_route": "/api/v8/seismic-array",
+      "browser_export": "seismic_array_score",
+      "shared_result_field": "array_score",
+      "request_fields": {
+        "short_sensors": "number",
+        "deep_sensors": "number",
+        "relay_towers": "number",
+        "ash_warning": "yesno"
+      },
+      "response_fields": {
+        "sensor_total": "number",
+        "short_scan_seconds": "number",
+        "deep_scan_seconds": "number",
+        "ash_sync_seconds": "number",
+        "array_required_seconds": "number",
+        "relay_capacity_seconds": "number",
+        "processed_seconds": "number",
+        "backlogged_seconds": "number",
+        "scan_rounds": "number",
+        "array_score": "number",
+        "array_state": "text"
+      },
+      "independence": "New seismic-array domain, v8 route, scan-round and relay formulas, vocabulary, fixtures, and browser export selected after the v0.5.5 product freeze and before any 044 scaffold or model output.",
+      "public_case_ids": [
+        "seismic_array_status",
+        "seismic_array_ash_backlog",
+        "seismic_array_wrong_relay_type",
+        "seismic_array_browser_ash"
+      ],
+      "hidden_case_ids": [
+        "seismic_array_aligned",
+        "seismic_array_routine_backlog",
+        "seismic_array_unknown_field",
+        "seismic_array_browser_aligned",
+        "seismic_array_browser_routine"
+      ]
+    },
+    {
+      "id": "museum_conservation_build",
+      "kind": "implementation",
+      "title": "Build a museum conservation scheduler across HTTP and browser targets",
+      "statement": "Implement the frozen Museum Conservation contract in the supplied stack. crate_total is canvas_crates + textile_crates. canvas_work_minutes is canvas_crates * 9. textile_work_minutes is textile_crates * 15. drying_setup_minutes is work_tables * 6 during emergency_drying and zero otherwise. conservation_required_minutes is canvas_work_minutes + textile_work_minutes + drying_setup_minutes. table_capacity_minutes is work_tables * 43. completed_minutes is min(conservation_required_minutes, table_capacity_minutes). deferred_minutes is max(conservation_required_minutes - table_capacity_minutes, 0). conservation_rounds is conservation_required_minutes divided by 34 using floor division. conservation_score is completed_minutes + deferred_minutes * 7 + conservation_rounds * 11. conservation_state is preserved when deferred_minutes is zero, emergency_queue when delay remains during emergency drying, and routine_queue otherwise. The browser export returns conservation_score.",
+      "service": "Museum Conservation",
+      "status_route": "/status/museum-conservation-ready",
+      "post_route": "/api/v8/museum-conservation",
+      "browser_export": "museum_conservation_score",
+      "shared_result_field": "conservation_score",
+      "request_fields": {
+        "canvas_crates": "number",
+        "textile_crates": "number",
+        "work_tables": "number",
+        "emergency_drying": "yesno"
+      },
+      "response_fields": {
+        "crate_total": "number",
+        "canvas_work_minutes": "number",
+        "textile_work_minutes": "number",
+        "drying_setup_minutes": "number",
+        "conservation_required_minutes": "number",
+        "table_capacity_minutes": "number",
+        "completed_minutes": "number",
+        "deferred_minutes": "number",
+        "conservation_rounds": "number",
+        "conservation_score": "number",
+        "conservation_state": "text"
+      },
+      "independence": "New museum-conservation domain, v8 route, conservation-round and work-table formulas, vocabulary, fixtures, and browser export selected after the v0.5.5 product freeze and before any 044 scaffold or model output.",
+      "public_case_ids": [
+        "museum_conservation_status",
+        "museum_conservation_emergency_queue",
+        "museum_conservation_wrong_media",
+        "museum_conservation_browser_emergency"
+      ],
+      "hidden_case_ids": [
+        "museum_conservation_preserved",
+        "museum_conservation_routine_queue",
+        "museum_conservation_unknown_field",
+        "museum_conservation_browser_preserved",
+        "museum_conservation_browser_routine"
+      ]
+    },
+    {
+      "id": "canal_lock_repair",
+      "kind": "maintenance",
+      "title": "Repair flood-protocol polarity in a canal lock scheduler",
+      "statement": "Repair the supplied Canal Lock application. barge_total is freight_barges + tour_barges. freight_lock_units is freight_barges * 10. tour_lock_units is tour_barges * 17. flood_lock_units is lock_chambers * 8 during flood_protocol and zero otherwise. lock_required_units is freight_lock_units + tour_lock_units + flood_lock_units. lock_capacity_units is lock_chambers * 45. passed_lock_units is min(lock_required_units, lock_capacity_units). held_lock_units is max(lock_required_units - lock_capacity_units, 0). clearance_units is max(lock_capacity_units - passed_lock_units, 0). canal_state is clear when held_lock_units is zero, flood_hold when load remains during flood protocol, and routine_hold otherwise. The HTTP response and browser export must use the same rule; the browser export returns clearance_units.",
+      "service": "Canal Lock",
+      "status_route": "/status/canal-lock-ready",
+      "post_route": "/api/v8/canal-lock",
+      "browser_export": "canal_clearance_units",
+      "shared_result_field": "clearance_units",
+      "request_fields": {
+        "freight_barges": "number",
+        "tour_barges": "number",
+        "lock_chambers": "number",
+        "flood_protocol": "yesno"
+      },
+      "response_fields": {
+        "barge_total": "number",
+        "freight_lock_units": "number",
+        "tour_lock_units": "number",
+        "flood_lock_units": "number",
+        "lock_required_units": "number",
+        "lock_capacity_units": "number",
+        "passed_lock_units": "number",
+        "held_lock_units": "number",
+        "clearance_units": "number",
+        "canal_state": "text"
+      },
+      "predeclared_defect": "The application-logic module reverses the flood_protocol condition, adding flood_lock_units during routine operation and omitting them during flood protocol.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic conditional-polarity inversion defect",
+      "adaptation_boundary": "The conditional polarity, canal-lock vocabulary, fixtures, and expected repair are new and were selected after the v0.5.5 product freeze and before any measured output.",
+      "public_case_ids": [
+        "canal_lock_status",
+        "canal_lock_clear",
+        "canal_lock_missing_chambers",
+        "canal_lock_browser_clear"
+      ],
+      "hidden_case_ids": [
+        "canal_lock_routine_hold",
+        "canal_lock_flood_hold",
+        "canal_lock_unknown_field",
+        "canal_lock_browser_routine",
+        "canal_lock_browser_flood"
+      ]
+    },
+    {
+      "id": "thermal_greenhouse_repair",
+      "kind": "maintenance",
+      "title": "Repair a heating-cycle divisor in a thermal greenhouse",
+      "statement": "Repair the supplied Thermal Greenhouse application. row_total is seedling_rows + fruit_rows. seedling_heat_units is seedling_rows * 8. fruit_heat_units is fruit_rows * 14. frost_heat_units is heat_pumps * 5 during frost_cycle and zero otherwise. heat_required_units is seedling_heat_units + fruit_heat_units + frost_heat_units. pump_capacity_units is heat_pumps * 41. delivered_heat_units is min(heat_required_units, pump_capacity_units). heat_deficit_units is max(heat_required_units - pump_capacity_units, 0). heat_reserve_units is max(pump_capacity_units - delivered_heat_units, 0). heating_cycles is heat_required_units divided by 29 using floor division. greenhouse_score is delivered_heat_units + heat_deficit_units * 5 + heating_cycles * 7. greenhouse_state is balanced when heat_deficit_units is zero, frost_shortage when a deficit remains during a frost cycle, and heat_shortage otherwise. The HTTP response and browser export must use the same rule; the browser export returns greenhouse_score.",
+      "service": "Thermal Greenhouse",
+      "status_route": "/status/thermal-greenhouse-ready",
+      "post_route": "/api/v8/thermal-greenhouse",
+      "browser_export": "thermal_greenhouse_score",
+      "shared_result_field": "greenhouse_score",
+      "request_fields": {
+        "seedling_rows": "number",
+        "fruit_rows": "number",
+        "heat_pumps": "number",
+        "frost_cycle": "yesno"
+      },
+      "response_fields": {
+        "row_total": "number",
+        "seedling_heat_units": "number",
+        "fruit_heat_units": "number",
+        "frost_heat_units": "number",
+        "heat_required_units": "number",
+        "pump_capacity_units": "number",
+        "delivered_heat_units": "number",
+        "heat_deficit_units": "number",
+        "heat_reserve_units": "number",
+        "heating_cycles": "number",
+        "greenhouse_score": "number",
+        "greenhouse_state": "text"
+      },
+      "predeclared_defect": "The application-logic module divides heat_required_units by 23 instead of 29 when computing heating_cycles.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic floor-divisor substitution defect",
+      "adaptation_boundary": "The heating-cycle divisor, greenhouse vocabulary, fixtures, and expected repair are new and were selected after the v0.5.5 product freeze and before any measured output.",
+      "public_case_ids": [
+        "thermal_greenhouse_status",
+        "thermal_greenhouse_balanced",
+        "thermal_greenhouse_wrong_frost_type",
+        "thermal_greenhouse_browser_balanced"
+      ],
+      "hidden_case_ids": [
+        "thermal_greenhouse_frost_shortage",
+        "thermal_greenhouse_heat_shortage",
+        "thermal_greenhouse_unknown_field",
+        "thermal_greenhouse_browser_frost",
+        "thermal_greenhouse_browser_heat"
+      ]
+    }
+  ]
+}

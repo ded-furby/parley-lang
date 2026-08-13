@@ -1,0 +1,661 @@
+{
+  "schema_version": 1,
+  "experiment_id": "044",
+  "tasks": {
+    "seismic_array_build": [
+      {
+        "id": "seismic_array_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/seismic-array-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Seismic Array",
+          "ready": true
+        }
+      },
+      {
+        "id": "seismic_array_ash_backlog",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/seismic-array",
+        "json": {
+          "short_sensors": 2,
+          "deep_sensors": 3,
+          "relay_towers": 2,
+          "ash_warning": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "sensor_total": 5,
+          "short_scan_seconds": 24,
+          "deep_scan_seconds": 60,
+          "ash_sync_seconds": 14,
+          "array_required_seconds": 98,
+          "relay_capacity_seconds": 96,
+          "processed_seconds": 96,
+          "backlogged_seconds": 2,
+          "scan_rounds": 2,
+          "array_score": 128,
+          "array_state": "ash_backlog"
+        }
+      },
+      {
+        "id": "seismic_array_wrong_relay_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "short_sensors": 2,
+          "deep_sensors": 3,
+          "relay_towers": true,
+          "ash_warning": true
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v8/seismic-array"
+      },
+      {
+        "id": "seismic_array_browser_ash",
+        "visibility": "public",
+        "target": "browser",
+        "export": "seismic_array_score",
+        "args": [
+          2,
+          3,
+          2,
+          true
+        ],
+        "expected": 128
+      },
+      {
+        "id": "seismic_array_aligned",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/seismic-array",
+        "json": {
+          "short_sensors": 1,
+          "deep_sensors": 1,
+          "relay_towers": 2,
+          "ash_warning": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "sensor_total": 2,
+          "short_scan_seconds": 12,
+          "deep_scan_seconds": 20,
+          "ash_sync_seconds": 0,
+          "array_required_seconds": 32,
+          "relay_capacity_seconds": 96,
+          "processed_seconds": 32,
+          "backlogged_seconds": 0,
+          "scan_rounds": 0,
+          "array_score": 32,
+          "array_state": "aligned"
+        }
+      },
+      {
+        "id": "seismic_array_routine_backlog",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/seismic-array",
+        "json": {
+          "short_sensors": 4,
+          "deep_sensors": 3,
+          "relay_towers": 2,
+          "ash_warning": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "sensor_total": 7,
+          "short_scan_seconds": 48,
+          "deep_scan_seconds": 60,
+          "ash_sync_seconds": 0,
+          "array_required_seconds": 108,
+          "relay_capacity_seconds": 96,
+          "processed_seconds": 96,
+          "backlogged_seconds": 12,
+          "scan_rounds": 2,
+          "array_score": 188,
+          "array_state": "routine_backlog"
+        }
+      },
+      {
+        "id": "seismic_array_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/seismic-array",
+        "json": {
+          "short_sensors": 2,
+          "deep_sensors": 3,
+          "relay_towers": 2,
+          "ash_warning": true,
+          "magma_band": 4
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "seismic_array_browser_aligned",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "seismic_array_score",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 32
+      },
+      {
+        "id": "seismic_array_browser_routine",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "seismic_array_score",
+        "args": [
+          4,
+          3,
+          2,
+          false
+        ],
+        "expected": 188
+      }
+    ],
+    "museum_conservation_build": [
+      {
+        "id": "museum_conservation_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/museum-conservation-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Museum Conservation",
+          "ready": true
+        }
+      },
+      {
+        "id": "museum_conservation_emergency_queue",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/museum-conservation",
+        "json": {
+          "canvas_crates": 3,
+          "textile_crates": 2,
+          "work_tables": 1,
+          "emergency_drying": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "crate_total": 5,
+          "canvas_work_minutes": 27,
+          "textile_work_minutes": 30,
+          "drying_setup_minutes": 6,
+          "conservation_required_minutes": 63,
+          "table_capacity_minutes": 43,
+          "completed_minutes": 43,
+          "deferred_minutes": 20,
+          "conservation_rounds": 1,
+          "conservation_score": 194,
+          "conservation_state": "emergency_queue"
+        }
+      },
+      {
+        "id": "museum_conservation_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required",
+        "path": "/api/v8/museum-conservation"
+      },
+      {
+        "id": "museum_conservation_browser_emergency",
+        "visibility": "public",
+        "target": "browser",
+        "export": "museum_conservation_score",
+        "args": [
+          3,
+          2,
+          1,
+          true
+        ],
+        "expected": 194
+      },
+      {
+        "id": "museum_conservation_preserved",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/museum-conservation",
+        "json": {
+          "canvas_crates": 1,
+          "textile_crates": 1,
+          "work_tables": 2,
+          "emergency_drying": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "crate_total": 2,
+          "canvas_work_minutes": 9,
+          "textile_work_minutes": 15,
+          "drying_setup_minutes": 0,
+          "conservation_required_minutes": 24,
+          "table_capacity_minutes": 86,
+          "completed_minutes": 24,
+          "deferred_minutes": 0,
+          "conservation_rounds": 0,
+          "conservation_score": 24,
+          "conservation_state": "preserved"
+        }
+      },
+      {
+        "id": "museum_conservation_routine_queue",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/museum-conservation",
+        "json": {
+          "canvas_crates": 5,
+          "textile_crates": 3,
+          "work_tables": 2,
+          "emergency_drying": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "crate_total": 8,
+          "canvas_work_minutes": 45,
+          "textile_work_minutes": 45,
+          "drying_setup_minutes": 0,
+          "conservation_required_minutes": 90,
+          "table_capacity_minutes": 86,
+          "completed_minutes": 86,
+          "deferred_minutes": 4,
+          "conservation_rounds": 2,
+          "conservation_score": 136,
+          "conservation_state": "routine_queue"
+        }
+      },
+      {
+        "id": "museum_conservation_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/museum-conservation",
+        "json": {
+          "canvas_crates": 3,
+          "textile_crates": 2,
+          "work_tables": 1,
+          "emergency_drying": true,
+          "gallery_wing": 3
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "museum_conservation_browser_preserved",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "museum_conservation_score",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 24
+      },
+      {
+        "id": "museum_conservation_browser_routine",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "museum_conservation_score",
+        "args": [
+          5,
+          3,
+          2,
+          false
+        ],
+        "expected": 136
+      }
+    ],
+    "canal_lock_repair": [
+      {
+        "id": "canal_lock_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/canal-lock-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Canal Lock",
+          "ready": true
+        }
+      },
+      {
+        "id": "canal_lock_clear",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/canal-lock",
+        "json": {
+          "freight_barges": 2,
+          "tour_barges": 1,
+          "lock_chambers": 2,
+          "flood_protocol": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "barge_total": 3,
+          "freight_lock_units": 20,
+          "tour_lock_units": 17,
+          "flood_lock_units": 16,
+          "lock_required_units": 53,
+          "lock_capacity_units": 90,
+          "passed_lock_units": 53,
+          "held_lock_units": 0,
+          "clearance_units": 37,
+          "canal_state": "clear"
+        }
+      },
+      {
+        "id": "canal_lock_missing_chambers",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "freight_barges": 2,
+          "tour_barges": 1,
+          "flood_protocol": true
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v8/canal-lock"
+      },
+      {
+        "id": "canal_lock_browser_clear",
+        "visibility": "public",
+        "target": "browser",
+        "export": "canal_clearance_units",
+        "args": [
+          2,
+          1,
+          2,
+          true
+        ],
+        "expected": 37
+      },
+      {
+        "id": "canal_lock_routine_hold",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/canal-lock",
+        "json": {
+          "freight_barges": 5,
+          "tour_barges": 3,
+          "lock_chambers": 2,
+          "flood_protocol": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "barge_total": 8,
+          "freight_lock_units": 50,
+          "tour_lock_units": 51,
+          "flood_lock_units": 0,
+          "lock_required_units": 101,
+          "lock_capacity_units": 90,
+          "passed_lock_units": 90,
+          "held_lock_units": 11,
+          "clearance_units": 0,
+          "canal_state": "routine_hold"
+        }
+      },
+      {
+        "id": "canal_lock_flood_hold",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/canal-lock",
+        "json": {
+          "freight_barges": 4,
+          "tour_barges": 3,
+          "lock_chambers": 2,
+          "flood_protocol": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "barge_total": 7,
+          "freight_lock_units": 40,
+          "tour_lock_units": 51,
+          "flood_lock_units": 16,
+          "lock_required_units": 107,
+          "lock_capacity_units": 90,
+          "passed_lock_units": 90,
+          "held_lock_units": 17,
+          "clearance_units": 0,
+          "canal_state": "flood_hold"
+        }
+      },
+      {
+        "id": "canal_lock_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/canal-lock",
+        "json": {
+          "freight_barges": 2,
+          "tour_barges": 1,
+          "lock_chambers": 2,
+          "flood_protocol": true,
+          "water_level": 6
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "canal_lock_browser_routine",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "canal_clearance_units",
+        "args": [
+          1,
+          2,
+          2,
+          false
+        ],
+        "expected": 46
+      },
+      {
+        "id": "canal_lock_browser_flood",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "canal_clearance_units",
+        "args": [
+          3,
+          1,
+          2,
+          true
+        ],
+        "expected": 27
+      }
+    ],
+    "thermal_greenhouse_repair": [
+      {
+        "id": "thermal_greenhouse_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/thermal-greenhouse-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Thermal Greenhouse",
+          "ready": true
+        }
+      },
+      {
+        "id": "thermal_greenhouse_balanced",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/thermal-greenhouse",
+        "json": {
+          "seedling_rows": 2,
+          "fruit_rows": 2,
+          "heat_pumps": 2,
+          "frost_cycle": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "row_total": 4,
+          "seedling_heat_units": 16,
+          "fruit_heat_units": 28,
+          "frost_heat_units": 10,
+          "heat_required_units": 54,
+          "pump_capacity_units": 82,
+          "delivered_heat_units": 54,
+          "heat_deficit_units": 0,
+          "heat_reserve_units": 28,
+          "heating_cycles": 1,
+          "greenhouse_score": 61,
+          "greenhouse_state": "balanced"
+        }
+      },
+      {
+        "id": "thermal_greenhouse_wrong_frost_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "seedling_rows": 2,
+          "fruit_rows": 2,
+          "heat_pumps": 2,
+          "frost_cycle": 1
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v8/thermal-greenhouse"
+      },
+      {
+        "id": "thermal_greenhouse_browser_balanced",
+        "visibility": "public",
+        "target": "browser",
+        "export": "thermal_greenhouse_score",
+        "args": [
+          2,
+          2,
+          2,
+          true
+        ],
+        "expected": 61
+      },
+      {
+        "id": "thermal_greenhouse_frost_shortage",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/thermal-greenhouse",
+        "json": {
+          "seedling_rows": 5,
+          "fruit_rows": 3,
+          "heat_pumps": 1,
+          "frost_cycle": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "row_total": 8,
+          "seedling_heat_units": 40,
+          "fruit_heat_units": 42,
+          "frost_heat_units": 5,
+          "heat_required_units": 87,
+          "pump_capacity_units": 41,
+          "delivered_heat_units": 41,
+          "heat_deficit_units": 46,
+          "heat_reserve_units": 0,
+          "heating_cycles": 3,
+          "greenhouse_score": 292,
+          "greenhouse_state": "frost_shortage"
+        }
+      },
+      {
+        "id": "thermal_greenhouse_heat_shortage",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/thermal-greenhouse",
+        "json": {
+          "seedling_rows": 4,
+          "fruit_rows": 2,
+          "heat_pumps": 1,
+          "frost_cycle": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "row_total": 6,
+          "seedling_heat_units": 32,
+          "fruit_heat_units": 28,
+          "frost_heat_units": 0,
+          "heat_required_units": 60,
+          "pump_capacity_units": 41,
+          "delivered_heat_units": 41,
+          "heat_deficit_units": 19,
+          "heat_reserve_units": 0,
+          "heating_cycles": 2,
+          "greenhouse_score": 150,
+          "greenhouse_state": "heat_shortage"
+        }
+      },
+      {
+        "id": "thermal_greenhouse_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v8/thermal-greenhouse",
+        "json": {
+          "seedling_rows": 2,
+          "fruit_rows": 2,
+          "heat_pumps": 2,
+          "frost_cycle": true,
+          "humidity_zone": 2
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "thermal_greenhouse_browser_frost",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "thermal_greenhouse_score",
+        "args": [
+          5,
+          3,
+          1,
+          true
+        ],
+        "expected": 292
+      },
+      {
+        "id": "thermal_greenhouse_browser_heat",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "thermal_greenhouse_score",
+        "args": [
+          4,
+          2,
+          1,
+          false
+        ],
+        "expected": 150
+      }
+    ]
+  }
+}

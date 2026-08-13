@@ -622,6 +622,10 @@ fell from 2.725720 to 0.802735 seconds (70.5496%), every fixture improved, and
 The accepted v0.5.5 product and unchanged 222-token agent context are frozen
 before successor task design in
 [benchmarks/FULLSTACK_AGENT_044_PRODUCT_FREEZE.md](benchmarks/FULLSTACK_AGENT_044_PRODUCT_FREEZE.md).
+The independently selected iteration-044 seismic, museum, canal, and greenhouse
+semantics are subsequently frozen in
+[benchmarks/FULLSTACK_AGENT_044.md](benchmarks/FULLSTACK_AGENT_044.md), before
+any new comparison protocol, scaffold, or model output.
 
 ## Development
 

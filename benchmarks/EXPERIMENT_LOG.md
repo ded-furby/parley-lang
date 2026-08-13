@@ -4765,3 +4765,30 @@ scaffold, prompt, or model output exists at this checkpoint.
 Next: commit the product freeze, then design and independently hash a disjoint
 044 semantics-only task/case population before any comparison protocol or
 scaffold exists.
+
+### 044 independent semantics-only corpus frozen
+
+- Preceding product-freeze commit:
+  `cbe2d8aceba3733cebe61af39815d7781e9cc18b`
+- Tasks: `benchmarks/fullstack_agent_044_tasks.json`
+- Task SHA-256:
+  `8b476f2285ba45ba937c739fd1f3036f4b58791951ee73b2f61bc78039d87659`
+- Cases: `benchmarks/fullstack_agent_044_cases.json`
+- Case SHA-256:
+  `6299db88780c417e68f2a6377710c6d3b83ff4bb8870f7c2d865cad7a5114b25`
+- Design record: `benchmarks/FULLSTACK_AGENT_044.md`
+
+The new population contains seismic-array and museum-conservation
+implementations plus canal-lock conditional-polarity and thermal-greenhouse
+floor-divisor repairs. It has 36 cases: four public and five hidden per task,
+including one public and two hidden browser judgments per task. An independent
+test oracle recomputes every successful response and browser scalar.
+
+Automated checks prove task IDs, case IDs, request/response fields,
+status/POST routes, and browser exports are disjoint from 036–043. Both new
+maintenance defects are publicly observable. This checkpoint contains no 044
+stack scaffold, reference implementation, comparison protocol, threshold,
+runner change, or measured session.
+
+Next: commit the semantics-only population, then preregister the balanced
+matrix and exact execution controls before building the harness.
