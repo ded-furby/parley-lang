@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiment_id": "042-context-freeze",
+  "parley_version": "0.5.3",
+  "frozen_on": "2026-08-13",
+  "evidence_commit": "c18f282da0d358165477daa093844d5ebb4adcda",
+  "evidence_artifact": "benchmarks/fullstack_agent_041_token_attribution.json",
+  "evidence_sha256": "a2ed758ee63c3cad5fcd3974acb0640195ce4ea32342191f04f9e40d7b539215",
+  "context_file": "skill/parley/references/scaffolded-web-v0.5.3.md",
+  "context_sha256": "f40a1030de6b3ed75f47183dee41d1ac3185dd87b747f779dab8835d4d63e8c4",
+  "context_bytes": 892,
+  "context_o200k_tokens": 222,
+  "baseline": {
+    "version": "0.5.2",
+    "files": [
+      "skill/parley/references/core-v0.5.2.md",
+      "skill/parley/references/web-v0.5.2.md"
+    ],
+    "combined_sha256": "6149712a71895d7a71741f79b2d005e373a2131cc19bdf2143d902cf8327a342",
+    "combined_bytes": 4350,
+    "combined_o200k_tokens": 1164
+  },
+  "reduction": {
+    "bytes": 3458,
+    "o200k_tokens": 942,
+    "o200k_percent": 80.9278
+  },
+  "preserved_rules": [
+    "supplied scaffold is authoritative",
+    "edit the smallest owning included logic function",
+    "one pure rule serves HTTP and browser paths",
+    "multiplication uses times or multiplied by",
+    "number from divided decimal is total truncation without otherwise",
+    "browser scalar number/decimal/yesno maps to bigint/number/boolean"
+  ],
+  "deliberate_omissions": [
+    "manifest example already printed by the scaffold",
+    "handler signatures already printed by the scaffold",
+    "record and request boilerplate already printed by the scaffold",
+    "JavaScript loader example already implemented by the scaffold",
+    "general CLI, collection, JSON, stdlib, and input syntax outside this surface"
+  ],
+  "construction_boundary": "The context is frozen before any iteration-042 task semantics, cases, scaffolds, reference implementations, thresholds, or agent output exist.",
+  "claim_boundary": "This is a context product and static budget result, not a reliability or comparative token-efficiency result. It requires validation on a new disjoint population and does not change iteration 041."
+}

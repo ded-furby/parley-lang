@@ -4293,3 +4293,23 @@ scaffold-aware web reference that retains total numeric conversions, pure
 shared logic, smallest-owner repair, and scalar browser constraints while
 omitting syntax already printed by the scaffold. Commit and validate that
 context before any successor task population exists.
+
+### 042 scaffold-aware context frozen before the successor corpus
+
+- Product version: v0.5.3
+- Context: `skill/parley/references/scaffolded-web-v0.5.3.md`
+- Context SHA-256:
+  `f40a1030de6b3ed75f47183dee41d1ac3185dd87b747f779dab8835d4d63e8c4`
+- Static budget: 892 bytes / 222 `o200k_base` tokens
+- Reduction from v0.5.2 core+web: 942 tokens / 80.9278%
+
+The specialized card treats the printed scaffold as the syntax and architecture
+reference. It retains the total-division, multiplication, pure shared-rule,
+smallest-owner, deterministic scalar, and JavaScript mapping constraints that
+guard the full-stack surface. It deliberately omits boilerplate already present
+in the scaffold and unrelated general-language syntax.
+
+No 042 task, case, scaffold, reference implementation, threshold, or agent
+output exists at this freeze. This is a deterministic product and static-budget
+checkpoint, not measured reliability or efficiency evidence. Next: commit this
+boundary, then create and freeze a disjoint successor population.

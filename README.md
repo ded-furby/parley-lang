@@ -527,6 +527,7 @@ the plan:
 - [x] generic functions: `any name` type variables, monomorphized — v0.5.0
 - [x] evidence-backed arithmetic guidance and natural multiplication alias — v0.5.1
 - [x] total-conversion clarity and repair-locality guidance — v0.5.2
+- [x] 222-token scaffold-aware typed-web repair context — v0.5.3
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -566,6 +567,14 @@ still unmet because Parley's 63,565.5 median complete-session tokens were
 4.91% above Python's 60,591. See
 [benchmarks/FULLSTACK_AGENT_041.md](benchmarks/FULLSTACK_AGENT_041.md) and the
 [canonical report](benchmarks/reports/041-independent-fullstack-study-gate-not-met.artifact.json).
+
+The complete-token attribution traced the remaining 041 difference to repeated
+input context: Parley already used fewer output and edit tokens in every matched
+pair. Version 0.5.3 freezes a 222-token scaffold-aware web card—80.93% smaller
+than the v0.5.2 context—before any iteration-042 task exists. This is a product
+and static-budget result, not a claim that the independent efficiency gate has
+passed; see
+[benchmarks/FULLSTACK_AGENT_042_CONTEXT_FREEZE.md](benchmarks/FULLSTACK_AGENT_042_CONTEXT_FREEZE.md).
 
 ## Development
 
