@@ -4489,3 +4489,25 @@ Decision: leave the token-winning v0.5.3 context and model prompts unchanged.
 Profile generic cold `parley web build` latency on non-042 programs, validate
 any improvement outside the frozen corpus, and freeze it before constructing a
 disjoint successor population.
+
+### Cold web-build study 001 frozen baseline
+
+- Protocol: `benchmarks/WEB_BUILD_LATENCY_001.md`
+- Harness: `benchmarks/measure_web_build_latency_001.py`
+- Freeze commit: `42c464a95245427918ee5e8e48a1fc1abf0a4e04`
+- Baseline: `benchmarks/web_build_latency_001_baseline.json`
+- Baseline SHA-256:
+  `ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b`
+
+The three non-042 fixtures crossed native-only, native-plus-browser, and typed
+POST-plus-browser surfaces. All 12 v0.5.3 cold builds passed. Their fixture
+medians were 3.543877, 3.855847, and 3.933453 seconds, for a median of fixture
+medians of 3.855847 seconds. The preregistered candidate threshold is at least
+20% lower latency with full regression success and no unjustified median native
+or WASM size increase above 25%.
+
+Independent phase profiling outside the frozen measurement showed that the
+native server Cargo build consumes approximately 3.3 seconds while the
+dependency-free browser/WASM crate takes approximately 0.16 seconds. The next
+implementation target is therefore server-side derive/dependency compilation,
+not browser code generation or the v0.5.3 agent context.

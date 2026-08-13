@@ -38,3 +38,15 @@ The benchmark measures local cold build latency, not server throughput,
 browser runtime speed, application quality, or universal language superiority.
 Any accepted change must be committed before a new independent full-stack
 corpus is designed.
+
+## Frozen v0.5.3 baseline
+
+The 12 measured builds at commit `42c464a` all passed. The fixture medians were
+3.543877 seconds for `status_only`, 3.855847 for `browser_score`, and 3.933453
+for `typed_post`; the median of those medians was **3.855847 seconds**. Median
+native-server sizes were 441,216 bytes for the two GET fixtures and 493,696
+bytes for the typed POST fixture. The browser artifacts were 1,103 and 1,442
+bytes.
+
+Canonical baseline: `web_build_latency_001_baseline.json`; SHA-256:
+`ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b`.

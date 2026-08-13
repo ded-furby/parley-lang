@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "study_id": "web-build-latency-001",
+  "generated_at": "2026-08-13T02:04:23Z",
+  "scope": "Three frozen non-042 projects; fresh target per cell; no exclusions or reruns.",
+  "repetitions": 4,
+  "toolchain": {
+    "parley": "parley 0.5.3",
+    "python": "3.14.6",
+    "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+    "git_commit": "42c464a95245427918ee5e8e48a1fc1abf0a4e04"
+  },
+  "fixture_sha256": {
+    "status_only": "ca08cc62086d47f61c997c1061a0e38e45566393e257e7dd1704f9060853c7f7",
+    "browser_score": "6b7f9798bedd965cd3356afb70c560ace148a37a26f6b75fb02b663926ecb746",
+    "typed_post": "b5d23446683f000728faaba6117e667f0f85021da43e2c67de5223f62c4b64aa"
+  },
+  "warmup": {
+    "fixture": "browser_score",
+    "elapsed_seconds": 5.385366,
+    "server_bytes": 441216,
+    "wasm_bytes": 1103,
+    "stdout_sha256": "6cc378f2883e80d7901eae031441cb5ab8640e8c5c4e0b0c9ab73a2ddc00ffb1",
+    "stderr": ""
+  },
+  "cells": [
+    {
+      "fixture": "status_only",
+      "elapsed_seconds": 3.55011,
+      "server_bytes": 441216,
+      "wasm_bytes": 0,
+      "stdout_sha256": "7d13e7aefbcc814eab7eedcfddbde23455957238b9156a55abb073532cc0007b",
+      "stderr": ""
+    },
+    {
+      "fixture": "status_only",
+      "elapsed_seconds": 3.537643,
+      "server_bytes": 441216,
+      "wasm_bytes": 0,
+      "stdout_sha256": "dbb24a23baac87f38dd9c78b4e6c1b0f33b458f34c1b89be79cbaf6466b74633",
+      "stderr": ""
+    },
+    {
+      "fixture": "status_only",
+      "elapsed_seconds": 3.657441,
+      "server_bytes": 441216,
+      "wasm_bytes": 0,
+      "stdout_sha256": "6728e39354e884bbec1ac5536a1923b7f66240c38ddf1bd01c66db6f5a2f6743",
+      "stderr": ""
+    },
+    {
+      "fixture": "status_only",
+      "elapsed_seconds": 3.527037,
+      "server_bytes": 441216,
+      "wasm_bytes": 0,
+      "stdout_sha256": "e6b21225d579f764b6412ec3fe954820267688917f342fd141b4bf525092f375",
+      "stderr": ""
+    },
+    {
+      "fixture": "browser_score",
+      "elapsed_seconds": 3.698444,
+      "server_bytes": 441216,
+      "wasm_bytes": 1103,
+      "stdout_sha256": "a1270b01628158332f91b365303e2dc3e37e77ad7b26a05eb930fcc1304ac5b5",
+      "stderr": ""
+    },
+    {
+      "fixture": "browser_score",
+      "elapsed_seconds": 3.869357,
+      "server_bytes": 441216,
+      "wasm_bytes": 1103,
+      "stdout_sha256": "234aa805ccddc75a42bbaf5a52e367f05fd4648f3d746636da3ed8d4ff3bec96",
+      "stderr": ""
+    },
+    {
+      "fixture": "browser_score",
+      "elapsed_seconds": 4.272243,
+      "server_bytes": 441216,
+      "wasm_bytes": 1103,
+      "stdout_sha256": "9fdc403438e775a7cfdb1830a635c6bab14b71b2ae85b2a657d9da613d844644",
+      "stderr": ""
+    },
+    {
+      "fixture": "browser_score",
+      "elapsed_seconds": 3.842336,
+      "server_bytes": 441216,
+      "wasm_bytes": 1103,
+      "stdout_sha256": "f558136ad9a49d653e11cd059b03e852d6dcd116104b81f71b8fe036902d52f2",
+      "stderr": ""
+    },
+    {
+      "fixture": "typed_post",
+      "elapsed_seconds": 3.977389,
+      "server_bytes": 493696,
+      "wasm_bytes": 1442,
+      "stdout_sha256": "f52cccf20ad5c8e92b3b63f1c1ead3c2dd438f439766b84c94bea7ca67b95752",
+      "stderr": ""
+    },
+    {
+      "fixture": "typed_post",
+      "elapsed_seconds": 3.778475,
+      "server_bytes": 493696,
+      "wasm_bytes": 1442,
+      "stdout_sha256": "9063389bc9ece1168fbb45236bd3af07477610c093f6e30d2000eef10453a851",
+      "stderr": ""
+    },
+    {
+      "fixture": "typed_post",
+      "elapsed_seconds": 4.021586,
+      "server_bytes": 493696,
+      "wasm_bytes": 1442,
+      "stdout_sha256": "8d6a563fec893ca0c87179224b68039d638fbb34f22f4dcb9199718b75c15317",
+      "stderr": ""
+    },
+    {
+      "fixture": "typed_post",
+      "elapsed_seconds": 3.889517,
+      "server_bytes": 493696,
+      "wasm_bytes": 1442,
+      "stdout_sha256": "6b9bd4a1bc0d5cc48361cbefe4f91f7c2197ad918e1d47fae0e063cb01e75e21",
+      "stderr": ""
+    }
+  ],
+  "by_fixture": {
+    "status_only": {
+      "sessions": 4,
+      "median_elapsed_seconds": 3.543877,
+      "mean_elapsed_seconds": 3.568058,
+      "median_server_bytes": 441216.0,
+      "median_wasm_bytes": 0.0
+    },
+    "browser_score": {
+      "sessions": 4,
+      "median_elapsed_seconds": 3.855847,
+      "mean_elapsed_seconds": 3.920595,
+      "median_server_bytes": 441216.0,
+      "median_wasm_bytes": 1103.0
+    },
+    "typed_post": {
+      "sessions": 4,
+      "median_elapsed_seconds": 3.933453,
+      "mean_elapsed_seconds": 3.916742,
+      "median_server_bytes": 493696.0,
+      "median_wasm_bytes": 1442.0
+    }
+  },
+  "median_of_fixture_medians_seconds": 3.855847,
+  "acceptance": {
+    "minimum_latency_improvement_percent": 20.0,
+    "maximum_unjustified_size_increase_percent": 25.0
+  },
+  "claim_boundary": "This local product benchmark measures cold web-build latency only; it is not an iteration-042 rerun or evidence of universal superiority."
+}

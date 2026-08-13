@@ -1,4 +1,5 @@
 import hashlib
+import json
 from pathlib import Path
 
 from benchmarks import measure_web_build_latency_001 as latency
@@ -10,6 +11,7 @@ EXPECTED_FIXTURE_HASHES = {
     "browser_score": "6b7f9798bedd965cd3356afb70c560ace148a37a26f6b75fb02b663926ecb746",
     "typed_post": "b5d23446683f000728faaba6117e667f0f85021da43e2c67de5223f62c4b64aa",
 }
+BASELINE = latency.REPO / "benchmarks/web_build_latency_001_baseline.json"
 
 
 def test_web_build_latency_fixture_hashes_are_frozen():
@@ -37,3 +39,20 @@ def test_web_build_latency_protocol_is_bound_to_script():
     script = Path(latency.__file__)
     assert hashlib.sha256(script.read_bytes()).hexdigest()
     assert latency.DEFAULT_OUTPUT.name == "web_build_latency_001_result.json"
+
+
+def test_web_build_latency_baseline_is_complete_and_frozen():
+    assert hashlib.sha256(BASELINE.read_bytes()).hexdigest() == (
+        "ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b"
+    )
+    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+
+    assert baseline["toolchain"]["parley"] == "parley 0.5.3"
+    assert baseline["toolchain"]["git_commit"] == (
+        "42c464a95245427918ee5e8e48a1fc1abf0a4e04"
+    )
+    assert baseline["fixture_sha256"] == EXPECTED_FIXTURE_HASHES
+    assert baseline["repetitions"] == 4
+    assert len(baseline["cells"]) == 12
+    assert not any(row["stderr"] for row in baseline["cells"])
+    assert baseline["median_of_fixture_medians_seconds"] == 3.855847
