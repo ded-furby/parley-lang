@@ -4411,3 +4411,30 @@ Task/case semantics, v0.5.3 product and context, models, reasoning, replicates,
 thresholds, metrics, gates, scratch budget, and no-rerun policy are unchanged.
 The next invocation is the once-run measured matrix; every start/finish,
 attempt, cleanup, and capacity record must be retained and published.
+
+### 042 valid measured matrix — token gate passes, overall gate does not
+
+- Completed: 2026-08-13
+- Measurement commit: `03a6abb716f6ae30f3dc5397ad2c951607ff1c6e`
+- Raw artifact: `benchmarks/fullstack_agent_042_raw.json`
+- Raw SHA-256:
+  `13f54a40b75ff55934c62a4e44400b0fbbae713392188979fce1f6c59aa3a889`
+- Audit SHA-256:
+  `b71e9c1c405ea3853059e370239f261e4bd8ea87d3016c03181717e05fce05ec`
+
+All 96 cells completed with unique threads, journals, attempt evidence, and
+post-evidence cleanup. Ninety-three capacity checks passed, all 290 exact-build
+boundaries were hash-stable, and no run-level or cleanup failure occurred. All
+four language arms passed 24/24 hidden assignments and 12/12 exact-root
+maintenance cells. Parley, TypeScript, and Rust passed 24/24 first checks;
+Python passed 23/24 after one BigInt/Number browser repair.
+
+Execution integrity, correctness, first check, tokens, and maintainability
+passed. The compact v0.5.3 context moved Parley's median from 4.9091% above
+Python in 041 to 0.9493% below Python in 042, with Parley lower in both model
+strata. Parley was also 8.4325% faster overall.
+
+Elapsed nevertheless failed the preregistered stratum rule: Terra Parley took
+27.41515 seconds versus Terra Python's 25.183, an 8.8637% deficit. The overall
+all-six gate is therefore false. Preserve 042 unchanged; do not reinterpret the
+overall elapsed lead as satisfying the registered within-stratum condition.

@@ -576,6 +576,13 @@ and static-budget result, not a claim that the independent efficiency gate has
 passed; see
 [benchmarks/FULLSTACK_AGENT_042_CONTEXT_FREEZE.md](benchmarks/FULLSTACK_AGENT_042_CONTEXT_FREEZE.md).
 
+Independent iteration 042 completed all 96 sessions cleanly. Parley passed
+24/24 hidden assignments, 24/24 first checks, 12/12 exact-root repairs, and the
+complete-token gate at 59,737 median tokens—0.9493% below Python. It was fastest
+overall, but the strict six-condition gate remains unmet because Terra Parley
+was 8.8637% slower than Terra Python. See
+[benchmarks/FULLSTACK_AGENT_042.md](benchmarks/FULLSTACK_AGENT_042.md).
+
 ## Development
 
 ```bash

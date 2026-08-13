@@ -2,8 +2,9 @@
 
 Iteration 042 is the independent validation target for Parley v0.5.3's
 scaffold-aware context. The 222-token card was committed before these task
-names, formulas, routes, fixtures, or defect mechanisms were selected. This
-checkpoint contains task and case semantics only.
+names, formulas, routes, fixtures, or defect mechanisms were selected. The
+study preserved separate product, corpus, protocol, harness, execution, raw,
+and audit checkpoints.
 
 ## Frozen task population
 
@@ -53,7 +54,7 @@ prove universal superiority, production-framework parity, or performance in
 unmeasured domains. Every cell and failure must be published without selective
 reruns or correctness-conditioned efficiency filtering.
 
-## Current state
+## Frozen design
 
 The semantics are ready for their standalone corpus commit with these exact
 SHA-256 values:
@@ -75,4 +76,26 @@ public semantics; all eight maintenance roots are exact. The largest reference
 or seed workspace retained 161,165,133 bytes, so the 2 GiB worker allowance is
 13.325× the observed peak. The end-to-end source-printer, FIFO, parent
 HTTP/Chromium, hidden-evaluator, and integrity smoke passes. Revision 2 binds
-all 19 transitive execution files; no journal or measured session exists.
+all 19 transitive execution files. At that committed boundary, no journal or
+measured session existed.
+
+## Measured result
+
+All 96 frozen cells completed exactly once with unique threads, durable attempt
+and journal evidence, and post-evidence cleanup. All four language arms passed
+24/24 hidden assignments and 12/12 exact-root maintenance cells. Parley,
+TypeScript, and Rust passed 24/24 first checks; Python passed 23/24 after one
+browser BigInt/Number repair.
+
+Parley passed the complete-token gate for the first time: its 59,737 median was
+0.9493% below Python's 60,309.5 and remained lower in both model strata. It was
+also fastest overall at 28.05485 seconds versus Python's 30.63845, TypeScript's
+33.54225, and Rust's 58.42965. However, the preregistered elapsed gate also
+requires every model stratum: under Terra, Parley took 27.41515 seconds versus
+Python's 25.183, an 8.8637% deficit. Elapsed therefore fails, and the strict
+all-six gate remains false at five of six conditions.
+
+This result establishes clean frozen evidence for correctness, first-check,
+complete-token, maintainability, overall elapsed, and source compactness on the
+measured population. It does not establish strict parity/efficiency under the
+registered gate and cannot prove universal language superiority.
