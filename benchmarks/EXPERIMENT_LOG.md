@@ -4342,3 +4342,31 @@ model configuration, threshold, agent prompt, or measured session. Next:
 commit this semantics-only boundary, then preregister the balanced matrix,
 scratch budget, evidence order, and exact execution controls before
 implementing any stack.
+
+### 042 balanced compact-context protocol preregistered
+
+- Preregistered: 2026-08-13
+- Corpus commit: `3e46ee290e0da156fcb18c8a4a2cf865ba13b7a1`
+- Protocol: `benchmarks/fullstack_agent_042_protocol.json`
+- Protocol SHA-256:
+  `0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f`
+- Frozen Parley release: v0.5.3 at
+  `dd6ee476ee8f244f8470a6524d1885103d919aa3`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The protocol binds the v0.5.3 scaffold-aware card alone as Parley's 892-byte /
+222-token measured context. The language, model, reasoning, replicate,
+public/hidden case, exact-build, parent-owned browser/HTTP, immutable journal,
+scratch, six-condition gate, exclusion, and no-rerun rules remain as strict as
+041.
+
+The scratch boundary retains an 8 GiB host reserve plus 2 GiB per worker for a
+16 GiB four-worker preflight. Complete finished evidence must be durable before
+the exact immediate-child workspace is reclaimed. Clean-room calibration may
+increase but never lower the budget before measurement.
+
+No 042 scaffold or reference implementation existed when this protocol was
+written. Next: commit the preregistration, then implement and validate all 16
+reference stack/task cells, maintenance roots, scratch reclamation, resume
+behavior, and orchestration before a final zero-session execution freeze.

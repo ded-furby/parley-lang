@@ -423,6 +423,14 @@ population. All 36 case IDs and every task/field/route/export identifier are
 disjoint from 036–041. This semantics-only checkpoint precedes the 042
 protocol, scaffolds, thresholds, and model output; see `FULLSTACK_AGENT_042.md`.
 
+The 042 comparison is preregistered in `fullstack_agent_042_protocol.json`:
+96 fresh sessions across four languages, two model configurations, and three
+replicates. It retains the strict six-condition gate, parent-owned HTTP/browser
+evaluation, immediate post-build hashes, 16 GiB scratch preflight, durable
+evidence before cleanup, and no-rerun rule. It binds the v0.5.3 card alone as
+Parley's measured 222-token context. No 042 scaffold or reference application
+existed when this protocol was frozen.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

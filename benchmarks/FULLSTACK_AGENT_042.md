@@ -63,5 +63,10 @@ SHA-256 values:
 
 An independent oracle verifies all successful HTTP and browser fixtures, the
 4/5 public/hidden split, browser coverage, metadata, defect observability, and
-disjointness from all six prior fresh-agent corpora. No 042 protocol, scaffold,
-validation artifact, execution journal, or measured session exists.
+disjointness from all six prior fresh-agent corpora. The balanced comparison is
+now preregistered in `fullstack_agent_042_protocol.json` with SHA-256
+`0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f`.
+It binds the 96-cell matrix and six-condition gate, 222-token context, 16 GiB
+four-worker preflight, evidence-before-cleanup ordering, and no-rerun behavior.
+No 042 scaffold, validation artifact, execution journal, or measured session
+exists.

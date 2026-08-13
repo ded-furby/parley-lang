@@ -269,3 +269,63 @@ def test_fullstack_042_corpus_was_created_after_the_context_only_freeze():
     assert "before any iteration-042 task semantics" in freeze[
         "construction_boundary"
     ]
+
+
+def test_fullstack_042_protocol_preregisters_matrix_gate_and_scratch_boundary():
+    protocol_path = BENCHMARKS / "fullstack_agent_042_protocol.json"
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    product = protocol["frozen_product"]
+    scratch = protocol["scratch_space_control"]
+
+    assert sha256(protocol_path) == (
+        "0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f"
+    )
+    assert protocol["schema_version"] == protocol["protocol_revision"] == 1
+    assert protocol["experiment_id"] == "042"
+    assert "execution_freeze" not in protocol
+    assert product["parley_version"] == "parley 0.5.3"
+    assert product["product_commit"] == (
+        "dd6ee476ee8f244f8470a6524d1885103d919aa3"
+    )
+    assert product["corpus_commit"] == (
+        "3e46ee290e0da156fcb18c8a4a2cf865ba13b7a1"
+    )
+    for file_key, hash_key in (
+        ("tasks_file", "tasks_sha256"),
+        ("cases_file", "cases_sha256"),
+        ("parley_context_file", "parley_context_sha256"),
+        ("context_freeze_file", "context_freeze_sha256"),
+    ):
+        assert sha256(REPO / product[file_key]) == product[hash_key]
+    assert product["parley_context_bytes"] == 892
+    assert product["parley_context_o200k_tokens"] == 222
+
+    for file_key, hash_key in (
+        ("implementation_file", "implementation_sha256"),
+        ("policy_file", "policy_sha256"),
+    ):
+        assert sha256(REPO / scratch[file_key]) == scratch[hash_key]
+    config = protocol["frozen_config"]
+    assert config["languages"] == ["parley", "python", "typescript", "rust"]
+    assert config["max_workers"] == scratch["max_workers"] == 4
+    assert scratch["reserve_bytes"] == 8 * 1024**3
+    assert scratch["per_worker_bytes"] == 2 * 1024**3
+    assert scratch["required_free_bytes"] == 16 * 1024**3
+    assert "before journal initialization" in scratch["preflight_timing"]
+    assert "before removing" in scratch["cleanup_order"]
+    assert "never authorizes a rerun" in scratch["failure_policy"]
+    assert protocol["matrix"]["fresh_sessions"] == 96
+    assert protocol["matrix"]["hidden_case_executions"] == 480
+    assert set(protocol["primary_gate"]) == {
+        "execution_integrity",
+        "correctness",
+        "first_check",
+        "tokens",
+        "elapsed",
+        "maintainability",
+        "verdict",
+    }
+    assert "implemented only after this protocol commit" in protocol[
+        "implementation_rule"
+    ]
+    assert "Scratch calibration may only increase" in protocol["change_rule"]
