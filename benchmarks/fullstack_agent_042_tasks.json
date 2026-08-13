@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "experiment_id": "042",
+  "description": "Two new full-stack implementation assignments and two new maintenance assignments, frozen after the v0.5.3 context checkpoint and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "radio_archive_build",
+      "kind": "implementation",
+      "title": "Build a radio archive planner across HTTP and browser targets",
+      "statement": "Implement the frozen Radio Archive contract in the supplied stack. segment_total is spoken_segments + music_segments. speech_megabytes is spoken_segments * 14. music_megabytes is music_segments * 24. translation_megabytes is language_tracks * 9 during a live_broadcast and zero otherwise. archive_megabytes is speech_megabytes + music_megabytes + translation_megabytes. replica_megabytes is archive_megabytes * language_tracks. upload_blocks is archive_megabytes divided by 64 using floor division. archive_score is replica_megabytes + upload_blocks * 17 + segment_total * 3. archive_mode is multilingual_live during a live broadcast with more than one language track, live during any other live broadcast, and catalog otherwise. The browser export returns archive_score.",
+      "service": "Radio Archive",
+      "status_route": "/status/radio-archive-ready",
+      "post_route": "/api/v6/radio-archive",
+      "browser_export": "radio_archive_score",
+      "shared_result_field": "archive_score",
+      "request_fields": {
+        "spoken_segments": "number",
+        "music_segments": "number",
+        "language_tracks": "number",
+        "live_broadcast": "yesno"
+      },
+      "response_fields": {
+        "segment_total": "number",
+        "speech_megabytes": "number",
+        "music_megabytes": "number",
+        "translation_megabytes": "number",
+        "archive_megabytes": "number",
+        "replica_megabytes": "number",
+        "upload_blocks": "number",
+        "archive_score": "number",
+        "archive_mode": "text"
+      },
+      "public_case_ids": [
+        "radio_archive_status",
+        "radio_archive_live_multilingual",
+        "radio_archive_wrong_language_type",
+        "radio_archive_browser_multilingual"
+      ],
+      "hidden_case_ids": [
+        "radio_archive_catalog",
+        "radio_archive_live_single",
+        "radio_archive_unknown_field",
+        "radio_archive_browser_catalog",
+        "radio_archive_browser_live_single"
+      ],
+      "independence": "New radio-archive domain, v6 route, replica and upload-block formulas, vocabulary, fixtures, and browser export selected after the v0.5.3 context freeze and before any 042 scaffold or model output."
+    },
+    {
+      "id": "theatre_turnaround_build",
+      "kind": "implementation",
+      "title": "Build a theatre turnaround planner across HTTP and browser targets",
+      "statement": "Implement the frozen Theatre Turnaround contract in the supplied stack. show_total is matinee_shows + evening_shows. base_reset_minutes is matinee_shows * 18 + evening_shows * 27. touring_minutes is stage_crews * 6 during a touring_production and zero otherwise. required_minutes is base_reset_minutes + touring_minutes. crew_capacity_minutes is stage_crews * 45. covered_minutes is min(required_minutes, crew_capacity_minutes). delayed_minutes is max(required_minutes - crew_capacity_minutes, 0). handoff_windows is required_minutes divided by 30 using floor division. turnaround_score is covered_minutes + delayed_minutes * 8 + handoff_windows * 11. turnaround_state is on_time when delayed_minutes is zero, touring_delay when delay remains during a touring production, and repertory_delay otherwise. The browser export returns turnaround_score.",
+      "service": "Theatre Turnaround",
+      "status_route": "/status/theatre-ready",
+      "post_route": "/api/v6/theatre-turnaround",
+      "browser_export": "theatre_turnaround_score",
+      "shared_result_field": "turnaround_score",
+      "request_fields": {
+        "matinee_shows": "number",
+        "evening_shows": "number",
+        "stage_crews": "number",
+        "touring_production": "yesno"
+      },
+      "response_fields": {
+        "show_total": "number",
+        "base_reset_minutes": "number",
+        "touring_minutes": "number",
+        "required_minutes": "number",
+        "crew_capacity_minutes": "number",
+        "covered_minutes": "number",
+        "delayed_minutes": "number",
+        "handoff_windows": "number",
+        "turnaround_score": "number",
+        "turnaround_state": "text"
+      },
+      "public_case_ids": [
+        "theatre_turnaround_status",
+        "theatre_turnaround_on_time",
+        "theatre_turnaround_wrong_media",
+        "theatre_turnaround_browser_on_time"
+      ],
+      "hidden_case_ids": [
+        "theatre_turnaround_touring_delay",
+        "theatre_turnaround_repertory_delay",
+        "theatre_turnaround_unknown_field",
+        "theatre_turnaround_browser_touring",
+        "theatre_turnaround_browser_repertory"
+      ],
+      "independence": "New theatre-turnaround domain, v6 route, reset and handoff-window formulas, vocabulary, fixtures, and browser export selected after the v0.5.3 context freeze and before any 042 scaffold or model output."
+    },
+    {
+      "id": "bakery_batch_repair",
+      "kind": "maintenance",
+      "title": "Repair partial-tray counting in a bakery schedule",
+      "statement": "Repair the supplied Bakery Batch application. loaf_total is sourdough_loaves + rye_loaves. sourdough_minutes is sourdough_loaves * 11. rye_minutes is rye_loaves * 8. proof_minutes is loaf_total * 2 during overnight_proof and zero otherwise. bake_minutes is sourdough_minutes + rye_minutes + proof_minutes. rack_capacity_minutes is oven_decks * 48. oven_minutes_used is min(bake_minutes, rack_capacity_minutes). unscheduled_minutes is max(bake_minutes - rack_capacity_minutes, 0). tray_batches is loaf_total divided into trays of 12, rounding up so any partial nonempty tray counts as a batch. bakery_state is ready when unscheduled_minutes is zero, overnight_backlog when backlog remains during overnight proofing, and daytime_backlog otherwise. The HTTP response and browser export must use the same rule; the browser export returns tray_batches.",
+      "service": "Bakery Batch",
+      "status_route": "/status/bakery-ready",
+      "post_route": "/api/v6/bakery-batches",
+      "browser_export": "bakery_tray_batches",
+      "shared_result_field": "tray_batches",
+      "request_fields": {
+        "sourdough_loaves": "number",
+        "rye_loaves": "number",
+        "oven_decks": "number",
+        "overnight_proof": "yesno"
+      },
+      "response_fields": {
+        "loaf_total": "number",
+        "sourdough_minutes": "number",
+        "rye_minutes": "number",
+        "proof_minutes": "number",
+        "bake_minutes": "number",
+        "rack_capacity_minutes": "number",
+        "oven_minutes_used": "number",
+        "unscheduled_minutes": "number",
+        "tray_batches": "number",
+        "bakery_state": "text"
+      },
+      "public_case_ids": [
+        "bakery_batch_status",
+        "bakery_batch_partial_tray",
+        "bakery_batch_missing_field",
+        "bakery_batch_browser_partial"
+      ],
+      "hidden_case_ids": [
+        "bakery_batch_day_backlog",
+        "bakery_batch_overnight_ready",
+        "bakery_batch_unknown_field",
+        "bakery_batch_browser_multiple",
+        "bakery_batch_browser_overnight"
+      ],
+      "predeclared_defect": "The application-logic module uses floor division for tray_batches, so a final partial nonempty tray is omitted.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic ceiling-rounding omission defect",
+      "adaptation_boundary": "The tray size, round-up contract, bakery vocabulary, fixtures, and expected repair are new and were selected after the v0.5.3 context freeze and before any measured output."
+    },
+    {
+      "id": "subsea_relay_repair",
+      "kind": "maintenance",
+      "title": "Repair storm-routing demand in a subsea relay",
+      "statement": "Repair the supplied Subsea Relay application. packet_total is shore_packets + vessel_packets. shore_units is shore_packets * 4. vessel_units is vessel_packets * 7. storm_units is relay_nodes * 5 during storm_routing and zero otherwise. required_units is shore_units + vessel_units + storm_units. relay_capacity_units is relay_nodes * 24. forwarded_units is min(required_units, relay_capacity_units). dropped_units is max(required_units - relay_capacity_units, 0). reserve_units is max(relay_capacity_units - forwarded_units, 0). relay_state is clear when dropped_units is zero, storm_loss when packets are dropped during storm routing, and packet_loss otherwise. The HTTP response and browser export must use the same rule; the browser export returns reserve_units.",
+      "service": "Subsea Relay",
+      "status_route": "/status/subsea-relay-ready",
+      "post_route": "/api/v6/subsea-relay",
+      "browser_export": "subsea_relay_reserve",
+      "shared_result_field": "reserve_units",
+      "request_fields": {
+        "shore_packets": "number",
+        "vessel_packets": "number",
+        "relay_nodes": "number",
+        "storm_routing": "yesno"
+      },
+      "response_fields": {
+        "packet_total": "number",
+        "shore_units": "number",
+        "vessel_units": "number",
+        "storm_units": "number",
+        "required_units": "number",
+        "relay_capacity_units": "number",
+        "forwarded_units": "number",
+        "dropped_units": "number",
+        "reserve_units": "number",
+        "relay_state": "text"
+      },
+      "public_case_ids": [
+        "subsea_relay_status",
+        "subsea_relay_storm_loss",
+        "subsea_relay_wrong_node_type",
+        "subsea_relay_browser_storm_loss"
+      ],
+      "hidden_case_ids": [
+        "subsea_relay_clear_loss",
+        "subsea_relay_storm_spare",
+        "subsea_relay_unknown_field",
+        "subsea_relay_browser_clear_loss",
+        "subsea_relay_browser_storm_spare"
+      ],
+      "predeclared_defect": "The application-logic module subtracts storm_units from required demand during storm routing instead of adding it, overstating reserve capacity.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic conditional sign-inversion defect",
+      "adaptation_boundary": "The storm-routing mechanism, sign, subsea-relay vocabulary, fixtures, and expected repair are new and were selected after the v0.5.3 context freeze and before any measured output."
+    }
+  ]
+}

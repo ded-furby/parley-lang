@@ -4313,3 +4313,32 @@ No 042 task, case, scaffold, reference implementation, threshold, or agent
 output exists at this freeze. This is a deterministic product and static-budget
 checkpoint, not measured reliability or efficiency evidence. Next: commit this
 boundary, then create and freeze a disjoint successor population.
+
+### 042 independent corpus frozen after the context product
+
+- Frozen: 2026-08-13
+- Preceding context commit: `dd6ee47`
+- Tasks: `benchmarks/fullstack_agent_042_tasks.json`
+- Task SHA-256:
+  `14f946574d2c5fa6a552496fb6eba4e51380a2af0c85445e1b6d0a60d66da302`
+- Cases: `benchmarks/fullstack_agent_042_cases.json`
+- Case SHA-256:
+  `f233dc0fa944a7a956619c8755801e882da974bc5e927b6dba67312084d4fe0c`
+- Design record: `benchmarks/FULLSTACK_AGENT_042.md`
+
+The population contains radio-archive and theatre-turnaround implementations
+plus bakery-batch and subsea-relay repairs. It has 36 cases: four public and
+five hidden per task, including one public and two hidden browser judgments per
+task. An independent oracle recomputes every successful HTTP response and
+browser scalar.
+
+Automated independence checks prove that task IDs, case IDs, request fields,
+response fields, status/POST routes, and browser exports are disjoint from
+036–041. The bakery's ceiling-rounding omission and relay's conditional
+sign-inversion defects are new and publicly observable.
+
+This checkpoint contains no 042 scaffold, reference implementation, protocol,
+model configuration, threshold, agent prompt, or measured session. Next:
+commit this semantics-only boundary, then preregister the balanced matrix,
+scratch budget, evidence order, and exact execution controls before
+implementing any stack.

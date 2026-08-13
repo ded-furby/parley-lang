@@ -415,6 +415,14 @@ work root, finished evidence must precede cleanup, and any later capacity or
 cleanup failure stops new scheduling without authorizing reruns. No 041
 scaffold or reference implementation existed at this checkpoint.
 
+Iteration 042 begins with two separately frozen boundaries. The v0.5.3
+scaffold-aware Parley card was committed first at 222 `o200k_base` tokens, then
+`fullstack_agent_042_tasks.json` and `fullstack_agent_042_cases.json` defined a
+new radio archive, theatre turnaround, bakery batching, and subsea relay
+population. All 36 case IDs and every task/field/route/export identifier are
+disjoint from 036–041. This semantics-only checkpoint precedes the 042
+protocol, scaffolds, thresholds, and model output; see `FULLSTACK_AGENT_042.md`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
