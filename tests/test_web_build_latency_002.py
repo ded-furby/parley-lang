@@ -146,7 +146,6 @@ def test_web_build_latency_002_analysis_is_deterministic(tmp_path):
         [
             sys.executable,
             str(ANALYZER),
-            "--verify-current-files",
             "--output",
             str(output),
         ],

@@ -24,6 +24,7 @@ from .parser import SourceMap, parse_program
 WEB_MANIFEST = "parley.web.json"
 NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
 FUNCTION_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
+FIELD_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 HTTP_METHODS = {"GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"}
 
 WEB_CARGO_TOML = """\
@@ -70,11 +71,19 @@ class WebProjectError(Exception):
 
 
 @dataclass(frozen=True)
+class ResponseControl:
+    status_field: str
+    headers_field: str
+    body_field: str
+
+
+@dataclass(frozen=True)
 class Route:
     method: str
     path: str
     handler: str
     success_status: int
+    response: ResponseControl | None
 
 
 @dataclass(frozen=True)
@@ -202,13 +211,35 @@ def load_project(path: str | Path) -> WebProject:
         handler = route.get("handler")
         if not isinstance(handler, str) or not FUNCTION_RE.fullmatch(handler):
             raise WebProjectError(f"routes item {index} handler is not a Parley function name")
+        response = None
+        if "response" in route:
+            raw_response = _object(route["response"], f"routes item {index} response")
+            expected = {"status_field", "headers_field", "body_field"}
+            if set(raw_response) != expected:
+                raise WebProjectError(
+                    f"routes item {index} response must contain exactly "
+                    "status_field, headers_field, and body_field")
+            values: dict[str, str] = {}
+            for field in sorted(expected):
+                value = raw_response[field]
+                if not isinstance(value, str) or not FIELD_RE.fullmatch(value):
+                    raise WebProjectError(
+                        f"routes item {index} response {field} is not a Parley field name")
+                values[field] = value
+            if len(set(values.values())) != 3:
+                raise WebProjectError(
+                    f"routes item {index} response field names must be distinct")
+            if "success_status" in route:
+                raise WebProjectError(
+                    f"routes item {index} cannot combine response with success_status")
+            response = ResponseControl(**values)
         success = _integer(route.get("success_status", 200),
                            f"routes item {index} success_status", 200, 299)
         key = (method, route_path)
         if key in seen_routes:
             raise WebProjectError(f"route {method} {route_path} is declared twice")
         seen_routes.add(key)
-        routes.append(Route(method, route_path, handler, success))
+        routes.append(Route(method, route_path, handler, success, response))
     if not routes and static_dir is None:
         raise WebProjectError("declare at least one route or a static_dir")
 
@@ -328,12 +359,54 @@ def check_web(project: WebProject) -> CheckedWeb:
                 "P711", f'Web handler "{function.name}" must give back a JSON response value.',
                 function, srcmap, hint="Add a `giving` type and give back that value on every path."))
             continue
-        response_problem = _json_type_error(function.ret, records, enums)
-        if response_problem:
-            contract_diags.append(_diag(
-                "P712", f'Web handler "{function.name}" response is not JSON-safe: {response_problem}.',
-                function, srcmap))
-            continue
+        if route.response is None:
+            response_problem = _json_type_error(function.ret, records, enums)
+            if response_problem:
+                contract_diags.append(_diag(
+                    "P712", f'Web handler "{function.name}" response is not JSON-safe: {response_problem}.',
+                    function, srcmap))
+                continue
+        else:
+            control = route.response
+            if not isinstance(function.ret, A.TRecord):
+                contract_diags.append(_diag(
+                    "P716", f'Web handler "{function.name}" must give a response-control record.',
+                    function, srcmap,
+                    hint="Return a record containing the configured status, headers, and body fields."))
+                continue
+            response_record = records.get(function.ret.name)
+            if response_record is None:
+                contract_diags.append(_diag(
+                    "P716", f'Web handler "{function.name}" response-control record is missing.',
+                    function, srcmap))
+                continue
+            field_types = dict(response_record.fields)
+            wanted_fields = {control.status_field, control.headers_field, control.body_field}
+            if set(field_types) != wanted_fields:
+                contract_diags.append(_diag(
+                    "P717", f'Web handler "{function.name}" response-control fields do not match its manifest.',
+                    response_record, srcmap,
+                    hint="The response record must contain exactly the configured status, headers, and body fields."))
+                continue
+            if not isinstance(field_types[control.status_field], A.TNum):
+                contract_diags.append(_diag(
+                    "P718", f'Web handler "{function.name}" response status must be number.',
+                    response_record, srcmap))
+                continue
+            header_type = field_types[control.headers_field]
+            if not (isinstance(header_type, A.TMap)
+                    and isinstance(header_type.key, A.TText)
+                    and isinstance(header_type.val, A.TText)):
+                contract_diags.append(_diag(
+                    "P719", f'Web handler "{function.name}" response headers must be map from text to text.',
+                    response_record, srcmap))
+                continue
+            body_problem = _json_type_error(field_types[control.body_field], records, enums)
+            if body_problem:
+                contract_diags.append(_diag(
+                    "P719", f'Web handler "{function.name}" response body is not JSON-safe: {body_problem}.',
+                    response_record, srcmap))
+                continue
         if len(function.params) > 2:
             contract_diags.append(_diag(
                 "P713", f'Web handler "{function.name}" takes too many parameters.',
@@ -480,7 +553,7 @@ def _route_arm(checked: CheckedRoute, *, uses_program_json: bool) -> str:
     if checked.has_request:
         setup.append("""
             let parley_request = WebRequest {
-                method: request.method.clone(),
+                method: method.to_string(),
                 path: request.path.clone(),
                 query: request.query.clone(),
                 headers: request.headers.clone(),
@@ -509,16 +582,28 @@ def _route_arm(checked: CheckedRoute, *, uses_program_json: bool) -> str:
         args.append(_rust_arg(checked.body_param, "parley_body"))
     setup_text = "\n".join(setup)
     call = f"{safe(function.name)}({', '.join(args)})"
+    response = route.response
+    encoded_value = "result" if response is None else f"result.{safe(response.body_field)}"
     encode = (
-        "serde_json::to_vec(&result)"
+        f"serde_json::to_vec(&{encoded_value})"
         if uses_program_json
-        else "parley_web_json_runtime::encode(&result).map(String::into_bytes)"
+        else f"parley_web_json_runtime::encode(&{encoded_value}).map(String::into_bytes)"
     )
+    if response is None:
+        success = (
+            f'ParleyHttpResponse::new({route.success_status}, '
+            '"application/json; charset=utf-8", body)'
+        )
+    else:
+        success = (
+            f"parley_dynamic_json_response(result.{safe(response.status_field)}, "
+            f"result.{safe(response.headers_field)}, body)"
+        )
     return f'''        ("{rust_str_lit(route.method)}", "{rust_str_lit(route.path)}") => {{
 {setup_text}
             let result = {call};
             match {encode} {{
-                Ok(body) => ParleyHttpResponse::new({route.success_status}, "application/json; charset=utf-8", body),
+                Ok(body) => {success},
                 Err(error) => parley_json_error(500, "response_json_failed", &error.to_string()),
             }}
         }}'''
@@ -1134,6 +1219,8 @@ mod parley_web_json_runtime {
 WEB_RUNTIME = r'''
 const PARLEY_MAX_HEADER_BYTES: usize = 65_536;
 const PARLEY_MAX_BODY_BYTES: usize = __MAX_BODY__;
+const PARLEY_MAX_RESPONSE_HEADERS: usize = 100;
+const PARLEY_MAX_RESPONSE_HEADER_BYTES: usize = 32_768;
 const PARLEY_STATIC_ROOT: &str = "__STATIC_ROOT__";
 
 #[derive(Clone)]
@@ -1148,12 +1235,13 @@ struct ParleyHttpRequest {
 struct ParleyHttpResponse {
     status: u16,
     content_type: String,
+    headers: BTreeMap<String, String>,
     body: Vec<u8>,
 }
 
 impl ParleyHttpResponse {
     fn new(status: u16, content_type: &str, body: Vec<u8>) -> Self {
-        Self { status, content_type: content_type.to_string(), body }
+        Self { status, content_type: content_type.to_string(), headers: BTreeMap::new(), body }
     }
 }
 
@@ -1187,13 +1275,83 @@ fn parley_json_error(status: u16, code: &str, detail: &str) -> ParleyHttpRespons
     ParleyHttpResponse::new(status, "application/json; charset=utf-8", body.into_bytes())
 }
 
+fn parley_header_name_ok(name: &str) -> bool {
+    !name.is_empty() && name.bytes().all(|byte|
+        byte.is_ascii_alphanumeric() || matches!(byte,
+            b'!' | b'#' | b'$' | b'%' | b'&' | b'\'' | b'*' | b'+' | b'-' |
+            b'.' | b'^' | b'_' | b'`' | b'|' | b'~'))
+}
+
+fn parley_reserved_response_header(name: &str) -> bool {
+    matches!(name,
+        "connection" | "content-length" | "content-type" | "date" |
+        "keep-alive" | "proxy-authenticate" | "proxy-authorization" |
+        "server" | "te" | "trailer" | "transfer-encoding" | "upgrade" |
+        "x-content-type-options")
+}
+
+fn parley_response_header_error(detail: &str) -> ParleyHttpResponse {
+    parley_json_error(500, "invalid_response_headers", detail)
+}
+
+fn parley_dynamic_json_response(
+    status: i64,
+    headers: BTreeMap<String, String>,
+    body: Vec<u8>,
+) -> ParleyHttpResponse {
+    if !(200..=599).contains(&status) {
+        return parley_json_error(
+            500, "invalid_response_status", "response status must be from 200 to 599");
+    }
+    if headers.len() > PARLEY_MAX_RESPONSE_HEADERS {
+        return parley_response_header_error("response headers exceeded 100 fields");
+    }
+    let mut normalized = BTreeMap::new();
+    let mut encoded_bytes = 0usize;
+    for (name, value) in headers {
+        if !parley_header_name_ok(&name) {
+            return parley_response_header_error(
+                "response header name contains unsupported bytes");
+        }
+        let name = name.to_ascii_lowercase();
+        if parley_reserved_response_header(&name) {
+            return parley_response_header_error("response header is owned by the server");
+        }
+        if value.bytes().any(|byte| byte < 0x20 || byte == 0x7f) {
+            return parley_response_header_error(
+                "response header value contains unsupported control bytes");
+        }
+        if normalized.contains_key(&name) {
+            return parley_response_header_error(
+                "response header names must be unique ignoring case");
+        }
+        encoded_bytes = match encoded_bytes.checked_add(name.len() + value.len() + 4) {
+            Some(total) if total <= PARLEY_MAX_RESPONSE_HEADER_BYTES => total,
+            _ => return parley_response_header_error(
+                "response headers exceeded 32768 bytes"),
+        };
+        normalized.insert(name, value);
+    }
+    ParleyHttpResponse {
+        status: status as u16,
+        content_type: "application/json; charset=utf-8".to_string(),
+        headers: normalized,
+        body,
+    }
+}
+
 fn parley_reason(status: u16) -> &'static str {
     match status {
         200 => "OK", 201 => "Created", 202 => "Accepted", 204 => "No Content",
-        400 => "Bad Request", 404 => "Not Found", 405 => "Method Not Allowed",
+        205 => "Reset Content", 301 => "Moved Permanently", 302 => "Found",
+        304 => "Not Modified", 307 => "Temporary Redirect", 308 => "Permanent Redirect",
+        400 => "Bad Request", 401 => "Unauthorized", 403 => "Forbidden",
+        404 => "Not Found", 405 => "Method Not Allowed", 409 => "Conflict",
         408 => "Request Timeout", 413 => "Content Too Large",
-        415 => "Unsupported Media Type", 431 => "Request Header Fields Too Large",
+        415 => "Unsupported Media Type", 422 => "Unprocessable Content",
+        429 => "Too Many Requests", 431 => "Request Header Fields Too Large",
         500 => "Internal Server Error", 501 => "Not Implemented",
+        502 => "Bad Gateway", 503 => "Service Unavailable", 504 => "Gateway Timeout",
         _ => "Response",
     }
 }
@@ -1270,8 +1428,7 @@ fn parley_read_request(stream: &mut std::net::TcpStream) -> Result<ParleyHttpReq
             .ok_or_else(|| parley_json_error(400, "invalid_header", "header line has no colon"))?;
         let name = raw_name.trim().to_ascii_lowercase();
         let value = raw_value.trim().to_string();
-        if name.is_empty() || !name.bytes().all(|byte|
-                byte.is_ascii_alphanumeric() || matches!(byte, b'!' | b'#' | b'$' | b'%' | b'&' | b'\'' | b'*' | b'+' | b'-' | b'.' | b'^' | b'_' | b'`' | b'|' | b'~')) {
+        if !parley_header_name_ok(&name) {
             return Err(parley_json_error(400, "invalid_header_name", "header name contains unsupported bytes"));
         }
         if let Some(previous) = headers.insert(name.clone(), value.clone()) {
@@ -1333,12 +1490,23 @@ fn parley_write_response(stream: &mut std::net::TcpStream, method: &str, respons
     } else {
         response.content_type.as_str()
     };
-    let head = format!(
-        "HTTP/1.1 {} {}\r\nContent-Type: {}\r\nContent-Length: {}\r\nConnection: close\r\nX-Content-Type-Options: nosniff\r\n\r\n",
-        status, parley_reason(status), content_type, response.body.len()
-    );
+    let bodyless = matches!(status, 204 | 205 | 304);
+    let mut head = format!(
+        "HTTP/1.1 {} {}\r\nContent-Type: {}\r\n",
+        status, parley_reason(status), content_type);
+    if !matches!(status, 204 | 304) {
+        let content_length = if status == 205 { 0 } else { response.body.len() };
+        head.push_str(&format!("Content-Length: {}\r\n", content_length));
+    }
+    for (name, value) in &response.headers {
+        head.push_str(name);
+        head.push_str(": ");
+        head.push_str(value);
+        head.push_str("\r\n");
+    }
+    head.push_str("Connection: close\r\nX-Content-Type-Options: nosniff\r\n\r\n");
     let _ = stream.set_write_timeout(Some(std::time::Duration::from_secs(10)));
-    if stream.write_all(head.as_bytes()).is_ok() && method != "HEAD" {
+    if stream.write_all(head.as_bytes()).is_ok() && method != "HEAD" && !bodyless {
         let _ = stream.write_all(&response.body);
     }
     let _ = stream.flush();

@@ -55,6 +55,9 @@ def verify_current_files() -> None:
 def analyze() -> dict[str, Any]:
     assert sha256(BASELINE) == BASELINE_SHA256
     assert sha256(CANDIDATE) == CANDIDATE_SHA256
+    # PRODUCT_FILES and VERIFICATION_FILES bind the accepted v0.5.5 candidate.
+    # The repository may advance after that freeze, so deterministic historical
+    # recomputation does not require the current tree to remain v0.5.5.
     baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
     candidate = json.loads(CANDIDATE.read_text(encoding="utf-8"))
     assert baseline["study_id"] == candidate["study_id"] == "web-build-latency-002"

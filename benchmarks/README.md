@@ -497,6 +497,15 @@ establish universal superiority. The canonical
 and [portable report](reports/044-independent-fullstack-study-gate-passed.html)
 preserve the audited result and claim boundary.
 
+Typed web response-control protocol 003 then freezes the first post-044
+product step before implementation. Parley v0.5.6 adds an opt-in checked
+status/header/body envelope while preserving static routes, both JSON
+backends, and the dependency-free route-only build. Native adversarial tests
+cover authentication, creation/validation, status semantics, header injection,
+duplicates, ownership, and size limits; the full gate passed 643/643 tests.
+See `WEB_RESPONSE_CONTROL_003.md`. This is product capability evidence, not a
+new agent comparison or a universal-superiority claim.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

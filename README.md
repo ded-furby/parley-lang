@@ -214,8 +214,11 @@ Release Radar is the dogfood application: one Parley readiness rule produces a
 live WASM score in the browser and the confirmed typed assessment on the native
 JSON backend. The generated server bounds headers and bodies, rejects ambiguous
 lengths and unsupported transfer encoding, canonicalizes static paths, and
-serves `.wasm` with the streaming MIME type. The present HTTP/1.1 and scalar
-WASM limits are explicit in [`docs/WEB.md`](docs/WEB.md); this is a foundation,
+serves `.wasm` with the streaming MIME type. Typed response envelopes can make
+request-dependent 201/401/422 decisions and safely return application headers
+without yielding control of framing or hop-by-hop fields. The present HTTP/1.1 and scalar
+WASM limits are explicit in [`docs/WEB.md`](docs/WEB.md), with the response
+contract in [`docs/WEB_RESPONSE_CONTROL.md`](docs/WEB_RESPONSE_CONTROL.md); this is a foundation,
 not yet a claim of mature-framework parity.
 
 The preregistered [four-language Release Radar
@@ -639,6 +642,14 @@ both model strata. This is scoped synthetic full-stack evidence, not a claim
 of universal superiority. See the [study record](benchmarks/FULLSTACK_AGENT_044.md),
 [canonical artifact](benchmarks/reports/044-independent-fullstack-study-gate-passed.artifact.json),
 and [portable report](benchmarks/reports/044-independent-fullstack-study-gate-passed.html).
+
+Version 0.5.6 adds opt-in typed response envelopes for request-dependent
+statuses and application headers. It supports authentication challenges,
+creation locations, validation failures, redirects, and bodyless statuses
+while rejecting response splitting, invalid/duplicate names, oversized maps,
+and server-owned framing or hop-by-hop fields. The frozen product gate passed
+643/643 tests across both JSON backends; see
+[benchmarks/WEB_RESPONSE_CONTROL_003.md](benchmarks/WEB_RESPONSE_CONTROL_003.md).
 
 ## Development
 

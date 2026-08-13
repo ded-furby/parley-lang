@@ -1568,6 +1568,18 @@ def _load_checked_web(path: str):
     return project, web, browser
 
 
+def _web_response_contract(route) -> dict:
+    control = route.route.response
+    if control is None:
+        return {"mode": "static", "status": route.route.success_status}
+    return {
+        "mode": "dynamic",
+        "status_field": control.status_field,
+        "headers_field": control.headers_field,
+        "body_field": control.body_field,
+    }
+
+
 def cmd_web_check(args) -> int:
     try:
         project, web, browser = _load_checked_web(args.project)
@@ -1587,6 +1599,7 @@ def cmd_web_check(args) -> int:
                 "request_metadata": route.has_request,
                 "json_body": None if route.body_param is None else str(route.body_param.type),
                 "json_response": str(route.function.ret),
+                "response": _web_response_contract(route),
             }
             for route in web.routes
         ],
@@ -1754,7 +1767,8 @@ def _write_web_bundle(project: WebProject, web, browser, server_binary: Path,
         "public": "public",
         "routes": [
             {"method": route.route.method, "path": route.route.path,
-             "handler": route.route.handler}
+             "handler": route.route.handler,
+             "response": _web_response_contract(route)}
             for route in web.routes
         ],
         "browser_exports": [] if browser is None else [

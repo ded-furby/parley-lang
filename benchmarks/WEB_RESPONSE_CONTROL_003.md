@@ -88,3 +88,21 @@ This protocol evaluates a missing typed-web capability and its safety
 properties. Passing it would not establish production-framework parity or
 universal language superiority. Any later agent comparison must freeze unseen
 tasks only after this product change and its evidence are committed.
+
+## Accepted v0.5.6 product
+
+The implementation passed all six frozen conditions. Fourteen dedicated tests
+cover manifest parsing, custom field names, P716--P719 static checks, both JSON
+backends, compiled authentication and creation/validation routes, malformed
+request precedence, invalid statuses, every declared header rejection class,
+both header limits, bodyless statuses, and dynamic `HEAD`. Existing static
+routes retain their success status and dependency-free Cargo path.
+
+The complete repository suite passed **643/643** in 199.70 seconds before the
+version advanced and **643/643** again in 199.47 seconds afterward. Historical
+benchmark references were kept byte-for-byte at
+their frozen hashes; the new user and agent references live in
+`docs/WEB_RESPONSE_CONTROL.md` and `skill/parley/references/web-v0.5.6.md`.
+The v0.5.6 wheel also built successfully from the release tree.
+This accepts the generic capability and safety contract only. No post-v0.5.5
+agent comparison has yet been run.

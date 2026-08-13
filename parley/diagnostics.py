@@ -258,6 +258,26 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "The handler's body parameter contains a value that cannot be decoded from JSON.",
         "fix": "Use JSON-safe scalars, maybes, lists, text-keyed maps, records, or kinds.",
     },
+    "P716": {
+        "title": "Invalid response-control return",
+        "explain": "A route with a response contract does not return a declared response-control record.",
+        "fix": "Return a record containing the configured status, headers, and body fields.",
+    },
+    "P717": {
+        "title": "Response-control fields do not match",
+        "explain": "The response record's fields differ from the three names configured by the route.",
+        "fix": "Use exactly the distinct status_field, headers_field, and body_field names from parley.web.json.",
+    },
+    "P718": {
+        "title": "Invalid response-control status type",
+        "explain": "The configured dynamic response status field is not a Parley number.",
+        "fix": "Declare the status field as number; runtime values must be from 200 through 599.",
+    },
+    "P719": {
+        "title": "Invalid response-control headers or body",
+        "explain": "The headers field is not map from text to text, or the body field is not JSON-safe.",
+        "fix": "Use a text-to-text header map and an existing JSON-safe body type.",
+    },
     "P720": {
         "title": "Browser export names a missing function",
         "explain": "A browser export in parley.web.json points to a function that is not defined in its entrypoint.",

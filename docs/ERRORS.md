@@ -278,6 +278,30 @@ function that gives back `nothing`.
 
 **How to fix it:** Use the supported JSON types documented in [WEB.md](WEB.md).
 
+## P716 — Invalid response-control return
+
+**What it means:** A route with a manifest `response` contract does not return a declared record.
+
+**How to fix it:** Return a record containing the configured status, headers, and body fields.
+
+## P717 — Response-control fields do not match
+
+**What it means:** The handler response record has a different field set from the route's manifest contract.
+
+**How to fix it:** Make the record contain exactly the three distinct fields named by `status_field`, `headers_field`, and `body_field`.
+
+## P718 — Invalid response-control status type
+
+**What it means:** The configured response status field is not a Parley `number`.
+
+**How to fix it:** Declare the status field as `number`; the runtime accepts values from 200 through 599.
+
+## P719 — Invalid response-control headers or body
+
+**What it means:** The headers field is not `map from text to text`, or the configured body field is not JSON-safe.
+
+**How to fix it:** Use a text-to-text header map and one of the JSON-safe body types documented in [WEB.md](WEB.md).
+
 ## P720 — Browser export names a missing function
 
 **What it means:** `browser.exports` points to a function that is not defined.

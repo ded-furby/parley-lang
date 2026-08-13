@@ -211,6 +211,7 @@ def test_release_radar_contract_is_checked():
     assert contract["ok"] is True
     assert len(contract["routes"]) == 2
     assert contract["routes"][1]["json_body"] == "release_input"
+    assert contract["routes"][0]["response"] == {"mode": "static", "status": 200}
     assert contract["browser_exports"][0]["name"] == "readiness_score"
 
 

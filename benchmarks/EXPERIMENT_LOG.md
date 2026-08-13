@@ -4874,3 +4874,32 @@ non-universal claim boundary. The portable delivery passed schema validation,
 static-chart packaging, source-dialog interaction, and browser verification at
 1440 px and 390 px. Next: keep 044 immutable and freeze a broader independent
 phase before using its outcomes to guide any product change.
+
+### v0.5.6 typed response-control gate passed
+
+- Frozen protocol: `benchmarks/WEB_RESPONSE_CONTROL_003.md`
+- Baseline commit: `e71e8ad`
+- Protocol commit: `fd2c730`
+- Dedicated response-control tests: 14 passed
+- Full regression before version advance: 643 passed, 0 failed, 199.70 seconds
+- Full regression after version advance: 643 passed, 0 failed, 199.47 seconds
+- Release wheel: `parley_lang-0.5.6-py3-none-any.whl`, 143,349 bytes
+- Release wheel SHA-256:
+  `f3fa31b3fb7ff23faa5f13b54d32c3f26a8cc65daed28cdbb21458263314a458`
+
+The accepted implementation gives opted-in typed routes request-dependent
+200--599 statuses, bounded application headers, and a separately serialized
+JSON body. Static success-status routes remain unchanged. The checker enforces
+the configured three-field record with P716--P719, while the generated runtime
+rejects invalid statuses, response splitting, case-insensitive duplicates,
+server-owned framing/hop-by-hop fields, more than 100 fields, and more than
+32,768 encoded header bytes. Compiled tests cover 401 challenges, 201 creation,
+422 validation, malformed request precedence, 204/205/304 semantics, `HEAD`,
+the dependency-free codec, and the explicit-JSON Serde backend.
+
+Frozen historical reference files were restored byte-for-byte after the first
+repository-wide verification identified their intentional hash guards. New
+documentation is versioned separately. This accepts one generic typed-web
+capability; it does not reuse 044, measure agent behavior, supply an identity
+provider, or establish universal language superiority. Next: commit and freeze
+v0.5.6 before selecting an unseen authentication/creation agent corpus.
