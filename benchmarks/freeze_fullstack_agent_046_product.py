@@ -53,7 +53,11 @@ def build() -> dict[str, object]:
         git("show", "-s", "--format=%T", ITERATION_045_RESULT_COMMIT)
         == ITERATION_045_RESULT_TREE
     )
-    assert not git("diff", "--name-only", PRODUCT_COMMIT, "--", "parley", "pyproject.toml")
+    # The freeze binds the recorded commit/tree, not the repository's future
+    # working tree. Requiring the current product to equal v0.5.6 would make
+    # this historical artifact impossible to reproduce after the next release.
+    assert git("show", f"{PRODUCT_COMMIT}:parley/__init__.py")
+    assert git("show", f"{PRODUCT_COMMIT}:pyproject.toml")
     forbidden = (
         "fullstack_agent_046_tasks.json",
         "fullstack_agent_046_cases.json",

@@ -5063,3 +5063,20 @@ native-only, dynamic browser, and static browser medians were 0.696614,
 seconds, retaining its 9.573492-second first cell. The candidate target is now
 fixed at 0.649157 seconds or lower, with the original per-fixture, size,
 correctness, and full-regression conditions unchanged.
+
+### Direct-rustc backend candidate rejected
+
+- Candidate SHA-256:
+  `ac161529241f770fed935b455da466f4f24b49e88e68b82ee109ea7011d8602b`
+- Analysis SHA-256:
+  `25a163c74dc646d56d4dd30b16f5bcf0eac0363adcf70be034b5dafd58c36f27`
+- Exact candidate regression: 705 passed, 0 failed
+- Acceptance: failed latency threshold; all other conditions passed
+
+The v0.5.7 candidate sent dependency-free generated native and browser code
+directly to `rustc`, while explicit language JSON retained Cargo and pinned
+Serde. All 16 cells passed, the maximum fixture regression was 1.5242%, native
+size did not increase, and maximum WASM growth was 4.4030%. The primary build
+aggregate improved only 4.3864%, from 0.811446 to 0.775853 seconds, below the
+frozen 20% requirement. The candidate is rejected, will remain reproducible in
+Git history, and the product returns to v0.5.6 without same-population tuning.

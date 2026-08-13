@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "study_id": "web-build-backend-003-analysis",
+  "generated_at": "2026-08-13T08:19:54Z",
+  "baseline_sha256": "5588e490c22c74d5a9e9be8751438ea645341433d264b723b39594acc1dfb9f0",
+  "candidate_sha256": "ac161529241f770fed935b455da466f4f24b49e88e68b82ee109ea7011d8602b",
+  "fixture_sha256": {
+    "harbor_admission": "7def72af37b813a90f9b993980c32da66ec44e0012571ad24a0d98806a914069",
+    "forest_inventory": "216405e22242bfb1283b2ccd1ee3bd826caaaf08fae1daf4f71ca4ac308c96ce",
+    "glacier_manifest": "55a604460f741037ad3e7dfefa994a1841928211bc09c6d1c6a4af6f619d7819",
+    "manual_json_control": "ae6f86bfdc28ed1ee7fb30175fbb1bd3a70a1c052d7457abf53a8c3d32b6d365"
+  },
+  "candidate_product_file_sha256": {
+    "parley/cli.py": "505af69739d87a6fd7e954b5e74303654af85d6be25bf192ceda14a543295b5b",
+    "parley/__init__.py": "ed63eafd1e9c6a64064364846b0246112e957e3620545b96f98a2d45cf68d150",
+    "pyproject.toml": "410b6f5da1f4246f1949a80a40d8926c9cc5db69219f714cd14d654be7992273",
+    "docs/WEB_BUILD_BACKEND_V057.md": "c5f28b247196fae2d7bcb33437cbe0b9f296d04b139a45b7f9b30a1daec82d97"
+  },
+  "candidate_verification_file_sha256": {
+    "tests/test_web_build_backend_003.py": "b14e0fd7543496e1159f74bc5518c12c9a1b939606b96645b30b31b2121af440",
+    "benchmarks/freeze_fullstack_agent_046_product.py": "47554bbb237a8245a3a8f4d412291c11a6d0b779b64c757cceb2a041b895b592"
+  },
+  "candidate_provenance": {
+    "git_base": "37f984f55bf5448ca5a58a1698a34f347b5a7f11",
+    "parley_version": "parley 0.5.7",
+    "note": "The rejected candidate was measured from the exact file hashes published here before those files were committed."
+  },
+  "fixtures": {
+    "harbor_admission": {
+      "primary": true,
+      "response_mode": "dynamic",
+      "baseline_median_elapsed_seconds": 0.696614,
+      "candidate_median_elapsed_seconds": 0.675405,
+      "latency_change_percent": -3.0446,
+      "latency_improvement_percent": 3.0446,
+      "baseline_median_server_bytes": 440704.0,
+      "candidate_median_server_bytes": 440688.0,
+      "server_size_change_percent": -0.0036,
+      "baseline_median_wasm_bytes": 0.0,
+      "candidate_median_wasm_bytes": 0.0,
+      "wasm_size_change_percent": 0.0
+    },
+    "forest_inventory": {
+      "primary": true,
+      "response_mode": "dynamic",
+      "baseline_median_elapsed_seconds": 0.87707,
+      "candidate_median_elapsed_seconds": 0.839149,
+      "latency_change_percent": -4.3236,
+      "latency_improvement_percent": 4.3236,
+      "baseline_median_server_bytes": 440736.0,
+      "candidate_median_server_bytes": 440720.0,
+      "server_size_change_percent": -0.0036,
+      "baseline_median_wasm_bytes": 1181.0,
+      "candidate_median_wasm_bytes": 1233.0,
+      "wasm_size_change_percent": 4.403
+    },
+    "glacier_manifest": {
+      "primary": true,
+      "response_mode": "static",
+      "baseline_median_elapsed_seconds": 0.811446,
+      "candidate_median_elapsed_seconds": 0.775853,
+      "latency_change_percent": -4.3864,
+      "latency_improvement_percent": 4.3864,
+      "baseline_median_server_bytes": 440720.0,
+      "candidate_median_server_bytes": 440704.0,
+      "server_size_change_percent": -0.0036,
+      "baseline_median_wasm_bytes": 1306.0,
+      "candidate_median_wasm_bytes": 1358.0,
+      "wasm_size_change_percent": 3.9816
+    },
+    "manual_json_control": {
+      "primary": false,
+      "response_mode": "static",
+      "baseline_median_elapsed_seconds": 3.715876,
+      "candidate_median_elapsed_seconds": 3.772513,
+      "latency_change_percent": 1.5242,
+      "latency_improvement_percent": -1.5242,
+      "baseline_median_server_bytes": 493888.0,
+      "candidate_median_server_bytes": 493888.0,
+      "server_size_change_percent": 0.0,
+      "baseline_median_wasm_bytes": 0.0,
+      "candidate_median_wasm_bytes": 0.0,
+      "wasm_size_change_percent": 0.0
+    }
+  },
+  "overall": {
+    "baseline_primary_median_of_fixture_medians_seconds": 0.811446,
+    "candidate_primary_median_of_fixture_medians_seconds": 0.775853,
+    "primary_latency_improvement_percent": 4.3864,
+    "maximum_fixture_regression_percent": 1.5242,
+    "maximum_server_size_increase_percent": 0.0,
+    "maximum_wasm_size_increase_percent": 4.403
+  },
+  "verification": {
+    "measured_cells": 32,
+    "failed_cells": 0,
+    "regression_command": "python3 -m pytest -q",
+    "regression_tests_passed": 705,
+    "regression_tests_failed": 0,
+    "boundaries": [
+      "direct rustc JSON diagnostics retain Parley source mapping",
+      "dependency-free native and browser artifacts use direct rustc",
+      "explicit language JSON retains Cargo and pinned Serde",
+      "dynamic response controls retain dedicated native execution coverage",
+      "historical web references remain byte-for-byte frozen",
+      "historical study 046 product rebuilding survives product advancement"
+    ]
+  },
+  "acceptance": {
+    "latency_threshold_percent": 20.0,
+    "fixture_regression_ceiling_percent": 5.0,
+    "size_ceiling_percent": 25.0,
+    "latency_pass": false,
+    "fixture_regression_pass": true,
+    "size_pass": true,
+    "regression_pass": true,
+    "accepted": false
+  },
+  "decision": {
+    "release_candidate": false,
+    "restore_version": "0.5.6",
+    "same_population_retuning": false,
+    "reason": "The 4.3864% primary improvement is below the frozen 20% threshold."
+  },
+  "claim_boundary": "This rejects a local build-path candidate. It cannot revise study 046, support a v0.5.7 release, or establish universal superiority."
+}

@@ -67,8 +67,6 @@ from .parser import SourceMap, parse_program
 from .workflows import WORKFLOW_TEMPLATES
 from .workflows.catalog import WORKFLOW_CATALOG
 from .web import (
-    WASM_CARGO_TOML,
-    WEB_CARGO_TOML,
     WEB_CARGO_TOML_DERIVE,
     WebProject,
     WebProjectError,
@@ -188,9 +186,12 @@ def _map_rustc_errors(stdout: str, linemap: dict[int, int], srcmap: SourceMap) -
             msg = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if msg.get("reason") != "compiler-message":
+        if msg.get("reason") == "compiler-message":
+            m = msg.get("message", {})
+        elif msg.get("$message_type") == "diagnostic":
+            m = msg
+        else:
             continue
-        m = msg.get("message", {})
         if m.get("level") != "error":
             continue
         text = m.get("message", "rust build error")
@@ -1683,6 +1684,67 @@ def _cargo_web_artifact(
     return _target_dir() / profile / "parley_web"
 
 
+def _rustc_web_artifact(
+        build_dir: Path,
+        rust: str,
+        linemap: dict[int, int],
+        srcmap: SourceMap,
+        *,
+        release: bool,
+        wasm: bool,
+) -> Path:
+    """Compile a dependency-free generated web artifact without Cargo startup."""
+    if shutil.which("rustc") is None:
+        raise ParleyError([Diagnostic(
+            "P902", "Parley needs Rust to build web projects, and `rustc` was not found.",
+            file=srcmap.main_file, line=1,
+            hint="Install it from https://rustup.rs, then re-run.")])
+    build_dir.mkdir(parents=True, exist_ok=True)
+    source_name = "lib.rs" if wasm else "main.rs"
+    source = build_dir / source_name
+    source.write_text(rust)
+    artifact = build_dir / ("parley_browser.wasm" if wasm else "parley_web")
+    command = [
+        "rustc",
+        "--crate-name", "parley_browser" if wasm else "parley_web",
+        "--edition=2021",
+        str(source),
+        "--error-format=json",
+        "--emit=link",
+        "-C", "overflow-checks=yes",
+    ]
+    if wasm:
+        command.extend([
+            "--crate-type=cdylib",
+            "--target", "wasm32-unknown-unknown",
+            "-C", "opt-level=s",
+            "-C", "lto=yes",
+            "-C", "panic=abort",
+            "-C", "strip=symbols",
+        ])
+    elif release:
+        command.extend([
+            "-C", "opt-level=3",
+            "-C", "strip=symbols",
+        ])
+    else:
+        command.extend(["-C", "debuginfo=2"])
+    command.extend(["-o", str(artifact)])
+    proc = subprocess.run(command, capture_output=True, text=True)
+    if proc.returncode != 0:
+        diagnostics = _map_rustc_errors(
+            "\n".join(part for part in (proc.stdout, proc.stderr) if part),
+            linemap,
+            srcmap,
+        )
+        if diagnostics and all(d.code == "P901" for d in diagnostics):
+            detail = (proc.stderr or proc.stdout).strip().splitlines()
+            if detail:
+                diagnostics[0].hint = detail[-1][:500]
+        raise ParleyError(diagnostics)
+    return artifact
+
+
 def _web_build_key(project: WebProject) -> str:
     digest = hashlib.sha256(str(project.root).encode()).hexdigest()[:12]
     return f"{project.name}-{digest}"
@@ -1699,25 +1761,31 @@ def _build_web_artifacts(project: WebProject, web, browser, *, release: bool):
         )])
     key = _web_build_key(project)
     server_rust, server_linemap = render_server(web)
-    server_binary = _cargo_web_artifact(
-        Path(".parley-build") / "web" / key / "server",
-        (
-            WEB_CARGO_TOML_DERIVE
-            if program_uses_json(web.program)
-            else WEB_CARGO_TOML
-        ),
-        server_rust,
-        server_linemap,
-        web.srcmap,
-        release=release,
-        wasm=False,
-    )
+    server_dir = Path(".parley-build") / "web" / key / "server"
+    if program_uses_json(web.program):
+        server_binary = _cargo_web_artifact(
+            server_dir,
+            WEB_CARGO_TOML_DERIVE,
+            server_rust,
+            server_linemap,
+            web.srcmap,
+            release=release,
+            wasm=False,
+        )
+    else:
+        server_binary = _rustc_web_artifact(
+            server_dir,
+            server_rust,
+            server_linemap,
+            web.srcmap,
+            release=release,
+            wasm=False,
+        )
     browser_artifacts = None
     if browser is not None:
         wasm_rust, wasm_linemap, javascript, declarations = render_browser(browser)
-        wasm_binary = _cargo_web_artifact(
+        wasm_binary = _rustc_web_artifact(
             Path(".parley-build") / "web" / key / "browser",
-            WASM_CARGO_TOML,
             wasm_rust,
             wasm_linemap,
             browser.srcmap,

@@ -2,13 +2,22 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 
+import pytest
+
+from conftest import run_cli
+from parley.cli import _map_rustc_errors
+from parley.parser import parse_program
 from parley.web import check_browser, check_web, load_project
 
 
 REPO = Path(__file__).resolve().parents[1]
 HARNESS = REPO / "benchmarks/measure_web_build_backend_003.py"
 BASELINE = REPO / "benchmarks/web_build_backend_003_baseline.json"
+CANDIDATE = REPO / "benchmarks/web_build_backend_003_candidate.json"
+ANALYSIS = REPO / "benchmarks/web_build_backend_003_analysis.json"
+ANALYZER = REPO / "benchmarks/analyze_web_build_backend_003.py"
 
 
 def load_harness():
@@ -109,3 +118,107 @@ def test_web_build_backend_003_baseline_is_complete_and_frozen():
         "maximum_fixture_regression_percent": 5.0,
         "maximum_unjustified_size_increase_percent": 25.0,
     }
+
+
+def test_direct_rustc_diagnostics_keep_source_mapping(tmp_path):
+    source = tmp_path / "main.par"
+    source.write_text('say "ready"\n')
+    _, srcmap = parse_program(source)
+    raw = json.dumps({
+        "$message_type": "diagnostic",
+        "message": "mismatched types",
+        "level": "error",
+        "spans": [{"is_primary": True, "line_start": 9}],
+    })
+    diagnostics = _map_rustc_errors(raw, {9: 1}, srcmap)
+    assert len(diagnostics) == 1
+    assert diagnostics[0].code == "P901"
+    assert diagnostics[0].line == 1
+    assert diagnostics[0].file == str(source)
+    assert "mismatched types" in diagnostics[0].message
+
+
+@pytest.mark.skipif(
+    shutil.which("cargo") is None or shutil.which("rustc") is None,
+    reason="Rust toolchain not installed",
+)
+def test_web_backend_uses_rustc_only_when_generated_code_has_no_dependencies(
+    tmp_path,
+):
+    harness = load_harness()
+
+    direct_project = harness.write_fixture(tmp_path, "forest_inventory")
+    direct_bundle = tmp_path / "direct-bundle"
+    direct = run_cli(
+        ["web", "build", str(direct_project), "-o", str(direct_bundle)],
+        cwd=tmp_path,
+    )
+    assert direct.returncode == 0, direct.stderr
+    direct_roots = list((tmp_path / ".parley-build/web").glob("forest-inventory-*/"))
+    assert len(direct_roots) == 1
+    direct_root = direct_roots[0]
+    assert (direct_root / "server/parley_web").is_file()
+    assert (direct_root / "browser/parley_browser.wasm").is_file()
+    assert not (direct_root / "server/Cargo.toml").exists()
+    assert not (direct_root / "browser/Cargo.toml").exists()
+
+    cargo_project = harness.write_fixture(tmp_path, "manual_json_control")
+    cargo_bundle = tmp_path / "cargo-bundle"
+    cargo = run_cli(
+        ["web", "build", str(cargo_project), "-o", str(cargo_bundle)],
+        cwd=tmp_path,
+    )
+    assert cargo.returncode == 0, cargo.stderr
+    cargo_roots = list((tmp_path / ".parley-build/web").glob("manual-json-control-*/"))
+    assert len(cargo_roots) == 1
+    cargo_root = cargo_roots[0]
+    assert (cargo_root / "server/Cargo.toml").is_file()
+    assert not (cargo_root / "browser").exists()
+
+
+def test_web_build_backend_003_candidate_is_valid_but_rejected():
+    candidate = json.loads(CANDIDATE.read_text(encoding="utf-8"))
+    analysis = json.loads(ANALYSIS.read_text(encoding="utf-8"))
+    assert hashlib.sha256(CANDIDATE.read_bytes()).hexdigest() == (
+        "ac161529241f770fed935b455da466f4f24b49e88e68b82ee109ea7011d8602b"
+    )
+    assert candidate["toolchain"]["parley"] == "parley 0.5.7"
+    assert len(candidate["cells"]) == 16
+    assert all(cell["stderr"] == "" for cell in candidate["cells"])
+    assert analysis["overall"] == {
+        "baseline_primary_median_of_fixture_medians_seconds": 0.811446,
+        "candidate_primary_median_of_fixture_medians_seconds": 0.775853,
+        "primary_latency_improvement_percent": 4.3864,
+        "maximum_fixture_regression_percent": 1.5242,
+        "maximum_server_size_increase_percent": 0.0,
+        "maximum_wasm_size_increase_percent": 4.403,
+    }
+    assert analysis["acceptance"] == {
+        "latency_threshold_percent": 20.0,
+        "fixture_regression_ceiling_percent": 5.0,
+        "size_ceiling_percent": 25.0,
+        "latency_pass": False,
+        "fixture_regression_pass": True,
+        "size_pass": True,
+        "regression_pass": True,
+        "accepted": False,
+    }
+    assert analysis["decision"] == {
+        "release_candidate": False,
+        "restore_version": "0.5.6",
+        "same_population_retuning": False,
+        "reason": "The 4.3864% primary improvement is below the frozen 20% threshold.",
+    }
+
+
+def test_web_build_backend_003_analysis_is_deterministic(tmp_path):
+    output = tmp_path / "analysis.json"
+    completed = __import__("subprocess").run(
+        [__import__("sys").executable, str(ANALYZER), "--output", str(output)],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ANALYSIS.read_bytes()

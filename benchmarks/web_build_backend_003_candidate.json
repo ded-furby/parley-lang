@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "study_id": "web-build-backend-003",
+  "generated_at": "2026-08-13T08:19:54Z",
+  "scope": "Four frozen non-046 v0.5.6 projects; fresh target per cell; no exclusions or reruns.",
+  "repetitions": 4,
+  "toolchain": {
+    "parley": "parley 0.5.7",
+    "python": "3.14.6",
+    "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+    "git_commit": "37f984f55bf5448ca5a58a1698a34f347b5a7f11"
+  },
+  "fixture_sha256": {
+    "harbor_admission": "7def72af37b813a90f9b993980c32da66ec44e0012571ad24a0d98806a914069",
+    "forest_inventory": "216405e22242bfb1283b2ccd1ee3bd826caaaf08fae1daf4f71ca4ac308c96ce",
+    "glacier_manifest": "55a604460f741037ad3e7dfefa994a1841928211bc09c6d1c6a4af6f619d7819",
+    "manual_json_control": "ae6f86bfdc28ed1ee7fb30175fbb1bd3a70a1c052d7457abf53a8c3d32b6d365"
+  },
+  "warmup": {
+    "fixture": "forest_inventory",
+    "elapsed_seconds": 0.884762,
+    "server_bytes": 440720,
+    "wasm_bytes": 1233,
+    "build_manifest_sha256": "52c5ebbdf20de9bc688c19a89a7fb78a9aaf3da695bbd44b1362c3159edaa292",
+    "response_modes": [
+      "dynamic"
+    ],
+    "stdout_sha256": "a3302afc90708442210da49000b36929c378963dba7e7367952a335638d010dd",
+    "stderr": ""
+  },
+  "cells": [
+    {
+      "fixture": "harbor_admission",
+      "elapsed_seconds": 0.720361,
+      "server_bytes": 440688,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "1ee092edb74f7fb42047377c4d2ed997e9ae97f2ed9582af7f3811391fc5f2ad",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "19e8564431caba94c6045573b3c2df2f7f8a86191c0fddc8ca5a819727f2273b",
+      "stderr": ""
+    },
+    {
+      "fixture": "harbor_admission",
+      "elapsed_seconds": 0.674952,
+      "server_bytes": 440688,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "1ee092edb74f7fb42047377c4d2ed997e9ae97f2ed9582af7f3811391fc5f2ad",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "bad9b9246227bca7ebb064e323faae8638bdef9b2eee2c93f05cb2078d670edf",
+      "stderr": ""
+    },
+    {
+      "fixture": "harbor_admission",
+      "elapsed_seconds": 0.675858,
+      "server_bytes": 440688,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "1ee092edb74f7fb42047377c4d2ed997e9ae97f2ed9582af7f3811391fc5f2ad",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "522aee2044dc6514b3ea4092c0ae701c27c8eb91c0f28de05d69da8d99ca168d",
+      "stderr": ""
+    },
+    {
+      "fixture": "harbor_admission",
+      "elapsed_seconds": 0.671868,
+      "server_bytes": 440688,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "1ee092edb74f7fb42047377c4d2ed997e9ae97f2ed9582af7f3811391fc5f2ad",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "1d231b0e8d5a4bb062a8544dc6f8b5c9e4ad5402d47811df2dc222e24ca62e22",
+      "stderr": ""
+    },
+    {
+      "fixture": "forest_inventory",
+      "elapsed_seconds": 0.841202,
+      "server_bytes": 440720,
+      "wasm_bytes": 1233,
+      "build_manifest_sha256": "52c5ebbdf20de9bc688c19a89a7fb78a9aaf3da695bbd44b1362c3159edaa292",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "a1336a5430965f35e316579ecb1f41b0c41cf4d3bb891cb9663d71d5aa5e533c",
+      "stderr": ""
+    },
+    {
+      "fixture": "forest_inventory",
+      "elapsed_seconds": 0.838342,
+      "server_bytes": 440720,
+      "wasm_bytes": 1233,
+      "build_manifest_sha256": "52c5ebbdf20de9bc688c19a89a7fb78a9aaf3da695bbd44b1362c3159edaa292",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "d9e02f6306e6186d112f4926f8f0c9817858adbbd44baa28cd0477b15de26a47",
+      "stderr": ""
+    },
+    {
+      "fixture": "forest_inventory",
+      "elapsed_seconds": 0.836352,
+      "server_bytes": 440720,
+      "wasm_bytes": 1233,
+      "build_manifest_sha256": "52c5ebbdf20de9bc688c19a89a7fb78a9aaf3da695bbd44b1362c3159edaa292",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "c033b8572aa303dca95f561452121a3fffa5fc174ade66c15b7e925515edf2ab",
+      "stderr": ""
+    },
+    {
+      "fixture": "forest_inventory",
+      "elapsed_seconds": 0.839957,
+      "server_bytes": 440720,
+      "wasm_bytes": 1233,
+      "build_manifest_sha256": "52c5ebbdf20de9bc688c19a89a7fb78a9aaf3da695bbd44b1362c3159edaa292",
+      "response_modes": [
+        "dynamic"
+      ],
+      "stdout_sha256": "3be3759b67dc59f181b6b1258bacf173e4786b637cc795ae51dce196ba897541",
+      "stderr": ""
+    },
+    {
+      "fixture": "glacier_manifest",
+      "elapsed_seconds": 0.777686,
+      "server_bytes": 440704,
+      "wasm_bytes": 1358,
+      "build_manifest_sha256": "3bfd0dc470a56a942929c79e6d181e3ab6d7ec6430640bfc539b07a6883ea0af",
+      "response_modes": [
+        "static",
+        "static"
+      ],
+      "stdout_sha256": "07a6f7e4213287e238f3ad3b768985753eda0f8fb1040f9af5ba85f4178b3279",
+      "stderr": ""
+    },
+    {
+      "fixture": "glacier_manifest",
+      "elapsed_seconds": 0.774021,
+      "server_bytes": 440704,
+      "wasm_bytes": 1358,
+      "build_manifest_sha256": "3bfd0dc470a56a942929c79e6d181e3ab6d7ec6430640bfc539b07a6883ea0af",
+      "response_modes": [
+        "static",
+        "static"
+      ],
+      "stdout_sha256": "00d459aa2b2188d5892755d3d5a8630f4f5415d240c42ac5fdecb0574474b549",
+      "stderr": ""
+    },
+    {
+      "fixture": "glacier_manifest",
+      "elapsed_seconds": 0.781814,
+      "server_bytes": 440704,
+      "wasm_bytes": 1358,
+      "build_manifest_sha256": "3bfd0dc470a56a942929c79e6d181e3ab6d7ec6430640bfc539b07a6883ea0af",
+      "response_modes": [
+        "static",
+        "static"
+      ],
+      "stdout_sha256": "cb42e887aa24f5a1d935de7eaa0f60906dc8e2e47a4d03e10d3e2255808f82e3",
+      "stderr": ""
+    },
+    {
+      "fixture": "glacier_manifest",
+      "elapsed_seconds": 0.77031,
+      "server_bytes": 440704,
+      "wasm_bytes": 1358,
+      "build_manifest_sha256": "3bfd0dc470a56a942929c79e6d181e3ab6d7ec6430640bfc539b07a6883ea0af",
+      "response_modes": [
+        "static",
+        "static"
+      ],
+      "stdout_sha256": "4f15c73f3dfb5f75f05b5ccd22cf098776979b5ce542289fa10c8f1975ae9ad3",
+      "stderr": ""
+    },
+    {
+      "fixture": "manual_json_control",
+      "elapsed_seconds": 4.790993,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "81ff499686b8bece1dfc14fec507051637acaa48f5ce393318d5a74e4cd71e7e",
+      "response_modes": [
+        "static"
+      ],
+      "stdout_sha256": "7e22411d5d8380fd152164db3cdc21d6325d1dd7a0fa4c0f07de527dfa6c3593",
+      "stderr": ""
+    },
+    {
+      "fixture": "manual_json_control",
+      "elapsed_seconds": 3.704642,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "81ff499686b8bece1dfc14fec507051637acaa48f5ce393318d5a74e4cd71e7e",
+      "response_modes": [
+        "static"
+      ],
+      "stdout_sha256": "b5d6d8376c41922852813abd36b4c14448d9108b79a21c839108cd43fec18c07",
+      "stderr": ""
+    },
+    {
+      "fixture": "manual_json_control",
+      "elapsed_seconds": 3.762691,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "81ff499686b8bece1dfc14fec507051637acaa48f5ce393318d5a74e4cd71e7e",
+      "response_modes": [
+        "static"
+      ],
+      "stdout_sha256": "698b94a13d6bb686256ce2725ad30c41d3f27d3d1929da8c500db99beef9b67b",
+      "stderr": ""
+    },
+    {
+      "fixture": "manual_json_control",
+      "elapsed_seconds": 3.782335,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "build_manifest_sha256": "81ff499686b8bece1dfc14fec507051637acaa48f5ce393318d5a74e4cd71e7e",
+      "response_modes": [
+        "static"
+      ],
+      "stdout_sha256": "9430e16728296750c94106def127a9350c032dc7d1aedb113b307a29e9d8c027",
+      "stderr": ""
+    }
+  ],
+  "by_fixture": {
+    "harbor_admission": {
+      "sessions": 4,
+      "primary": true,
+      "response_mode": "dynamic",
+      "median_elapsed_seconds": 0.675405,
+      "mean_elapsed_seconds": 0.68576,
+      "median_server_bytes": 440688.0,
+      "median_wasm_bytes": 0.0
+    },
+    "forest_inventory": {
+      "sessions": 4,
+      "primary": true,
+      "response_mode": "dynamic",
+      "median_elapsed_seconds": 0.839149,
+      "mean_elapsed_seconds": 0.838963,
+      "median_server_bytes": 440720.0,
+      "median_wasm_bytes": 1233.0
+    },
+    "glacier_manifest": {
+      "sessions": 4,
+      "primary": true,
+      "response_mode": "static",
+      "median_elapsed_seconds": 0.775853,
+      "mean_elapsed_seconds": 0.775958,
+      "median_server_bytes": 440704.0,
+      "median_wasm_bytes": 1358.0
+    },
+    "manual_json_control": {
+      "sessions": 4,
+      "primary": false,
+      "response_mode": "static",
+      "median_elapsed_seconds": 3.772513,
+      "mean_elapsed_seconds": 4.010165,
+      "median_server_bytes": 493888.0,
+      "median_wasm_bytes": 0.0
+    }
+  },
+  "primary_median_of_fixture_medians_seconds": 0.775853,
+  "acceptance": {
+    "minimum_latency_improvement_percent": 20.0,
+    "maximum_fixture_regression_percent": 5.0,
+    "maximum_unjustified_size_increase_percent": 25.0
+  },
+  "claim_boundary": "This local product benchmark measures cold web-build backend latency only; it cannot revise study 046 or establish universal superiority."
+}

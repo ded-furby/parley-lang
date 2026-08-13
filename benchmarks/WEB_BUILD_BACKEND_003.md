@@ -92,3 +92,37 @@ correctness, and size gates.
 
 Next: commit this immutable baseline, then profile the generic build backend
 without changing the frozen fixture population or acceptance rule.
+
+## Rejected direct-rustc candidate
+
+The candidate compiled dependency-free generated native and browser artifacts
+directly with `rustc`, while preserving Cargo and pinned Serde for explicit
+language-level JSON. It also extended direct compiler diagnostics to retain
+Parley's generated-to-source line mapping. The exact candidate passed the
+complete 705-test suite and all 16 measured cells.
+
+| Fixture | Baseline median | Candidate median | Change |
+| --- | ---: | ---: | ---: |
+| `harbor_admission` | 0.696614s | 0.675405s | -3.0446% |
+| `forest_inventory` | 0.877070s | 0.839149s | -4.3236% |
+| `glacier_manifest` | 0.811446s | 0.775853s | -4.3864% |
+| `manual_json_control` | 3.715876s | 3.772513s | +1.5242% |
+
+The primary median of fixture medians improved only **4.3864%**, from 0.811446
+to 0.775853 seconds, below the preregistered 20% requirement. The maximum
+fixture regression was 1.5242%; native size did not increase; and the maximum
+WASM size increase was 4.4030%, so every non-latency condition passed.
+
+The candidate is rejected and v0.5.7 is not released. Its implementation and
+exact verification files are retained in Git history, then the product returns
+to v0.5.6. There will be no same-population retuning or second candidate run.
+
+Canonical candidate: `web_build_backend_003_candidate.json`; SHA-256:
+`ac161529241f770fed935b455da466f4f24b49e88e68b82ee109ea7011d8602b`.
+Canonical analysis: `web_build_backend_003_analysis.json`; SHA-256:
+`25a163c74dc646d56d4dd30b16f5bcf0eac0363adcf70be034b5dafd58c36f27`.
+
+This rejection narrows the mechanism: Cargo orchestration contributes a real
+but small fraction of the remaining prepared-toolchain build time. It does not
+explain study 046's variable end-to-end elapsed difference and does not support
+a language-superiority claim.
