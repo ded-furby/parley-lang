@@ -4814,3 +4814,45 @@ exists.
 
 Next: commit the preregistration, then implement and clean-room validate the 16
 stack/task cells before a final zero-session execution freeze.
+
+### 044 clean-room harness and execution frozen
+
+- Harness commit: `b1690b5719830647a1ed3850956967c8455cde77`
+- Revision-2 execution-freeze commit:
+  `ecdbf5198ef9aad24408b0c2f86dfdb03981d62b`
+- Protocol SHA-256:
+  `b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`
+- Measured sessions before revision 2: 0
+
+The clean-room harness passed 16/16 task/language references, all 144 named
+cases, all 16 built-but-semantically-broken seeds, all eight maintenance root
+boundaries, and the parent-owned FIFO/HTTP/Chromium orchestration smoke. Peak
+calibration workspace use was 161,169,608 bytes, 13.324× below the frozen 2 GiB
+per-worker allowance. Revision 2 binds 19 transitive execution inputs without
+changing the corpus, product, context, models, metrics, thresholds, or gate.
+
+### 044 independent six-condition gate passed
+
+- Raw result: `benchmarks/fullstack_agent_044_raw.json`
+- Raw SHA-256:
+  `76512be28a1d0052c98aa4f601f4945b92423777a5a8560bba0a0c7afcef3399`
+- Independent audit: `benchmarks/fullstack_agent_044_audit.json`
+- Audit SHA-256:
+  `a9f875c07f95333eeb3436de374bfe3b321480081625e311eeac950580f50c54`
+- Measurement commit: `ecdbf5198ef9aad24408b0c2f86dfdb03981d62b`
+
+All 96/96 assignments passed hidden judgment and all four languages retained
+12/12 exact maintenance roots. Parley passed 24/24 first checks; Python passed
+23/24 and repaired its one first-check miss on a second attempt. Parley's
+median complete-session total was 60,103.5 tokens, 1.0072% below Python, and
+its median elapsed time was 23.4006 seconds, 12.5438% below Python. Parley was
+also no higher than the fastest baseline for both metrics within sol-medium
+and terra-medium, so execution integrity, correctness, first check, tokens,
+elapsed, and maintainability all passed.
+
+The audit hash-verified 96 journal/cleanup triples, 97 public-attempt files,
+290 exact-build boundaries, 480/480 hidden named cases, 93 scratch checks, and
+zero retained disposable bytes. This is scoped evidence for the frozen 044
+population—not proof of universal language superiority. Next: publish a
+canonical portable report, then select a materially broader independent phase
+without tuning on 044.

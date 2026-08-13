@@ -630,7 +630,13 @@ harness then passed 16/16 reference cells, all 144 cases, all 16 negative
 controls, all eight maintenance boundaries, and the parent-owned browser smoke.
 Revision 2 now binds 19 transitive execution inputs at protocol SHA-256
 `b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`;
-no measured model session existed at that once-run boundary.
+no measured model session existed at that once-run boundary. The completed
+once-run matrix then passed all six preregistered conditions: every language
+passed 24/24 hidden assignments, Parley passed 24/24 first checks and 12/12
+exact maintenance roots, and its 60,103.5-token / 23.4006-second medians were
+1.0072% lower-token and 12.5438% faster than Python while remaining lower in
+both model strata. This is scoped synthetic full-stack evidence, not a claim
+of universal superiority.
 
 ## Development
 

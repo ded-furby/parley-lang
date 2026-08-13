@@ -483,6 +483,17 @@ per-worker allowance. Revision 2 binds all 19 transitive execution inputs in
 once-run boundary. The frozen protocol SHA-256 is
 `b5d40db4de13e96fc5f93bdf9f916e86a4f4438e4e7328b47b6cd711525feb38`.
 
+The completed 044 matrix retained all 96 once-run outcomes and passed all six
+frozen conditions. Every language passed 24/24 hidden assignments and 12/12
+exact maintenance roots. Parley passed 24/24 first checks; Python passed 23/24
+and repaired the remaining cell on its second public attempt. Parley's median
+was 60,103.5 complete-session tokens and 23.4006 seconds, respectively 1.0072%
+lower and 12.5438% faster than Python, with both token and elapsed thresholds
+also passing separately under sol-medium and terra-medium. The independent
+audit verified every external evidence file and all 480 hidden named cases.
+The result remains limited to this frozen synthetic population and does not
+establish universal superiority.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

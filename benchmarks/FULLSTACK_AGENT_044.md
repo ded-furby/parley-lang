@@ -88,3 +88,26 @@ Revision 2 binds the 19 transitive harness and dependency files listed in
 No measured model session existed at this once-run boundary. The frozen task
 semantics, compiler/context, models, replicates, metrics, thresholds, and
 strict six-condition gate are unchanged from revision 1.
+
+## Completed result
+
+All 96 once-run cells completed with unique ephemeral sessions, passed hidden
+judgment, and retained clean execution evidence. Parley, TypeScript, and Rust
+passed 24/24 first public checks. Python passed 23/24 first checks and repaired
+the remaining museum-conservation cell on its second public attempt. All four
+languages passed 12/12 exact maintenance roots.
+
+The independently recomputed strict gate passed all six conditions. Parley's
+median complete-session total was 60,103.5 tokens versus Python's 60,715.0,
+1.0072% lower. Its median elapsed time was 23.4006 seconds versus Python's
+26.75695, 12.5438% lower. Parley remained lower than the fastest baseline in
+both sol-medium and terra-medium token and elapsed strata. The audit verified
+96 journal/cleanup triples, 97 external public-attempt files, 290 exact-build
+hash boundaries, 480/480 hidden named cases, 93 scratch checks, and zero
+retained disposable workspace bytes.
+
+This is the first frozen population in this program to pass the complete
+six-condition gate. It supports a scoped conclusion for these four synthetic
+full-stack contracts, four scaffolded stacks, two model configurations, and
+this machine. It does not establish that Parley is universally superior,
+production-ready, or best for every workload.
