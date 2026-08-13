@@ -4540,3 +4540,20 @@ its result's Git field records the clean v0.5.3 base because measurement
 preceded the product publication commit. The change is accepted as a generic
 local build-path improvement. It does not retroactively change 042. Next:
 freeze v0.5.4 before selecting a new disjoint full-stack population.
+
+### v0.5.4 frozen before iteration 043 corpus construction
+
+- Product commit: `bf0f85aa33dbd6d52c17260d85a04155d11518c2`
+- Product tree: `9f3149e3f742167982e8c48212ac26830870e4bb`
+- Product artifact: `benchmarks/fullstack_agent_043_product.json`
+- Product artifact SHA-256:
+  `1ca7bb4fe501eda55991af61cabb715c5c5c53e202df976ef051809576635ed0`
+- Design boundary: `benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md`
+
+The artifact reads exact blobs from the evidence commit, binding v0.5.4's
+manual strict route-boundary Serde path, the unchanged 222-token context, the
+12+12 build measurements, 31.5904% accepted improvement, and 585-test
+regression. No iteration-043 task name, domain, route, field, formula, fixture,
+defect, scaffold, prompt, or model output existed at this checkpoint. Next:
+commit the product freeze, then design and independently hash a disjoint 043
+task/case population before any comparison protocol or scaffold exists.

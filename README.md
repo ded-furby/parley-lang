@@ -597,6 +597,8 @@ explicitly uses core JSON expressions. On the frozen 12-build product benchmark,
 median cold web-build latency improved 31.5904% with 585/585 regressions passing
 and essentially unchanged artifacts; see
 [benchmarks/WEB_BUILD_LATENCY_001.md](benchmarks/WEB_BUILD_LATENCY_001.md).
+The v0.5.4 product is independently frozen before successor task design in
+[benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md](benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md).
 
 ## Development
 

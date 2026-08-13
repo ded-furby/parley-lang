@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "experiment_id": "043-product-freeze",
+  "frozen_on": "2026-08-13",
+  "parley_version": "0.5.4",
+  "evidence_commit": "bf0f85aa33dbd6d52c17260d85a04155d11518c2",
+  "evidence_tree": "9f3149e3f742167982e8c48212ac26830870e4bb",
+  "product_files": {
+    "parley/web.py": "ee246720ed282502ddd3134aef4e47085bc3c1ab6f9c165fef164c1200ed061f",
+    "parley/cli.py": "656a7ba25e340bf0ebdf9b7c0ce8877aa03cbbad2aa6562186e587530d56b71a",
+    "parley/__init__.py": "e691d8dec7c516b5e1bee4011e0f04238d10a8fc9a2d6062586c8822913dda51",
+    "pyproject.toml": "4804d27942f9fc0eb80c993db89679dfb9d468e6fbfb4508670206efc5bc9b5a"
+  },
+  "agent_context": {
+    "file": "skill/parley/references/scaffolded-web-v0.5.3.md",
+    "sha256": "f40a1030de6b3ed75f47183dee41d1ac3185dd87b747f779dab8835d4d63e8c4",
+    "bytes": 892,
+    "o200k_base_tokens": 222,
+    "status": "unchanged from the independently token-winning 042 freeze"
+  },
+  "build_evidence": {
+    "baseline_file": "benchmarks/web_build_latency_001_baseline.json",
+    "baseline_sha256": "ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b",
+    "candidate_file": "benchmarks/web_build_latency_001_candidate.json",
+    "candidate_sha256": "2fca8256642b5e6e06f72b61c4b7f839b18fc13c657c6781015a4b507c726848",
+    "analysis_file": "benchmarks/web_build_latency_001_analysis.json",
+    "analysis_sha256": "380c2309102acf570eebd94140d2106bdacebea87ebbebadf2d0c103fc80ee22",
+    "baseline_median_seconds": 3.855847,
+    "candidate_median_seconds": 2.63777,
+    "improvement_percent": 31.5904,
+    "regression_tests_passed": 585,
+    "accepted": true
+  },
+  "frozen_decisions": [
+    "keep the 222-token scaffold-aware context unchanged",
+    "use manual strict Serde traits at ordinary typed route boundaries",
+    "retain Serde derives for programs with explicit from-json or as-json expressions",
+    "preserve strict unknown, duplicate, missing, wrong-type, optional, and enum behavior",
+    "preserve the six-condition all-strata gate and once-run execution controls"
+  ],
+  "construction_boundary": "This v0.5.4 product and its evidence commit are frozen before any iteration-043 task names, domains, routes, fields, formulas, fixtures, defects, scaffolds, thresholds, prompts, or model output are selected.",
+  "claim_boundary": "The 31.5904% result is a local cold-build product benchmark. It does not change iteration 042 or establish future agent reliability, strict efficiency parity, production suitability, or universal superiority."
+}
