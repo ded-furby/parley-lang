@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "protocol_revision": 1,
+  "experiment_id": "047",
+  "title": "Independent compact-context typed path-routing pilot",
+  "description": "A frozen 32-session comparison of four unseen exact/parameterized routing and browser assignments in Parley, Python, TypeScript, and Rust, using the pre-corpus 176-token Parley v0.5.7 path-response card.",
+  "frozen_product": {
+    "parley_version": "parley 0.5.7",
+    "product_commit": "c9e8c9bea770c9243ac244663c28209bb18264df",
+    "product_tree": "c749b23a61ec360cd4ad33d5fd93dc700a278927",
+    "product_boundary_commit": "f1959a5247db7444c161340110ec1782faa3d2b7",
+    "corpus_commit": "32017e311379d007481c7c52a06f652a76830aea",
+    "corpus_tree": "135a7735e726403b140e3dfed0f9945d2ff1851b",
+    "tasks_file": "benchmarks/fullstack_agent_047_tasks.json",
+    "tasks_sha256": "c7cc0680ad62b0e78ce4fb1fda306f3f48ae5018f18ffdf19ad6e6a9df418348",
+    "cases_file": "benchmarks/fullstack_agent_047_cases.json",
+    "cases_sha256": "11f08afbede6825f455d630ca0507c7e6661fccb0110c95aab2df2a2f8d4a5c9",
+    "parley_context_file": "skill/parley/references/scaffolded-path-response-web-v0.5.7-compact.md",
+    "parley_context_sha256": "b3d0473cdc4e17741bebe1c24441f337abc7579bd59783b1cd94e645bb698f23",
+    "parley_context_bytes": 760,
+    "parley_context_o200k_tokens": 176,
+    "context_freeze_file": "benchmarks/fullstack_agent_047_context.json",
+    "context_freeze_sha256": "857bfc8b06428cc6fe2038175d9758e481b6eb4bff90f77a4040a70e0a8fa7ae",
+    "product_freeze_file": "benchmarks/fullstack_agent_047_product.json",
+    "product_freeze_sha256": "33e1c581162e7ab617ad972a65bdf41eaf5ac61b06860d1d6a159b8c48cf4b5f",
+    "json_evidence_file": "benchmarks/json_evidence.py",
+    "json_evidence_sha256": "dad9f4144e0dfa1c21d29e4362f116abd38c5181664a82dbb161b3358e70689c",
+    "path_protocol_file": "benchmarks/WEB_PATH_PARAMETERS_004.md",
+    "path_protocol_sha256": "d27d2f3ab39dd4ec3578f362ee7a3d4cf347526cc5039d7ac0159f29b398a531",
+    "path_result_file": "benchmarks/WEB_PATH_PARAMETERS_004_RESULT.md",
+    "path_result_sha256": "73b739ab1b067be36f7adff190406f4fe9d9747f9500f4bf723a7457315a26b0",
+    "frozen_path_parameter_tests": 21,
+    "frozen_full_regression_tests": 727
+  },
+  "validated_transport": {
+    "transport_commit": "c833b5fec002fdbedf6fdf5c3e65361afaf4675a",
+    "transport_file": "benchmarks/agent_check_transport.py",
+    "transport_sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491",
+    "terra_smoke_file": "benchmarks/agent_check_transport_smoke.json",
+    "terra_smoke_sha256": "346bf924b5ce5b17be564548ba5a19f451584fa1362bead51a242ae8049c7179",
+    "sol_smoke_file": "benchmarks/agent_check_transport_smoke_sol.json",
+    "sol_smoke_sha256": "37fc51927a8ee95f5aab4594bde271855a50773b10a1b5c7d2a0b1174acfb8ec",
+    "sandbox_network": "sandbox_workspace_write.network_access=false",
+    "channel": "Two protected mode-0600 POSIX FIFOs carry bounded request and public-feedback messages; only the parent evaluator binds loopback.",
+    "threat_boundary": "The transport is a measurement-integrity mechanism for command-constrained agents, not an isolation boundary against a deliberately hostile workspace process."
+  },
+  "validated_exact_build_freeze": {
+    "mechanism_commit": "6e50439dd2f47cae4c7bb4d5356bae7cf5dd0937",
+    "validator_file": "benchmarks/exact_build_freeze.py",
+    "validator_sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9",
+    "smoke_file": "benchmarks/smoke_exact_build_freeze_038.py",
+    "smoke_sha256": "b2c950b8616f06bd32648fbab2e735630c1130050eafa420ba596d5814faee9b",
+    "evidence_file": "benchmarks/exact_build_freeze_038_smoke.json",
+    "evidence_sha256": "993e374346d6d3361de1b3aedb81540aa2c007d04032c14c4e41da235a77e80b",
+    "canonical_lock_sha256": "f09bc2e54a894aa9793d47ab1e634dcabcc6c0b8de8e977d84d0c06c9c9b6740",
+    "positive_control": "Canonical manifest/lock survives native release and wasm32 release builds byte-for-byte.",
+    "negative_control": "A displaced root block passes cargo metadata --locked --offline; cargo build --release returns zero and rewrites it; post-command hashes reject the build.",
+    "required_integration": "Reference validation and measured evaluation must hash every protected/read-only input immediately after each exact build command for every language, in addition to final workspace integrity."
+  },
+  "scratch_space_control": {
+    "control_commit": "85acd3ec3f2732f4dd11083646b1d8f3cfd0dbb5",
+    "implementation_file": "benchmarks/scratch_space.py",
+    "implementation_sha256": "29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d",
+    "policy_file": "benchmarks/SCRATCH_SPACE_POLICY.md",
+    "policy_sha256": "b90daa409da5c7e93e12536a1b1a55f2264f4317aa783f523f6450429cdf8e79",
+    "reserve_bytes": 8589934592,
+    "per_worker_bytes": 2147483648,
+    "max_workers": 4,
+    "required_free_bytes": 17179869184,
+    "preflight_timing": "Resolve disjoint work, journal, and attempt roots and require the full four-worker budget before journal initialization or any measured cell start.",
+    "evidence_boundary": "The disposable work root and durable journal/attempt roots must be distinct real directories with no equal, ancestor, or descendant relationship.",
+    "cleanup_order": "Persist the complete finished journal and external parent attempts before removing that journal's exact real immediate-child workspace through cleanup_finished_workspace.",
+    "resume_policy": "On resume, seal every started unfinished cell as a permanent failure before reclaiming only workspaces certified by finished records; run only never-started cells.",
+    "failure_policy": "Preflight, boundary, cleanup, or renewed capacity failure stops scheduling new cells, remains an execution-integrity failure after any cell starts, and never authorizes a rerun.",
+    "calibration_rule": "Clean-room harness validation must measure peak per-cell scratch use. Revision 2 may increase, but never lower, the frozen reserve or per-worker budget before the first measured session."
+  },
+  "frozen_config": {
+    "languages": [
+      "parley",
+      "python",
+      "typescript",
+      "rust"
+    ],
+    "agent_configurations": [
+      {
+        "id": "sol-medium",
+        "model": "gpt-5.6-sol",
+        "reasoning": "medium"
+      }
+    ],
+    "replicates_per_task_language_configuration": 2,
+    "seed": 470260813,
+    "timeout_seconds": 900,
+    "max_workers": 4,
+    "max_public_check_attempts": 8,
+    "fresh_session_per_cell": true,
+    "public_check_command": "./check",
+    "source_command": "./sources",
+    "source_command_count": 1,
+    "internet": "disabled",
+    "selective_reruns": "forbidden"
+  },
+  "matrix": {
+    "tasks": 4,
+    "implementation_tasks": 2,
+    "maintenance_tasks": 2,
+    "languages": 4,
+    "agent_configurations": 1,
+    "replicates": 2,
+    "fresh_sessions": 32,
+    "sessions_per_language": 8,
+    "sessions_per_task_kind_and_language": 4,
+    "public_cases_per_assignment": 5,
+    "public_http_cases_per_assignment": 4,
+    "public_browser_cases_per_assignment": 1,
+    "hidden_cases_per_assignment": 5,
+    "hidden_http_cases_per_assignment": 3,
+    "hidden_browser_cases_per_assignment": 2,
+    "frozen_public_case_executions_across_first_checks": 160,
+    "hidden_case_executions": 160,
+    "derivation": "4 tasks x 4 languages x 1 agent configuration x 2 replicates"
+  },
+  "language_stacks": {
+    "parley": {
+      "version": "0.5.7",
+      "stack": "Generated native HTTP/JSON server with checked whole-segment path parameters, dynamic response envelopes, and generated browser WebAssembly",
+      "agent_context": "Frozen 176-token v0.5.7 compact path-response card used alone and included in measured input tokens."
+    },
+    "python": {
+      "version": "3.14.6",
+      "stack": "FastAPI 0.141.1, Uvicorn 0.52.1, Pydantic 2.13.4, and a counted browser JavaScript application module"
+    },
+    "typescript": {
+      "version": "7.0.2 on Node.js 22.22.2",
+      "stack": "Hono 4.13.0, @hono/node-server 2.1.0, @hono/zod-validator 0.9.0, and Zod 4.4.3"
+    },
+    "rust": {
+      "version": "rustc/cargo 1.94.0",
+      "stack": "Axum 0.8.9, Tokio 1.53.1, Tower HTTP 0.7.0, Serde 1.0.229, serde_json 1.0.151, and a scalar WebAssembly export"
+    }
+  },
+  "scaffold_protocol": {
+    "purpose": "Supply stable language-appropriate transport, build, and browser wiring so the measured assignment is application implementation or repair rather than framework installation.",
+    "editable": "Task-specific route handlers, response records, browser score modules, and application manifests required by each language.",
+    "read_only": "Dependency locks, generic launch adapters, shared static shell, frozen contract, source printer, generated check client, public check wrapper, and benchmark configuration.",
+    "source_visibility": "The first shell command prints every editable and visibly read-only source/context file exactly once. Direct reconnaissance or reading protected case/configuration files is forbidden.",
+    "dependency_setup": "Pinned dependencies are installed or fetched before measured sessions. Each parent evaluation uses only the frozen local dependency store; network time is never part of a cell.",
+    "reference_validation": "Before measurement, isolated reference applications for all 16 task/language pairs must run the exact measured builds under post-command hash checks and pass all 160 named public/hidden HTTP path/status/JSON/header and browser cases. Every maintenance seed must build, fail its public parameterized case, and pass after changing only the predeclared route-handler root file.",
+    "rust_lockfile": "Generate Cargo.lock canonically from the final study-047 manifest. Run native and wasm32 release builds locked and offline under immediate post-command hash checks, then preserve the reviewed lock hash in every Rust workspace.",
+    "symmetry": "Every language receives the same English contract and semantic cases. Framework-specific source and configuration may differ, but no language receives a hidden expected value or repair."
+  },
+  "session_protocol": {
+    "runner": "A new iteration-047 runner creates one isolated workspace, external attempt directory, immutable journal entry, and fresh ephemeral Codex thread per cell.",
+    "tool_policy": "Disable user configuration, repository rules, plugins, apps, browser-use, computer-use, and multi-agent delegation. Use workspace-write with approval never and network disabled.",
+    "command_policy": "The first shell command must be exactly ./sources and occur once. Every later shell command must be exactly ./check. At least one and at most eight ./check commands are permitted.",
+    "public_feedback": "Each ./check request is evaluated by the parent and records build output plus all public HTTP path/status/JSON/custom-header and real-Chromium verdicts, then returns only bounded public feedback.",
+    "public_execution_requirement": "Every completed public attempt must execute all five public cases, including four HTTP cases and the browser case. A build failure may short-circuit cases but remains a failed attempt; zero semantic execution cannot pass.",
+    "hidden_judgment": "After the agent exits, the parent separately rebuilds and executes all withheld HTTP path/status/JSON/custom-header and browser cases. Hidden inputs and values never enter the workspace or public transport.",
+    "attempt_capture": "Preserve every parent-owned public attempt, source snapshot, file hash, changed-file list, command event, agent message, diagnostic, stdout/stderr, elapsed time, thread ID, and reported token count.",
+    "integrity": "Hash all protected/read-only files immediately after every exact build and at cell finalization; reject unexpected files and symlinks; compare FIFO device/inode/type/mode/owner; revalidate frozen repository and toolchain provenance; require one start/finish journal record per cell; preserve the initial and renewed scratch checks without binding observed free bytes into resume identity; persist evidence and measured workspace bytes before bounded per-cell cleanup.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute.",
+    "failure_policy": "Timeouts, interruptions, agent errors, nonzero exits, build failures, case failures, protocol violations, checker/FIFO/read-only integrity failures, missing source, unexpected files, scratch-boundary violations, low-space events after start, and cleanup failures are failures and remain in the complete result.",
+    "domain_judgment": "The parent sends frozen raw paths without pre-decoding or validating captured segments. Routing, exact priority, once-decoding, safety rejection, authorization, and positive-decimal validation are application-stack responsibilities."
+  },
+  "execution_freeze": {
+    "status": "pending post-protocol harness implementation",
+    "measured_sessions_before_freeze": 0,
+    "required_revision": 2,
+    "requirements": [
+      "bind every new and transitive execution file by SHA-256",
+      "validate 16 task/language reference applications in clean rooms",
+      "validate all 160 named public/hidden cases including decoded captures",
+      "prove all eight language-specific maintenance roots with built negative controls",
+      "calibrate peak workspace use within the frozen scratch allowance",
+      "pass parent-owned FIFO, HTTP, header, malformed-path, and Chromium smoke",
+      "prove live-to-persisted JSON equality for paths, path parameters, and headers"
+    ],
+    "prohibition": "No measured session may start until revision 2 is committed with zero measured sessions and every requirement passing."
+  },
+  "metrics": {
+    "correctness": "Exact hidden HTTP route/status/JSON/error/custom-header and real-browser results, overall and by task, kind, language, and replicate.",
+    "first_check": "Whether the first parent-owned public build and all five public cases pass, with HTTP and browser execution counts retained.",
+    "repairs": "Number of later ./check attempts after the first, with every parent attempt retained outside the workspace.",
+    "tokens": "Complete reported Codex input, cached input, uncached input, output, reasoning output, and input-plus-output totals. Primary efficiency uses complete input-plus-output tokens per assignment.",
+    "elapsed": "Monotonic wall time for the whole fresh session, including parent-owned public builds and repairs but excluding dependency installation.",
+    "maintainability": "Changed editable files, rough token edit size, and whether maintenance patches touch exactly the predeclared defect-root file set.",
+    "source": "Final and seed UTF-8 bytes, physical lines, rough tokens, o200k_base tokens, and per-file SHA-256, reported descriptively rather than substituted for session tokens.",
+    "cross_target": "Valid decoded path integer/browser equality for the shared score plus successful Chromium execution; routing, invalid-path, authorization, and header branches remain separately exact."
+  },
+  "primary_gate": {
+    "execution_integrity": "All 32 cells must finish exactly once with unique thread IDs, one journal start/finish, compliant commands, durable evidence, intact protected inputs, required HTTP/browser execution, and no runner, scratch, or cleanup error.",
+    "correctness": "Parley must pass 100% of hidden HTTP and browser cases, and its assignment success rate must be no lower than every baseline overall and within both implementation and maintenance tasks.",
+    "first_check": "Parley's first-public-check assignment success rate must be no lower than the highest baseline rate overall and within each task kind.",
+    "tokens": "Parley's median complete input-plus-output tokens per assignment must be no higher than the lowest baseline median overall.",
+    "elapsed": "Parley's median complete-session elapsed seconds must be no higher than the lowest baseline median overall.",
+    "maintainability": "Every hidden-correct Parley maintenance assignment must change exactly its predeclared root file set, and its exact-root rate must be no lower than every baseline.",
+    "verdict": "All six conditions must hold for strict unseen path-routing agent parity and efficiency. Report every condition independently when the gate fails."
+  },
+  "secondary_analysis": [
+    "Report complete distributions and paired task/replicate cells; never replace the primary result with a successful or repair-free subset.",
+    "Report implementation and maintenance separately, including exact repair-root quality and public/hidden disagreement classes.",
+    "Report public-attempt and semantic case counts so build-only feedback cannot appear as a passing check.",
+    "Report frozen context, manifest, scaffold, final-source, and complete-session token counts without substituting source size for session cost.",
+    "Compare study 046 only as mechanism history; never pool its tasks, tokens, or timing with study 047.",
+    "Treat two replicates as pilot evidence: show paired observations and avoid population-level certainty claims."
+  ],
+  "interpretation_boundary": [
+    "The study covers four small synthetic path-routing plus browser contracts, one model ID, one reasoning setting, two replicates, and one frozen toolchain environment.",
+    "Scaffolds test application work, not dependency discovery, deployment, load, databases, accessibility, or production operations.",
+    "Header comparisons test deterministic request decisions, not general identity or policy-system security.",
+    "A deterministic scalar export in real Chromium is a cross-target check, not a general user-interface evaluation.",
+    "Synthetic route-handler defects cover only the declared capture-use failures and do not estimate production-defect distributions.",
+    "Even a fully passing gate cannot prove universal language superiority; it supports only the frozen comparative claim.",
+    "A failed strict gate cannot be repaired by same-corpus language, context, prompt, task, runner, threshold, or metric tuning."
+  ],
+  "implementation_rule": "Corpus semantics were frozen before this revision. Scaffold generation, dependency preparation, clean-room validation, orchestration evidence, and every transitive execution hash must be committed in revision 2 before measurement.",
+  "change_rule": "Task semantics have been immutable since corpus commit 32017e311379d007481c7c52a06f652a76830aea. From revision 1 onward, no context, metric, threshold, model, reasoning setting, replicate count, or primary gate may change based on validation or output. An objective harness defect may be corrected only before measurement in a documented zero-session amendment preserving semantic hashes. Scratch budgets may increase but not decrease.",
+  "stop_rule": "Run every frozen cell once and publish the complete positive, mixed, negative, or invalid result without same-corpus optimization or rerun. Any later product change requires a corpus outside iteration 047."
+}
