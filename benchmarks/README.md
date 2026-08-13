@@ -431,6 +431,13 @@ evidence before cleanup, and no-rerun rule. It binds the v0.5.3 card alone as
 Parley's measured 222-token context. No 042 scaffold or reference application
 existed when this protocol was frozen.
 
+The later 042 clean-room harness validates 16/16 reference cells, 144/144 named
+cases, all eight maintenance root boundaries, and the complete parent-owned
+orchestration path. Its 161,165,133-byte largest workspace remains more than
+13× below the frozen 2 GiB per-worker allowance. These are zero-session harness
+checks; a revision-2 execution freeze must still bind every transitive hash
+before measurement.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

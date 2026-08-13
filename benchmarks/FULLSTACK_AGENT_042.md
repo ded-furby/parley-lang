@@ -68,5 +68,11 @@ now preregistered in `fullstack_agent_042_protocol.json` with SHA-256
 `0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f`.
 It binds the 96-cell matrix and six-condition gate, 222-token context, 16 GiB
 four-worker preflight, evidence-before-cleanup ordering, and no-rerun behavior.
-No 042 scaffold, validation artifact, execution journal, or measured session
-exists.
+
+The clean-room harness now passes all 16 task/language reference cells and all
+144 named cases plus HTTP/browser agreement. All 16 broken seeds build and fail
+public semantics; all eight maintenance roots are exact. The largest reference
+or seed workspace retained 161,165,133 bytes, so the 2 GiB worker allowance is
+more than 13× the observed peak. The end-to-end source-printer, FIFO, parent
+HTTP/Chromium, hidden-evaluator, and integrity smoke passes. No execution-freeze
+revision, journal, or measured session exists.
