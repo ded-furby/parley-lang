@@ -84,10 +84,14 @@ def test_server_generation_has_strict_json_and_bounded_http(tmp_path):
     checked = check_web(load_project(write_project(tmp_path / "app")))
     rust, _ = render_server(checked)
 
-    assert "impl serde::Serialize for RequestBody" in rust
-    assert "impl<'de> serde::Deserialize<'de> for RequestBody" in rust
-    assert "serde::de::Error::unknown_field" in rust
+    assert "impl parley_web_json_runtime::Codec for RequestBody" in rust
+    assert "unknown field {}" in rust
+    assert "duplicate field name" in rust
     assert "serde::Serialize, serde::Deserialize" not in rust
+    assert "serde_json::from_str" not in rust
+    assert "serde_json::to_vec" not in rust
+    assert "serde =" not in WEB_CARGO_TOML
+    assert "serde_json =" not in WEB_CARGO_TOML
     assert 'content_type != "application/json"' in rust
     assert "PARLEY_MAX_HEADER_BYTES" in rust
     assert "PARLEY_MAX_BODY_BYTES: usize = 4096" in rust
@@ -96,7 +100,7 @@ def test_server_generation_has_strict_json_and_bounded_http(tmp_path):
     assert '"application/wasm"' in rust
 
 
-def test_server_manual_serde_covers_optional_fields_and_enums(tmp_path):
+def test_server_direct_json_covers_optional_fields_and_enums(tmp_path):
     root = write_project(tmp_path / "app")
     with (root / "main.par").open("a") as source:
         source.write("""
@@ -105,9 +109,9 @@ a build_note has mood as build_mood, detail as maybe text
 """)
     rust, _ = render_server(check_web(load_project(root)))
 
-    assert "impl serde::Serialize for BuildMood" in rust
-    assert "impl<'de> serde::Deserialize<'de> for BuildMood" in rust
-    assert "serde::de::Error::unknown_variant" in rust
+    assert "impl parley_web_json_runtime::Codec for BuildMood" in rust
+    assert "impl parley_web_json_runtime::Codec for BuildNote" in rust
+    assert "unknown variant {}" in rust
     assert "Option<Option<String>>" in rust
     assert "parley_field_detail.unwrap_or(None)" in rust
 
@@ -123,8 +127,10 @@ to encoded with value as request_body giving text:
 
     assert "serde::Serialize, serde::Deserialize" in rust
     assert "#[serde(deny_unknown_fields)]" in rust
-    assert 'features = ["derive"]' not in WEB_CARGO_TOML
+    assert "serde =" not in WEB_CARGO_TOML
+    assert "serde_json =" not in WEB_CARGO_TOML
     assert 'features = ["derive"]' in WEB_CARGO_TOML_DERIVE
+    assert 'serde_json = "=1.0.151"' in WEB_CARGO_TOML_DERIVE
 
 
 def test_browser_generation_has_stable_scalar_abi_and_bindings(tmp_path):
@@ -313,6 +319,84 @@ def test_native_web_bundle_serves_static_and_strict_typed_json(tmp_path):
         with pytest.raises(urllib.error.HTTPError) as caught:
             urllib.request.urlopen(head_post_only)
         assert caught.value.code == 404
+    finally:
+        server.terminate()
+        server.wait(timeout=10)
+
+
+@pytest.mark.skipif(shutil.which("cargo") is None, reason="cargo not installed")
+def test_dependency_free_typed_json_covers_nested_values_and_unicode(tmp_path):
+    project = write_project(tmp_path / "app", browser=False)
+    (project / "main.par").write_text("""\
+a urgency is one of routine, critical
+a contact has label as text, enabled as yesno
+a dispatch_packet has title as text, ratio as decimal, urgency as urgency, note as maybe text, counts as list of number, tags as map from text to text, contact as contact
+
+to echo_dispatch with request as dispatch_packet giving dispatch_packet:
+    give back request
+""")
+    manifest = json.loads((project / "parley.web.json").read_text())
+    manifest["routes"] = [
+        {"method": "POST", "path": "/api/echo-dispatch", "handler": "echo_dispatch"}
+    ]
+    (project / "parley.web.json").write_text(json.dumps(manifest))
+    bundle = tmp_path / "bundle"
+    build = run_cli(["web", "build", str(project), "-o", str(bundle)], cwd=REPO)
+    assert build.returncode == 0, build.stderr
+
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        port = probe.getsockname()[1]
+    env = dict(**__import__("os").environ, PARLEY_WEB_PORT=str(port))
+    server = subprocess.Popen(
+        [str(bundle / "server")], cwd=bundle, env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+    )
+
+    def post(raw: bytes):
+        return urllib.request.urlopen(urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/echo-dispatch",
+            data=raw,
+            headers={"content-type": "application/json"},
+            method="POST",
+        ))
+
+    try:
+        deadline = time.monotonic() + 10
+        while time.monotonic() < deadline:
+            try:
+                payload = {
+                    "title": "café \"north\"\n😀",
+                    "ratio": 2.5,
+                    "urgency": "critical",
+                    "counts": [1, 2, 3],
+                    "tags": {"zulu": "last", "alpha": "first"},
+                    "contact": {"label": "Ångström", "enabled": True},
+                }
+                with post(json.dumps(payload, ensure_ascii=True).encode()) as response:
+                    echoed = json.loads(response.read())
+                assert echoed == {**payload, "note": None}
+                break
+            except (OSError, urllib.error.URLError):
+                time.sleep(0.05)
+        else:
+            pytest.fail("web server did not start")
+
+        invalid_bodies = [
+            b'{"title":"x","ratio":2.5,"urgency":"routine","counts":[],"tags":{},"contact":{"label":"x","enabled":true},"extra":1}',
+            b'{"title":"x","title":"y","ratio":2.5,"urgency":"routine","counts":[],"tags":{},"contact":{"label":"x","enabled":true}}',
+            b'{"title":"x","ratio":2.5,"urgency":"unknown","counts":[],"tags":{},"contact":{"label":"x","enabled":true}}',
+            b'{"title":"x","ratio":2.5,"urgency":"routine","counts":[1.5],"tags":{},"contact":{"label":"x","enabled":true}}',
+            b'{"title":"\\ud800","ratio":2.5,"urgency":"routine","counts":[],"tags":{},"contact":{"label":"x","enabled":true}}',
+            b'{"title":"x","ratio":2.5,"urgency":"routine","counts":[],"tags":{},"contact":{"label":"x","enabled":true}} trailing',
+        ]
+        for raw in invalid_bodies:
+            with pytest.raises(urllib.error.HTTPError) as caught:
+                post(raw)
+            assert caught.value.code == 400
+            error = json.loads(caught.value.read())
+            assert error["error"] == "invalid_json"
+            assert isinstance(error["detail"], str) and error["detail"]
     finally:
         server.terminate()
         server.wait(timeout=10)

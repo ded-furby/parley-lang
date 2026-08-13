@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "study_id": "web-build-latency-002",
+  "generated_at": "2026-08-13T03:41:06Z",
+  "scope": "Four frozen non-043 projects; fresh target per cell; no exclusions or reruns.",
+  "repetitions": 4,
+  "toolchain": {
+    "parley": "parley 0.5.5",
+    "python": "3.14.6",
+    "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+    "git_commit": "595f8373449189645a55c3b5f8ee86b23701845e"
+  },
+  "fixture_sha256": {
+    "depot_overview": "88620befb8e6070919c7f49403e59c082f605305605d82dd864be3211a4e43ae",
+    "orchard_batch": "933d950cb7b24ff426c5cbd2eadb51bb30962142eb3f9792f3ef6eafcc12b345",
+    "weather_dispatch": "9b462bda84cfee3f655e1bb6e650e7281abc045f27a67a19be7483881eddbf9c",
+    "explicit_json_control": "480a72e05ecea8a15f94a680c733b46acac9863de9ed502e901eb5db6558ff10"
+  },
+  "warmup": {
+    "fixture": "weather_dispatch",
+    "elapsed_seconds": 0.868824,
+    "server_bytes": 440720,
+    "wasm_bytes": 1436,
+    "stdout_sha256": "4913be2b2bce2e985f8c7dd239689a3cb22f584527b69fdb48088206f234d28c",
+    "stderr": ""
+  },
+  "cells": [
+    {
+      "fixture": "depot_overview",
+      "elapsed_seconds": 0.621361,
+      "server_bytes": 407488,
+      "wasm_bytes": 0,
+      "stdout_sha256": "a3b4cb021d5516074286ef54b6c85bfbeb14b949d8a278686af71a69e8f02f24",
+      "stderr": ""
+    },
+    {
+      "fixture": "depot_overview",
+      "elapsed_seconds": 0.622388,
+      "server_bytes": 407488,
+      "wasm_bytes": 0,
+      "stdout_sha256": "4d167e4af079d3390c842a6ba5b9680edcec842345f88139b46ff6fec0bcd8dd",
+      "stderr": ""
+    },
+    {
+      "fixture": "depot_overview",
+      "elapsed_seconds": 0.663516,
+      "server_bytes": 407488,
+      "wasm_bytes": 0,
+      "stdout_sha256": "368d5d4102df2acfb31f6d5e1157584d5c64e755573b2b9277c5f7cd1b140a31",
+      "stderr": ""
+    },
+    {
+      "fixture": "depot_overview",
+      "elapsed_seconds": 0.584457,
+      "server_bytes": 407488,
+      "wasm_bytes": 0,
+      "stdout_sha256": "22c4a9febb94d6064f4acf0e3224f26e6837ce23589f3fa7d3a514719bd71923",
+      "stderr": ""
+    },
+    {
+      "fixture": "orchard_batch",
+      "elapsed_seconds": 0.802038,
+      "server_bytes": 424208,
+      "wasm_bytes": 1417,
+      "stdout_sha256": "689606d8ac2feeaffcbbd84574985f399030f9f5349b4bf588d42b1a09a15aa2",
+      "stderr": ""
+    },
+    {
+      "fixture": "orchard_batch",
+      "elapsed_seconds": 0.802515,
+      "server_bytes": 424208,
+      "wasm_bytes": 1417,
+      "stdout_sha256": "89979a97b3e91c873b0081ee6fcaa42878c2ba9bd7ee53f40faf8c80307867cd",
+      "stderr": ""
+    },
+    {
+      "fixture": "orchard_batch",
+      "elapsed_seconds": 0.804887,
+      "server_bytes": 424208,
+      "wasm_bytes": 1417,
+      "stdout_sha256": "8410a64f733c6a68cffb723cee09fe30db1a5bf37278a169026b354275cd04b4",
+      "stderr": ""
+    },
+    {
+      "fixture": "orchard_batch",
+      "elapsed_seconds": 0.802955,
+      "server_bytes": 424208,
+      "wasm_bytes": 1417,
+      "stdout_sha256": "6d1764903f26e343ebdac46aa05e66e5a48019ed518e95b4e48cda9a224f85e2",
+      "stderr": ""
+    },
+    {
+      "fixture": "weather_dispatch",
+      "elapsed_seconds": 0.822824,
+      "server_bytes": 440720,
+      "wasm_bytes": 1436,
+      "stdout_sha256": "c5d5e8460434e2270f625165a2ef311fe5a21b576662375584607a3b6c6e80b0",
+      "stderr": ""
+    },
+    {
+      "fixture": "weather_dispatch",
+      "elapsed_seconds": 0.828065,
+      "server_bytes": 440720,
+      "wasm_bytes": 1436,
+      "stdout_sha256": "7e9542dcdfeb7e874a82b7c786644cd2c80949942d226e12d2ff653b540ba0c6",
+      "stderr": ""
+    },
+    {
+      "fixture": "weather_dispatch",
+      "elapsed_seconds": 0.843186,
+      "server_bytes": 440720,
+      "wasm_bytes": 1436,
+      "stdout_sha256": "a6ac29d6651fddfbbbce18500784845052dcc0235a0272ac24dc55fd69902713",
+      "stderr": ""
+    },
+    {
+      "fixture": "weather_dispatch",
+      "elapsed_seconds": 0.824458,
+      "server_bytes": 440720,
+      "wasm_bytes": 1436,
+      "stdout_sha256": "c6d40da66544a25da6c4855f879fdafa00b94cc4c90f4ef9a0e2a25eafa74ced",
+      "stderr": ""
+    },
+    {
+      "fixture": "explicit_json_control",
+      "elapsed_seconds": 5.117268,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "stdout_sha256": "29611ecd9c74a1083e1ec61d1ceb2de0c511dcf60cbb2051a9efd084711d6867",
+      "stderr": ""
+    },
+    {
+      "fixture": "explicit_json_control",
+      "elapsed_seconds": 3.522055,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "stdout_sha256": "d9082a1db74bee909484ef327189557df1f2a63919b823ee49c5c6de5acaac88",
+      "stderr": ""
+    },
+    {
+      "fixture": "explicit_json_control",
+      "elapsed_seconds": 3.784248,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "stdout_sha256": "02f4a185e3c968e0b16bd887fbdd46a048bdfbc8087965810f945a3f80962a08",
+      "stderr": ""
+    },
+    {
+      "fixture": "explicit_json_control",
+      "elapsed_seconds": 3.435025,
+      "server_bytes": 493888,
+      "wasm_bytes": 0,
+      "stdout_sha256": "a160b5d58d0901b81ece735109922b114a0134fb1da8b3f72d9684c7adc8874b",
+      "stderr": ""
+    }
+  ],
+  "by_fixture": {
+    "depot_overview": {
+      "sessions": 4,
+      "primary": true,
+      "median_elapsed_seconds": 0.621875,
+      "mean_elapsed_seconds": 0.622931,
+      "median_server_bytes": 407488.0,
+      "median_wasm_bytes": 0.0
+    },
+    "orchard_batch": {
+      "sessions": 4,
+      "primary": true,
+      "median_elapsed_seconds": 0.802735,
+      "mean_elapsed_seconds": 0.803099,
+      "median_server_bytes": 424208.0,
+      "median_wasm_bytes": 1417.0
+    },
+    "weather_dispatch": {
+      "sessions": 4,
+      "primary": true,
+      "median_elapsed_seconds": 0.826261,
+      "mean_elapsed_seconds": 0.829633,
+      "median_server_bytes": 440720.0,
+      "median_wasm_bytes": 1436.0
+    },
+    "explicit_json_control": {
+      "sessions": 4,
+      "primary": false,
+      "median_elapsed_seconds": 3.653151,
+      "mean_elapsed_seconds": 3.964649,
+      "median_server_bytes": 493888.0,
+      "median_wasm_bytes": 0.0
+    }
+  },
+  "median_of_fixture_medians_seconds": 0.814498,
+  "primary_median_of_fixture_medians_seconds": 0.802735,
+  "acceptance": {
+    "minimum_latency_improvement_percent": 20.0,
+    "maximum_fixture_regression_percent": 5.0,
+    "maximum_unjustified_size_increase_percent": 25.0
+  },
+  "claim_boundary": "This local product benchmark measures cold web-build latency only; it is not an iteration-043 rerun or evidence of universal superiority."
+}

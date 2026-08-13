@@ -612,6 +612,14 @@ slower than Python. See the [study record](benchmarks/FULLSTACK_AGENT_043.md),
 [canonical artifact](benchmarks/reports/043-independent-fullstack-study-gate-not-met.artifact.json),
 and [portable report](benchmarks/reports/043-independent-fullstack-study-gate-not-met.html).
 
+Version 0.5.5 addresses the remaining generic cold-build mechanism on a second
+frozen non-agent corpus. Typed route-only servers now use generated strict JSON
+code with no third-party Rust dependencies; explicit language-level JSON keeps
+the established Serde backend. The preregistered fresh-target build aggregate
+fell from 2.725720 to 0.802735 seconds (70.5496%), every fixture improved, and
+609/609 tests passed. See
+[benchmarks/WEB_BUILD_LATENCY_002.md](benchmarks/WEB_BUILD_LATENCY_002.md).
+
 ## Development
 
 ```bash

@@ -84,3 +84,34 @@ Canonical baseline: `web_build_latency_002_baseline.json`; SHA-256:
 This result fixes the candidate's 20% target at **2.180576 seconds or lower**
 for the median of primary fixture medians, in addition to the per-fixture
 regression, correctness, and size gates above.
+
+## Accepted v0.5.5 candidate
+
+Version 0.5.5 generates a strict standard-library JSON parser, encoder, and
+typed codecs for programs that use JSON only at web route boundaries. Their
+native Cargo project therefore has no third-party dependency graph. Programs
+that explicitly use Parley `from json` or `as json` expressions retain the
+existing Serde derive backend unchanged.
+
+All 16 candidate cells passed. The primary fixture medians fell to 0.621875
+seconds for `depot_overview`, 0.802735 for `orchard_batch`, and 0.826261 for
+`weather_dispatch`. Their median improved from 2.725720 to **0.802735
+seconds**, a **70.5496% reduction** that clears the frozen 20% threshold. The
+derive-backed control also improved 5.5866%, so no fixture regressed. Native
+servers became 3.2321–14.0639% smaller and WASM sizes were unchanged.
+
+The complete suite passed 609/609 tests. Dedicated native execution covers
+strict unknown, duplicate, missing, wrong-type, optional, enum, nested record,
+list, text-keyed map, decimal, Unicode, escape, surrogate, malformed-number,
+and trailing-input behavior. The previous v0.5.4 analysis remains
+byte-for-byte reproducible after the product advanced.
+
+Canonical candidate: `web_build_latency_002_candidate.json`; SHA-256:
+`25efbcc80906060c3403c0e00852ff43ff8f7c0dcd4440c672613dbff9fdb9f7`.
+Canonical analysis: `web_build_latency_002_analysis.json`; SHA-256:
+`fc00677316db8969dee86460899fb8d84ad0e5fb4cda9fafe3275305f2c19c40`.
+
+This accepts a generic local build-path improvement. It does not alter 043,
+predict an agent-study result, or establish universal language superiority.
+The v0.5.5 product and evidence must be committed before any successor agent
+task population is selected.

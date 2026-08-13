@@ -4715,3 +4715,33 @@ unjustified median artifact-size increase above 25%. This is a local product
 benchmark, not a 043 reinterpretation or universal-performance claim. Next:
 attribute the generic dependency/build phases and implement against this frozen
 population only.
+
+### v0.5.5 cold web-build candidate accepted
+
+- Candidate: `benchmarks/web_build_latency_002_candidate.json`
+- Candidate SHA-256:
+  `25efbcc80906060c3403c0e00852ff43ff8f7c0dcd4440c672613dbff9fdb9f7`
+- Analysis: `benchmarks/web_build_latency_002_analysis.json`
+- Analysis SHA-256:
+  `fc00677316db8969dee86460899fb8d84ad0e5fb4cda9fafe3275305f2c19c40`
+- Full regression: 609 passed, 0 failed
+
+The accepted candidate replaces Serde/serde_json for route-boundary-only
+programs with generated strict standard-library parsing, encoding, and codecs.
+Explicit Parley JSON expressions retain the existing derive-backed path. The
+new native execution coverage includes nested records, kinds, optionals,
+lists, text-keyed maps, decimals, Unicode and surrogate pairs, strict field
+boundaries, malformed numbers and escapes, and trailing-input rejection.
+
+All 16 frozen candidate cells passed. The primary aggregate fell from 2.725720
+to 0.802735 seconds, a 70.5496% improvement against the 20% threshold. Every
+fixture improved, including 5.5866% for the explicit-JSON control. Native
+servers were 3.2321–14.0639% smaller and WASM artifacts were unchanged, so the
+latency, per-fixture regression, size, and full-regression conditions all pass.
+
+The analyzer binds the exact v0.5.5 product and verification files used by the
+measurement. Its Git field records the clean v0.5.4 baseline because the
+candidate was measured before publication. This evidence accepts a local
+generic product change only; it does not modify 043 or establish universal
+superiority. Next: commit and push v0.5.5 with this evidence, then freeze the
+product before selecting any disjoint successor agent corpus.

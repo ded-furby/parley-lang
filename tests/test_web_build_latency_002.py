@@ -2,6 +2,8 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 from parley.web import check_browser, check_web, load_project
 
@@ -9,6 +11,9 @@ from parley.web import check_browser, check_web, load_project
 REPO = Path(__file__).resolve().parents[1]
 HARNESS = REPO / "benchmarks/measure_web_build_latency_002.py"
 BASELINE = REPO / "benchmarks/web_build_latency_002_baseline.json"
+CANDIDATE = REPO / "benchmarks/web_build_latency_002_candidate.json"
+ANALYSIS = REPO / "benchmarks/web_build_latency_002_analysis.json"
+ANALYZER = REPO / "benchmarks/analyze_web_build_latency_002.py"
 
 
 def load_harness():
@@ -98,3 +103,58 @@ def test_web_build_latency_002_baseline_is_complete_and_frozen():
         "maximum_fixture_regression_percent": 5.0,
         "maximum_unjustified_size_increase_percent": 25.0,
     }
+
+
+def test_web_build_latency_002_candidate_passes_frozen_acceptance():
+    candidate = json.loads(CANDIDATE.read_text(encoding="utf-8"))
+    analysis = json.loads(ANALYSIS.read_text(encoding="utf-8"))
+
+    assert hashlib.sha256(CANDIDATE.read_bytes()).hexdigest() == (
+        "25efbcc80906060c3403c0e00852ff43ff8f7c0dcd4440c672613dbff9fdb9f7"
+    )
+    assert hashlib.sha256(ANALYSIS.read_bytes()).hexdigest() == (
+        "fc00677316db8969dee86460899fb8d84ad0e5fb4cda9fafe3275305f2c19c40"
+    )
+    assert candidate["toolchain"]["parley"] == "parley 0.5.5"
+    assert len(candidate["cells"]) == 16
+    assert all(cell["stderr"] == "" for cell in candidate["cells"])
+    assert candidate["primary_median_of_fixture_medians_seconds"] == 0.802735
+    assert analysis["overall"] == {
+        "baseline_primary_median_of_fixture_medians_seconds": 2.72572,
+        "candidate_primary_median_of_fixture_medians_seconds": 0.802735,
+        "primary_latency_improvement_percent": 70.5496,
+        "maximum_fixture_regression_percent": -5.5866,
+        "maximum_server_size_increase_percent": -3.2321,
+        "maximum_wasm_size_increase_percent": 0.0,
+    }
+    assert analysis["verification"]["regression_tests_passed"] == 609
+    assert analysis["acceptance"] == {
+        "latency_threshold_percent": 20.0,
+        "fixture_regression_ceiling_percent": 5.0,
+        "size_ceiling_percent": 25.0,
+        "latency_pass": True,
+        "fixture_regression_pass": True,
+        "size_pass": True,
+        "regression_pass": True,
+        "accepted": True,
+    }
+
+
+def test_web_build_latency_002_analysis_is_deterministic(tmp_path):
+    output = tmp_path / "analysis.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(ANALYZER),
+            "--verify-current-files",
+            "--output",
+            str(output),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ANALYSIS.read_bytes()

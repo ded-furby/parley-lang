@@ -465,6 +465,14 @@ elapsed failed while the other five conditions passed. The canonical
 and [portable report](reports/043-independent-fullstack-study-gate-not-met.html)
 preserve the audited result and its non-universal claim boundary.
 
+The separately frozen cold web-build study 002 then accepted Parley v0.5.5.
+Route-boundary-only servers now generate a strict standard-library JSON codec
+and avoid third-party Rust dependencies, while explicit core JSON keeps the
+Serde backend. The primary fresh-target build aggregate improved 70.5496%
+from 2.725720 to 0.802735 seconds, every fixture improved, native binaries
+became smaller, WASM sizes were unchanged, and 609/609 tests passed. See
+`WEB_BUILD_LATENCY_002.md`; this product result does not reinterpret 043.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames
