@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "phase": "post-result secondary latency decomposition",
+  "raw_sha256": "0117effbc633affb6d79d14e8f1b713634ca3c5c263537e1ba2207b7ccaf2d07",
+  "bootstrap": {
+    "seed": 460260814,
+    "samples": 50000,
+    "unit": "matched task/configuration/replicate pair"
+  },
+  "definitions": {
+    "session_elapsed_seconds": "Frozen primary wall time around the complete Codex subprocess and all parent public checks requested during it; hidden judgment is excluded.",
+    "public_check_seconds": "Sum of parent-recorded ./check attempt wall times.",
+    "public_build_seconds": "Sum of exact application build wall times inside public checks.",
+    "public_runtime_seconds": "Public check time minus build time; includes server, HTTP, Chromium, proxy, and parent-check overhead.",
+    "noncheck_session_seconds": "Session elapsed minus public check time; includes model service latency, source printing, editing, command transport, and other agent work."
+  },
+  "by_language": {
+    "parley": {
+      "sessions": 24,
+      "session_elapsed_seconds": {
+        "median": 33.6522,
+        "mean": 41.8597,
+        "minimum": 18.365,
+        "maximum": 95.9131
+      },
+      "public_check_seconds": {
+        "median": 2.3634,
+        "mean": 2.5883,
+        "minimum": 2.0976,
+        "maximum": 4.5874
+      },
+      "public_build_seconds": {
+        "median": 0.9707,
+        "mean": 1.0816,
+        "minimum": 0.9013,
+        "maximum": 1.8706
+      },
+      "public_runtime_seconds": {
+        "median": 1.4297,
+        "mean": 1.5066,
+        "minimum": 1.175,
+        "maximum": 2.7185
+      },
+      "noncheck_session_seconds": {
+        "median": 30.1767,
+        "mean": 39.2715,
+        "minimum": 16.1358,
+        "maximum": 93.391
+      }
+    },
+    "python": {
+      "sessions": 24,
+      "session_elapsed_seconds": {
+        "median": 28.8755,
+        "mean": 38.6088,
+        "minimum": 18.9279,
+        "maximum": 95.0397
+      },
+      "public_check_seconds": {
+        "median": 1.5375,
+        "mean": 1.6522,
+        "minimum": 1.443,
+        "maximum": 2.3948
+      },
+      "public_build_seconds": {
+        "median": 0.0607,
+        "mean": 0.0672,
+        "minimum": 0.0518,
+        "maximum": 0.0969
+      },
+      "public_runtime_seconds": {
+        "median": 1.4779,
+        "mean": 1.5851,
+        "minimum": 1.3878,
+        "maximum": 2.2979
+      },
+      "noncheck_session_seconds": {
+        "median": 27.3635,
+        "mean": 36.9565,
+        "minimum": 17.0099,
+        "maximum": 93.5102
+      }
+    },
+    "typescript": {
+      "sessions": 24,
+      "session_elapsed_seconds": {
+        "median": 61.8548,
+        "mean": 73.0182,
+        "minimum": 44.7217,
+        "maximum": 142.9034
+      },
+      "public_check_seconds": {
+        "median": 1.2399,
+        "mean": 1.3731,
+        "minimum": 1.1316,
+        "maximum": 2.4653
+      },
+      "public_build_seconds": {
+        "median": 0.0678,
+        "mean": 0.0861,
+        "minimum": 0.0569,
+        "maximum": 0.1381
+      },
+      "public_runtime_seconds": {
+        "median": 1.1404,
+        "mean": 1.2869,
+        "minimum": 1.0732,
+        "maximum": 2.3419
+      },
+      "noncheck_session_seconds": {
+        "median": 60.6999,
+        "mean": 71.6452,
+        "minimum": 43.3003,
+        "maximum": 141.7018
+      }
+    },
+    "rust": {
+      "sessions": 24,
+      "session_elapsed_seconds": {
+        "median": 77.7707,
+        "mean": 113.0606,
+        "minimum": 50.1229,
+        "maximum": 487.6131
+      },
+      "public_check_seconds": {
+        "median": 13.8661,
+        "mean": 15.3362,
+        "minimum": 12.0886,
+        "maximum": 27.4402
+      },
+      "public_build_seconds": {
+        "median": 12.1917,
+        "mean": 13.6483,
+        "minimum": 10.7485,
+        "maximum": 24.5029
+      },
+      "public_runtime_seconds": {
+        "median": 1.4787,
+        "mean": 1.688,
+        "minimum": 1.2389,
+        "maximum": 3.2717
+      },
+      "noncheck_session_seconds": {
+        "median": 63.9879,
+        "mean": 97.7243,
+        "minimum": 36.448,
+        "maximum": 460.1729
+      }
+    }
+  },
+  "by_configuration": {
+    "sol-medium": {
+      "parley": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 31.5594,
+          "mean": 45.0507,
+          "minimum": 21.1425,
+          "maximum": 95.9131
+        },
+        "public_check_seconds": {
+          "median": 2.3625,
+          "mean": 2.3719,
+          "minimum": 2.0976,
+          "maximum": 2.9469
+        },
+        "public_build_seconds": {
+          "median": 0.9373,
+          "mean": 1.0136,
+          "minimum": 0.9226,
+          "maximum": 1.5141
+        },
+        "public_runtime_seconds": {
+          "median": 1.4127,
+          "mean": 1.3583,
+          "minimum": 1.175,
+          "maximum": 1.5025
+        },
+        "noncheck_session_seconds": {
+          "median": 29.2608,
+          "mean": 42.6788,
+          "minimum": 18.7806,
+          "maximum": 93.391
+        }
+      },
+      "python": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 34.3492,
+          "mean": 42.1728,
+          "minimum": 20.6668,
+          "maximum": 95.0397
+        },
+        "public_check_seconds": {
+          "median": 1.5169,
+          "mean": 1.6424,
+          "minimum": 1.443,
+          "maximum": 2.3948
+        },
+        "public_build_seconds": {
+          "median": 0.0577,
+          "mean": 0.0646,
+          "minimum": 0.0518,
+          "maximum": 0.0969
+        },
+        "public_runtime_seconds": {
+          "median": 1.4575,
+          "mean": 1.5778,
+          "minimum": 1.3878,
+          "maximum": 2.2979
+        },
+        "noncheck_session_seconds": {
+          "median": 32.5506,
+          "mean": 40.5304,
+          "minimum": 19.1989,
+          "maximum": 93.5102
+        }
+      },
+      "typescript": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 56.0723,
+          "mean": 62.8944,
+          "minimum": 44.7217,
+          "maximum": 115.6459
+        },
+        "public_check_seconds": {
+          "median": 1.2399,
+          "mean": 1.2561,
+          "minimum": 1.1316,
+          "maximum": 1.451
+        },
+        "public_build_seconds": {
+          "median": 0.1081,
+          "mean": 0.0917,
+          "minimum": 0.0573,
+          "maximum": 0.1381
+        },
+        "public_runtime_seconds": {
+          "median": 1.1364,
+          "mean": 1.1644,
+          "minimum": 1.0732,
+          "maximum": 1.3129
+        },
+        "noncheck_session_seconds": {
+          "median": 54.8713,
+          "mean": 61.6383,
+          "minimum": 43.3003,
+          "maximum": 114.3336
+        }
+      },
+      "rust": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 77.7707,
+          "mean": 99.4818,
+          "minimum": 53.7297,
+          "maximum": 200.752
+        },
+        "public_check_seconds": {
+          "median": 14.0148,
+          "mean": 14.5435,
+          "minimum": 12.5037,
+          "maximum": 17.1677
+        },
+        "public_build_seconds": {
+          "median": 12.3211,
+          "mean": 12.8885,
+          "minimum": 11.0408,
+          "maximum": 15.523
+        },
+        "public_runtime_seconds": {
+          "median": 1.4745,
+          "mean": 1.6549,
+          "minimum": 1.3054,
+          "maximum": 3.2717
+        },
+        "noncheck_session_seconds": {
+          "median": 63.9879,
+          "mean": 84.9383,
+          "minimum": 36.9178,
+          "maximum": 183.5843
+        }
+      }
+    },
+    "terra-medium": {
+      "parley": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 33.8165,
+          "mean": 38.6688,
+          "minimum": 18.365,
+          "maximum": 92.0904
+        },
+        "public_check_seconds": {
+          "median": 2.4372,
+          "mean": 2.8046,
+          "minimum": 2.1348,
+          "maximum": 4.5874
+        },
+        "public_build_seconds": {
+          "median": 1.0135,
+          "mean": 1.1497,
+          "minimum": 0.9013,
+          "maximum": 1.8706
+        },
+        "public_runtime_seconds": {
+          "median": 1.4676,
+          "mean": 1.6549,
+          "minimum": 1.2075,
+          "maximum": 2.7185
+        },
+        "noncheck_session_seconds": {
+          "median": 30.3112,
+          "mean": 35.8641,
+          "minimum": 16.1358,
+          "maximum": 89.6391
+        }
+      },
+      "python": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 27.6291,
+          "mean": 35.0447,
+          "minimum": 18.9279,
+          "maximum": 68.5284
+        },
+        "public_check_seconds": {
+          "median": 1.6323,
+          "mean": 1.6621,
+          "minimum": 1.4514,
+          "maximum": 2.1268
+        },
+        "public_build_seconds": {
+          "median": 0.0657,
+          "mean": 0.0698,
+          "minimum": 0.0542,
+          "maximum": 0.092
+        },
+        "public_runtime_seconds": {
+          "median": 1.5468,
+          "mean": 1.5923,
+          "minimum": 1.3953,
+          "maximum": 2.0625
+        },
+        "noncheck_session_seconds": {
+          "median": 26.0396,
+          "mean": 33.3826,
+          "minimum": 17.0099,
+          "maximum": 67.0614
+        }
+      },
+      "typescript": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 75.094,
+          "mean": 83.1421,
+          "minimum": 47.3033,
+          "maximum": 142.9034
+        },
+        "public_check_seconds": {
+          "median": 1.2378,
+          "mean": 1.49,
+          "minimum": 1.1438,
+          "maximum": 2.4653
+        },
+        "public_build_seconds": {
+          "median": 0.0662,
+          "mean": 0.0805,
+          "minimum": 0.0569,
+          "maximum": 0.1234
+        },
+        "public_runtime_seconds": {
+          "median": 1.1757,
+          "mean": 1.4095,
+          "minimum": 1.0833,
+          "maximum": 2.3419
+        },
+        "noncheck_session_seconds": {
+          "median": 73.368,
+          "mean": 81.6521,
+          "minimum": 46.1595,
+          "maximum": 141.7018
+        }
+      },
+      "rust": {
+        "sessions": 12,
+        "session_elapsed_seconds": {
+          "median": 89.233,
+          "mean": 126.6394,
+          "minimum": 50.1229,
+          "maximum": 487.6131
+        },
+        "public_check_seconds": {
+          "median": 13.2406,
+          "mean": 16.129,
+          "minimum": 12.0886,
+          "maximum": 27.4402
+        },
+        "public_build_seconds": {
+          "median": 11.5084,
+          "mean": 14.408,
+          "minimum": 10.7485,
+          "maximum": 24.5029
+        },
+        "public_runtime_seconds": {
+          "median": 1.5018,
+          "mean": 1.721,
+          "minimum": 1.2389,
+          "maximum": 2.9373
+        },
+        "noncheck_session_seconds": {
+          "median": 76.335,
+          "mean": 110.5103,
+          "minimum": 36.448,
+          "maximum": 460.1729
+        }
+      }
+    }
+  },
+  "parley_vs_python": {
+    "marginal_median": {
+      "elapsed_difference_seconds": 4.7767,
+      "elapsed_percent": 16.5424,
+      "public_check_difference_seconds": 0.8259,
+      "public_build_difference_seconds": 0.91,
+      "noncheck_difference_seconds": 2.8132
+    },
+    "matched_pairs": {
+      "pairs": 24,
+      "parley_faster": 13,
+      "python_faster": 11,
+      "ties": 0,
+      "elapsed_difference_seconds": {
+        "median": -0.5204,
+        "mean": 3.251,
+        "minimum": -53.4758,
+        "maximum": 69.3897,
+        "bootstrap_median_95_percent_interval": [
+          -10.2032,
+          2.3991
+        ]
+      },
+      "public_check_difference_seconds": {
+        "median": 0.812,
+        "mean": 0.936,
+        "minimum": -0.2435,
+        "maximum": 2.7659
+      },
+      "public_build_difference_seconds": {
+        "median": 0.9042,
+        "mean": 1.0144,
+        "minimum": 0.816,
+        "maximum": 1.8078
+      },
+      "noncheck_difference_seconds": {
+        "median": -1.0202,
+        "mean": 2.315,
+        "minimum": -54.2759,
+        "maximum": 68.3718
+      },
+      "total_token_difference": {
+        "median": -138.5,
+        "mean": -132.5,
+        "minimum": -800.0,
+        "maximum": 428.0,
+        "parley_no_higher_pairs": 15
+      },
+      "two_sided_sign_test_p": 0.83882
+    }
+  },
+  "interpretation": {
+    "frozen_gate_unchanged": true,
+    "conclusion": "Parley's marginal median elapsed failure is valid, but it is not a clean estimate of compiler overhead. Public build/check overhead explains only part of the marginal gap, while separately scheduled matched cells show high noncheck variance and no stable directional paired effect.",
+    "limitations": "Pairs share task, model configuration, and replicate label but were not simultaneous controlled executions. This post-result analysis is descriptive and cannot revise the primary gate or authorize a same-corpus rerun."
+  }
+}
