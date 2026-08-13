@@ -113,3 +113,15 @@ it. The shared portable reader validated and rendered
 The report retains all eight model/language rows and gives the binding
 terra-medium elapsed comparison its own chart; it does not replace the raw or
 audited evidence.
+
+## Post-study elapsed attribution
+
+The complete 24-pair Parley/Python attribution is documented in
+`FULLSTACK_AGENT_042_ELAPSED_ATTRIBUTION.md` and
+`fullstack_agent_042_elapsed_attribution.json`. Parley was faster in 7/12
+Terra matched pairs and by 1.3807 seconds at the paired median even though its
+separate language median failed the registered threshold. The systematic
+disadvantage was the frozen public build phase: Parley was slower there in
+24/24 matched pairs by 3.96095 seconds at the paired median. This diagnostic
+does not change 042; it selects generic cold web-build latency as the next
+out-of-corpus product target.

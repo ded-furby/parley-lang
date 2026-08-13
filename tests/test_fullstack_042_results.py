@@ -13,6 +13,7 @@ REPORT = (
     BENCHMARKS
     / "reports/042-independent-fullstack-study-gate-not-met.artifact.json"
 )
+ATTRIBUTION = BENCHMARKS / "fullstack_agent_042_elapsed_attribution.json"
 
 
 def sha256(path: Path) -> str:
@@ -164,3 +165,43 @@ def test_fullstack_042_report_builder_is_deterministic():
 
     assert completed.returncode == 0, completed.stderr
     assert sha256(REPORT) == before
+
+
+def test_fullstack_042_elapsed_attribution_uses_all_pairs_and_preserves_boundary(
+    tmp_path,
+):
+    output = tmp_path / "elapsed-attribution.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(BENCHMARKS / "analyze_fullstack_agent_042_elapsed.py"),
+            "--output",
+            str(output),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ATTRIBUTION.read_bytes()
+    attribution = json.loads(output.read_text(encoding="utf-8"))
+    assert len(attribution["matched_pairs"]) == 24
+    mechanism = attribution["terra_gate_mechanism"]
+    assert mechanism["matched_pairs"] == 12
+    assert mechanism["parley_marginal_gap_percent"] == 8.863718
+    assert mechanism["parley_faster_matched_pairs"] == 7
+    assert mechanism["median_paired_delta_seconds"] == -1.3807
+    build = attribution["build_phase_diagnostic"]
+    assert build["overall_paired_build_delta"]["parley_higher_pairs"] == 24
+    assert build["overall_paired_build_delta"]["median"] == 3.96095
+    assert build["terra_paired_build_delta"]["parley_higher_pairs"] == 12
+    assert build["terra_paired_build_delta"]["median"] == 4.1111
+    assert build["terra_marginal_medians"]["parley"][
+        "elapsed_seconds_excluding_build"
+    ] == 22.07895
+    assert build["terra_marginal_medians"]["python"][
+        "elapsed_seconds_excluding_build"
+    ] == 25.11775
+    assert "remains gate-not-met" in attribution["claim_boundary"]

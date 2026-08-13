@@ -4462,3 +4462,30 @@ verification checks.
 Next: preserve 042 unchanged and attribute the Terra elapsed miss from the
 complete frozen timing population before proposing any generic product or
 tooling change.
+
+### Post-042 elapsed attribution
+
+- Analysis: `benchmarks/fullstack_agent_042_elapsed_attribution.json`
+- Analysis SHA-256:
+  `10cd4507e3982b6fd8146297a40595e82729b7c360e3f475506b7bedcc2d456b`
+- Matched population: all 24 Parley/Python task/configuration/replicate pairs
+- Exclusions: none
+
+The registered Terra comparison remains a real miss: separate language
+medians were 27.41515 seconds for Parley and 25.183 for Python. It was not a
+uniform paired loss. Parley was faster in 7/12 Terra pairs and its median paired
+difference was −1.3807 seconds. Terra implementation medians favored Parley;
+the mixed maintenance distribution favored Python and placed Python's two
+central observations below Parley's.
+
+The stable mechanism is the public build phase. Parley was slower than Python
+there in all 24 matched pairs, by 3.96095 seconds at the paired median overall
+and 4.1111 seconds under Terra. Outside the public check, Parley was 4.8015
+seconds faster at the Terra paired median. Subtracting observed build time
+would reverse the marginal comparison, but that arithmetic is only a component
+diagnostic and does not change the gate.
+
+Decision: leave the token-winning v0.5.3 context and model prompts unchanged.
+Profile generic cold `parley web build` latency on non-042 programs, validate
+any improvement outside the frozen corpus, and freeze it before constructing a
+disjoint successor population.

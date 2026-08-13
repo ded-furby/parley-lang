@@ -585,6 +585,10 @@ was 8.8637% slower than Terra Python. See
 [canonical artifact](benchmarks/reports/042-independent-fullstack-study-gate-not-met.artifact.json),
 or the
 [portable report](benchmarks/reports/042-independent-fullstack-study-gate-not-met.html).
+The complete matched-pair
+[elapsed attribution](benchmarks/FULLSTACK_AGENT_042_ELAPSED_ATTRIBUTION.md)
+isolates cold web-build latency as the next generic target without reusing 042
+for tuning.
 
 ## Development
 
