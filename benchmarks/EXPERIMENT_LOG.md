@@ -4745,3 +4745,23 @@ candidate was measured before publication. This evidence accepts a local
 generic product change only; it does not modify 043 or establish universal
 superiority. Next: commit and push v0.5.5 with this evidence, then freeze the
 product before selecting any disjoint successor agent corpus.
+
+### v0.5.5 frozen before iteration 044 corpus construction
+
+- Product commit: `a098996847927c4eb622e2af8d0b7ebee81011c6`
+- Product tree: `be8be51158157fc33b6b0e00e5ce62e6478d94fe`
+- Product artifact: `benchmarks/fullstack_agent_044_product.json`
+- Product artifact SHA-256:
+  `181e26d1204765f3e14a1a24dfe9d82a545d271b3da900785716e509e1551e89`
+- Design boundary: `benchmarks/FULLSTACK_AGENT_044_PRODUCT_FREEZE.md`
+
+The deterministic artifact reads exact blobs from the accepted v0.5.5
+evidence commit. It binds the dependency-free typed-route JSON path, unchanged
+222-token agent context, all 16+16 build outcomes, 70.5496% accepted primary
+improvement, smaller native artifacts, unchanged WASM, and 609-test regression.
+No iteration-044 task name, domain, route, field, formula, fixture, defect,
+scaffold, prompt, or model output exists at this checkpoint.
+
+Next: commit the product freeze, then design and independently hash a disjoint
+044 semantics-only task/case population before any comparison protocol or
+scaffold exists.

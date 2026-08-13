@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment_id": "044-product-freeze",
+  "frozen_on": "2026-08-13",
+  "parley_version": "0.5.5",
+  "evidence_commit": "a098996847927c4eb622e2af8d0b7ebee81011c6",
+  "evidence_tree": "be8be51158157fc33b6b0e00e5ce62e6478d94fe",
+  "product_files": {
+    "parley/web.py": "1585e7f3f19815e7b0481dcbaf37bab7a8c26fd098deb5964ed304e37098cf2d",
+    "parley/cli.py": "656a7ba25e340bf0ebdf9b7c0ce8877aa03cbbad2aa6562186e587530d56b71a",
+    "parley/__init__.py": "5c7ad293b29a5b84ce4c7a39324b847622de1c531a49e6c2d55f32f979b2d3df",
+    "pyproject.toml": "2621ecc54229070a1bf913ccddf473df42fecde2a1422a6facaecd0ccd403cc0"
+  },
+  "agent_context": {
+    "file": "skill/parley/references/scaffolded-web-v0.5.3.md",
+    "sha256": "f40a1030de6b3ed75f47183dee41d1ac3185dd87b747f779dab8835d4d63e8c4",
+    "bytes": 892,
+    "o200k_base_tokens": 222,
+    "status": "unchanged from the independently token-winning 042 freeze"
+  },
+  "build_evidence": {
+    "baseline_file": "benchmarks/web_build_latency_002_baseline.json",
+    "baseline_sha256": "b6c951d84f1754f0d7fa640379accbdf1e2dccf2a3af6c333a354d0080e8f62b",
+    "candidate_file": "benchmarks/web_build_latency_002_candidate.json",
+    "candidate_sha256": "25efbcc80906060c3403c0e00852ff43ff8f7c0dcd4440c672613dbff9fdb9f7",
+    "analysis_file": "benchmarks/web_build_latency_002_analysis.json",
+    "analysis_sha256": "fc00677316db8969dee86460899fb8d84ad0e5fb4cda9fafe3275305f2c19c40",
+    "baseline_median_seconds": 2.72572,
+    "candidate_median_seconds": 0.802735,
+    "improvement_percent": 70.5496,
+    "maximum_fixture_regression_percent": -5.5866,
+    "maximum_server_size_increase_percent": -3.2321,
+    "maximum_wasm_size_increase_percent": 0.0,
+    "regression_tests_passed": 609,
+    "accepted": true
+  },
+  "frozen_decisions": [
+    "keep the 222-token scaffold-aware context unchanged",
+    "use generated strict standard-library JSON codecs at ordinary typed route boundaries",
+    "retain Serde derives for programs with explicit from-json or as-json expressions",
+    "preserve strict nested, Unicode, unknown, duplicate, missing, wrong-type, optional, and enum behavior",
+    "preserve the six-condition all-strata gate and once-run execution controls"
+  ],
+  "construction_boundary": "This v0.5.5 product and its evidence commit are frozen before any iteration-044 task names, domains, routes, fields, formulas, fixtures, defects, scaffolds, thresholds, prompts, or model output are selected.",
+  "claim_boundary": "The 70.5496% result is a local cold-build product benchmark. It does not change iteration 043 or establish future agent reliability, strict efficiency parity, production suitability, or universal superiority."
+}

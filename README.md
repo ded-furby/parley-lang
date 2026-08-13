@@ -619,6 +619,9 @@ the established Serde backend. The preregistered fresh-target build aggregate
 fell from 2.725720 to 0.802735 seconds (70.5496%), every fixture improved, and
 609/609 tests passed. See
 [benchmarks/WEB_BUILD_LATENCY_002.md](benchmarks/WEB_BUILD_LATENCY_002.md).
+The accepted v0.5.5 product and unchanged 222-token agent context are frozen
+before successor task design in
+[benchmarks/FULLSTACK_AGENT_044_PRODUCT_FREEZE.md](benchmarks/FULLSTACK_AGENT_044_PRODUCT_FREEZE.md).
 
 ## Development
 
