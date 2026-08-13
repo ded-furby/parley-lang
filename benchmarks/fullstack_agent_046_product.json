@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "phase": "pre-corpus product and evidence freeze",
+  "frozen_on": "2026-08-13",
+  "parley": {
+    "version": "0.5.6",
+    "product_commit": "6bae1149d101d5a483f31f55905083e0a939c1da",
+    "product_tree": "525b23b0191cb5f16a9cc4b5281d9b9af912898c"
+  },
+  "context": {
+    "commit": "2b55413953d1f8f17478875f1742f22e802b4c3a",
+    "tree": "0f01b7cb3423d90447af207543910020464caeaf",
+    "o200k_base_tokens": 124,
+    "maximum_tokens": 128
+  },
+  "evidence_boundary": {
+    "json_native_commit": "df2c1944b29081064789b6005ffcc12cf0f52823",
+    "json_native_tree": "d4dda528c5d00b972c4f02e63d62f2ee1014b553",
+    "required_header_pair_shape": "list[list[str, str]]",
+    "required_pre_measurement_controls": [
+      "empty header pairs survive live-to-persisted equality",
+      "custom header pairs survive live-to-persisted equality",
+      "duplicate header pairs survive live-to-persisted equality",
+      "non-finite JSON evidence is rejected"
+    ]
+  },
+  "iteration_045_boundary": {
+    "result_commit": "61fe34729f6361846cf418183cc3fa240c09516c",
+    "result_tree": "47bc7ddd46b9cff8aa1192ff9156f10c0bc29415",
+    "status": "invalid; frozen gate failed",
+    "selective_rerun": false,
+    "same_corpus_reuse": false
+  },
+  "files": {
+    "context_freeze": {
+      "file": "benchmarks/fullstack_agent_046_context.json",
+      "sha256": "32ba3aaf03c0d397ac9e0e845443bd2c2c9240e2f5102d844278f00d6fa07fee"
+    },
+    "compact_context": {
+      "file": "skill/parley/references/scaffolded-response-web-v0.5.6-compact.md",
+      "sha256": "12515da0f10ab5c3312edcb21b233d786f20bc4c444598acd26e589109b84580"
+    },
+    "evidence_implementation": {
+      "file": "benchmarks/json_evidence.py",
+      "sha256": "dad9f4144e0dfa1c21d29e4362f116abd38c5181664a82dbb161b3358e70689c"
+    },
+    "iteration_045_raw": {
+      "file": "benchmarks/fullstack_agent_045_raw.json",
+      "sha256": "521f706074526ec34a34d6cbba98ce4db427d1490433e8188b23094a7313e7f9"
+    },
+    "iteration_045_audit": {
+      "file": "benchmarks/fullstack_agent_045_audit.json",
+      "sha256": "26c8b3ed87a68b50411c8f0232db9d848d6faab3aebf34f496596b66f2122f07"
+    },
+    "iteration_045_report": {
+      "file": "benchmarks/FULLSTACK_AGENT_045_RESULT.md",
+      "sha256": "a8653c7e0ace7698192154892175a0fe603c70d6c108256ea7a768b9da850239"
+    }
+  },
+  "pre_corpus_anchor_commit": "2b55413953d1f8f17478875f1742f22e802b4c3a",
+  "corpus_selected_before_freeze": false,
+  "measured_sessions_before_freeze": 0,
+  "next_step": "Select and freeze new response-control task semantics that are disjoint from iterations 036-045 before any scaffold or model output.",
+  "claim_boundary": "No language superiority or session-efficiency claim follows from this product/evidence freeze."
+}
