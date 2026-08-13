@@ -50,6 +50,7 @@ instead of hand-building a replacement.
 | 040 | Parley 0.5.2 | Host ENOSPC invalidated five cells; all 460 executed hidden cases passed, but only maintainability passed the frozen gate | [Artifact](040-independent-fullstack-study-invalidated.artifact.json) |
 | 041 | Parley 0.5.2 | Valid clean run tied hidden correctness, first check, and locality and was fastest overall, but its complete-session token median remained 4.91% above Python | [Artifact](041-independent-fullstack-study-gate-not-met.artifact.json) |
 | 042 | Parley 0.5.3 | Valid clean run passed complete-session tokens for the first time and was fastest overall, but terra-medium elapsed remained 8.86% above Python | [HTML](042-independent-fullstack-study-gate-not-met.html) · [Artifact](042-independent-fullstack-study-gate-not-met.artifact.json) |
+| 043 | Parley 0.5.4 | Valid clean run passed 96/96 first and hidden checks and retained the token/overall-time lead, but terra-medium elapsed remained 2.63% above Python | [HTML](043-independent-fullstack-study-gate-not-met.html) · [Artifact](043-independent-fullstack-study-gate-not-met.artifact.json) |
 
 The decision record, input hashes, exact metrics, and next experiment are in
 `../EXPERIMENT_LOG.md`. Full per-session JSON remains under

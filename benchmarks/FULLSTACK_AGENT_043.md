@@ -85,3 +85,46 @@ transitive harness and dependency inputs described in
 `FULLSTACK_AGENT_043_EXECUTION_FREEZE.md`. Measured sessions before that freeze:
 zero. The revision-2 protocol SHA-256 is
 `a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.
+
+## Measured result
+
+All 96 once-run cells completed with unique threads, immutable journals,
+attempt evidence, and verified cleanup. All 96 assignments passed their first
+public check and hidden judgment, covering 384/384 public named cases, 96
+public Chromium cases, 480/480 hidden named cases, 192 hidden Chromium cases,
+and all cross-target agreement checks. All 288 exact-build boundaries remained
+stable and all 12 maintenance cells per language changed their exact declared
+root.
+
+Parley had the lowest overall median complete-session token count at 60,206.5,
+0.8253% below Python's 60,707.5, and remained lower under both model
+configurations. Parley was also fastest overall at 26.2831 seconds versus
+Python's 26.7349 seconds. The elapsed condition nevertheless failed because
+terra-medium Parley took 26.2647 seconds versus Python's 25.5915 seconds, a
+2.6306% gap. The strict all-six result is therefore false: execution integrity,
+correctness, first check, tokens, and maintainability passed; elapsed failed.
+
+The complete paired attribution retains all 24 Parley/Python pairs. Parley was
+slower during the public build in 24/24 pairs by 2.935 seconds at the paired
+median; under Terra the build delta was 3.34245 seconds. Excluding that measured
+component is diagnostic only and does not alter the frozen result or authorize
+tuning on this corpus.
+
+## Published evidence
+
+- Raw result SHA-256:
+  `13ab8043bfb973a51d339838a90936b7ec4624fe2d2813e8c297954e958fb021`
+- Independent audit SHA-256:
+  `004f0dcf241b36512f327d0d588a569170309fe85097be1d407c9ef9a42411b8`
+- Elapsed attribution SHA-256:
+  `0e3fbd5a11bdf58411fc15f5efa08a3c236912e0e0c1d975808b3f540a8d0527`
+- Canonical report artifact SHA-256:
+  `8b60bd4d9544a6f3d40226f6269d5e4d646efbaa43bc0be5459dc3db4541541a`
+- Portable report SHA-256:
+  `1fd0eeec0a232013aed3210cd310c221c7692d358b8b8badb26aac368d0f4940`
+
+This study establishes only the preregistered outcomes above. It does not
+establish universal language superiority, ecosystem breadth, production
+readiness, or performance outside the measured stacks, tasks, models, and
+execution environment. Preserve 043 unchanged; the next product work must use
+new generic build fixtures and be frozen before any successor agent corpus.

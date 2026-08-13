@@ -603,6 +603,15 @@ The disjoint iteration-043 semantics-only population is subsequently frozen in
 [benchmarks/FULLSTACK_AGENT_043.md](benchmarks/FULLSTACK_AGENT_043.md), before
 any new scaffold, protocol implementation, or model output.
 
+Independent iteration 043 then completed all 96 frozen sessions without a
+repair turn. Parley passed 24/24 first checks, 24/24 hidden assignments, and
+12/12 exact-root maintenance cells; its 60,206.5 median complete-session tokens
+were 0.8253% below Python and its 26.2831-second overall median was fastest.
+The strict all-six gate remains unmet because terra-medium Parley was 2.6306%
+slower than Python. See the [study record](benchmarks/FULLSTACK_AGENT_043.md),
+[canonical artifact](benchmarks/reports/043-independent-fullstack-study-gate-not-met.artifact.json),
+and [portable report](benchmarks/reports/043-independent-fullstack-study-gate-not-met.html).
+
 ## Development
 
 ```bash

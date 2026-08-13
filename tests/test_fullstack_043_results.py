@@ -10,6 +10,10 @@ BENCHMARKS = REPO / "benchmarks"
 RAW = BENCHMARKS / "fullstack_agent_043_raw.json"
 AUDIT = BENCHMARKS / "fullstack_agent_043_audit.json"
 ATTRIBUTION = BENCHMARKS / "fullstack_agent_043_elapsed_attribution.json"
+REPORT = (
+    BENCHMARKS
+    / "reports/043-independent-fullstack-study-gate-not-met.artifact.json"
+)
 
 
 def sha256(path: Path) -> str:
@@ -108,6 +112,66 @@ def test_fullstack_043_committed_audit_verified_external_evidence():
         "median_elapsed_seconds"
     ] == 25.5915
     assert audit["median_final_source"]["parley"]["o200k_base_tokens"] == 751.5
+
+
+def test_fullstack_043_report_preserves_gate_and_claim_boundary():
+    report = json.loads(REPORT.read_text(encoding="utf-8"))
+
+    assert report["surface"] == "report"
+    assert report["snapshot"]["status"] == "ready"
+    assert report["manifest"]["title"] == (
+        "Independent Full-Stack Agent Study — Iteration 043"
+    )
+    datasets = report["snapshot"]["datasets"]
+    assert len(datasets["languages"]) == 4
+    assert len(datasets["configurations"]) == 8
+    assert len(datasets["configuration_efficiency"]) == 4
+    assert "model_failures" not in datasets
+    assert [row["result"] for row in datasets["gates"]] == [
+        "PASS", "PASS", "PASS", "PASS", "FAIL", "PASS"
+    ]
+    assert datasets["headline"][0] == {
+        "conditions_passed": 5,
+        "conditions_total": 6,
+        "hidden_assignments_passed": 96,
+        "hidden_assignments_total": 96,
+        "parley_first_checks": 24,
+        "parley_first_check_total": 24,
+        "token_advantage_percent": 0.8253,
+        "overall_elapsed_advantage_percent": 1.6899,
+        "terra_elapsed_gap_percent": 2.6306,
+    }
+    charts = {chart["id"]: chart for chart in report["manifest"]["charts"]}
+    assert charts["configuration_elapsed_chart"]["dataset"] == (
+        "configuration_efficiency"
+    )
+    verdict = next(
+        block for block in report["manifest"]["blocks"]
+        if block["id"] == "verdict"
+    )
+    assert "Terra-medium Parley took 26.2647 seconds" in verdict["body"]
+    assert "overall gate does not pass" in verdict["body"]
+    limitations = next(
+        block for block in report["manifest"]["blocks"]
+        if block["id"] == "limitations"
+    )
+    assert "does **not** establish universal language superiority" in (
+        limitations["body"]
+    )
+
+
+def test_fullstack_043_report_builder_is_deterministic():
+    before = sha256(REPORT)
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_043_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert sha256(REPORT) == before
 
 
 def test_fullstack_043_elapsed_attribution_uses_all_pairs_and_preserves_boundary(

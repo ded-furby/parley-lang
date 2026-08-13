@@ -455,6 +455,16 @@ and the parent-owned HTTP/Chromium orchestration smoke. Peak workspace use was
 once-run boundary. The frozen protocol SHA-256 is
 `a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.
 
+The completed 043 matrix retained all 96 once-run outcomes. Every language
+passed 24/24 first checks and hidden assignments, with no repair turns. Parley
+had the lowest median complete-session token count at 60,206.5 and the lowest
+overall median elapsed time at 26.2831 seconds. The strict gate remains unmet:
+terra-medium Parley took 26.2647 seconds versus Python's 25.5915 seconds, so
+elapsed failed while the other five conditions passed. The canonical
+[artifact](reports/043-independent-fullstack-study-gate-not-met.artifact.json)
+and [portable report](reports/043-independent-fullstack-study-gate-not-met.html)
+preserve the audited result and its non-universal claim boundary.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

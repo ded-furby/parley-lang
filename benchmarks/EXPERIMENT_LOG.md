@@ -4626,3 +4626,70 @@ then execute all 96 cells exactly once and publish every outcome.
 
 Revision-2 protocol SHA-256:
 `a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.
+
+### 043 valid measured matrix — repeated token win, overall gate not met
+
+- Completed: 2026-08-13
+- Measurement commit: `9c7a5348912e5d69aa5531e648c603604b462ce6`
+- Raw artifact: `benchmarks/fullstack_agent_043_raw.json`
+- Raw SHA-256:
+  `13ab8043bfb973a51d339838a90936b7ec4624fe2d2813e8c297954e958fb021`
+- Audit SHA-256:
+  `004f0dcf241b36512f327d0d588a569170309fe85097be1d407c9ef9a42411b8`
+
+All 96 cells completed with unique threads and externally hash-verified
+journals, attempt files, and cleanup records. All four languages passed 24/24
+first checks and 24/24 hidden assignments with no repair turns. The run covered
+384 public named cases, 96 public Chromium cases, 480 hidden named cases, 192
+hidden Chromium cases, and 288 stable exact-build boundaries. Ninety-three
+scratch-capacity checks passed and no disposable workspace remained.
+
+Parley had the lowest median complete-session token count: 60,206.5 versus
+Python's 60,707.5, a 0.8253% advantage, with lower Parley medians under both
+models. It was fastest overall at 26.2831 seconds versus Python's 26.7349.
+Elapsed nevertheless failed the frozen within-model rule because terra-medium
+Parley took 26.2647 seconds versus Python's 25.5915, a 2.6306% deficit. The
+strict gate remains PASS/PASS/PASS/PASS/FAIL/PASS and therefore false.
+
+### Post-043 elapsed attribution
+
+- Analysis: `benchmarks/fullstack_agent_043_elapsed_attribution.json`
+- Analysis SHA-256:
+  `0e3fbd5a11bdf58411fc15f5efa08a3c236912e0e0c1d975808b3f540a8d0527`
+- Matched population: all 24 Parley/Python task/configuration/replicate pairs
+- Exclusions: none
+
+The Terra miss is concentrated in the maintenance half: implementation paired
+medians favored Parley by 1.21815 seconds, while maintenance paired medians
+favored Python by 2.61335 seconds. Parley was faster in 5/12 Terra pairs and
+the all-Terra paired median difference was +1.4336 seconds. These paired facts
+do not replace the preregistered marginal gate.
+
+The persistent product mechanism remains cold public build latency. Parley was
+slower than Python during that phase in 24/24 matched pairs, by 2.935 seconds
+at the paired median overall and 3.34245 seconds under Terra. Removing observed
+build time would favor Parley under Terra, but that is component attribution,
+not an alternate outcome. Preserve 043 unchanged and use new non-043 fixtures
+for the next generic build-path experiment.
+
+### 043 canonical audited report published
+
+- Artifact:
+  `benchmarks/reports/043-independent-fullstack-study-gate-not-met.artifact.json`
+- Artifact SHA-256:
+  `8b60bd4d9544a6f3d40226f6269d5e4d646efbaa43bc0be5459dc3db4541541a`
+- Portable HTML:
+  `benchmarks/reports/043-independent-fullstack-study-gate-not-met.html`
+- Portable HTML SHA-256:
+  `1fd0eeec0a232013aed3210cd310c221c7692d358b8b8badb26aac368d0f4940`
+
+The deterministic builder hash-binds the raw result, revision-2 protocol,
+validation, independent audit, elapsed attribution, and measurement commit.
+The report passed strict artifact validation and browser verification at 1440-
+and 390-pixel viewports, including keyboard source-dialog interaction. Its
+model-stratified chart exposes the binding Terra miss and its claim boundary
+explicitly rejects universal-superiority conclusions.
+
+Next: preserve the measured corpus and results unchanged, freeze a second
+generic cold-build study on unseen fixtures, and improve only mechanisms that
+replicate outside 043.
