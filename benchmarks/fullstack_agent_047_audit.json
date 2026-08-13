@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "experiment_id": "047",
+  "generated_at": "2026-08-13T09:46:16.794892Z",
+  "raw_sha256": "f04515b84abfbb2a3fe0477c7d0d5c5de9eba8a6f4de3eba2cf062886e779d28",
+  "protocol_sha256": "a0f414e21c0d6a497788678748bcd114077dc44e48cf584a1b934e6fa0bb1c8d",
+  "validation_sha256": "28c2989ba66b0bc9b590ca27bca992a47ea78dc54e6d5262fd8f1914ded0d3b0",
+  "measurement_commit": "38151ffe40f7908801a4621ca4d7c00ac9f12d18",
+  "external_evidence_verified": true,
+  "matrix": {
+    "cells": 32,
+    "unique_cell_ids": 32,
+    "unique_thread_ids": 32,
+    "journal_pairs_verified": 32,
+    "cleanup_records_verified": 32,
+    "attempt_files_verified": 35
+  },
+  "public": {
+    "attempts": 35,
+    "successful_attempts": 35,
+    "failed_attempts": 0,
+    "named_cases_executed": 175,
+    "browser_cases_executed": 35,
+    "cross_target_checks_executed": 35,
+    "first_check_successes": 32,
+    "final_check_successes": 32,
+    "repair_turns": 3
+  },
+  "hidden": {
+    "assignment_successes": 32,
+    "named_cases_executed": 160,
+    "named_case_passes": 160,
+    "browser_cases_executed": 64,
+    "cross_target_checks_executed": 0
+  },
+  "exact_build": {
+    "commands": 99,
+    "successful_commands": 99,
+    "stable_hash_checks": 99
+  },
+  "scratch": {
+    "capacity_checks": 29,
+    "minimum_free_bytes": 19236229120,
+    "final_free_bytes": 19534827520,
+    "integrity_ok": true,
+    "cleanup_records": 32,
+    "cleanup_failures": 0,
+    "peak_cell_workspace_bytes": 160816251,
+    "peak_per_worker_workspace_bytes": 160816251,
+    "retained_workspace_bytes_after_cleanup": 0
+  },
+  "json_evidence_boundary": {
+    "classification": "json_native_route_and_header_evidence",
+    "integrity_cells": 32,
+    "durable_attempt_files_match_raw": true,
+    "effect": "Every live route path, path-parameter mapping, and application-header pair is JSON-native before persistence; all 32 live attempt collections equal their durable files.",
+    "selective_rerun_permitted": false
+  },
+  "route_evidence": {
+    "public_http_cases": 140,
+    "hidden_http_cases": 96,
+    "http_cases_with_request_paths": 236,
+    "http_cases_with_json_native_header_pairs": 236,
+    "public_cases_with_path_parameters": 140,
+    "hidden_cases_with_path_parameters": 64,
+    "hidden_percent_encoded_paths": 64
+  },
+  "model_failure_classes": {
+    "public_build_then_repaired": 0,
+    "public_semantic_then_repaired": 0,
+    "redundant_checks_after_first_success": 3,
+    "hidden_semantic_failure": 0
+  },
+  "by_language": {
+    "parley": {
+      "sessions": 8,
+      "hidden_successes": 8,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 8,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 4,
+      "exact_root_successes": 4,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 60757.0,
+      "median_elapsed_seconds": 33.4983,
+      "repair_turns": 3
+    },
+    "python": {
+      "sessions": 8,
+      "hidden_successes": 8,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 8,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 4,
+      "exact_root_successes": 2,
+      "exact_root_rate": 0.5,
+      "median_total_tokens": 60551.5,
+      "median_elapsed_seconds": 30.057850000000002,
+      "repair_turns": 0
+    },
+    "typescript": {
+      "sessions": 8,
+      "hidden_successes": 8,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 8,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 4,
+      "exact_root_successes": 0,
+      "exact_root_rate": 0.0,
+      "median_total_tokens": 77828.5,
+      "median_elapsed_seconds": 34.415350000000004,
+      "repair_turns": 0
+    },
+    "rust": {
+      "sessions": 8,
+      "hidden_successes": 8,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 8,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 4,
+      "exact_root_successes": 4,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 101209.5,
+      "median_elapsed_seconds": 51.66125,
+      "repair_turns": 0
+    }
+  },
+  "by_configuration": {
+    "sol-medium": {
+      "parley": {
+        "sessions": 8,
+        "hidden_successes": 8,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 8,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 4,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60757.0,
+        "median_elapsed_seconds": 33.4983,
+        "repair_turns": 3
+      },
+      "python": {
+        "sessions": 8,
+        "hidden_successes": 8,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 8,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 2,
+        "exact_root_rate": 0.5,
+        "median_total_tokens": 60551.5,
+        "median_elapsed_seconds": 30.057850000000002,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 8,
+        "hidden_successes": 8,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 8,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 77828.5,
+        "median_elapsed_seconds": 34.415350000000004,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 8,
+        "hidden_successes": 8,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 8,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 4,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 101209.5,
+        "median_elapsed_seconds": 51.66125,
+        "repair_turns": 0
+      }
+    }
+  },
+  "by_kind": {
+    "implementation": {
+      "parley": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 61027.5,
+        "median_elapsed_seconds": 34.55175,
+        "repair_turns": 3
+      },
+      "python": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 60643.0,
+        "median_elapsed_seconds": 29.896250000000002,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 76831.0,
+        "median_elapsed_seconds": 27.8101,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 99985.0,
+        "median_elapsed_seconds": 45.118399999999994,
+        "repair_turns": 0
+      }
+    },
+    "maintenance": {
+      "parley": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 4,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60326.0,
+        "median_elapsed_seconds": 32.2008,
+        "repair_turns": 0
+      },
+      "python": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 2,
+        "exact_root_rate": 0.5,
+        "median_total_tokens": 60375.5,
+        "median_elapsed_seconds": 30.057850000000002,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 78823.0,
+        "median_elapsed_seconds": 40.1776,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 4,
+        "hidden_successes": 4,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 4,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 4,
+        "exact_root_successes": 4,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 104159.0,
+        "median_elapsed_seconds": 55.6405,
+        "repair_turns": 0
+      }
+    }
+  },
+  "primary_gate": {
+    "conditions": {
+      "execution_integrity": true,
+      "correctness": true,
+      "first_check": true,
+      "tokens": false,
+      "elapsed": false,
+      "maintainability": true
+    },
+    "passed": false
+  },
+  "structural_root_analysis_outside_primary_gate": {
+    "parley": {
+      "eligible": 4,
+      "exact": 4
+    },
+    "python": {
+      "eligible": 4,
+      "exact": 2
+    },
+    "typescript": {
+      "eligible": 4,
+      "exact": 0
+    },
+    "rust": {
+      "eligible": 4,
+      "exact": 4
+    }
+  },
+  "comparisons": {
+    "parley_tokens_vs_python_percent": 0.3394,
+    "parley_elapsed_vs_python_percent": 11.4461,
+    "parley_elapsed_vs_typescript_percent": -2.6647,
+    "parley_source_smaller_than_python_percent": 21.334,
+    "parley_source_smaller_than_typescript_percent": -0.2023,
+    "parley_source_smaller_than_rust_percent": 42.134
+  },
+  "median_final_source": {
+    "parley": {
+      "bytes": 3180.5,
+      "lines": 43.0,
+      "rough_tokens": 731.0,
+      "o200k_base_tokens": 743.0
+    },
+    "python": {
+      "bytes": 3767.0,
+      "lines": 58.0,
+      "rough_tokens": 1076.0,
+      "o200k_base_tokens": 944.5
+    },
+    "typescript": {
+      "bytes": 2788.5,
+      "lines": 8.5,
+      "rough_tokens": 1000.0,
+      "o200k_base_tokens": 741.5
+    },
+    "rust": {
+      "bytes": 4456.5,
+      "lines": 8.0,
+      "rough_tokens": 1695.5,
+      "o200k_base_tokens": 1284.0
+    }
+  },
+  "audit_pass": true,
+  "study_valid": true
+}

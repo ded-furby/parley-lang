@@ -543,3 +543,13 @@ gate and once-run lifecycle while adding exact custom response headers to
 parent-owned HTTP judgment. Harness implementation is prohibited until this
 protocol commits; measurement is prohibited until a validated zero-session
 revision-2 execution freeze.
+
+Iteration 047 independently evaluates v0.5.7 typed path routing on four unseen
+implementation/maintenance assignments. Its smaller pilot matrix contains 32
+fresh sessions across Parley, Python, TypeScript, and Rust under sol-medium.
+All sessions passed their first public check and hidden assignment. Parley tied
+the best exact-root maintenance result and beat TypeScript/Rust on median
+complete-session tokens, but Python used 0.3394% fewer tokens and 11.4461% less
+elapsed time. The strict gate therefore failed. See
+`FULLSTACK_AGENT_047_RESULT.md`; selective reruns and same-corpus tuning remain
+forbidden.

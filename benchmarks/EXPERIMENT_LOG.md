@@ -5103,3 +5103,22 @@ bundle metadata expose ordered names. Native coverage composes captures with
 typed JSON bodies, dynamic response controls, `HEAD`, and both route JSON
 backends. Historical references remain frozen. This is a bounded product
 capability, not agent evidence or a universal-superiority claim.
+
+### 047 valid typed path-routing pilot completed
+
+- Raw SHA-256:
+  `f04515b84abfbb2a3fe0477c7d0d5c5de9eba8a6f4de3eba2cf062886e779d28`
+- Audit SHA-256:
+  `0fc04897b4ba3a5e24c35b1b7d6235f1cde5835c005004a1f5a0fb2053182f5a`
+- Measurement commit:
+  `38151ffe40f7908801a4621ca4d7c00ac9f12d18`
+- Status: valid / strict gate failed tokens and elapsed
+
+All 32 once-run sessions passed their first public check, all 32 hidden
+assignments, and all 160 hidden named cases. The audit matched 32 journals, 32
+cleanups, and 35 attempt files and reconstructed 236 HTTP route/header records.
+Parley tied Rust at 4/4 exact maintenance roots, used 21.9348% fewer median
+complete-session tokens than TypeScript and 39.9691% fewer than Rust, but used
+0.3394% more tokens and 11.4461% more elapsed time than Python. The failed gate
+is final for this corpus; the pilot's one model configuration and two
+replicates do not support a universal claim.
