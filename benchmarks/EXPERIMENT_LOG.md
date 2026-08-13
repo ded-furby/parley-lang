@@ -4965,3 +4965,23 @@ The two route-handler defects are publicly observable. This checkpoint has no
 045 scaffold, stack implementation, comparison threshold, prompt, or model
 output. Next: commit the corpus, then preregister execution before building the
 harness.
+
+### 045 balanced response-control protocol preregistered
+
+- Corpus commit: `3f3a5943532cd63a151ec8221715f75ab352a931`
+- Corpus tree: `faeb773d4a867abcbab47bc5468f2e20293b09e1`
+- Protocol: `benchmarks/fullstack_agent_045_protocol.json`
+- Protocol revision: 1
+- Protocol SHA-256:
+  `0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The unchanged six-condition gate now judges exact application headers as part
+of HTTP correctness. Domain-invalid typed values must reach application logic
+and return the frozen 422 envelope. The 313-token response-web card is counted
+in Parley input. Revision 1 contains no 045 scaffold or reference application;
+revision 2 must bind every transitive input after clean-room reference,
+negative-control, scratch, and orchestration validation, with zero measured
+sessions. Next: commit this preregistration, then build the harness without
+changing any frozen semantic, model, metric, threshold, or gate.

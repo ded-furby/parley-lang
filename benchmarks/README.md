@@ -527,3 +527,10 @@ header repairs. Its 36 cases exercise dynamic status/header/body behavior and
 generated transport/schema failures; every identifier and formula is disjoint
 from 036--044. No scaffold, comparison threshold, or model output existed at
 this boundary. See `FULLSTACK_AGENT_045.md`.
+
+Revision-1 protocol 045 preregisters 96 fresh sessions across the established
+four languages and two model configurations. It preserves the strict all-six
+gate and once-run lifecycle while adding exact custom response headers to
+parent-owned HTTP judgment. Harness implementation is prohibited until this
+protocol commits; measurement is prohibited until a validated zero-session
+revision-2 execution freeze.

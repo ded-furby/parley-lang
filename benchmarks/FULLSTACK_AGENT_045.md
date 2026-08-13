@@ -2,8 +2,9 @@
 
 Iteration 045 starts from the committed v0.5.6 product and context freeze at
 `6b39eef`. Only after that checkpoint were these task semantics and cases
-selected. This commit contains no stack scaffold, reference implementation,
-comparison protocol, threshold, prompt, or model output.
+selected. The corpus-freeze commit `3f3a594` contains no stack scaffold,
+reference implementation, comparison protocol, threshold, prompt, or model
+output.
 
 ## Frozen population
 
@@ -57,3 +58,20 @@ It cannot establish reliability, efficiency, framework parity, or universal
 superiority. Next, commit this corpus, then preregister the balanced language /
 model / replicate matrix and six-condition gate before any scaffold or
 reference implementation is authored.
+
+## Preregistered comparison protocol
+
+Protocol revision 1 is now frozen in `fullstack_agent_045_protocol.json` at
+SHA-256
+`0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b`.
+It retains four languages × two model configurations × three replicates for 96
+fresh sessions, the strict six-condition gate, exact-root maintenance, complete
+session tokens, overall and all-strata elapsed/tokens, external evidence,
+16-GiB scratch preflight, bounded cleanup, and no reruns. HTTP judgment now
+also requires exact application headers, and negative/zero domain values must
+reach the handler's typed 422 response rather than being rejected by a proxy.
+
+No scaffold exists at revision 1. A revision-2 execution freeze must bind every
+harness input and pass 16/16 clean-room references, all 144 named cases,
+maintenance negative controls, scratch calibration, and full FIFO/HTTP/header/
+Chromium orchestration before the first measured session.
