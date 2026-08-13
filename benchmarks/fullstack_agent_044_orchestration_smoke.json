@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "experiment_id": "044",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "seismic_array_build",
+  "language": "python",
+  "protocol_sha256": "9a2d25d1e8c90e686c972ed18b34096780efde950057fd2b27244408159c3da4",
+  "provenance_sha256": "2b7c30d82fe0b17317b0574e840e7eec16adacbb11aa0f91adda46698f273732",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}
