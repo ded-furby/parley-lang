@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "experiment_id": "043",
+  "description": "Two new full-stack implementation assignments and two new maintenance assignments, frozen after the v0.5.4 product checkpoint and before stack scaffolds, reference implementations, protocol thresholds, or measured agent output.",
+  "frozen_on": "2026-08-13",
+  "product_freeze_commit": "863c3d6d18911b565f8e91efaebf24fe90978176",
+  "product_freeze_sha256": "1ca7bb4fe501eda55991af61cabb715c5c5c53e202df976ef051809576635ed0",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. Reject malformed JSON, missing fields, unknown fields, wrong field types, and out-of-domain numeric values. A number is a JSON integer and never a boolean; yesno is a JSON boolean.",
+    "errors": "Return status 400 with {\"error\":\"invalid_json\"} for invalid JSON shape, types, or values. Return status 415 with {\"error\":\"json_content_type_required\"} for a POST body without application/json. Return status 413 with {\"error\":\"body_too_large\"} when the request body exceeds the frozen limit.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "The response field named by shared_result_field must equal the browser export for equivalent inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "numeric_domain": "All numeric inputs are nonnegative integers.",
+    "body_limit_bytes": 16384
+  },
+  "tasks": [
+    {
+      "id": "wildfire_drone_build",
+      "kind": "implementation",
+      "title": "Build a wildfire drone mission planner across HTTP and browser targets",
+      "statement": "Implement the frozen Wildfire Drone contract in the supplied stack. drone_total is scout_drones + cargo_drones. scout_flight_minutes is scout_drones * 13. cargo_flight_minutes is cargo_drones * 21. night_setup_minutes is launch_pads * 8 during a night_mission and zero otherwise. mission_load_minutes is scout_flight_minutes + cargo_flight_minutes + night_setup_minutes. launch_capacity_minutes is launch_pads * 50. completed_flight_minutes is min(mission_load_minutes, launch_capacity_minutes). delayed_flight_minutes is max(mission_load_minutes - launch_capacity_minutes, 0). flight_waves is mission_load_minutes divided by 40 using floor division. wildfire_score is completed_flight_minutes + delayed_flight_minutes * 6 + flight_waves * 9. wildfire_mode is ready when delayed_flight_minutes is zero, night_delay when delay remains during a night mission, and day_delay otherwise. The browser export returns wildfire_score.",
+      "service": "Wildfire Drone",
+      "status_route": "/status/wildfire-drone-ready",
+      "post_route": "/api/v7/wildfire-drone",
+      "browser_export": "wildfire_mission_score",
+      "shared_result_field": "wildfire_score",
+      "request_fields": {
+        "scout_drones": "number",
+        "cargo_drones": "number",
+        "launch_pads": "number",
+        "night_mission": "yesno"
+      },
+      "response_fields": {
+        "drone_total": "number",
+        "scout_flight_minutes": "number",
+        "cargo_flight_minutes": "number",
+        "night_setup_minutes": "number",
+        "mission_load_minutes": "number",
+        "launch_capacity_minutes": "number",
+        "completed_flight_minutes": "number",
+        "delayed_flight_minutes": "number",
+        "flight_waves": "number",
+        "wildfire_score": "number",
+        "wildfire_mode": "text"
+      },
+      "independence": "New wildfire-drone domain, v7 route, flight-wave and mission formulas, vocabulary, fixtures, and browser export selected after the v0.5.4 product freeze and before any 043 scaffold or model output.",
+      "public_case_ids": [
+        "wildfire_drone_status",
+        "wildfire_drone_night_delay",
+        "wildfire_drone_wrong_pad_type",
+        "wildfire_drone_browser_night"
+      ],
+      "hidden_case_ids": [
+        "wildfire_drone_ready",
+        "wildfire_drone_day_delay",
+        "wildfire_drone_unknown_field",
+        "wildfire_drone_browser_ready",
+        "wildfire_drone_browser_day"
+      ]
+    },
+    {
+      "id": "satellite_uplink_build",
+      "kind": "implementation",
+      "title": "Build a satellite uplink scheduler across HTTP and browser targets",
+      "statement": "Implement the frozen Satellite Uplink contract in the supplied stack. uplink_packet_total is science_packets + navigation_packets. science_transmit_seconds is science_packets * 6. navigation_transmit_seconds is navigation_packets * 10. interference_seconds is ground_antennas * 7 during solar_interference and zero otherwise. transmit_seconds is science_transmit_seconds + navigation_transmit_seconds + interference_seconds. antenna_capacity_seconds is ground_antennas * 44. sent_seconds is min(transmit_seconds, antenna_capacity_seconds). queued_seconds is max(transmit_seconds - antenna_capacity_seconds, 0). transmission_windows is transmit_seconds divided by 25 using floor division. uplink_score is sent_seconds + queued_seconds * 7 + transmission_windows * 12. uplink_mode is synchronized when queued_seconds is zero, solar_queue when delay remains during solar interference, and routine_queue otherwise. The browser export returns uplink_score.",
+      "service": "Satellite Uplink",
+      "status_route": "/status/satellite-uplink-ready",
+      "post_route": "/api/v7/satellite-uplink",
+      "browser_export": "satellite_uplink_score",
+      "shared_result_field": "uplink_score",
+      "request_fields": {
+        "science_packets": "number",
+        "navigation_packets": "number",
+        "ground_antennas": "number",
+        "solar_interference": "yesno"
+      },
+      "response_fields": {
+        "uplink_packet_total": "number",
+        "science_transmit_seconds": "number",
+        "navigation_transmit_seconds": "number",
+        "interference_seconds": "number",
+        "transmit_seconds": "number",
+        "antenna_capacity_seconds": "number",
+        "sent_seconds": "number",
+        "queued_seconds": "number",
+        "transmission_windows": "number",
+        "uplink_score": "number",
+        "uplink_mode": "text"
+      },
+      "independence": "New satellite-uplink domain, v7 route, antenna and transmission-window formulas, vocabulary, fixtures, and browser export selected after the v0.5.4 product freeze and before any 043 scaffold or model output.",
+      "public_case_ids": [
+        "satellite_uplink_status",
+        "satellite_uplink_solar_queue",
+        "satellite_uplink_wrong_media",
+        "satellite_uplink_browser_solar"
+      ],
+      "hidden_case_ids": [
+        "satellite_uplink_synchronized",
+        "satellite_uplink_routine_queue",
+        "satellite_uplink_unknown_field",
+        "satellite_uplink_browser_sync",
+        "satellite_uplink_browser_routine"
+      ]
+    },
+    {
+      "id": "alpine_gondola_repair",
+      "kind": "maintenance",
+      "title": "Repair transposed load coefficients in an alpine gondola",
+      "statement": "Repair the supplied Alpine Gondola application. gondola_item_total is passenger_groups + supply_crates. rider_load_units is passenger_groups * 8. freight_load_units is supply_crates * 13. express_load_units is gondola_cabins * 5 during express_service and zero otherwise. gondola_required_units is rider_load_units + freight_load_units + express_load_units. gondola_capacity_units is gondola_cabins * 42. carried_load_units is min(gondola_required_units, gondola_capacity_units). stranded_load_units is max(gondola_required_units - gondola_capacity_units, 0). lift_margin_units is max(gondola_capacity_units - carried_load_units, 0). gondola_condition is clear when stranded_load_units is zero, express_stranded when load remains during express service, and standard_stranded otherwise. The HTTP response and browser export must use the same rule; the browser export returns lift_margin_units.",
+      "service": "Alpine Gondola",
+      "status_route": "/status/alpine-gondola-ready",
+      "post_route": "/api/v7/alpine-gondola",
+      "browser_export": "gondola_lift_margin",
+      "shared_result_field": "lift_margin_units",
+      "request_fields": {
+        "passenger_groups": "number",
+        "supply_crates": "number",
+        "gondola_cabins": "number",
+        "express_service": "yesno"
+      },
+      "response_fields": {
+        "gondola_item_total": "number",
+        "rider_load_units": "number",
+        "freight_load_units": "number",
+        "express_load_units": "number",
+        "gondola_required_units": "number",
+        "gondola_capacity_units": "number",
+        "carried_load_units": "number",
+        "stranded_load_units": "number",
+        "lift_margin_units": "number",
+        "gondola_condition": "text"
+      },
+      "predeclared_defect": "The application-logic module transposes the passenger-group and supply-crate coefficients, multiplying passenger_groups by 13 and supply_crates by 8.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic coefficient-transposition defect",
+      "adaptation_boundary": "The two coefficients, alpine-gondola vocabulary, fixtures, and expected repair are new and were selected after the v0.5.4 product freeze and before any measured output.",
+      "public_case_ids": [
+        "alpine_gondola_status",
+        "alpine_gondola_clear",
+        "alpine_gondola_missing_cabins",
+        "alpine_gondola_browser_clear"
+      ],
+      "hidden_case_ids": [
+        "alpine_gondola_standard_stranded",
+        "alpine_gondola_express_stranded",
+        "alpine_gondola_unknown_field",
+        "alpine_gondola_browser_standard",
+        "alpine_gondola_browser_express"
+      ]
+    },
+    {
+      "id": "kelp_hatchery_repair",
+      "kind": "maintenance",
+      "title": "Repair delivered-oxygen selection in a kelp hatchery",
+      "statement": "Repair the supplied Kelp Hatchery application. hatchery_tank_total is juvenile_tanks + mature_tanks. juvenile_oxygen_units is juvenile_tanks * 9. mature_oxygen_units is mature_tanks * 16. treatment_oxygen_units is aerators * 4 during heat_treatment and zero otherwise. oxygen_needed_units is juvenile_oxygen_units + mature_oxygen_units + treatment_oxygen_units. aeration_capacity_units is aerators * 38. oxygen_delivered_units is min(oxygen_needed_units, aeration_capacity_units). oxygen_deficit_units is max(oxygen_needed_units - aeration_capacity_units, 0). oxygen_buffer_units is max(aeration_capacity_units - oxygen_delivered_units, 0). hatchery_condition is balanced when oxygen_deficit_units is zero, heat_shortage when a deficit remains during heat treatment, and oxygen_shortage otherwise. The HTTP response and browser export must use the same rule; the browser export returns oxygen_delivered_units.",
+      "service": "Kelp Hatchery",
+      "status_route": "/status/kelp-hatchery-ready",
+      "post_route": "/api/v7/kelp-hatchery",
+      "browser_export": "hatchery_oxygen_delivered",
+      "shared_result_field": "oxygen_delivered_units",
+      "request_fields": {
+        "juvenile_tanks": "number",
+        "mature_tanks": "number",
+        "aerators": "number",
+        "heat_treatment": "yesno"
+      },
+      "response_fields": {
+        "hatchery_tank_total": "number",
+        "juvenile_oxygen_units": "number",
+        "mature_oxygen_units": "number",
+        "treatment_oxygen_units": "number",
+        "oxygen_needed_units": "number",
+        "aeration_capacity_units": "number",
+        "oxygen_delivered_units": "number",
+        "oxygen_deficit_units": "number",
+        "oxygen_buffer_units": "number",
+        "hatchery_condition": "text"
+      },
+      "predeclared_defect": "The application-logic module selects max(oxygen_needed_units, aeration_capacity_units) for oxygen_delivered_units instead of min, reporting oxygen that cannot be supplied or consumed.",
+      "root_cause_role": "application_logic",
+      "historical_grounding": "synthetic extremum-selector inversion defect",
+      "adaptation_boundary": "The delivered-oxygen extremum, kelp-hatchery vocabulary, fixtures, and expected repair are new and were selected after the v0.5.4 product freeze and before any measured output.",
+      "public_case_ids": [
+        "kelp_hatchery_status",
+        "kelp_hatchery_balanced",
+        "kelp_hatchery_wrong_heat_type",
+        "kelp_hatchery_browser_balanced"
+      ],
+      "hidden_case_ids": [
+        "kelp_hatchery_heat_shortage",
+        "kelp_hatchery_oxygen_shortage",
+        "kelp_hatchery_unknown_field",
+        "kelp_hatchery_browser_heat",
+        "kelp_hatchery_browser_oxygen"
+      ]
+    }
+  ]
+}

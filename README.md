@@ -599,6 +599,9 @@ and essentially unchanged artifacts; see
 [benchmarks/WEB_BUILD_LATENCY_001.md](benchmarks/WEB_BUILD_LATENCY_001.md).
 The v0.5.4 product is independently frozen before successor task design in
 [benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md](benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md).
+The disjoint iteration-043 semantics-only population is subsequently frozen in
+[benchmarks/FULLSTACK_AGENT_043.md](benchmarks/FULLSTACK_AGENT_043.md), before
+any new scaffold, protocol implementation, or model output.
 
 ## Development
 

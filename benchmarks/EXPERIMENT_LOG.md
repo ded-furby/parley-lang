@@ -4557,3 +4557,29 @@ regression. No iteration-043 task name, domain, route, field, formula, fixture,
 defect, scaffold, prompt, or model output existed at this checkpoint. Next:
 commit the product freeze, then design and independently hash a disjoint 043
 task/case population before any comparison protocol or scaffold exists.
+
+### 043 independent semantics-only corpus frozen
+
+- Preceding product-freeze commit:
+  `863c3d6d18911b565f8e91efaebf24fe90978176`
+- Tasks: `benchmarks/fullstack_agent_043_tasks.json`
+- Task SHA-256:
+  `7dc4df635d713be18f222aa2954de28b756083c01a159bf8b42a263f96b205da`
+- Cases: `benchmarks/fullstack_agent_043_cases.json`
+- Case SHA-256:
+  `ae52c292e16b0eb82db2aedacd7c063cd742a330093efd0a970ddf34306f1691`
+- Design record: `benchmarks/FULLSTACK_AGENT_043.md`
+
+The population contains wildfire-drone and satellite-uplink implementations
+plus alpine-gondola coefficient-transposition and kelp-hatchery
+extremum-selector repairs. It has 36 cases: four public and five hidden per
+task, including one public and two hidden browser judgments per task. An
+independent test oracle recomputes every successful response and browser scalar.
+
+Automated checks prove task IDs, case IDs, request/response fields, status/POST
+routes, and browser exports are disjoint from 036–042. Both new maintenance
+defects are publicly observable. This checkpoint contains no 043 stack
+scaffold, reference implementation, comparison protocol, threshold, runner
+change, or measured session. Next: commit the semantics-only population, then
+preregister the balanced matrix and exact execution controls before building
+the harness.

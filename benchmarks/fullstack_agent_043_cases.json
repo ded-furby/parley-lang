@@ -1,0 +1,655 @@
+{
+  "schema_version": 1,
+  "experiment_id": "043",
+  "tasks": {
+    "wildfire_drone_build": [
+      {
+        "id": "wildfire_drone_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/wildfire-drone-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Wildfire Drone",
+          "ready": true
+        }
+      },
+      {
+        "id": "wildfire_drone_night_delay",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/wildfire-drone",
+        "json": {
+          "scout_drones": 2,
+          "cargo_drones": 3,
+          "launch_pads": 2,
+          "night_mission": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "drone_total": 5,
+          "scout_flight_minutes": 26,
+          "cargo_flight_minutes": 63,
+          "night_setup_minutes": 16,
+          "mission_load_minutes": 105,
+          "launch_capacity_minutes": 100,
+          "completed_flight_minutes": 100,
+          "delayed_flight_minutes": 5,
+          "flight_waves": 2,
+          "wildfire_score": 148,
+          "wildfire_mode": "night_delay"
+        }
+      },
+      {
+        "id": "wildfire_drone_wrong_pad_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "scout_drones": 2,
+          "cargo_drones": 3,
+          "launch_pads": true,
+          "night_mission": true
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v7/wildfire-drone"
+      },
+      {
+        "id": "wildfire_drone_browser_night",
+        "visibility": "public",
+        "target": "browser",
+        "export": "wildfire_mission_score",
+        "args": [
+          2,
+          3,
+          2,
+          true
+        ],
+        "expected": 148
+      },
+      {
+        "id": "wildfire_drone_ready",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/wildfire-drone",
+        "json": {
+          "scout_drones": 1,
+          "cargo_drones": 1,
+          "launch_pads": 2,
+          "night_mission": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "drone_total": 2,
+          "scout_flight_minutes": 13,
+          "cargo_flight_minutes": 21,
+          "night_setup_minutes": 0,
+          "mission_load_minutes": 34,
+          "launch_capacity_minutes": 100,
+          "completed_flight_minutes": 34,
+          "delayed_flight_minutes": 0,
+          "flight_waves": 0,
+          "wildfire_score": 34,
+          "wildfire_mode": "ready"
+        }
+      },
+      {
+        "id": "wildfire_drone_day_delay",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/wildfire-drone",
+        "json": {
+          "scout_drones": 4,
+          "cargo_drones": 3,
+          "launch_pads": 2,
+          "night_mission": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "drone_total": 7,
+          "scout_flight_minutes": 52,
+          "cargo_flight_minutes": 63,
+          "night_setup_minutes": 0,
+          "mission_load_minutes": 115,
+          "launch_capacity_minutes": 100,
+          "completed_flight_minutes": 100,
+          "delayed_flight_minutes": 15,
+          "flight_waves": 2,
+          "wildfire_score": 208,
+          "wildfire_mode": "day_delay"
+        }
+      },
+      {
+        "id": "wildfire_drone_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/wildfire-drone",
+        "json": {
+          "scout_drones": 2,
+          "cargo_drones": 3,
+          "launch_pads": 2,
+          "night_mission": true,
+          "wind_sector": 4
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "wildfire_drone_browser_ready",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "wildfire_mission_score",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 34
+      },
+      {
+        "id": "wildfire_drone_browser_day",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "wildfire_mission_score",
+        "args": [
+          4,
+          3,
+          2,
+          false
+        ],
+        "expected": 208
+      }
+    ],
+    "satellite_uplink_build": [
+      {
+        "id": "satellite_uplink_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/satellite-uplink-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Satellite Uplink",
+          "ready": true
+        }
+      },
+      {
+        "id": "satellite_uplink_solar_queue",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/satellite-uplink",
+        "json": {
+          "science_packets": 4,
+          "navigation_packets": 3,
+          "ground_antennas": 1,
+          "solar_interference": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "uplink_packet_total": 7,
+          "science_transmit_seconds": 24,
+          "navigation_transmit_seconds": 30,
+          "interference_seconds": 7,
+          "transmit_seconds": 61,
+          "antenna_capacity_seconds": 44,
+          "sent_seconds": 44,
+          "queued_seconds": 17,
+          "transmission_windows": 2,
+          "uplink_score": 187,
+          "uplink_mode": "solar_queue"
+        }
+      },
+      {
+        "id": "satellite_uplink_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "expected_status": 415,
+        "expected_error": "json_content_type_required",
+        "path": "/api/v7/satellite-uplink"
+      },
+      {
+        "id": "satellite_uplink_browser_solar",
+        "visibility": "public",
+        "target": "browser",
+        "export": "satellite_uplink_score",
+        "args": [
+          4,
+          3,
+          1,
+          true
+        ],
+        "expected": 187
+      },
+      {
+        "id": "satellite_uplink_synchronized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/satellite-uplink",
+        "json": {
+          "science_packets": 2,
+          "navigation_packets": 1,
+          "ground_antennas": 2,
+          "solar_interference": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "uplink_packet_total": 3,
+          "science_transmit_seconds": 12,
+          "navigation_transmit_seconds": 10,
+          "interference_seconds": 0,
+          "transmit_seconds": 22,
+          "antenna_capacity_seconds": 88,
+          "sent_seconds": 22,
+          "queued_seconds": 0,
+          "transmission_windows": 0,
+          "uplink_score": 22,
+          "uplink_mode": "synchronized"
+        }
+      },
+      {
+        "id": "satellite_uplink_routine_queue",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/satellite-uplink",
+        "json": {
+          "science_packets": 8,
+          "navigation_packets": 2,
+          "ground_antennas": 1,
+          "solar_interference": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "uplink_packet_total": 10,
+          "science_transmit_seconds": 48,
+          "navigation_transmit_seconds": 20,
+          "interference_seconds": 0,
+          "transmit_seconds": 68,
+          "antenna_capacity_seconds": 44,
+          "sent_seconds": 44,
+          "queued_seconds": 24,
+          "transmission_windows": 2,
+          "uplink_score": 236,
+          "uplink_mode": "routine_queue"
+        }
+      },
+      {
+        "id": "satellite_uplink_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/satellite-uplink",
+        "json": {
+          "science_packets": 4,
+          "navigation_packets": 3,
+          "ground_antennas": 1,
+          "solar_interference": true,
+          "orbital_lane": 3
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "satellite_uplink_browser_sync",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "satellite_uplink_score",
+        "args": [
+          2,
+          1,
+          2,
+          false
+        ],
+        "expected": 22
+      },
+      {
+        "id": "satellite_uplink_browser_routine",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "satellite_uplink_score",
+        "args": [
+          8,
+          2,
+          1,
+          false
+        ],
+        "expected": 236
+      }
+    ],
+    "alpine_gondola_repair": [
+      {
+        "id": "alpine_gondola_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/alpine-gondola-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Alpine Gondola",
+          "ready": true
+        }
+      },
+      {
+        "id": "alpine_gondola_clear",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/alpine-gondola",
+        "json": {
+          "passenger_groups": 3,
+          "supply_crates": 2,
+          "gondola_cabins": 2,
+          "express_service": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "gondola_item_total": 5,
+          "rider_load_units": 24,
+          "freight_load_units": 26,
+          "express_load_units": 10,
+          "gondola_required_units": 60,
+          "gondola_capacity_units": 84,
+          "carried_load_units": 60,
+          "stranded_load_units": 0,
+          "lift_margin_units": 24,
+          "gondola_condition": "clear"
+        }
+      },
+      {
+        "id": "alpine_gondola_missing_cabins",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "passenger_groups": 3,
+          "supply_crates": 2,
+          "express_service": true
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v7/alpine-gondola"
+      },
+      {
+        "id": "alpine_gondola_browser_clear",
+        "visibility": "public",
+        "target": "browser",
+        "export": "gondola_lift_margin",
+        "args": [
+          3,
+          2,
+          2,
+          true
+        ],
+        "expected": 24
+      },
+      {
+        "id": "alpine_gondola_standard_stranded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/alpine-gondola",
+        "json": {
+          "passenger_groups": 6,
+          "supply_crates": 3,
+          "gondola_cabins": 2,
+          "express_service": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "gondola_item_total": 9,
+          "rider_load_units": 48,
+          "freight_load_units": 39,
+          "express_load_units": 0,
+          "gondola_required_units": 87,
+          "gondola_capacity_units": 84,
+          "carried_load_units": 84,
+          "stranded_load_units": 3,
+          "lift_margin_units": 0,
+          "gondola_condition": "standard_stranded"
+        }
+      },
+      {
+        "id": "alpine_gondola_express_stranded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/alpine-gondola",
+        "json": {
+          "passenger_groups": 5,
+          "supply_crates": 4,
+          "gondola_cabins": 2,
+          "express_service": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "gondola_item_total": 9,
+          "rider_load_units": 40,
+          "freight_load_units": 52,
+          "express_load_units": 10,
+          "gondola_required_units": 102,
+          "gondola_capacity_units": 84,
+          "carried_load_units": 84,
+          "stranded_load_units": 18,
+          "lift_margin_units": 0,
+          "gondola_condition": "express_stranded"
+        }
+      },
+      {
+        "id": "alpine_gondola_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/alpine-gondola",
+        "json": {
+          "passenger_groups": 3,
+          "supply_crates": 2,
+          "gondola_cabins": 2,
+          "express_service": true,
+          "snow_depth": 6
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "alpine_gondola_browser_standard",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "gondola_lift_margin",
+        "args": [
+          1,
+          3,
+          2,
+          false
+        ],
+        "expected": 37
+      },
+      {
+        "id": "alpine_gondola_browser_express",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "gondola_lift_margin",
+        "args": [
+          4,
+          1,
+          2,
+          true
+        ],
+        "expected": 29
+      }
+    ],
+    "kelp_hatchery_repair": [
+      {
+        "id": "kelp_hatchery_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/kelp-hatchery-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Kelp Hatchery",
+          "ready": true
+        }
+      },
+      {
+        "id": "kelp_hatchery_balanced",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/kelp-hatchery",
+        "json": {
+          "juvenile_tanks": 2,
+          "mature_tanks": 1,
+          "aerators": 2,
+          "heat_treatment": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "hatchery_tank_total": 3,
+          "juvenile_oxygen_units": 18,
+          "mature_oxygen_units": 16,
+          "treatment_oxygen_units": 8,
+          "oxygen_needed_units": 42,
+          "aeration_capacity_units": 76,
+          "oxygen_delivered_units": 42,
+          "oxygen_deficit_units": 0,
+          "oxygen_buffer_units": 34,
+          "hatchery_condition": "balanced"
+        }
+      },
+      {
+        "id": "kelp_hatchery_wrong_heat_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "juvenile_tanks": 2,
+          "mature_tanks": 1,
+          "aerators": 2,
+          "heat_treatment": 1
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json",
+        "path": "/api/v7/kelp-hatchery"
+      },
+      {
+        "id": "kelp_hatchery_browser_balanced",
+        "visibility": "public",
+        "target": "browser",
+        "export": "hatchery_oxygen_delivered",
+        "args": [
+          2,
+          1,
+          2,
+          true
+        ],
+        "expected": 42
+      },
+      {
+        "id": "kelp_hatchery_heat_shortage",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/kelp-hatchery",
+        "json": {
+          "juvenile_tanks": 4,
+          "mature_tanks": 3,
+          "aerators": 1,
+          "heat_treatment": true
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "hatchery_tank_total": 7,
+          "juvenile_oxygen_units": 36,
+          "mature_oxygen_units": 48,
+          "treatment_oxygen_units": 4,
+          "oxygen_needed_units": 88,
+          "aeration_capacity_units": 38,
+          "oxygen_delivered_units": 38,
+          "oxygen_deficit_units": 50,
+          "oxygen_buffer_units": 0,
+          "hatchery_condition": "heat_shortage"
+        }
+      },
+      {
+        "id": "kelp_hatchery_oxygen_shortage",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/kelp-hatchery",
+        "json": {
+          "juvenile_tanks": 3,
+          "mature_tanks": 2,
+          "aerators": 1,
+          "heat_treatment": false
+        },
+        "expected_status": 200,
+        "expected_json": {
+          "hatchery_tank_total": 5,
+          "juvenile_oxygen_units": 27,
+          "mature_oxygen_units": 32,
+          "treatment_oxygen_units": 0,
+          "oxygen_needed_units": 59,
+          "aeration_capacity_units": 38,
+          "oxygen_delivered_units": 38,
+          "oxygen_deficit_units": 21,
+          "oxygen_buffer_units": 0,
+          "hatchery_condition": "oxygen_shortage"
+        }
+      },
+      {
+        "id": "kelp_hatchery_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v7/kelp-hatchery",
+        "json": {
+          "juvenile_tanks": 2,
+          "mature_tanks": 1,
+          "aerators": 2,
+          "heat_treatment": true,
+          "salinity_band": 2
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "kelp_hatchery_browser_heat",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "hatchery_oxygen_delivered",
+        "args": [
+          4,
+          3,
+          1,
+          true
+        ],
+        "expected": 38
+      },
+      {
+        "id": "kelp_hatchery_browser_oxygen",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "hatchery_oxygen_delivered",
+        "args": [
+          3,
+          2,
+          1,
+          false
+        ],
+        "expected": 38
+      }
+    ]
+  }
+}
