@@ -558,6 +558,15 @@ maintenance locality; see
 [benchmarks/FULLSTACK_AGENT_039.md](benchmarks/FULLSTACK_AGENT_039.md) for the
 complete evidence and claim boundary.
 
+Independent iteration 041 completed a clean 96-session v0.5.2 confirmation:
+all four languages passed 24/24 hidden assignments, Parley passed 24/24 first
+checks and 12/12 exact-root repairs, and Parley had the lowest median complete
+workflow time and smallest editable source. The strict six-condition gate is
+still unmet because Parley's 63,565.5 median complete-session tokens were
+4.91% above Python's 60,591. See
+[benchmarks/FULLSTACK_AGENT_041.md](benchmarks/FULLSTACK_AGENT_041.md) and the
+[canonical report](benchmarks/reports/041-independent-fullstack-study-gate-not-met.artifact.json).
+
 ## Development
 
 ```bash
