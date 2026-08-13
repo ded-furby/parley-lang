@@ -1,0 +1,753 @@
+{
+  "schema_version": 1,
+  "experiment_id": "047",
+  "phase": "post-result secondary token and latency attribution",
+  "generated_at": "2026-08-13T09:46:16.794892Z",
+  "raw_sha256": "f04515b84abfbb2a3fe0477c7d0d5c5de9eba8a6f4de3eba2cf062886e779d28",
+  "bootstrap": {
+    "seed": 470260814,
+    "samples": 50000,
+    "unit": "matched task/configuration/replicate pair"
+  },
+  "definitions": {
+    "complete_session_tokens": "Frozen input plus output token total.",
+    "session_elapsed_seconds": "Frozen wall time around the complete Codex subprocess and all parent public checks requested during it; hidden judgment is excluded.",
+    "public_check_seconds": "Sum of parent-recorded ./check attempt wall times.",
+    "public_build_seconds": "Sum of exact application build wall times inside public checks.",
+    "public_runtime_seconds": "Public check time minus build time; includes server, HTTP, Chromium, proxy, and parent-check overhead.",
+    "noncheck_session_seconds": "Session elapsed minus public check time; includes model service latency, source printing, editing, command transport, and other agent work."
+  },
+  "by_language": {
+    "parley": {
+      "sessions": 8,
+      "total_tokens": {
+        "median": 60757.0,
+        "mean": 74119.375,
+        "minimum": 60011.0,
+        "maximum": 168386.0
+      },
+      "input_tokens": {
+        "median": 59962.0,
+        "mean": 73009.25,
+        "minimum": 59336.0,
+        "maximum": 165141.0
+      },
+      "cached_input_tokens": {
+        "median": 51200.0,
+        "mean": 55168.0,
+        "minimum": 28160.0,
+        "maximum": 123904.0
+      },
+      "uncached_input_tokens": {
+        "median": 13339.5,
+        "mean": 17841.25,
+        "minimum": 8136.0,
+        "maximum": 41237.0
+      },
+      "output_tokens": {
+        "median": 831.0,
+        "mean": 1110.125,
+        "minimum": 564.0,
+        "maximum": 3245.0
+      },
+      "reasoning_output_tokens": {
+        "median": 440.0,
+        "mean": 597.75,
+        "minimum": 183.0,
+        "maximum": 1978.0
+      },
+      "prompt_characters": {
+        "median": 4715.5,
+        "mean": 4689.0,
+        "minimum": 4473.0,
+        "maximum": 4852.0
+      },
+      "source_edit_rough_tokens": {
+        "median": 16.0,
+        "mean": 13.25,
+        "minimum": 2.0,
+        "maximum": 19.0
+      },
+      "agent_message_items": {
+        "median": 3.0,
+        "mean": 3.5,
+        "minimum": 3.0,
+        "maximum": 6.0
+      },
+      "public_check_attempts": {
+        "median": 1.0,
+        "mean": 1.375,
+        "minimum": 1.0,
+        "maximum": 4.0
+      },
+      "session_elapsed_seconds": {
+        "median": 33.4983,
+        "mean": 44.072,
+        "minimum": 25.6633,
+        "maximum": 125.6205
+      },
+      "public_check_seconds": {
+        "median": 2.6007,
+        "mean": 3.773,
+        "minimum": 2.0671,
+        "maximum": 11.0999
+      },
+      "public_build_seconds": {
+        "median": 1.054,
+        "mean": 1.6393,
+        "minimum": 0.926,
+        "maximum": 4.8302
+      },
+      "public_runtime_seconds": {
+        "median": 1.4579,
+        "mean": 2.1337,
+        "minimum": 1.1411,
+        "maximum": 6.2697
+      },
+      "noncheck_session_seconds": {
+        "median": 30.5765,
+        "mean": 40.299,
+        "minimum": 22.7265,
+        "maximum": 114.5206
+      }
+    },
+    "python": {
+      "sessions": 8,
+      "total_tokens": {
+        "median": 60551.5,
+        "mean": 60450.25,
+        "minimum": 60043.0,
+        "maximum": 60766.0
+      },
+      "input_tokens": {
+        "median": 59836.0,
+        "mean": 59815.375,
+        "minimum": 59523.0,
+        "maximum": 60103.0
+      },
+      "cached_input_tokens": {
+        "median": 34560.0,
+        "mean": 35744.0,
+        "minimum": 27136.0,
+        "maximum": 51200.0
+      },
+      "uncached_input_tokens": {
+        "median": 25213.0,
+        "mean": 24071.375,
+        "minimum": 8353.0,
+        "maximum": 32869.0
+      },
+      "output_tokens": {
+        "median": 648.5,
+        "mean": 634.875,
+        "minimum": 490.0,
+        "maximum": 778.0
+      },
+      "reasoning_output_tokens": {
+        "median": 164.5,
+        "mean": 168.375,
+        "minimum": 73.0,
+        "maximum": 302.0
+      },
+      "prompt_characters": {
+        "median": 4052.5,
+        "mean": 4026.0,
+        "minimum": 3810.0,
+        "maximum": 4189.0
+      },
+      "source_edit_rough_tokens": {
+        "median": 20.0,
+        "mean": 20.75,
+        "minimum": 17.0,
+        "maximum": 27.0
+      },
+      "agent_message_items": {
+        "median": 4.0,
+        "mean": 4.0,
+        "minimum": 4.0,
+        "maximum": 4.0
+      },
+      "public_check_attempts": {
+        "median": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "session_elapsed_seconds": {
+        "median": 30.0579,
+        "mean": 29.7672,
+        "minimum": 24.8263,
+        "maximum": 34.285
+      },
+      "public_check_seconds": {
+        "median": 1.5418,
+        "mean": 1.6077,
+        "minimum": 1.4519,
+        "maximum": 2.0211
+      },
+      "public_build_seconds": {
+        "median": 0.0614,
+        "mean": 0.0619,
+        "minimum": 0.0583,
+        "maximum": 0.0652
+      },
+      "public_runtime_seconds": {
+        "median": 1.4804,
+        "mean": 1.5458,
+        "minimum": 1.3912,
+        "maximum": 1.9565
+      },
+      "noncheck_session_seconds": {
+        "median": 28.4607,
+        "mean": 28.1595,
+        "minimum": 23.3557,
+        "maximum": 32.7894
+      }
+    },
+    "typescript": {
+      "sessions": 8,
+      "total_tokens": {
+        "median": 77828.5,
+        "mean": 77840.5,
+        "minimum": 76356.0,
+        "maximum": 79403.0
+      },
+      "input_tokens": {
+        "median": 76733.5,
+        "mean": 76732.375,
+        "minimum": 75753.0,
+        "maximum": 77633.0
+      },
+      "cached_input_tokens": {
+        "median": 53504.0,
+        "mean": 56000.0,
+        "minimum": 53504.0,
+        "maximum": 63488.0
+      },
+      "uncached_input_tokens": {
+        "median": 22784.5,
+        "mean": 20732.375,
+        "minimum": 13289.0,
+        "maximum": 24129.0
+      },
+      "output_tokens": {
+        "median": 1095.0,
+        "mean": 1108.125,
+        "minimum": 603.0,
+        "maximum": 1770.0
+      },
+      "reasoning_output_tokens": {
+        "median": 216.5,
+        "mean": 236.75,
+        "minimum": 87.0,
+        "maximum": 498.0
+      },
+      "prompt_characters": {
+        "median": 4079.5,
+        "mean": 4053.0,
+        "minimum": 3837.0,
+        "maximum": 4216.0
+      },
+      "source_edit_rough_tokens": {
+        "median": 30.5,
+        "mean": 28.0,
+        "minimum": 10.0,
+        "maximum": 46.0
+      },
+      "agent_message_items": {
+        "median": 4.0,
+        "mean": 3.625,
+        "minimum": 3.0,
+        "maximum": 4.0
+      },
+      "public_check_attempts": {
+        "median": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "session_elapsed_seconds": {
+        "median": 34.4154,
+        "mean": 34.2547,
+        "minimum": 26.681,
+        "maximum": 42.5505
+      },
+      "public_check_seconds": {
+        "median": 1.2065,
+        "mean": 1.2471,
+        "minimum": 1.1491,
+        "maximum": 1.6131
+      },
+      "public_build_seconds": {
+        "median": 0.0595,
+        "mean": 0.0612,
+        "minimum": 0.0574,
+        "maximum": 0.0772
+      },
+      "public_runtime_seconds": {
+        "median": 1.1395,
+        "mean": 1.1858,
+        "minimum": 1.0906,
+        "maximum": 1.5536
+      },
+      "noncheck_session_seconds": {
+        "median": 33.0247,
+        "mean": 33.0076,
+        "minimum": 25.5319,
+        "maximum": 41.3375
+      }
+    },
+    "rust": {
+      "sessions": 8,
+      "total_tokens": {
+        "median": 101209.5,
+        "mean": 104541.375,
+        "minimum": 99557.0,
+        "maximum": 126067.0
+      },
+      "input_tokens": {
+        "median": 100047.5,
+        "mean": 103256.375,
+        "minimum": 98813.0,
+        "maximum": 124344.0
+      },
+      "cached_input_tokens": {
+        "median": 75776.0,
+        "mean": 73632.0,
+        "minimum": 54528.0,
+        "maximum": 98048.0
+      },
+      "uncached_input_tokens": {
+        "median": 24649.0,
+        "mean": 29624.375,
+        "minimum": 23196.0,
+        "maximum": 45269.0
+      },
+      "output_tokens": {
+        "median": 1162.0,
+        "mean": 1285.0,
+        "minimum": 744.0,
+        "maximum": 2143.0
+      },
+      "reasoning_output_tokens": {
+        "median": 386.0,
+        "mean": 382.625,
+        "minimum": 234.0,
+        "maximum": 564.0
+      },
+      "prompt_characters": {
+        "median": 4064.5,
+        "mean": 4038.0,
+        "minimum": 3822.0,
+        "maximum": 4201.0
+      },
+      "source_edit_rough_tokens": {
+        "median": 12.0,
+        "mean": 27.625,
+        "minimum": 6.0,
+        "maximum": 87.0
+      },
+      "agent_message_items": {
+        "median": 4.0,
+        "mean": 4.375,
+        "minimum": 4.0,
+        "maximum": 5.0
+      },
+      "public_check_attempts": {
+        "median": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.0
+      },
+      "session_elapsed_seconds": {
+        "median": 51.6613,
+        "mean": 51.9108,
+        "minimum": 43.3917,
+        "maximum": 67.0546
+      },
+      "public_check_seconds": {
+        "median": 14.3572,
+        "mean": 14.5765,
+        "minimum": 12.1585,
+        "maximum": 17.9552
+      },
+      "public_build_seconds": {
+        "median": 13.005,
+        "mean": 13.1728,
+        "minimum": 10.9211,
+        "maximum": 16.5562
+      },
+      "public_runtime_seconds": {
+        "median": 1.4106,
+        "mean": 1.4037,
+        "minimum": 1.2374,
+        "maximum": 1.6252
+      },
+      "noncheck_session_seconds": {
+        "median": 38.0188,
+        "mean": 37.3343,
+        "minimum": 26.1101,
+        "maximum": 51.5486
+      }
+    }
+  },
+  "frozen_prompt_difference": {
+    "context_file": "skill/parley/references/scaffolded-path-response-web-v0.5.7-compact.md",
+    "context_sha256": "b3d0473cdc4e17741bebe1c24441f337abc7579bd59783b1cd94e645bb698f23",
+    "context_bytes": 760,
+    "context_o200k_tokens": 176,
+    "task_prompt_deltas": [
+      {
+        "task_id": "tundra_probe_lookup_build",
+        "characters": 663,
+        "o200k_tokens": 161
+      },
+      {
+        "task_id": "magma_core_lookup_build",
+        "characters": 663,
+        "o200k_tokens": 161
+      },
+      {
+        "task_id": "aviary_band_lookup_repair",
+        "characters": 663,
+        "o200k_tokens": 161
+      },
+      {
+        "task_id": "canal_gate_lookup_repair",
+        "characters": 663,
+        "o200k_tokens": 161
+      }
+    ],
+    "constant_extra_prompt_characters": 663,
+    "constant_extra_prompt_o200k_tokens": 161
+  },
+  "parley_vs_python": {
+    "marginal_median": {
+      "total_token_difference": 205.5,
+      "total_token_percent": 0.3394,
+      "elapsed_difference_seconds": 3.4404,
+      "elapsed_percent": 11.4461,
+      "public_check_difference_seconds": 1.0589,
+      "public_build_difference_seconds": 0.9926,
+      "noncheck_difference_seconds": 2.1158
+    },
+    "matched_pairs": {
+      "total_tokens": {
+        "median": 384.5,
+        "mean": 13669.125,
+        "minimum": -189.0,
+        "maximum": 107620.0,
+        "parley_lower_pairs": 3,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 5,
+        "bootstrap_median_95_percent_interval": [
+          -88.0,
+          771.0
+        ],
+        "two_sided_sign_test_p": 0.726562
+      },
+      "input_tokens": {
+        "median": 142.5,
+        "mean": 13193.875,
+        "minimum": -316.0,
+        "maximum": 105118.0,
+        "parley_lower_pairs": 3,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 5
+      },
+      "cached_input_tokens": {
+        "median": 13696.0,
+        "mean": 19424.0,
+        "minimum": -8960.0,
+        "maximum": 87808.0,
+        "parley_lower_pairs": 1,
+        "equal_pairs": 1,
+        "parley_higher_pairs": 6
+      },
+      "uncached_input_tokens": {
+        "median": -5182.5,
+        "mean": -6230.125,
+        "minimum": -24083.0,
+        "maximum": 17310.0,
+        "parley_lower_pairs": 5,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 3
+      },
+      "output_tokens": {
+        "median": 214.0,
+        "mean": 475.25,
+        "minimum": -2.0,
+        "maximum": 2502.0,
+        "parley_lower_pairs": 1,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 7
+      },
+      "reasoning_output_tokens": {
+        "median": 276.5,
+        "mean": 429.375,
+        "minimum": 87.0,
+        "maximum": 1676.0,
+        "parley_lower_pairs": 0,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 8
+      },
+      "prompt_characters": {
+        "median": 663.0,
+        "mean": 663.0,
+        "minimum": 663.0,
+        "maximum": 663.0,
+        "parley_lower_pairs": 0,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 8
+      },
+      "source_edit_rough_tokens": {
+        "median": -4.0,
+        "mean": -7.5,
+        "minimum": -25.0,
+        "maximum": -1.0,
+        "parley_lower_pairs": 8,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 0
+      },
+      "session_elapsed_seconds": {
+        "median": 4.4578,
+        "mean": 14.3048,
+        "minimum": -5.1138,
+        "maximum": 93.0058,
+        "parley_lower_pairs": 2,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 6,
+        "bootstrap_median_95_percent_interval": [
+          -2.9256,
+          12.6811
+        ],
+        "two_sided_sign_test_p": 0.289062
+      },
+      "public_check_seconds": {
+        "median": 1.0284,
+        "mean": 2.1653,
+        "minimum": 0.5128,
+        "maximum": 9.5039,
+        "parley_lower_pairs": 0,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 8
+      },
+      "public_build_seconds": {
+        "median": 0.992,
+        "mean": 1.5774,
+        "minimum": 0.8653,
+        "maximum": 4.7719,
+        "parley_lower_pairs": 0,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 8
+      },
+      "public_runtime_seconds": {
+        "median": 0.0364,
+        "mean": 0.5879,
+        "minimum": -0.5326,
+        "maximum": 4.732,
+        "parley_lower_pairs": 3,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 5
+      },
+      "noncheck_session_seconds": {
+        "median": 3.6593,
+        "mean": 12.1395,
+        "minimum": -6.1861,
+        "maximum": 83.5019,
+        "parley_lower_pairs": 2,
+        "equal_pairs": 0,
+        "parley_higher_pairs": 6
+      }
+    }
+  },
+  "redundant_check_sensitivity_outside_gate": {
+    "excluded_pair": {
+      "task_id": "magma_core_lookup_build",
+      "configuration_id": "sol-medium",
+      "replicate": 1,
+      "parley_public_check_attempts": 4,
+      "python_public_check_attempts": 1,
+      "all_attempts_succeeded": true
+    },
+    "retained_matched_pairs": 7,
+    "by_language": {
+      "parley": {
+        "sessions": 7,
+        "median_total_tokens": 60515.0,
+        "median_elapsed_seconds": 29.2446
+      },
+      "python": {
+        "sessions": 7,
+        "median_total_tokens": 60551.0,
+        "median_elapsed_seconds": 28.5889
+      }
+    },
+    "interpretation": "This exclusion is descriptive sensitivity only. The frozen primary result retains the cell and remains failed."
+  },
+  "matched_pair_rows": [
+    {
+      "task_id": "aviary_band_lookup_repair",
+      "configuration_id": "sol-medium",
+      "replicate": 1,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": -189.0,
+      "input_tokens_difference": -187.0,
+      "cached_input_tokens_difference": 18176.0,
+      "uncached_input_tokens_difference": -18363.0,
+      "output_tokens_difference": -2.0,
+      "reasoning_output_tokens_difference": 120.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -18.0,
+      "session_elapsed_seconds_difference": 0.7862,
+      "public_check_seconds_difference": 0.642,
+      "public_build_seconds_difference": 0.8692,
+      "public_runtime_seconds_difference": -0.2272,
+      "noncheck_session_seconds_difference": 0.1442
+    },
+    {
+      "task_id": "aviary_band_lookup_repair",
+      "configuration_id": "sol-medium",
+      "replicate": 2,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": -88.0,
+      "input_tokens_difference": -316.0,
+      "cached_input_tokens_difference": 1024.0,
+      "uncached_input_tokens_difference": -1340.0,
+      "output_tokens_difference": 228.0,
+      "reasoning_output_tokens_difference": 326.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -25.0,
+      "session_elapsed_seconds_difference": 7.0889,
+      "public_check_seconds_difference": 2.5096,
+      "public_build_seconds_difference": 2.03,
+      "public_runtime_seconds_difference": 0.4796,
+      "noncheck_session_seconds_difference": 4.5793
+    },
+    {
+      "task_id": "canal_gate_lookup_repair",
+      "configuration_id": "sol-medium",
+      "replicate": 1,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": -2.0,
+      "input_tokens_difference": -19.0,
+      "cached_input_tokens_difference": 24064.0,
+      "uncached_input_tokens_difference": -24083.0,
+      "output_tokens_difference": 17.0,
+      "reasoning_output_tokens_difference": 87.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -4.0,
+      "session_elapsed_seconds_difference": -2.9256,
+      "public_check_seconds_difference": 1.4849,
+      "public_build_seconds_difference": 0.9539,
+      "public_runtime_seconds_difference": 0.531,
+      "noncheck_session_seconds_difference": -4.4105
+    },
+    {
+      "task_id": "canal_gate_lookup_repair",
+      "configuration_id": "sol-medium",
+      "replicate": 2,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": 771.0,
+      "input_tokens_difference": 398.0,
+      "cached_input_tokens_difference": 0.0,
+      "uncached_input_tokens_difference": 398.0,
+      "output_tokens_difference": 373.0,
+      "reasoning_output_tokens_difference": 426.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -4.0,
+      "session_elapsed_seconds_difference": 4.4974,
+      "public_check_seconds_difference": 0.6124,
+      "public_build_seconds_difference": 1.145,
+      "public_runtime_seconds_difference": -0.5326,
+      "noncheck_session_seconds_difference": 3.885
+    },
+    {
+      "task_id": "magma_core_lookup_build",
+      "configuration_id": "sol-medium",
+      "replicate": 1,
+      "parley_public_check_attempts": 4,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": 107620.0,
+      "input_tokens_difference": 105118.0,
+      "cached_input_tokens_difference": 87808.0,
+      "uncached_input_tokens_difference": 17310.0,
+      "output_tokens_difference": 2502.0,
+      "reasoning_output_tokens_difference": 1676.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -1.0,
+      "session_elapsed_seconds_difference": 93.0058,
+      "public_check_seconds_difference": 9.5039,
+      "public_build_seconds_difference": 4.7719,
+      "public_runtime_seconds_difference": 4.732,
+      "noncheck_session_seconds_difference": 83.5019
+    },
+    {
+      "task_id": "magma_core_lookup_build",
+      "configuration_id": "sol-medium",
+      "replicate": 2,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": 472.0,
+      "input_tokens_difference": 272.0,
+      "cached_input_tokens_difference": -8960.0,
+      "uncached_input_tokens_difference": 9232.0,
+      "output_tokens_difference": 200.0,
+      "reasoning_output_tokens_difference": 227.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -1.0,
+      "session_elapsed_seconds_difference": 4.4183,
+      "public_check_seconds_difference": 0.9846,
+      "public_build_seconds_difference": 0.9539,
+      "public_runtime_seconds_difference": 0.0307,
+      "noncheck_session_seconds_difference": 3.4337
+    },
+    {
+      "task_id": "tundra_probe_lookup_build",
+      "configuration_id": "sol-medium",
+      "replicate": 1,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": 447.0,
+      "input_tokens_difference": 94.0,
+      "cached_input_tokens_difference": 24064.0,
+      "uncached_input_tokens_difference": -23970.0,
+      "output_tokens_difference": 353.0,
+      "reasoning_output_tokens_difference": 392.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -1.0,
+      "session_elapsed_seconds_difference": 12.6811,
+      "public_check_seconds_difference": 0.5128,
+      "public_build_seconds_difference": 0.8653,
+      "public_runtime_seconds_difference": -0.3525,
+      "noncheck_session_seconds_difference": 12.1683
+    },
+    {
+      "task_id": "tundra_probe_lookup_build",
+      "configuration_id": "sol-medium",
+      "replicate": 2,
+      "parley_public_check_attempts": 1,
+      "python_public_check_attempts": 1,
+      "total_tokens_difference": 322.0,
+      "input_tokens_difference": 191.0,
+      "cached_input_tokens_difference": 9216.0,
+      "uncached_input_tokens_difference": -9025.0,
+      "output_tokens_difference": 131.0,
+      "reasoning_output_tokens_difference": 181.0,
+      "prompt_characters_difference": 663.0,
+      "source_edit_rough_tokens_difference": -6.0,
+      "session_elapsed_seconds_difference": -5.1138,
+      "public_check_seconds_difference": 1.0723,
+      "public_build_seconds_difference": 1.0301,
+      "public_runtime_seconds_difference": 0.0422,
+      "noncheck_session_seconds_difference": -6.1861
+    }
+  ],
+  "finding": "The eight matched pairs have a +384.5-token Parley median: +142.5 input tokens and +214 output tokens. Parley is lower in three total-token pairs and higher in five; its reasoning-output count is higher in all eight. The fixed rendered prompt delta is only 161 tokens. One successful cell made three redundant checks and is an extreme token/time outlier, but it remains part of the valid gate. The evidence does not isolate a generic language defect that would justify syntax or semantic tuning.",
+  "next_action": "Preserve v0.5.7 and the compact context. Improve broadly useful product coverage independently, then use a larger disjoint evaluation to distinguish small token effects from interaction variance. Treat the stable roughly one-second public-build gap as a separate compiler-cost target.",
+  "claim_boundary": "This descriptive analysis does not revise the frozen 047 gate, exclude a cell, authorize a same-corpus rerun, or establish universal superiority."
+}

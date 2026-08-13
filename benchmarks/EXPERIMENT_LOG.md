@@ -5122,3 +5122,18 @@ complete-session tokens than TypeScript and 39.9691% fewer than Rust, but used
 0.3394% more tokens and 11.4461% more elapsed time than Python. The failed gate
 is final for this corpus; the pilot's one model configuration and two
 replicates do not support a universal claim.
+
+### 047 token and latency attribution frozen
+
+- Artifact: `benchmarks/fullstack_agent_047_attribution.json`
+- Artifact SHA-256:
+  `a9ee9b9961c408cef70ccd6bec6bfa23995abdea5fdf761080988c957f420865`
+
+The eight matched Parley/Python pairs have a +384.5-token median difference,
+with a -88 to +771 bootstrap interval; the fixed prompt delta is 161 tokens,
+and Parley used more reasoning-output tokens in all eight pairs. One Parley
+cell made three redundant successful checks and is an extreme outlier, but it
+remains in the valid failed gate. Every Parley public build was slower, with a
++0.9920-second paired median. The decomposition identifies a separate stable
+build-cost target but no generic language defect warranting same-corpus syntax
+or context tuning.
