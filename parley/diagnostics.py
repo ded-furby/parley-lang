@@ -251,7 +251,7 @@ ERROR_CATALOG: dict[str, dict] = {
     "P714": {
         "title": "Malformed web_request record",
         "explain": "A handler uses web_request, but that record does not match the stable HTTP metadata contract.",
-        "fix": "Declare method, path, query, headers, and body with the types and order shown in docs/WEB.md.",
+        "fix": "Declare method, path, query, headers, and body in order; add path_parameters as the final text-to-text map for parameterized routes.",
     },
     "P715": {
         "title": "Web request body is not JSON-safe",
@@ -302,6 +302,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "title": "Browser build target is missing",
         "explain": "The project declares browser exports but Rust's wasm32-unknown-unknown standard library is not installed.",
         "fix": "Run `rustup target add wasm32-unknown-unknown` once, then build again.",
+    },
+    "P725": {
+        "title": "Parameterized route needs path metadata",
+        "explain": "A route path declares captures, but its handler cannot receive the decoded parameter map.",
+        "fix": "Take web_request first and add path_parameters as its final map from text to text field.",
     },
     # --- residual Rust errors (P9xx)
     "P901": {

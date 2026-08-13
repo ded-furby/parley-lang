@@ -95,7 +95,7 @@ def test_server_generation_has_strict_json_and_bounded_http(tmp_path):
     assert 'content_type != "application/json"' in rust
     assert "PARLEY_MAX_HEADER_BYTES" in rust
     assert "PARLEY_MAX_BODY_BYTES: usize = 4096" in rust
-    assert '("POST", "/api/hello")' in rust
+    assert 'method == "POST" && request.path == "/api/hello"' in rust
     assert "std::fs::canonicalize" in rust
     assert '"application/wasm"' in rust
 

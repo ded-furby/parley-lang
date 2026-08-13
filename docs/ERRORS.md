@@ -270,7 +270,9 @@ function that gives back `nothing`.
 
 **What it means:** The record does not match the stable HTTP metadata contract.
 
-**How to fix it:** Declare the exact method, path, query, headers, and body fields in [WEB.md](WEB.md).
+**How to fix it:** Declare method, path, query, headers, and body in order. For
+parameterized routes, add `path_parameters as map from text to text` last; see
+[WEB_PATH_PARAMETERS.md](WEB_PATH_PARAMETERS.md).
 
 ## P715 — Web request body is not JSON-safe
 
@@ -331,6 +333,12 @@ function that gives back `nothing`.
 **What it means:** The project declares browser exports but Rust's browser target is not installed.
 
 **How to fix it:** Run `rustup target add wasm32-unknown-unknown` once, then build again.
+
+## P725 — Parameterized route needs path metadata
+
+**What it means:** The route declares path captures, but its handler cannot receive the decoded parameter map.
+
+**How to fix it:** Take `web_request` first and add `path_parameters as map from text to text` as the record's final field.
 
 ## P901 — The Rust backend rejected the program
 

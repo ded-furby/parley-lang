@@ -5080,3 +5080,26 @@ size did not increase, and maximum WASM growth was 4.4030%. The primary build
 aggregate improved only 4.3864%, from 0.811446 to 0.775853 seconds, below the
 frozen 20% requirement. The candidate is rejected, will remain reproducible in
 Git history, and the product returns to v0.5.6 without same-population tuning.
+
+### v0.5.7 typed web path-parameter gate passed
+
+- Frozen protocol: `benchmarks/WEB_PATH_PARAMETERS_004.md`
+- Baseline commit/tree: `bed8fde` /
+  `6e3b0c94227d25d3a4c47e5015270a4a4de52d75`
+- Dedicated path-parameter tests: 21 passed
+- Full regression before version advance: 727 passed, 0 failed, 205.22 seconds
+- Full regression after version advance: 727 passed, 0 failed, 206.22 seconds
+- Exact final-tree regression: 727 passed, 0 failed, 209.00 seconds
+- Release wheel: `parley_lang-0.5.7-py3-none-any.whl`, 145,278 bytes
+- Release wheel SHA-256:
+  `553bfb8ffe003edb9e38d057c6617f7f9abbb634bdb1838a4402c18776daa7e1`
+
+The accepted implementation adds checked whole-segment route captures through
+an extended `web_request.path_parameters` map. Exact routes have deterministic
+priority, overlapping same-method templates are rejected, captures decode
+exactly once as UTF-8, and malformed, separator-smuggling, NUL, control, DEL,
+or invalid UTF-8 values fail before handler/body execution. Both check and
+bundle metadata expose ordered names. Native coverage composes captures with
+typed JSON bodies, dynamic response controls, `HEAD`, and both route JSON
+backends. Historical references remain frozen. This is a bounded product
+capability, not agent evidence or a universal-superiority claim.

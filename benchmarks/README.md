@@ -506,6 +506,15 @@ duplicates, ownership, and size limits; the full gate passed 643/643 tests.
 See `WEB_RESPONSE_CONTROL_003.md`. This is product capability evidence, not a
 new agent comparison or a universal-superiority claim.
 
+Typed web path-parameter protocol 004 freezes the next post-046 product step
+before implementation. Parley v0.5.7 adds unambiguous whole-segment captures
+to extended `web_request` metadata, with exact-route priority, overlap
+rejection, strict percent/UTF-8 decoding, separator/control-byte defenses, and
+ordered check/build metadata. Twenty-one dedicated native/static tests and the
+727-test repository gate passed before and after version advance; see
+`WEB_PATH_PARAMETERS_004.md`. Any comparative evaluation must use unseen tasks
+frozen after this product commit.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

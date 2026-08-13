@@ -81,6 +81,7 @@ class ResponseControl:
 class Route:
     method: str
     path: str
+    path_parameters: tuple[str, ...]
     handler: str
     success_status: int
     response: ResponseControl | None
@@ -111,6 +112,7 @@ class CheckedRoute:
     route: Route
     function: A.FuncDef
     has_request: bool
+    has_path_parameters: bool
     body_param: A.Param | None
 
 
@@ -155,6 +157,57 @@ def _integer(value, label: str, lo: int, hi: int) -> int:
     if isinstance(value, bool) or not isinstance(value, int) or not lo <= value <= hi:
         raise WebProjectError(f"{label} must be a whole number from {lo} to {hi}")
     return value
+
+
+def _path_parameters(path: str, label: str) -> tuple[str, ...]:
+    if "{" not in path and "}" not in path:
+        return ()
+    segments = path.split("/")[1:]
+    if not segments or any(not segment for segment in segments):
+        raise WebProjectError(
+            f"{label} template must not contain empty segments or end with /"
+        )
+    parameters: list[str] = []
+    for segment in segments:
+        if segment.startswith("{") and segment.endswith("}"):
+            name = segment[1:-1]
+            if not FIELD_RE.fullmatch(name):
+                raise WebProjectError(
+                    f"{label} capture must be a whole segment with a Parley field name"
+                )
+            if name in parameters:
+                raise WebProjectError(f"{label} repeats path capture {name}")
+            parameters.append(name)
+        elif "{" in segment or "}" in segment:
+            raise WebProjectError(
+                f"{label} capture must occupy one complete path segment"
+            )
+    if not parameters:
+        raise WebProjectError(f"{label} contains braces but no path capture")
+    return tuple(parameters)
+
+
+def _template_segments(route: Route) -> tuple[str | None, ...]:
+    parameters = set(route.path_parameters)
+    return tuple(
+        None
+        if segment.startswith("{")
+        and segment.endswith("}")
+        and segment[1:-1] in parameters
+        else segment
+        for segment in route.path.split("/")[1:]
+    )
+
+
+def _templates_overlap(left: Route, right: Route) -> bool:
+    left_segments = _template_segments(left)
+    right_segments = _template_segments(right)
+    return len(left_segments) == len(right_segments) and all(
+        left_segment is None
+        or right_segment is None
+        or left_segment == right_segment
+        for left_segment, right_segment in zip(left_segments, right_segments)
+    )
 
 
 def load_project(path: str | Path) -> WebProject:
@@ -207,7 +260,8 @@ def load_project(path: str | Path) -> WebProject:
         if (not isinstance(route_path, str) or not route_path.startswith("/")
                 or any(c in route_path for c in "?#\r\n")):
             raise WebProjectError(
-                f"routes item {index} path must be an exact path beginning with /")
+                f"routes item {index} path must begin with / and exclude ?, #, CR, and LF")
+        path_parameters = _path_parameters(route_path, f"routes item {index} path")
         handler = route.get("handler")
         if not isinstance(handler, str) or not FUNCTION_RE.fullmatch(handler):
             raise WebProjectError(f"routes item {index} handler is not a Parley function name")
@@ -238,8 +292,26 @@ def load_project(path: str | Path) -> WebProject:
         key = (method, route_path)
         if key in seen_routes:
             raise WebProjectError(f"route {method} {route_path} is declared twice")
+        candidate = Route(
+            method, route_path, path_parameters, handler, success, response
+        )
+        overlap = next(
+            (
+                previous
+                for previous in routes
+                if previous.method == method
+                and previous.path_parameters
+                and path_parameters
+                and _templates_overlap(previous, candidate)
+            ),
+            None,
+        )
+        if overlap is not None:
+            raise WebProjectError(
+                f"route templates {method} {overlap.path} and {route_path} overlap"
+            )
         seen_routes.add(key)
-        routes.append(Route(method, route_path, handler, success, response))
+        routes.append(candidate)
     if not routes and static_dir is None:
         raise WebProjectError("declare at least one route or a static_dir")
 
@@ -324,9 +396,9 @@ def _json_type_error(ty: A.Type, records: dict[str, A.RecordDef], enums: set[str
     return f"{_type_name(ty)} values cannot cross JSON"
 
 
-def _web_request_ok(record: A.RecordDef | None) -> bool:
+def _web_request_kind(record: A.RecordDef | None) -> str | None:
     if record is None:
-        return False
+        return None
     expected = [
         ("method", A.TText()),
         ("path", A.TText()),
@@ -334,7 +406,14 @@ def _web_request_ok(record: A.RecordDef | None) -> bool:
         ("headers", A.TMap(A.TText(), A.TText())),
         ("body", A.TText()),
     ]
-    return record.fields == expected
+    if record.fields == expected:
+        return "legacy"
+    if record.fields == [
+        *expected,
+        ("path_parameters", A.TMap(A.TText(), A.TText())),
+    ]:
+        return "extended"
+    return None
 
 
 def check_web(project: WebProject) -> CheckedWeb:
@@ -419,16 +498,22 @@ def check_web(project: WebProject) -> CheckedWeb:
                 function, srcmap))
             continue
         has_request = False
+        has_path_parameters = False
         body_param = None
         params = list(function.params)
         if params and isinstance(params[0].type, A.TRecord) and params[0].type.name == "web_request":
             has_request = True
-            if not _web_request_ok(records.get("web_request")):
+            request_kind = _web_request_kind(records.get("web_request"))
+            if request_kind is None:
                 contract_diags.append(_diag(
                     "P714", "web_request does not have the required HTTP fields.",
                     records.get("web_request") or function, srcmap,
-                    hint="Define method, path, query, headers, and body using the documented types and order."))
+                    hint=(
+                        "Define method, path, query, headers, and body in order; "
+                        "optionally add path_parameters as the final text-to-text map."
+                    )))
                 continue
+            has_path_parameters = request_kind == "extended"
             params.pop(0)
         if len(params) == 1:
             body_param = params[0]
@@ -444,7 +529,21 @@ def check_web(project: WebProject) -> CheckedWeb:
                 function, srcmap,
                 hint="Use no parameters, one typed JSON body, or web_request followed by a typed JSON body."))
             continue
-        checked.append(CheckedRoute(route, function, has_request, body_param))
+        if route.path_parameters and not (has_request and has_path_parameters):
+            contract_diags.append(_diag(
+                "P725",
+                f'Parameterized route "{route.path}" requires extended web_request metadata.',
+                function,
+                srcmap,
+                hint=(
+                    "Take web_request first and add path_parameters as the final "
+                    "map from text to text field."
+                ),
+            ))
+            continue
+        checked.append(CheckedRoute(
+            route, function, has_request, has_path_parameters, body_param
+        ))
     if contract_diags:
         raise ParleyError(contract_diags)
     return CheckedWeb(project, program, srcmap, tuple(checked))
@@ -545,32 +644,42 @@ def _rust_arg(param: A.Param, name: str) -> str:
     return f"&{name}" if A.is_heap(param.type) else name
 
 
-def _route_arm(checked: CheckedRoute, *, uses_program_json: bool) -> str:
+def _route_body(
+    checked: CheckedRoute,
+    *,
+    uses_program_json: bool,
+    request_name: str,
+) -> str:
     route = checked.route
     function = checked.function
     setup: list[str] = []
     args: list[str] = []
     if checked.has_request:
-        setup.append("""
-            let parley_request = WebRequest {
+        path_parameters = (
+            f"\n                path_parameters: {request_name}.path_parameters.clone(),"
+            if checked.has_path_parameters
+            else ""
+        )
+        setup.append(f"""
+            let parley_request = WebRequest {{
                 method: method.to_string(),
-                path: request.path.clone(),
-                query: request.query.clone(),
-                headers: request.headers.clone(),
-                body: request.body.clone(),
-            };""".rstrip())
+                path: {request_name}.path.clone(),
+                query: {request_name}.query.clone(),
+                headers: {request_name}.headers.clone(),
+                body: {request_name}.body.clone(),{path_parameters}
+            }};""".rstrip())
         args.append(_rust_arg(function.params[0], "parley_request"))
     if checked.body_param is not None:
         # rust_type lives on the emitter module; importing here avoids exposing
         # backend details in the manifest model.
         from .emit_rust import rust_type
         decode = (
-            "serde_json::from_str(&request.body)"
+            f"serde_json::from_str(&{request_name}.body)"
             if uses_program_json
-            else "parley_web_json_runtime::decode(&request.body)"
+            else f"parley_web_json_runtime::decode(&{request_name}.body)"
         )
         setup.append(f"""
-            let content_type = request.headers.get("content-type")
+            let content_type = {request_name}.headers.get("content-type")
                 .and_then(|value| value.split(';').next()).unwrap_or("").trim();
             if content_type != "application/json" && !content_type.ends_with("+json") {{
                 return parley_json_error(415, "json_content_type_required", "typed request bodies require application/json");
@@ -599,7 +708,7 @@ def _route_arm(checked: CheckedRoute, *, uses_program_json: bool) -> str:
             f"parley_dynamic_json_response(result.{safe(response.status_field)}, "
             f"result.{safe(response.headers_field)}, body)"
         )
-    return f'''        ("{rust_str_lit(route.method)}", "{rust_str_lit(route.path)}") => {{
+    return f'''{{
 {setup_text}
             let result = {call};
             match {encode} {{
@@ -607,6 +716,31 @@ def _route_arm(checked: CheckedRoute, *, uses_program_json: bool) -> str:
                 Err(error) => parley_json_error(500, "response_json_failed", &error.to_string()),
             }}
         }}'''
+
+
+def _route_dispatch(checked: CheckedRoute, *, uses_program_json: bool) -> str:
+    route = checked.route
+    if not route.path_parameters:
+        body = _route_body(
+            checked, uses_program_json=uses_program_json, request_name="request"
+        )
+        return f'''    if method == "{rust_str_lit(route.method)}" && request.path == "{rust_str_lit(route.path)}" {{
+        return {body};
+    }}'''
+    body = _route_body(
+        checked, uses_program_json=uses_program_json, request_name="routed_request"
+    )
+    return f'''    if method == "{rust_str_lit(route.method)}" {{
+        match parley_match_path("{rust_str_lit(route.path)}", &request.path) {{
+            Ok(Some(path_parameters)) => {{
+                let mut routed_request = request.clone();
+                routed_request.path_parameters = path_parameters;
+                return {body};
+            }}
+            Ok(None) => {{}},
+            Err(response) => return response,
+        }}
+    }}'''
 
 
 def _manual_serde_impls(program: A.Program) -> str:
@@ -1230,6 +1364,7 @@ struct ParleyHttpRequest {
     query: String,
     headers: BTreeMap<String, String>,
     body: String,
+    path_parameters: BTreeMap<String, String>,
 }
 
 struct ParleyHttpResponse {
@@ -1273,6 +1408,74 @@ fn parley_json_error(status: u16, code: &str, detail: &str) -> ParleyHttpRespons
     parley_json_write_string(detail, &mut body);
     body.push('}');
     ParleyHttpResponse::new(status, "application/json; charset=utf-8", body.into_bytes())
+}
+
+fn parley_path_hex(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
+    }
+}
+
+fn parley_decode_path_parameter(value: &str) -> Result<String, ParleyHttpResponse> {
+    let input = value.as_bytes();
+    let mut output = Vec::with_capacity(input.len());
+    let mut index = 0usize;
+    while index < input.len() {
+        if input[index] == b'%' {
+            if index + 2 >= input.len() {
+                return Err(parley_json_error(
+                    400, "invalid_path_parameter", "path parameter has a truncated percent escape"));
+            }
+            let high = parley_path_hex(input[index + 1]);
+            let low = parley_path_hex(input[index + 2]);
+            match (high, low) {
+                (Some(high), Some(low)) => output.push(high * 16 + low),
+                _ => return Err(parley_json_error(
+                    400, "invalid_path_parameter", "path parameter has an invalid percent escape")),
+            }
+            index += 3;
+        } else {
+            output.push(input[index]);
+            index += 1;
+        }
+    }
+    if output.iter().any(|byte| matches!(*byte, 0..=0x1f | 0x7f | b'/' | b'\\')) {
+        return Err(parley_json_error(
+            400, "invalid_path_parameter", "path parameter contains a forbidden separator or control byte"));
+    }
+    String::from_utf8(output).map_err(|_| parley_json_error(
+        400, "invalid_path_parameter", "path parameter is not valid UTF-8"))
+}
+
+fn parley_match_path(
+    template: &str,
+    path: &str,
+) -> Result<Option<BTreeMap<String, String>>, ParleyHttpResponse> {
+    let template_segments: Vec<&str> = template.trim_start_matches('/').split('/').collect();
+    let path_segments: Vec<&str> = path.trim_start_matches('/').split('/').collect();
+    if template_segments.len() != path_segments.len() {
+        return Ok(None);
+    }
+    for (template_segment, path_segment) in template_segments.iter().zip(&path_segments) {
+        let capture = template_segment.starts_with('{') && template_segment.ends_with('}');
+        if !capture && template_segment != path_segment {
+            return Ok(None);
+        }
+        if capture && path_segment.is_empty() {
+            return Ok(None);
+        }
+    }
+    let mut parameters = BTreeMap::new();
+    for (template_segment, path_segment) in template_segments.iter().zip(&path_segments) {
+        if template_segment.starts_with('{') {
+            let name = &template_segment[1..template_segment.len() - 1];
+            parameters.insert(name.to_string(), parley_decode_path_parameter(path_segment)?);
+        }
+    }
+    Ok(Some(parameters))
 }
 
 fn parley_header_name_ok(name: &str) -> bool {
@@ -1463,7 +1666,7 @@ fn parley_read_request(stream: &mut std::net::TcpStream) -> Result<ParleyHttpReq
     let (path, query) = target.split_once('?').unwrap_or((target.as_str(), ""));
     Ok(ParleyHttpRequest {
         method, path: path.to_string(), query: query.to_string(),
-        headers, body,
+        headers, body, path_parameters: BTreeMap::new(),
     })
 }
 
@@ -1471,15 +1674,11 @@ fn parley_dispatch(request: &ParleyHttpRequest) -> ParleyHttpResponse {
     // RFC 9110: a server that answers GET for a resource must answer HEAD for
     // it too, with the same headers. parley_write_response drops the body.
     let method = if request.method == "HEAD" { "GET" } else { request.method.as_str() };
-    match (method, request.path.as_str()) {
 __ROUTES__
-        _ => {
-            if matches!(request.method.as_str(), "GET" | "HEAD") {
-                if let Some(response) = parley_static(&request.path) { return response; }
-            }
-            parley_json_error(404, "not_found", "no typed route or static file matched")
-        }
+    if matches!(request.method.as_str(), "GET" | "HEAD") {
+        if let Some(response) = parley_static(&request.path) { return response; }
     }
+    parley_json_error(404, "not_found", "no typed route or static file matched")
 }
 
 fn parley_write_response(stream: &mut std::net::TcpStream, method: &str, response: ParleyHttpResponse) {
@@ -1569,9 +1768,13 @@ def render_server(checked: CheckedWeb) -> tuple[str, dict[int, int]]:
     if not uses_program_json:
         rust += "\n" + WEB_JSON_RUNTIME.strip() + "\n"
         rust += "\n" + _direct_json_impls(checked.program) + "\n"
-    routes = ",\n".join(
-        _route_arm(route, uses_program_json=uses_program_json)
-        for route in checked.routes
+    ordered_routes = sorted(
+        checked.routes,
+        key=lambda route: bool(route.route.path_parameters),
+    )
+    routes = "\n".join(
+        _route_dispatch(route, uses_program_json=uses_program_json)
+        for route in ordered_routes
     )
     runtime = (WEB_RUNTIME
                .replace("__MAX_BODY__", str(checked.project.max_body_bytes))

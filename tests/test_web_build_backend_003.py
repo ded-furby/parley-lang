@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 import subprocess
 
-from parley import __version__
 from parley.web import check_browser, check_web, load_project
 
 
@@ -164,8 +163,7 @@ def test_web_build_backend_003_analysis_is_deterministic(tmp_path):
     assert output.read_bytes() == ANALYSIS.read_bytes()
 
 
-def test_rejected_candidate_is_preserved_in_history_not_current_product():
-    assert __version__ == "0.5.6"
+def test_rejected_backend_is_preserved_in_history_not_current_product():
     assert "_rustc_web_artifact" not in (REPO / "parley/cli.py").read_text()
     candidate_source = subprocess.run(
         ["git", "show", "bf0b30c:parley/cli.py"],

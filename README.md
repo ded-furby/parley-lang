@@ -216,10 +216,15 @@ JSON backend. The generated server bounds headers and bodies, rejects ambiguous
 lengths and unsupported transfer encoding, canonicalizes static paths, and
 serves `.wasm` with the streaming MIME type. Typed response envelopes can make
 request-dependent 201/401/422 decisions and safely return application headers
-without yielding control of framing or hop-by-hop fields. The present HTTP/1.1 and scalar
-WASM limits are explicit in [`docs/WEB.md`](docs/WEB.md), with the response
-contract in [`docs/WEB_RESPONSE_CONTROL.md`](docs/WEB_RESPONSE_CONTROL.md); this is a foundation,
-not yet a claim of mature-framework parity.
+without yielding control of framing or hop-by-hop fields. Whole-segment path
+templates such as `/api/items/{item_id}` provide checked, unambiguous UTF-8
+captures through `web_request.path_parameters`; exact routes retain priority
+and malformed or separator-smuggling encodings fail before the handler. The
+present HTTP/1.1 and scalar WASM limits are explicit in
+[`docs/WEB.md`](docs/WEB.md), with the response and path contracts in
+[`docs/WEB_RESPONSE_CONTROL.md`](docs/WEB_RESPONSE_CONTROL.md) and
+[`docs/WEB_PATH_PARAMETERS.md`](docs/WEB_PATH_PARAMETERS.md). This is a
+foundation, not yet a claim of mature-framework parity.
 
 The preregistered [four-language Release Radar
 comparison](benchmarks/reports/035-release-radar-fullstack-compactness-proof.html)
@@ -532,6 +537,9 @@ the plan:
 - [x] total-conversion clarity and repair-locality guidance — v0.5.2
 - [x] 222-token scaffold-aware typed-web repair context — v0.5.3
 - [x] proc-macro-free strict typed-web route serialization for faster cold builds — v0.5.4
+- [x] dependency-free strict typed-web JSON boundary for faster cold builds — v0.5.5
+- [x] checked dynamic web response statuses and application headers — v0.5.6
+- [x] safe typed whole-segment web path parameters — v0.5.7
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
