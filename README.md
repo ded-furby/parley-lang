@@ -581,7 +581,10 @@ Independent iteration 042 completed all 96 sessions cleanly. Parley passed
 complete-token gate at 59,737 median tokens—0.9493% below Python. It was fastest
 overall, but the strict six-condition gate remains unmet because Terra Parley
 was 8.8637% slower than Terra Python. See
-[benchmarks/FULLSTACK_AGENT_042.md](benchmarks/FULLSTACK_AGENT_042.md).
+[benchmarks/FULLSTACK_AGENT_042.md](benchmarks/FULLSTACK_AGENT_042.md), the
+[canonical artifact](benchmarks/reports/042-independent-fullstack-study-gate-not-met.artifact.json),
+or the
+[portable report](benchmarks/reports/042-independent-fullstack-study-gate-not-met.html).
 
 ## Development
 

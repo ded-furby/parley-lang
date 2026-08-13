@@ -99,3 +99,17 @@ This result establishes clean frozen evidence for correctness, first-check,
 complete-token, maintainability, overall elapsed, and source compactness on the
 measured population. It does not establish strict parity/efficiency under the
 registered gate and cannot prove universal language superiority.
+
+## Canonical report
+
+The canonical report is
+`reports/042-independent-fullstack-study-gate-not-met.artifact.json`, with
+SHA-256
+`5e8a26d2966d6eb55f04e8b3faa98d727dd88dc633212d5428bb90782428a9ef`.
+Its deterministic builder, audit SQL, and visualization decision map sit beside
+it. The shared portable reader validated and rendered
+`reports/042-independent-fullstack-study-gate-not-met.html`, with SHA-256
+`7b9ea427522ed0ada8e6fc27509a4d5b0341df25157f96e6395a838697b6de36`.
+The report retains all eight model/language rows and gives the binding
+terra-medium elapsed comparison its own chart; it does not replace the raw or
+audited evidence.

@@ -4438,3 +4438,27 @@ Elapsed nevertheless failed the preregistered stratum rule: Terra Parley took
 27.41515 seconds versus Terra Python's 25.183, an 8.8637% deficit. The overall
 all-six gate is therefore false. Preserve 042 unchanged; do not reinterpret the
 overall elapsed lead as satisfying the registered within-stratum condition.
+
+### 042 canonical audited report published
+
+- Artifact:
+  `benchmarks/reports/042-independent-fullstack-study-gate-not-met.artifact.json`
+- Artifact SHA-256:
+  `5e8a26d2966d6eb55f04e8b3faa98d727dd88dc633212d5428bb90782428a9ef`
+- Portable HTML:
+  `benchmarks/reports/042-independent-fullstack-study-gate-not-met.html`
+- Portable HTML SHA-256:
+  `7b9ea427522ed0ada8e6fc27509a4d5b0341df25157f96e6395a838697b6de36`
+
+The deterministic report builder hash-binds the raw result, protocol,
+validation, audit, and measurement commit. Its six-row gate table preserves the
+PASS/PASS/PASS/PASS/FAIL/PASS ordering. A dedicated four-bar Parley/Python
+model-stratified elapsed chart exposes the Terra miss beside the faster overall
+language median; the full eight-row configuration table preserves the other
+baselines. The shared portable reader passed schema validation, packaging,
+source-dialog, desktop/mobile viewport, chart extraction, and browser
+verification checks.
+
+Next: preserve 042 unchanged and attribute the Terra elapsed miss from the
+complete frozen timing population before proposing any generic product or
+tooling change.

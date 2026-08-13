@@ -9,6 +9,10 @@ REPO = Path(__file__).resolve().parents[1]
 BENCHMARKS = REPO / "benchmarks"
 RAW = BENCHMARKS / "fullstack_agent_042_raw.json"
 AUDIT = BENCHMARKS / "fullstack_agent_042_audit.json"
+REPORT = (
+    BENCHMARKS
+    / "reports/042-independent-fullstack-study-gate-not-met.artifact.json"
+)
 
 
 def sha256(path: Path) -> str:
@@ -107,3 +111,56 @@ def test_fullstack_042_committed_audit_verified_external_evidence():
         "median_elapsed_seconds"
     ] == 25.183
     assert audit["median_final_source"]["parley"]["o200k_base_tokens"] == 672.0
+
+
+def test_fullstack_042_report_preserves_gate_and_claim_boundary():
+    report = json.loads(REPORT.read_text(encoding="utf-8"))
+
+    assert report["surface"] == "report"
+    assert report["snapshot"]["status"] == "ready"
+    assert report["manifest"]["title"] == (
+        "Independent Full-Stack Agent Study — Iteration 042"
+    )
+    datasets = report["snapshot"]["datasets"]
+    assert len(datasets["languages"]) == 4
+    assert len(datasets["configurations"]) == 8
+    assert len(datasets["configuration_efficiency"]) == 4
+    assert [row["result"] for row in datasets["gates"]] == [
+        "PASS", "PASS", "PASS", "PASS", "FAIL", "PASS"
+    ]
+    assert datasets["headline"][0] == {
+        "conditions_passed": 5,
+        "conditions_total": 6,
+        "hidden_assignments_passed": 96,
+        "hidden_assignments_total": 96,
+        "parley_first_checks": 24,
+        "parley_first_check_total": 24,
+        "token_advantage_percent": 0.9493,
+        "overall_elapsed_advantage_percent": 8.4325,
+        "terra_elapsed_gap_percent": 8.8637,
+    }
+    charts = {chart["id"]: chart for chart in report["manifest"]["charts"]}
+    assert charts["configuration_elapsed_chart"]["dataset"] == (
+        "configuration_efficiency"
+    )
+    claim = next(
+        block for block in report["manifest"]["blocks"]
+        if block["id"] == "claim_boundary"
+    )
+    assert "does **not** establish" in claim["body"]
+    assert "neither universal language superiority" in claim["body"]
+    assert "terra-medium elapsed parity failed" in claim["body"]
+
+
+def test_fullstack_042_report_builder_is_deterministic():
+    before = sha256(REPORT)
+    completed = subprocess.run(
+        [sys.executable, str(BENCHMARKS / "reports/build_042_report.py")],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert sha256(REPORT) == before
