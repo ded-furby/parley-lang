@@ -256,9 +256,18 @@ def test_fullstack_041_protocol_preregisters_matrix_gate_and_scratch_boundary():
     scratch = protocol["scratch_space_control"]
 
     assert protocol["schema_version"] == 1
-    assert protocol["protocol_revision"] == 1
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "041"
-    assert "execution_freeze" not in protocol
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "e91090187dae1c19213051f4816c8dbf6aa0406f"
+    )
+    assert len(execution["files"]) == 19
+    for item in execution["files"]:
+        assert hashlib.sha256((REPO / item["file"]).read_bytes()).hexdigest() == (
+            item["sha256"]
+        )
     assert product["parley_version"] == "parley 0.5.2"
     assert product["corpus_commit"] == (
         "16af92c5a02b1c77e50ad0b2253e8556794b508c"

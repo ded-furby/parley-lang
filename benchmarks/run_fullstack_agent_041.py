@@ -33,6 +33,7 @@ try:
     from .fullstack_agent_041_guard import DomainGuard
     from .scratch_space import (
         ScratchBudget,
+        ScratchCapacityError,
         cleanup_finished_workspace,
         preflight_scratch_space,
     )
@@ -50,6 +51,7 @@ except ImportError:
     from fullstack_agent_041_guard import DomainGuard
     from scratch_space import (
         ScratchBudget,
+        ScratchCapacityError,
         cleanup_finished_workspace,
         preflight_scratch_space,
     )
@@ -1136,6 +1138,22 @@ def cleanup_path(journal_root: Path, identifier: str) -> Path:
     return journal_root / f"{identifier}.cleanup.json"
 
 
+def directory_size_bytes(root: Path) -> int:
+    """Measure retained regular-file bytes without following symlinks."""
+
+    total = 0
+    for current_root, directory_names, file_names in os.walk(root, followlinks=False):
+        current = Path(current_root)
+        directory_names[:] = [
+            name for name in directory_names if not (current / name).is_symlink()
+        ]
+        for name in file_names:
+            path = current / name
+            if not path.is_symlink():
+                total += path.stat().st_size
+    return total
+
+
 def _cell_workspace_candidates(cell: dict[str, Any], work_root: Path) -> list[Path]:
     prefix = (
         f"041-{cell['task_id']}-{cell['language']}-"
@@ -1159,7 +1177,7 @@ def ensure_cleanup_record(
         record = json.loads(path.read_text(encoding="utf-8"))
         if (
             record.get("cell_id") != cell["cell_id"]
-            or record.get("status") not in {"removed", "not_created"}
+            or record.get("status") not in {"removed", "not_created", "failed"}
             or record.get("finished_record") != str(finished.resolve())
         ):
             raise RuntimeError(f"invalid cleanup evidence: {path}")
@@ -1168,6 +1186,8 @@ def ensure_cleanup_record(
             raise RuntimeError(f"cleaned workspace still exists: {workdir}")
         if record["status"] == "not_created" and workdir:
             raise RuntimeError(f"cleanup claims no workspace for {workdir}")
+        if record["status"] == "failed" and not record.get("error"):
+            raise RuntimeError(f"cleanup failure lacks an error: {path}")
         return record
     if path.exists():
         raise RuntimeError(f"cleanup evidence is not a regular file: {path}")
@@ -1177,13 +1197,27 @@ def ensure_cleanup_record(
             raise RuntimeError(
                 f"finished workspace disappeared without cleanup evidence: {workdir}"
             )
-        record = cleanup_finished_workspace(work_root, Path(workdir), finished)
+        try:
+            workspace_bytes = directory_size_bytes(Path(workdir))
+            record = cleanup_finished_workspace(work_root, Path(workdir), finished)
+            record["workspace_bytes"] = workspace_bytes
+        except Exception as exc:
+            record = {
+                "schema_version": 1,
+                "status": "failed",
+                "work_root": str(work_root.resolve()),
+                "workspace": str(Path(workdir).resolve()),
+                "workspace_bytes": locals().get("workspace_bytes", 0),
+                "finished_record": str(finished.resolve()),
+                "error": repr(exc),
+            }
     else:
         record = {
             "schema_version": 1,
             "status": "not_created",
             "work_root": str(work_root.resolve()),
             "workspace": None,
+            "workspace_bytes": 0,
             "finished_record": str(finished.resolve()),
         }
     record["cell_id"] = cell["cell_id"]
@@ -1259,6 +1293,7 @@ def execute_journaled_cell(
             "schema_version": 1,
             "experiment_id": "041",
             "status": "started",
+            "agent_session_started": True,
             "recorded_at": utc_now(),
             "cell": {
                 key: cell[key]
@@ -1289,6 +1324,7 @@ def execute_journaled_cell(
         if len(candidates) == 1:
             row["workdir"] = str(candidates[0])
     row["journal_attempt"] = 1
+    row["agent_session_started"] = True
     atomic_write_json(
         finished_path,
         {
@@ -1299,12 +1335,16 @@ def execute_journaled_cell(
             "result": row,
         },
     )
-    ensure_cleanup_record(
+    cleanup = ensure_cleanup_record(
         cell,
         row,
         journal_root=journal_root,
         work_root=work_root,
     )
+    if cleanup["status"] == "failed":
+        raise RuntimeError(
+            f"workspace cleanup failed for {cell['cell_id']}: {cleanup['error']}"
+        )
     return row
 
 
@@ -1331,7 +1371,7 @@ def initialize_journal(
             f"{identifier}.finished.json",
             f"{identifier}.cleanup.json",
         )
-    } | {"run_manifest.json"}
+    } | {"run_manifest.json", "run_failure.json"}
     unknown = sorted(path.name for path in journal_root.glob("*.json") if path.name not in expected_names)
     if unknown:
         raise RuntimeError(f"journal contains unknown records: {unknown}")
@@ -1400,6 +1440,7 @@ def initialize_journal(
                 interrupted_before_completion=True,
             )
             row["journal_attempt"] = 1
+            row["agent_session_started"] = True
             atomic_write_json(
                 finished_path,
                 {
@@ -1429,6 +1470,7 @@ def ensure_run_manifest(
     identity: dict[str, Any],
     *,
     resume: bool,
+    scratch_preflight: dict[str, Any],
 ) -> Path:
     path = journal_root / "run_manifest.json"
     if resume:
@@ -1437,6 +1479,9 @@ def ensure_run_manifest(
         existing = json.loads(path.read_text(encoding="utf-8"))
         if existing.get("identity") != identity:
             raise RuntimeError("resume environment differs from the frozen run manifest")
+        initial = existing.get("initial_scratch_preflight", {})
+        if initial.get("status") != "pass":
+            raise RuntimeError("run manifest lacks a passing initial scratch preflight")
     else:
         if path.exists():
             raise RuntimeError(f"fresh run refuses existing manifest: {path}")
@@ -1447,9 +1492,121 @@ def ensure_run_manifest(
                 "experiment_id": "041",
                 "created_at": utc_now(),
                 "identity": identity,
+                "initial_scratch_preflight": scratch_preflight,
             },
         )
     return path
+
+
+def record_run_failure(
+    journal_root: Path,
+    *,
+    category: str,
+    error: str,
+    evidence: dict[str, Any] | None = None,
+) -> Path:
+    """Persist the first run-level integrity failure without overwriting it."""
+
+    path = journal_root / "run_failure.json"
+    if path.is_file():
+        return path
+    if path.exists():
+        raise RuntimeError(f"run failure evidence is not a regular file: {path}")
+    atomic_write_json(
+        path,
+        {
+            "schema_version": 1,
+            "experiment_id": "041",
+            "recorded_at": utc_now(),
+            "category": category,
+            "error": error,
+            "evidence": evidence,
+        },
+    )
+    return path
+
+
+def seal_unstarted_cell(
+    cell: dict[str, Any],
+    *,
+    journal_root: Path,
+    work_root: Path,
+    error: str,
+) -> dict[str, Any]:
+    """Record a permanent failed outcome without starting an agent session."""
+
+    started, finished = journal_paths(journal_root, cell["cell_id"])
+    if started.exists() or finished.exists():
+        raise RuntimeError(f"cannot seal already-journaled cell: {cell['cell_id']}")
+    cell_identity = {
+        key: cell[key]
+        for key in (
+            "cell_id",
+            "plan_index",
+            "task_id",
+            "task_kind",
+            "language",
+            "configuration_id",
+            "replicate",
+        )
+    }
+    atomic_write_json(
+        started,
+        {
+            "schema_version": 1,
+            "experiment_id": "041",
+            "status": "started",
+            "agent_session_started": False,
+            "recorded_at": utc_now(),
+            "cell": cell_identity,
+        },
+    )
+    row = failure_row(cell, error)
+    row["journal_attempt"] = 1
+    row["agent_session_started"] = False
+    atomic_write_json(
+        finished,
+        {
+            "schema_version": 1,
+            "experiment_id": "041",
+            "status": "finished",
+            "recorded_at": utc_now(),
+            "result": row,
+        },
+    )
+    cleanup = ensure_cleanup_record(
+        cell,
+        row,
+        journal_root=journal_root,
+        work_root=work_root,
+    )
+    if cleanup["status"] != "not_created":
+        raise RuntimeError(f"sealed cell has unexpected cleanup state: {cleanup}")
+    return row
+
+
+def scratch_snapshot(
+    work_root: Path,
+    budget: ScratchBudget,
+    *,
+    phase: str,
+) -> dict[str, Any]:
+    usage = shutil.disk_usage(work_root)
+    required = budget.required_free_bytes
+    return {
+        "schema_version": 1,
+        "phase": phase,
+        "status": "pass" if usage.free >= required else "fail",
+        "work_root": str(work_root.resolve()),
+        "max_workers": budget.max_workers,
+        "reserve_bytes": budget.reserve_bytes,
+        "per_worker_bytes": budget.per_worker_bytes,
+        "required_free_bytes": required,
+        "filesystem_total_bytes": usage.total,
+        "filesystem_used_bytes": usage.used,
+        "filesystem_free_bytes": usage.free,
+        "headroom_bytes": usage.free - required,
+    }
 
 
 def journal_manifest(plan: list[dict[str, Any]], journal_root: Path) -> list[dict[str, Any]]:
@@ -1457,6 +1614,7 @@ def journal_manifest(plan: list[dict[str, Any]], journal_root: Path) -> list[dic
     for cell in plan:
         started, finished = journal_paths(journal_root, cell["cell_id"])
         cleanup = cleanup_path(journal_root, cell["cell_id"])
+        cleanup_record = json.loads(cleanup.read_text(encoding="utf-8"))
         rows.append(
             {
                 "cell_id": cell["cell_id"],
@@ -1466,6 +1624,7 @@ def journal_manifest(plan: list[dict[str, Any]], journal_root: Path) -> list[dic
                 "finished_sha256": digest(finished),
                 "cleanup_file": str(cleanup),
                 "cleanup_sha256": digest(cleanup),
+                "cleanup": cleanup_record,
             }
         )
     return rows
@@ -1809,6 +1968,7 @@ def summarize(
         and all(row.get("command_protocol", {}).get("compliant") for row in results)
         and all(not row.get("runner_error") for row in results)
         and all(row.get("fresh_ephemeral_session") for row in results)
+        and all(row.get("agent_session_started") is True for row in results)
         and all(row.get("journal_attempt") == 1 for row in results)
         and all(row.get("agent_returncode") == 0 for row in results)
         and all(not row.get("agent_timed_out") for row in results)
@@ -2043,15 +2203,29 @@ def main(argv: list[str] | None = None) -> int:
     scratch = protocol["scratch_space_control"]
     if scratch["max_workers"] != config["max_workers"]:
         raise RuntimeError("scratch worker budget differs from frozen executor workers")
+    scratch_budget = ScratchBudget(
+        max_workers=scratch["max_workers"],
+        reserve_bytes=scratch["reserve_bytes"],
+        per_worker_bytes=scratch["per_worker_bytes"],
+    )
     scratch_preflight = preflight_scratch_space(
         work_root,
-        ScratchBudget(
-            max_workers=scratch["max_workers"],
-            reserve_bytes=scratch["reserve_bytes"],
-            per_worker_bytes=scratch["per_worker_bytes"],
-        ),
+        scratch_budget,
         evidence_roots=[args.journal_root, args.attempt_root],
     )
+    scratch_preflight["phase"] = "resume_preflight" if args.resume else "initial_preflight"
+    scratch_checks = [scratch_preflight]
+    scratch_identity = {
+        key: scratch_preflight[key]
+        for key in (
+            "work_root",
+            "evidence_roots",
+            "max_workers",
+            "reserve_bytes",
+            "per_worker_bytes",
+            "required_free_bytes",
+        )
+    }
     run_identity = {
         "protocol_sha256": digest(PROTOCOL_PATH),
         "runner_sha256": digest(Path(__file__)),
@@ -2063,7 +2237,7 @@ def main(argv: list[str] | None = None) -> int:
         "attempt_root": str(args.attempt_root.resolve()),
         "repository": repo_state,
         "execution_environment": executor,
-        "scratch_preflight": scratch_preflight,
+        "scratch_control": scratch_identity,
         "plan_cell_ids": [cell["cell_id"] for cell in plan],
     }
     if args.resume:
@@ -2071,6 +2245,7 @@ def main(argv: list[str] | None = None) -> int:
             args.journal_root,
             run_identity,
             resume=True,
+            scratch_preflight=scratch_preflight,
         )
         results, pending = initialize_journal(
             plan, args.journal_root, resume=True, work_root=work_root
@@ -2083,29 +2258,165 @@ def main(argv: list[str] | None = None) -> int:
             args.journal_root,
             run_identity,
             resume=False,
+            scratch_preflight=scratch_preflight,
         )
+    manifest_payload = json.loads(run_manifest_path.read_text(encoding="utf-8"))
+    initial_scratch_preflight = manifest_payload["initial_scratch_preflight"]
+    run_failure_path = args.journal_root / "run_failure.json"
+    lifecycle_failure = ""
+    if run_failure_path.is_file():
+        previous_failure = json.loads(run_failure_path.read_text(encoding="utf-8"))
+        lifecycle_failure = previous_failure.get("error", "prior run-level integrity failure")
+    failed_cleanup_cells = [
+        row["cell_id"]
+        for row in results
+        if cleanup_path(args.journal_root, row["cell_id"]).is_file()
+        and json.loads(
+            cleanup_path(args.journal_root, row["cell_id"]).read_text(encoding="utf-8")
+        ).get("status")
+        == "failed"
+    ]
+    if failed_cleanup_cells and not lifecycle_failure:
+        lifecycle_failure = f"prior cleanup failure for cells: {failed_cleanup_cells}"
+        run_failure_path = record_run_failure(
+            args.journal_root,
+            category="cell_lifecycle",
+            error=lifecycle_failure,
+            evidence={"cell_ids": failed_cleanup_cells},
+        )
+
+    unscheduled = list(pending)
     with concurrent.futures.ThreadPoolExecutor(max_workers=config["max_workers"]) as pool:
-        futures = {
-            pool.submit(
-                execute_journaled_cell,
-                cell,
-                journal_root=args.journal_root,
-                codex_command=args.codex_command,
-                parley_command=args.parley_command,
-                work_root=work_root,
-                attempt_root=args.attempt_root,
-                timeout=config["timeout_seconds"],
-            ): cell
-            for cell in pending
-        }
-        for future in concurrent.futures.as_completed(futures):
-            row = future.result()
-            results.append(row)
-            print(
-                f"completed {row['task_id']} {row['language']} {row['configuration_id']} "
-                f"r{row['replicate']}: hidden={row.get('hidden_success', False)}",
-                flush=True,
+        futures: dict[concurrent.futures.Future[dict[str, Any]], dict[str, Any]] = {}
+
+        def submit_available(limit: int) -> None:
+            for _ in range(min(limit, len(unscheduled))):
+                cell = unscheduled.pop(0)
+                future = pool.submit(
+                    execute_journaled_cell,
+                    cell,
+                    journal_root=args.journal_root,
+                    codex_command=args.codex_command,
+                    parley_command=args.parley_command,
+                    work_root=work_root,
+                    attempt_root=args.attempt_root,
+                    timeout=config["timeout_seconds"],
+                )
+                futures[future] = cell
+
+        if not lifecycle_failure:
+            submit_available(config["max_workers"])
+        while futures:
+            done, _ = concurrent.futures.wait(
+                futures,
+                return_when=concurrent.futures.FIRST_COMPLETED,
             )
+            completed_batch: list[dict[str, Any]] = []
+            for future in sorted(done, key=lambda item: futures[item]["plan_index"]):
+                cell = futures.pop(future)
+                try:
+                    row = future.result()
+                except Exception as exc:
+                    started, finished = journal_paths(args.journal_root, cell["cell_id"])
+                    if not finished.is_file():
+                        agent_session_was_started = started.is_file()
+                        if not agent_session_was_started:
+                            atomic_write_json(
+                                started,
+                                {
+                                    "schema_version": 1,
+                                    "experiment_id": "041",
+                                    "status": "started",
+                                    "agent_session_started": False,
+                                    "recorded_at": utc_now(),
+                                    "cell": {
+                                        key: cell[key]
+                                        for key in (
+                                            "cell_id",
+                                            "plan_index",
+                                            "task_id",
+                                            "task_kind",
+                                            "language",
+                                            "configuration_id",
+                                            "replicate",
+                                        )
+                                    },
+                                },
+                            )
+                        row = failure_row(cell, repr(exc))
+                        row["journal_attempt"] = 1
+                        row["agent_session_started"] = agent_session_was_started
+                        atomic_write_json(
+                            finished,
+                            {
+                                "schema_version": 1,
+                                "experiment_id": "041",
+                                "status": "finished",
+                                "recorded_at": utc_now(),
+                                "result": row,
+                            },
+                        )
+                        ensure_cleanup_record(
+                            cell,
+                            row,
+                            journal_root=args.journal_root,
+                            work_root=work_root,
+                        )
+                    else:
+                        row = json.loads(finished.read_text(encoding="utf-8"))["result"]
+                    lifecycle_failure = lifecycle_failure or repr(exc)
+                    run_failure_path = record_run_failure(
+                        args.journal_root,
+                        category="cell_lifecycle",
+                        error=lifecycle_failure,
+                        evidence={"cell_id": cell["cell_id"]},
+                    )
+                completed_batch.append(row)
+            for row in completed_batch:
+                results.append(row)
+                print(
+                    f"completed {row['task_id']} {row['language']} {row['configuration_id']} "
+                    f"r{row['replicate']}: hidden={row.get('hidden_success', False)}",
+                    flush=True,
+                )
+            if not lifecycle_failure and unscheduled:
+                try:
+                    renewed = preflight_scratch_space(
+                        work_root,
+                        scratch_budget,
+                        evidence_roots=[args.journal_root, args.attempt_root],
+                    )
+                    renewed["phase"] = "renewed_before_scheduling"
+                    scratch_checks.append(renewed)
+                except ScratchCapacityError as exc:
+                    failed_check = scratch_snapshot(
+                        work_root,
+                        scratch_budget,
+                        phase="renewed_before_scheduling",
+                    )
+                    scratch_checks.append(failed_check)
+                    lifecycle_failure = repr(exc)
+                    run_failure_path = record_run_failure(
+                        args.journal_root,
+                        category="scratch_capacity",
+                        error=lifecycle_failure,
+                        evidence=failed_check,
+                    )
+            if not lifecycle_failure:
+                submit_available(len(completed_batch))
+
+    if lifecycle_failure:
+        halt_error = f"agent session not started after run-level integrity failure: {lifecycle_failure}"
+        for cell in unscheduled:
+            results.append(
+                seal_unstarted_cell(
+                    cell,
+                    journal_root=args.journal_root,
+                    work_root=work_root,
+                    error=halt_error,
+                )
+            )
+        unscheduled.clear()
     results.sort(key=lambda row: int(row["plan_index"]))
     if len(results) != len(plan) or len({row["cell_id"] for row in results}) != len(plan):
         raise RuntimeError("journal did not produce exactly one result for every frozen cell")
@@ -2115,13 +2426,29 @@ def main(argv: list[str] | None = None) -> int:
         load_provenance(args.provenance, args.parley_command)
     except Exception as exc:
         provenance_after_error = repr(exc)
+    journal = journal_manifest(plan, args.journal_root)
+    cleanup_records = [entry["cleanup"] for entry in journal]
+    scratch_final = scratch_snapshot(work_root, scratch_budget, phase="final")
+    scratch_integrity_ok = (
+        not lifecycle_failure
+        and all(check["status"] == "pass" for check in scratch_checks)
+        and scratch_final["status"] == "pass"
+        and all(record["status"] in {"removed", "not_created"} for record in cleanup_records)
+    )
     execution_context_ok = (
         repo_state_after["commit"] == repo_state["commit"]
         and repo_state_after["tree"] == repo_state["tree"]
         and repo_state_after["branch"] == repo_state["branch"]
         and not repo_state_after["status_porcelain"]
         and not provenance_after_error
+        and scratch_integrity_ok
     )
+    run_failure_payload = (
+        json.loads(run_failure_path.read_text(encoding="utf-8"))
+        if run_failure_path.is_file()
+        else None
+    )
+    workspace_sizes = [int(record.get("workspace_bytes", 0)) for record in cleanup_records]
     report = {
         "schema_version": 1,
         "experiment_id": "041",
@@ -2140,12 +2467,29 @@ def main(argv: list[str] | None = None) -> int:
         "repository": repo_state,
         "repository_after": repo_state_after,
         "execution_environment": executor,
-        "scratch_preflight": scratch_preflight,
+        "scratch_preflight": initial_scratch_preflight,
+        "scratch_capacity_checks": scratch_checks,
+        "scratch_final": scratch_final,
+        "scratch_summary": {
+            "integrity_ok": scratch_integrity_ok,
+            "cleanup_records": len(cleanup_records),
+            "cleanup_failures": sum(record["status"] == "failed" for record in cleanup_records),
+            "peak_cell_workspace_bytes": max(workspace_sizes, default=0),
+            "peak_per_worker_workspace_bytes": max(workspace_sizes, default=0),
+            "retained_workspace_bytes_after_cleanup": sum(
+                size
+                for size, record in zip(workspace_sizes, cleanup_records, strict=True)
+                if record["status"] == "failed"
+            ),
+        },
         "journal_root": str(args.journal_root.resolve()),
         "attempt_root": str(args.attempt_root.resolve()),
         "run_manifest_file": str(run_manifest_path.resolve()),
         "run_manifest_sha256": digest(run_manifest_path),
-        "journal": journal_manifest(plan, args.journal_root),
+        "run_failure_file": str(run_failure_path.resolve()) if run_failure_payload else None,
+        "run_failure_sha256": digest(run_failure_path) if run_failure_payload else None,
+        "run_failure": run_failure_payload,
+        "journal": journal,
         "plan": [
             {
                 key: cell[key]

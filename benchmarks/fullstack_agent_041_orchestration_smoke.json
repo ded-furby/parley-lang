@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "observatory_schedule_build",
   "language": "python",
-  "protocol_sha256": "611d8dd47c60aa17698547becdb05af5254b469da049d2baef1c70f2043f1d5d",
+  "protocol_sha256": "421aed5531ac0d6b40eab332282eac7d91c635b5022e351b819da2fe502cd655",
   "provenance_sha256": "44a47a137259fc7da1e166b69c7a9fe77ec510190adc9a67ecc9c1689048ac48",
   "commands": [
     {

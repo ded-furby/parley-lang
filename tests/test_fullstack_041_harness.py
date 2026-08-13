@@ -13,6 +13,7 @@ from benchmarks.run_fullstack_agent_041 import (
     build_plan,
     command_protocol,
     ensure_cleanup_record,
+    ensure_run_manifest,
     journal_paths,
     validate_corpus,
 )
@@ -137,6 +138,7 @@ def test_fullstack_041_finished_journal_precedes_bounded_cleanup(tmp_path):
     )
 
     assert record["status"] == "removed"
+    assert record["workspace_bytes"] == 0
     assert finished.is_file()
     assert not workspace.exists()
     assert ensure_cleanup_record(
@@ -145,3 +147,61 @@ def test_fullstack_041_finished_journal_precedes_bounded_cleanup(tmp_path):
         journal_root=journals,
         work_root=work,
     ) == record
+
+
+def test_fullstack_041_cleanup_failure_is_immutable_evidence(tmp_path):
+    work = tmp_path / "work"
+    journals = tmp_path / "journals"
+    workspace = work / "nested" / "cell-workspace"
+    workspace.mkdir(parents=True)
+    (workspace / "retained.txt").write_text("retained")
+    journals.mkdir()
+    cell = {"cell_id": "cell-002"}
+    row = {"cell_id": "cell-002", "workdir": str(workspace)}
+    _, finished = journal_paths(journals, cell["cell_id"])
+    finished.write_text(json.dumps({"status": "finished", "result": row}))
+
+    record = ensure_cleanup_record(
+        cell,
+        row,
+        journal_root=journals,
+        work_root=work,
+    )
+
+    assert record["status"] == "failed"
+    assert record["workspace_bytes"] == len("retained")
+    assert workspace.is_dir()
+    assert ensure_cleanup_record(
+        cell,
+        row,
+        journal_root=journals,
+        work_root=work,
+    ) == record
+
+
+def test_fullstack_041_resume_identity_excludes_observed_free_space(tmp_path):
+    journals = tmp_path / "journals"
+    journals.mkdir()
+    identity = {
+        "protocol_sha256": "protocol",
+        "scratch_control": {
+            "work_root": "/tmp/work",
+            "required_free_bytes": 16,
+        },
+    }
+    initial = {"status": "pass", "filesystem_free_bytes": 32}
+    resumed = {"status": "pass", "filesystem_free_bytes": 24}
+
+    path = ensure_run_manifest(
+        journals,
+        identity,
+        resume=False,
+        scratch_preflight=initial,
+    )
+    assert ensure_run_manifest(
+        journals,
+        identity,
+        resume=True,
+        scratch_preflight=resumed,
+    ) == path
+    assert json.loads(path.read_text())["initial_scratch_preflight"] == initial
