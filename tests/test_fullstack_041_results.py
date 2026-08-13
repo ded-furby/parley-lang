@@ -13,6 +13,7 @@ REPORT = (
     BENCHMARKS
     / "reports/041-independent-fullstack-study-gate-not-met.artifact.json"
 )
+ATTRIBUTION = BENCHMARKS / "fullstack_agent_041_token_attribution.json"
 
 
 def sha256(path: Path) -> str:
@@ -142,3 +143,38 @@ def test_fullstack_041_report_builder_is_deterministic():
 
     assert completed.returncode == 0, completed.stderr
     assert sha256(REPORT) == before
+
+
+def test_fullstack_041_token_attribution_uses_all_pairs_and_preserves_boundary(
+    tmp_path,
+):
+    output = tmp_path / "attribution.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(BENCHMARKS / "analyze_fullstack_agent_041_tokens.py"),
+            "--output",
+            str(output),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ATTRIBUTION.read_bytes()
+    attribution = json.loads(output.read_text())
+    assert len(attribution["matched_pairs"]) == 24
+    assert attribution["paired_parley_minus_python"]["input_tokens"]["median"] == 3309.0
+    assert attribution["paired_parley_minus_python"]["output_tokens"]["median"] == -254.0
+    assert attribution["frozen_prompt_difference"][
+        "constant_extra_prompt_o200k_tokens"
+    ] == 1154
+    assert attribution["counterfactual_diagnostic"][
+        "three_prompt_repetitions_removed_parley_median"
+    ] == 60103.5
+    assert "not measured alternative outcomes" in attribution[
+        "counterfactual_diagnostic"
+    ]["interpretation"]
+    assert "remains gate-not-met" in attribution["claim_boundary"]

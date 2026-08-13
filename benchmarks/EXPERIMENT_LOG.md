@@ -4250,3 +4250,46 @@ The largest retained clean-room reference or seed workspace was approximately
 size, in addition to the independent 8 GiB host reserve. No measured session
 exists. Next: commit this harness, then create a revision-2 protocol that binds
 every transitive file and the zero-session validation/smoke evidence.
+
+### 041 valid measured matrix — five of six gates pass
+
+- Completed: 2026-08-13
+- Measurement commit: `d4bd76fbe14674804e81aeb4b50cefdd29b0e583`
+- Raw artifact: `benchmarks/fullstack_agent_041_raw.json`
+- Raw SHA-256:
+  `37c27539e9003a7a28bc82b58bdc70fd9f0538a1dd5dc0ab6aa5ff6a6ffff65d`
+- Audit SHA-256:
+  `f781ea8a7afb4cc7e7e3409a67036107db80e80fe43649084512d417ccb396e6`
+
+All 96 cells completed with unique threads, journals, attempt evidence, and
+post-evidence cleanup. Ninety-three capacity checks passed, all 290 exact-build
+boundaries were hash-stable, and no run-level or cleanup failure occurred. All
+four language arms passed 24/24 hidden assignments and 12/12 exact-root
+maintenance cells. Parley, TypeScript, and Rust passed 24/24 first checks;
+Python passed 23/24 after one BigInt/Number browser repair.
+
+Execution integrity, correctness, first check, elapsed, and maintainability
+passed. Tokens failed: Parley's 63,565.5 median was 4.9091% above Python's
+60,591 and remained higher in both model strata. The overall all-six gate is
+therefore false. Preserve 041 unchanged; no same-corpus tuning or rerun.
+
+### Post-041 complete-token attribution
+
+- Analysis: `benchmarks/fullstack_agent_041_token_attribution.json`
+- Matched population: all 24 Parley/Python task/configuration/replicate pairs
+- Exclusions: none
+
+The median paired Parley-minus-Python total difference is +3,028.5 tokens and
+the input difference is +3,309. Parley uses 254 fewer output tokens and 73.5
+fewer rough edit tokens at the paired median; it is lower on both in all 24
+pairs. The rendered Parley prompt is exactly 4,270 characters / 1,154
+`o200k_base` tokens larger for every task because the 4,350-byte core+web
+reference replaces Python's two-line stack note.
+
+Subtracting that fixed prompt delta three times yields a descriptive 60,103.5
+Parley median, but this is only an arithmetic diagnostic and does not change
+the frozen result. Decision: the highest-priority generic target is a compact,
+scaffold-aware web reference that retains total numeric conversions, pure
+shared logic, smallest-owner repair, and scalar browser constraints while
+omitting syntax already printed by the scaffold. Commit and validate that
+context before any successor task population exists.
