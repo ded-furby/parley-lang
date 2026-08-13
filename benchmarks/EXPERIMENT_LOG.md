@@ -4583,3 +4583,23 @@ scaffold, reference implementation, comparison protocol, threshold, runner
 change, or measured session. Next: commit the semantics-only population, then
 preregister the balanced matrix and exact execution controls before building
 the harness.
+
+### 043 balanced v0.5.4 protocol preregistered
+
+- Corpus commit: `b5d2fc4b23dbd0716f4e09ab4472372f1d7dbf01`
+- Protocol: `benchmarks/fullstack_agent_043_protocol.json`
+- Protocol SHA-256:
+  `4027a144f10e346a1505c55c30fb3490c48c5a81ab41d042a2ca2a24d0b14642`
+- Frozen product: v0.5.4 at
+  `bf0f85aa33dbd6d52c17260d85a04155d11518c2`
+- Matrix: four tasks × four languages × two model configurations × three
+  replicates = 96 fresh sessions
+
+The protocol binds the token-winning 222-token scaffold-aware context and the
+accepted 31.5904% cold-build product result without treating that product
+benchmark as an agent outcome. The language, model, reasoning, replicate,
+public/hidden case, exact-build, parent-owned browser/HTTP, immutable journal,
+scratch, six-condition gate, exclusion, and no-rerun rules remain as strict as
+042. No 043 scaffold, reference implementation, runner, or measured session
+exists. Next: commit the preregistration, then implement and clean-room validate
+the 16 stack/task cells before a final zero-session execution freeze.
