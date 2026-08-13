@@ -4693,3 +4693,25 @@ explicitly rejects universal-superiority conclusions.
 Next: preserve the measured corpus and results unchanged, freeze a second
 generic cold-build study on unseen fixtures, and improve only mechanisms that
 replicate outside 043.
+
+### Cold web-build study 002 frozen baseline
+
+- Protocol and harness commit: `3772eaa0a485f3c56334837c2459499d2de7d8bc`
+- Protocol: `benchmarks/WEB_BUILD_LATENCY_002.md`
+- Baseline: `benchmarks/web_build_latency_002_baseline.json`
+- Baseline SHA-256:
+  `b6c951d84f1754f0d7fa640379accbdf1e2dccf2a3af6c333a354d0080e8f62b`
+
+Four new non-043 fixtures crossed enum/optional GET, typed POST plus browser,
+combined GET/POST/browser, and explicit core-JSON control surfaces. Every cell
+started with a fresh target and all 16 v0.5.4 builds passed without exclusion
+or rerun. The three primary fixture medians were 2.512234, 2.725720, and
+2.739210 seconds, producing the frozen 2.725720-second aggregate. The explicit
+JSON control median was 3.869316 seconds.
+
+The candidate threshold is at most 2.180576 seconds for the primary aggregate,
+with no fixture more than 5% slower, full regression success, and no
+unjustified median artifact-size increase above 25%. This is a local product
+benchmark, not a 043 reinterpretation or universal-performance claim. Next:
+attribute the generic dependency/build phases and implement against this frozen
+population only.

@@ -69,3 +69,18 @@ committed and a new agent corpus is independently frozen.
 
 Next: commit this protocol and harness, measure and publish the v0.5.4 baseline
 unchanged, then diagnose or implement only generic mechanisms outside 043.
+
+## Frozen v0.5.4 baseline
+
+The 16 measured builds at protocol commit `3772eaa` all passed. The primary
+fixture medians were 2.512234 seconds for `depot_overview`, 2.725720 for
+`orchard_batch`, and 2.739210 for `weather_dispatch`; their preregistered median
+was **2.725720 seconds**. The derive-backed `explicit_json_control` median was
+3.869316 seconds. Median native-server sizes ranged from 441,232 to 510,384
+bytes, while the two WASM artifacts were 1,417 and 1,436 bytes.
+
+Canonical baseline: `web_build_latency_002_baseline.json`; SHA-256:
+`b6c951d84f1754f0d7fa640379accbdf1e2dccf2a3af6c333a354d0080e8f62b`.
+This result fixes the candidate's 20% target at **2.180576 seconds or lower**
+for the median of primary fixture medians, in addition to the per-fixture
+regression, correctness, and size gates above.
