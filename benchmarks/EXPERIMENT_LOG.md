@@ -5047,3 +5047,19 @@ before implementation; the candidate requires at least 20% improvement in the
 primary median of fixture medians, at most 5% regression for every fixture,
 bounded sizes, all 16 cells, and the complete regression suite. This local
 product benchmark cannot revise 046 or establish universal superiority.
+
+### Web-build backend 003 baseline frozen
+
+- Protocol commit:
+  `d04acec70ffbed84381cb555652ca6e6eac2926d`
+- Baseline: `benchmarks/web_build_backend_003_baseline.json`
+- Baseline SHA-256:
+  `5588e490c22c74d5a9e9be8751438ea645341433d264b723b39594acc1dfb9f0`
+- Primary median of fixture medians: 0.811446 seconds
+
+All 16 untouched v0.5.6 cells passed without exclusion or rerun. The dynamic
+native-only, dynamic browser, and static browser medians were 0.696614,
+0.877070, and 0.811446 seconds. The explicit-JSON control median was 3.715876
+seconds, retaining its 9.573492-second first cell. The candidate target is now
+fixed at 0.649157 seconds or lower, with the original per-fixture, size,
+correctness, and full-regression conditions unchanged.

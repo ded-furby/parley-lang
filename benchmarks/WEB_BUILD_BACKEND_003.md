@@ -69,3 +69,26 @@ committed and a new disjoint corpus is frozen.
 
 Next: commit this zero-measurement protocol and harness, then execute and
 publish the untouched v0.5.6 baseline exactly once.
+
+## Frozen v0.5.6 baseline
+
+The 16 measured builds at protocol commit
+`d04acec70ffbed84381cb555652ca6e6eac2926d` all passed. The primary fixture
+medians were 0.696614 seconds for `harbor_admission`, 0.877070 for
+`forest_inventory`, and 0.811446 for `glacier_manifest`; their preregistered
+median was **0.811446 seconds**. The dependency-backed `manual_json_control`
+median was 3.715876 seconds. Its retained first cell took 9.573492 seconds; it
+was not excluded or rerun.
+
+Median native-server sizes ranged from 440,704 to 493,888 bytes. The two WASM
+artifacts were 1,181 and 1,306 bytes. Dynamic and static response modes were
+present in every build manifest exactly as frozen.
+
+Canonical baseline: `web_build_backend_003_baseline.json`; SHA-256:
+`5588e490c22c74d5a9e9be8751438ea645341433d264b723b39594acc1dfb9f0`.
+This fixes the candidate's 20% target at **0.649157 seconds or lower** for the
+median of primary fixture medians, in addition to the per-fixture regression,
+correctness, and size gates.
+
+Next: commit this immutable baseline, then profile the generic build backend
+without changing the frozen fixture population or acceptance rule.

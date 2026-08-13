@@ -1,3 +1,4 @@
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ from parley.web import check_browser, check_web, load_project
 
 REPO = Path(__file__).resolve().parents[1]
 HARNESS = REPO / "benchmarks/measure_web_build_backend_003.py"
+BASELINE = REPO / "benchmarks/web_build_backend_003_baseline.json"
 
 
 def load_harness():
@@ -84,3 +86,26 @@ def test_web_build_backend_003_gate_is_frozen():
     assert '"maximum_fixture_regression_percent": 5.0' in source
     assert '"maximum_unjustified_size_increase_percent": 25.0' in source
     assert "cannot revise study 046" in source
+
+
+def test_web_build_backend_003_baseline_is_complete_and_frozen():
+    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+    assert hashlib.sha256(BASELINE.read_bytes()).hexdigest() == (
+        "5588e490c22c74d5a9e9be8751438ea645341433d264b723b39594acc1dfb9f0"
+    )
+    assert baseline["study_id"] == "web-build-backend-003"
+    assert baseline["toolchain"]["parley"] == "parley 0.5.6"
+    assert baseline["toolchain"]["git_commit"] == (
+        "d04acec70ffbed84381cb555652ca6e6eac2926d"
+    )
+    assert len(baseline["cells"]) == 16
+    assert all(cell["stderr"] == "" for cell in baseline["cells"])
+    assert baseline["primary_median_of_fixture_medians_seconds"] == 0.811446
+    assert baseline["by_fixture"]["manual_json_control"][
+        "median_elapsed_seconds"
+    ] == 3.715876
+    assert baseline["acceptance"] == {
+        "minimum_latency_improvement_percent": 20.0,
+        "maximum_fixture_regression_percent": 5.0,
+        "maximum_unjustified_size_increase_percent": 25.0,
+    }
