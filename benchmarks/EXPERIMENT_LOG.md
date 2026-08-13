@@ -5174,3 +5174,18 @@ before handler/body execution, and retains path-error precedence. Five- and
 six-field handlers keep unchanged raw-query behavior. Check/build metadata,
 dynamic responses, and both JSON backends are covered. This product result does
 not revise study 047 or establish universal superiority.
+
+### 048 pre-corpus compact context frozen
+
+- Context: `skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`
+- Context SHA-256:
+  `f7cadc7bfe839a5174bc1064fbed3a021ab9251386b57173bdf6e69b75ed7a92`
+- Size: 921 bytes / 217 `o200k_base` tokens
+- Product commit/tree: `8d040c55fcc4ad502bdc6449c363035a42d0dceb` /
+  `2eed6a33517c6a31311348314093aaa1ef66d2be`
+- Study-048 corpus files at product commit: none
+
+The compact card retains response controls, path captures, repeated query-map
+access, safe list lookup, comparator guidance, and repair locality within a
+225-token ceiling. It is frozen before any 048 task, case, scaffold, threshold,
+prompt, or model output exists; its static size is not comparative evidence.

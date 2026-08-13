@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiment_id": "048",
+  "phase": "pre-corpus context freeze",
+  "frozen_on": "2026-08-13",
+  "product": {
+    "version": "0.5.8",
+    "commit": "8d040c55fcc4ad502bdc6449c363035a42d0dceb",
+    "tree": "2eed6a33517c6a31311348314093aaa1ef66d2be",
+    "query_parameter_result": {
+      "file": "benchmarks/WEB_QUERY_PARAMETERS_005_RESULT.md",
+      "sha256": "79de0a0a042c88dc7d5b08d5704f1bc727030d2de27b69ece69257db9115d5c4"
+    }
+  },
+  "context": {
+    "file": "skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md",
+    "sha256": "f7cadc7bfe839a5174bc1064fbed3a021ab9251386b57173bdf6e69b75ed7a92",
+    "bytes": 921,
+    "o200k_base_tokens": 217
+  },
+  "maximum_o200k_base_tokens": 225,
+  "corpus_selected_before_freeze": false,
+  "measured_sessions_before_freeze": 0,
+  "claim_boundary": "This freezes compact v0.5.8 instructions before task selection; it does not establish session efficiency or universal superiority."
+}
