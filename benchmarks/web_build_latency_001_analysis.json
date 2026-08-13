@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "study_id": "web-build-latency-001-analysis",
+  "generated_at": "2026-08-13T02:09:30Z",
+  "baseline_sha256": "ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b",
+  "candidate_sha256": "2fca8256642b5e6e06f72b61c4b7f839b18fc13c657c6781015a4b507c726848",
+  "fixture_sha256": {
+    "status_only": "ca08cc62086d47f61c997c1061a0e38e45566393e257e7dd1704f9060853c7f7",
+    "browser_score": "6b7f9798bedd965cd3356afb70c560ace148a37a26f6b75fb02b663926ecb746",
+    "typed_post": "b5d23446683f000728faaba6117e667f0f85021da43e2c67de5223f62c4b64aa"
+  },
+  "candidate_product_file_sha256": {
+    "parley/web.py": "ee246720ed282502ddd3134aef4e47085bc3c1ab6f9c165fef164c1200ed061f",
+    "parley/cli.py": "656a7ba25e340bf0ebdf9b7c0ce8877aa03cbbad2aa6562186e587530d56b71a",
+    "parley/__init__.py": "e691d8dec7c516b5e1bee4011e0f04238d10a8fc9a2d6062586c8822913dda51",
+    "pyproject.toml": "4804d27942f9fc0eb80c993db89679dfb9d468e6fbfb4508670206efc5bc9b5a"
+  },
+  "candidate_provenance": {
+    "git_base": "26ad4eb83303afca48be3a14a232db5f8ffb1b34",
+    "parley_version": "parley 0.5.4",
+    "note": "The candidate was measured from the exact product-file hashes published with this analysis; its git field records the clean base before those product changes were committed."
+  },
+  "fixtures": {
+    "status_only": {
+      "baseline_median_elapsed_seconds": 3.543877,
+      "candidate_median_elapsed_seconds": 2.475271,
+      "latency_improvement_percent": 30.1536,
+      "baseline_median_server_bytes": 441216.0,
+      "candidate_median_server_bytes": 441232.0,
+      "server_size_change_percent": 0.0036,
+      "baseline_median_wasm_bytes": 0.0,
+      "candidate_median_wasm_bytes": 0.0,
+      "wasm_size_change_percent": 0.0
+    },
+    "browser_score": {
+      "baseline_median_elapsed_seconds": 3.855847,
+      "candidate_median_elapsed_seconds": 2.63777,
+      "latency_improvement_percent": 31.5904,
+      "baseline_median_server_bytes": 441216.0,
+      "candidate_median_server_bytes": 441232.0,
+      "server_size_change_percent": 0.0036,
+      "baseline_median_wasm_bytes": 1103.0,
+      "candidate_median_wasm_bytes": 1103.0,
+      "wasm_size_change_percent": 0.0
+    },
+    "typed_post": {
+      "baseline_median_elapsed_seconds": 3.933453,
+      "candidate_median_elapsed_seconds": 2.806763,
+      "latency_improvement_percent": 28.6438,
+      "baseline_median_server_bytes": 493696.0,
+      "candidate_median_server_bytes": 493632.0,
+      "server_size_change_percent": -0.013,
+      "baseline_median_wasm_bytes": 1442.0,
+      "candidate_median_wasm_bytes": 1442.0,
+      "wasm_size_change_percent": 0.0
+    }
+  },
+  "overall": {
+    "baseline_median_of_fixture_medians_seconds": 3.855847,
+    "candidate_median_of_fixture_medians_seconds": 2.63777,
+    "latency_improvement_percent": 31.5904,
+    "maximum_server_size_increase_percent": 0.0036,
+    "maximum_wasm_size_increase_percent": 0.0
+  },
+  "verification": {
+    "measured_cells": 24,
+    "failed_cells": 0,
+    "regression_command": "python3 -m pytest -q",
+    "regression_tests_passed": 585,
+    "regression_tests_failed": 0,
+    "strict_json_behaviors": [
+      "unknown fields rejected",
+      "duplicate fields rejected",
+      "missing required fields rejected",
+      "wrong types rejected",
+      "missing optional fields default to nothing",
+      "unknown enum variants rejected",
+      "internal Parley JSON keeps derive backend"
+    ]
+  },
+  "acceptance": {
+    "latency_threshold_percent": 20.0,
+    "size_ceiling_percent": 25.0,
+    "latency_pass": true,
+    "size_pass": true,
+    "regression_pass": true,
+    "accepted": true
+  },
+  "finding": "Parley v0.5.4 reduced the frozen median of cold web-build fixture medians from 3.855847 to 2.63777 seconds (31.5904%) by emitting strict Serde traits directly for route-boundary records and enums. All three fixtures improved, WASM sizes were unchanged, native sizes were flat, and 585 regression tests passed.",
+  "claim_boundary": "This accepts a generic build-path product improvement on the frozen local benchmark. It does not change iteration 042, predict a future agent-study gate, or establish universal language superiority."
+}

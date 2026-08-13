@@ -4511,3 +4511,32 @@ native server Cargo build consumes approximately 3.3 seconds while the
 dependency-free browser/WASM crate takes approximately 0.16 seconds. The next
 implementation target is therefore server-side derive/dependency compilation,
 not browser code generation or the v0.5.3 agent context.
+
+### v0.5.4 cold web-build candidate accepted
+
+- Candidate: `benchmarks/web_build_latency_001_candidate.json`
+- Candidate SHA-256:
+  `2fca8256642b5e6e06f72b61c4b7f839b18fc13c657c6781015a4b507c726848`
+- Analysis: `benchmarks/web_build_latency_001_analysis.json`
+- Analysis SHA-256:
+  `380c2309102acf570eebd94140d2106bdacebea87ebbebadf2d0c103fc80ee22`
+- Full regression: 585 passed, 0 failed
+
+The candidate replaces route-boundary-only Serde derives with generated strict
+trait implementations for records and enums. That removes proc-macro2, quote,
+syn, and serde_derive from the common cold server dependency graph. Programs
+that contain explicit Parley `from json` or `as json` expressions retain the
+derive backend unchanged.
+
+All 12 candidate builds passed. The median of fixture medians fell from
+3.855847 to 2.63777 seconds, a 31.5904% improvement against the preregistered
+20% threshold. Each fixture improved by at least 28.6438%. WASM artifacts were
+byte-identical in size; the maximum native-server increase was 0.0036%. Strict
+unknown, duplicate, missing, wrong-type, optional-field, and enum behavior,
+native serving, and browser/WASM all passed.
+
+The analysis hash-binds the exact v0.5.4 product files used by the candidate;
+its result's Git field records the clean v0.5.3 base because measurement
+preceded the product publication commit. The change is accepted as a generic
+local build-path improvement. It does not retroactively change 042. Next:
+freeze v0.5.4 before selecting a new disjoint full-stack population.

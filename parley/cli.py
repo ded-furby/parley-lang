@@ -69,6 +69,7 @@ from .workflows.catalog import WORKFLOW_CATALOG
 from .web import (
     WASM_CARGO_TOML,
     WEB_CARGO_TOML,
+    WEB_CARGO_TOML_DERIVE,
     WebProject,
     WebProjectError,
     check_browser,
@@ -1687,7 +1688,11 @@ def _build_web_artifacts(project: WebProject, web, browser, *, release: bool):
     server_rust, server_linemap = render_server(web)
     server_binary = _cargo_web_artifact(
         Path(".parley-build") / "web" / key / "server",
-        WEB_CARGO_TOML,
+        (
+            WEB_CARGO_TOML_DERIVE
+            if program_uses_json(web.program)
+            else WEB_CARGO_TOML
+        ),
         server_rust,
         server_linemap,
         web.srcmap,

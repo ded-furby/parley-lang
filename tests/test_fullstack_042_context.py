@@ -4,9 +4,6 @@ from pathlib import Path
 import subprocess
 import sys
 
-import parley
-
-
 REPO = Path(__file__).resolve().parents[1]
 CONTEXT = REPO / "skill/parley/references/scaffolded-web-v0.5.3.md"
 MANIFEST = REPO / "benchmarks/fullstack_agent_042_context.json"
@@ -21,7 +18,7 @@ def test_v053_scaffolded_web_context_is_frozen_compact_and_complete():
     context = CONTEXT.read_text(encoding="utf-8")
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
-    assert parley.__version__ == "0.5.3"
+    assert manifest["parley_version"] == "0.5.3"
     assert len(context.encode()) == manifest["context_bytes"] == 892
     assert sha256(CONTEXT) == manifest["context_sha256"] == (
         "f40a1030de6b3ed75f47183dee41d1ac3185dd87b747f779dab8835d4d63e8c4"

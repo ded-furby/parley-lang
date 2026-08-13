@@ -1,6 +1,8 @@
 import hashlib
 import json
 from pathlib import Path
+import subprocess
+import sys
 
 from benchmarks import measure_web_build_latency_001 as latency
 from parley.web import check_browser, check_web, load_project
@@ -12,6 +14,9 @@ EXPECTED_FIXTURE_HASHES = {
     "typed_post": "b5d23446683f000728faaba6117e667f0f85021da43e2c67de5223f62c4b64aa",
 }
 BASELINE = latency.REPO / "benchmarks/web_build_latency_001_baseline.json"
+CANDIDATE = latency.REPO / "benchmarks/web_build_latency_001_candidate.json"
+ANALYSIS = latency.REPO / "benchmarks/web_build_latency_001_analysis.json"
+ANALYZER = latency.REPO / "benchmarks/analyze_web_build_latency_001.py"
 
 
 def test_web_build_latency_fixture_hashes_are_frozen():
@@ -56,3 +61,46 @@ def test_web_build_latency_baseline_is_complete_and_frozen():
     assert len(baseline["cells"]) == 12
     assert not any(row["stderr"] for row in baseline["cells"])
     assert baseline["median_of_fixture_medians_seconds"] == 3.855847
+
+
+def test_web_build_latency_candidate_passes_frozen_acceptance():
+    assert hashlib.sha256(CANDIDATE.read_bytes()).hexdigest() == (
+        "2fca8256642b5e6e06f72b61c4b7f839b18fc13c657c6781015a4b507c726848"
+    )
+    assert hashlib.sha256(ANALYSIS.read_bytes()).hexdigest() == (
+        "380c2309102acf570eebd94140d2106bdacebea87ebbebadf2d0c103fc80ee22"
+    )
+    candidate = json.loads(CANDIDATE.read_text(encoding="utf-8"))
+    analysis = json.loads(ANALYSIS.read_text(encoding="utf-8"))
+
+    assert candidate["toolchain"]["parley"] == "parley 0.5.4"
+    assert candidate["fixture_sha256"] == EXPECTED_FIXTURE_HASHES
+    assert len(candidate["cells"]) == 12
+    assert not any(row["stderr"] for row in candidate["cells"])
+    assert candidate["median_of_fixture_medians_seconds"] == 2.63777
+    assert analysis["overall"]["latency_improvement_percent"] == 31.5904
+    assert analysis["overall"]["maximum_server_size_increase_percent"] == 0.0036
+    assert analysis["overall"]["maximum_wasm_size_increase_percent"] == 0.0
+    assert analysis["verification"]["regression_tests_passed"] == 585
+    assert analysis["acceptance"] == {
+        "latency_threshold_percent": 20.0,
+        "size_ceiling_percent": 25.0,
+        "latency_pass": True,
+        "size_pass": True,
+        "regression_pass": True,
+        "accepted": True,
+    }
+
+
+def test_web_build_latency_analysis_is_deterministic(tmp_path):
+    output = tmp_path / "analysis.json"
+    completed = subprocess.run(
+        [sys.executable, str(ANALYZER), "--output", str(output)],
+        cwd=latency.REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ANALYSIS.read_bytes()

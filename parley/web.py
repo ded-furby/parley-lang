@@ -17,7 +17,7 @@ from typing import Iterable
 from . import ast_nodes as A
 from .checker import check_program
 from .diagnostics import Diagnostic, ParleyError
-from .emit_rust import emit_program, rust_str_lit, safe
+from .emit_rust import camel, emit_program, program_uses_json, rust_str_lit, rust_type, safe
 from .parser import SourceMap, parse_program
 
 
@@ -33,7 +33,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-serde = { version = "=1.0.229", features = ["derive"] }
+serde = "=1.0.229"
 serde_json = "=1.0.151"
 
 [profile.release]
@@ -41,6 +41,11 @@ strip = true
 # Same promise as the command target: overflow stops, never wraps.
 overflow-checks = true
 """
+
+WEB_CARGO_TOML_DERIVE = WEB_CARGO_TOML.replace(
+    'serde = "=1.0.229"',
+    'serde = { version = "=1.0.229", features = ["derive"] }',
+)
 
 WASM_CARGO_TOML = """\
 [package]
@@ -509,6 +514,134 @@ def _route_arm(checked: CheckedRoute) -> str:
         }}'''
 
 
+def _manual_serde_impls(program: A.Program) -> str:
+    """Emit strict serde traits without compiling serde's proc-macro stack.
+
+    Web projects need JSON at their typed route boundary even when the Parley
+    program itself never uses `from json` or `as json`. Those projects can use
+    ordinary trait implementations and avoid compiling syn/quote/proc-macro2
+    for every fresh Cargo target. Programs that explicitly use JSON keep the
+    derive backend so their internal expressions retain identical semantics.
+    """
+    chunks: list[str] = []
+    for record in program.records:
+        type_name = camel(record.name)
+        visitor_name = f"ParleySerdeVisitor{type_name}"
+        fields = [name for name, _field_type in record.fields]
+        field_literals = ", ".join(
+            f'"{rust_str_lit(field)}"' for field in fields
+        )
+        serialize_fields = "\n".join(
+            f'        state.serialize_field("{rust_str_lit(field)}", '
+            f'&self.{safe(field)})?;'
+            for field in fields
+        )
+        declarations = "\n".join(
+            f"                let mut parley_field_{safe(field)}: "
+            f"Option<{rust_type(field_type)}> = None;"
+            for field, field_type in record.fields
+        )
+        match_arms = "\n".join(
+            f'''                    "{rust_str_lit(field)}" => {{
+                        if parley_field_{safe(field)}.is_some() {{
+                            return Err(serde::de::Error::duplicate_field("{rust_str_lit(field)}"));
+                        }}
+                        parley_field_{safe(field)} = Some(map.next_value()?);
+                    }}'''
+            for field, _field_type in record.fields
+        )
+        required_fields = []
+        for field, field_type in record.fields:
+            variable = f"parley_field_{safe(field)}"
+            if isinstance(field_type, A.TMaybe):
+                required_fields.append(
+                    f"                let {variable} = {variable}.unwrap_or(None);"
+                )
+            else:
+                required_fields.append(
+                    f'''                let {variable} = {variable}.ok_or_else(||
+                    serde::de::Error::missing_field("{rust_str_lit(field)}"))?;'''
+                )
+        initializers = ", ".join(
+            f"{safe(field)}: parley_field_{safe(field)}" for field in fields
+        )
+        chunks.append(f'''
+impl serde::Serialize for {type_name} {{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where S: serde::Serializer {{
+        use serde::ser::SerializeStruct;
+        let mut state = serializer.serialize_struct("{type_name}", {len(fields)})?;
+{serialize_fields}
+        state.end()
+    }}
+}}
+
+impl<'de> serde::Deserialize<'de> for {type_name} {{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: serde::Deserializer<'de> {{
+        const FIELDS: &[&str] = &[{field_literals}];
+        struct {visitor_name};
+        impl<'de> serde::de::Visitor<'de> for {visitor_name} {{
+            type Value = {type_name};
+            fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {{
+                formatter.write_str("a strict {type_name} JSON object")
+            }}
+            fn visit_map<M>(self, mut map: M) -> Result<Self::Value, M::Error>
+            where M: serde::de::MapAccess<'de> {{
+{declarations}
+                while let Some(parley_key) = map.next_key::<String>()? {{
+                    match parley_key.as_str() {{
+{match_arms}
+                        _ => return Err(serde::de::Error::unknown_field(&parley_key, FIELDS)),
+                    }}
+                }}
+{chr(10).join(required_fields)}
+                Ok({type_name} {{ {initializers} }})
+            }}
+        }}
+        deserializer.deserialize_struct("{type_name}", FIELDS, {visitor_name})
+    }}
+}}
+'''.strip())
+
+    for enum in program.enums:
+        type_name = camel(enum.name)
+        variants = ", ".join(
+            f'"{rust_str_lit(variant)}"' for variant in enum.variants
+        )
+        serialize_arms = "\n".join(
+            f'            {type_name}::{camel(variant)} => "{rust_str_lit(variant)}",'
+            for variant in enum.variants
+        )
+        deserialize_arms = "\n".join(
+            f'            "{rust_str_lit(variant)}" => Ok({type_name}::{camel(variant)}),'
+            for variant in enum.variants
+        )
+        chunks.append(f'''
+impl serde::Serialize for {type_name} {{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where S: serde::Serializer {{
+        serializer.serialize_str(match self {{
+{serialize_arms}
+        }})
+    }}
+}}
+
+impl<'de> serde::Deserialize<'de> for {type_name} {{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: serde::Deserializer<'de> {{
+        const VARIANTS: &[&str] = &[{variants}];
+        let value = <String as serde::Deserialize>::deserialize(deserializer)?;
+        match value.as_str() {{
+{deserialize_arms}
+            _ => Err(serde::de::Error::unknown_variant(&value, VARIANTS)),
+        }}
+    }}
+}}
+'''.strip())
+    return "\n\n".join(chunks)
+
+
 WEB_RUNTIME = r'''
 const PARLEY_MAX_HEADER_BYTES: usize = 65_536;
 const PARLEY_MAX_BODY_BYTES: usize = __MAX_BODY__;
@@ -746,7 +879,14 @@ fn main() {
 
 
 def render_server(checked: CheckedWeb) -> tuple[str, dict[int, int]]:
-    rust, linemap = emit_program(checked.program, program_main=None, serde=True)
+    uses_program_json = program_uses_json(checked.program)
+    rust, linemap = emit_program(
+        checked.program,
+        program_main=None,
+        serde=uses_program_json,
+    )
+    if not uses_program_json:
+        rust += "\n" + _manual_serde_impls(checked.program) + "\n"
     routes = ",\n".join(_route_arm(route) for route in checked.routes)
     runtime = (WEB_RUNTIME
                .replace("__MAX_BODY__", str(checked.project.max_body_bytes))

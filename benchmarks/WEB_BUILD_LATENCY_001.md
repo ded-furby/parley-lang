@@ -50,3 +50,29 @@ bytes.
 
 Canonical baseline: `web_build_latency_001_baseline.json`; SHA-256:
 `ba295fc3395491f83dfa5e93ad6ca9fac28407dbfa0f5097ff370817010ee05b`.
+
+## Accepted v0.5.4 candidate
+
+Version 0.5.4 emits ordinary strict Serde trait implementations for records and
+enums used only at typed route boundaries. This removes Serde's
+syn/quote/proc-macro2 derive stack from the common cold native build. Programs
+that explicitly use `from json` or `as json` retain the derive backend.
+
+All 12 candidate cells passed. The fixture medians fell to 2.475271 seconds for
+`status_only`, 2.63777 for `browser_score`, and 2.806763 for `typed_post`. The
+median of fixture medians improved from 3.855847 to **2.63777 seconds**, a
+**31.5904% reduction** that clears the frozen 20% threshold. Each fixture
+improved by 28.6438–31.5904%. WASM sizes were unchanged; the largest native
+size increase was 0.0036%. The complete suite passed 585/585 tests, including
+strict unknown, duplicate, missing, wrong-type, optional-field, enum, internal
+JSON, native server, and browser/WASM paths.
+
+Canonical candidate: `web_build_latency_001_candidate.json`; SHA-256:
+`2fca8256642b5e6e06f72b61c4b7f839b18fc13c657c6781015a4b507c726848`.
+Canonical analysis: `web_build_latency_001_analysis.json`; SHA-256:
+`380c2309102acf570eebd94140d2106bdacebea87ebbebadf2d0c103fc80ee22`.
+
+The candidate was measured from the exact v0.5.4 product-file hashes recorded
+in the analysis; the result's Git field identifies their clean v0.5.3 base
+because the accepted product diff had not yet been committed. This local
+product result does not alter iteration 042 or predict a future agent outcome.

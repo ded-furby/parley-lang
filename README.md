@@ -528,6 +528,7 @@ the plan:
 - [x] evidence-backed arithmetic guidance and natural multiplication alias — v0.5.1
 - [x] total-conversion clarity and repair-locality guidance — v0.5.2
 - [x] 222-token scaffold-aware typed-web repair context — v0.5.3
+- [x] proc-macro-free strict typed-web route serialization for faster cold builds — v0.5.4
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -589,6 +590,13 @@ The complete matched-pair
 [elapsed attribution](benchmarks/FULLSTACK_AGENT_042_ELAPSED_ATTRIBUTION.md)
 isolates cold web-build latency as the next generic target without reusing 042
 for tuning.
+
+Version 0.5.4 addresses that mechanism outside the 042 corpus: strict
+route-boundary JSON now avoids Serde's proc-macro compile stack unless a program
+explicitly uses core JSON expressions. On the frozen 12-build product benchmark,
+median cold web-build latency improved 31.5904% with 585/585 regressions passing
+and essentially unchanged artifacts; see
+[benchmarks/WEB_BUILD_LATENCY_001.md](benchmarks/WEB_BUILD_LATENCY_001.md).
 
 ## Development
 

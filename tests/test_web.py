@@ -13,6 +13,8 @@ from conftest import REPO, run_cli
 from parley.cli import _safe_bundle_target
 from parley.diagnostics import ParleyError
 from parley.web import (
+    WEB_CARGO_TOML,
+    WEB_CARGO_TOML_DERIVE,
     WebProjectError,
     check_browser,
     check_web,
@@ -82,14 +84,47 @@ def test_server_generation_has_strict_json_and_bounded_http(tmp_path):
     checked = check_web(load_project(write_project(tmp_path / "app")))
     rust, _ = render_server(checked)
 
-    assert "serde::Deserialize" in rust
-    assert "#[serde(deny_unknown_fields)]" in rust
+    assert "impl serde::Serialize for RequestBody" in rust
+    assert "impl<'de> serde::Deserialize<'de> for RequestBody" in rust
+    assert "serde::de::Error::unknown_field" in rust
+    assert "serde::Serialize, serde::Deserialize" not in rust
     assert 'content_type != "application/json"' in rust
     assert "PARLEY_MAX_HEADER_BYTES" in rust
     assert "PARLEY_MAX_BODY_BYTES: usize = 4096" in rust
     assert '("POST", "/api/hello")' in rust
     assert "std::fs::canonicalize" in rust
     assert '"application/wasm"' in rust
+
+
+def test_server_manual_serde_covers_optional_fields_and_enums(tmp_path):
+    root = write_project(tmp_path / "app")
+    with (root / "main.par").open("a") as source:
+        source.write("""
+a build_mood is one of calm, urgent
+a build_note has mood as build_mood, detail as maybe text
+""")
+    rust, _ = render_server(check_web(load_project(root)))
+
+    assert "impl serde::Serialize for BuildMood" in rust
+    assert "impl<'de> serde::Deserialize<'de> for BuildMood" in rust
+    assert "serde::de::Error::unknown_variant" in rust
+    assert "Option<Option<String>>" in rust
+    assert "parley_field_detail.unwrap_or(None)" in rust
+
+
+def test_web_program_with_internal_json_keeps_derive_backend(tmp_path):
+    root = write_project(tmp_path / "app")
+    with (root / "main.par").open("a") as source:
+        source.write("""
+to encoded with value as request_body giving text:
+    give back value as json
+""")
+    rust, _ = render_server(check_web(load_project(root)))
+
+    assert "serde::Serialize, serde::Deserialize" in rust
+    assert "#[serde(deny_unknown_fields)]" in rust
+    assert 'features = ["derive"]' not in WEB_CARGO_TOML
+    assert 'features = ["derive"]' in WEB_CARGO_TOML_DERIVE
 
 
 def test_browser_generation_has_stable_scalar_abi_and_bindings(tmp_path):
@@ -220,6 +255,28 @@ def test_native_web_bundle_serves_static_and_strict_typed_json(tmp_path):
         )
         with pytest.raises(urllib.error.HTTPError) as caught:
             urllib.request.urlopen(unknown)
+        assert caught.value.code == 400
+        assert json.loads(caught.value.read())["error"] == "invalid_json"
+
+        duplicate = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/hello",
+            data=b'{"name":"Ada","name":"Grace","count":2}',
+            headers={"content-type": "application/json"},
+            method="POST",
+        )
+        with pytest.raises(urllib.error.HTTPError) as caught:
+            urllib.request.urlopen(duplicate)
+        assert caught.value.code == 400
+        assert json.loads(caught.value.read())["error"] == "invalid_json"
+
+        missing = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/hello",
+            data=b'{"name":"Ada"}',
+            headers={"content-type": "application/json"},
+            method="POST",
+        )
+        with pytest.raises(urllib.error.HTTPError) as caught:
+            urllib.request.urlopen(missing)
         assert caught.value.code == 400
         assert json.loads(caught.value.read())["error"] == "invalid_json"
 
