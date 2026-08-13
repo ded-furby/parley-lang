@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "045",
   "title": "Independent typed response-control implementation and maintenance study",
   "description": "A preregistered 96-session comparison of four unseen authenticated, validated, conflict-aware, or creation-oriented server-plus-browser assignments in Parley, Python, TypeScript, and Rust.",
@@ -164,18 +164,108 @@
     "domain_judgment": "The parent validates JSON syntax and declared JSON types but does not pre-reject negative integers or zero-capacity combinations. Those typed values must reach every language handler and receive the frozen 422 envelope."
   },
   "execution_freeze": {
-    "status": "pending post-protocol harness implementation",
+    "description": "Post-protocol response-control harness, transparent proxy, v0.5.6 compact-context integration, scratch lifecycle, and exact-build execution inputs frozen after clean-room validation and before the first measured cell; all task, case, expected status/JSON/header/browser, model, metric, threshold, gate, compiler, context, and stack semantics are unchanged.",
     "measured_sessions_before_freeze": 0,
-    "required_revision": 2,
-    "requirements": [
-      "bind every new and transitive execution file by SHA-256",
-      "validate 16 task/language reference applications in clean rooms",
-      "validate all 144 named public/hidden cases including exact custom headers",
-      "prove both route-handler maintenance roots with built negative controls",
-      "calibrate peak workspace use within the frozen scratch allowance",
-      "pass parent-owned FIFO, HTTP, custom-header, and Chromium orchestration smoke"
+    "protocol_revision_1_commit": "4aebf5f",
+    "protocol_revision_1_sha256": "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b",
+    "harness_commit": "58aaf262bffa97a28a0a23cb310de45c9fd59719",
+    "harness_tree": "6cdf3a28e43950c2e803238da298db4afb94804a",
+    "calibrated_max_workspace_bytes": 161230321,
+    "calibrated_per_worker_headroom_multiple": 13.319,
+    "parley_prompt_delta_vs_python_o200k_tokens": 298,
+    "reference_cells_passed": 16,
+    "seed_cells_built": 16,
+    "seed_cells_correct": 0,
+    "maintenance_root_boundaries_passed": 8,
+    "named_reference_case_executions": 144,
+    "files": [
+      {
+        "file": "benchmarks/run_fullstack_agent_045.py",
+        "sha256": "839f54d963d28e33a0d1fd4d287208b891dcd3b7354e8515e7375b63d06940ce"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_045_scaffolds.py",
+        "sha256": "0709335b17f6cdb2949c666af713ac6e4d60968bc2db484a8ca266d38e27014d"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_045_logic.py",
+        "sha256": "3bcb0114061e0d635f5da5a7ccc4bbb4c9f33de8bff3228da5645cfbe9ac105f"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_045_guard.py",
+        "sha256": "510c2054a517973e7b5e04f65b4f0ce9f4bc6b77acb064de7ddaecd569b19739"
+      },
+      {
+        "file": "benchmarks/prepare_fullstack_agent_045.py",
+        "sha256": "796886e8bea64954f53ecdbe9fa23faebaa16d2fb658b16ee199cdde361d7ef3"
+      },
+      {
+        "file": "benchmarks/smoke_fullstack_agent_045.py",
+        "sha256": "8ce5948f275fcbd7093626a36cb200ce78ef681b3d3ad5a340796cd5a5d78e06"
+      },
+      {
+        "file": "benchmarks/agent_check_transport.py",
+        "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"
+      },
+      {
+        "file": "benchmarks/agent_runner.py",
+        "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"
+      },
+      {
+        "file": "benchmarks/exact_build_freeze.py",
+        "sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9"
+      },
+      {
+        "file": "benchmarks/scratch_space.py",
+        "sha256": "29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d"
+      },
+      {
+        "file": "benchmarks/fullstack_045/rust/Cargo.toml",
+        "sha256": "8d5e3cb03aeeb01287e7fb0cc9377af7fc2e9b919c7786a3ae7ce2135a35ed51"
+      },
+      {
+        "file": "benchmarks/fullstack_045/rust/Cargo.lock",
+        "sha256": "936f5ae705f5be2b423523db58cd23e65ea4ca34b109ef258042b6ba1e6c376f"
+      },
+      {
+        "file": "benchmarks/fullstack_045/rust/src/lib.rs",
+        "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.txt",
+        "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.lock.txt",
+        "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package.json",
+        "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package-lock.json",
+        "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+        "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+      },
+      {
+        "file": "benchmarks/FULLSTACK_AGENT_045_EXECUTION_FREEZE.md",
+        "sha256": "781d79a6ef8f190fb8463b26c554abc2a481b0081c4fe86f9546fff119c438f7"
+      }
     ],
-    "prohibition": "No measured session may start until revision 2 is committed with zero measured sessions and all requirements passing."
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "Atomic JSON files outside the agent workspace, revalidated during cell finalization and result aggregation.",
+    "scratch_preflight": "17,179,869,184 bytes free required before journal initialization and every scheduling refill with work/journal/attempt roots proven disjoint; observed capacity is evidence rather than resume identity.",
+    "workspace_cleanup": "A separate immutable cleanup record is written only after the complete finished journal; it retains pre-cleanup workspace bytes and proves removal, absence, or permanent cleanup failure.",
+    "bounded_scheduler": "At most four cells are active and no later cell is queued; a run-level capacity or cleanup failure stops refills and permanently journals all unstarted cells as failed without creating agent sessions.",
+    "response_proxy": "Identical transparent parent-owned loopback proxy for all languages; it forwards typed negative/zero domain inputs and preserves application headers while normalizing framing.",
+    "application_header_judgment": "Compare the complete normalized multiset of non-server, non-hop-by-hop response header pairs; missing, extra, wrong, or duplicate application headers fail.",
+    "exact_build_integrity": "Every protected/read-only file is checked before and immediately after each exact build command; any mutation fails the build and cell.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; finished evidence is reconciled with cleanup evidence; only never-started cells may execute."
   },
   "metrics": {
     "correctness": "Exact hidden HTTP status/JSON/error/custom application headers and real-browser scalar results, overall and by task, kind, language, model, and replicate.",
