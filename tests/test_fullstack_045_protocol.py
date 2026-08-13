@@ -17,11 +17,12 @@ def sha256(path: Path) -> str:
 
 def test_fullstack_045_protocol_preregisters_product_matrix_and_gate():
     assert sha256(PROTOCOL) == (
-        "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b"
+        "04bb01b863d32bf3ba0e52cccd2515d77cc122ca0bb36f8ae17538cb91ec0de3"
     )
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     product = protocol["frozen_product"]
-    assert protocol["schema_version"] == protocol["protocol_revision"] == 1
+    assert protocol["schema_version"] == 1
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "045"
     assert product["parley_version"] == "parley 0.5.6"
     assert product["product_commit"] == (
@@ -64,16 +65,29 @@ def test_fullstack_045_protocol_preregisters_product_matrix_and_gate():
         "primary_gate"]["elapsed"]
 
 
-def test_fullstack_045_protocol_requires_zero_session_execution_freeze():
+def test_fullstack_045_protocol_freezes_validated_zero_session_execution():
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     execution = protocol["execution_freeze"]
-    assert execution["status"] == "pending post-protocol harness implementation"
     assert execution["measured_sessions_before_freeze"] == 0
-    assert execution["required_revision"] == 2
-    assert len(execution["requirements"]) == 6
-    assert "144 named" in " ".join(execution["requirements"])
-    assert "custom headers" in " ".join(execution["requirements"])
-    assert "No measured session may start" in execution["prohibition"]
+    assert execution["protocol_revision_1_sha256"] == (
+        "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b"
+    )
+    assert execution["harness_commit"] == (
+        "58aaf262bffa97a28a0a23cb310de45c9fd59719"
+    )
+    assert execution["reference_cells_passed"] == 16
+    assert execution["seed_cells_built"] == 16
+    assert execution["seed_cells_correct"] == 0
+    assert execution["maintenance_root_boundaries_passed"] == 8
+    assert execution["named_reference_case_executions"] == 144
+    assert execution["calibrated_max_workspace_bytes"] == 161230321
+    assert execution["application_header_judgment"].startswith(
+        "Compare the complete normalized multiset"
+    )
+    assert all(
+        sha256(REPO / item["file"]) == item["sha256"]
+        for item in execution["files"]
+    )
     assert "does not pre-reject negative integers" in protocol[
         "session_protocol"]["domain_judgment"]
     assert protocol["scratch_space_control"]["required_free_bytes"] == 16 * 1024**3
@@ -92,4 +106,7 @@ def test_fullstack_045_protocol_builder_is_deterministic(tmp_path):
         timeout=30,
     )
     assert completed.returncode == 0, completed.stderr
-    assert output.read_bytes() == PROTOCOL.read_bytes()
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    assert sha256(output) == protocol["execution_freeze"][
+        "protocol_revision_1_sha256"
+    ]

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "experiment_id": "045",
-  "generated_at": "2026-08-13T05:40:21.856394Z",
-  "protocol_sha256": "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b",
+  "generated_at": "2026-08-13T05:47:46.091712Z",
+  "protocol_sha256": "04bb01b863d32bf3ba0e52cccd2515d77cc122ca0bb36f8ae17538cb91ec0de3",
   "provenance_file": "/private/tmp/parley-fullstack-045-provenance.json",
   "provenance_sha256": "b924e36fc3945fddbad8cd55713dccc454d7eba2709efb4fc35cf1f177e5d63f",
   "cells": [
@@ -19,8 +19,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 1,
       "seed_exact_build_commands": 1,
-      "reference_workspace_bytes": 1422513,
-      "seed_workspace_bytes": 1415664
+      "reference_workspace_bytes": 1422505,
+      "seed_workspace_bytes": 1415656
     },
     {
       "task_id": "artifact_accession_build",
@@ -67,8 +67,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 2,
       "seed_exact_build_commands": 2,
-      "reference_workspace_bytes": 161184070,
-      "seed_workspace_bytes": 161214655
+      "reference_workspace_bytes": 161183772,
+      "seed_workspace_bytes": 161214349
     },
     {
       "task_id": "microgrid_bid_build",
@@ -83,8 +83,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 1,
       "seed_exact_build_commands": 1,
-      "reference_workspace_bytes": 1479054,
-      "seed_workspace_bytes": 1421821
+      "reference_workspace_bytes": 1479046,
+      "seed_workspace_bytes": 1421813
     },
     {
       "task_id": "microgrid_bid_build",
@@ -131,8 +131,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 2,
       "seed_exact_build_commands": 2,
-      "reference_workspace_bytes": 161224054,
-      "seed_workspace_bytes": 161230321
+      "reference_workspace_bytes": 161223748,
+      "seed_workspace_bytes": 161230023
     },
     {
       "task_id": "trail_permit_repair",
@@ -147,8 +147,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 1,
       "seed_exact_build_commands": 1,
-      "reference_workspace_bytes": 1421385,
-      "seed_workspace_bytes": 1421389
+      "reference_workspace_bytes": 1421377,
+      "seed_workspace_bytes": 1421381
     },
     {
       "task_id": "trail_permit_repair",
@@ -195,8 +195,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 2,
       "seed_exact_build_commands": 2,
-      "reference_workspace_bytes": 161181724,
-      "seed_workspace_bytes": 161181830
+      "reference_workspace_bytes": 161181402,
+      "seed_workspace_bytes": 161181532
     },
     {
       "task_id": "cold_chain_booking_repair",
@@ -211,8 +211,8 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 1,
       "seed_exact_build_commands": 1,
-      "reference_workspace_bytes": 1422560,
-      "seed_workspace_bytes": 1422586
+      "reference_workspace_bytes": 1422552,
+      "seed_workspace_bytes": 1422578
     },
     {
       "task_id": "cold_chain_booking_repair",
@@ -259,13 +259,13 @@
       "seed_post_build_integrity": true,
       "reference_exact_build_commands": 2,
       "seed_exact_build_commands": 2,
-      "reference_workspace_bytes": 161159261,
-      "seed_workspace_bytes": 161159577
+      "reference_workspace_bytes": 161158955,
+      "seed_workspace_bytes": 161159279
     }
   ],
   "reference_cells_passed": 16,
   "seed_cells_built": 16,
   "seed_cells_correct": 0,
   "maintenance_root_boundaries_passed": 8,
-  "peak_validation_workspace_bytes": 161230321
+  "peak_validation_workspace_bytes": 161230023
 }

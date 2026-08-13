@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "artifact_accession_build",
   "language": "python",
-  "protocol_sha256": "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b",
+  "protocol_sha256": "04bb01b863d32bf3ba0e52cccd2515d77cc122ca0bb36f8ae17538cb91ec0de3",
   "provenance_sha256": "b924e36fc3945fddbad8cd55713dccc454d7eba2709efb4fc35cf1f177e5d63f",
   "commands": [
     {
