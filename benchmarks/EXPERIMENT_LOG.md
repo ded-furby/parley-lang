@@ -5137,3 +5137,19 @@ remains in the valid failed gate. Every Parley public build was slower, with a
 +0.9920-second paired median. The decomposition identifies a separate stable
 build-cost target but no generic language defect warranting same-corpus syntax
 or context tuning.
+
+### Typed web query-parameter protocol 005 frozen
+
+- Protocol: `benchmarks/WEB_QUERY_PARAMETERS_005.md`
+- Protocol SHA-256:
+  `8c4d96512af3759d635d410b4b7372e268e80af5d90a94a00b895c6c9c1a64c3`
+- Baseline commit/tree: `7d21f51d35cb271c15873a0c417a1bfe89c9eefd` /
+  `13206bc2194d8f1de64aca3c3831c09fc28bd09b`
+- Query-map implementation before freeze: none
+
+The v0.5.8 gate freezes a seven-field `web_request` whose final map preserves
+decoded repeated query values as ordered text lists. It specifies once-only
+UTF-8/form decoding, a 128-pair bound, stable 400 failures, path/query/body
+precedence, metadata, compatibility with both older request shapes, dynamic
+responses, and both JSON backends. This independent product capability cannot
+revise study 047 or establish comparative superiority.
