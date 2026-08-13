@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "orbital_clearance_build",
   "language": "python",
-  "protocol_sha256": "e283312020be0d0efb7784abf11be0215cc67ca3938c7295e3dc8e06223d0265",
+  "protocol_sha256": "5a19c535425fdb996d2741dbebebc67f7f0b1ada09ad8603c8868e836eaa936d",
   "provenance_sha256": "e27529b2798e787da4a980e60831515107de1ad7c3edfc241206c0864c581c40",
   "commands": [
     {
