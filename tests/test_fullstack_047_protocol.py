@@ -9,6 +9,7 @@ REPO = Path(__file__).resolve().parents[1]
 BENCHMARKS = REPO / "benchmarks"
 PROTOCOL = BENCHMARKS / "fullstack_agent_047_protocol.json"
 BUILDER = BENCHMARKS / "freeze_fullstack_agent_047_protocol.py"
+EXECUTION_BUILDER = BENCHMARKS / "freeze_fullstack_agent_047_execution.py"
 
 
 def sha256(path: Path) -> str:
@@ -17,12 +18,12 @@ def sha256(path: Path) -> str:
 
 def test_fullstack_047_protocol_preregisters_product_matrix_and_gate():
     assert sha256(PROTOCOL) == (
-        "c0434ac473d014beaca6e3d2b0c3577023dd6402db13257b58e17ee60d398a1f"
+        "a0f414e21c0d6a497788678748bcd114077dc44e48cf584a1b934e6fa0bb1c8d"
     )
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     product = protocol["frozen_product"]
     assert protocol["schema_version"] == 1
-    assert protocol["protocol_revision"] == 1
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "047"
     assert product["parley_version"] == "parley 0.5.7"
     assert product["product_commit"] == "c9e8c9bea770c9243ac244663c28209bb18264df"
@@ -63,15 +64,37 @@ def test_fullstack_047_protocol_preregisters_product_matrix_and_gate():
     assert "cannot prove universal" in " ".join(protocol["interpretation_boundary"])
 
 
-def test_fullstack_047_protocol_blocks_measurement_until_revision_2():
+def test_fullstack_047_protocol_freezes_validated_zero_session_execution():
     protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
     execution = protocol["execution_freeze"]
-    assert execution["status"] == "pending post-protocol harness implementation"
     assert execution["measured_sessions_before_freeze"] == 0
-    assert execution["required_revision"] == 2
-    assert len(execution["requirements"]) == 7
-    assert "No measured session may start" in execution["prohibition"]
-    assert "decoded captures" in execution["requirements"][2]
+    assert execution["protocol_revision_1_sha256"] == (
+        "c0434ac473d014beaca6e3d2b0c3577023dd6402db13257b58e17ee60d398a1f"
+    )
+    assert execution["harness_commit"] == (
+        "69518e2c98640b2cd5841ab355e31fb84e550eef"
+    )
+    assert execution["reference_cells_passed"] == 16
+    assert execution["seed_cells_built"] == 16
+    assert execution["seed_cells_correct"] == 0
+    assert execution["maintenance_root_boundaries_passed"] == 8
+    assert execution["named_reference_case_executions"] == 160
+    assert execution["calibrated_max_workspace_bytes"] == 160_812_817
+    assert execution["parley_context_o200k_tokens"] == 176
+    assert execution["parley_prompt_delta_vs_python_o200k_tokens"] == 161
+    assert execution["parley_manifest_o200k_token_range"] == [174, 179]
+    assert all(execution["json_evidence_controls"][name] for name in (
+        "empty_header_pairs_live_to_persisted",
+        "custom_header_pairs_live_to_persisted",
+        "duplicate_header_pairs_live_to_persisted",
+        "request_path_live_to_persisted",
+        "path_parameters_live_to_persisted",
+        "broker_attempt_live_to_persisted",
+    ))
+    assert all(
+        sha256(REPO / item["file"]) == item["sha256"]
+        for item in execution["files"]
+    )
     assert "committed in revision 2" in protocol["implementation_rule"]
     assert "outside iteration 047" in protocol["stop_rule"]
 
@@ -80,6 +103,21 @@ def test_fullstack_047_protocol_builder_is_deterministic(tmp_path):
     output = tmp_path / "protocol.json"
     completed = subprocess.run(
         [sys.executable, str(BUILDER), "--output", str(output)],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert sha256(output) == json.loads(PROTOCOL.read_text())["execution_freeze"][
+        "protocol_revision_1_sha256"
+    ]
+
+
+def test_fullstack_047_execution_builder_is_deterministic(tmp_path):
+    output = tmp_path / "protocol-revision-2.json"
+    completed = subprocess.run(
+        [sys.executable, str(EXECUTION_BUILDER), "--output", str(output)],
         cwd=REPO,
         capture_output=True,
         text=True,

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "047",
   "title": "Independent compact-context typed path-routing pilot",
   "description": "A frozen 32-session comparison of four unseen exact/parameterized routing and browser assignments in Parley, Python, TypeScript, and Rust, using the pre-corpus 176-token Parley v0.5.7 path-response card.",
@@ -163,19 +163,140 @@
     "domain_judgment": "The parent sends frozen raw paths without pre-decoding or validating captured segments. Routing, exact priority, once-decoding, safety rejection, authorization, and positive-decimal validation are application-stack responsibilities."
   },
   "execution_freeze": {
-    "status": "pending post-protocol harness implementation",
+    "description": "Validated compact-context path-routing harness, JSON-native route/header evidence, transparent proxy, scratch lifecycle, and exact-build inputs frozen before the first measured cell; semantic and gate inputs are unchanged.",
     "measured_sessions_before_freeze": 0,
-    "required_revision": 2,
-    "requirements": [
-      "bind every new and transitive execution file by SHA-256",
-      "validate 16 task/language reference applications in clean rooms",
-      "validate all 160 named public/hidden cases including decoded captures",
-      "prove all eight language-specific maintenance roots with built negative controls",
-      "calibrate peak workspace use within the frozen scratch allowance",
-      "pass parent-owned FIFO, HTTP, header, malformed-path, and Chromium smoke",
-      "prove live-to-persisted JSON equality for paths, path parameters, and headers"
+    "protocol_revision_1_commit": "87a2412635b5bffb39bb1fb2ab2e0a8e01863887",
+    "protocol_revision_1_sha256": "c0434ac473d014beaca6e3d2b0c3577023dd6402db13257b58e17ee60d398a1f",
+    "harness_commit": "69518e2c98640b2cd5841ab355e31fb84e550eef",
+    "harness_tree": "2847fc6d51a064c5b30e504587ff6640245f9d6a",
+    "calibrated_max_workspace_bytes": 160812817,
+    "calibrated_per_worker_headroom_multiple": 13.354,
+    "parley_context_o200k_tokens": 176,
+    "parley_prompt_delta_vs_python_o200k_tokens": 161,
+    "parley_manifest_o200k_token_range": [
+      174,
+      179
     ],
-    "prohibition": "No measured session may start until revision 2 is committed with zero measured sessions and every requirement passing."
+    "reference_cells_passed": 16,
+    "seed_cells_built": 16,
+    "seed_cells_correct": 0,
+    "maintenance_root_boundaries_passed": 8,
+    "named_reference_case_executions": 160,
+    "json_evidence_controls": {
+      "empty_header_pairs_live_to_persisted": true,
+      "custom_header_pairs_live_to_persisted": true,
+      "duplicate_header_pairs_live_to_persisted": true,
+      "request_path_live_to_persisted": true,
+      "path_parameters_live_to_persisted": true,
+      "broker_attempt_live_to_persisted": true,
+      "header_pair_shape": "list[list[str, str]]",
+      "path_parameter_shape": "dict[str, str]"
+    },
+    "files": [
+      {
+        "file": "benchmarks/run_fullstack_agent_047.py",
+        "sha256": "fddf26ea57eb5a065a891bd750f79fa460c00474ee50f688d18289f5e9b8cc87"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_047_scaffolds.py",
+        "sha256": "89fbd6cc24e42425192ecc3c989c445a3660f75f476680fcd64ae4a3a079a766"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_047_guard.py",
+        "sha256": "6c3fb5a511508f2fb401e308bc6f3227a396e8d377c0d4a1a8641c731daad847"
+      },
+      {
+        "file": "benchmarks/prepare_fullstack_agent_047.py",
+        "sha256": "632f532031eb95caab73981c5afaece3e60cdacd10b5d6180e21d04857ec7d13"
+      },
+      {
+        "file": "benchmarks/smoke_fullstack_agent_047.py",
+        "sha256": "109face48991dcd4dc8433d74b3c1af978a3c524eecc6ff8c4b7fb808532ef42"
+      },
+      {
+        "file": "benchmarks/json_evidence.py",
+        "sha256": "dad9f4144e0dfa1c21d29e4362f116abd38c5181664a82dbb161b3358e70689c"
+      },
+      {
+        "file": "benchmarks/agent_check_transport.py",
+        "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"
+      },
+      {
+        "file": "benchmarks/agent_runner.py",
+        "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"
+      },
+      {
+        "file": "benchmarks/exact_build_freeze.py",
+        "sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9"
+      },
+      {
+        "file": "benchmarks/scratch_space.py",
+        "sha256": "29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d"
+      },
+      {
+        "file": "benchmarks/fullstack_047/rust/Cargo.toml",
+        "sha256": "74f0a2d9cb5c7d15de954500f83c3b7cd816834f184f48a95395cf54c53b8eb6"
+      },
+      {
+        "file": "benchmarks/fullstack_047/rust/Cargo.lock",
+        "sha256": "27ae2495c5e577c2ec0f7914c9abbf2a78d9264d956a8b7e00999d088ab0f2ac"
+      },
+      {
+        "file": "benchmarks/fullstack_047/rust/src/lib.rs",
+        "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.txt",
+        "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.lock.txt",
+        "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package.json",
+        "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package-lock.json",
+        "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+        "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+      },
+      {
+        "file": "skill/parley/references/scaffolded-path-response-web-v0.5.7-compact.md",
+        "sha256": "b3d0473cdc4e17741bebe1c24441f337abc7579bd59783b1cd94e645bb698f23"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_047_provenance.json",
+        "sha256": "9e7e7827d606e38e650a3cb8bb584178ecf06d621e1e8ef53a6339a584543057"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_047_validation.json",
+        "sha256": "28c2989ba66b0bc9b590ca27bca992a47ea78dc54e6d5262fd8f1914ded0d3b0"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_047_orchestration_smoke.json",
+        "sha256": "3f0e4782403dcc9cbfc25962d36481a47ad06989b88ad27c9e3fccebd4b0c086"
+      },
+      {
+        "file": "benchmarks/FULLSTACK_AGENT_047_EXECUTION_FREEZE.md",
+        "sha256": "44f60ba601a4bd75d8742ad027da6fe266e6d754c25792cd2fd92c37cd2cb336"
+      }
+    ],
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "JSON-native atomic files outside the workspace, reread during cell finalization and result aggregation.",
+    "scratch_preflight": "17,179,869,184 bytes free required before journal initialization and each scheduling refill, with work/journal/attempt roots proven disjoint.",
+    "workspace_cleanup": "Write a separate immutable cleanup record after the complete finished journal; retain pre-cleanup bytes and removal, absence, or failure status.",
+    "bounded_scheduler": "At most four cells active; capacity or cleanup failure stops refills and permanently journals every unstarted cell as failed without an agent session.",
+    "response_proxy": "Identical transparent parent-owned loopback proxy preserves every raw path for all languages; decoding and domain decisions remain stack responsibilities.",
+    "application_header_judgment": "Compare the complete normalized multiset of JSON-native non-server, non-hop-by-hop response-header pairs; missing, extra, wrong, or duplicate application headers fail.",
+    "path_parameter_judgment": "Persist the exact requested raw path plus expected and body-observed decoded parameter maps; disagreement fails the named HTTP case.",
+    "exact_build_integrity": "Check every protected/read-only file before and immediately after each exact build command; any mutation fails the build and cell.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute."
   },
   "metrics": {
     "correctness": "Exact hidden HTTP route/status/JSON/error/custom-header and real-browser results, overall and by task, kind, language, and replicate.",

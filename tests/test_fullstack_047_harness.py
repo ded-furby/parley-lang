@@ -124,13 +124,13 @@ def test_fullstack_047_guard_preserves_raw_path_and_json_native_capture_evidence
     assert observed == ["/api/v11/tundra-probes/%34%32"]
 
 
-def test_fullstack_047_revision_1_keeps_measurement_locked():
+def test_fullstack_047_revision_2_records_the_zero_session_unlock_boundary():
     protocol = json.loads(
         (BENCHMARKS / "fullstack_agent_047_protocol.json").read_text()
     )
-    assert protocol["protocol_revision"] == 1
-    assert protocol["execution_freeze"]["required_revision"] == 2
+    assert protocol["protocol_revision"] == 2
     assert protocol["execution_freeze"]["measured_sessions_before_freeze"] == 0
+    assert protocol["execution_freeze"]["named_reference_case_executions"] == 160
 
 
 def test_fullstack_047_provenance_and_reference_validation_are_complete():
@@ -142,9 +142,9 @@ def test_fullstack_047_provenance_and_reference_validation_are_complete():
     validation = json.loads(validation_path.read_text())
     assert provenance["experiment_id"] == "047"
     assert provenance["parley"]["reported_version"] == "parley 0.5.7"
-    assert validation["protocol_sha256"] == hashlib.sha256(
-        (BENCHMARKS / "fullstack_agent_047_protocol.json").read_bytes()
-    ).hexdigest()
+    assert validation["protocol_sha256"] == (
+        "c0434ac473d014beaca6e3d2b0c3577023dd6402db13257b58e17ee60d398a1f"
+    )
     assert validation["provenance_sha256"] == hashlib.sha256(
         provenance_path.read_bytes()
     ).hexdigest()
