@@ -270,9 +270,11 @@ function that gives back `nothing`.
 
 **What it means:** The record does not match the stable HTTP metadata contract.
 
-**How to fix it:** Declare method, path, query, headers, and body in order. For
-parameterized routes, add `path_parameters as map from text to text` last; see
-[WEB_PATH_PARAMETERS.md](WEB_PATH_PARAMETERS.md).
+**How to fix it:** Declare method, path, query, headers, and body in order.
+Optionally add `path_parameters as map from text to text` sixth, then
+`query_parameters as map from text to list of text` seventh; see
+[WEB_PATH_PARAMETERS.md](WEB_PATH_PARAMETERS.md) and
+[WEB_QUERY_PARAMETERS.md](WEB_QUERY_PARAMETERS.md).
 
 ## P715 — Web request body is not JSON-safe
 

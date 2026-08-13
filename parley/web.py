@@ -113,6 +113,7 @@ class CheckedRoute:
     function: A.FuncDef
     has_request: bool
     has_path_parameters: bool
+    has_query_parameters: bool
     body_param: A.Param | None
 
 
@@ -412,7 +413,13 @@ def _web_request_kind(record: A.RecordDef | None) -> str | None:
         *expected,
         ("path_parameters", A.TMap(A.TText(), A.TText())),
     ]:
-        return "extended"
+        return "path"
+    if record.fields == [
+        *expected,
+        ("path_parameters", A.TMap(A.TText(), A.TText())),
+        ("query_parameters", A.TMap(A.TText(), A.TList(A.TText()))),
+    ]:
+        return "query"
     return None
 
 
@@ -499,6 +506,7 @@ def check_web(project: WebProject) -> CheckedWeb:
             continue
         has_request = False
         has_path_parameters = False
+        has_query_parameters = False
         body_param = None
         params = list(function.params)
         if params and isinstance(params[0].type, A.TRecord) and params[0].type.name == "web_request":
@@ -510,10 +518,12 @@ def check_web(project: WebProject) -> CheckedWeb:
                     records.get("web_request") or function, srcmap,
                     hint=(
                         "Define method, path, query, headers, and body in order; "
-                        "optionally add path_parameters as the final text-to-text map."
+                        "optionally add path_parameters as the sixth text-to-text map, "
+                        "then query_parameters as the seventh text-to-list-of-text map."
                     )))
                 continue
-            has_path_parameters = request_kind == "extended"
+            has_path_parameters = request_kind in {"path", "query"}
+            has_query_parameters = request_kind == "query"
             params.pop(0)
         if len(params) == 1:
             body_param = params[0]
@@ -542,7 +552,8 @@ def check_web(project: WebProject) -> CheckedWeb:
             ))
             continue
         checked.append(CheckedRoute(
-            route, function, has_request, has_path_parameters, body_param
+            route, function, has_request, has_path_parameters,
+            has_query_parameters, body_param
         ))
     if contract_diags:
         raise ParleyError(contract_diags)
@@ -660,13 +671,23 @@ def _route_body(
             if checked.has_path_parameters
             else ""
         )
+        query_parameters = ""
+        if checked.has_query_parameters:
+            setup.append(f"""
+            let parley_query_parameters = match parley_parse_query_parameters(&{request_name}.query) {{
+                Ok(value) => value,
+                Err(response) => return response,
+            }};""".rstrip())
+            query_parameters = (
+                "\n                query_parameters: parley_query_parameters,"
+            )
         setup.append(f"""
             let parley_request = WebRequest {{
                 method: method.to_string(),
                 path: {request_name}.path.clone(),
                 query: {request_name}.query.clone(),
                 headers: {request_name}.headers.clone(),
-                body: {request_name}.body.clone(),{path_parameters}
+                body: {request_name}.body.clone(),{path_parameters}{query_parameters}
             }};""".rstrip())
         args.append(_rust_arg(function.params[0], "parley_request"))
     if checked.body_param is not None:
@@ -1448,6 +1469,65 @@ fn parley_decode_path_parameter(value: &str) -> Result<String, ParleyHttpRespons
     }
     String::from_utf8(output).map_err(|_| parley_json_error(
         400, "invalid_path_parameter", "path parameter is not valid UTF-8"))
+}
+
+fn parley_decode_query_component(value: &str) -> Result<String, ParleyHttpResponse> {
+    let input = value.as_bytes();
+    let mut output = Vec::with_capacity(input.len());
+    let mut index = 0usize;
+    while index < input.len() {
+        match input[index] {
+            b'%' => {
+                if index + 2 >= input.len() {
+                    return Err(parley_json_error(
+                        400, "invalid_query_parameter", "query parameter has a truncated percent escape"));
+                }
+                match (parley_path_hex(input[index + 1]), parley_path_hex(input[index + 2])) {
+                    (Some(high), Some(low)) => output.push(high * 16 + low),
+                    _ => return Err(parley_json_error(
+                        400, "invalid_query_parameter", "query parameter has an invalid percent escape")),
+                }
+                index += 3;
+            }
+            b'+' => {
+                output.push(b' ');
+                index += 1;
+            }
+            byte => {
+                output.push(byte);
+                index += 1;
+            }
+        }
+    }
+    if output.iter().any(|byte| matches!(*byte, 0..=0x1f | 0x7f)) {
+        return Err(parley_json_error(
+            400, "invalid_query_parameter", "query parameter contains a forbidden control byte"));
+    }
+    String::from_utf8(output).map_err(|_| parley_json_error(
+        400, "invalid_query_parameter", "query parameter is not valid UTF-8"))
+}
+
+fn parley_parse_query_parameters(
+    query: &str,
+) -> Result<BTreeMap<String, Vec<String>>, ParleyHttpResponse> {
+    let mut parameters: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut pairs = 0usize;
+    for pair in query.split('&').filter(|pair| !pair.is_empty()) {
+        pairs += 1;
+        if pairs > 128 {
+            return Err(parley_json_error(
+                400, "invalid_query_parameter", "query parameters exceeded 128 pairs"));
+        }
+        let (raw_name, raw_value) = pair.split_once('=').unwrap_or((pair, ""));
+        let name = parley_decode_query_component(raw_name)?;
+        if name.is_empty() {
+            return Err(parley_json_error(
+                400, "invalid_query_parameter", "query parameter name is empty"));
+        }
+        let value = parley_decode_query_component(raw_value)?;
+        parameters.entry(name).or_default().push(value);
+    }
+    Ok(parameters)
 }
 
 fn parley_match_path(

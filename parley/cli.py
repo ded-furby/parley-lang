@@ -1598,6 +1598,7 @@ def cmd_web_check(args) -> int:
                 "path_parameters": list(route.route.path_parameters),
                 "handler": route.route.handler,
                 "request_metadata": route.has_request,
+                "query_parameters": route.has_query_parameters,
                 "json_body": None if route.body_param is None else str(route.body_param.type),
                 "json_response": str(route.function.ret),
                 "response": _web_response_contract(route),
@@ -1769,6 +1770,7 @@ def _write_web_bundle(project: WebProject, web, browser, server_binary: Path,
         "routes": [
             {"method": route.route.method, "path": route.route.path,
              "path_parameters": list(route.route.path_parameters),
+             "query_parameters": route.has_query_parameters,
              "handler": route.route.handler,
              "response": _web_response_contract(route)}
             for route in web.routes

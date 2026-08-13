@@ -5153,3 +5153,24 @@ UTF-8/form decoding, a 128-pair bound, stable 400 failures, path/query/body
 precedence, metadata, compatibility with both older request shapes, dynamic
 responses, and both JSON backends. This independent product capability cannot
 revise study 047 or establish comparative superiority.
+
+### v0.5.8 typed web query-parameter gate passed
+
+- Frozen protocol: `benchmarks/WEB_QUERY_PARAMETERS_005.md`
+- Baseline commit/tree: `7d21f51d35cb271c15873a0c417a1bfe89c9eefd` /
+  `13206bc2194d8f1de64aca3c3831c09fc28bd09b`
+- Dedicated query tests: 9 passed
+- Focused web compatibility tests after version advance: 56 passed
+- Full regression before version advance: 767 passed, 0 failed, 225.23 seconds
+- Full regression after version advance: 767 passed, 0 failed, 219.19 seconds
+- Release wheel: `parley_lang-0.5.8-py3-none-any.whl`, 145,793 bytes
+- Release wheel SHA-256:
+  `044af3f790226b1bef82709c0f7c6d84121180476d96da1539eee2e69d141a67`
+
+The accepted seven-field request shape adds deterministic repeated-value query
+maps without changing core syntax. It decodes names and values exactly once,
+preserves repeated-value order, bounds pairs, rejects malformed/control input
+before handler/body execution, and retains path-error precedence. Five- and
+six-field handlers keep unchanged raw-query behavior. Check/build metadata,
+dynamic responses, and both JSON backends are covered. This product result does
+not revise study 047 or establish universal superiority.

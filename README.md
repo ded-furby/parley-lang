@@ -219,11 +219,15 @@ request-dependent 201/401/422 decisions and safely return application headers
 without yielding control of framing or hop-by-hop fields. Whole-segment path
 templates such as `/api/items/{item_id}` provide checked, unambiguous UTF-8
 captures through `web_request.path_parameters`; exact routes retain priority
-and malformed or separator-smuggling encodings fail before the handler. The
+and malformed or separator-smuggling encodings fail before the handler.
+Query-aware handlers can additionally receive decoded repeated values through
+`web_request.query_parameters`, with once-only UTF-8/form decoding, stable
+arrival order, bounded pairs, and failures before handler or body execution. The
 present HTTP/1.1 and scalar WASM limits are explicit in
 [`docs/WEB.md`](docs/WEB.md), with the response and path contracts in
 [`docs/WEB_RESPONSE_CONTROL.md`](docs/WEB_RESPONSE_CONTROL.md) and
-[`docs/WEB_PATH_PARAMETERS.md`](docs/WEB_PATH_PARAMETERS.md). This is a
+[`docs/WEB_PATH_PARAMETERS.md`](docs/WEB_PATH_PARAMETERS.md), and the query
+contract in [`docs/WEB_QUERY_PARAMETERS.md`](docs/WEB_QUERY_PARAMETERS.md). This is a
 foundation, not yet a claim of mature-framework parity.
 
 The preregistered [four-language Release Radar
@@ -540,6 +544,7 @@ the plan:
 - [x] dependency-free strict typed-web JSON boundary for faster cold builds — v0.5.5
 - [x] checked dynamic web response statuses and application headers — v0.5.6
 - [x] safe typed whole-segment web path parameters — v0.5.7
+- [x] deterministic repeated-value web query parameters — v0.5.8
 - [x] membership helpers for bundled lists — v0.3.83
 - [x] key membership helpers for bundled maps — v0.3.84
 - [x] explicit list sum helpers and map copy helpers — v0.3.85
@@ -658,6 +663,13 @@ while rejecting response splitting, invalid/duplicate names, oversized maps,
 and server-owned framing or hop-by-hop fields. The frozen product gate passed
 643/643 tests across both JSON backends; see
 [benchmarks/WEB_RESPONSE_CONTROL_003.md](benchmarks/WEB_RESPONSE_CONTROL_003.md).
+
+Version 0.5.8 adds opt-in repeated-value query maps to typed web requests while
+preserving raw-query behavior for older handler shapes. Names and values decode
+once as UTF-8, repeated values keep arrival order, malformed inputs fail before
+handler/body execution, and path-capture errors retain precedence. The frozen
+product gate passed 767/767 tests before and after the version advance; see
+[benchmarks/WEB_QUERY_PARAMETERS_005.md](benchmarks/WEB_QUERY_PARAMETERS_005.md).
 
 ## Development
 

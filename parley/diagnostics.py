@@ -251,7 +251,7 @@ ERROR_CATALOG: dict[str, dict] = {
     "P714": {
         "title": "Malformed web_request record",
         "explain": "A handler uses web_request, but that record does not match the stable HTTP metadata contract.",
-        "fix": "Declare method, path, query, headers, and body in order; add path_parameters as the final text-to-text map for parameterized routes.",
+        "fix": "Declare method, path, query, headers, and body in order; optionally add path_parameters, then query_parameters as a text-to-list-of-text map.",
     },
     "P715": {
         "title": "Web request body is not JSON-safe",
