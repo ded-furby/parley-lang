@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045-product-freeze",
+  "frozen_on": "2026-08-13",
+  "parley_version": "0.5.6",
+  "product_commit": "6bae1149d101d5a483f31f55905083e0a939c1da",
+  "product_tree": "525b23b0191cb5f16a9cc4b5281d9b9af912898c",
+  "context_commit": "1a73fc7ea7d60f5235d5cd3173eba858a6a384b7",
+  "context_tree": "b704aff898c299d0d15f549f30078753ae35e7b9",
+  "product_files": {
+    "parley/web.py": "a45d3b85a32261363b760a01bd0f1e37158537fea9de418ad1ce2bc8526dec9c",
+    "parley/cli.py": "e26555fa043f77f3d8f9f3739e9d500bc69059575ed2064d17473f3ca34560d8",
+    "parley/diagnostics.py": "f00ccabbecf3ecc910d809215722d57c9fedf1f712b2a274885c03a06e6c06cf",
+    "parley/__init__.py": "6b348bc7d061de1e0ae06c14cc3059bddc8d4c7767ccd174c6d05cb258ee35e6",
+    "pyproject.toml": "10158ecc1012d7e3fe5e7cd3adc24a462d3fbac30f1fb6b0747e91ba2373e52a"
+  },
+  "verification_files": {
+    "tests/test_web.py": "9991cc49b5ac73bdf526c44738a8f550689e947a774dcdb9483b75d9c64bbe41",
+    "tests/test_web_response_control_003.py": "370a210a0d07e3d3edc5120137038a86701f7a2f9713f2c871512aaccd77867a"
+  },
+  "product_evidence": {
+    "protocol_file": "benchmarks/WEB_RESPONSE_CONTROL_003.md",
+    "protocol_sha256": "369a5b45b379b4600794579339a9f44b0fae585883a718c4d3ec67227516afbf",
+    "dedicated_tests_passed": 14,
+    "full_tests_before_version_advance": 643,
+    "full_tests_after_version_advance": 643,
+    "release_wheel": "parley_lang-0.5.6-py3-none-any.whl",
+    "release_wheel_bytes": 143349,
+    "release_wheel_sha256": "f3fa31b3fb7ff23faa5f13b54d32c3f26a8cc65daed28cdbb21458263314a458",
+    "accepted": true
+  },
+  "agent_context": {
+    "file": "skill/parley/references/scaffolded-response-web-v0.5.6.md",
+    "sha256": "58e1066e2c313c35617d96c5f8829e4ca14f6a77a60fdba0d8af7b19a2fab2b8",
+    "bytes": 1281,
+    "o200k_base_tokens": 313,
+    "freeze_file": "benchmarks/fullstack_agent_045_context.json",
+    "freeze_sha256": "746f1af9c788c5a441657c500f89a276f7402bdb0bb806433a58af4553eb24ab",
+    "baseline_reduction_percent": 73.11
+  },
+  "references": {
+    "docs/WEB_RESPONSE_CONTROL.md": "338ad01a4d73d6db0bb38c93638775f4722318732f210dd90109d9ce8154b9d2",
+    "skill/parley/references/web-v0.5.6.md": "8d27e4924d12e536bba2a2592cf65ca7e7a464fdeec326df504aa2eb22a92fe0"
+  },
+  "frozen_capabilities": [
+    "opt-in checked status/header/body response envelopes",
+    "request-dependent statuses from 200 through 599",
+    "bounded normalized application response headers",
+    "rejection of invalid, duplicate, control-bearing, framing, and hop-by-hop headers",
+    "bodyless 204, 205, and 304 semantics plus GET-equivalent HEAD metadata",
+    "unchanged static success-status routes and both strict JSON backends"
+  ],
+  "construction_boundary": "The v0.5.6 product, verification, and 313-token context are frozen before any iteration-045 task domain, route, field, formula, case, scaffold, reference implementation, threshold, prompt, or model output is selected.",
+  "claim_boundary": "This freeze records an accepted generic product capability and static context budget. It does not reinterpret iteration 044, measure successor agent behavior, prove framework parity, or establish universal superiority."
+}

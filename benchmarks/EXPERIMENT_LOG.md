@@ -4924,3 +4924,22 @@ reference. This is a static budget and coverage result, not an agent outcome.
 No 045 task semantics or comparative thresholds exist. Next: commit this
 context boundary, freeze the complete v0.5.6 product artifact, and only then
 select a disjoint response-control corpus.
+
+### 045 v0.5.6 product frozen before corpus selection
+
+- Product artifact: `benchmarks/fullstack_agent_045_product.json`
+- Product artifact SHA-256:
+  `49e1ee43ce014e3888a193442e426269f7bdf19b0403ab29a2b3a40505596216`
+- Product boundary: `benchmarks/FULLSTACK_AGENT_045_PRODUCT_FREEZE.md`
+- Product commit/tree: `6bae1149d101d5a483f31f55905083e0a939c1da` /
+  `525b23b0191cb5f16a9cc4b5281d9b9af912898c`
+- Context commit/tree: `1a73fc7ea7d60f5235d5cd3173eba858a6a384b7` /
+  `b704aff898c299d0d15f549f30078753ae35e7b9`
+
+The deterministic artifact reads exact Git blobs for the v0.5.6 product,
+response-control verification, user/agent references, and 313-token context.
+It binds the 14 dedicated tests, both 643-test full regressions, and successful
+release wheel without treating any of them as an agent outcome. No 045 domain,
+route, field, formula, case, scaffold, comparison threshold, or model output
+exists. Next: commit this product freeze, then independently select and hash a
+disjoint 045 semantics-only population.
