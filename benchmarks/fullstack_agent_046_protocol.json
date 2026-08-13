@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "protocol_revision": 1,
+  "protocol_revision": 2,
   "experiment_id": "046",
   "title": "Independent compact-context response-control implementation and maintenance study",
   "description": "A frozen 96-session comparison of four unseen authenticated, validated, conflict-aware, or creation-oriented server-plus-browser assignments in Parley, Python, TypeScript, and Rust, using the pre-corpus 124-token Parley response-web card.",
@@ -170,19 +170,128 @@
     "domain_judgment": "The parent validates JSON syntax and declared JSON types but does not pre-reject negative integers or zero-capacity combinations. Those typed values must reach every language handler and receive the frozen 422 envelope."
   },
   "execution_freeze": {
-    "status": "pending post-protocol harness implementation",
+    "description": "Validated compact-context response-control harness, JSON-native evidence boundary, transparent proxy, scratch lifecycle, and exact-build inputs frozen before the first measured cell; semantic and gate inputs are unchanged.",
     "measured_sessions_before_freeze": 0,
-    "required_revision": 2,
-    "requirements": [
-      "bind every new and transitive execution file by SHA-256",
-      "validate 16 task/language reference applications in clean rooms",
-      "validate all 144 named public/hidden cases including exact custom headers",
-      "prove both route-handler maintenance roots with built negative controls",
-      "calibrate peak workspace use within the frozen scratch allowance",
-      "pass parent-owned FIFO, HTTP, custom-header, and Chromium orchestration smoke",
-      "prove live-to-persisted JSON equality for empty, custom, and duplicate header pairs"
+    "protocol_revision_1_commit": "47448a84b3663ff2aef1d17cf92cca26bc4d7891",
+    "protocol_revision_1_sha256": "e283312020be0d0efb7784abf11be0215cc67ca3938c7295e3dc8e06223d0265",
+    "harness_commit": "3f716d448cd5f64f0ce008d03a5a27e24eef1f63",
+    "harness_tree": "4fa77808aeaa2f33f2e35307c0ce0653ba135efe",
+    "calibrated_max_workspace_bytes": 161226830,
+    "calibrated_per_worker_headroom_multiple": 13.32,
+    "parley_context_o200k_tokens": 124,
+    "parley_prompt_delta_vs_python_o200k_tokens": 109,
+    "parley_manifest_o200k_token_range": [
+      124,
+      132
     ],
-    "prohibition": "No measured session may start until revision 2 is committed with zero measured sessions and all requirements passing."
+    "reference_cells_passed": 16,
+    "seed_cells_built": 16,
+    "seed_cells_correct": 0,
+    "maintenance_root_boundaries_passed": 8,
+    "named_reference_case_executions": 144,
+    "json_evidence_controls": {
+      "empty_header_pairs_live_to_persisted": true,
+      "custom_header_pairs_live_to_persisted": true,
+      "duplicate_header_pairs_live_to_persisted": true,
+      "broker_attempt_live_to_persisted": true,
+      "required_shape": "list[list[str, str]]"
+    },
+    "files": [
+      {
+        "file": "benchmarks/run_fullstack_agent_046.py",
+        "sha256": "e8eb60372ec29c3d354ef829fb41ea6f68ce5b3c863bb7c792915077fd4ac8a4"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_046_scaffolds.py",
+        "sha256": "b63cd64a544c5344abcd713701afc3fdbfd3dfb7219c425f22b18a884a5ee8c9"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_046_logic.py",
+        "sha256": "1007dd14bcc783bde4f1833cd778e0207ff1f297a7a1e8c4ab79701579b167c3"
+      },
+      {
+        "file": "benchmarks/fullstack_agent_046_guard.py",
+        "sha256": "91879efe32ee7684f0762f3f1ddb8daf92ba287e2bb912396cc0b001bfef28bf"
+      },
+      {
+        "file": "benchmarks/prepare_fullstack_agent_046.py",
+        "sha256": "a0e5ace70cb4980b6b447e4e9d6200d45ca35dc1921b14bba69658961200ecd1"
+      },
+      {
+        "file": "benchmarks/smoke_fullstack_agent_046.py",
+        "sha256": "c3b4eed3922d0e74ee7d4ed6e8f792bfca3e770551a05de1520c82844cae181c"
+      },
+      {
+        "file": "benchmarks/json_evidence.py",
+        "sha256": "dad9f4144e0dfa1c21d29e4362f116abd38c5181664a82dbb161b3358e70689c"
+      },
+      {
+        "file": "benchmarks/agent_check_transport.py",
+        "sha256": "edfd2d11b1d14f3858bd51a76d020d20ed4cf084683d0d858b0435fd34e70491"
+      },
+      {
+        "file": "benchmarks/agent_runner.py",
+        "sha256": "34a738fd07d1e56e062c7ffafefbf0fa6ece60ee6f04ae5393b963f00fc428cb"
+      },
+      {
+        "file": "benchmarks/exact_build_freeze.py",
+        "sha256": "f48ae97529f289f58e21b137e2965c11db64df74c62aab3b17b3cceb9cd944f9"
+      },
+      {
+        "file": "benchmarks/scratch_space.py",
+        "sha256": "29a76efe1db16f57f584830c45ffc3c5f871ed2c05389d05297decbad44bf57d"
+      },
+      {
+        "file": "benchmarks/fullstack_046/rust/Cargo.toml",
+        "sha256": "75517752b0765a6d42cc4210318146dfc7e4876db56dc2f915a45df22cf93c59"
+      },
+      {
+        "file": "benchmarks/fullstack_046/rust/Cargo.lock",
+        "sha256": "5982764e8881261f3ccbebdf088baf208781fc7f37271399d7d658eb514bb712"
+      },
+      {
+        "file": "benchmarks/fullstack_046/rust/src/lib.rs",
+        "sha256": "2a947867733afb2cd3ee156e04b813e108f1b670bc6d7922a86149271f8ab9c8"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.txt",
+        "sha256": "b6d52b41a5f984fb885ee73e97a92b7c639f3f6fa36be2e2506f71c5c1e1eaf2"
+      },
+      {
+        "file": "benchmarks/fullstack_035/python/requirements.lock.txt",
+        "sha256": "73c1cc895c48540a2001cb88e94bbdd01dbf62b750c85e78257b5fadf7302c90"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package.json",
+        "sha256": "537e403898e60fd0037d06a0ee0fceb8c91a27fefd89979f1de1bd885c89606a"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/package-lock.json",
+        "sha256": "144498da70e0433eb1206f5ad1a932b429842ad0d37f9285b271f2146187b9ef"
+      },
+      {
+        "file": "benchmarks/fullstack_035/typescript/tsconfig.json",
+        "sha256": "f6e920ad01ce01bc17d6fa13cc0d4605330076aaa838a3b5d31a1b04e68666d1"
+      },
+      {
+        "file": "skill/parley/references/scaffolded-response-web-v0.5.6-compact.md",
+        "sha256": "12515da0f10ab5c3312edcb21b233d786f20bc4c444598acd26e589109b84580"
+      },
+      {
+        "file": "benchmarks/FULLSTACK_AGENT_046_EXECUTION_FREEZE.md",
+        "sha256": "02f241529c60b3b247ecf88e572962a89a651bfcf73eef4d470676859282f1c5"
+      }
+    ],
+    "provenance_schema": 1,
+    "journal_attempts_per_cell": 1,
+    "public_attempt_storage": "JSON-native atomic files outside the workspace, reread during cell finalization and result aggregation.",
+    "scratch_preflight": "17,179,869,184 bytes free required before journal initialization and each scheduling refill, with work/journal/attempt roots proven disjoint.",
+    "workspace_cleanup": "Write a separate immutable cleanup record after the complete finished journal; retain pre-cleanup bytes and removal, absence, or failure status.",
+    "bounded_scheduler": "At most four cells active; capacity or cleanup failure stops refills and permanently journals every unstarted cell as failed without an agent session.",
+    "response_proxy": "Identical transparent parent-owned loopback proxy for every language; typed negative and zero-domain values reach the application handler.",
+    "application_header_judgment": "Compare the complete normalized multiset of JSON-native non-server, non-hop-by-hop response-header pairs; missing, extra, wrong, or duplicate application headers fail.",
+    "exact_build_integrity": "Check every protected/read-only file before and immediately after each exact build command; any mutation fails the build and cell.",
+    "resume_policy": "A started cell without a finished record becomes a permanent interruption failure; only never-started cells may execute."
   },
   "metrics": {
     "correctness": "Exact hidden HTTP status/JSON/error/custom application headers and real-browser scalar results, overall and by task, kind, language, model, and replicate.",
