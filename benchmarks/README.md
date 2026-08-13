@@ -444,6 +444,17 @@ The protocol SHA-256 is
 `2a8416d542141b6da0f28ae7b415182325113770b44a1e4e4458bdfb3f6ed149`.
 No measured cell existed at this once-run boundary.
 
+Iteration 043 evaluates the accepted v0.5.4 cold typed-web build improvement on
+a separately frozen wildfire, satellite, gondola, and kelp full-stack corpus.
+Its clean-room harness passed 16/16 task/language reference cells, all 144 named
+cases, all 16 seeded negative controls, all eight maintenance root boundaries,
+and the parent-owned HTTP/Chromium orchestration smoke. Peak workspace use was
+161,170,519 bytes, more than 13× below the frozen per-worker allowance. Revision
+2 binds all 19 transitive execution inputs in
+`FULLSTACK_AGENT_043_EXECUTION_FREEZE.md`; no model session existed at this
+once-run boundary. The frozen protocol SHA-256 is
+`a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

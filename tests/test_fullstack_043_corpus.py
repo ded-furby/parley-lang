@@ -210,10 +210,19 @@ def test_fullstack_043_protocol_preregisters_matrix_gate_and_scratch_boundary():
     product = protocol["frozen_product"]
     scratch = protocol["scratch_space_control"]
 
-    assert sha256(PROTOCOL) == "4027a144f10e346a1505c55c30fb3490c48c5a81ab41d042a2ca2a24d0b14642"
-    assert protocol["protocol_revision"] == 1
+    assert sha256(PROTOCOL) == "a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4"
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "043"
-    assert "execution_freeze" not in protocol
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "9ca28d531197c69b5171c52b64c165b193faa767"
+    )
+    assert execution["calibrated_max_workspace_bytes"] == 161_170_519
+    assert execution["parley_prompt_delta_vs_python_o200k_tokens"] == 207
+    assert len(execution["files"]) == 19
+    for item in execution["files"]:
+        assert sha256(REPO / item["file"]) == item["sha256"]
     assert product["parley_version"] == "parley 0.5.4"
     assert product["product_commit"] == "bf0f85aa33dbd6d52c17260d85a04155d11518c2"
     assert product["corpus_commit"] == "b5d2fc4b23dbd0716f4e09ab4472372f1d7dbf01"

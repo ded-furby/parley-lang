@@ -69,3 +69,19 @@ post-build hashes, and the no-rerun rule. No scaffold, reference application,
 runner, or measured session exists at this checkpoint. Those may now be built
 and validated, but task semantics, the compiler/context, models, metrics,
 thresholds, and gate may not change.
+
+## Validated execution harness
+
+The post-protocol harness commit `9ca28d5` passed 16/16 task/language reference
+cells and all 144 public and hidden cases. All 16 seeded applications built and
+failed public semantics as intended, all eight maintenance root-boundary
+checks passed, and every exact native/WASM build preserved protected hashes.
+The parent-owned orchestration smoke passed HTTP, real Chromium, cross-target,
+FIFO, hidden-judgment, and final-integrity checks.
+
+Peak clean-room workspace use was 161,170,519 bytes, leaving 13.324× headroom
+inside the preregistered 2 GiB per-worker allowance. Revision 2 binds the 19
+transitive harness and dependency inputs described in
+`FULLSTACK_AGENT_043_EXECUTION_FREEZE.md`. Measured sessions before that freeze:
+zero. The revision-2 protocol SHA-256 is
+`a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.

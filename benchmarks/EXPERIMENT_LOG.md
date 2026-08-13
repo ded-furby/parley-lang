@@ -4603,3 +4603,26 @@ scratch, six-condition gate, exclusion, and no-rerun rules remain as strict as
 042. No 043 scaffold, reference implementation, runner, or measured session
 exists. Next: commit the preregistration, then implement and clean-room validate
 the 16 stack/task cells before a final zero-session execution freeze.
+
+### 043 validated harness and zero-session execution freeze
+
+- Harness commit: `9ca28d531197c69b5171c52b64c165b193faa767`
+- Reference cells: 16/16
+- Named reference cases: 144/144
+- Seed builds: 16/16, with 0/16 semantically correct as designed
+- Maintenance root boundaries: 8/8
+- Peak workspace: 161,170,519 bytes
+- Measured sessions before revision 2: 0
+
+The frozen v0.5.4 archive and pinned Python, TypeScript, Rust, and Chromium
+environments passed provenance validation. Exact native/WASM builds preserved
+all protected and read-only hashes. The parent-check orchestration smoke passed
+bounded FIFO feedback, public HTTP/browser execution, hidden judgment,
+cross-target agreement, and final integrity. Revision 2 binds the 19 transitive
+execution inputs documented in `FULLSTACK_AGENT_043_EXECUTION_FREEZE.md` without
+changing the task/case semantics, compiler/context, model matrix, metrics,
+thresholds, or strict all-six gate. Next: commit and push the once-run boundary,
+then execute all 96 cells exactly once and publish every outcome.
+
+Revision-2 protocol SHA-256:
+`a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4`.
