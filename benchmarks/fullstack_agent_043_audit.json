@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "experiment_id": "043",
+  "generated_at": "2026-08-13T03:07:54.940587Z",
+  "raw_sha256": "13ab8043bfb973a51d339838a90936b7ec4624fe2d2813e8c297954e958fb021",
+  "protocol_sha256": "a6ba21dc60dfee27027232f648d622363ead3a4e4063f67bded670ef4dc72cc4",
+  "validation_sha256": "7e90186e8c9cd7ac2c51961f880479bb809804cc3af15849cee7f0b5ec9d3a53",
+  "measurement_commit": "9c7a5348912e5d69aa5531e648c603604b462ce6",
+  "external_evidence_verified": true,
+  "matrix": {
+    "cells": 96,
+    "unique_cell_ids": 96,
+    "unique_thread_ids": 96,
+    "journal_pairs_verified": 96,
+    "cleanup_records_verified": 96,
+    "attempt_files_verified": 96
+  },
+  "public": {
+    "attempts": 96,
+    "successful_attempts": 96,
+    "failed_attempts": 0,
+    "named_cases_executed": 384,
+    "browser_cases_executed": 96,
+    "cross_target_checks_executed": 96,
+    "first_check_successes": 96,
+    "final_check_successes": 96,
+    "repair_turns": 0
+  },
+  "hidden": {
+    "assignment_successes": 96,
+    "named_cases_executed": 480,
+    "named_case_passes": 480,
+    "browser_cases_executed": 192,
+    "cross_target_checks_executed": 96
+  },
+  "exact_build": {
+    "commands": 288,
+    "successful_commands": 288,
+    "stable_hash_checks": 288
+  },
+  "scratch": {
+    "capacity_checks": 93,
+    "minimum_free_bytes": 21980676096,
+    "final_free_bytes": 22291218432,
+    "integrity_ok": true,
+    "cleanup_records": 96,
+    "cleanup_failures": 0,
+    "peak_cell_workspace_bytes": 161144494,
+    "peak_per_worker_workspace_bytes": 161144494,
+    "retained_workspace_bytes_after_cleanup": 0
+  },
+  "model_failure_classes": {},
+  "by_language": {
+    "parley": {
+      "sessions": 24,
+      "hidden_successes": 24,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 24,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 12,
+      "exact_root_successes": 12,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 60206.5,
+      "median_elapsed_seconds": 26.283099999999997,
+      "repair_turns": 0
+    },
+    "python": {
+      "sessions": 24,
+      "hidden_successes": 24,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 24,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 12,
+      "exact_root_successes": 12,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 60707.5,
+      "median_elapsed_seconds": 26.7349,
+      "repair_turns": 0
+    },
+    "typescript": {
+      "sessions": 24,
+      "hidden_successes": 24,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 24,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 12,
+      "exact_root_successes": 12,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 78178.0,
+      "median_elapsed_seconds": 34.0822,
+      "repair_turns": 0
+    },
+    "rust": {
+      "sessions": 24,
+      "hidden_successes": 24,
+      "hidden_success_rate": 1.0,
+      "first_check_successes": 24,
+      "first_check_success_rate": 1.0,
+      "hidden_correct_maintenance_rows": 12,
+      "exact_root_successes": 12,
+      "exact_root_rate": 1.0,
+      "median_total_tokens": 103716.0,
+      "median_elapsed_seconds": 54.57825,
+      "repair_turns": 0
+    }
+  },
+  "by_configuration": {
+    "sol-medium": {
+      "parley": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60143.0,
+        "median_elapsed_seconds": 26.469,
+        "repair_turns": 0
+      },
+      "python": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60763.5,
+        "median_elapsed_seconds": 27.90715,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 78210.5,
+        "median_elapsed_seconds": 35.150499999999994,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 103784.0,
+        "median_elapsed_seconds": 54.774,
+        "repair_turns": 0
+      }
+    },
+    "terra-medium": {
+      "parley": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60362.0,
+        "median_elapsed_seconds": 26.264699999999998,
+        "repair_turns": 0
+      },
+      "python": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60673.5,
+        "median_elapsed_seconds": 25.5915,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 78152.5,
+        "median_elapsed_seconds": 31.705750000000002,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 6,
+        "exact_root_successes": 6,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 103632.5,
+        "median_elapsed_seconds": 54.304500000000004,
+        "repair_turns": 0
+      }
+    }
+  },
+  "by_kind": {
+    "implementation": {
+      "parley": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 60335.5,
+        "median_elapsed_seconds": 27.1217,
+        "repair_turns": 0
+      },
+      "python": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 61191.0,
+        "median_elapsed_seconds": 30.0668,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 78201.5,
+        "median_elapsed_seconds": 35.33255,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 0,
+        "exact_root_successes": 0,
+        "exact_root_rate": 0.0,
+        "median_total_tokens": 104028.5,
+        "median_elapsed_seconds": 55.311800000000005,
+        "repair_turns": 0
+      }
+    },
+    "maintenance": {
+      "parley": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 12,
+        "exact_root_successes": 12,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60171.5,
+        "median_elapsed_seconds": 24.9967,
+        "repair_turns": 0
+      },
+      "python": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 12,
+        "exact_root_successes": 12,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 60595.5,
+        "median_elapsed_seconds": 25.43485,
+        "repair_turns": 0
+      },
+      "typescript": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 12,
+        "exact_root_successes": 12,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 78178.0,
+        "median_elapsed_seconds": 32.044250000000005,
+        "repair_turns": 0
+      },
+      "rust": {
+        "sessions": 12,
+        "hidden_successes": 12,
+        "hidden_success_rate": 1.0,
+        "first_check_successes": 12,
+        "first_check_success_rate": 1.0,
+        "hidden_correct_maintenance_rows": 12,
+        "exact_root_successes": 12,
+        "exact_root_rate": 1.0,
+        "median_total_tokens": 103606.5,
+        "median_elapsed_seconds": 53.07125,
+        "repair_turns": 0
+      }
+    }
+  },
+  "primary_gate": {
+    "conditions": {
+      "execution_integrity": true,
+      "correctness": true,
+      "first_check": true,
+      "tokens": true,
+      "elapsed": false,
+      "maintainability": true
+    },
+    "passed": false
+  },
+  "comparisons": {
+    "parley_tokens_vs_python_percent": -0.8253,
+    "parley_elapsed_vs_python_percent": -1.6899,
+    "parley_elapsed_vs_typescript_percent": -22.8832,
+    "parley_source_smaller_than_python_percent": 24.0526,
+    "parley_source_smaller_than_typescript_percent": 15.4668,
+    "parley_source_smaller_than_rust_percent": 48.2794
+  },
+  "median_final_source": {
+    "parley": {
+      "bytes": 3112.5,
+      "lines": 69.5,
+      "rough_tokens": 525.0,
+      "o200k_base_tokens": 751.5
+    },
+    "python": {
+      "bytes": 3688.5,
+      "lines": 70.5,
+      "rough_tokens": 988.5,
+      "o200k_base_tokens": 989.5
+    },
+    "typescript": {
+      "bytes": 3258.0,
+      "lines": 33.0,
+      "rough_tokens": 1035.5,
+      "o200k_base_tokens": 889.0
+    },
+    "rust": {
+      "bytes": 5408.5,
+      "lines": 34.0,
+      "rough_tokens": 1586.5,
+      "o200k_base_tokens": 1453.0
+    }
+  },
+  "audit_pass": true
+}
