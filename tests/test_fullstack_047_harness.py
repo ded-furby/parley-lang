@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import hashlib
 import json
 from pathlib import Path
 import threading
@@ -13,6 +14,7 @@ from benchmarks.run_fullstack_agent_047 import (
     build_plan,
     command_protocol,
     load_cases,
+    load_provenance,
     load_protocol,
     render_prompt,
     request,
@@ -129,3 +131,65 @@ def test_fullstack_047_revision_1_keeps_measurement_locked():
     assert protocol["protocol_revision"] == 1
     assert protocol["execution_freeze"]["required_revision"] == 2
     assert protocol["execution_freeze"]["measured_sessions_before_freeze"] == 0
+
+
+def test_fullstack_047_provenance_and_reference_validation_are_complete():
+    provenance_path = BENCHMARKS / "fullstack_agent_047_provenance.json"
+    validation_path = BENCHMARKS / "fullstack_agent_047_validation.json"
+    provenance = load_provenance(
+        provenance_path, "/private/tmp/parley-fullstack-047-parley/bin/parley"
+    )
+    validation = json.loads(validation_path.read_text())
+    assert provenance["experiment_id"] == "047"
+    assert provenance["parley"]["reported_version"] == "parley 0.5.7"
+    assert validation["protocol_sha256"] == hashlib.sha256(
+        (BENCHMARKS / "fullstack_agent_047_protocol.json").read_bytes()
+    ).hexdigest()
+    assert validation["provenance_sha256"] == hashlib.sha256(
+        provenance_path.read_bytes()
+    ).hexdigest()
+    assert validation["reference_cells_passed"] == 16
+    assert validation["seed_cells_built"] == 16
+    assert validation["seed_cells_correct"] == 0
+    assert validation["maintenance_root_boundaries_passed"] == 8
+    assert len(validation["cells"]) == 16
+    assert sum(row["reference_cases"] for row in validation["cells"]) == 160
+    assert all(row["reference_post_build_integrity"] for row in validation["cells"])
+    assert all(row["seed_post_build_integrity"] for row in validation["cells"])
+    assert validation["peak_validation_workspace_bytes"] == max(
+        max(row["reference_workspace_bytes"], row["seed_workspace_bytes"])
+        for row in validation["cells"]
+    )
+    assert validation["peak_validation_workspace_bytes"] < 2 * 1024**3
+
+
+def test_fullstack_047_orchestration_smoke_persists_routing_evidence():
+    smoke = json.loads(
+        (BENCHMARKS / "fullstack_agent_047_orchestration_smoke.json").read_text()
+    )
+    assert smoke["experiment_id"] == "047"
+    assert smoke["task_id"] == "tundra_probe_lookup_build"
+    assert smoke["commands"] == [
+        {"command": "./sources", "returncode": 0},
+        {"command": "./check", "returncode": 1},
+    ]
+    assert smoke["public"]["case_count"] == smoke["hidden"]["case_count"] == 5
+    assert smoke["public"]["http_cases"] == 4
+    assert smoke["hidden"]["http_cases"] == 3
+    controls = smoke["json_evidence_controls"]
+    assert controls["broker_attempt_exact"] is True
+    assert controls["empty"] == {"live": [], "persisted": []}
+    assert controls["custom"]["live"] == controls["custom"]["persisted"] == [
+        ["x-access-denial", "tundra_pass"]
+    ]
+    assert controls["duplicate"]["live"] == controls["duplicate"]["persisted"] == [
+        ["x-repeat", "alpha"], ["x-repeat", "beta"]
+    ]
+    assert controls["routing"] == {
+        "live_path": "/api/v11/tundra-probes/18",
+        "persisted_path": "/api/v11/tundra-probes/18",
+        "live_path_parameters": {"probe_serial": "18"},
+        "persisted_path_parameters": {"probe_serial": "18"},
+    }
+    assert controls["json_native_shape"] is controls["pass"] is True
+    assert smoke["pass"] is True

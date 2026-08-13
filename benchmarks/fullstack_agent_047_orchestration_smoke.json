@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "experiment_id": "047",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "tundra_probe_lookup_build",
+  "language": "python",
+  "protocol_sha256": "c0434ac473d014beaca6e3d2b0c3577023dd6402db13257b58e17ee60d398a1f",
+  "provenance_sha256": "9e7e7827d606e38e650a3cb8bb584178ecf06d621e1e8ef53a6339a584543057",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 4,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": false
+  },
+  "custom_header_judgment": {
+    "failing_public_case": "tundra_probe_lookup_primary",
+    "failing_public_application_headers": {
+      "x-probe-state": "catalogued"
+    },
+    "passing_hidden_case": "tundra_probe_lookup_unauthorized",
+    "passing_hidden_application_headers": {
+      "x-access-denial": "tundra_pass"
+    },
+    "passing_hidden_case_pass": true
+  },
+  "json_evidence_controls": {
+    "broker_attempt_exact": true,
+    "empty": {
+      "live": [],
+      "persisted": []
+    },
+    "custom": {
+      "live": [
+        [
+          "x-access-denial",
+          "tundra_pass"
+        ]
+      ],
+      "persisted": [
+        [
+          "x-access-denial",
+          "tundra_pass"
+        ]
+      ]
+    },
+    "duplicate": {
+      "live": [
+        [
+          "x-repeat",
+          "alpha"
+        ],
+        [
+          "x-repeat",
+          "beta"
+        ]
+      ],
+      "persisted": [
+        [
+          "x-repeat",
+          "alpha"
+        ],
+        [
+          "x-repeat",
+          "beta"
+        ]
+      ]
+    },
+    "routing": {
+      "live_path": "/api/v11/tundra-probes/18",
+      "persisted_path": "/api/v11/tundra-probes/18",
+      "live_path_parameters": {
+        "probe_serial": "18"
+      },
+      "persisted_path_parameters": {
+        "probe_serial": "18"
+      }
+    },
+    "json_native_shape": true,
+    "pass": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}
