@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "description": "Two response-control implementations and two route-handler repairs, frozen after the 046 product/evidence boundary and before scaffolds, reference implementations, protocol thresholds, or model output.",
+  "frozen_on": "2026-08-13",
+  "product_freeze_commit": "d6ab7e114574c8f9e5c2aa2dd9e9b7efeb7cdb8e",
+  "product_freeze_sha256": "1dab21f26a2f49f8c398840816f1780dd51172cc66baff0c270c95fd2e805ce2",
+  "common_contract": {
+    "server": "Expose the exact GET status route and typed POST JSON route declared by the task. The POST route returns the frozen dynamic status/header/body envelope. Request header names are compared case-insensitively.",
+    "request_precedence": "Typed JSON decoding precedes authorization and domain decisions. Malformed JSON, missing or unknown fields, and wrong JSON types return 400 invalid_json before a typed application envelope.",
+    "transport_errors": "Return 415 json_content_type_required without application/json and 413 body_too_large above 16384 bytes.",
+    "dynamic_response": "Return the exact task status, JSON body, and custom headers. Content-Type, Content-Length, Connection, Transfer-Encoding, and X-Content-Type-Options are server-owned.",
+    "browser": "Expose the declared deterministic scalar browser function as an ES module export and return the exact frozen values in real Chromium.",
+    "cross_target": "For a domain-valid request, shared_result_field equals the browser export for the same numeric and boolean inputs.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "body_limit_bytes": 16384,
+    "response_envelope": {
+      "status_field": "status",
+      "headers_field": "headers",
+      "body_field": "body"
+    }
+  },
+  "tasks": [
+    {
+      "id": "orbital_clearance_build",
+      "kind": "implementation",
+      "title": "Build an authenticated orbital cargo-clearance workflow",
+      "statement": "Implement Orbital Cargo Clearance. POST requires x-orbit-credential: orbit-046; otherwise return 403 with x-access-denial orbit_credential and clearance_phase authorization_required. Negative numbers return 422 with x-validation nonnegative. Positive payload_tally with zero docking_arms returns 422 with x-validation docking_arms. payload_tally is pressurized_pods + vacuum_pods. transfer_effort is pressurized_pods*8 + vacuum_pods*14, plus docking_arms*5 during solar_flare. berth_allowance is docking_arms*47. approved_effort is min(effort, allowance); spillover_effort is max(effort - allowance, 0); orbit_passes is ceiling(payload_tally/4). clearance_rating is approved_effort + spillover_effort*7 + orbit_passes*6. clearance_phase is cleared with no spillover, flare_hold during a flare, and routine_hold otherwise. Success returns 207 with location /api/v10/orbital-clearances/{clearance_slug} and x-clearance-phase. The browser export returns the rating.",
+      "service": "Orbital Cargo Clearance",
+      "status_route": "/status/orbital-clearance-ready",
+      "post_route": "/api/v10/orbital-clearances",
+      "browser_export": "orbital_clearance_rating",
+      "browser_fields": [
+        "pressurized_pods",
+        "vacuum_pods",
+        "docking_arms",
+        "solar_flare"
+      ],
+      "shared_result_field": "clearance_rating",
+      "request_fields": {
+        "clearance_slug": "text",
+        "pressurized_pods": "number",
+        "vacuum_pods": "number",
+        "docking_arms": "number",
+        "solar_flare": "yesno"
+      },
+      "response_fields": {
+        "clearance_slug": "text",
+        "payload_tally": "number",
+        "transfer_effort": "number",
+        "berth_allowance": "number",
+        "approved_effort": "number",
+        "spillover_effort": "number",
+        "orbit_passes": "number",
+        "clearance_rating": "number",
+        "clearance_phase": "text"
+      },
+      "authorization": {
+        "header": "x-orbit-credential",
+        "value": "orbit-046",
+        "failure_status": 403,
+        "failure_headers": {
+          "x-access-denial": "orbit_credential"
+        }
+      },
+      "success_status": 207,
+      "independence": "New orbital vocabulary, v10 routes, 207 response, credential header, formulas, fixtures, and export selected after the 046 product freeze.",
+      "public_case_ids": [
+        "orbital_clearance_status",
+        "orbital_clearance_primary",
+        "orbital_clearance_wrong_vacuum_type",
+        "orbital_clearance_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "orbital_clearance_unauthorized",
+        "orbital_clearance_zero_arms",
+        "orbital_clearance_unknown_field",
+        "orbital_clearance_browser_hidden_1",
+        "orbital_clearance_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "estuary_assay_build",
+      "kind": "implementation",
+      "title": "Build an authenticated asynchronous estuary-assay workflow",
+      "statement": "Implement Estuary Assay Dispatch. POST requires Authorization: Sample sample-046; otherwise return 401 with www-authenticate Sample realm=estuary and assay_phase authorization_required. Negative numbers return 422 with x-validation nonnegative. Positive sample_tally with zero assay_benches returns 422 with x-validation assay_benches. repeated_submission returns 409 with x-conflict repeated_submission. sample_tally is inlet_vials + outlet_vials. assay_effort is inlet_vials*11 + outlet_vials*7 + reagent_cartridges*9, plus reagent_cartridges*4 during contamination_alert. bench_allowance is assay_benches*52. examined_effort is min(effort, allowance); pending_assay is max(effort - allowance, 0); assay_cycles is ceiling(effort/27). assay_rating is examined_effort + pending_assay*4 + assay_cycles*8. assay_phase is dispatched with no pending work, contamination_queue during an alert, and routine_queue otherwise. Success returns 202 with location /api/v10/estuary-assays/{assay_ref}, retry-after 5, and x-assay-phase. The browser export returns rating.",
+      "service": "Estuary Assay Dispatch",
+      "status_route": "/status/estuary-assay-ready",
+      "post_route": "/api/v10/estuary-assays",
+      "browser_export": "estuary_assay_rating",
+      "browser_fields": [
+        "inlet_vials",
+        "outlet_vials",
+        "reagent_cartridges",
+        "assay_benches",
+        "contamination_alert"
+      ],
+      "shared_result_field": "assay_rating",
+      "request_fields": {
+        "assay_ref": "text",
+        "inlet_vials": "number",
+        "outlet_vials": "number",
+        "reagent_cartridges": "number",
+        "assay_benches": "number",
+        "contamination_alert": "yesno",
+        "repeated_submission": "yesno"
+      },
+      "response_fields": {
+        "assay_ref": "text",
+        "sample_tally": "number",
+        "assay_effort": "number",
+        "bench_allowance": "number",
+        "examined_effort": "number",
+        "pending_assay": "number",
+        "assay_cycles": "number",
+        "assay_rating": "number",
+        "assay_phase": "text"
+      },
+      "authorization": {
+        "header": "authorization",
+        "value": "Sample sample-046",
+        "failure_status": 401,
+        "failure_headers": {
+          "www-authenticate": "Sample realm=estuary"
+        }
+      },
+      "success_status": 202,
+      "independence": "New estuary vocabulary, v10 routes, Sample authorization, formulas, fixtures, conflict branch, headers, and export selected after the 046 product freeze.",
+      "public_case_ids": [
+        "estuary_assay_status",
+        "estuary_assay_primary",
+        "estuary_assay_wrong_media",
+        "estuary_assay_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "estuary_assay_duplicate",
+        "estuary_assay_unauthorized",
+        "estuary_assay_unknown_field",
+        "estuary_assay_browser_hidden_1",
+        "estuary_assay_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "archive_transfer_repair",
+      "kind": "maintenance",
+      "title": "Repair a custom response-header name in an archive transfer",
+      "statement": "Repair Archive Transfer. Negative numbers return 422 with x-validation nonnegative. Positive volume_tally with zero catalog_carts returns 422 with x-validation catalog_carts. volume_tally is folio_boxes + atlas_tubes. relocation_effort is folio_boxes*6 + atlas_tubes*17, plus catalog_carts*3 during humidity_warning. cart_allowance is catalog_carts*43. shelved_effort is min(effort, allowance); quarantined_effort is max(effort - allowance, 0); transfer_rounds is ceiling(volume_tally/5). transfer_rating is shelved_effort + quarantined_effort*6 + transfer_rounds*7. transfer_phase is shelved with no quarantine, humidity_hold during a warning, and routine_hold otherwise. Success returns 201 with location /api/v10/archive-transfers/{transfer_tag} and x-transfer-phase. The browser export returns the rating.",
+      "service": "Archive Transfer",
+      "status_route": "/status/archive-transfer-ready",
+      "post_route": "/api/v10/archive-transfers",
+      "browser_export": "archive_transfer_rating",
+      "browser_fields": [
+        "folio_boxes",
+        "atlas_tubes",
+        "catalog_carts",
+        "humidity_warning"
+      ],
+      "shared_result_field": "transfer_rating",
+      "request_fields": {
+        "transfer_tag": "text",
+        "folio_boxes": "number",
+        "atlas_tubes": "number",
+        "catalog_carts": "number",
+        "humidity_warning": "yesno"
+      },
+      "response_fields": {
+        "transfer_tag": "text",
+        "volume_tally": "number",
+        "relocation_effort": "number",
+        "cart_allowance": "number",
+        "shelved_effort": "number",
+        "quarantined_effort": "number",
+        "transfer_rounds": "number",
+        "transfer_rating": "number",
+        "transfer_phase": "text"
+      },
+      "success_status": 201,
+      "predeclared_defect": "The route-handler seed writes the calculated phase under x-transfer-state instead of the required x-transfer-phase response header.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic custom response-header name substitution defect",
+      "adaptation_boundary": "The custom-header defect, archive-transfer workflow, v10 routes, formulas, fixtures, and repair were selected after the 046 product freeze.",
+      "public_case_ids": [
+        "archive_transfer_status",
+        "archive_transfer_primary",
+        "archive_transfer_missing_carts",
+        "archive_transfer_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "archive_transfer_negative_folios",
+        "archive_transfer_zero_carts",
+        "archive_transfer_unknown_field",
+        "archive_transfer_browser_hidden_1",
+        "archive_transfer_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "beacon_enrollment_repair",
+      "kind": "maintenance",
+      "title": "Repair a success status in a beacon-enrollment workflow",
+      "statement": "Repair Beacon Enrollment. POST requires x-rescue-pass: beacon-046; otherwise return 403 with x-access-denial rescue_pass and enrollment_phase authorization_required. Negative numbers return 422 with x-validation nonnegative. Positive transponder_tally with zero calibration_frames returns 422 with x-validation calibration_frames. transponder_tally is analog_transponders + digital_transponders. tuning_effort is analog*9 + digital*16, plus calibration_frames*7 during whiteout_warning. frame_allowance is calibration_frames*50. commissioned_effort is min(effort, allowance); uncommissioned_effort is max(effort - allowance, 0); tuning_rounds is ceiling(transponder_tally/6). enrollment_rating is commissioned_effort + uncommissioned_effort*8 + tuning_rounds*5. enrollment_phase is enrolled with no remainder, whiteout_hold during a warning, and routine_hold otherwise. Success returns 202 with location /api/v10/beacon-enrollments/{enrollment_ref}, retry-after 4, and x-enrollment-phase. The browser export returns the rating.",
+      "service": "Beacon Enrollment",
+      "status_route": "/status/beacon-enrollment-ready",
+      "post_route": "/api/v10/beacon-enrollments",
+      "browser_export": "beacon_enrollment_rating",
+      "browser_fields": [
+        "analog_transponders",
+        "digital_transponders",
+        "calibration_frames",
+        "whiteout_warning"
+      ],
+      "shared_result_field": "enrollment_rating",
+      "request_fields": {
+        "enrollment_ref": "text",
+        "analog_transponders": "number",
+        "digital_transponders": "number",
+        "calibration_frames": "number",
+        "whiteout_warning": "yesno"
+      },
+      "response_fields": {
+        "enrollment_ref": "text",
+        "transponder_tally": "number",
+        "tuning_effort": "number",
+        "frame_allowance": "number",
+        "commissioned_effort": "number",
+        "uncommissioned_effort": "number",
+        "tuning_rounds": "number",
+        "enrollment_rating": "number",
+        "enrollment_phase": "text"
+      },
+      "authorization": {
+        "header": "x-rescue-pass",
+        "value": "beacon-046",
+        "failure_status": 403,
+        "failure_headers": {
+          "x-access-denial": "rescue_pass"
+        }
+      },
+      "success_status": 202,
+      "predeclared_defect": "The route-handler seed returns 201 for a valid enrollment instead of the required asynchronous 202 status.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic successful response-status substitution defect",
+      "adaptation_boundary": "The status defect, beacon workflow, v10 routes, formulas, fixtures, and repair were selected after the 046 product freeze.",
+      "public_case_ids": [
+        "beacon_enrollment_status",
+        "beacon_enrollment_primary",
+        "beacon_enrollment_wrong_frame_type",
+        "beacon_enrollment_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "beacon_enrollment_unauthorized",
+        "beacon_enrollment_zero_frames",
+        "beacon_enrollment_unknown_field",
+        "beacon_enrollment_browser_hidden_1",
+        "beacon_enrollment_browser_hidden_2"
+      ]
+    }
+  ]
+}

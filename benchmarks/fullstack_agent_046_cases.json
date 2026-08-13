@@ -1,0 +1,756 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "visibility_policy": "Prompts expose only public case IDs and expected outcomes. Hidden cases remain parent-owned and are never placed in agent workspaces.",
+  "tasks": {
+    "orbital_clearance_build": [
+      {
+        "id": "orbital_clearance_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/orbital-clearance-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Orbital Cargo Clearance",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "orbital_clearance_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/orbital-clearances",
+        "json": {
+          "clearance_slug": "zenith-4",
+          "pressurized_pods": 3,
+          "vacuum_pods": 2,
+          "docking_arms": 2,
+          "solar_flare": true
+        },
+        "request_headers": {
+          "X-Orbit-Credential": "orbit-046"
+        },
+        "expected_status": 207,
+        "expected_json": {
+          "clearance_slug": "zenith-4",
+          "payload_tally": 5,
+          "transfer_effort": 62,
+          "berth_allowance": 94,
+          "approved_effort": 62,
+          "spillover_effort": 0,
+          "orbit_passes": 2,
+          "clearance_rating": 74,
+          "clearance_phase": "cleared"
+        },
+        "expected_headers": {
+          "location": "/api/v10/orbital-clearances/zenith-4",
+          "x-clearance-phase": "cleared"
+        }
+      },
+      {
+        "id": "orbital_clearance_wrong_vacuum_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "clearance_slug": "zenith-4",
+          "pressurized_pods": 3,
+          "vacuum_pods": true,
+          "docking_arms": 2,
+          "solar_flare": true
+        },
+        "request_headers": {
+          "x-orbit-credential": "orbit-046"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "orbital_clearance_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "orbital_clearance_rating",
+        "args": [
+          3,
+          2,
+          2,
+          true
+        ],
+        "expected": 74
+      },
+      {
+        "id": "orbital_clearance_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/orbital-clearances",
+        "json": {
+          "clearance_slug": "zenith-4",
+          "pressurized_pods": 3,
+          "vacuum_pods": 2,
+          "docking_arms": 2,
+          "solar_flare": true
+        },
+        "request_headers": {},
+        "expected_status": 403,
+        "expected_json": {
+          "clearance_slug": "zenith-4",
+          "payload_tally": 0,
+          "transfer_effort": 0,
+          "berth_allowance": 0,
+          "approved_effort": 0,
+          "spillover_effort": 0,
+          "orbit_passes": 0,
+          "clearance_rating": 0,
+          "clearance_phase": "authorization_required"
+        },
+        "expected_headers": {
+          "x-access-denial": "orbit_credential"
+        }
+      },
+      {
+        "id": "orbital_clearance_zero_arms",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/orbital-clearances",
+        "json": {
+          "clearance_slug": "nadir-2",
+          "pressurized_pods": 1,
+          "vacuum_pods": 2,
+          "docking_arms": 0,
+          "solar_flare": false
+        },
+        "request_headers": {
+          "x-orbit-credential": "orbit-046"
+        },
+        "expected_status": 422,
+        "expected_json": {
+          "clearance_slug": "nadir-2",
+          "payload_tally": 0,
+          "transfer_effort": 0,
+          "berth_allowance": 0,
+          "approved_effort": 0,
+          "spillover_effort": 0,
+          "orbit_passes": 0,
+          "clearance_rating": 0,
+          "clearance_phase": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "docking_arms"
+        }
+      },
+      {
+        "id": "orbital_clearance_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/orbital-clearances",
+        "json": {
+          "clearance_slug": "zenith-4",
+          "pressurized_pods": 3,
+          "vacuum_pods": 2,
+          "docking_arms": 2,
+          "solar_flare": true,
+          "cargo_latch": 3
+        },
+        "request_headers": {
+          "X-Orbit-Credential": "orbit-046"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "orbital_clearance_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "orbital_clearance_rating",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 28
+      },
+      {
+        "id": "orbital_clearance_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "orbital_clearance_rating",
+        "args": [
+          7,
+          4,
+          1,
+          true
+        ],
+        "expected": 555
+      }
+    ],
+    "estuary_assay_build": [
+      {
+        "id": "estuary_assay_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/estuary-assay-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Estuary Assay Dispatch",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "estuary_assay_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/estuary-assays",
+        "json": {
+          "assay_ref": "delta-9",
+          "inlet_vials": 3,
+          "outlet_vials": 2,
+          "reagent_cartridges": 2,
+          "assay_benches": 2,
+          "contamination_alert": true,
+          "repeated_submission": false
+        },
+        "request_headers": {
+          "authorization": "Sample sample-046"
+        },
+        "expected_status": 202,
+        "expected_json": {
+          "assay_ref": "delta-9",
+          "sample_tally": 5,
+          "assay_effort": 73,
+          "bench_allowance": 104,
+          "examined_effort": 73,
+          "pending_assay": 0,
+          "assay_cycles": 3,
+          "assay_rating": 97,
+          "assay_phase": "dispatched"
+        },
+        "expected_headers": {
+          "location": "/api/v10/estuary-assays/delta-9",
+          "retry-after": "5",
+          "x-assay-phase": "dispatched"
+        }
+      },
+      {
+        "id": "estuary_assay_wrong_media",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "raw_body": "{}",
+        "content_type": "text/plain",
+        "request_headers": {
+          "authorization": "Sample sample-046"
+        },
+        "expected_status": 415,
+        "expected_error": "json_content_type_required"
+      },
+      {
+        "id": "estuary_assay_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "estuary_assay_rating",
+        "args": [
+          3,
+          2,
+          2,
+          2,
+          true
+        ],
+        "expected": 97
+      },
+      {
+        "id": "estuary_assay_duplicate",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/estuary-assays",
+        "json": {
+          "assay_ref": "delta-9",
+          "inlet_vials": 3,
+          "outlet_vials": 2,
+          "reagent_cartridges": 2,
+          "assay_benches": 2,
+          "contamination_alert": true,
+          "repeated_submission": true
+        },
+        "request_headers": {
+          "authorization": "Sample sample-046"
+        },
+        "expected_status": 409,
+        "expected_json": {
+          "assay_ref": "delta-9",
+          "sample_tally": 0,
+          "assay_effort": 0,
+          "bench_allowance": 0,
+          "examined_effort": 0,
+          "pending_assay": 0,
+          "assay_cycles": 0,
+          "assay_rating": 0,
+          "assay_phase": "duplicate"
+        },
+        "expected_headers": {
+          "x-conflict": "repeated_submission"
+        }
+      },
+      {
+        "id": "estuary_assay_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/estuary-assays",
+        "json": {
+          "assay_ref": "delta-9",
+          "inlet_vials": 3,
+          "outlet_vials": 2,
+          "reagent_cartridges": 2,
+          "assay_benches": 2,
+          "contamination_alert": true,
+          "repeated_submission": false
+        },
+        "request_headers": {},
+        "expected_status": 401,
+        "expected_json": {
+          "assay_ref": "delta-9",
+          "sample_tally": 0,
+          "assay_effort": 0,
+          "bench_allowance": 0,
+          "examined_effort": 0,
+          "pending_assay": 0,
+          "assay_cycles": 0,
+          "assay_rating": 0,
+          "assay_phase": "authorization_required"
+        },
+        "expected_headers": {
+          "www-authenticate": "Sample realm=estuary"
+        }
+      },
+      {
+        "id": "estuary_assay_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/estuary-assays",
+        "json": {
+          "assay_ref": "delta-9",
+          "inlet_vials": 3,
+          "outlet_vials": 2,
+          "reagent_cartridges": 2,
+          "assay_benches": 2,
+          "contamination_alert": true,
+          "repeated_submission": false,
+          "salinity_band": "high"
+        },
+        "request_headers": {
+          "authorization": "Sample sample-046"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "estuary_assay_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "estuary_assay_rating",
+        "args": [
+          1,
+          2,
+          1,
+          2,
+          false
+        ],
+        "expected": 50
+      },
+      {
+        "id": "estuary_assay_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "estuary_assay_rating",
+        "args": [
+          6,
+          5,
+          3,
+          1,
+          true
+        ],
+        "expected": 452
+      }
+    ],
+    "archive_transfer_repair": [
+      {
+        "id": "archive_transfer_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/archive-transfer-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Archive Transfer",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "archive_transfer_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/archive-transfers",
+        "json": {
+          "transfer_tag": "folio-8",
+          "folio_boxes": 4,
+          "atlas_tubes": 2,
+          "catalog_carts": 2,
+          "humidity_warning": true
+        },
+        "request_headers": {},
+        "expected_status": 201,
+        "expected_json": {
+          "transfer_tag": "folio-8",
+          "volume_tally": 6,
+          "relocation_effort": 64,
+          "cart_allowance": 86,
+          "shelved_effort": 64,
+          "quarantined_effort": 0,
+          "transfer_rounds": 2,
+          "transfer_rating": 78,
+          "transfer_phase": "shelved"
+        },
+        "expected_headers": {
+          "location": "/api/v10/archive-transfers/folio-8",
+          "x-transfer-phase": "shelved"
+        }
+      },
+      {
+        "id": "archive_transfer_missing_carts",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "transfer_tag": "folio-8",
+          "folio_boxes": 4,
+          "atlas_tubes": 2,
+          "humidity_warning": true
+        },
+        "request_headers": {},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "archive_transfer_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "archive_transfer_rating",
+        "args": [
+          4,
+          2,
+          2,
+          true
+        ],
+        "expected": 78
+      },
+      {
+        "id": "archive_transfer_negative_folios",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/archive-transfers",
+        "json": {
+          "transfer_tag": "stack-3",
+          "folio_boxes": -1,
+          "atlas_tubes": 2,
+          "catalog_carts": 1,
+          "humidity_warning": false
+        },
+        "request_headers": {},
+        "expected_status": 422,
+        "expected_json": {
+          "transfer_tag": "stack-3",
+          "volume_tally": 0,
+          "relocation_effort": 0,
+          "cart_allowance": 0,
+          "shelved_effort": 0,
+          "quarantined_effort": 0,
+          "transfer_rounds": 0,
+          "transfer_rating": 0,
+          "transfer_phase": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "nonnegative"
+        }
+      },
+      {
+        "id": "archive_transfer_zero_carts",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/archive-transfers",
+        "json": {
+          "transfer_tag": "vault-5",
+          "folio_boxes": 2,
+          "atlas_tubes": 1,
+          "catalog_carts": 0,
+          "humidity_warning": false
+        },
+        "request_headers": {},
+        "expected_status": 422,
+        "expected_json": {
+          "transfer_tag": "vault-5",
+          "volume_tally": 0,
+          "relocation_effort": 0,
+          "cart_allowance": 0,
+          "shelved_effort": 0,
+          "quarantined_effort": 0,
+          "transfer_rounds": 0,
+          "transfer_rating": 0,
+          "transfer_phase": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "catalog_carts"
+        }
+      },
+      {
+        "id": "archive_transfer_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/archive-transfers",
+        "json": {
+          "transfer_tag": "folio-8",
+          "folio_boxes": 4,
+          "atlas_tubes": 2,
+          "catalog_carts": 2,
+          "humidity_warning": true,
+          "shelf_aisle": 7
+        },
+        "request_headers": {},
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "archive_transfer_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "archive_transfer_rating",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 30
+      },
+      {
+        "id": "archive_transfer_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "archive_transfer_rating",
+        "args": [
+          7,
+          4,
+          1,
+          true
+        ],
+        "expected": 484
+      }
+    ],
+    "beacon_enrollment_repair": [
+      {
+        "id": "beacon_enrollment_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/beacon-enrollment-ready",
+        "expected_status": 200,
+        "expected_json": {
+          "service": "Beacon Enrollment",
+          "ready": true
+        },
+        "expected_headers": {}
+      },
+      {
+        "id": "beacon_enrollment_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/beacon-enrollments",
+        "json": {
+          "enrollment_ref": "ridge-6",
+          "analog_transponders": 3,
+          "digital_transponders": 2,
+          "calibration_frames": 2,
+          "whiteout_warning": true
+        },
+        "request_headers": {
+          "x-rescue-pass": "beacon-046"
+        },
+        "expected_status": 202,
+        "expected_json": {
+          "enrollment_ref": "ridge-6",
+          "transponder_tally": 5,
+          "tuning_effort": 73,
+          "frame_allowance": 100,
+          "commissioned_effort": 73,
+          "uncommissioned_effort": 0,
+          "tuning_rounds": 1,
+          "enrollment_rating": 78,
+          "enrollment_phase": "enrolled"
+        },
+        "expected_headers": {
+          "location": "/api/v10/beacon-enrollments/ridge-6",
+          "retry-after": "4",
+          "x-enrollment-phase": "enrolled"
+        }
+      },
+      {
+        "id": "beacon_enrollment_wrong_frame_type",
+        "visibility": "public",
+        "target": "http",
+        "method": "POST",
+        "json": {
+          "enrollment_ref": "ridge-6",
+          "analog_transponders": 3,
+          "digital_transponders": 2,
+          "calibration_frames": false,
+          "whiteout_warning": true
+        },
+        "request_headers": {
+          "x-rescue-pass": "beacon-046"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "beacon_enrollment_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "beacon_enrollment_rating",
+        "args": [
+          3,
+          2,
+          2,
+          true
+        ],
+        "expected": 78
+      },
+      {
+        "id": "beacon_enrollment_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/beacon-enrollments",
+        "json": {
+          "enrollment_ref": "ridge-6",
+          "analog_transponders": 3,
+          "digital_transponders": 2,
+          "calibration_frames": 2,
+          "whiteout_warning": true
+        },
+        "request_headers": {
+          "x-rescue-pass": "wrong"
+        },
+        "expected_status": 403,
+        "expected_json": {
+          "enrollment_ref": "ridge-6",
+          "transponder_tally": 0,
+          "tuning_effort": 0,
+          "frame_allowance": 0,
+          "commissioned_effort": 0,
+          "uncommissioned_effort": 0,
+          "tuning_rounds": 0,
+          "enrollment_rating": 0,
+          "enrollment_phase": "authorization_required"
+        },
+        "expected_headers": {
+          "x-access-denial": "rescue_pass"
+        }
+      },
+      {
+        "id": "beacon_enrollment_zero_frames",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/beacon-enrollments",
+        "json": {
+          "enrollment_ref": "scree-2",
+          "analog_transponders": 2,
+          "digital_transponders": 1,
+          "calibration_frames": 0,
+          "whiteout_warning": false
+        },
+        "request_headers": {
+          "x-rescue-pass": "beacon-046"
+        },
+        "expected_status": 422,
+        "expected_json": {
+          "enrollment_ref": "scree-2",
+          "transponder_tally": 0,
+          "tuning_effort": 0,
+          "frame_allowance": 0,
+          "commissioned_effort": 0,
+          "uncommissioned_effort": 0,
+          "tuning_rounds": 0,
+          "enrollment_rating": 0,
+          "enrollment_phase": "invalid"
+        },
+        "expected_headers": {
+          "x-validation": "calibration_frames"
+        }
+      },
+      {
+        "id": "beacon_enrollment_unknown_field",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "POST",
+        "path": "/api/v10/beacon-enrollments",
+        "json": {
+          "enrollment_ref": "ridge-6",
+          "analog_transponders": 3,
+          "digital_transponders": 2,
+          "calibration_frames": 2,
+          "whiteout_warning": true,
+          "rescue_sector": "north"
+        },
+        "request_headers": {
+          "x-rescue-pass": "beacon-046"
+        },
+        "expected_status": 400,
+        "expected_error": "invalid_json"
+      },
+      {
+        "id": "beacon_enrollment_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "beacon_enrollment_rating",
+        "args": [
+          1,
+          1,
+          2,
+          false
+        ],
+        "expected": 30
+      },
+      {
+        "id": "beacon_enrollment_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "beacon_enrollment_rating",
+        "args": [
+          6,
+          5,
+          1,
+          true
+        ],
+        "expected": 788
+      }
+    ]
+  }
+}
