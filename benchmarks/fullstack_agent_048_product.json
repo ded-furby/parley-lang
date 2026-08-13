@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment_id": "048",
+  "phase": "pre-corpus product and evidence freeze",
+  "frozen_on": "2026-08-13",
+  "parley": {
+    "version": "0.5.8",
+    "product_commit": "8d040c55fcc4ad502bdc6449c363035a42d0dceb",
+    "product_tree": "2eed6a33517c6a31311348314093aaa1ef66d2be",
+    "accepted_product_gate": "9 dedicated and 767 complete tests passed",
+    "wheel_sha256": "044af3f790226b1bef82709c0f7c6d84121180476d96da1539eee2e69d141a67"
+  },
+  "context": {
+    "commit": "b7e65e3441d4dbaeeeea1ee5da165cae84dadf01",
+    "tree": "ff6694876095edf7b7ab24a1c428fe668c78889b",
+    "bytes": 921,
+    "o200k_base_tokens": 217,
+    "maximum_tokens": 225
+  },
+  "files": {
+    "product": {
+      "parley/web.py": "d0bbe5cfcf774c7bb79ab7949a2705dd9df52fa408b7fb370ab3cf4af16ddf29",
+      "parley/cli.py": "ce53c588510924c847b812f6115973fdb9dadbaff291fe2465dd4ed10f438872",
+      "parley/diagnostics.py": "506f91ce3b8c9207ea3022edab49f99677aed196efabb714674e42ec384ee5d0",
+      "parley/__init__.py": "bb87a6127b4425c1877fd377b61952ce29839215c9c3a65acd0efeffa12b1b5d",
+      "pyproject.toml": "65ac4e0610964af8d25adf567587b1694b54fa43f3b18b0ed73d73f29ffd7401",
+      "benchmarks/WEB_QUERY_PARAMETERS_005.md": "8c4d96512af3759d635d410b4b7372e268e80af5d90a94a00b895c6c9c1a64c3",
+      "benchmarks/WEB_QUERY_PARAMETERS_005_RESULT.md": "79de0a0a042c88dc7d5b08d5704f1bc727030d2de27b69ece69257db9115d5c4",
+      "docs/WEB_QUERY_PARAMETERS.md": "16da1feffc852af5c60bddf29377f435cd51f8ff31d61e6d9dd017181128c0b3",
+      "skill/parley/references/web-v0.5.8.md": "9b05892f00cffa11bc84f7eff18ec7dedfd7c9c42b41ca1ae0cdbd799f49670e",
+      "tests/test_web_query_parameters_005.py": "20567ef654be3ee081af5ca43b33869d630eede2d1c8373bee5c8490e2734fb0"
+    },
+    "context": {
+      "skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md": "f7cadc7bfe839a5174bc1064fbed3a021ab9251386b57173bdf6e69b75ed7a92",
+      "benchmarks/fullstack_agent_048_context.json": "36f85d7bcfb9d2f5e91cdb4ae8223b7a639b2ecf6a341eb538f321bcd1569f33",
+      "benchmarks/build_fullstack_agent_048_context.py": "05e7cc412e549d8a33e2cbd8904096fd4a699ac3282d3f1860da76f16d354bb9"
+    },
+    "evidence": {
+      "benchmarks/json_evidence.py": "dad9f4144e0dfa1c21d29e4362f116abd38c5181664a82dbb161b3358e70689c"
+    }
+  },
+  "evidence_boundary": {
+    "json_native_header_pairs": true,
+    "non_finite_json_rejected": true,
+    "route_path_path_parameters_and_query_parameters_must_match_live_and_persisted_evidence": true
+  },
+  "previous_study_boundary": {
+    "experiment_id": "047",
+    "result_commit": "8d040c55fcc4ad502bdc6449c363035a42d0dceb",
+    "result_tree": "2eed6a33517c6a31311348314093aaa1ef66d2be",
+    "status": "valid; strict gate failed on tokens and elapsed time",
+    "selective_rerun": false,
+    "same_corpus_reuse": false,
+    "files": {
+      "benchmarks/fullstack_agent_047_raw.json": "f04515b84abfbb2a3fe0477c7d0d5c5de9eba8a6f4de3eba2cf062886e779d28",
+      "benchmarks/fullstack_agent_047_audit.json": "0fc04897b4ba3a5e24c35b1b7d6235f1cde5835c005004a1f5a0fb2053182f5a",
+      "benchmarks/FULLSTACK_AGENT_047_RESULT.md": "f62e5de9d6e98c45c3b80788276c3e3f03782efcde2ec644404f920733ec182b",
+      "benchmarks/fullstack_agent_047_attribution.json": "a9ee9b9961c408cef70ccd6bec6bfa23995abdea5fdf761080988c957f420865",
+      "benchmarks/FULLSTACK_AGENT_047_ATTRIBUTION.md": "b68a27c86423b917186dab13e0664cdd75183916bc32a4dd924564a6a1382746"
+    }
+  },
+  "pre_corpus_anchor_commit": "b7e65e3441d4dbaeeeea1ee5da165cae84dadf01",
+  "corpus_selected_before_freeze": false,
+  "measured_sessions_before_freeze": 0,
+  "next_step": "Select and freeze new query-routing semantics disjoint from all previous measured corpora before building scaffolds or prompts.",
+  "claim_boundary": "This checkpoint establishes reproducibility only; it does not establish agent efficiency, broad framework parity, or universal superiority."
+}

@@ -5189,3 +5189,18 @@ The compact card retains response controls, path captures, repeated query-map
 access, safe list lookup, comparator guidance, and repair locality within a
 225-token ceiling. It is frozen before any 048 task, case, scaffold, threshold,
 prompt, or model output exists; its static size is not comparative evidence.
+
+### 048 v0.5.8 product frozen before corpus selection
+
+- Product artifact: `benchmarks/fullstack_agent_048_product.json`
+- Product artifact SHA-256:
+  `cf76af8353f6ed2c2fb72fabb5a819fc745d65d3406ca54efccce86509ec676c`
+- Product commit/tree: `8d040c55fcc4ad502bdc6449c363035a42d0dceb` /
+  `2eed6a33517c6a31311348314093aaa1ef66d2be`
+- Context commit/tree: `b7e65e3441d4dbaeeeea1ee5da165cae84dadf01` /
+  `ff6694876095edf7b7ab24a1c428fe668c78889b`
+
+The deterministic artifact binds exact product, compact-context, JSON-evidence,
+and immutable 047 result/attribution blobs. It records the 9 dedicated query
+tests, 767-test full gate, and accepted wheel without treating them as agent
+outcomes. No 048 task, case, scaffold, threshold, prompt, or model output exists.
