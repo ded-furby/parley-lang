@@ -1,0 +1,700 @@
+{
+  "schema_version": 1,
+  "experiment_id": "047",
+  "visibility_policy": "Prompts expose only public case IDs and expected outcomes. Hidden cases remain parent-owned and never enter agent workspaces.",
+  "tasks": {
+    "tundra_probe_lookup_build": [
+      {
+        "id": "tundra_probe_lookup_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/tundra-probe-ready",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {},
+        "expected_json": {
+          "service": "Tundra Probe Lookup",
+          "ready": true
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "tundra_probe_lookup_exact",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/current",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {
+          "x-probe-state": "current"
+        },
+        "expected_json": {
+          "probe_serial": "current",
+          "probe_sequence": 47,
+          "calibration_score": 611,
+          "probe_state": "current"
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "tundra_probe_lookup_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/18",
+        "request_headers": {
+          "x-tundra-pass": "tundra-047",
+          "x-calibration-mode": "precision"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-probe-state": "catalogued"
+        },
+        "expected_json": {
+          "probe_serial": "18",
+          "probe_sequence": 18,
+          "calibration_score": 243,
+          "probe_state": "catalogued"
+        },
+        "expected_path_parameters": {
+          "probe_serial": "18"
+        }
+      },
+      {
+        "id": "tundra_probe_lookup_zero",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/0",
+        "request_headers": {
+          "x-tundra-pass": "tundra-047"
+        },
+        "expected_status": 422,
+        "expected_headers": {
+          "x-validation": "probe_serial"
+        },
+        "expected_json": {
+          "probe_serial": "0",
+          "probe_sequence": 0,
+          "calibration_score": 0,
+          "probe_state": "invalid"
+        },
+        "expected_path_parameters": {
+          "probe_serial": "0"
+        }
+      },
+      {
+        "id": "tundra_probe_lookup_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "tundra_calibration_score",
+        "args": [
+          18,
+          true
+        ],
+        "expected": 243
+      },
+      {
+        "id": "tundra_probe_lookup_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/18",
+        "request_headers": {
+          "x-calibration-mode": "precision"
+        },
+        "expected_status": 403,
+        "expected_headers": {
+          "x-access-denial": "tundra_pass"
+        },
+        "expected_json": {
+          "probe_serial": "18",
+          "probe_sequence": 0,
+          "calibration_score": 0,
+          "probe_state": "authorization_required"
+        },
+        "expected_path_parameters": {
+          "probe_serial": "18"
+        }
+      },
+      {
+        "id": "tundra_probe_lookup_encoded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/%34%32",
+        "request_headers": {
+          "x-tundra-pass": "tundra-047"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-probe-state": "catalogued"
+        },
+        "expected_json": {
+          "probe_serial": "42",
+          "probe_sequence": 42,
+          "calibration_score": 546,
+          "probe_state": "catalogued"
+        },
+        "expected_path_parameters": {
+          "probe_serial": "42"
+        }
+      },
+      {
+        "id": "tundra_probe_lookup_invalid_escape",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/tundra-probes/%ZZ",
+        "request_headers": {
+          "x-tundra-pass": "tundra-047"
+        },
+        "expected_status": 400,
+        "expected_headers": {},
+        "expected_error": "invalid_path_parameter"
+      },
+      {
+        "id": "tundra_probe_lookup_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "tundra_calibration_score",
+        "args": [
+          7,
+          false
+        ],
+        "expected": 91
+      },
+      {
+        "id": "tundra_probe_lookup_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "tundra_calibration_score",
+        "args": [
+          41,
+          true
+        ],
+        "expected": 542
+      }
+    ],
+    "magma_core_lookup_build": [
+      {
+        "id": "magma_core_lookup_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/magma-core-ready",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {},
+        "expected_json": {
+          "service": "Magma Core Lookup",
+          "ready": true
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "magma_core_lookup_exact",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/prime",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {
+          "x-core-disposition": "prime"
+        },
+        "expected_json": {
+          "core_marker": "prime",
+          "core_sequence": 31,
+          "thermal_index": 527,
+          "core_disposition": "prime"
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "magma_core_lookup_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/14",
+        "request_headers": {
+          "authorization": "Core core-047",
+          "x-analysis-mode": "thermal"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-core-disposition": "indexed"
+        },
+        "expected_json": {
+          "core_marker": "14",
+          "core_sequence": 14,
+          "thermal_index": 244,
+          "core_disposition": "indexed"
+        },
+        "expected_path_parameters": {
+          "core_marker": "14"
+        }
+      },
+      {
+        "id": "magma_core_lookup_zero",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/0",
+        "request_headers": {
+          "authorization": "Core core-047"
+        },
+        "expected_status": 422,
+        "expected_headers": {
+          "x-validation": "core_marker"
+        },
+        "expected_json": {
+          "core_marker": "0",
+          "core_sequence": 0,
+          "thermal_index": 0,
+          "core_disposition": "invalid"
+        },
+        "expected_path_parameters": {
+          "core_marker": "0"
+        }
+      },
+      {
+        "id": "magma_core_lookup_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "magma_thermal_index",
+        "args": [
+          14,
+          true
+        ],
+        "expected": 244
+      },
+      {
+        "id": "magma_core_lookup_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/14",
+        "request_headers": {
+          "x-analysis-mode": "thermal"
+        },
+        "expected_status": 401,
+        "expected_headers": {
+          "www-authenticate": "Core realm=magma"
+        },
+        "expected_json": {
+          "core_marker": "14",
+          "core_sequence": 0,
+          "thermal_index": 0,
+          "core_disposition": "authorization_required"
+        },
+        "expected_path_parameters": {
+          "core_marker": "14"
+        }
+      },
+      {
+        "id": "magma_core_lookup_encoded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/%32%39",
+        "request_headers": {
+          "authorization": "Core core-047",
+          "x-analysis-mode": "thermal"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-core-disposition": "indexed"
+        },
+        "expected_json": {
+          "core_marker": "29",
+          "core_sequence": 29,
+          "thermal_index": 499,
+          "core_disposition": "indexed"
+        },
+        "expected_path_parameters": {
+          "core_marker": "29"
+        }
+      },
+      {
+        "id": "magma_core_lookup_invalid_escape",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/magma-cores/%FF",
+        "request_headers": {
+          "authorization": "Core core-047"
+        },
+        "expected_status": 400,
+        "expected_headers": {},
+        "expected_error": "invalid_path_parameter"
+      },
+      {
+        "id": "magma_core_lookup_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "magma_thermal_index",
+        "args": [
+          9,
+          false
+        ],
+        "expected": 153
+      },
+      {
+        "id": "magma_core_lookup_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "magma_thermal_index",
+        "args": [
+          33,
+          true
+        ],
+        "expected": 567
+      }
+    ],
+    "aviary_band_lookup_repair": [
+      {
+        "id": "aviary_band_lookup_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/aviary-band-ready",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {},
+        "expected_json": {
+          "service": "Aviary Band Lookup",
+          "ready": true
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "aviary_band_lookup_exact",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/resident",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {
+          "x-band-status": "resident"
+        },
+        "expected_json": {
+          "band_marker": "resident",
+          "band_sequence": 23,
+          "migration_rank": 253,
+          "band_status": "resident"
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "aviary_band_lookup_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/27",
+        "request_headers": {
+          "x-flight-mode": "migration"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-band-status": "traced"
+        },
+        "expected_json": {
+          "band_marker": "27",
+          "band_sequence": 27,
+          "migration_rank": 305,
+          "band_status": "traced"
+        },
+        "expected_path_parameters": {
+          "band_marker": "27"
+        }
+      },
+      {
+        "id": "aviary_band_lookup_zero",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/0",
+        "request_headers": {},
+        "expected_status": 422,
+        "expected_headers": {
+          "x-validation": "band_marker"
+        },
+        "expected_json": {
+          "band_marker": "0",
+          "band_sequence": 0,
+          "migration_rank": 0,
+          "band_status": "invalid"
+        },
+        "expected_path_parameters": {
+          "band_marker": "0"
+        }
+      },
+      {
+        "id": "aviary_band_lookup_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "aviary_migration_rank",
+        "args": [
+          27,
+          true
+        ],
+        "expected": 305
+      },
+      {
+        "id": "aviary_band_lookup_negative",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/-3",
+        "request_headers": {},
+        "expected_status": 422,
+        "expected_headers": {
+          "x-validation": "band_marker"
+        },
+        "expected_json": {
+          "band_marker": "-3",
+          "band_sequence": 0,
+          "migration_rank": 0,
+          "band_status": "invalid"
+        },
+        "expected_path_parameters": {
+          "band_marker": "-3"
+        }
+      },
+      {
+        "id": "aviary_band_lookup_encoded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/%33%36",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {
+          "x-band-status": "traced"
+        },
+        "expected_json": {
+          "band_marker": "36",
+          "band_sequence": 36,
+          "migration_rank": 396,
+          "band_status": "traced"
+        },
+        "expected_path_parameters": {
+          "band_marker": "36"
+        }
+      },
+      {
+        "id": "aviary_band_lookup_invalid_escape",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/aviary-bands/%2F",
+        "request_headers": {},
+        "expected_status": 400,
+        "expected_headers": {},
+        "expected_error": "invalid_path_parameter"
+      },
+      {
+        "id": "aviary_band_lookup_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "aviary_migration_rank",
+        "args": [
+          8,
+          false
+        ],
+        "expected": 88
+      },
+      {
+        "id": "aviary_band_lookup_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "aviary_migration_rank",
+        "args": [
+          44,
+          true
+        ],
+        "expected": 492
+      }
+    ],
+    "canal_gate_lookup_repair": [
+      {
+        "id": "canal_gate_lookup_status",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/status/canal-gate-ready",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {},
+        "expected_json": {
+          "service": "Canal Gate Lookup",
+          "ready": true
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "canal_gate_lookup_exact",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/control",
+        "request_headers": {},
+        "expected_status": 200,
+        "expected_headers": {
+          "x-gate-condition": "control"
+        },
+        "expected_json": {
+          "gate_token": "control",
+          "gate_sequence": 17,
+          "flow_measure": 323,
+          "gate_condition": "control"
+        },
+        "expected_path_parameters": {}
+      },
+      {
+        "id": "canal_gate_lookup_primary",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/12",
+        "request_headers": {
+          "x-lock-key": "canal-047",
+          "x-flow-mode": "flood"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-gate-condition": "mapped"
+        },
+        "expected_json": {
+          "gate_token": "12",
+          "gate_sequence": 12,
+          "flow_measure": 233,
+          "gate_condition": "mapped"
+        },
+        "expected_path_parameters": {
+          "gate_token": "12"
+        }
+      },
+      {
+        "id": "canal_gate_lookup_zero",
+        "visibility": "public",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/0",
+        "request_headers": {
+          "x-lock-key": "canal-047"
+        },
+        "expected_status": 422,
+        "expected_headers": {
+          "x-validation": "gate_token"
+        },
+        "expected_json": {
+          "gate_token": "0",
+          "gate_sequence": 0,
+          "flow_measure": 0,
+          "gate_condition": "invalid"
+        },
+        "expected_path_parameters": {
+          "gate_token": "0"
+        }
+      },
+      {
+        "id": "canal_gate_lookup_browser_primary",
+        "visibility": "public",
+        "target": "browser",
+        "export": "canal_flow_measure",
+        "args": [
+          12,
+          true
+        ],
+        "expected": 233
+      },
+      {
+        "id": "canal_gate_lookup_unauthorized",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/12",
+        "request_headers": {
+          "x-flow-mode": "flood"
+        },
+        "expected_status": 403,
+        "expected_headers": {
+          "x-access-denial": "lock_key"
+        },
+        "expected_json": {
+          "gate_token": "12",
+          "gate_sequence": 0,
+          "flow_measure": 0,
+          "gate_condition": "authorization_required"
+        },
+        "expected_path_parameters": {
+          "gate_token": "12"
+        }
+      },
+      {
+        "id": "canal_gate_lookup_encoded",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/%32%34",
+        "request_headers": {
+          "x-lock-key": "canal-047",
+          "x-flow-mode": "flood"
+        },
+        "expected_status": 200,
+        "expected_headers": {
+          "x-gate-condition": "mapped"
+        },
+        "expected_json": {
+          "gate_token": "24",
+          "gate_sequence": 24,
+          "flow_measure": 461,
+          "gate_condition": "mapped"
+        },
+        "expected_path_parameters": {
+          "gate_token": "24"
+        }
+      },
+      {
+        "id": "canal_gate_lookup_invalid_escape",
+        "visibility": "hidden",
+        "target": "http",
+        "method": "GET",
+        "path": "/api/v11/canal-gates/%5C",
+        "request_headers": {
+          "x-lock-key": "canal-047"
+        },
+        "expected_status": 400,
+        "expected_headers": {},
+        "expected_error": "invalid_path_parameter"
+      },
+      {
+        "id": "canal_gate_lookup_browser_hidden_1",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "canal_flow_measure",
+        "args": [
+          6,
+          false
+        ],
+        "expected": 114
+      },
+      {
+        "id": "canal_gate_lookup_browser_hidden_2",
+        "visibility": "hidden",
+        "target": "browser",
+        "export": "canal_flow_measure",
+        "args": [
+          37,
+          true
+        ],
+        "expected": 708
+      }
+    ]
+  }
+}

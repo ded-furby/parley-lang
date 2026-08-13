@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "experiment_id": "047",
+  "description": "Two path-routing implementations and two route-handler repairs, frozen after the study-047 product/evidence boundary and before scaffolds, reference applications, protocol thresholds, or model output.",
+  "frozen_on": "2026-08-13",
+  "product_freeze_commit": "f1959a5247db7444c161340110ec1782faa3d2b7",
+  "product_freeze_sha256": "33e1c581162e7ab617ad972a65bdf41eaf5ac61b06860d1d6a159b8c48cf4b5f",
+  "common_contract": {
+    "server": "Expose the exact status and named-item routes declared by the task plus the whole-segment parameterized GET route. Exact routes win over the template regardless of declaration order. Parameterized handlers receive decoded path_parameters while request.path remains raw.",
+    "path_safety": "Percent-decode a captured segment exactly once as UTF-8. Malformed escapes, invalid UTF-8, decoded slash or backslash, NUL, controls, and DEL return 400 invalid_path_parameter before handler logic.",
+    "application": "Authorized captures must contain a positive ASCII decimal integer. Invalid values return the declared 422 envelope. Header names are case-insensitive.",
+    "dynamic_response": "Return the exact status, JSON body, and custom application headers. Framing, hop-by-hop, and security headers remain server-owned.",
+    "browser": "Expose the declared deterministic scalar ES-module export and return the exact frozen values in real Chromium.",
+    "cross_target": "For a valid parameter request, the response score equals the browser export for the decoded integer and whether the declared mode header is active.",
+    "network": "Bind only to 127.0.0.1 on the harness-selected port.",
+    "response_envelope": {
+      "status_field": "status",
+      "headers_field": "headers",
+      "body_field": "body"
+    }
+  },
+  "tasks": [
+    {
+      "id": "tundra_probe_lookup_build",
+      "kind": "implementation",
+      "title": "Build an authenticated tundra-probe lookup",
+      "statement": "Implement Tundra Probe Lookup. GET /status/tundra-probe-ready returns the ready body. The exact /api/v11/tundra-probes/current route wins over the {probe_serial} template and returns probe_serial current, probe_sequence 47, calibration_score 611, probe_state current, and x-probe-state current without authorization. The template requires x-tundra-pass: tundra-047; otherwise return 403 with x-access-denial tundra_pass and a zeroed authorization_required body. Decode probe_serial once; it must be a positive ASCII decimal integer or return 422 with x-validation probe_serial and a zeroed invalid body. calibration_score is probe_sequence*13 plus 9 when x-calibration-mode is precision. Success returns 200 with x-probe-state catalogued and probe_state catalogued. The browser export computes the score.",
+      "service": "Tundra Probe Lookup",
+      "status_route": "/status/tundra-probe-ready",
+      "parameter_route": "/api/v11/tundra-probes/{probe_serial}",
+      "exact_route": "/api/v11/tundra-probes/current",
+      "exact_segment": "current",
+      "browser_export": "tundra_calibration_score",
+      "path_parameter": "probe_serial",
+      "sequence_field": "probe_sequence",
+      "score_field": "calibration_score",
+      "state_field": "probe_state",
+      "success_state": "catalogued",
+      "state_header": "x-probe-state",
+      "factor": 13,
+      "boost": 9,
+      "mode_header": "x-calibration-mode",
+      "mode_value": "precision",
+      "exact_sequence": 47,
+      "authorization": {
+        "header": "x-tundra-pass",
+        "value": "tundra-047",
+        "failure_status": 403,
+        "failure_headers": {
+          "x-access-denial": "tundra_pass"
+        }
+      },
+      "independence": "New tundra vocabulary, v11 routes, capture, fields, headers, formula, fixtures, and export selected after the study-047 product freeze.",
+      "response_fields": {
+        "probe_serial": "text",
+        "probe_sequence": "number",
+        "calibration_score": "number",
+        "probe_state": "text"
+      },
+      "public_case_ids": [
+        "tundra_probe_lookup_status",
+        "tundra_probe_lookup_exact",
+        "tundra_probe_lookup_primary",
+        "tundra_probe_lookup_zero",
+        "tundra_probe_lookup_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "tundra_probe_lookup_unauthorized",
+        "tundra_probe_lookup_encoded",
+        "tundra_probe_lookup_invalid_escape",
+        "tundra_probe_lookup_browser_hidden_1",
+        "tundra_probe_lookup_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "magma_core_lookup_build",
+      "kind": "implementation",
+      "title": "Build an authenticated magma-core lookup",
+      "statement": "Implement Magma Core Lookup. GET /status/magma-core-ready returns the ready body. Exact /api/v11/magma-cores/prime wins over {core_marker} and returns core_marker prime, core_sequence 31, thermal_index 527, core_disposition prime, and x-core-disposition prime without authorization. The template requires Authorization: Core core-047; otherwise return 401 with www-authenticate Core realm=magma and a zeroed authorization_required body. Decode core_marker once; it must be a positive ASCII decimal integer or return 422 with x-validation core_marker and a zeroed invalid body. thermal_index is core_sequence*17 plus 6 when x-analysis-mode is thermal. Success returns 200 with x-core-disposition indexed and that body state. The browser export computes the index.",
+      "service": "Magma Core Lookup",
+      "status_route": "/status/magma-core-ready",
+      "parameter_route": "/api/v11/magma-cores/{core_marker}",
+      "exact_route": "/api/v11/magma-cores/prime",
+      "exact_segment": "prime",
+      "browser_export": "magma_thermal_index",
+      "path_parameter": "core_marker",
+      "sequence_field": "core_sequence",
+      "score_field": "thermal_index",
+      "state_field": "core_disposition",
+      "success_state": "indexed",
+      "state_header": "x-core-disposition",
+      "factor": 17,
+      "boost": 6,
+      "mode_header": "x-analysis-mode",
+      "mode_value": "thermal",
+      "exact_sequence": 31,
+      "authorization": {
+        "header": "authorization",
+        "value": "Core core-047",
+        "failure_status": 401,
+        "failure_headers": {
+          "www-authenticate": "Core realm=magma"
+        }
+      },
+      "independence": "New magma vocabulary, v11 routes, capture, fields, headers, formula, fixtures, and export selected after the study-047 product freeze.",
+      "response_fields": {
+        "core_marker": "text",
+        "core_sequence": "number",
+        "thermal_index": "number",
+        "core_disposition": "text"
+      },
+      "public_case_ids": [
+        "magma_core_lookup_status",
+        "magma_core_lookup_exact",
+        "magma_core_lookup_primary",
+        "magma_core_lookup_zero",
+        "magma_core_lookup_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "magma_core_lookup_unauthorized",
+        "magma_core_lookup_encoded",
+        "magma_core_lookup_invalid_escape",
+        "magma_core_lookup_browser_hidden_1",
+        "magma_core_lookup_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "aviary_band_lookup_repair",
+      "kind": "maintenance",
+      "title": "Repair an aviary-band capture lookup",
+      "statement": "Repair Aviary Band Lookup. The ready route is exact. Exact /api/v11/aviary-bands/resident wins over {band_marker} and returns band_marker resident, band_sequence 23, migration_rank 253, band_status resident, and x-band-status resident. Decode band_marker once; it must be a positive ASCII decimal integer or return 422 with x-validation band_marker and a zeroed invalid body. migration_rank is band_sequence*11 plus 8 when x-flight-mode is migration. Success returns 200 with x-band-status traced and band_status traced. The browser export computes the rank.",
+      "service": "Aviary Band Lookup",
+      "status_route": "/status/aviary-band-ready",
+      "parameter_route": "/api/v11/aviary-bands/{band_marker}",
+      "exact_route": "/api/v11/aviary-bands/resident",
+      "exact_segment": "resident",
+      "browser_export": "aviary_migration_rank",
+      "path_parameter": "band_marker",
+      "sequence_field": "band_sequence",
+      "score_field": "migration_rank",
+      "state_field": "band_status",
+      "success_state": "traced",
+      "state_header": "x-band-status",
+      "factor": 11,
+      "boost": 8,
+      "mode_header": "x-flight-mode",
+      "mode_value": "migration",
+      "exact_sequence": 23,
+      "predeclared_defect": "The route-handler seed reads band_code from path parameters instead of the declared band_marker, so the public parameterized lookup fails.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic path-parameter key substitution defect",
+      "adaptation_boundary": "The capture-key defect and all aviary semantics were selected only after the study-047 product freeze.",
+      "response_fields": {
+        "band_marker": "text",
+        "band_sequence": "number",
+        "migration_rank": "number",
+        "band_status": "text"
+      },
+      "public_case_ids": [
+        "aviary_band_lookup_status",
+        "aviary_band_lookup_exact",
+        "aviary_band_lookup_primary",
+        "aviary_band_lookup_zero",
+        "aviary_band_lookup_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "aviary_band_lookup_negative",
+        "aviary_band_lookup_encoded",
+        "aviary_band_lookup_invalid_escape",
+        "aviary_band_lookup_browser_hidden_1",
+        "aviary_band_lookup_browser_hidden_2"
+      ]
+    },
+    {
+      "id": "canal_gate_lookup_repair",
+      "kind": "maintenance",
+      "title": "Repair decoded capture use in a canal-gate lookup",
+      "statement": "Repair Canal Gate Lookup. The ready route is exact. Exact /api/v11/canal-gates/control wins over {gate_token} and returns gate_token control, gate_sequence 17, flow_measure 323, gate_condition control, and x-gate-condition control without authorization. The template requires x-lock-key: canal-047; otherwise return 403 with x-access-denial lock_key and a zeroed authorization_required body. Decode gate_token once; it must be a positive ASCII decimal integer or return 422 with x-validation gate_token and a zeroed invalid body. flow_measure is gate_sequence*19 plus 5 when x-flow-mode is flood. Success returns 200 with x-gate-condition mapped and that body state. The browser export computes the measure.",
+      "service": "Canal Gate Lookup",
+      "status_route": "/status/canal-gate-ready",
+      "parameter_route": "/api/v11/canal-gates/{gate_token}",
+      "exact_route": "/api/v11/canal-gates/control",
+      "exact_segment": "control",
+      "browser_export": "canal_flow_measure",
+      "path_parameter": "gate_token",
+      "sequence_field": "gate_sequence",
+      "score_field": "flow_measure",
+      "state_field": "gate_condition",
+      "success_state": "mapped",
+      "state_header": "x-gate-condition",
+      "factor": 19,
+      "boost": 5,
+      "mode_header": "x-flow-mode",
+      "mode_value": "flood",
+      "exact_sequence": 17,
+      "authorization": {
+        "header": "x-lock-key",
+        "value": "canal-047",
+        "failure_status": 403,
+        "failure_headers": {
+          "x-access-denial": "lock_key"
+        }
+      },
+      "predeclared_defect": "The route-handler seed converts the raw request.path instead of the decoded gate_token path parameter, so the public parameterized lookup fails.",
+      "root_cause_role": "route_handler",
+      "historical_grounding": "synthetic raw-path-for-capture substitution defect",
+      "adaptation_boundary": "The decoded-capture defect and all canal semantics were selected only after the study-047 product freeze.",
+      "response_fields": {
+        "gate_token": "text",
+        "gate_sequence": "number",
+        "flow_measure": "number",
+        "gate_condition": "text"
+      },
+      "public_case_ids": [
+        "canal_gate_lookup_status",
+        "canal_gate_lookup_exact",
+        "canal_gate_lookup_primary",
+        "canal_gate_lookup_zero",
+        "canal_gate_lookup_browser_primary"
+      ],
+      "hidden_case_ids": [
+        "canal_gate_lookup_unauthorized",
+        "canal_gate_lookup_encoded",
+        "canal_gate_lookup_invalid_escape",
+        "canal_gate_lookup_browser_hidden_1",
+        "canal_gate_lookup_browser_hidden_2"
+      ]
+    }
+  ]
+}
