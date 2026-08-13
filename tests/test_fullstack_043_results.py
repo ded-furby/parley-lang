@@ -9,6 +9,7 @@ REPO = Path(__file__).resolve().parents[1]
 BENCHMARKS = REPO / "benchmarks"
 RAW = BENCHMARKS / "fullstack_agent_043_raw.json"
 AUDIT = BENCHMARKS / "fullstack_agent_043_audit.json"
+ATTRIBUTION = BENCHMARKS / "fullstack_agent_043_elapsed_attribution.json"
 
 
 def sha256(path: Path) -> str:
@@ -107,3 +108,46 @@ def test_fullstack_043_committed_audit_verified_external_evidence():
         "median_elapsed_seconds"
     ] == 25.5915
     assert audit["median_final_source"]["parley"]["o200k_base_tokens"] == 751.5
+
+
+def test_fullstack_043_elapsed_attribution_uses_all_pairs_and_preserves_boundary(
+    tmp_path,
+):
+    output = tmp_path / "elapsed-attribution.json"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(BENCHMARKS / "analyze_fullstack_agent_043_elapsed.py"),
+            "--output",
+            str(output),
+        ],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert output.read_bytes() == ATTRIBUTION.read_bytes()
+    attribution = json.loads(output.read_text(encoding="utf-8"))
+    assert sha256(ATTRIBUTION) == (
+        "0e3fbd5a11bdf58411fc15f5efa08a3c236912e0e0c1d975808b3f540a8d0527"
+    )
+    assert len(attribution["matched_pairs"]) == 24
+    mechanism = attribution["terra_gate_mechanism"]
+    assert mechanism["matched_pairs"] == 12
+    assert mechanism["parley_marginal_gap_percent"] == 2.630561
+    assert mechanism["parley_faster_matched_pairs"] == 5
+    assert mechanism["median_paired_delta_seconds"] == 1.4336
+    build = attribution["build_phase_diagnostic"]
+    assert build["overall_paired_build_delta"]["parley_higher_pairs"] == 24
+    assert build["overall_paired_build_delta"]["median"] == 2.935
+    assert build["terra_paired_build_delta"]["parley_higher_pairs"] == 12
+    assert build["terra_paired_build_delta"]["median"] == 3.34245
+    assert build["terra_marginal_medians"]["parley"][
+        "elapsed_seconds_excluding_build"
+    ] == 23.09745
+    assert build["terra_marginal_medians"]["python"][
+        "elapsed_seconds_excluding_build"
+    ] == 25.5308
+    assert "remains gate-not-met" in attribution["claim_boundary"]
