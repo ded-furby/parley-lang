@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "orbital_clearance_build",
+  "language": "python",
+  "protocol_sha256": "e283312020be0d0efb7784abf11be0215cc67ca3938c7295e3dc8e06223d0265",
+  "provenance_sha256": "e27529b2798e787da4a980e60831515107de1ad7c3edfc241206c0864c581c40",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": false
+  },
+  "custom_header_judgment": {
+    "failing_public_case": "orbital_clearance_primary",
+    "failing_public_application_headers": {},
+    "passing_hidden_case": "orbital_clearance_unauthorized",
+    "passing_hidden_application_headers": {
+      "x-access-denial": "orbit_credential"
+    },
+    "passing_hidden_case_pass": true
+  },
+  "json_evidence_controls": {
+    "broker_attempt_exact": true,
+    "empty": {
+      "live": [],
+      "persisted": []
+    },
+    "custom": {
+      "live": [
+        [
+          "x-access-denial",
+          "orbit_credential"
+        ]
+      ],
+      "persisted": [
+        [
+          "x-access-denial",
+          "orbit_credential"
+        ]
+      ]
+    },
+    "duplicate": {
+      "live": [
+        [
+          "x-repeat",
+          "alpha"
+        ],
+        [
+          "x-repeat",
+          "beta"
+        ]
+      ],
+      "persisted": [
+        [
+          "x-repeat",
+          "alpha"
+        ],
+        [
+          "x-repeat",
+          "beta"
+        ]
+      ]
+    },
+    "json_native_shape": true,
+    "pass": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}
