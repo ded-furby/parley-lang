@@ -513,3 +513,10 @@ start with a monotonically increasing experiment number and are immutable;
 new results create a new HTML file instead of replacing an earlier one. The
 decision log, acceptance target, input hashes, and next experiment are kept in
 `benchmarks/EXPERIMENT_LOG.md`.
+
+Iteration 045 begins with a pre-corpus context freeze. The 313-token v0.5.6
+response-web card adds only the dynamic response contract, checked header-map
+operations, and safety boundary needed beyond the earlier 222-token scaffold
+card. It remains 73.11% smaller than the historical full core-plus-web context.
+No 045 task domain, route, formula, case, scaffold, threshold, or model output
+exists at this checkpoint.

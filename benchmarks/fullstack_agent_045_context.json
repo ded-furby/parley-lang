@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045-context-freeze",
+  "parley_version": "0.5.6",
+  "frozen_on": "2026-08-13",
+  "product_commit": "6bae1149d101d5a483f31f55905083e0a939c1da",
+  "product_tree": "525b23b0191cb5f16a9cc4b5281d9b9af912898c",
+  "product_protocol": "benchmarks/WEB_RESPONSE_CONTROL_003.md",
+  "product_protocol_sha256": "369a5b45b379b4600794579339a9f44b0fae585883a718c4d3ec67227516afbf",
+  "context_file": "skill/parley/references/scaffolded-response-web-v0.5.6.md",
+  "context_sha256": "58e1066e2c313c35617d96c5f8829e4ca14f6a77a60fdba0d8af7b19a2fab2b8",
+  "context_bytes": 1281,
+  "context_o200k_tokens": 313,
+  "baseline": {
+    "version": "0.5.2",
+    "files": [
+      "skill/parley/references/core-v0.5.2.md",
+      "skill/parley/references/web-v0.5.2.md"
+    ],
+    "combined_sha256": "6149712a71895d7a71741f79b2d005e373a2131cc19bdf2143d902cf8327a342",
+    "combined_bytes": 4350,
+    "combined_o200k_tokens": 1164
+  },
+  "reduction": {
+    "bytes": 3069,
+    "o200k_tokens": 851,
+    "o200k_percent": 73.11
+  },
+  "increment_from_v053_card": {
+    "previous_o200k_tokens": 222,
+    "added_o200k_tokens": 91,
+    "reason": "Adds the exact dynamic response manifest/record contract, header map operations, request-header lookup, and safe status/header boundary."
+  },
+  "preserved_rules": [
+    "printed scaffold is authoritative",
+    "make the smallest owning change and keep shared rules pure",
+    "dynamic response record matches the three manifest fields exactly",
+    "request and response header map operations use checked Parley syntax",
+    "dynamic statuses stay within 200 through 599",
+    "server-owned framing and hop-by-hop headers remain forbidden",
+    "browser scalar number/decimal/yesno maps to bigint/number/boolean",
+    "only the supplied checker may run"
+  ],
+  "construction_boundary": "The response-web card is frozen after v0.5.6 and before any iteration-045 task domain, route, field, formula, case, scaffold, reference implementation, threshold, or model output exists.",
+  "claim_boundary": "This is a static context budget and coverage result, not evidence of agent correctness, lower complete-session tokens, or universal superiority."
+}

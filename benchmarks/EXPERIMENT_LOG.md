@@ -4903,3 +4903,24 @@ documentation is versioned separately. This accepts one generic typed-web
 capability; it does not reuse 044, measure agent behavior, supply an identity
 provider, or establish universal language superiority. Next: commit and freeze
 v0.5.6 before selecting an unseen authentication/creation agent corpus.
+
+### 045 response-web agent context frozen before corpus selection
+
+- Product commit: `6bae1149d101d5a483f31f55905083e0a939c1da`
+- Product tree: `525b23b0191cb5f16a9cc4b5281d9b9af912898c`
+- Context: `skill/parley/references/scaffolded-response-web-v0.5.6.md`
+- Context SHA-256:
+  `58e1066e2c313c35617d96c5f8829e4ca14f6a77a60fdba0d8af7b19a2fab2b8`
+- Context budget: 1,281 bytes / 313 `o200k_base` tokens
+- Deterministic freeze: `benchmarks/fullstack_agent_045_context.json`
+- Freeze SHA-256:
+  `746f1af9c788c5a441657c500f89a276f7402bdb0bb806433a58af4553eb24ab`
+
+The card spends 91 tokens beyond the previous scaffold-only card to state the
+new response manifest, exact status/header/body record, header-map write and
+request-header lookup syntax, status range, and server-owned-header boundary.
+It is still 73.11% smaller than the frozen 1,164-token full core-plus-web
+reference. This is a static budget and coverage result, not an agent outcome.
+No 045 task semantics or comparative thresholds exist. Next: commit this
+context boundary, freeze the complete v0.5.6 product artifact, and only then
+select a disjoint response-control corpus.
