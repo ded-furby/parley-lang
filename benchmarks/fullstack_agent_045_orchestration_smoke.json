@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "purpose": "non-model end-to-end orchestration smoke",
+  "task_id": "artifact_accession_build",
+  "language": "python",
+  "protocol_sha256": "0de1f0048d99a94d08a3b0419bca646da6eaae74c2dd8e2f2fc9da1d7345da5b",
+  "provenance_sha256": "b924e36fc3945fddbad8cd55713dccc454d7eba2709efb4fc35cf1f177e5d63f",
+  "commands": [
+    {
+      "command": "./sources",
+      "returncode": 0
+    },
+    {
+      "command": "./check",
+      "returncode": 1
+    }
+  ],
+  "sources_listed_contract": true,
+  "check_returned_public_failure": true,
+  "attempt_count": 1,
+  "public": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 4,
+    "http_cases": 3,
+    "browser_cases": 1,
+    "cross_target_executed": true
+  },
+  "hidden": {
+    "semantic_pass": false,
+    "build_pass": true,
+    "post_build_integrity": true,
+    "exact_build_commands": 2,
+    "case_count": 5,
+    "http_cases": 3,
+    "browser_cases": 2,
+    "cross_target_executed": false
+  },
+  "custom_header_judgment": {
+    "failing_public_case": "artifact_accession_primary",
+    "failing_public_application_headers": {},
+    "passing_hidden_case": "artifact_accession_unauthorized",
+    "passing_hidden_application_headers": {
+      "www-authenticate": "Bearer realm=artifact-accession"
+    },
+    "passing_hidden_case_pass": true
+  },
+  "protected_integrity": true,
+  "read_only_integrity": true,
+  "transport_integrity": true,
+  "unexpected_files": [],
+  "pass": true
+}
