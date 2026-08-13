@@ -4,7 +4,7 @@
   "purpose": "non-model end-to-end orchestration smoke",
   "task_id": "radio_archive_build",
   "language": "python",
-  "protocol_sha256": "0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f",
+  "protocol_sha256": "2a8416d542141b6da0f28ae7b415182325113770b44a1e4e4458bdfb3f6ed149",
   "provenance_sha256": "7dd532377b0005ea742658983c57846a43741a9c6c5702cd9ca5fbd65d8bbaba",
   "commands": [
     {

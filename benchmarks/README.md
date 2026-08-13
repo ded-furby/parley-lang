@@ -438,6 +438,12 @@ orchestration path. Its 161,165,133-byte largest workspace remains more than
 checks; a revision-2 execution freeze must still bind every transitive hash
 before measurement.
 
+Revision 2 now binds all 19 transitive harness/dependency files and the
+zero-session validation artifacts in `FULLSTACK_AGENT_042_EXECUTION_FREEZE.md`.
+The protocol SHA-256 is
+`2a8416d542141b6da0f28ae7b415182325113770b44a1e4e4458bdfb3f6ed149`.
+No measured cell existed at this once-run boundary.
+
 ## Versioned benchmark reports
 
 Completed experiment reports live in `benchmarks/reports/`. Report filenames

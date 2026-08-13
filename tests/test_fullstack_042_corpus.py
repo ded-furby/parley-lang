@@ -278,11 +278,21 @@ def test_fullstack_042_protocol_preregisters_matrix_gate_and_scratch_boundary():
     scratch = protocol["scratch_space_control"]
 
     assert sha256(protocol_path) == (
-        "0f137dc7b023b98533ea058863dca00a3decff03ca562a7bce5ff506d372472f"
+        "2a8416d542141b6da0f28ae7b415182325113770b44a1e4e4458bdfb3f6ed149"
     )
-    assert protocol["schema_version"] == protocol["protocol_revision"] == 1
+    assert protocol["schema_version"] == 1
+    assert protocol["protocol_revision"] == 2
     assert protocol["experiment_id"] == "042"
-    assert "execution_freeze" not in protocol
+    execution = protocol["execution_freeze"]
+    assert execution["measured_sessions_before_freeze"] == 0
+    assert execution["harness_commit"] == (
+        "8e9535473ac0e0d172de6c18131da2e65a3a87aa"
+    )
+    assert execution["calibrated_max_workspace_bytes"] == 161_165_133
+    assert execution["parley_prompt_delta_vs_python_o200k_tokens"] == 207
+    assert len(execution["files"]) == 19
+    for item in execution["files"]:
+        assert sha256(REPO / item["file"]) == item["sha256"]
     assert product["parley_version"] == "parley 0.5.3"
     assert product["product_commit"] == (
         "dd6ee476ee8f244f8470a6524d1885103d919aa3"

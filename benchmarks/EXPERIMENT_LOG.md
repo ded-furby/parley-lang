@@ -4392,3 +4392,22 @@ were removed only after the durable validation artifact was written. No
 measured session exists. Next: commit this harness, then create a revision-2
 protocol binding every transitive file and the zero-session validation/smoke
 evidence.
+
+### 042 final zero-session execution boundary
+
+- Frozen: 2026-08-13
+- Harness commit: `8e9535473ac0e0d172de6c18131da2e65a3a87aa`
+- Revision-2 protocol SHA-256:
+  `2a8416d542141b6da0f28ae7b415182325113770b44a1e4e4458bdfb3f6ed149`
+- Execution freeze: `benchmarks/FULLSTACK_AGENT_042_EXECUTION_FREEZE.md`
+- Measured sessions before freeze: 0
+
+Revision 2 binds all 19 transitive harness, shared-control, dependency-lock,
+Rust-manifest, and execution-freeze files. It binds the observed 161,165,133-
+byte maximum workspace, 13.325× per-worker headroom, and the exact 207-token
+Parley/Python rendered prompt difference.
+
+Task/case semantics, v0.5.3 product and context, models, reasoning, replicates,
+thresholds, metrics, gates, scratch budget, and no-rerun policy are unchanged.
+The next invocation is the once-run measured matrix; every start/finish,
+attempt, cleanup, and capacity record must be retained and published.
