@@ -4985,3 +4985,65 @@ revision 2 must bind every transitive input after clean-room reference,
 negative-control, scratch, and orchestration validation, with zero measured
 sessions. Next: commit this preregistration, then build the harness without
 changing any frozen semantic, model, metric, threshold, or gate.
+
+### 045 invalid result preserved; JSON evidence boundary repaired
+
+- Raw SHA-256:
+  `521f706074526ec34a34d6cbba98ce4db427d1490433e8188b23094a7313e7f9`
+- Audit SHA-256:
+  `26c8b3ed87a68b50411c8f0232db9d848d6faab3aebf34f496596b66f2122f07`
+- Status: invalid / strict gate failed
+
+All 96 sessions and 480 hidden named cases completed successfully, but strict
+live-to-persisted equality failed because header pairs were tuples before JSON
+persistence and arrays afterward. The invalid result is immutable and was not
+rerun. A generic JSON-native evidence helper plus empty, custom, and duplicate
+header-pair orchestration controls were committed before iteration 046.
+
+### 046 valid response-control study completed
+
+- Raw SHA-256:
+  `0117effbc633affb6d79d14e8f1b713634ca3c5c263537e1ba2207b7ccaf2d07`
+- Audit SHA-256:
+  `5251e814218fc7b502e9e05c2fc6a13da6d3cdabe41906a9eb024e1b0e3ccbad`
+- Measurement commit:
+  `28ecbc95ff787752c9a203803a4403f04f9e086e`
+- Status: valid / strict gate failed only elapsed
+
+The independently frozen 96-session matrix achieved 96/96 hidden assignments,
+480/480 hidden cases, 96/96 final public checks, and complete execution,
+workspace, journal, cleanup, and exact-build integrity. Parley and Python both
+passed all 24 first checks. Parley had the lowest median complete-session token
+count at 61,992.5 and 12/12 exact maintenance roots, but its 33.6522-second
+median elapsed time was above Python's 28.8755 seconds. The six-condition gate
+therefore failed overall; this is bounded evidence, not a universal claim.
+
+### 046 latency decomposition frozen
+
+- Artifact: `benchmarks/fullstack_agent_046_latency.json`
+- Artifact SHA-256:
+  `d02880e5982248bc82f5a9bec845525bd8bbdee257cef3a369586b08e8f47a04`
+
+Parley's marginal public-check median was 0.8259 seconds above Python and its
+application-build median was 0.9100 seconds above Python. Across 24 matched
+task/configuration/replicate pairs, however, Parley was faster in 13, the
+paired elapsed median was -0.5204 seconds, its 95% bootstrap interval was
+-10.2032 to +2.3991 seconds, and the exact sign-test p-value was 0.838820.
+This identifies a stable local build cost while showing that separately
+scheduled non-check latency is too variable for a compiler-only causal claim.
+The frozen 046 gate remains unchanged.
+
+### Cold web-build backend study 003 preregistered
+
+- Protocol: `benchmarks/WEB_BUILD_BACKEND_003.md`
+- Harness: `benchmarks/measure_web_build_backend_003.py`
+- Measured baseline cells before this freeze: 0
+
+Four new v0.5.6 projects cover dynamic response envelopes with default and
+custom field names, static typed routes, native-only and browser/WASM builds,
+and an explicit-JSON dependency-backed control. Their identifiers and routes
+are absent from studies 036--046. The untouched baseline must be committed
+before implementation; the candidate requires at least 20% improvement in the
+primary median of fixture medians, at most 5% regression for every fixture,
+bounded sizes, all 16 cells, and the complete regression suite. This local
+product benchmark cannot revise 046 or establish universal superiority.
