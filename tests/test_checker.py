@@ -120,10 +120,10 @@ CASES = [
      "P301", "JSON text"),
     ("json_rejects_function_values",
      "to f giving number:\n    give back 1\nsay (the function f) as json\n",
-     "P317", "cannot cross JSON"),
+     "P324", "cannot cross JSON"),
     ("json_rejects_number_keyed_maps",
      "let m be a map from number to text\nsay m as json\n",
-     "P317", "keys must be text"),
+     "P324", "keys must be text"),
     ("polymorphic_recursion_is_bounded",
      "to nest with x as any item giving number:\n"
      "    let wrapped be a list of x\n"

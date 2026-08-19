@@ -1310,7 +1310,7 @@ class Checker:
             target = A.TRecord(e.type_name)
             problem = self._json_safe(target)
             if problem:
-                self.err("P317",
+                self.err("P324",
                          f"{e.type_name} cannot be read from JSON: {problem}.", e,
                          hint="JSON carries number, decimal, text, yesno, kinds, "
                               "lists, text-keyed maps, and records of those.")
@@ -1611,7 +1611,7 @@ class Checker:
         if op == "json_text":
             problem = self._json_safe(ty)
             if problem:
-                self.err("P317", f"This cannot be written as JSON: {problem}.", e,
+                self.err("P324", f"This cannot be written as JSON: {problem}.", e,
                          hint="JSON carries number, decimal, text, yesno, kinds, "
                               "lists, text-keyed maps, and records of those.")
                 return TErr()

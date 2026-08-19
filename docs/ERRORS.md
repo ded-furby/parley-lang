@@ -242,7 +242,7 @@ need a fallback; only their text-input forms return a maybe. Use `otherwise` on
 results that can be nothing, such as `ask for a number`, a maybe lookup, or a
 function that gives back `nothing`.
 
-## P317 — Value cannot cross JSON
+## P324 — Value cannot cross JSON
 
 **What it means:** JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.
 

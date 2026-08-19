@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 800/800, including e2e tests that
+  → cargo). The latest isolated local suite passes 801/801, including e2e tests that
   compile every feature to a native binary and assert stdout. Nineteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -187,6 +187,17 @@ Update it whenever you finish or start a work item.
   the one-line snapshot is simpler and no slower. If a hot-loop workload ever
   shows Vec-allocation churn dominating, the safe form is `.iter().cloned()`
   guarded by the existing mutated-names analysis.
+- **v0.5.9 fixed a shipped P-code collision.** `P317` was defined twice —
+  "Arithmetic goes past the number range" (v0.4.2) and "Value cannot cross
+  JSON" (v0.4.4, an accidental reuse). The catalog is a dict, so the JSON
+  entry silently shadowed the arithmetic one while the checker emitted P317
+  for *both*, and `ERRORS.md` carried two `## P317` sections. An agent seeing
+  P317 could not tell overflow from a JSON problem. The senior arithmetic
+  P317 is kept (pinned by `test_literal_overflow_is_p317`); JSON-safety moved
+  to **P324** across the checker, catalog, docs, and tests. A new
+  `test_no_code_is_defined_twice_in_the_catalog` guards the source text and
+  ERRORS.md so this class of bug cannot recur silently. No frozen study
+  context referenced P317. 801/801.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

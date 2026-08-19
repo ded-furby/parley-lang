@@ -37,6 +37,21 @@ def test_explain_known_and_unknown():
     assert "Unknown code" in explain("P999")
 
 
+def test_no_code_is_defined_twice_in_the_catalog():
+    # The catalog is a dict, so a duplicate key silently collapses — that is
+    # how a P317 collision (arithmetic overflow vs JSON) once shipped. Guard
+    # the source text, and the ERRORS.md sections, against a repeat.
+    source = (REPO / "parley" / "diagnostics.py").read_text()
+    keys = re.findall(r'^    "(P\d{3})": \{', source, re.M)
+    duplicates = sorted({k for k in keys if keys.count(k) > 1})
+    assert not duplicates, f"codes defined twice in the catalog: {duplicates}"
+
+    errors_md = (REPO / "docs" / "ERRORS.md").read_text()
+    doc_codes = re.findall(r'^## (P\d{3}) ', errors_md, re.M)
+    doc_dupes = sorted({c for c in doc_codes if doc_codes.count(c) > 1})
+    assert not doc_dupes, f"codes documented twice in ERRORS.md: {doc_dupes}"
+
+
 def test_every_emitted_code_is_in_the_catalog():
     """Grep the compiler sources for P-codes; each must have a catalog entry."""
     used = set()

@@ -227,11 +227,6 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "A whole number in Parley is a 64-bit signed integer, and this expression's result provably falls outside it.",
         "fix": "Keep whole-number arithmetic between -9223372036854775808 and 9223372036854775807, or use `decimal` values when a wider range matters. At runtime, an overflow stops the program rather than wrapping.",
     },
-    "P317": {
-        "title": "Value cannot cross JSON",
-        "explain": "JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.",
-        "fix": "Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.",
-    },
     "P318": {
         "title": "Type variable is not decided by the call",
         "explain": "A generic function's `any name` types are worked out from its arguments, so every type variable in the giving type must also appear in a parameter type.",
@@ -261,6 +256,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "title": "Record contains itself",
         "explain": "A record that holds itself by value — directly, or through another record — would need infinite memory. Only an indirection breaks the cycle.",
         "fix": "Hold a `list of` the type instead of the bare type; a list can be empty, so the size is finite.",
+    },
+    "P324": {
+        "title": "Value cannot cross JSON",
+        "explain": "JSON carries number, decimal, text, yesno, kinds, lists, text-keyed maps, and records built from those. Function values, number-keyed maps, and records that contain themselves have no JSON form.",
+        "fix": "Convert the value into a record of JSON-safe fields first, or change a number-keyed map to a text-keyed one.",
     },
     # --- typed web project errors (P7xx)
     "P710": {
