@@ -575,6 +575,16 @@ def test_random_covers_extreme_spans(workdir):
     assert proc.stdout == "yes\nyes\nyes\n"
 
 
+def test_recursive_records_need_a_list_indirection(workdir):
+    # A `list of` self is legal and finite because a list can be empty.
+    proc = run_program(workdir, "tree", (
+        "a tree has label as text, children as list of tree\n"
+        "let leaf be a tree with label \"leaf\", children (an empty list of tree)\n"
+        "let root be a tree with label \"root\", children (a list of leaf)\n"
+        "say \"{root's label} has {length of root's children} child\"\n"))
+    assert proc.stdout == "root has 1 child\n"
+
+
 def test_decimals_stay_finite(workdir):
     # Non-finite text is not a number.
     proc = run_program(workdir, "finite_text", (

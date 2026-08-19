@@ -152,6 +152,12 @@ Update it whenever you finish or start a work item.
   needs Arjun. The report is preserved at
   `workflows/RELEASE_READINESS_v0.5.9.md`. This is the first Steward run on a
   live candidate since the v0.3.158 dogfood.
+- **v0.5.9 self-referential records refused (P323).** `a node has next as
+  node` (and indirect cycles like `x_rec -> y_rec -> x_rec`) reached rustc as
+  an unactionable P901 for an infinitely-sized type. The checker now walks
+  by-value record fields for a cycle back to the type and refuses it with the
+  fix spelled out: hold a `list of` the type, which can be empty. A `list of`
+  self stays legal and is pinned by an e2e tree program. 797/797.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

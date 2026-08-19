@@ -324,6 +324,27 @@ class Checker:
 
     # ------------------------------------------------------------- programs
 
+    def _value_cycle(self, start, current, seen):
+        """A `'s`-path back to `start` through by-value record fields only.
+
+        Lists, maps, and maybes are indirections in Rust, so they break the
+        cycle; only a bare record field continues it. Returns a readable path
+        when the record contains itself, else None.
+        """
+        record = self.records.get(current)
+        if record is None:
+            return None
+        seen = seen | {current}
+        for field_name, field_type in record.fields:
+            if isinstance(field_type, A.TRecord):
+                if field_type.name == start:
+                    return f"through {field_name}"
+                if field_type.name not in seen:
+                    deeper = self._value_cycle(start, field_type.name, seen)
+                    if deeper:
+                        return f"{field_name} -> {deeper}"
+        return None
+
     def _claim_type_name(self, name: str, node) -> bool:
         """Records and kinds share one generated-code namespace.
 
@@ -391,6 +412,17 @@ class Checker:
         # resolve record field types after all type names are known
         for r in self.records.values():
             r.fields = [(fn, self.resolve_type(ft, r)) for fn, ft in r.fields]
+        # A record that contains itself by value would be infinitely large
+        # in Rust; only an indirection (a list) breaks the cycle. Catch it
+        # here rather than letting rustc reject it as an unactionable P901.
+        for r in self.records.values():
+            cycle = self._value_cycle(r.name, r.name, set())
+            if cycle:
+                self.err("P323",
+                         f'"{r.name}" contains itself ({cycle}), so it would '
+                         "never fit in memory.", r,
+                         hint="Break the cycle by holding a `list of` the "
+                              "type instead, which can be empty.")
         implicit_main = next((f for f in p.funcs
                               if f.name == "main" and f.implicit_main), None)
         for f in p.funcs:

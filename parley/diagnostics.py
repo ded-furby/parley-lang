@@ -252,6 +252,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "A `changing` parameter takes exclusive hold of its variable for the whole call, so the same variable cannot also be read or changed through another argument of that call.",
         "fix": "Make a copy first (`let x_copy be x`) and pass the copy for the reading side.",
     },
+    "P323": {
+        "title": "Record contains itself",
+        "explain": "A record that holds itself by value — directly, or through another record — would need infinite memory. Only an indirection breaks the cycle.",
+        "fix": "Hold a `list of` the type instead of the bare type; a list can be empty, so the size is finite.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",

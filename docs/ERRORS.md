@@ -272,6 +272,12 @@ function that gives back `nothing`.
 
 **How to fix it:** Make a copy first (`let x_copy be x`) and pass the copy for the reading side.
 
+## P323 — Record contains itself
+
+**What it means:** A record that holds itself by value — directly, or through another record — would need infinite memory. Only an indirection breaks the cycle.
+
+**How to fix it:** Hold a `list of` the type instead of the bare type; a list can be empty, so the size is finite.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.
