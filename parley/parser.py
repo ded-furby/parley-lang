@@ -213,7 +213,17 @@ def _split_string(raw: str, line: int, col: int) -> list:
         c = inner[i]
         if c == "\\" and i + 1 < n:
             nxt = inner[i + 1]
-            buf.append({"n": "\n", "t": "\t", "r": "\r", '"': '"', "\\": "\\"}.get(nxt, nxt))
+            resolved = {"n": "\n", "t": "\t", "r": "\r", '"': '"', "\\": "\\"}
+            if nxt not in resolved:
+                # Silently dropping the backslash turned `"C:\path"` into
+                # `C:path` and `"\u00e9"` into `u00e9` with no warning. An
+                # unknown escape is a clear, repairable mistake instead.
+                raise ParleyError([Diagnostic(
+                    "P108", f'"\\{nxt}" is not a valid escape.',
+                    line=line, col=col,
+                    hint='Parley strings escape \\n \\t \\r \\" and \\\\ . For a '
+                         'literal backslash write \\\\ .')])
+            buf.append(resolved[nxt])
             i += 2
         elif c == "{":
             if i + 1 < n and inner[i + 1] == "{":

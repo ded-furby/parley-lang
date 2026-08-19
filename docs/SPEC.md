@@ -43,7 +43,8 @@ For learning, read [TUTORIAL.md](TUTORIAL.md); for daily use,
   single new keyword would silently break any existing program that already
   uses that word as a variable name.
 * Literals: `INT /\d+/`, `FLOAT /\d+\.\d+/`, strings
-  `"(\\.|[^"\\\n])*"` with escapes `\n \t \r \" \\` and `{expr}`
+  `"(\\.|[^"\\\n])*"` with escapes `\n \t \r \" \\` (any other escape is
+  P108, so a literal backslash must be written `\\`) and `{expr}`
   interpolation (`{{`/`}}` for literal braces). An interpolated expression may
   contain text literals, written with escaped quotes:
   `"{name otherwise \"none\"}"`. An unescaped quote closes the string, so the

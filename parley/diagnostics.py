@@ -70,6 +70,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An expression nests more than a thousand levels deep — past what the Rust backend accepts.",
         "fix": "Split the longest expression into smaller `let` steps.",
     },
+    "P108": {
+        "title": "Invalid string escape",
+        "explain": "A backslash in a string is followed by a character that is not a known escape. Parley recognises \\n, \\t, \\r, \\\" and \\\\.",
+        "fix": "Use one of the known escapes, or write \\\\ for a literal backslash (so a Windows path is \"C:\\\\path\").",
+    },
     "P107": {
         "title": "Source is not UTF-8",
         "explain": "A .par file (or an included file) contains bytes that are not valid UTF-8, so it cannot be read as text.",

@@ -52,6 +52,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Save the file with UTF-8 encoding. Parley source is text, not binary.
 
+## P108 — Invalid string escape
+
+**What it means:** A backslash in a string is followed by a character that is not a known escape. Parley recognises `\n`, `\t`, `\r`, `\"` and `\\`.
+
+**How to fix it:** Use one of the known escapes, or write `\\` for a literal backslash (so a Windows path is `"C:\\path"`).
+
 ## P201 — Unknown name
 
 **What it means:** A name was used that is not a variable in scope, a function, or an enum variant.

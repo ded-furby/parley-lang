@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 801/801, including e2e tests that
+  → cargo). The latest isolated local suite passes 804/804, including e2e tests that
   compile every feature to a native binary and assert stdout. Nineteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -198,6 +198,14 @@ Update it whenever you finish or start a work item.
   `test_no_code_is_defined_twice_in_the_catalog` guards the source text and
   ERRORS.md so this class of bug cannot recur silently. No frozen study
   context referenced P317. 801/801.
+- **v0.5.9 invalid string escapes are refused (P108).** A backslash before an
+  unknown character silently dropped the backslash: `"C:\path"` became
+  `C:path` and `"\u00e9"` became `u00e9`, with no warning — a silent
+  wrong-output an agent writing a Windows path or a Unicode escape would hit.
+  Unknown escapes are now **P108** at parse time, listing the valid set
+  (`\n \t \r \" \\`); the known escapes are unchanged. No example, stdlib
+  file, or test used an unknown escape, so nothing regressed. Pinned by
+  parametrized parser tests. 804/804.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

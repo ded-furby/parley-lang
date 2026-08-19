@@ -128,6 +128,26 @@ def test_nested_quote_inside_interpolation_names_the_real_mistake(src):
     assert "Escape quotes inside" in ei.value.diagnostics[0].hint
 
 
+@pytest.mark.parametrize("src,bad", [
+    ('to main:\n    say "\\u00e9"\n', "\\u"),
+    ('to main:\n    say "C:\\path"\n', "\\p"),
+    ('to main:\n    say "a\\qb"\n', "\\q"),
+])
+def test_unknown_escape_is_rejected_not_silently_dropped(src, bad):
+    # `"C:\path"` used to become `C:path` with the backslash silently gone.
+    with pytest.raises(ParleyError) as ei:
+        parse(src)
+    d = ei.value.diagnostics[0]
+    assert d.code == "P108"
+    assert bad in d.message
+
+
+def test_known_escapes_still_resolve():
+    prog = parse('to main:\n    say "a\\tb\\nc\\"d\\\\e"\n')
+    parts = prog.funcs[0].body[0].value.parts
+    assert parts == ["a\tb\nc\"d\\e"]
+
+
 def test_add_to_nested_item_hints_the_copy_out_idiom():
     with pytest.raises(ParleyError) as ei:
         parse('to main:\n'
