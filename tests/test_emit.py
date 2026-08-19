@@ -164,20 +164,24 @@ def test_generic_function_is_monomorphized_once_per_type():
     assert "any item" not in rust
 
 
-def test_json_decode_and_encode_emit_serde():
+def test_json_decode_and_encode_embed_the_shared_codec():
     rust = emit_text('a config has name as text\n'
                      'let c be a config from json "x"\n'
                      'say (value of c) as json\n')
-    assert "serde_json::from_str::<Config>" in rust
-    assert "serde_json::to_string" in rust
-    assert "serde::Serialize, serde::Deserialize" in rust
-    assert "deny_unknown_fields" in rust
+    assert "parley_web_json_runtime::decode::<Config>" in rust
+    assert "parley_web_json_runtime::encode(&(" in rust
+    assert rust.count("mod parley_web_json_runtime") == 1
+    assert "impl parley_web_json_runtime::Codec for Config" in rust
+    # Dependency-free: the codec is embedded, serde is gone entirely.
+    assert "serde" not in rust
 
 
 def test_maybe_json_field_defaults_to_nothing_when_absent():
     rust = emit_text('a author has name as text, email as maybe text\n'
                      'let a_value be a author from json "x"\n')
-    assert "#[serde(default)]" in rust
+    # An absent key is exactly what `maybe` means: the generated decoder
+    # finishes an unseen optional field as None instead of failing.
+    assert "parley_field_email.unwrap_or(None)" in rust
 
 
 def test_maps_emit_as_btreemap_so_every_ordering_agrees():

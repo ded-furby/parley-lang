@@ -69,7 +69,6 @@ from .workflows.catalog import WORKFLOW_CATALOG
 from .web import (
     WASM_CARGO_TOML,
     WEB_CARGO_TOML,
-    WEB_CARGO_TOML_DERIVE,
     WebProject,
     WebProjectError,
     check_browser,
@@ -91,12 +90,6 @@ strip = true
 # behaviour from `run` and `build` — overflow stops the program — so the
 # release profile keeps the checks debug builds already have.
 overflow-checks = true
-"""
-
-CARGO_TOML_JSON = CARGO_TOML + """
-[dependencies]
-serde = { version = "=1.0.229", features = ["derive"] }
-serde_json = "=1.0.151"
 """
 
 NEW_TEMPLATE = """\
@@ -233,7 +226,7 @@ def _map_rustc_errors(stdout: str, linemap: dict[int, int], srcmap: SourceMap) -
 
 
 def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMap,
-                release: bool, uses_json: bool = False) -> Path:
+                release: bool) -> Path:
     """Build the generated Rust; returns the binary path. Raises ParleyError.
 
     Identical input bytes produce an identical binary, so each program keeps
@@ -244,7 +237,7 @@ def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMa
     """
     profile = "release" if release else "debug"
     d = _build_dir(path)
-    cargo_toml = CARGO_TOML_JSON if uses_json else CARGO_TOML
+    cargo_toml = CARGO_TOML
     key = hashlib.sha256(
         f"{profile}\n{cargo_toml}\n{rust}".encode()
     ).hexdigest()
@@ -293,7 +286,7 @@ def cmd_run(args) -> int:
     path = Path(args.file)
     try:
         rust, linemap, srcmap, uses_json = compile_source(args.file)
-        binary = cargo_build(path, rust, linemap, srcmap, release=False, uses_json=uses_json)
+        binary = cargo_build(path, rust, linemap, srcmap, release=False)
     except ParleyError as e:
         return _fail(e, None)
     except RecursionError:
@@ -306,7 +299,7 @@ def cmd_build(args) -> int:
     path = Path(args.file)
     try:
         rust, linemap, srcmap, uses_json = compile_source(args.file)
-        binary = cargo_build(path, rust, linemap, srcmap, release=True, uses_json=uses_json)
+        binary = cargo_build(path, rust, linemap, srcmap, release=True)
     except ParleyError as e:
         return _fail(e, None)
     except RecursionError:
@@ -578,7 +571,7 @@ def cmd_workflow_run(args) -> int:
         input_paths = _workflow_inputs(args.input, names, manifest["schema_version"])
         output_path = _validate_workflow_output(input_paths, args.output, args.force)
         rust, linemap, srcmap, uses_json = compile_source(str(entrypoint))
-        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False, uses_json=uses_json)
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
     except OSError as exc:
         print(f"workflow error: {exc}", file=sys.stderr)
         return 1
@@ -613,7 +606,7 @@ def cmd_workflow_test(args) -> int:
         if not isinstance(tests, list) or not tests:
             raise OSError("workflow.json needs at least one test fixture")
         rust, linemap, srcmap, uses_json = compile_source(str(entrypoint))
-        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False, uses_json=uses_json)
+        binary = cargo_build(entrypoint, rust, linemap, srcmap, release=False)
     except OSError as exc:
         print(f"workflow error: {exc}", file=sys.stderr)
         return 1
@@ -1743,11 +1736,7 @@ def _build_web_artifacts(project: WebProject, web, browser, *, release: bool):
     server_rust, server_linemap = render_server(web)
     server_binary = _cargo_web_artifact(
         Path(".parley-build") / "web" / key / "server",
-        (
-            WEB_CARGO_TOML_DERIVE
-            if program_uses_json(web.program)
-            else WEB_CARGO_TOML
-        ),
+        WEB_CARGO_TOML,
         server_rust,
         server_linemap,
         web.srcmap,

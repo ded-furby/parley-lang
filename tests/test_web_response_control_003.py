@@ -267,8 +267,10 @@ to encode_item with value as item_input giving text:
 ''')
     checked = check_web(load_project(project))
     rust, _ = render_server(checked)
-    assert "serde_json::to_vec(&result.body)" in rust
-    assert "serde::Serialize, serde::Deserialize" in rust
+    # Explicit JSON in the program no longer forces a serde backend: dynamic
+    # response bodies encode through the same embedded codec as everything else.
+    assert "parley_web_json_runtime::encode(&result.body).map(String::into_bytes)" in rust
+    assert "serde" not in rust
 
     check = run_cli(["web", "check", str(project), "--json"], cwd=REPO)
     assert check.returncode == 0, check.stderr

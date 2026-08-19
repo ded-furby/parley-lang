@@ -485,6 +485,17 @@ class Emitter:
             self.emit_enum(e)
         for f in self.program.funcs:
             self.emit_func(f)
+        if self.serde:
+            # Embed the shared strict codec instead of depending on serde:
+            # same module the web target uses at its route boundary.
+            from .json_codec import JSON_RUNTIME, direct_json_impls
+
+            for line in JSON_RUNTIME.strip().splitlines():
+                self.out(line)
+            self.out("")
+            for line in direct_json_impls(self.program).splitlines():
+                self.out(line)
+            self.out("")
         if self.program_main:
             for line in self.program_main.splitlines():
                 self.out(line)
@@ -492,20 +503,10 @@ class Emitter:
         return "\n".join(self.lines) + "\n", self.linemap
 
     def emit_record(self, r: A.RecordDef):
-        derives = "Clone, Debug, PartialEq"
-        if self.serde:
-            derives += ", serde::Serialize, serde::Deserialize"
-        self.out(f"#[derive({derives})]", r.line)
-        if self.serde:
-            self.out("#[serde(deny_unknown_fields)]", r.line)
+        self.out("#[derive(Clone, Debug, PartialEq)]", r.line)
         self.out(f"struct {camel(r.name)} {{", r.line)
         self.indent += 1
         for fname, fty in r.fields:
-            if self.serde and safe(fname) != fname:
-                self.out(f'#[serde(rename = "{rust_str_lit(fname)}")]', r.line)
-            if self.serde and isinstance(fty, A.TMaybe):
-                # An absent key is exactly what `maybe` already means.
-                self.out("#[serde(default)]", r.line)
             self.out(f"{safe(fname)}: {rust_type(fty)},", r.line)
         self.indent -= 1
         self.out("}")
@@ -513,15 +514,10 @@ class Emitter:
 
     def emit_enum(self, e: A.EnumDef):
         name = camel(e.name)
-        derives = "Clone, Copy, Debug, PartialEq"
-        if self.serde:
-            derives += ", serde::Serialize, serde::Deserialize"
-        self.out(f"#[derive({derives})]", e.line)
+        self.out("#[derive(Clone, Copy, Debug, PartialEq)]", e.line)
         self.out(f"enum {name} {{", e.line)
         self.indent += 1
         for v in e.variants:
-            if self.serde:
-                self.out(f'#[serde(rename = "{rust_str_lit(v)}")]', e.line)
             self.out(f"{camel(v)},", e.line)
         self.indent -= 1
         self.out("}")
@@ -927,7 +923,7 @@ class Emitter:
         if isinstance(e, A.TheTime):
             return "parley_current_time()"
         if isinstance(e, A.FromJson):
-            return (f"serde_json::from_str::<{camel(e.type_name)}>"
+            return (f"parley_web_json_runtime::decode::<{camel(e.type_name)}>"
                     f"(&({self.borrow(e.value)})).ok()")
         if isinstance(e, A.Ask):
             fn = "parley_ask_num" if e.numeric else "parley_ask"
@@ -1119,7 +1115,9 @@ class Emitter:
         if op == "values":
             return f"parley_values(&({self.borrow(v)}))"
         if op == "json_text":
-            return (f"serde_json::to_string(&({self.borrow(v)}))"
+            # encode only fails on a non-finite decimal, which parley_fin and
+            # the parse filter keep out of the language entirely.
+            return (f"parley_web_json_runtime::encode(&({self.borrow(v)}))"
                     f'.unwrap_or_else(|_| "null".to_string())')
         if op == "text_from":
             spec, arg = self.fmt_arg(v)
@@ -1407,8 +1405,8 @@ class Emitter:
 def program_uses_json(program: A.Program) -> bool:
     """Does any expression in this program cross JSON?
 
-    Drives both the serde derives and the Cargo dependency, so a program that
-    never mentions JSON still builds with no dependencies at all.
+    Decides whether the shared strict JSON codec is embedded; every program
+    builds with no Cargo dependencies either way.
     """
     found = False
     # The checker annotates call nodes with `target_fn`, which points back at

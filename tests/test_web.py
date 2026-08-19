@@ -14,7 +14,6 @@ from parley.cli import _safe_bundle_target
 from parley.diagnostics import ParleyError
 from parley.web import (
     WEB_CARGO_TOML,
-    WEB_CARGO_TOML_DERIVE,
     WebProjectError,
     check_browser,
     check_web,
@@ -116,7 +115,10 @@ a build_note has mood as build_mood, detail as maybe text
     assert "parley_field_detail.unwrap_or(None)" in rust
 
 
-def test_web_program_with_internal_json_keeps_derive_backend(tmp_path):
+def test_web_program_with_internal_json_uses_the_shared_codec(tmp_path):
+    # Explicit `as json` / `from json` in a web program used to force the
+    # serde derive backend and its proc-macro build; both boundaries now embed
+    # the one strict codec, and no Cargo manifest mentions serde at all.
     root = write_project(tmp_path / "app")
     with (root / "main.par").open("a") as source:
         source.write("""
@@ -125,12 +127,11 @@ to encoded with value as request_body giving text:
 """)
     rust, _ = render_server(check_web(load_project(root)))
 
-    assert "serde::Serialize, serde::Deserialize" in rust
-    assert "#[serde(deny_unknown_fields)]" in rust
+    assert "serde" not in rust
+    assert rust.count("mod parley_web_json_runtime") == 1
+    assert "parley_web_json_runtime::encode(&(" in rust
     assert "serde =" not in WEB_CARGO_TOML
     assert "serde_json =" not in WEB_CARGO_TOML
-    assert 'features = ["derive"]' in WEB_CARGO_TOML_DERIVE
-    assert 'serde_json = "=1.0.151"' in WEB_CARGO_TOML_DERIVE
 
 
 def test_browser_generation_has_stable_scalar_abi_and_bindings(tmp_path):

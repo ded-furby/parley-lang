@@ -99,6 +99,23 @@ Update it whenever you finish or start a work item.
   argument of the same call reads or changes it hit rustc's borrow checker as
   a bare P901; the checker now refuses it as **P322** with the copy-first
   fix spelled out. SPEC §5 records both rules. 790/790.
+- **v0.5.9 one JSON codec everywhere — serde removed from the toolchain.**
+  The v0.5.5 dependency-free strict codec (accepted by preregistered
+  cold-build study 002, exercised at route boundaries through studies
+  044–047) now lives in `parley/json_codec.py` and is embedded by *both*
+  backends: the command target's `from json` / `as json` and every web
+  route, including dynamic response bodies and web programs with explicit
+  JSON, which previously forced the serde-derive fork. Deleted outright:
+  `CARGO_TOML_JSON`, `WEB_CARGO_TOML_DERIVE`, the dead v0.5.4
+  `_manual_serde_impls`, and the serde attribute emission in records/kinds.
+  Measured: a cold `parley build` of a JSON program fell **4.8 s → 0.35 s**
+  and the binary **413 → 345 KiB** — every Parley binary is now
+  dependency-free at the same size. Behavioural parity is enforced by the
+  unchanged exact-output e2e tests (absent-`maybe` decoding, `null`
+  encoding, key-ordered maps, unknown/duplicate/missing rejection) and by a
+  live Release Radar smoke reproducing the frozen 035 error contract
+  (415 `json_content_type_required`, strict 400 unknown-field). This also
+  retires the serde-tax caveat on the 047 build-cost target. 790/790.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
