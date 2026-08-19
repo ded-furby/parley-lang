@@ -148,6 +148,16 @@ CASES = [
     ("camel_variant_collision",
      "a m is one of ab, aB\nsay 1\n",
      "P207", "same variant"),
+    ("aliased_changing_arguments",
+     "to grow_both with changing left as list of number, changing right as list of number:\n"
+     "    add 1 to left\n"
+     "let xs be a list of 9\ngrow_both with xs, xs\n",
+     "P322", "cannot also be read or changed"),
+    ("changing_argument_read_elsewhere_in_call",
+     "to grow_by with changing target as list of number, source as list of number:\n"
+     "    add 1 to target\n"
+     "let xs be a list of 1\ngrow_by with xs, (reversed xs)\n",
+     "P322", "cannot also be read or changed"),
     ("otherwise_on_plain_value", in_main("say 5 otherwise 1"), "P315", "already number"),
     ("otherwise_on_total_decimal_conversion",
      in_main("say number from (5 divided by 2) otherwise 0"),

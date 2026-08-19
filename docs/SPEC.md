@@ -99,6 +99,14 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   arithmetic positions). Division always yields decimal.
 * **Multiplication spelling.** `a times b`, `a multiplied by b`, and `a * b`
   are equivalent and have the same precedence.
+* **Decimals stay finite.** `decimal from text` refuses "NaN"/"inf" (they
+  parse in Rust but a non-finite decimal would make `is` non-reflexive and
+  sorting unsound). A decimal operation whose result leaves the finite range
+  — overflow to infinity, or a NaN from `x to the power of y` — stops the
+  program with a catchable English failure, exactly as integer overflow does.
+* **Aliased mutation is refused.** A `changing` argument takes exclusive hold
+  of its variable for the call, so the same variable cannot also be read or
+  changed through another argument of that call (P322); copy first.
 * **Whole-number remainder** has three equivalent spellings: `a % b`, `a
   modulo b`, and `remainder of a divided by b`. All use the same guarded
   operation and reject a zero divisor at runtime. Negative operands follow

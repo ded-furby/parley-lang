@@ -266,6 +266,12 @@ function that gives back `nothing`.
 
 **How to fix it:** Stay inside the range, or use `decimal` for large magnitudes (up to about 1.8e308).
 
+## P322 — One variable passed twice where one use changes it
+
+**What it means:** A `changing` parameter takes exclusive hold of its variable for the whole call, so the same variable cannot also be read or changed through another argument of that call.
+
+**How to fix it:** Make a copy first (`let x_copy be x`) and pass the copy for the reading side.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.

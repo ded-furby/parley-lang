@@ -247,6 +247,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "Whole numbers are 64-bit (-9223372036854775808 to 9223372036854775807) and decimals are 64-bit floating point; a literal beyond those ranges cannot exist at runtime.",
         "fix": "Stay inside the range, or use `decimal` for large magnitudes (up to about 1.8e308).",
     },
+    "P322": {
+        "title": "One variable passed twice where one use changes it",
+        "explain": "A `changing` parameter takes exclusive hold of its variable for the whole call, so the same variable cannot also be read or changed through another argument of that call.",
+        "fix": "Make a copy first (`let x_copy be x`) and pass the copy for the reading side.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",

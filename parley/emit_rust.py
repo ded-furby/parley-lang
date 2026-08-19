@@ -247,7 +247,7 @@ fn parley_values<K: Ord, V: Clone>(m: &BTreeMap<K, V>) -> Vec<V> {
 }
 
 fn parley_sum_i(xs: &[i64]) -> i64 { xs.iter().sum() }
-fn parley_sum_f(xs: &[f64]) -> f64 { xs.iter().sum() }
+fn parley_sum_f(xs: &[f64]) -> f64 { parley_fin(xs.iter().sum()) }
 
 fn parley_min<T: PartialOrd + Clone>(xs: &[T]) -> T {
     if xs.is_empty() { panic!("Cannot take the smallest of an empty list."); }
@@ -306,9 +306,16 @@ fn parley_count(needle: &str, text: &str) -> i64 {
     count
 }
 
+fn parley_fin(v: f64) -> f64 {
+    // The decimal counterpart of integer overflow-checks: an operation that
+    // leaves the finite range stops the program instead of propagating an
+    // inf/NaN that would poison comparisons and sorting downstream.
+    if v.is_finite() { v } else { panic!("The decimal calculation left the finite range."); }
+}
+
 fn parley_div(a: f64, b: f64) -> f64 {
     if b == 0.0 { panic!("Cannot divide by zero."); }
-    a / b
+    parley_fin(a / b)
 }
 
 fn parley_rem(a: i64, b: i64) -> i64 {
@@ -330,7 +337,11 @@ fn parley_sqrt(x: f64) -> f64 {
 }
 
 fn parley_parse_int(s: &str) -> Option<i64> { s.trim().parse::<i64>().ok() }
-fn parley_parse_dec(s: &str) -> Option<f64> { s.trim().parse::<f64>().ok() }
+fn parley_parse_dec(s: &str) -> Option<f64> {
+    // "NaN" and "inf" parse in Rust, but a non-finite decimal would make
+    // `is` non-reflexive and `sorted` unsound, so they are not numbers here.
+    s.trim().parse::<f64>().ok().filter(|v| v.is_finite())
+}
 
 fn parley_ask(prompt: &str) -> String {
     use std::io::Write;
@@ -1021,10 +1032,12 @@ class Emitter:
             if isinstance(e.ty, A.TNum):
                 return f"parley_pow({self.value(e.left)}, {self.value(e.right)})"
             ls, rs = self._num_pair(e.left, e.right, want_dec=True)
-            return f"({ls}).powf({rs})"
+            return f"parley_fin(({ls}).powf({rs}))"
         want_dec = isinstance(e.ty, A.TDec)
         ls, rs = self._num_pair(e.left, e.right, want_dec)
         sym = {"+": "+", "-": "-", "*": "*"}[op]
+        if want_dec:
+            return f"parley_fin(({ls}) {sym} ({rs}))"
         return f"(({ls}) {sym} ({rs}))"
 
     def _value_compare(self, e: A.Compare) -> str:

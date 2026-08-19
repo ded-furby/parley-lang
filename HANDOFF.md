@@ -88,6 +88,17 @@ Update it whenever you finish or start a work item.
   (`string`/`p_string` → `PString`, `ab`/`aB` → `Ab`) are refused at the
   definition with P207 naming both. Pinned by
   `test_name_escaping_is_injective` and two checker cases. 787/787.
+- **v0.5.9 semantic guardrails: finite decimals and exclusive mutation.**
+  `decimal from "NaN"` and `"inf"` parsed (Rust accepts them), after which
+  `d is d` answered **no** and `sorted` returned `[3.0, NaN, 1.0]` — silent
+  nonsense, not errors. Non-finite text now parses to `nothing`, and any
+  decimal operation whose result leaves the finite range (overflow to
+  infinity, `(-4.0) to the power of 0.5`) stops the program exactly as
+  integer overflow does (`parley_fin` around dec add/sub/mul/div/pow/sum).
+  Separately, passing one variable to a `changing` parameter while any other
+  argument of the same call reads or changes it hit rustc's borrow checker as
+  a bare P901; the checker now refuses it as **P322** with the copy-first
+  fix spelled out. SPEC §5 records both rules. 790/790.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

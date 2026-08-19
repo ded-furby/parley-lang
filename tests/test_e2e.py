@@ -562,6 +562,29 @@ def test_maybe_item_never_stops_the_program(workdir):
     assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
 
 
+def test_decimals_stay_finite(workdir):
+    # Non-finite text is not a number.
+    proc = run_program(workdir, "finite_text", (
+        'say (decimal from "NaN") has no value\n'
+        'say (decimal from "inf") has no value\n'
+        'say (decimal from "-2.5") has no value\n'))
+    assert proc.stdout == "yes\nyes\nno\n"
+
+    # An operation that leaves the finite range stops, like integer overflow.
+    big = "9" * 300 + ".5"
+    proc = run_program(workdir, "finite_mul",
+                       f"let big be {big}\nsay big times big\n",
+                       expect_ok=False)
+    assert proc.returncode == 1
+    assert "finite range" in proc.stderr
+
+    proc = run_program(workdir, "finite_pow",
+                       "let neg be 0.0 minus 4.0\nsay neg to the power of 0.5\n",
+                       expect_ok=False)
+    assert proc.returncode == 1
+    assert "finite range" in proc.stderr
+
+
 def test_name_escaping_is_injective(workdir):
     # `fn` and `fn_p` used to merge into one Rust variable and this printed 4.
     proc = run_program(workdir, "escapes", (

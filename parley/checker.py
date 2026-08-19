@@ -135,6 +135,25 @@ def _unify(param: A.Type, arg: A.Type, mapping: dict[str, A.Type]) -> bool:
     return not _type_vars(param)
 
 
+def _var_names(expr) -> set[str]:
+    """Every variable name mentioned anywhere inside an expression."""
+    out: set[str] = set()
+    stack = [expr]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, (list, tuple)):
+            stack.extend(node)
+            continue
+        if not isinstance(node, A.Node):
+            continue
+        if isinstance(node, A.Var):
+            out.add(node.name)
+        for value in vars(node).values():
+            if isinstance(value, (list, tuple, A.Node)):
+                stack.append(value)
+    return out
+
+
 def _mangle(ty: A.Type) -> str:
     return "".join(ch if ch.isalnum() else "_" for ch in str(ty))
 
@@ -967,6 +986,17 @@ class Checker:
             node.target_fn = fn
             if fn is None:
                 return TErr()
+        changed_here = {arg.name for prm, arg in zip(fn.params, args)
+                        if prm.changing and isinstance(arg, A.Var)}
+        for name in sorted(changed_here):
+            mentions = sum(1 for arg in args if name in _var_names(arg))
+            if mentions > 1:
+                self.err("P322",
+                         f'"{name}" is being changed by this call, so it '
+                         "cannot also be read or changed by another argument "
+                         "of the same call.", node,
+                         hint=f"Make a copy first — `let {name}_copy be "
+                              f"{name}` — and pass the copy.")
         for prm, arg in zip(fn.params, args):
             a_ty = self.infer(arg)
             if prm.changing:
