@@ -227,14 +227,33 @@ def _map_rustc_errors(stdout: str, linemap: dict[int, int], srcmap: SourceMap) -
 
 def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMap,
                 release: bool, uses_json: bool = False) -> Path:
-    """Build the generated Rust; returns the binary path. Raises ParleyError."""
+    """Build the generated Rust; returns the binary path. Raises ParleyError.
+
+    Identical input bytes produce an identical binary, so each program keeps
+    its last built binary beside a hash of exactly what produced it. A repeat
+    build of unchanged source returns that copy without invoking cargo — the
+    shared cargo target is overwritten by every program, so the per-program
+    copy is also what makes the returned path stable.
+    """
+    profile = "release" if release else "debug"
+    d = _build_dir(path)
+    cargo_toml = CARGO_TOML_JSON if uses_json else CARGO_TOML
+    key = hashlib.sha256(
+        f"{profile}\n{cargo_toml}\n{rust}".encode()
+    ).hexdigest()
+    cached_binary = d / f"program-{profile}"
+    stamp = d / f"program-{profile}.hash"
+    try:
+        if stamp.read_text() == key and cached_binary.is_file():
+            return cached_binary
+    except OSError:
+        pass
     if shutil.which("cargo") is None:
         raise ParleyError([Diagnostic(
             "P902", "Parley needs Rust to build native binaries, and `cargo` was not found.",
             file=srcmap.main_file, line=1,
             hint="Install it from https://rustup.rs (one command), then re-run.")])
-    d = _build_dir(path)
-    (d / "Cargo.toml").write_text(CARGO_TOML_JSON if uses_json else CARGO_TOML)
+    (d / "Cargo.toml").write_text(cargo_toml)
     (d / "src" / "main.rs").write_text(rust)
     cmd = ["cargo", "build", "--message-format=json", "-q"]
     if release:
@@ -242,8 +261,14 @@ def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMa
     proc = subprocess.run(cmd, cwd=d, env=_cargo_env(), capture_output=True, text=True)
     if proc.returncode != 0:
         raise ParleyError(_map_rustc_errors(proc.stdout, linemap, srcmap))
-    profile = "release" if release else "debug"
-    return _target_dir() / profile / "parley_program"
+    built = _target_dir() / profile / "parley_program"
+    stamp.unlink(missing_ok=True)
+    # Copy then rename so a concurrent run never execs a half-written binary.
+    partial = cached_binary.with_suffix(".partial")
+    shutil.copy2(built, partial)
+    os.replace(partial, cached_binary)
+    stamp.write_text(key)
+    return cached_binary
 
 
 def _fail(e: ParleyError, srcmap: SourceMap | None, as_json: bool = False) -> int:

@@ -562,6 +562,56 @@ def test_maybe_item_never_stops_the_program(workdir):
     assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
 
 
+def test_unchanged_source_reuses_the_built_binary(workdir):
+    import os
+
+    f = workdir / "reuse.par"
+    f.write_text('say "reused"\n')
+    first = run_cli(["run", f.name], cwd=workdir)
+    assert first.returncode == 0 and first.stdout == "reused\n"
+
+    cached = workdir / ".parley-build" / "reuse" / "program-debug"
+    stamp = workdir / ".parley-build" / "reuse" / "program-debug.hash"
+    assert cached.is_file() and stamp.is_file()
+    built_at = os.stat(cached).st_mtime_ns
+
+    second = run_cli(["run", f.name], cwd=workdir)
+    assert second.returncode == 0 and second.stdout == "reused\n"
+    # Same bytes in, same binary out: the second run must not rebuild.
+    assert os.stat(cached).st_mtime_ns == built_at
+
+    f.write_text('say "changed"\n')
+    third = run_cli(["run", f.name], cwd=workdir)
+    assert third.returncode == 0 and third.stdout == "changed\n"
+    # An edit must invalidate the cache, never serve the stale binary.
+    assert os.stat(cached).st_mtime_ns != built_at
+
+
+def test_corrupt_grammar_cache_never_breaks_parsing(workdir, tmp_path):
+    import os
+    import subprocess
+    import sys
+
+    cache_home = tmp_path / "cache-home"
+    env = {**os.environ, "XDG_CACHE_HOME": str(cache_home)}
+    f = workdir / "gcache.par"
+    f.write_text('say "ok"\n')
+
+    first = subprocess.run(
+        [sys.executable, "-m", "parley.cli", "check", f.name],
+        cwd=workdir, env=env, capture_output=True, text=True, timeout=300)
+    assert first.returncode == 0, first.stderr
+    caches = list((cache_home / "parley").glob("grammar-*.cache"))
+    assert len(caches) == 1
+
+    # Truncate the cache to garbage: the fallback drops it and rebuilds.
+    caches[0].write_bytes(b"not a lark cache")
+    second = subprocess.run(
+        [sys.executable, "-m", "parley.cli", "check", f.name],
+        cwd=workdir, env=env, capture_output=True, text=True, timeout=300)
+    assert second.returncode == 0, second.stderr
+
+
 def test_top_level_program(workdir):
     src = '''to shout with t as text giving text:
     give back uppercase of t

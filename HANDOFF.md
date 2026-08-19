@@ -25,12 +25,31 @@ Update it whenever you finish or start a work item.
 
 ### Done and verified
 
-- **Language/toolchain v0.5.8** — full pipeline (Lark LALR parse → checker → Rust emit
+- **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest isolated local suite passes 774/774, including e2e tests that
   compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
+- **v0.5.9 toolchain-latency cuts** (product work aimed at the 047 build-cost
+  target; no frozen corpus touched). Measured decomposition first: of a
+  0.194 s `parley check`, 0.096 s was Lark rebuilding its LALR tables from the
+  grammar on every invocation, and a warm-unchanged `parley run` still paid
+  cargo ~0.3 s to conclude nothing changed. Two changes:
+  (1) the parser tables are cached under `$XDG_CACHE_HOME/parley/` keyed by
+  grammar hash + lark version, with a corrupt/unwritable cache falling back to
+  an uncached build (`test_corrupt_grammar_cache_never_breaks_parsing`);
+  (2) `cargo_build` keys each program's last binary by
+  sha256(profile+Cargo.toml+generated Rust) and returns the per-program copy
+  without invoking cargo when nothing changed — published atomically via
+  copy-then-rename, and the per-program copy also makes the returned path
+  stable against the shared cargo target being overwritten by other programs.
+  Medians: `check` 0.194 → 0.091 s, unchanged `run` 0.642 → 0.093 s (6.9×),
+  unchanged `build` 0.347 → 0.092 s; the full suite itself fell 228 → 188 s.
+  Edits invalidate by content hash (`test_unchanged_source_reuses_the_built_binary`).
+  This is exactly the redundant-check shape the 047 outlier paid for three
+  times. The *cold first build* gap is untouched — that remains the
+  preregistered-study target in next-work item 2.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
@@ -1540,7 +1559,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.5.8).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.5.9).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.

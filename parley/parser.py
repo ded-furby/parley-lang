@@ -143,17 +143,51 @@ _GRAMMAR = (Path(__file__).parent / "grammar.lark").read_text()
 _LARK = None
 
 
+def _grammar_cache_path() -> Path:
+    """Where the serialized LALR tables live for this exact grammar.
+
+    Building the tables costs ~0.1 s — half of a `parley check` — and the
+    grammar only changes with a Parley release, so the tables are cached per
+    grammar hash (a grammar edit gets a fresh file automatically) and per
+    lark version (the serialization format is lark's own).
+    """
+    import hashlib
+    import lark as _lark_pkg
+
+    base = os.environ.get("XDG_CACHE_HOME") or str(Path.home() / ".cache")
+    key = hashlib.sha256(
+        (_GRAMMAR + "\n" + _lark_pkg.__version__).encode()
+    ).hexdigest()[:16]
+    return Path(base) / "parley" / f"grammar-{key}.cache"
+
+
+def _build_lark(cache: str | None) -> Lark:
+    return Lark(
+        _GRAMMAR,
+        parser="lalr",
+        postlex=ParleyIndenter(),
+        propagate_positions=True,
+        maybe_placeholders=True,
+        start=["start", "rhs"],
+        **({"cache": cache} if cache else {}),
+    )
+
+
 def _lark() -> Lark:
     global _LARK
     if _LARK is None:
-        _LARK = Lark(
-            _GRAMMAR,
-            parser="lalr",
-            postlex=ParleyIndenter(),
-            propagate_positions=True,
-            maybe_placeholders=True,
-            start=["start", "rhs"],
-        )
+        cache = _grammar_cache_path()
+        try:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            _LARK = _build_lark(str(cache))
+        except Exception:
+            # A corrupt or unwritable cache must never break parsing: drop it
+            # and pay the one-off table build instead.
+            try:
+                cache.unlink(missing_ok=True)
+            except OSError:
+                pass
+            _LARK = _build_lark(None)
     return _LARK
 
 
