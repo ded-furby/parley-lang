@@ -4923,20 +4923,52 @@ def test_fullstack_040_raw_and_audit_preserve_invalidated_negative_result():
     assert audit["primary_gate"] == raw["summary"]["primary_gate"]
 
 
-def test_fullstack_040_audit_is_deterministic():
+def test_fullstack_040_audit_is_deterministic(tmp_path):
+    """Re-running the audit reproduces the committed result.
+
+    The raw result is gitignored (measurement-machine only) and the journal,
+    provenance, and run-manifest evidence lives outside the repository, so
+    this adapts to what the machine still has: full mode when the external
+    evidence survives, --skip-external otherwise — comparing everything but
+    the three fields that record which mode ran.
+    """
+    raw_path = BENCHMARKS / "results/fullstack_agent_040_raw.json"
+    if not raw_path.exists():
+        pytest.skip("gitignored 040 raw result is absent on this machine")
     audit = BENCHMARKS / "fullstack_agent_040_audit.json"
-    before = hashlib.sha256(audit.read_bytes()).hexdigest()
+    committed = json.loads(audit.read_text())
 
+    raw = json.loads(raw_path.read_text())
+    external_present = Path(raw["provenance_file"]).exists()
+    out = tmp_path / "audit.json"
+    command = [
+        sys.executable,
+        str(BENCHMARKS / "audit_fullstack_agent_040.py"),
+        "--output",
+        str(out),
+    ]
+    if not external_present:
+        command.append("--skip-external")
     completed = subprocess.run(
-        [sys.executable, str(BENCHMARKS / "audit_fullstack_agent_040.py")],
-        cwd=REPO,
-        capture_output=True,
-        text=True,
-        timeout=30,
+        command, cwd=REPO, capture_output=True, text=True, timeout=30
     )
-
     assert completed.returncode == 0, completed.stderr
-    assert hashlib.sha256(audit.read_bytes()).hexdigest() == before
+
+    regenerated = json.loads(out.read_text())
+    if external_present:
+        assert regenerated == committed
+        return
+
+    def strip_external_mode(payload):
+        payload = dict(payload)
+        payload.pop("external_evidence_verified", None)
+        matrix = dict(payload.get("matrix", {}))
+        matrix.pop("journal_pairs_verified", None)
+        matrix.pop("attempt_files_verified", None)
+        payload["matrix"] = matrix
+        return payload
+
+    assert strip_external_mode(regenerated) == strip_external_mode(committed)
 
 
 def test_fullstack_040_report_preserves_invalidated_gate_and_incident():

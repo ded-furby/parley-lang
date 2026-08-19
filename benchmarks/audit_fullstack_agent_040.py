@@ -91,8 +91,6 @@ def audit(*, verify_external: bool) -> dict[str, Any]:
     assert raw["repository"]["commit"] == MEASUREMENT_COMMIT
     assert raw["repository"]["status_porcelain"] == ""
     assert raw["provenance_after_execution_error"] == ""
-    assert sha256(Path(raw["provenance_file"])) == raw["provenance_sha256"]
-    assert sha256(Path(raw["run_manifest_file"])) == raw["run_manifest_sha256"]
     for key, path in (
         ("runner_sha256", BENCHMARKS / "run_fullstack_agent_040.py"),
         ("preparer_sha256", BENCHMARKS / "prepare_fullstack_agent_040.py"),
@@ -139,6 +137,11 @@ def audit(*, verify_external: bool) -> dict[str, Any]:
 
     external_journals = external_attempts = 0
     if verify_external:
+        # Evidence outside the repository (measurement-time /private/tmp
+        # artifacts). --skip-external exists for machines where these are
+        # gone; the recorded hashes in the raw result remain authoritative.
+        assert sha256(Path(raw["provenance_file"])) == raw["provenance_sha256"]
+        assert sha256(Path(raw["run_manifest_file"])) == raw["run_manifest_sha256"]
         assert len(raw["journal"]) == 96
         for record in raw["journal"]:
             started = Path(record["started_file"])

@@ -9,12 +9,14 @@ from benchmarks.fullstack_agent_047_scaffolds import LANGUAGES, load_task_map
 from benchmarks.prepare_fullstack_agent_047 import SOURCE_COMMIT, SOURCE_TREE
 from benchmarks.run_fullstack_agent_047 import (
     CONTEXT_PATH,
+    FROZEN_PARLEY_COMMIT,
+    FROZEN_PARLEY_TREE,
     O200K,
     allocate_port,
     build_plan,
     command_protocol,
+    frozen_source_archive_sha256,
     load_cases,
-    load_provenance,
     load_protocol,
     render_prompt,
     request,
@@ -136,9 +138,23 @@ def test_fullstack_047_revision_2_records_the_zero_session_unlock_boundary():
 def test_fullstack_047_provenance_and_reference_validation_are_complete():
     provenance_path = BENCHMARKS / "fullstack_agent_047_provenance.json"
     validation_path = BENCHMARKS / "fullstack_agent_047_validation.json"
-    provenance = load_provenance(
-        provenance_path, "/private/tmp/parley-fullstack-047-parley/bin/parley"
-    )
+    # load_provenance() is the measurement-time guard: it re-hashes the live
+    # /private/tmp trees and executes the frozen binary, which only exists on
+    # the measurement machine. The committed artifacts carry the recorded
+    # hashes, so this checks their internal consistency instead.
+    provenance = json.loads(provenance_path.read_text())
+    assert provenance["schema_version"] == 1
+    parley = provenance["parley"]
+    assert parley["source_commit"] == FROZEN_PARLEY_COMMIT
+    assert parley["source_tree"] == FROZEN_PARLEY_TREE
+    assert parley["source_archive_sha256"] == frozen_source_archive_sha256()
+    for field in (
+        "source_tree_sha256",
+        "package_tree_sha256",
+        "site_packages_tree_sha256",
+        "executable_sha256",
+    ):
+        assert len(parley[field]) == 64, field
     validation = json.loads(validation_path.read_text())
     assert provenance["experiment_id"] == "047"
     assert provenance["parley"]["reported_version"] == "parley 0.5.7"
