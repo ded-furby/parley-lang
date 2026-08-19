@@ -974,12 +974,23 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
         hint=hint)
 
 
+def _ensure_stack_headroom() -> None:
+    """Deep-but-legal programs recurse in the transformer, checker, and
+    emitter; the depth cap itself lives in the checker (P106), but every
+    phase before it needs enough Python stack to reach that judgement."""
+    import sys
+
+    if sys.getrecursionlimit() < 20000:
+        sys.setrecursionlimit(20000)
+
+
 def parse(text: str) -> A.Program:
     """Parse combined program text into an AST. Raises ParleyError.
 
     Positions in the AST/diagnostics refer to the combined text; resolve them
     through the SourceMap before showing them to anyone.
     """
+    _ensure_stack_headroom()
     if not text.endswith("\n"):
         text += "\n"
     try:

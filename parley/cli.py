@@ -153,6 +153,13 @@ document.querySelector("#status").textContent = value.ok
 
 # ------------------------------------------------------------------ pipeline
 
+def _too_deep(path: str) -> ParleyError:
+    return ParleyError([Diagnostic(
+        "P106", "This program nests expressions too deeply to compile.",
+        file=str(path), line=1,
+        hint="Split the longest expression into smaller `let` steps.")])
+
+
 def compile_source(path: str):
     """parse → check → emit. Returns (rust, linemap, srcmap); raises ParleyError
     with file-resolved diagnostics on any failure."""
@@ -289,6 +296,8 @@ def cmd_run(args) -> int:
         binary = cargo_build(path, rust, linemap, srcmap, release=False, uses_json=uses_json)
     except ParleyError as e:
         return _fail(e, None)
+    except RecursionError:
+        return _fail(_too_deep(args.file), None)
     forwarded = [a for a in getattr(args, "program_args", []) if a != "--"]
     proc = subprocess.run([str(binary), *forwarded])
     return proc.returncode if proc.returncode >= 0 else 1
@@ -300,6 +309,8 @@ def cmd_build(args) -> int:
         binary = cargo_build(path, rust, linemap, srcmap, release=True, uses_json=uses_json)
     except ParleyError as e:
         return _fail(e, None)
+    except RecursionError:
+        return _fail(_too_deep(args.file), None)
     out = Path(args.output or path.stem)
     try:
         # copy2 into a directory silently writes a differently-named file and
@@ -327,6 +338,8 @@ def cmd_check(args) -> int:
             raise ParleyError(srcmap.resolve(diags))
     except ParleyError as e:
         return _fail(e, srcmap, as_json=args.json)
+    except RecursionError:
+        return _fail(_too_deep(args.file), srcmap, as_json=args.json)
     if args.json:
         print(render_json([]))
     else:
@@ -339,6 +352,8 @@ def cmd_rust(args) -> int:
         rust, _, _, _ = compile_source(args.file)
     except ParleyError as e:
         return _fail(e, None)
+    except RecursionError:
+        return _fail(_too_deep(args.file), None)
     print(rust, end="")
     return 0
 

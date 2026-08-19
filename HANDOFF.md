@@ -61,6 +61,19 @@ Update it whenever you finish or start a work item.
   violation; `resolve_type` now rejects stray variables with **P320**, while
   signatures still declare them and instantiated bodies still receive them by
   substitution. Both are pinned in `tests/test_checker.py`; 779/779.
+- **v0.5.9 numeric-bounds and depth totality fixes** (same probing pass).
+  Out-of-range literals reached rustc as bare P901s — a whole number past
+  2^63-1, a decimal literal that parses to infinity, and the same two shapes
+  inside `when` patterns; all four are now **P321** at check time, with the
+  one shape rustc genuinely accepts — `-9223372036854775808` as
+  `Neg(Num(2^63))` — explicitly waived and pinned by
+  `test_boundary_literals_are_legal`. Expression nesting past ~1,400 levels
+  also died inside rustc; the checker now refuses more than 1,000 levels
+  (**P106**, iterative walk), `parse()` raises its own stack headroom so
+  deep-but-legal programs reach that judgement in-process, and a program too
+  deep even for the transformer (60,000 terms) comes back as machine-readable
+  P106 JSON from `parley check --json` rather than a traceback
+  (`test_pathological_depth_still_answers_in_json`). 784/784.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

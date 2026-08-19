@@ -562,6 +562,20 @@ def test_maybe_item_never_stops_the_program(workdir):
     assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
 
 
+def test_pathological_depth_still_answers_in_json(workdir):
+    import json as _json
+
+    # 60,000 terms blows Python's transformer stack long before the checker;
+    # an agent must still get machine-readable JSON, never a traceback.
+    f = workdir / "deep.par"
+    f.write_text("say " + " plus ".join(["1"] * 60000) + "\n")
+    proc = run_cli(["check", f.name, "--json"], cwd=workdir)
+    assert proc.returncode == 1
+    payload = _json.loads(proc.stdout)
+    assert payload["diagnostics"][0]["code"] == "P106"
+    assert "Traceback" not in proc.stderr
+
+
 def test_unchanged_source_reuses_the_built_binary(workdir):
     import os
 

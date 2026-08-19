@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import copy
 import difflib
+import math
 
 from . import ast_nodes as A
 from .diagnostics import Diagnostic, ParleyError
@@ -56,6 +57,11 @@ RESERVED = {
 CONTEXTUAL_NAME_KINDS = {
     "number": {"field", "function", "parameter", "variable", "loop variable"},
 }
+
+# The machine's whole-number range; literals beyond it cannot exist at runtime,
+# so they are refused here instead of surfacing as a rustc error (P901).
+_I64_MAX = 2**63 - 1
+_I64_MIN = -(2**63)
 
 _NUMERIC = (A.TNum, A.TDec)
 _ORDERED = (A.TNum, A.TDec, A.TText)
@@ -740,6 +746,12 @@ class Checker:
             return
         want = {"int": A.TNum(), "dec": A.TDec(), "text": A.TText(),
                 "yes": A.TBool(), "no": A.TBool()}[pat.kind]
+        if pat.kind == "int" and not (_I64_MIN <= pat.value <= _I64_MAX):
+            self.err("P321",
+                     f"{pat.value} is outside the whole-number range.", pat,
+                     hint=f"Numbers go from {_I64_MIN} to {_I64_MAX}.")
+        if pat.kind == "dec" and math.isinf(pat.value):
+            self.err("P321", "This decimal is too large for the machine.", pat)
         if pat.kind in ("yes", "no"):
             covered.add(pat.kind)
         if not self.assignable(want, subj_ty) and not self.assignable(subj_ty, want):
@@ -996,8 +1008,19 @@ class Checker:
 
     def _infer(self, e: A.Expr) -> A.Type:
         if isinstance(e, A.Num):
+            if e.value > _I64_MAX:
+                self.err("P321",
+                         f"{e.value} is too large — numbers go up to {_I64_MAX}.",
+                         e, hint="Use `decimal` for magnitudes beyond the "
+                                 "whole-number range.")
+                return TErr()
             return A.TNum()
         if isinstance(e, A.Dec):
+            if math.isinf(e.value):
+                self.err("P321",
+                         "This decimal is too large for the machine.", e,
+                         hint="Decimals go up to about 1.8 times 10 to the 308.")
+                return TErr()
             return A.TDec()
         if isinstance(e, A.YesLit) or isinstance(e, A.NoLit):
             return A.TBool()
@@ -1031,6 +1054,12 @@ class Checker:
                 self.err("P303", f"`not` needs yes or no, but this is {ty}.", e)
             return A.TBool()
         if isinstance(e, A.Neg):
+            # -9223372036854775808 parses as Neg(Num(2^63)); the pair is
+            # exactly the smallest i64 and rustc accepts the negated literal,
+            # so the bare-literal bound is waived for this one shape.
+            if isinstance(e.value, A.Num) and e.value.value == _I64_MAX + 1:
+                e.value.ty = A.TNum()
+                return A.TNum()
             ty = self.infer(e.value)
             if isinstance(ty, (A.TNum, A.TDec, TErr)):
                 return ty if not isinstance(ty, TErr) else TErr()
@@ -1626,6 +1655,50 @@ class Checker:
         return A.TRecord(rec.name)
 
 
+# rustc's own parser gives up somewhere between 1,000 and 1,500 nested
+# expressions, so anything deeper would sail through this checker and come
+# back as an unexplained backend rejection — a totality violation. The walk is
+# iterative because the whole point is that Python recursion cannot survive
+# these trees either.
+MAX_EXPRESSION_DEPTH = 1000
+
+
+def _deepest_expression(fn: A.FuncDef) -> int:
+    deepest = 0
+    stack: list[tuple[object, int]] = [(fn.body, 0)]
+    seen: set[int] = set()
+    while stack:
+        node, depth = stack.pop()
+        if isinstance(node, (list, tuple)):
+            for item in node:
+                stack.append((item, depth))
+            continue
+        if not isinstance(node, A.Node) or isinstance(node, A.FuncDef):
+            continue
+        if id(node) in seen:
+            continue
+        seen.add(id(node))
+        if isinstance(node, A.Expr):
+            depth += 1
+            if depth > deepest:
+                deepest = depth
+                if deepest > MAX_EXPRESSION_DEPTH:
+                    return deepest
+        for value in vars(node).values():
+            if isinstance(value, (list, tuple, A.Node)):
+                stack.append((value, depth))
+    return deepest
+
+
 def check_program(program: A.Program, *, require_main: bool = True) -> list[Diagnostic]:
     """Convenience entry point. Returns diagnostics (empty list = all good)."""
+    for fn in program.funcs:
+        if _deepest_expression(fn) > MAX_EXPRESSION_DEPTH:
+            return [Diagnostic(
+                "P106",
+                f'An expression in "{fn.name}" nests more than '
+                f"{MAX_EXPRESSION_DEPTH} levels deep.",
+                line=fn.line, col=fn.col,
+                hint="Split the longest expression into smaller `let` steps.")]
     return Checker(program, require_main=require_main).check()
+

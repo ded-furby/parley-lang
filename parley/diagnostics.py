@@ -65,6 +65,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An `include \"file.par\"` line points to a file that cannot be loaded.",
         "fix": "Check the relative path, parley_modules/ package, or PARLEY_PATH root, and make sure the file exists and is not included in a cycle.",
     },
+    "P106": {
+        "title": "Program nests too deeply",
+        "explain": "An expression nests more than a thousand levels deep — past what the Rust backend accepts.",
+        "fix": "Split the longest expression into smaller `let` steps.",
+    },
     # --- name errors (P2xx)
     "P201": {
         "title": "Unknown name",
@@ -236,6 +241,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "title": "`any …` outside a generic signature",
         "explain": "A type variable is decided by a generic function's arguments, so it only means something in a function's parameter and giving types (and, from there, its body). A record field or a type in ordinary code has nothing to decide it.",
         "fix": "Use a concrete type here, or move the code into a generic function whose parameters mention the same `any name`.",
+    },
+    "P321": {
+        "title": "Number too large for the machine",
+        "explain": "Whole numbers are 64-bit (-9223372036854775808 to 9223372036854775807) and decimals are 64-bit floating point; a literal beyond those ranges cannot exist at runtime.",
+        "fix": "Stay inside the range, or use `decimal` for large magnitudes (up to about 1.8e308).",
     },
     # --- typed web project errors (P7xx)
     "P710": {

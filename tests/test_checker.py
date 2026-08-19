@@ -136,6 +136,12 @@ CASES = [
     ("type_variable_in_plain_body",
      "let x be an empty list of any item\nsay length of x\n",
      "P320", "generic function"),
+    ("integer_literal_too_large",
+     in_main("let x be 99999999999999999999999"), "P321", "too large"),
+    ("pattern_literal_too_large",
+     in_main("when 5:", "    is 99999999999999999999999:", "        say 1",
+             "    otherwise:", "        say 2"),
+     "P321", "whole-number range"),
     ("otherwise_on_plain_value", in_main("say 5 otherwise 1"), "P315", "already number"),
     ("otherwise_on_total_decimal_conversion",
      in_main("say number from (5 divided by 2) otherwise 0"),
@@ -154,6 +160,23 @@ def test_checker_case(name, src, code, fragment):
     assert code in codes, f"{name}: expected {code}, got {[(d.code, d.message) for d in diags]}"
     blob = " ".join((d.message + " " + (d.hint or "")) for d in diags if d.code == code)
     assert fragment.lower() in blob.lower(), f"{name}: fragment {fragment!r} not in {blob!r}"
+
+
+def test_boundary_literals_are_legal():
+    # i64 min only exists as Neg(Num(2**63)); rustc accepts the negated
+    # literal, so the checker must too — while the bare literal stays refused.
+    assert check_text("let lo be -9223372036854775808\n"
+                      "let hi be 9223372036854775807\n"
+                      "say lo\nsay hi\n") == []
+
+
+def test_expression_depth_is_bounded_before_rustc():
+    # rustc rejects ~1,500 nested expressions; the checker refuses first.
+    deep = "say " + " plus ".join(["1"] * 1001) + "\n"
+    diags = check_text(deep)
+    assert [d.code for d in diags] == ["P106"]
+    fine = "say " + " plus ".join(["1"] * 200) + "\n"
+    assert check_text(fine) == []
 
 
 def test_clean_program_no_diags():

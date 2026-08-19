@@ -40,6 +40,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Check the relative path, parley_modules/ package, or PARLEY_PATH root, and make sure the file exists and is not included in a cycle.
 
+## P106 — Program nests too deeply
+
+**What it means:** An expression nests more than a thousand levels deep — past what the Rust backend accepts.
+
+**How to fix it:** Split the longest expression into smaller `let` steps.
+
 ## P201 — Unknown name
 
 **What it means:** A name was used that is not a variable in scope, a function, or an enum variant.
@@ -253,6 +259,12 @@ function that gives back `nothing`.
 **What it means:** A type variable is decided by a generic function's arguments, so it only means something in a function's parameter and giving types (and, from there, its body). A record field or a type in ordinary code has nothing to decide it.
 
 **How to fix it:** Use a concrete type here, or move the code into a generic function whose parameters mention the same `any name`.
+
+## P321 — Number too large for the machine
+
+**What it means:** Whole numbers are 64-bit (-9223372036854775808 to 9223372036854775807) and decimals are 64-bit floating point; a literal beyond those ranges cannot exist at runtime.
+
+**How to fix it:** Stay inside the range, or use `decimal` for large magnitudes (up to about 1.8e308).
 
 ## P710 — Web route names a missing handler
 
