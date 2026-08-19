@@ -176,6 +176,17 @@ Update it whenever you finish or start a work item.
   and 10 distinct programs at once all produce correct output; the web build's
   content-keyed target is unchanged. Pinned by
   `test_concurrent_first_builds_do_not_race`. 800/800.
+- **Measured and declined (2026-08-20): the for-each Vec clone.**
+  `for each x in xs` emits `for x in xs.clone()`, allocating a fresh Vec per
+  loop entry. Hypothesis: iterate the borrow (`xs.iter().cloned()`) when the
+  body does not mutate the source. Implemented and verified byte-for-byte
+  behaviour across every loop shape, but the benchmark said no: a `Vec<i64>`
+  clone is a cheap memcpy (10.8 -> 10.3 ms, ~5%), and for `list of text` the
+  per-element `String` clones dominate so the saved allocation is noise
+  (88 -> 91 ms, within variance). The clone was never the bottleneck. Reverted;
+  the one-line snapshot is simpler and no slower. If a hot-loop workload ever
+  shows Vec-allocation churn dominating, the safe form is `.iter().cloned()`
+  guarded by the existing mutated-names analysis.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
