@@ -685,6 +685,36 @@ def test_pathological_depth_still_answers_in_json(workdir):
     assert "Traceback" not in proc.stderr
 
 
+def test_concurrent_first_builds_do_not_race(tmp_path):
+    import concurrent.futures
+    import subprocess
+    import sys
+
+    # A cold cache built 10 ways at once — same program and distinct programs —
+    # must always produce the right binary, never a torn copy or missing file.
+    same = tmp_path / "same.par"
+    same.write_text('say "same {2 plus 2}"\n')
+
+    def run_same(_):
+        return subprocess.run([sys.executable, "-m", "parley.cli", "run", same.name],
+                              cwd=tmp_path, capture_output=True, text=True, timeout=180)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+        results = list(pool.map(run_same, range(10)))
+    assert {r.returncode for r in results} == {0}, [r.stderr[-200:] for r in results if r.returncode]
+    assert {r.stdout.strip() for r in results} == {"same 4"}
+
+    for i in range(10):
+        (tmp_path / f"d{i}.par").write_text(f'say "prog {i}"\n')
+
+    def run_distinct(i):
+        r = subprocess.run([sys.executable, "-m", "parley.cli", "run", f"d{i}.par"],
+                           cwd=tmp_path, capture_output=True, text=True, timeout=180)
+        return i, r.returncode, r.stdout.strip()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+        distinct = list(pool.map(run_distinct, range(10)))
+    assert all(rc == 0 and out == f"prog {i}" for i, rc, out in distinct), distinct
+
+
 def test_unchanged_source_reuses_the_built_binary(workdir):
     import os
 

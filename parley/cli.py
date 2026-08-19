@@ -175,9 +175,27 @@ def _target_dir() -> Path:
     return (Path(".parley-build") / "target").resolve()
 
 
-def _cargo_env() -> dict:
+def _build_lock(build_dir: Path):
+    """An exclusive per-build-dir lock, held for the cargo build and copy."""
+    import fcntl
+    import contextlib
+
+    @contextlib.contextmanager
+    def guard():
+        lock_path = build_dir / ".build.lock"
+        with open(lock_path, "w") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    return guard()
+
+
+def _cargo_env(target_dir: Path | None = None) -> dict:
     env = dict(os.environ)
-    env["CARGO_TARGET_DIR"] = str(_target_dir())
+    env["CARGO_TARGET_DIR"] = str((target_dir or _target_dir()).resolve())
     return env
 
 
@@ -253,22 +271,35 @@ def cargo_build(path: Path, rust: str, linemap: dict[int, int], srcmap: SourceMa
             "P902", "Parley needs Rust to build native binaries, and `cargo` was not found.",
             file=srcmap.main_file, line=1,
             hint="Install it from https://rustup.rs (one command), then re-run.")])
-    (d / "Cargo.toml").write_text(cargo_toml)
-    (d / "src" / "main.rs").write_text(rust)
-    cmd = ["cargo", "build", "--message-format=json", "-q"]
-    if release:
-        cmd.append("--release")
-    proc = subprocess.run(cmd, cwd=d, env=_cargo_env(), capture_output=True, text=True)
-    if proc.returncode != 0:
-        raise ParleyError(_map_rustc_errors(proc.stdout, linemap, srcmap))
-    built = _target_dir() / profile / "parley_program"
-    stamp.unlink(missing_ok=True)
-    # Copy then rename so a concurrent run never execs a half-written binary.
-    partial = cached_binary.with_suffix(".partial")
-    shutil.copy2(built, partial)
-    os.replace(partial, cached_binary)
-    stamp.write_text(key)
-    return cached_binary
+    # Serialize concurrent builds of this program: without the lock they race
+    # on main.rs and on cargo's fixed output name.
+    with _build_lock(d):
+        # Re-check under the lock: a peer may have finished while we waited.
+        try:
+            if stamp.read_text() == key and cached_binary.is_file():
+                return cached_binary
+        except OSError:
+            pass
+        # A per-program target dir means concurrent builds of *different*
+        # programs never share cargo's fixed `parley_program` output path.
+        target = d / "target"
+        (d / "Cargo.toml").write_text(cargo_toml)
+        (d / "src" / "main.rs").write_text(rust)
+        cmd = ["cargo", "build", "--message-format=json", "-q"]
+        if release:
+            cmd.append("--release")
+        proc = subprocess.run(cmd, cwd=d, env=_cargo_env(target),
+                              capture_output=True, text=True)
+        if proc.returncode != 0:
+            raise ParleyError(_map_rustc_errors(proc.stdout, linemap, srcmap))
+        built = target / profile / "parley_program"
+        stamp.unlink(missing_ok=True)
+        # Copy then rename so a reader never execs a half-written binary.
+        partial = cached_binary.with_suffix(".partial")
+        shutil.copy2(built, partial)
+        os.replace(partial, cached_binary)
+        stamp.write_text(key)
+        return cached_binary
 
 
 def _fail(e: ParleyError, srcmap: SourceMap | None, as_json: bool = False) -> int:

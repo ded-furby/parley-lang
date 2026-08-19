@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 799/799, including e2e tests that
+  → cargo). The latest isolated local suite passes 800/800, including e2e tests that
   compile every feature to a native binary and assert stdout. Nineteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -165,6 +165,17 @@ Update it whenever you finish or start a work item.
   hint) across check/run/build/rust, so an agent handed a mis-encoded file
   gets a repair instruction, not a stack trace. Pinned by
   `test_non_utf8_source_is_a_clean_diagnostic`. 799/799.
+- **v0.5.9 concurrent builds are race-free (fixing a claim I got wrong).** The
+  v0.5.9 binary cache published atomically, but every program still built to
+  cargo's one shared `target/debug/parley_program`, so parallel first-builds
+  raced — a 12-way concurrent cold run tracebacked on a vanished file. Now that
+  serde is gone there are no dependencies to share, so each program gets its
+  own per-program cargo target dir (isolating *different* programs) plus an
+  exclusive `flock` around the build-and-copy (serializing the *same* program),
+  with a re-check under the lock. Verified: 12 concurrent runs of one program
+  and 10 distinct programs at once all produce correct output; the web build's
+  content-keyed target is unchanged. Pinned by
+  `test_concurrent_first_builds_do_not_race`. 800/800.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
