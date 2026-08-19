@@ -607,12 +607,15 @@ The complete matched-pair
 isolates cold web-build latency as the next generic target without reusing 042
 for tuning.
 
-Version 0.5.4 addresses that mechanism outside the 042 corpus: strict
-route-boundary JSON now avoids Serde's proc-macro compile stack unless a program
-explicitly uses core JSON expressions. On the frozen 12-build product benchmark,
-median cold web-build latency improved 31.5904% with 585/585 regressions passing
-and essentially unchanged artifacts; see
-[benchmarks/WEB_BUILD_LATENCY_001.md](benchmarks/WEB_BUILD_LATENCY_001.md).
+Versions 0.5.4 and 0.5.5 addressed that mechanism outside the 042 corpus with
+preregistered latency studies, replacing Serde's proc-macro stack with a
+generated strict standard-library JSON codec (median cold web-build latency
+improved 31.59% then 70.55%; see
+[benchmarks/WEB_BUILD_LATENCY_001.md](benchmarks/WEB_BUILD_LATENCY_001.md)).
+As of 0.5.9 that one codec is shared by both backends — the command target's
+`from json` / `as json` and every web route — so **serde is gone from the
+toolchain entirely**: every Parley binary is dependency-free at the same size,
+and a cold JSON build fell from ~4.8 s to ~0.35 s.
 The v0.5.4 product is independently frozen before successor task design in
 [benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md](benchmarks/FULLSTACK_AGENT_043_PRODUCT_FREEZE.md).
 The disjoint iteration-043 semantics-only population is subsequently frozen in
