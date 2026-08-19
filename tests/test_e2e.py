@@ -562,6 +562,33 @@ def test_maybe_item_never_stops_the_program(workdir):
     assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
 
 
+def test_name_escaping_is_injective(workdir):
+    # `fn` and `fn_p` used to merge into one Rust variable and this printed 4.
+    proc = run_program(workdir, "escapes", (
+        "let fn be 1\n"
+        "let fn_p be 2\n"
+        "let px_fn be 4\n"
+        "say fn plus fn_p plus px_fn\n"))
+    assert proc.stdout == "7\n"
+
+    # A user function named like the synthesized entry point must coexist.
+    proc = run_program(workdir, "mainish", (
+        "to main_p giving number:\n    give back 7\n"
+        "to px_main giving number:\n    give back 8\n"
+        "say (main_p) plus (px_main)\n"))
+    assert proc.stdout == "15\n"
+
+    # And a user function named like a generic instantiation's mangled form.
+    proc = run_program(workdir, "mangled", (
+        "to head_or__number with x as number giving number:\n"
+        "    give back x plus 100\n"
+        "to head_or with xs as list of any item, d as any item giving any item:\n"
+        "    give back (maybe item 1 of xs) otherwise d\n"
+        "say (head_or__number with 1)\n"
+        "say (head_or with (a list of 5), 0)\n"))
+    assert proc.stdout == "101\n5\n"
+
+
 def test_pathological_depth_still_answers_in_json(workdir):
     import json as _json
 
@@ -3692,7 +3719,7 @@ def test_rust_command_prints_source(workdir):
     f.write_text("to main:\n    say 1\n")
     proc = run_cli(["rust", f.name], cwd=workdir)
     assert proc.returncode == 0
-    assert "fn main_p()" in proc.stdout
+    assert "fn px_main()" in proc.stdout
 
 
 def test_new_command(workdir):

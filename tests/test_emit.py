@@ -340,8 +340,8 @@ def test_rust_keyword_names_are_mangled():
         "    let loop be 1\n"
         "    let match be 2\n"
         "    say loop plus match\n")
-    assert "let mut loop_p: i64" in rust
-    assert "let mut match_p: i64" in rust
+    assert "let mut px_loop: i64" in rust
+    assert "let mut px_match: i64" in rust
 
 
 def test_rust_reserved_type_names_are_prefixed():
@@ -392,7 +392,7 @@ def test_assert_statement_without_message_uses_default_failure():
 def test_main_catches_panics_in_english():
     rust = emit_text("to main:\n    say 1\n")
     assert "The program stopped" in rust
-    assert "fn main_p()" in rust
+    assert "fn px_main()" in rust
 
 
 def test_linemap_points_at_parley_lines():

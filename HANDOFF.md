@@ -74,6 +74,20 @@ Update it whenever you finish or start a work item.
   deep even for the transformer (60,000 terms) comes back as machine-readable
   P106 JSON from `parley check --json` rather than a traceback
   (`test_pathological_depth_still_answers_in_json`). 784/784.
+- **v0.5.9 name-mangling soundness — one silent miscompilation found and
+  fixed.** `let fn be 1` beside `let fn_p be 2` emitted the *same* Rust
+  variable, so `fn plus fn_p` printed 4 instead of 3 — the `_p` keyword-escape
+  suffix was not injective, and a program could be wrong without any error.
+  `safe()` now escapes with a self-escaping prefix (`px_` is itself escaped),
+  which makes distinct Parley names provably distinct in Rust; the synthesized
+  entry point moved off hard-coded `main_p` onto the same scheme. Related
+  P901 escapes closed in the same pass: a user function named like a generic
+  instantiation's mangled form (`head_or__number`) collided with the
+  instantiation — concrete names now step past any taken name at creation —
+  and distinct record/kind/variant names that render to the same CamelCase
+  (`string`/`p_string` → `PString`, `ab`/`aB` → `Ab`) are refused at the
+  definition with P207 naming both. Pinned by
+  `test_name_escaping_is_injective` and two checker cases. 787/787.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

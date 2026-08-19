@@ -21,6 +21,7 @@ import math
 
 from . import ast_nodes as A
 from .diagnostics import Diagnostic, ParleyError
+from .emit_rust import camel
 
 
 class TErr(A.Type):
@@ -179,6 +180,7 @@ class Checker:
         self._instances: dict[tuple, A.FuncDef] = {}
         self._instance_queue: list[tuple] = []
         self._resolving_signature = False
+        self._camel_type_names: dict[str, str] = {}
 
     # ------------------------------------------------------------- plumbing
 
@@ -303,12 +305,33 @@ class Checker:
 
     # ------------------------------------------------------------- programs
 
+    def _claim_type_name(self, name: str, node) -> bool:
+        """Records and kinds share one generated-code namespace.
+
+        Distinct Parley names can render to the same Rust struct/enum name —
+        `string` and `p_string` both become `PString`, `ab` and `aB` both
+        become `Ab` — so uniqueness is enforced on the rendered form, where
+        the collision actually happens.
+        """
+        rendered = camel(name)
+        other = self._camel_type_names.get(rendered)
+        if other is not None and other != name:
+            self.err("P207",
+                     f'"{name}" and "{other}" become the same name '
+                     f"({rendered}) in generated code.", node,
+                     hint="Rename one of them so they stay distinct.")
+            return False
+        self._camel_type_names[rendered] = name
+        return True
+
     def check(self) -> list[Diagnostic]:
         p = self.program
         for r in p.records:
             self.check_name_ok(r.name, r, "record")
             if r.name in self.records or r.name in self.enums or r.name in self.funcs:
                 self.err("P207", f'There are two definitions called "{r.name}".', r)
+                continue
+            if not self._claim_type_name(r.name, r):
                 continue
             seen = set()
             fields = []
@@ -326,6 +349,17 @@ class Checker:
             if e.name in self.records or e.name in self.enums or e.name in self.funcs:
                 self.err("P207", f'There are two definitions called "{e.name}".', e)
                 continue
+            if not self._claim_type_name(e.name, e):
+                continue
+            variant_rendered: dict[str, str] = {}
+            for v in e.variants:
+                other = variant_rendered.get(camel(v))
+                if other is not None and other != v:
+                    self.err("P207",
+                             f'"{v}" and "{other}" become the same variant '
+                             f"({camel(v)}) in generated code.", e,
+                             hint="Rename one of them so they stay distinct.")
+                variant_rendered[camel(v)] = v
             self.enums[e.name] = e
             for v in e.variants:
                 self.check_name_ok(v, e, "variant")
@@ -439,8 +473,15 @@ class Checker:
                           "the recursion so the type stays the same.")
             return None
         concrete = copy.deepcopy(fn)
-        concrete.name = fn.name + "__" + "_".join(
+        base = fn.name + "__" + "_".join(
             _mangle(mapping[v]) for v in sorted(mapping))
+        # A user may legally define a function whose name matches the mangled
+        # form; the concrete name is internal, so step past any collision.
+        name, n = base, 2
+        while (name in self.funcs or name in self.records
+               or name in self.enums or name in self.variants):
+            name, n = f"{base}_{n}", n + 1
+        concrete.name = name
         _substitute_in_tree(concrete, mapping, set())
         self._instances[key] = concrete
         self.funcs[concrete.name] = concrete

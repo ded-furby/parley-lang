@@ -34,8 +34,16 @@ RESERVED_TYPE_NAMES = {
 
 
 def safe(name: str) -> str:
-    if name in RUST_KEYWORDS or name == "main" or name.startswith("parley_"):
-        return name + "_p"
+    """Escape names that would collide in Rust — injectively.
+
+    A plain suffix scheme is not: `fn` and `fn_p` are distinct Parley names
+    that would both emit as `fn_p`, silently merging two variables. The
+    prefix escapes itself (`px_…` is also escaped), so no two distinct
+    Parley names can ever land on the same Rust identifier.
+    """
+    if (name in RUST_KEYWORDS or name == "main"
+            or name.startswith("parley_") or name.startswith("px_")):
+        return "px_" + name
     return name
 
 
@@ -416,7 +424,7 @@ fn main() {
         };
         LAST_ERROR.with(|e| *e.borrow_mut() = msg);
     }));
-    if std::panic::catch_unwind(main_p).is_err() {
+    if std::panic::catch_unwind(px_main).is_err() {
         eprintln!("The program stopped: {}", parley_last_error());
         std::process::exit(1);
     }
@@ -523,7 +531,7 @@ class Emitter:
         self.out("")
 
     def fn_name(self, name: str) -> str:
-        return "main_p" if name == "main" else safe(name)
+        return safe(name)
 
     def param_takes_ref(self, p: A.Param) -> bool:
         return not p.changing and A.is_heap(p.type)
