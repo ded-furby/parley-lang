@@ -128,6 +128,14 @@ def test_nested_quote_inside_interpolation_names_the_real_mistake(src):
     assert "Escape quotes inside" in ei.value.diagnostics[0].hint
 
 
+def test_add_to_nested_item_hints_the_copy_out_idiom():
+    with pytest.raises(ParleyError) as ei:
+        parse('to main:\n'
+              '    let m be a map from text to list of number\n'
+              '    add 2 to item "k" of m\n')
+    assert "copying it out" in ei.value.diagnostics[0].hint
+
+
 def test_parse_hint_never_leaks_internal_terminal_names():
     with pytest.raises(ParleyError) as ei:
         parse("to f with x as number\n    give back x\n")

@@ -965,6 +965,12 @@ def _token_error(e: UnexpectedToken, text: str) -> Diagnostic:
         hint = (hint or "") + " Write `giving TYPE`, not `returns TYPE`."
     if re.match(r"^\s*(?:return\b|give\s+(?!back\b))", line):
         hint = (hint or "") + " Return a value with `give back value`."
+    if re.match(r"^\s*add\b.*\bto\s+item\b", line):
+        hint = (hint or "") + (
+            " A container inside a map or list is changed by copying it out: "
+            "`let inner be item k of m`, change `inner`, then "
+            "`set item k of m to inner`."
+        )
     nested = _nested_quote_hint(line)
     if nested:
         hint = (hint or "") + " " + nested
