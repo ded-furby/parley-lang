@@ -46,6 +46,12 @@ emits them machine-readably; `parley explain P204` prints the entry below in the
 
 **How to fix it:** Split the longest expression into smaller `let` steps.
 
+## P107 — Source is not UTF-8
+
+**What it means:** A .par file (or an included file) contains bytes that are not valid UTF-8, so it cannot be read as text.
+
+**How to fix it:** Save the file with UTF-8 encoding. Parley source is text, not binary.
+
 ## P201 — Unknown name
 
 **What it means:** A name was used that is not a variable in scope, a function, or an enum variant.

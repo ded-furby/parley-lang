@@ -158,6 +158,13 @@ Update it whenever you finish or start a work item.
   by-value record fields for a cycle back to the type and refuses it with the
   fix spelled out: hold a `list of` the type, which can be empty. A `list of`
   self stays legal and is pinned by an e2e tree program. 797/797.
+- **v0.5.9 non-UTF-8 source is a clean diagnostic (P107).** A file with
+  Latin-1 bytes or raw binary crashed the loader with a
+  `UnicodeDecodeError` traceback — the loader caught `OSError` but not a
+  decode failure. It is **P107** now (a proper `{"ok": false, …}` with a
+  hint) across check/run/build/rust, so an agent handed a mis-encoded file
+  gets a repair instruction, not a stack trace. Pinned by
+  `test_non_utf8_source_is_a_clean_diagnostic`. 799/799.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

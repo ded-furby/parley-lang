@@ -107,7 +107,7 @@ def load_program(path) -> tuple[str, SourceMap]:
             return
         spliced.add(p)
         try:
-            text = p.read_text()
+            text = p.read_text(encoding="utf-8")
         except OSError as e:
             where = _display(stack[-1]) if stack else _display(p)
             raise ParleyError([Diagnostic(
@@ -115,6 +115,12 @@ def load_program(path) -> tuple[str, SourceMap]:
                 file=where, line=1,
                 hint="Includes are relative to the including file, or to "
                      "parley_modules/ and PARLEY_PATH package roots.")])
+        except UnicodeDecodeError:
+            raise ParleyError([Diagnostic(
+                "P107", f'"{_display(p)}" is not valid UTF-8 text.',
+                file=_display(p), line=1,
+                hint="Save the file as UTF-8. Parley source is text, not "
+                     "binary.")])
         sources[_display(p)] = text
         for i, ln in enumerate(text.splitlines(), 1):
             m = INCLUDE_RE.match(ln)

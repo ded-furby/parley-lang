@@ -651,6 +651,26 @@ def test_name_escaping_is_injective(workdir):
     assert proc.stdout == "101\n5\n"
 
 
+def test_non_utf8_source_is_a_clean_diagnostic(workdir):
+    import json as _json
+
+    # A mis-encoded or binary file must be P107 JSON, never a UnicodeDecodeError
+    # traceback — the same contract every other malformed input keeps.
+    latin1 = workdir / "latin1.par"
+    latin1.write_bytes(b'say "caf\xe9"\n')
+    proc = run_cli(["check", latin1.name, "--json"], cwd=workdir)
+    assert proc.returncode == 1
+    assert "Traceback" not in proc.stderr
+    assert _json.loads(proc.stdout)["diagnostics"][0]["code"] == "P107"
+
+    binary = workdir / "binary.par"
+    binary.write_bytes(bytes(range(256)))
+    proc = run_cli(["run", binary.name], cwd=workdir)
+    assert proc.returncode == 1
+    assert "Traceback" not in proc.stderr
+    assert "P107" in proc.stdout or "P107" in proc.stderr
+
+
 def test_pathological_depth_still_answers_in_json(workdir):
     import json as _json
 

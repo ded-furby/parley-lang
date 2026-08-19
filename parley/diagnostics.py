@@ -70,6 +70,11 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "An expression nests more than a thousand levels deep — past what the Rust backend accepts.",
         "fix": "Split the longest expression into smaller `let` steps.",
     },
+    "P107": {
+        "title": "Source is not UTF-8",
+        "explain": "A .par file (or an included file) contains bytes that are not valid UTF-8, so it cannot be read as text.",
+        "fix": "Save the file with UTF-8 encoding. Parley source is text, not binary.",
+    },
     # --- name errors (P2xx)
     "P201": {
         "title": "Unknown name",
