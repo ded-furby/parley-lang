@@ -50,6 +50,17 @@ Update it whenever you finish or start a work item.
   This is exactly the redundant-check shape the 047 outlier paid for three
   times. The *cold first build* gap is untouched — that remains the
   preregistered-study target in next-work item 2.
+- **v0.5.9 generics hardening (probing found two checker-totality breaks).**
+  Polymorphic recursion — a generic whose recursive call wraps its argument in
+  a deeper type every step — ran monomorphization unbounded until a raw Python
+  `RecursionError` escaped; it is now cut off after 64 instantiations per
+  function with **P319** naming the mechanism at the call site. And a type
+  variable outside a generic signature (`a box has value as any item`, or
+  `an empty list of any item` in plain code) sailed through the checker to die
+  in the emitter as `AssertionError: no rust type for any item` — a totality
+  violation; `resolve_type` now rejects stray variables with **P320**, while
+  signatures still declare them and instantiated bodies still receive them by
+  substitution. Both are pinned in `tests/test_checker.py`; 779/779.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

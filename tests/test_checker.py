@@ -124,6 +124,18 @@ CASES = [
     ("json_rejects_number_keyed_maps",
      "let m be a map from number to text\nsay m as json\n",
      "P317", "keys must be text"),
+    ("polymorphic_recursion_is_bounded",
+     "to nest with x as any item giving number:\n"
+     "    let wrapped be a list of x\n"
+     "    give back (nest with wrapped)\n"
+     "say (nest with 1)\n",
+     "P319", "copies never end"),
+    ("type_variable_in_record_field",
+     "a box has value as any item\nsay 1\n",
+     "P320", "generic function"),
+    ("type_variable_in_plain_body",
+     "let x be an empty list of any item\nsay length of x\n",
+     "P320", "generic function"),
     ("otherwise_on_plain_value", in_main("say 5 otherwise 1"), "P315", "already number"),
     ("otherwise_on_total_decimal_conversion",
      in_main("say number from (5 divided by 2) otherwise 0"),

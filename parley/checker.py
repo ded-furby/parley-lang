@@ -172,6 +172,7 @@ class Checker:
         # sees ordinary concrete definitions.
         self._instances: dict[tuple, A.FuncDef] = {}
         self._instance_queue: list[tuple] = []
+        self._resolving_signature = False
 
     # ------------------------------------------------------------- plumbing
 
@@ -224,6 +225,22 @@ class Checker:
     # ------------------------------------------------------------- types
 
     def resolve_type(self, ty: A.Type, node) -> A.Type:
+        if isinstance(ty, A.TVar):
+            # A type variable is decided by a generic function's arguments.
+            # In a signature it declares that variable; anywhere else there is
+            # nothing to decide it, and letting it through would reach the
+            # Rust backend as a type that cannot be lowered. (Bodies of
+            # generic functions never resolve one: each concrete copy has its
+            # variables substituted before it is checked.)
+            if self._resolving_signature:
+                return ty
+            self.err("P320",
+                     f"`{ty}` only means something in a generic function's "
+                     "parameters and giving type.", node,
+                     hint="Give this a concrete type, or move it into a "
+                          "function whose parameters mention the same "
+                          f"`{ty}`.")
+            return TErr()
         if isinstance(ty, A.TNamed):
             if ty.name in self.records:
                 return A.TRecord(ty.name)
@@ -333,10 +350,14 @@ class Checker:
                 self.err("P207", f'There are two definitions called "{f.name}".', f)
                 continue
             self.funcs[f.name] = f
-            for prm in f.params:
-                prm.type = self.resolve_type(prm.type, prm)
-            if f.ret is not None:
-                f.ret = self.resolve_type(f.ret, f)
+            self._resolving_signature = True
+            try:
+                for prm in f.params:
+                    prm.type = self.resolve_type(prm.type, prm)
+                if f.ret is not None:
+                    f.ret = self.resolve_type(f.ret, f)
+            finally:
+                self._resolving_signature = False
             # A type variable is decided by the arguments, so one that appears
             # only in the giving type can never be decided at all. That is a
             # mistake in the definition, not in any particular call.
@@ -389,13 +410,28 @@ class Checker:
         types = [prm.type for prm in fn.params] + ([fn.ret] if fn.ret else [])
         return any(_type_vars(ty) for ty in types)
 
+    # A generic function legitimately gets a handful of instantiations; only
+    # polymorphic recursion — a call whose argument type nests one level
+    # deeper every time — grows without bound. The cap turns that runaway
+    # into one diagnostic instead of an ever-longer work queue.
+    MAX_INSTANTIATIONS_PER_FUNCTION = 64
+
     def _instantiate(self, fn: A.FuncDef, mapping: dict[str, A.Type],
-                     node) -> A.FuncDef:
+                     node) -> A.FuncDef | None:
         """One concrete copy of a generic function per distinct instantiation."""
         key = (fn.name, tuple(sorted((k, str(v)) for k, v in mapping.items())))
         existing = self._instances.get(key)
         if existing is not None:
             return existing
+        count = sum(1 for name, _ in self._instances if name == fn.name)
+        if count >= self.MAX_INSTANTIATIONS_PER_FUNCTION:
+            self.err("P319",
+                     f'"{fn.name}" keeps needing new types: each call wraps its '
+                     "argument in a deeper type, so the copies never end.", node,
+                     hint="A generic function cannot call itself with a more "
+                          "deeply nested type than it was given. Restructure "
+                          "the recursion so the type stays the same.")
+            return None
         concrete = copy.deepcopy(fn)
         concrete.name = fn.name + "__" + "_".join(
             _mangle(mapping[v]) for v in sorted(mapping))

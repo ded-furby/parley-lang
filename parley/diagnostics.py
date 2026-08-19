@@ -227,6 +227,16 @@ ERROR_CATALOG: dict[str, dict] = {
         "explain": "A generic function's `any name` types are worked out from its arguments, so every type variable in the giving type must also appear in a parameter type.",
         "fix": "Add a parameter that mentions the same `any name`, or give the function a concrete giving type.",
     },
+    "P319": {
+        "title": "Generic instantiations never end",
+        "explain": "A generic function is compiled once per concrete type it is called with. A call chain that wraps its argument in a deeper type every step (polymorphic recursion) would need infinitely many copies.",
+        "fix": "Restructure the recursion so the argument type stays the same across recursive calls, or make the recursive step concrete.",
+    },
+    "P320": {
+        "title": "`any …` outside a generic signature",
+        "explain": "A type variable is decided by a generic function's arguments, so it only means something in a function's parameter and giving types (and, from there, its body). A record field or a type in ordinary code has nothing to decide it.",
+        "fix": "Use a concrete type here, or move the code into a generic function whose parameters mention the same `any name`.",
+    },
     # --- typed web project errors (P7xx)
     "P710": {
         "title": "Web route names a missing handler",

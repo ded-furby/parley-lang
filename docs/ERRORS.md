@@ -242,6 +242,18 @@ function that gives back `nothing`.
 
 **How to fix it:** Add a parameter that mentions the same `any name`, or give the function a concrete giving type.
 
+## P319 — Generic instantiations never end
+
+**What it means:** A generic function is compiled once per concrete type it is called with. A call chain that wraps its argument in a deeper type every step (polymorphic recursion) would need infinitely many copies.
+
+**How to fix it:** Restructure the recursion so the argument type stays the same across recursive calls, or make the recursive step concrete.
+
+## P320 — `any …` outside a generic signature
+
+**What it means:** A type variable is decided by a generic function's arguments, so it only means something in a function's parameter and giving types (and, from there, its body). A record field or a type in ordinary code has nothing to decide it.
+
+**How to fix it:** Use a concrete type here, or move the code into a generic function whose parameters mention the same `any name`.
+
 ## P710 — Web route names a missing handler
 
 **What it means:** A route manifest points to a function that is not defined.
