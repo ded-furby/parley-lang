@@ -13,3 +13,6 @@ output/playwright/
 .playwright-cli/
 benchmarks/results/*.json
 benchmarks/results/*.jsonl
+
+# demo output written by examples/file_stats.par
+parley_demo.txt
