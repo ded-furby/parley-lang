@@ -483,8 +483,8 @@
     {
       "file": "004-toolchain-latency-and-soundness.html",
       "title": "Never Silently Wrong \u2014 Product record 004",
-      "bytes": 10820,
-      "sha256": "75b91a82020360891f9404e68c2454e6d5fa738d61fb676065d4ae8bb1d203db",
+      "bytes": 10974,
+      "sha256": "0a87d8c7d50c10137bfae3e039f38287f79655265bf10693355f6428013eafcf",
       "path": "progress/product/004-toolchain-latency-and-soundness.html"
     }
   ]
