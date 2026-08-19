@@ -409,8 +409,10 @@ fn parley_random(lo: i64, hi: i64) -> i64 {
     x ^= x << 17;
     SEED.store(x, Ordering::Relaxed);
     let (a, b) = if lo <= hi { (lo, hi) } else { (hi, lo) };
-    let span = (b - a + 1) as u64;
-    a + (x % span) as i64
+    // The span can exceed i64 (0 to i64::MAX, or the full range), so widen.
+    let span = (b as i128) - (a as i128) + 1;
+    if span == 1i128 << 64 { return x as i64; }
+    ((a as i128) + ((x % span as u64) as i128)) as i64
 }
 
 """.strip()

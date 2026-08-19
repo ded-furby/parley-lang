@@ -116,6 +116,17 @@ Update it whenever you finish or start a work item.
   live Release Radar smoke reproducing the frozen 035 error contract
   (415 `json_content_type_required`, strict 400 unknown-field). This also
   retires the serde-tax caveat on the 047 build-cost target. 790/790.
+- **v0.5.9 random spans and adversarial web validation.** `a random number
+  from 0 to 9223372036854775807` (and the full-range form) stopped with an
+  overflow because the span arithmetic was i64; it is i128 now, with the
+  2^64-wide case handled exactly, and inverted bounds still swap
+  (`test_random_covers_extreme_spans`). A ten-case hostile sweep against a
+  live v0.5.8 server — repeated query keys, decode-once UTF-8, overlong
+  `%C0%AF`, NUL and `%2e%2e%2f` in path captures, empty query names, `?` and
+  `+` in values, encoded names, emoji captures — found **no defects**; the
+  frozen query/path products hold under adversarial input. Docs were swept
+  for the retired serde claims (README, SPEC, TUTORIAL, REFERENCE now
+  describe the embedded codec and the single 345 KiB size). 791/791.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

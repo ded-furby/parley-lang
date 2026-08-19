@@ -506,8 +506,9 @@ text, yes/no, kinds, lists, text-keyed maps, and records of those. Anything
 else is refused at check time with P317. Maps encode in key order, so the same
 value always produces the same bytes.
 
-A program that never mentions JSON still builds with no dependencies; one that
-does adds serde and about 68 KiB to the binary.
+The codec is generated into the binary — the same strict module the typed web
+layer uses — so a JSON program still has no dependencies and stays the same
+size as any other program.
 
 ## 16. Many files
 

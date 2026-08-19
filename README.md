@@ -140,9 +140,9 @@ layer applies to request bodies. An absent `maybe` field simply decodes as
 that has no JSON form is refused at check time (P317).
 
 Maps encode in key order, so the same value always produces the same bytes —
-Parley maps are `BTreeMap`, and iteration, printing, and JSON all agree. A
-program that never mentions JSON still builds with no dependencies; one that
-does adds serde and about 68 KiB. See
+Parley maps are `BTreeMap`, and iteration, printing, and JSON all agree. The
+codec is generated into the binary, so a JSON program has no dependencies and
+stays ~345 KiB, the same as any other program. See
 [`examples/jsonreport.par`](examples/jsonreport.par).
 
 ## Build something real: Parley Workflows

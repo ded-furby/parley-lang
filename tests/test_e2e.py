@@ -562,6 +562,19 @@ def test_maybe_item_never_stops_the_program(workdir):
     assert proc.stdout == "10\n-1\nv\n?\nb\n?\n"
 
 
+def test_random_covers_extreme_spans(workdir):
+    proc = run_program(workdir, "random_spans", (
+        "let full be a random number from -9223372036854775808 to 9223372036854775807\n"
+        "let half be a random number from 0 to 9223372036854775807\n"
+        "let die be a random number from 1 to 6\n"
+        "let swapped be a random number from 6 to 1\n"
+        "say die is at least 1 and die is at most 6\n"
+        "say swapped is at least 1 and swapped is at most 6\n"
+        "say half is at least 0\n"))
+    # `full` proves the span arithmetic itself cannot overflow.
+    assert proc.stdout == "yes\nyes\nyes\n"
+
+
 def test_decimals_stay_finite(workdir):
     # Non-finite text is not a number.
     proc = run_program(workdir, "finite_text", (

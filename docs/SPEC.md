@@ -482,9 +482,9 @@ validated under the P710–P724 boundary rules in [WEB.md](WEB.md).
   JSON-safe value as text. Both directions accept exactly the types the web
   layer accepts: number, decimal, text, yesno, kinds, lists, text-keyed maps,
   and records of those; anything else is P317. Maps encode in key order, so the
-  same value always produces the same bytes. A program that never mentions JSON
-  builds with no dependencies at all; one that does adds serde and about 68 KiB
-  to the binary.
+  same value always produces the same bytes. The strict codec is generated
+  into the binary — the same module the typed web layer uses at its route
+  boundary — so every program builds with no dependencies at the same size.
 * **Whole-number division.** `number from (a divided by b)` is integer
   division: the decimal quotient truncated toward zero. `std/time`'s
   `floor_divide` is the flooring variant, which differs only for negative
