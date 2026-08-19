@@ -265,7 +265,7 @@ def render_index(reports: list[dict], product_records: list[dict]) -> str:
         <a class="milestone" href="product/001-release-steward-workflow-catalog.html"><b>PRODUCT 001</b><h3>Release Steward ships</h3><p>Three installable, fixture-tested workflows with checksum verification.</p></a>
         <a class="milestone" href="product/002-typed-full-stack-foundation.html"><b>PRODUCT 002</b><h3>Typed full-stack foundation</h3><p>Strict JSON routes, native HTTP, browser WASM, and a dogfood application.</p></a>
         <a class="milestone" href="product/003-language-capability-and-token-cuts.html"><b>PRODUCT 003</b><h3>A language you would pick</h3><p>Source tokens cut 6.6% with behaviour held, then arguments, stdin, files, and typed JSON.</p></a>
-        <a class="milestone" href="product/004-toolchain-latency-and-soundness.html"><b>PRODUCT 004</b><h3>Never silently wrong</h3><p>Unchanged runs 6.9&times; faster, serde removed, one miscompilation found and fixed, eight new check-time diagnostics.</p></a>
+        <a class="milestone" href="product/004-toolchain-latency-and-soundness.html"><b>PRODUCT 004</b><h3>Never silently wrong</h3><p>Unchanged runs 6.9&times; faster, serde removed, one miscompilation found and fixed, nine new check-time diagnostics.</p></a>
       </div>
     </section>
     <section class="block">
