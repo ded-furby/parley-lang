@@ -25,8 +25,8 @@
     <div class="metrics">
       <div class="metric"><span>Unchanged-source rerun</span><strong>0.64 &rarr; 0.09 s</strong></div>
       <div class="metric"><span>Cold JSON build</span><strong>4.8 &rarr; 0.35 s</strong></div>
-      <div class="metric"><span>Silent miscompilations</span><strong>1 found, 0 left</strong></div>
-      <div class="metric"><span>Local suite</span><strong>792 / 792</strong></div>
+      <div class="metric"><span>P901 escapes closed</span><strong>7 diagnostics</strong></div>
+      <div class="metric"><span>Local suite</span><strong>798 / 798</strong></div>
     </div>
 
     <section class="section">
@@ -71,6 +71,7 @@
         <li><b>P321</b><span>Out-of-range literals reached rustc; the one shape rustc accepts (&minus;2&#8309;&sup3;) stays legal</span><span class="pass">AT CHECK</span></li>
         <li><b>P106</b><span>1,000+-level nesting died inside rustc; 60,000 terms escaped as a traceback &mdash; both now answer machine-readable JSON</span><span class="pass">AT CHECK</span></li>
         <li><b>P322</b><span>A variable changed and read by the same call hit rustc's borrow checker bare</span><span class="pass">AT CHECK</span></li>
+        <li><b>P323</b><span>A record containing itself by value would be infinitely sized in Rust</span><span class="pass">REFUSED</span></li>
         <li><b>Finite decimals</b><span>decimal from "NaN" made `is` non-reflexive and sorted return [3.0, NaN, 1.0]</span><span class="pass">STOPPED</span></li>
         <li><b>Name collisions</b><span>user `head_or__number` vs an instantiation; `string`/`p_string` &rarr; one PString struct</span><span class="pass">CLOSED</span></li>
         <li><b>Random spans</b><span>0 to i64::MAX overflowed the span arithmetic; i128 now, full range exact</span><span class="pass">FIXED</span></li>
