@@ -145,6 +145,13 @@ Update it whenever you finish or start a work item.
   anything beyond it into the same clean `data error` / `{"ok": false, …}`
   shape as every other malformed input; all four data commands carry the arm.
   Pinned by `test_deep_json_is_processed_or_refused_cleanly`. 793/793.
+- **Release Steward operated on a real candidate (next-work item 5).** The
+  installed catalog workflow was run against v0.5.9's actual evidence — 794/794
+  tests, the smoke-installed wheel, and the release checklist — and decided
+  **BLOCKED**, correctly: every item passes except PyPI publication, which
+  needs Arjun. The report is preserved at
+  `workflows/RELEASE_READINESS_v0.5.9.md`. This is the first Steward run on a
+  live candidate since the v0.3.158 dogfood.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
