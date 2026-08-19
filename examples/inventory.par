@@ -1,0 +1,33 @@
+note: inventory — a small typed program using generics, records, JSON, and the
+note: stdlib together. `inventory FILE` reads a JSON catalog and reports low stock.
+include "std/text"
+
+a product has sku as text, name as text, on_hand as number, reorder_at as number
+a catalog has items as list of product
+
+note: one generic helper, used across two element types below
+to first_matching with xs as list of any item, keep as (function taking any item giving yesno) giving list of any item:
+    let out be an empty list of any item
+    for each x in xs:
+        if (keep with x):
+            add x to out
+    give back out
+
+to is_low with product as product giving yesno:
+    give back product's on_hand is at most product's reorder_at
+
+to needs_name with product as product giving yesno:
+    give back length of product's name is more than 0
+
+let path be (maybe item 1 of the arguments) otherwise "catalog.json"
+let loaded be a catalog from json ((read file path) otherwise "")
+if loaded has no value:
+    fail "{path} is not a catalog"
+
+let named be (first_matching with (value of loaded)'s items, the function needs_name)
+let low be (first_matching with named, the function is_low)
+
+say "{length of low} of {length of named} items are low on stock"
+for each product in reversed (sorted low by on_hand):
+    let gap be product's reorder_at minus product's on_hand
+    say "{(padded_right with product's sku, 8, \" \")} {(padded_right with product's name, 16, \" \")} {product's on_hand} on hand, short {gap}"

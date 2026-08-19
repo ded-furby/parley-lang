@@ -95,6 +95,22 @@ def test_generics_example(workdir):
         "none\n")
 
 
+def test_inventory_example(workdir):
+    catalog = workdir / "catalog.json"
+    catalog.write_text(
+        '{"items":['
+        '{"sku":"A-1","name":"Widget","on_hand":3,"reorder_at":10},'
+        '{"sku":"B-2","name":"Gizmo","on_hand":50,"reorder_at":20},'
+        '{"sku":"C-3","name":"Sprocket","on_hand":8,"reorder_at":15},'
+        '{"sku":"D-4","name":"","on_hand":0,"reorder_at":5}]}')
+    proc = run_cli(["run", str(EXAMPLES / "inventory.par"), str(catalog)], cwd=workdir)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout == (
+        "2 of 3 items are low on stock\n"
+        "C-3      Sprocket         8 on hand, short 7\n"
+        "A-1      Widget           3 on hand, short 7\n")
+
+
 def test_jsonreport_example(workdir):
     proc = run_cli(["run", str(EXAMPLES / "jsonreport.par"),
                     str(EXAMPLES / "feed.json"), "5"], cwd=workdir)

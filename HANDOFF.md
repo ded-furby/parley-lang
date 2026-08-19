@@ -27,7 +27,7 @@ Update it whenever you finish or start a work item.
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
   → cargo). The latest isolated local suite passes 792/792, including e2e tests that
-  compile every feature to a native binary and assert stdout. Eighteen examples in
+  compile every feature to a native binary and assert stdout. Nineteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
