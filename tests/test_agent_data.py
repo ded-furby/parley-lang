@@ -226,3 +226,34 @@ def test_check_still_reports_toon_for_a_toon_artifact(tmp_path):
 
     checked = run_cli(["data", "check", str(packed), "--json"], cwd=tmp_path)
     assert json.loads(checked.stdout)["format"] == "toon"
+
+
+def test_deep_json_is_processed_or_refused_cleanly(tmp_path):
+    import json as _json
+    import subprocess
+    import sys
+
+    # 3,000 levels is legal and must work; 60,000 must come back as a clean
+    # data error, never a traceback (the same contract parley check keeps).
+    deep = {"a": None}
+    node = deep
+    for _ in range(3000):
+        node["a"] = {"a": None}
+        node = node["a"]
+    node["a"] = 1
+    legal = tmp_path / "deep.json"
+    legal.write_text(_json.dumps(deep))
+    ok = subprocess.run([sys.executable, "-m", "parley.cli", "data", "compare", str(legal)],
+                        capture_output=True, text=True, timeout=120)
+    assert ok.returncode == 0, ok.stderr
+
+    absurd = tmp_path / "deep60k.json"
+    absurd.write_text('{"a":' * 60000 + "1" + "}" * 60000)
+    for command in (["data", "compare", str(absurd)],
+                    ["data", "pack", str(absurd), "--output", str(tmp_path / "d.agent")]):
+        proc = subprocess.run([sys.executable, "-m", "parley.cli", *command],
+                              capture_output=True, text=True, timeout=120)
+        combined = proc.stdout + proc.stderr
+        assert "Traceback" not in combined
+        if proc.returncode != 0:
+            assert "nests too deeply" in combined

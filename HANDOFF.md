@@ -137,7 +137,14 @@ Update it whenever you finish or start a work item.
   `progress/product/004-toolchain-latency-and-soundness.html` records this
   day's work in the house style (latency cuts, the JSON unification, the
   soundness campaign with its honest boundary) and is registered in the
-  progress index and manifest. Suite stands at **792/792**.
+  progress index and manifest. Suite stands at **793/793**.
+- **v0.5.9 `parley data` depth totality.** A 3,000-level JSON document — legal
+  everywhere else since the parser work — crashed `data compare` with a raw
+  traceback, and 60,000 levels crashed `pack` the same way. The data layer now
+  shares the compiler's stack headroom (legal depths just work) and converts
+  anything beyond it into the same clean `data error` / `{"ok": false, …}`
+  shape as every other malformed input; all four data commands carry the arm.
+  Pinned by `test_deep_json_is_processed_or_refused_cleanly`. 793/793.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

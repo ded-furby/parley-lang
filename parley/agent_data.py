@@ -52,6 +52,12 @@ class _Line:
 
 def load_json_text(text: str) -> Any:
     """Load strict JSON while rejecting JavaScript-only NaN/Infinity values."""
+    # Deep-but-legal documents recurse in Python's json module; share the
+    # compiler's stack headroom, and turn anything beyond it into the same
+    # clean data error every other malformed input gets.
+    from .parser import _ensure_stack_headroom
+
+    _ensure_stack_headroom()
 
     def reject_constant(value: str):
         raise AgentDataError(f"JSON contains non-finite number {value}")
@@ -60,6 +66,8 @@ def load_json_text(text: str) -> Any:
         return json.loads(text, parse_constant=reject_constant)
     except (json.JSONDecodeError, UnicodeError) as exc:
         raise AgentDataError(f"invalid JSON: {exc}") from exc
+    except RecursionError as exc:
+        raise AgentDataError("the JSON value nests too deeply to process") from exc
 
 
 def load_json_file(path: Path) -> tuple[Any, bytes]:

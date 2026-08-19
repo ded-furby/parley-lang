@@ -997,6 +997,8 @@ def cmd_data_compare(args) -> int:
         report = compare_value(value, tokenizer=args.tokenizer, source_bytes=raw)
     except AgentDataError as exc:
         return _data_error(str(exc), as_json=True)
+    except RecursionError:
+        return _data_error("the JSON value nests too deeply to process", as_json=True)
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 
@@ -1031,6 +1033,8 @@ def cmd_data_pack(args) -> int:
             )
     except (AgentDataError, OSError) as exc:
         return _data_error(str(exc))
+    except RecursionError:
+        return _data_error("the JSON value nests too deeply to process")
     if output_path is not None:
         print(
             f"Packed {args.input} as {delivered_format} -> {output_path.as_posix()} "
@@ -1068,6 +1072,8 @@ def cmd_data_unpack(args) -> int:
         _write_data_text(output_path, content)
     except (AgentDataError, OSError) as exc:
         return _data_error(str(exc))
+    except RecursionError:
+        return _data_error("the JSON value nests too deeply to process")
     if output_path is not None:
         print(f"Unpacked {args.input} as JSON -> {output_path.as_posix()}.")
     return 0
@@ -1091,6 +1097,9 @@ def cmd_data_check(args) -> int:
         }
     except (AgentDataError, OSError) as exc:
         return _data_error(str(exc), as_json=args.json)
+    except RecursionError:
+        return _data_error("the JSON value nests too deeply to process",
+                           as_json=args.json)
     if args.json:
         print(json.dumps(details, ensure_ascii=False, indent=2))
     else:
