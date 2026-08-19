@@ -21,29 +21,94 @@ Update it whenever you finish or start a work item.
    metric; benchmark agent error rates across Python/Rust/Zero/Parley;
    publish on arXiv with a USYD professor. (Arjun's long-term goal.)
 
-## Where things stand (2026-08-13)
+## Where things stand (2026-08-20)
 
 ### Done and verified
 
-- **Language/toolchain v0.5.0** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 478/478, including e2e tests that
+- **Language/toolchain v0.5.8** — full pipeline (Lark LALR parse → checker → Rust emit
+  → cargo). The latest isolated local suite passes 774/774, including e2e tests that
   compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
   you add a P-code; `tests/test_diagnostics.py` enforces coverage).
-- **Iteration 036 unseen full-stack agent study is preregistered and launch-ready.**
-  It is a new four-language harness, not an extension of the frozen CLI runner
-  or Release Radar corpus. Two implementation tasks and two maintenance tasks
-  each require an exact typed JSON service plus a real browser scalar target.
-  The frozen matrix is 96 fresh sessions: Parley, Python, TypeScript, and Rust ×
-  sol-medium and terra-medium × three repetitions. Corpus commit `0d26bb9`,
-  protocol commit `64741b3`, and harness/reference checkpoint `7d96094` are
-  pushed on `agent/unseen-fullstack-study`. Pre-session validation passes all
-  16 reference cells across 128 exact cases, builds all 16 intentionally broken
-  seeds without one false success, and proves all eight maintenance root-file
-  boundaries. **No measured agent cell has run.** Prepare dependencies, rerun
-  the validator from the committed checkpoint, then execute the complete matrix
-  once; never tune or selectively rerun it.
+- **Where the study program stands (2026-08-20): study 048 is frozen at the
+  pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
+  agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
+  921 bytes / 217 `o200k` tokens, SHA `f7cadc7b…`) and the product artifact
+  (`benchmarks/fullstack_agent_048_product.json`, SHA `cf76af83…`, product
+  commit `8d040c5`) are committed. **No 048 task, case, scaffold, threshold,
+  prompt, or model output exists yet.** Next: select an independent corpus,
+  preregister the balanced protocol, validate the harness clean-room, then run
+  the complete matrix exactly once — same discipline as 040–047.
+- **The full-stack study arc 036–047 in one place** (details and hashes in
+  `benchmarks/EXPERIMENT_LOG.md`; every raw result, audit, and canonical
+  report is committed and immutable):
+  - **036** — first unseen 96-cell matrix; run completed but the strict result
+    is **invalid** (in-sandbox loopback check design); hidden correctness kept
+    descriptively only.
+  - **037** — parent-owned FIFO check transport built and validated to replace
+    the 036 design; its own measured matrix is preserved as a second
+    **invalid** strict result (lockfile-integrity defect).
+  - **038** — exact-build freeze mechanism proven; measured matrix **valid,
+    gate not met**; closed 037's lockfile defect.
+  - **039** — independent successor; arithmetic fixes replicated; **valid,
+    gate not met**. v0.5.1/v0.5.2 preserved the evaluated contexts and
+    sharpened the P315 hint plus one-pure-function repair guidance without
+    touching any frozen study path.
+  - **040** — **invalidated by host disk exhaustion** (5 of 96 cells hit
+    ENOSPC); sealed, never selectively rerun; scratch-space controls added.
+  - **041** — **valid; five of six gates pass**, tokens fail (Parley median
+    4.9091% above Python).
+  - **042** — compact scaffold-aware v0.5.3 context; **token gate passes**
+    (0.9493% below Python) and Parley 8.43% faster overall, but the frozen
+    within-stratum elapsed rule fails (terra). Overall gate false.
+  - **v0.5.4 / v0.5.5 cold web-build products** — preregistered latency
+    studies replaced route-boundary Serde derives with generated stdlib
+    codecs: cold builds 3.86 s → 2.64 s (31.6%) then → 0.80 s (70.5%);
+    explicit `from json` / `as json` keeps the derive backend; native servers
+    got smaller and WASM stayed byte-identical.
+  - **043** — semantics-only corpus on v0.5.4; **repeated token win** (0.83%
+    below Python, lower under both models, fastest overall) but the
+    within-model elapsed rule fails again (terra, 2.63%). Gate false.
+  - **044 — the six-condition gate PASSED.** 96/96 hidden assignments,
+    24/24 Parley first checks (Python 23/24), 12/12 exact maintenance roots in
+    all four languages, median complete-session tokens 60,103.5 (**1.0072%
+    below Python**), median elapsed 23.4006 s (**12.54% below Python**), and
+    Parley no higher than the fastest baseline in both strata. Independent
+    audit hash-verified 96 journal/cleanup triples, 480/480 hidden cases, and
+    290 exact-build boundaries. Canonical report:
+    `benchmarks/reports/044-independent-fullstack-study-gate-passed.html`.
+    **Scoped evidence for the frozen 044 population — not universal.**
+  - **045** — **invalid** (header pairs serialized as tuples live vs arrays
+    persisted); preserved unrun; JSON-native evidence helper committed.
+  - **v0.5.6** — typed response controls (request-dependent status, bounded
+    app headers, split/duplicate/hop-by-hop rejection; P716–P719).
+  - **046** — the valid successor: 96/96 correctness, lowest Parley median
+    tokens (61,992.5), 12/12 roots, but **elapsed failed** (33.65 s vs
+    Python's 28.88 s). Gate false on elapsed alone.
+  - **v0.5.7 / v0.5.8** — typed web **path parameters** (checked
+    whole-segment captures, exact-route priority, strict decode-once UTF-8)
+    and **query parameters** (deterministic repeated-value maps, decode-once,
+    malformed/control rejection before handler execution). 21 and 9 dedicated
+    tests; full regressions 727 and 767 green at their gates.
+  - **047** — 32-session typed path-routing pilot: **valid, gate failed
+    tokens and elapsed**. Parley beat TypeScript by 21.93% and Rust by 39.97%
+    on tokens but was 0.3394% above Python on tokens and 11.45% on elapsed.
+    The frozen attribution (`benchmarks/fullstack_agent_047_attribution.json`)
+    decomposes it: +384.5 median paired tokens (161 fixed prompt; more
+    reasoning output in all eight pairs) and +0.99 s paired public-build cost —
+    **a stable build-cost target, not a generic language defect**. A
+    direct-rustc backend candidate was measured against protocol 003 and
+    **rejected**; v0.5.6 was restored.
+- **Test-suite hygiene (2026-08-20):** the 040 audit determinism test and the
+  047 provenance test were measurement-time guards running as unit tests —
+  both re-hashed `/private/tmp` evidence that only exists on the measurement
+  machine, so they failed on any host after temp clearing. The audit script
+  now gates those external hashes behind its existing `--skip-external` flag
+  (journal checks were already gated); the 040 test compares regenerated
+  output field-for-field minus the three mode-recording fields, and the 047
+  test validates the committed provenance artifact against the runner's frozen
+  constants. No frozen protocol, validation, or result artifact changed.
 - **v0.3.156 Parley Workflows:** `parley workflow list/new/run` ships the first
   product layer over the language. Three bundled starters cover text cleanup,
   log summaries, and Markdown checklist reports; normal Parley source can
@@ -1432,26 +1497,29 @@ Update it whenever you finish or start a work item.
 
 ### Next work (in suggested order)
 
-1. **Execute frozen full-stack agent study 036 once.** The independent task
-   population, 96-cell protocol, stack scaffolds, runner, and reference
-   validation are committed and pushed. Run the complete matrix without a
-   selective rerun, preserve every failure/protocol violation, and publish the
-   exact behavior, first-check, repair, complete-token, elapsed, browser/server,
-   and maintainability result. Do not change the compiler, skill, cases,
-   models, gates, or runner from any output.
-2. **Production web hardening.** Dogfood concurrency, graceful shutdown,
+1. **Complete study 048.** The compact context and v0.5.8 product boundary are
+   frozen; nothing else exists. Select an independent corpus (no reuse or
+   tuning from 040–047), preregister the balanced protocol and six-condition
+   gate, validate the harness clean-room, then run the complete matrix exactly
+   once. Preserve every failure; never selectively rerun.
+2. **Attack the 047 build-cost target.** The frozen attribution isolates a
+   +0.99 s paired public-build cost and a fixed 161-token prompt delta as the
+   stable gaps versus Python. Any change must be preregistered like the
+   v0.5.4/v0.5.5 cold-build studies (protocol → baseline → candidate →
+   threshold) and must not touch a frozen corpus.
+3. **Production web hardening.** Dogfood concurrency, graceful shutdown,
    reverse-proxy semantics, structured observability, and sustained load before
    calling the generated HTTP server production-ready. Add browser strings,
    records, or async behavior only when unrelated products need them.
-3. **Independent adoption evidence.** Record first-run/edit friction with
+4. **Independent adoption evidence.** Record first-run/edit friction with
    maintainers other than the original author before claiming ecosystem use.
-4. **Real Release Steward operation.** Use the installed workflow on each
+5. **Real Release Steward operation.** Use the installed workflow on each
    actual release candidate and preserve its report. Promote structured values
    inside programs only if friction recurs across maintained products.
-5. **Mature-repository validation.** If another language benchmark is justified, use a
+6. **Mature-repository validation.** If another language benchmark is justified, use a
    real repository or release operation with history and dependency search;
    preregister it and do not tune from reports 031 or 032.
-6. **Package publishing workflow** — checksum installs, publish-entry
+7. **Package publishing workflow** — checksum installs, publish-entry
    generation, lock verification, registry validation, ownership metadata,
    semantic version governance, submission review, and HMAC release-signature
    verification exist. Still needed later: PyPI reservation/upload and a
@@ -1472,7 +1540,7 @@ Update it whenever you finish or start a work item.
 
 ## Conventions
 
-- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.5.0).
+- Version lives in `pyproject.toml` and `parley/__init__.py` (now 0.5.8).
 - Examples must run clean; e2e tests assert their exact stdout.
 - The skill (`skill/parley/SKILL.md`) is the agent-facing contract —
   treat it as part of the language release, not an afterthought.
