@@ -388,6 +388,15 @@ def cmd_workflow_list(args) -> int:
 
 def cmd_workflow_new(args) -> int:
     root = Path(args.name)
+    # The argument is a product name, not a path: checking only the final
+    # component let "../sneaky" scaffold outside the working directory.
+    if args.name != root.name or args.name in (".", ".."):
+        print(
+            "workflow error: the name is a bare product name — "
+            "run the command inside the directory you want it created in",
+            file=sys.stderr,
+        )
+        return 1
     if root.exists():
         print(f"workflow error: '{args.name}' already exists.", file=sys.stderr)
         return 1

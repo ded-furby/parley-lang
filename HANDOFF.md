@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 774/774, including e2e tests that
+  → cargo). The latest isolated local suite passes 792/792, including e2e tests that
   compile every feature to a native binary and assert stdout. Eighteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -127,6 +127,17 @@ Update it whenever you finish or start a work item.
   frozen query/path products hold under adversarial input. Docs were swept
   for the retired serde claims (README, SPEC, TUTORIAL, REFERENCE now
   describe the embedded codec and the single 345 KiB size). 791/791.
+- **v0.5.9 `parley workflow new` takes a bare name.** Only the final path
+  component was validated, so `parley workflow new "../sneaky"` scaffolded
+  outside the working directory — inconsistent with every sibling command's
+  name validation and an easy trap for an agent driven by a hostile task
+  file. Path-shaped names (and `.`/`..`) are refused with a clear message;
+  pinned by `test_workflow_new_refuses_path_shaped_names`.
+- **Product record 004 published** —
+  `progress/product/004-toolchain-latency-and-soundness.html` records this
+  day's work in the house style (latency cuts, the JSON unification, the
+  soundness campaign with its honest boundary) and is registered in the
+  progress index and manifest. Suite stands at **792/792**.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,

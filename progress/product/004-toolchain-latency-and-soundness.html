@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-parley-report-theme="portable-v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Never Silently Wrong — Product record 004</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root{--canvas:#fff;--surface:#fff;--subtle:#f7f7f7;--ink:#0d0d0d;--muted:#606060;--tertiary:#929292;--line:rgba(13,13,13,.09);--blue:#0285ff;--green:#087d3e;--green-bg:#edf9f1;--amber:#a65d00;--amber-bg:#fff7e8;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--canvas)}
+    @media(prefers-color-scheme:dark){:root{--canvas:#181818;--surface:#212121;--subtle:#292929;--ink:#e7e7e7;--muted:#c2c2c2;--tertiary:#9f9f9f;--line:rgba(255,255,255,.09);--blue:#68b7ff;--green:#45d27e;--green-bg:rgba(69,210,126,.13);--amber:#ffb552;--amber-bg:rgba(255,181,82,.13)}}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--canvas);color:var(--ink)}body{font-size:14px;line-height:1.55}.bar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:20px;padding:13px 18px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--canvas) 92%,transparent);backdrop-filter:blur(12px)}.bar strong{font-weight:550}.bar span{color:var(--tertiary)}main{width:min(900px,100%);margin:auto;padding:54px 28px 80px}.eyebrow{margin:0 0 12px;color:var(--blue);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}h1{max-width:760px;margin:0;font-size:clamp(38px,7vw,68px);font-weight:620;line-height:1.02;letter-spacing:-.05em}.summary{max-width:760px;margin:22px 0 0;color:var(--muted);font-size:17px;line-height:1.65}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:40px}.metric,.card,.flow,.limit{border:1px solid var(--line);border-radius:16px;background:var(--surface)}.metric{padding:20px}.metric span{display:block;color:var(--muted)}.metric strong{display:block;margin-top:6px;font-size:24px;font-weight:550}.section{margin-top:48px}.head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:16px}.head h2{margin:0;font-size:22px;font-weight:550;letter-spacing:-.025em}.head p{margin:0;color:var(--tertiary);font-size:12px}.flow{display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;align-items:stretch;padding:10px;background:var(--subtle)}.node{padding:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}.node b{display:block;font-size:15px;font-weight:550}.node span{display:block;margin-top:6px;color:var(--muted);font-size:12px}.arrow{display:grid;place-items:center;color:var(--blue);font-size:20px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px}.card{padding:24px}.card h3{margin:0 0 9px;font-size:16px;font-weight:550}.card p{margin:0;color:var(--muted)}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}.checks{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}.checks li{display:grid;grid-template-columns:92px 1fr auto;gap:18px;padding:15px 0;border-bottom:1px solid var(--line)}.checks b{font-weight:550}.checks span{color:var(--muted)}.pass{color:var(--green)!important}.limit{padding:22px;border-color:color-mix(in srgb,var(--amber) 34%,var(--line));background:var(--amber-bg)}.limit strong{display:block;color:var(--amber)}.limit p{margin:7px 0 0;color:var(--muted)}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.links a{padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none}.links a:hover{border-color:var(--blue);color:var(--blue)}footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);color:var(--tertiary);font-size:12px}@media(max-width:720px){.bar{position:static;flex-direction:column;gap:0}.metrics{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr}.arrow{height:34px;transform:rotate(90deg)}.cards{grid-template-columns:1fr}.checks li{grid-template-columns:1fr;gap:3px}}@media(max-width:420px){main{padding:36px 18px 60px}.metrics{grid-template-columns:1fr}.head{align-items:start;flex-direction:column;gap:2px}}
+  </style>
+</head>
+<body>
+  <div class="bar"><strong>Parley product record 004</strong><span>Toolchain soundness &middot; v0.5.9</span></div>
+  <main>
+    <p class="eyebrow">Product record 004</p>
+    <h1>Faster to answer, and never silently wrong.</h1>
+    <p class="summary">One working day against two targets the frozen 047 attribution left standing:
+    the toolchain's fixed latency, and anything that could make a correct-looking program lie.
+    Every fix below was found by measuring or by adversarial probing, and each landed with the
+    test that would have caught it.</p>
+
+    <div class="metrics">
+      <div class="metric"><span>Unchanged-source rerun</span><strong>0.64 &rarr; 0.09 s</strong></div>
+      <div class="metric"><span>Cold JSON build</span><strong>4.8 &rarr; 0.35 s</strong></div>
+      <div class="metric"><span>Silent miscompilations</span><strong>1 found, 0 left</strong></div>
+      <div class="metric"><span>Local suite</span><strong>792 / 792</strong></div>
+    </div>
+
+    <section class="section">
+      <div class="head"><h2>Latency &mdash; measured, then cut</h2><p>The 047 build-cost target</p></div>
+      <p class="summary">Of a 0.194 s <code>parley check</code>, 0.096 s was Lark rebuilding its LALR
+      tables on every invocation, and a warm-unchanged <code>run</code> paid cargo ~0.3 s to conclude
+      nothing changed. The tables now cache per grammar hash, and each program keeps its last binary
+      keyed by sha256 of exactly what produced it.</p>
+      <ul class="checks">
+        <li><b>check</b><span>0.194 &rarr; 0.091 s</span><span class="pass">2.1&times;</span></li>
+        <li><b>run, unchanged source</b><span>0.642 &rarr; 0.093 s &mdash; the redundant-check shape the 047 outlier paid three times</span><span class="pass">6.9&times;</span></li>
+        <li><b>Full test suite</b><span>228 &rarr; ~190 s from the same two changes</span><span class="pass">&minus;17%</span></li>
+        <li><b>Safety</b><span>Corrupt cache falls back and rebuilds; binary publish is copy-then-rename; edits invalidate by content hash</span><span class="pass">PINNED</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>One JSON codec everywhere</h2><p>serde removed from the toolchain</p></div>
+      <div class="flow">
+        <div class="node"><b>v0.5.5 codec</b><span>accepted by preregistered study 002, proven at route boundaries through 044&ndash;047</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>parley/json_codec.py</b><span>one shared module</span></div>
+        <div class="arrow">&rarr;</div>
+        <div class="node"><b>both backends</b><span>from json &middot; as json &middot; every route</span></div>
+      </div>
+      <ul class="checks">
+        <li><b>Cold JSON build</b><span>4.8 s &rarr; 0.35 s; binary 413 &rarr; 345 KiB &mdash; every Parley binary is dependency-free at one size</span><span class="pass">UNIFIED</span></li>
+        <li><b>Parity</b><span>Exact-output e2e tests unchanged; live Release Radar reproduces the frozen 035 error contract</span><span class="pass">HELD</span></li>
+        <li><b>Deleted</b><span>CARGO_TOML_JSON, the web derive fork, and the superseded v0.5.4 manual impls</span><span class="pass">&minus;3 PATHS</span></li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="head"><h2>The soundness campaign</h2><p>Adversarial probing, wrong answers first</p></div>
+      <p class="summary"><code>let fn be 1</code> beside <code>let fn_p be 2</code> compiled both names to one
+      Rust variable and <strong>printed 4 instead of 3</strong> &mdash; no error anywhere. The escape scheme is
+      now provably injective, and every other probe that reached rustc or produced nonsense became a
+      named check-time diagnostic.</p>
+      <ul class="checks">
+        <li><b>P319</b><span>Polymorphic recursion ran monomorphization unbounded to a raw RecursionError</span><span class="pass">BOUNDED</span></li>
+        <li><b>P320</b><span>`any item` outside a generic signature crashed the emitter</span><span class="pass">REFUSED</span></li>
+        <li><b>P321</b><span>Out-of-range literals reached rustc; the one shape rustc accepts (&minus;2&#8309;&sup3;) stays legal</span><span class="pass">AT CHECK</span></li>
+        <li><b>P106</b><span>1,000+-level nesting died inside rustc; 60,000 terms escaped as a traceback &mdash; both now answer machine-readable JSON</span><span class="pass">AT CHECK</span></li>
+        <li><b>P322</b><span>A variable changed and read by the same call hit rustc's borrow checker bare</span><span class="pass">AT CHECK</span></li>
+        <li><b>Finite decimals</b><span>decimal from "NaN" made `is` non-reflexive and sorted return [3.0, NaN, 1.0]</span><span class="pass">STOPPED</span></li>
+        <li><b>Name collisions</b><span>user `head_or__number` vs an instantiation; `string`/`p_string` &rarr; one PString struct</span><span class="pass">CLOSED</span></li>
+        <li><b>Random spans</b><span>0 to i64::MAX overflowed the span arithmetic; i128 now, full range exact</span><span class="pass">FIXED</span></li>
+        <li><b>Hostile web sweep</b><span>ten adversarial path/query cases against a live v0.5.8 server</span><span class="pass">0 DEFECTS</span></li>
+      </ul>
+    </section>
+
+    <section class="section limit">
+      <strong>Honest boundary</strong>
+      <p>Product work only: no frozen corpus, protocol, or result was touched, and none of this is
+      agent-session evidence. The 047 gate stays failed as recorded; what changed is that its two
+      named mechanical gaps &mdash; redundant-check cost and the serde build tax &mdash; no longer exist for
+      future preregistered work. Study 048 remains frozen at the pre-corpus boundary and is still
+      the next research step. The 040 audit and 047 provenance tests were also made
+      machine-independent, and HANDOFF was brought forward from v0.5.0 to the present.</p>
+    </section>
+
+    <nav class="links" aria-label="Product sources">
+      <a href="../../HANDOFF.md">Read the full record</a>
+      <a href="../../parley/json_codec.py">Open the shared codec</a>
+      <a href="../../docs/ERRORS.md">Read the new diagnostics</a>
+      <a href="../index.html">Back to progress</a>
+    </nav>
+    <footer>Durable local product record. Benchmark claims remain separate and preregistered.</footer>
+  </main>
+</body>
+</html>

@@ -12,6 +12,17 @@ def test_workflow_list_shows_bundled_starters(tmp_path):
     assert "checklist-report" in proc.stdout
 
 
+def test_workflow_new_refuses_path_shaped_names(tmp_path):
+    # "../sneaky" used to scaffold outside the working directory because only
+    # the final path component was validated.
+    for bad in ("../sneaky", "a/b", "..", "."):
+        proc = run_cli(["workflow", "new", bad], cwd=tmp_path)
+        assert proc.returncode == 1
+        assert "bare product name" in proc.stderr
+    assert list(tmp_path.iterdir()) == []
+    assert not (tmp_path.parent / "sneaky").exists()
+
+
 def test_workflow_new_scaffolds_manifest_source_and_sample(tmp_path):
     proc = run_cli(
         ["workflow", "new", "release-report", "--template", "checklist-report"],
