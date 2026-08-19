@@ -26,7 +26,7 @@ Update it whenever you finish or start a work item.
 ### Done and verified
 
 - **Language/toolchain v0.5.9** — full pipeline (Lark LALR parse → checker → Rust emit
-  → cargo). The latest isolated local suite passes 804/804, including e2e tests that
+  → cargo). The latest isolated local suite passes 805/805, including e2e tests that
   compile every feature to a native binary and assert stdout. Nineteen examples in
   `examples/`. Docs: `docs/TUTORIAL.md`, `REFERENCE.md`, `SPEC.md`,
   `ERRORS.md` (generated from `parley/diagnostics.py` — regenerate it if
@@ -205,7 +205,7 @@ Update it whenever you finish or start a work item.
   Unknown escapes are now **P108** at parse time, listing the valid set
   (`\n \t \r \" \\`); the known escapes are unchanged. No example, stdlib
   file, or test used an unknown escape, so nothing regressed. Pinned by
-  parametrized parser tests. 804/804.
+  parametrized parser tests. 805/805.
 - **Where the study program stands (2026-08-20): study 048 is frozen at the
   pre-corpus boundary and is the next thing to execute.** The compact v0.5.8
   agent context (`skill/parley/references/scaffolded-query-response-web-v0.5.8-compact.md`,
