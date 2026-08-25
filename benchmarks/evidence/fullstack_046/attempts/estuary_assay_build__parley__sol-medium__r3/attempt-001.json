@@ -1,0 +1,177 @@
+{
+  "attempt": 1,
+  "request_id": "1cdafd8f8daff97ac6cf4f3a439e5f4b",
+  "elapsed_seconds": 2.9469,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 1.5141,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-046-measured-work/046-estuary_assay_build-parley-sol-medium-r3-yb8x23nq",
+          "-o",
+          "/private/tmp/parley-fullstack-046-measured-work/046-estuary_assay_build-parley-sol-medium-r3-yb8x23nq/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "estuary_assay_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:43:45 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "49"
+      },
+      "body": "{\"service\":\"Estuary Assay Dispatch\",\"ready\":true}",
+      "json": {
+        "service": "Estuary Assay Dispatch",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:43:45 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v10/estuary-assays/delta-9",
+        "retry-after": "5",
+        "x-assay-phase": "dispatched",
+        "x-content-type-options": "nosniff",
+        "content-length": "181"
+      },
+      "body": "{\"assay_ref\":\"delta-9\",\"sample_tally\":5,\"assay_effort\":73,\"bench_allowance\":104,\"examined_effort\":73,\"pending_assay\":0,\"assay_cycles\":3,\"assay_rating\":97,\"assay_phase\":\"dispatched\"}",
+      "json": {
+        "assay_ref": "delta-9",
+        "sample_tally": 5,
+        "assay_effort": 73,
+        "bench_allowance": 104,
+        "examined_effort": 73,
+        "pending_assay": 0,
+        "assay_cycles": 3,
+        "assay_rating": 97,
+        "assay_phase": "dispatched"
+      },
+      "application_headers": {
+        "location": "/api/v10/estuary-assays/delta-9",
+        "retry-after": "5",
+        "x-assay-phase": "dispatched"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/estuary-assays/delta-9"
+        ],
+        [
+          "retry-after",
+          "5"
+        ],
+        [
+          "x-assay-phase",
+          "dispatched"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_wrong_media",
+      "target": "http",
+      "status": 415,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:43:45 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "95"
+      },
+      "body": "{\"error\":\"json_content_type_required\",\"detail\":\"typed request bodies require application/json\"}",
+      "json": {
+        "error": "json_content_type_required",
+        "detail": "typed request bodies require application/json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 97,
+      "error": "",
+      "elapsed_seconds": 0.3046,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 97,
+    "error": "",
+    "elapsed_seconds": 0.3241,
+    "expected": 97,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to estuary_assay_rating with inlet_vials as number, outlet_vials as number, reagent_cartridges as number, assay_benches as number, contamination_alert as yesno giving number:\n    let effort be inlet_vials times 11 plus outlet_vials times 7 plus reagent_cartridges times 9\n    if contamination_alert:\n        set effort to effort plus reagent_cartridges times 4\n    let allowance be assay_benches times 52\n    let examined be effort\n    if examined is more than allowance:\n        set examined to allowance\n    let pending be effort minus allowance\n    if pending is less than 0:\n        set pending to 0\n    let cycles be number from ((effort plus 26) divided by 27)\n    give back examined plus pending times 4 plus cycles times 8\n",
+        "sha256": "e97ca14c37d83ee085813c66f8c4aeb1286db6494f2b61a8f31941a64c63c299",
+        "bytes": 731,
+        "lines": 13,
+        "rough_tokens": 114,
+        "o200k_base_tokens": 175
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has assay_ref as text, inlet_vials as number, outlet_vials as number, reagent_cartridges as number, assay_benches as number, contamination_alert as yesno, repeated_submission as yesno\na response_body has assay_ref as text, sample_tally as number, assay_effort as number, bench_allowance as number, examined_effort as number, pending_assay as number, assay_cycles as number, assay_rating as number, assay_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Estuary Assay Dispatch\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with assay_ref key, sample_tally 0, assay_effort 0, bench_allowance 0, examined_effort 0, pending_assay 0, assay_cycles 0, assay_rating 0, assay_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Sample sample-046\":\n        set item \"www-authenticate\" of headers to \"Sample realm=estuary\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's assay_ref, \"authorization_required\")\n    if body's inlet_vials is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's assay_ref, \"invalid\")\n    if body's outlet_vials is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's assay_ref, \"invalid\")\n    if body's reagent_cartridges is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's assay_ref, \"invalid\")\n    if body's assay_benches is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's assay_ref, \"invalid\")\n    if body's assay_benches is 0:\n        if body's inlet_vials plus body's outlet_vials is more than 0:\n            set item \"x-validation\" of headers to \"assay_benches\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's assay_ref, \"invalid\")\n    if body's repeated_submission:\n        set item \"x-conflict\" of headers to \"repeated_submission\"\n        give back a controlled_response with status 409, headers headers, body (empty_body with body's assay_ref, \"duplicate\")\n    let total be body's inlet_vials plus body's outlet_vials\n    let effort be body's inlet_vials times 11 plus body's outlet_vials times 7 plus body's reagent_cartridges times 9\n    if body's contamination_alert:\n        set effort to effort plus body's reagent_cartridges times 4\n    let allowance be body's assay_benches times 52\n    let examined be effort\n    if examined is more than allowance:\n        set examined to allowance\n    let pending be effort minus allowance\n    if pending is less than 0:\n        set pending to 0\n    let cycles be number from ((effort plus 26) divided by 27)\n    let state be \"dispatched\"\n    if pending is more than 0:\n        set state to \"routine_queue\"\n        if body's contamination_alert:\n            set state to \"contamination_queue\"\n    let result be a response_body with assay_ref body's assay_ref, sample_tally total, assay_effort effort, bench_allowance allowance, examined_effort examined, pending_assay pending, assay_cycles cycles, assay_rating (estuary_assay_rating with body's inlet_vials, body's outlet_vials, body's reagent_cartridges, body's assay_benches, body's contamination_alert), assay_phase state\n    set item \"location\" of headers to \"/api/v10/estuary-assays/\" plus body's assay_ref\n    set item \"retry-after\" of headers to \"5\"\n    set item \"x-assay-phase\" of headers to state\n    give back a controlled_response with status 202, headers headers, body result\n",
+        "sha256": "b269a065f4f0b475211939fb5641938e2be7158a5aa8a8f12c1aa503ab014f0a",
+        "bytes": 4447,
+        "lines": 57,
+        "rough_tokens": 773,
+        "o200k_base_tokens": 1022
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\"schema_version\":1,\"name\":\"estuary_assay_build\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/estuary-assay-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/estuary-assays\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"estuary_assay_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+        "sha256": "ddf217458fb29308cc19ff7381eccda0036e8996606a2d908e2dff3b4bfe7647",
+        "bytes": 494,
+        "lines": 1,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 132
+      }
+    },
+    "totals": {
+      "bytes": 5672,
+      "lines": 71,
+      "rough_tokens": 1082,
+      "o200k_base_tokens": 1329
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for estuary_assay_build\n",
+  "stderr": ""
+}

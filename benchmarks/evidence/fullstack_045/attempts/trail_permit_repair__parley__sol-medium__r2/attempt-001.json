@@ -1,0 +1,164 @@
+{
+  "attempt": 1,
+  "request_id": "69dfb2afbb3d051edf812825135d729a",
+  "elapsed_seconds": 2.7487,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 1.3094,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-045-measured-work/045-trail_permit_repair-parley-sol-medium-r2-rqomfahi",
+          "-o",
+          "/private/tmp/parley-fullstack-045-measured-work/045-trail_permit_repair-parley-sol-medium-r2-rqomfahi/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "trail_permit_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:56:28 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "39"
+      },
+      "body": "{\"service\":\"Trail Permit\",\"ready\":true}",
+      "json": {
+        "service": "Trail Permit",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_primary",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:56:28 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-permit-state": "issued",
+        "x-content-type-options": "nosniff",
+        "content-length": "167"
+      },
+      "body": "{\"permit_code\":\"ridge-12\",\"visitor_total\":6,\"trail_units\":56,\"guide_capacity_units\":76,\"admitted_units\":56,\"waiting_units\":0,\"permit_score\":56,\"permit_state\":\"issued\"}",
+      "json": {
+        "permit_code": "ridge-12",
+        "visitor_total": 6,
+        "trail_units": 56,
+        "guide_capacity_units": 76,
+        "admitted_units": 56,
+        "waiting_units": 0,
+        "permit_score": 56,
+        "permit_state": "issued"
+      },
+      "application_headers": {
+        "x-permit-state": "issued"
+      },
+      "application_header_pairs": [
+        [
+          "x-permit-state",
+          "issued"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_missing_guides",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:56:28 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "62"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"missing field trail_guides\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "missing field trail_guides"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 56,
+      "error": "",
+      "elapsed_seconds": 0.2971,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 56,
+    "error": "",
+    "elapsed_seconds": 0.2651,
+    "expected": 56,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to trail_permit_score with day_hikers as number, overnight_hikers as number, trail_guides as number, storm_alert as yesno giving number:\n    let required be day_hikers times 5 plus overnight_hikers times 12\n    if storm_alert:\n        set required to required plus trail_guides times 6\n    let capacity be trail_guides times 38\n    let admitted be required\n    if admitted is more than capacity:\n        set admitted to capacity\n    let waiting be required minus capacity\n    if waiting is less than 0:\n        set waiting to 0\n    give back admitted plus waiting times 6\n",
+        "sha256": "e694fcf80fbaec1f3922510b71d5c9c03d32830890cc157568c03e894cfc5955",
+        "bytes": 572,
+        "lines": 12,
+        "rough_tokens": 87,
+        "o200k_base_tokens": 133
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has permit_code as text, day_hikers as number, overnight_hikers as number, trail_guides as number, storm_alert as yesno\na response_body has permit_code as text, visitor_total as number, trail_units as number, guide_capacity_units as number, admitted_units as number, waiting_units as number, permit_score as number, permit_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Trail Permit\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with permit_code key, visitor_total 0, trail_units 0, guide_capacity_units 0, admitted_units 0, waiting_units 0, permit_score 0, permit_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer trail-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=trail-permit\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's permit_code, \"authorization_required\")\n    if body's day_hikers is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's permit_code, \"invalid\")\n    if body's overnight_hikers is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's permit_code, \"invalid\")\n    if body's trail_guides is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's permit_code, \"invalid\")\n    if body's trail_guides is 0:\n        if body's day_hikers plus body's overnight_hikers is more than 0:\n            set item \"x-validation\" of headers to \"trail_guides\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's permit_code, \"invalid\")\n    let total be body's day_hikers plus body's overnight_hikers\n    let required be body's day_hikers times 5 plus body's overnight_hikers times 12\n    if body's storm_alert:\n        set required to required plus body's trail_guides times 6\n    let capacity be body's trail_guides times 38\n    let admitted be required\n    if admitted is more than capacity:\n        set admitted to capacity\n    let waiting be required minus capacity\n    if waiting is less than 0:\n        set waiting to 0\n    let state be \"issued\"\n    if waiting is more than 0:\n        set state to \"routine_queue\"\n        if body's storm_alert:\n            set state to \"storm_queue\"\n    let result be a response_body with permit_code body's permit_code, visitor_total total, trail_units required, guide_capacity_units capacity, admitted_units admitted, waiting_units waiting, permit_score (trail_permit_score with body's day_hikers, body's overnight_hikers, body's trail_guides, body's storm_alert), permit_state state\n    set item \"x-permit-state\" of headers to state\n    give back a controlled_response with status 200, headers headers, body result\n",
+        "sha256": "9eb78ae4f8a71c296120941b23c13bd2214c7c4c988951f15ff340159300cfec",
+        "bytes": 3600,
+        "lines": 48,
+        "rough_tokens": 616,
+        "o200k_base_tokens": 799
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\n  \"schema_version\": 1,\n  \"name\": \"trail_permit_repair\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/trail-permit-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/trail-permits\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"trail_permit_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+        "sha256": "d25e6dbd77a73630d55b493103f994cb503f6a4d49e388053c3f388c6812ea1c",
+        "bytes": 699,
+        "lines": 36,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 214
+      }
+    },
+    "totals": {
+      "bytes": 4871,
+      "lines": 96,
+      "rough_tokens": 898,
+      "o200k_base_tokens": 1146
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for trail_permit_repair\n",
+  "stderr": ""
+}

@@ -1,0 +1,181 @@
+{
+  "attempt": 1,
+  "request_id": "1437b35506e7ef93871139fa2f820f63",
+  "elapsed_seconds": 15.9045,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 14.4889,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "estuary_assay_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:37:18 GMT",
+        "content-type": "application/json",
+        "content-length": "49"
+      },
+      "body": "{\"ready\":true,\"service\":\"Estuary Assay Dispatch\"}",
+      "json": {
+        "ready": true,
+        "service": "Estuary Assay Dispatch"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:37:18 GMT",
+        "content-type": "application/json",
+        "location": "/api/v10/estuary-assays/delta-9",
+        "retry-after": "5",
+        "x-assay-phase": "dispatched",
+        "content-length": "181"
+      },
+      "body": "{\"assay_ref\":\"delta-9\",\"sample_tally\":5,\"assay_effort\":73,\"bench_allowance\":104,\"examined_effort\":73,\"pending_assay\":0,\"assay_cycles\":3,\"assay_rating\":97,\"assay_phase\":\"dispatched\"}",
+      "json": {
+        "assay_ref": "delta-9",
+        "sample_tally": 5,
+        "assay_effort": 73,
+        "bench_allowance": 104,
+        "examined_effort": 73,
+        "pending_assay": 0,
+        "assay_cycles": 3,
+        "assay_rating": 97,
+        "assay_phase": "dispatched"
+      },
+      "application_headers": {
+        "location": "/api/v10/estuary-assays/delta-9",
+        "retry-after": "5",
+        "x-assay-phase": "dispatched"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/estuary-assays/delta-9"
+        ],
+        [
+          "retry-after",
+          "5"
+        ],
+        [
+          "x-assay-phase",
+          "dispatched"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_wrong_media",
+      "target": "http",
+      "status": 415,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:37:18 GMT",
+        "content-type": "application/json",
+        "content-length": "75"
+      },
+      "body": "{\"detail\":\"expected application/json\",\"error\":\"json_content_type_required\"}",
+      "json": {
+        "detail": "expected application/json",
+        "error": "json_content_type_required"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "estuary_assay_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 97,
+      "error": "",
+      "elapsed_seconds": 0.2847,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 97,
+    "error": "",
+    "elapsed_seconds": 0.2821,
+    "expected": 97,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/lib.rs": {
+        "exists": true,
+        "text": "use serde::{Deserialize,Serialize};#[derive(Deserialize)]#[serde(deny_unknown_fields)]pub struct RequestInput{pub assay_ref:String,pub inlet_vials:i64,pub outlet_vials:i64,pub reagent_cartridges:i64,pub assay_benches:i64,pub contamination_alert:bool,pub repeated_submission:bool}#[derive(Serialize)]pub struct ResponseOutput{pub assay_ref:String,pub sample_tally:i64,pub assay_effort:i64,pub bench_allowance:i64,pub examined_effort:i64,pub pending_assay:i64,pub assay_cycles:i64,pub assay_rating:i64,pub assay_phase:String}pub fn score(i:i64,o:i64,r:i64,b:i64,c:bool)->i64{let e=i*11+o*7+r*9+if c{r*4}else{0};let a=b*52;let x=e.min(a);let p=(e-a).max(0);let cycles=(e+26)/27;x+p*4+cycles*8}pub fn calculate(v:&RequestInput)->ResponseOutput{let t=v.inlet_vials+v.outlet_vials;let e=v.inlet_vials*11+v.outlet_vials*7+v.reagent_cartridges*9+if v.contamination_alert{v.reagent_cartridges*4}else{0};let a=v.assay_benches*52;let p=(e-a).max(0);ResponseOutput{assay_ref:v.assay_ref.clone(),sample_tally:t,assay_effort:e,bench_allowance:a,examined_effort:e.min(a),pending_assay:p,assay_cycles:(e+26)/27,assay_rating:score(v.inlet_vials,v.outlet_vials,v.reagent_cartridges,v.assay_benches,v.contamination_alert),assay_phase:if p==0{\"dispatched\"}else if v.contamination_alert{\"contamination_queue\"}else{\"routine_queue\"}.into()}}#[unsafe(no_mangle)]pub extern \"C\" fn parley_browser_score(a0:i64,a1:i64,a2:i64,a3:i64,a4:i32)->i64{score(a0,a1,a2,a3,a4!=0)}\n",
+        "sha256": "9d187ee2a2fc4c4cad622d8e45782cf02c749bc54d3da05a22a12c510314b090",
+        "bytes": 1444,
+        "lines": 1,
+        "rough_tokens": 469,
+        "o200k_base_tokens": 482
+      },
+      "src/main.rs": {
+        "exists": true,
+        "text": "use std::env;use axum::{Router,body::{Body,to_bytes},extract::Request,http::{HeaderMap,StatusCode,header},response::{IntoResponse,Response},routing::{any,get,post}};use fullstack_agent_046::{RequestInput,calculate};use serde::Serialize;use serde_json::json;use tower_http::services::{ServeDir,ServeFile};const MAX_BODY_BYTES:usize=16_384;const BROWSER_MODULE:&str=r#\"const asI64=(v,n)=>{if(typeof v==='bigint')return v;if(!Number.isSafeInteger(v))throw new TypeError(`${n} must be a safe whole number`);return BigInt(v)};export async function loadParley(){const r=await fetch(new URL('/fullstack_agent_046.wasm',import.meta.url));const m=(await WebAssembly.instantiateStreaming(r)).instance.exports;return {estuary_assay_rating:(a0,a1,a2,a3,a4)=>m.parley_browser_score(asI64(a0,'a0'),asI64(a1,'a1'),asI64(a2,'a2'),asI64(a3,'a3'),a4?1:0)}}\"#;\nfn json_response(value:impl Serialize,status:u16,headers:&[(&str,&str)])->Response{if headers.iter().any(|(n,_)|matches!(n.to_ascii_lowercase().as_str(),\"content-length\"|\"content-type\"|\"connection\"|\"transfer-encoding\"|\"x-content-type-options\")){return error(\"invalid_response_headers\",500,\"server-owned response header\")}let status=StatusCode::from_u16(status).unwrap();let mut response=(status,serde_json::to_vec(&value).unwrap()).into_response();response.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));for(n,v)in headers{response.headers_mut().insert(header::HeaderName::from_bytes(n.as_bytes()).unwrap(),header::HeaderValue::from_str(v).unwrap());}response}fn error(code:&str,status:u16,detail:&str)->Response{let mut r=(StatusCode::from_u16(status).unwrap(),serde_json::to_vec(&json!({\"error\":code,\"detail\":detail})).unwrap()).into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));r}fn zero(v:&RequestInput,state:&str)->serde_json::Value{json!({\"assay_ref\":v.assay_ref,\"sample_tally\":0,\"assay_effort\":0,\"bench_allowance\":0,\"examined_effort\":0,\"pending_assay\":0,\"assay_cycles\":0,\"assay_rating\":0,\"assay_phase\":state})}fn decide(v:RequestInput,headers:&HeaderMap)->Response{if headers.get(\"authorization\").and_then(|x|x.to_str().ok()).unwrap_or(\"\")!=\"Sample sample-046\"{return json_response(zero(&v,\"authorization_required\"),401,&[(\"www-authenticate\",\"Sample realm=estuary\")])}if [v.inlet_vials,v.outlet_vials,v.reagent_cartridges,v.assay_benches].iter().any(|x|*x<0){return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"nonnegative\")])}if v.assay_benches==0&&v.inlet_vials+v.outlet_vials>0{return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"assay_benches\")])}if v.repeated_submission{return json_response(zero(&v,\"duplicate\"),409,&[(\"x-conflict\",\"repeated_submission\")])}let output=calculate(&v);let location=format!(\"/api/v10/estuary-assays/{}\",v.assay_ref);json_response(output,202,&[(\"location\",&location),(\"retry-after\",\"5\"),(\"x-assay-phase\",&calculate(&v).assay_phase)])}\nasync fn status()->Response{json_response(json!({\"service\":\"Estuary Assay Dispatch\",\"ready\":true}),200,&[])}async fn endpoint(request:Request)->Response{let headers=request.headers().clone();let media=headers.get(header::CONTENT_TYPE).and_then(|v|v.to_str().ok()).unwrap_or(\"\").split(';').next().unwrap_or(\"\").trim().to_ascii_lowercase();if media!=\"application/json\"&&!media.ends_with(\"+json\"){return error(\"json_content_type_required\",415,\"expected application/json\")}if let Some(length)=headers.get(header::CONTENT_LENGTH){let declared=length.to_str().ok().and_then(|v|v.parse::<usize>().ok());if declared.is_none_or(|v|v>MAX_BODY_BYTES){return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")}}let body=match to_bytes(request.into_body(),MAX_BODY_BYTES).await{Ok(body)=>body,Err(_)=>return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")};match serde_json::from_slice::<RequestInput>(&body){Ok(v)=>decide(v,&headers),Err(reason)=>error(\"invalid_json\",400,&reason.to_string())}}async fn missing(request:Request<Body>)->Response{error(\"not_found\",404,&format!(\"no API route {}\",request.uri().path()))}async fn browser()->Response{let mut r=BROWSER_MODULE.into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"text/javascript; charset=utf-8\"));r}#[tokio::main]async fn main(){let wasm=env::var_os(\"FULLSTACK_046_WASM\").map(std::path::PathBuf::from).unwrap();let app=Router::new().route(\"/status/estuary-assay-ready\",get(status)).route(\"/api/v10/estuary-assays\",post(endpoint)).route(\"/api/{*rest}\",any(missing)).route(\"/parley.js\",get(browser)).route_service(\"/fullstack_agent_046.wasm\",ServeFile::new(wasm)).fallback_service(ServeDir::new(\"public\").append_index_html_on_directories(true));let port=env::var(\"PARLEY_WEB_PORT\").unwrap().parse::<u16>().unwrap();let listener=tokio::net::TcpListener::bind((\"127.0.0.1\",port)).await.unwrap();axum::serve(listener,app).await.unwrap()}\n",
+        "sha256": "12c8249d8979abc2d0cb5ff4382263b5c5c1bf1fa48484ce35588934428ab05a",
+        "bytes": 4902,
+        "lines": 3,
+        "rough_tokens": 1711,
+        "o200k_base_tokens": 1355
+      }
+    },
+    "totals": {
+      "bytes": 6346,
+      "lines": 4,
+      "rough_tokens": 2180,
+      "o200k_base_tokens": 1837
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for estuary_assay_build\n",
+  "stderr": ""
+}

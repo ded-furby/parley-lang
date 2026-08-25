@@ -1,0 +1,70 @@
+{
+  "attempt": 1,
+  "request_id": "a4ee88aafd37879d52eae5fb304674ba",
+  "elapsed_seconds": 0.2187,
+  "ok": false,
+  "build": {
+    "ok": false,
+    "error": "command failed (1): /private/tmp/parley-fullstack-045-parley/bin/parley web build /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg -o /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg/.benchmark_build/bundle\nstdout:\n\nstderr:\nerror[P101]: I didn't expect 'least' here.\n  --> logic.par:8\n  hint: Expected ':' or 'or' or 'and'\u2026 Lines that open a block (to/if/while/when/\u2026) end with ':'.\n",
+    "elapsed_seconds": 0.2176,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg",
+          "-o",
+          "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "command failed (1): /private/tmp/parley-fullstack-045-parley/bin/parley web build /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg -o /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg/.benchmark_build/bundle\nstdout:\n\nstderr:\nerror[P101]: I didn't expect 'least' here.\n  --> logic.par:8\n  hint: Expected ':' or 'or' or 'and'\u2026 Lines that open a block (to/if/while/when/\u2026) end with ':'.\n",
+        "hashes_ok": true,
+        "ok": false
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [],
+  "cross_target": null,
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    let artifact_total be stable_units plus fragile_units\n    let packing_units be stable_units times 6 plus fragile_units times 11\n    if expedited:\n        set packing_units to packing_units plus packing_stations times 4\n    let capacity_units be packing_stations times 40\n    let overflow_units be packing_units minus capacity_units\n    if overflow_units is not at least 0:\n        set overflow_units to 0\n    let inspection_rounds be number from (artifact_total divided by 5)\n    give back packing_units plus overflow_units times 5 plus inspection_rounds times 7\n",
+        "sha256": "20171079d469914139d1225b50e1af268e2142565d410220c388d7212933ea7b",
+        "bytes": 710,
+        "lines": 11,
+        "rough_tokens": 94,
+        "o200k_base_tokens": 152
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is not at least 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is not at least 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is not at least 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is not at least 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    set item \"location\" of headers to \"/api/v9/artifact-accessions/\" plus body's accession_key\n    set item \"x-accession-state\" of headers to state\n    give back a controlled_response with status 201, headers headers, body result\n",
+        "sha256": "e01a7663cc3e46a7cf95d2d39277e3aadd9d2a0ef4930554828ac62331552b05",
+        "bytes": 3658,
+        "lines": 45,
+        "rough_tokens": 628,
+        "o200k_base_tokens": 789
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+        "sha256": "52e771326e37650070a1828d26352777a7290c8f2c391902ec3ea66b83019b83",
+        "bytes": 721,
+        "lines": 36,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 212
+      }
+    },
+    "totals": {
+      "bytes": 5089,
+      "lines": 92,
+      "rough_tokens": 917,
+      "o200k_base_tokens": 1153
+    }
+  },
+  "stdout": "",
+  "stderr": "command failed (1): /private/tmp/parley-fullstack-045-parley/bin/parley web build /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg -o /private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r2-g_mk9gxg/.benchmark_build/bundle\nstdout:\n\nstderr:\nerror[P101]: I didn't expect 'least' here.\n  --> logic.par:8\n  hint: Expected ':' or 'or' or 'and'\u2026 Lines that open a block (to/if/while/when/\u2026) end with ':'.\n\n"
+}

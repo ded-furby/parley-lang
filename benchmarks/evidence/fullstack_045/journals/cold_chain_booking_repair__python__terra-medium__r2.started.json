@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T06:15:49.893518Z",
+  "cell": {
+    "cell_id": "cold_chain_booking_repair__python__terra-medium__r2",
+    "plan_index": 89,
+    "task_id": "cold_chain_booking_repair",
+    "task_kind": "maintenance",
+    "language": "python",
+    "configuration_id": "terra-medium",
+    "replicate": 2
+  }
+}

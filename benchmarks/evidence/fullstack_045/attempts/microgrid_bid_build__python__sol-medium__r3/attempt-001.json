@@ -1,0 +1,186 @@
+{
+  "attempt": 1,
+  "request_id": "d14b4687a95f382a4dcb0538be876b0e",
+  "elapsed_seconds": 2.0533,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0643,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "microgrid_bid_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:11:15 GMT",
+        "content-type": "application/json",
+        "content-length": "40"
+      },
+      "body": "{\"service\":\"Microgrid Bid\",\"ready\":true}",
+      "json": {
+        "service": "Microgrid Bid",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:11:15 GMT",
+        "location": "/api/v9/microgrid-bids/sunset-7",
+        "retry-after": "3",
+        "x-bid-state": "accepted",
+        "content-type": "application/json",
+        "content-length": "221"
+      },
+      "body": "{\"bid_key\":\"sunset-7\",\"generation_units\":53,\"battery_buffer_units\":14,\"grid_required_units\":67,\"grid_capacity_units\":110,\"delivered_units\":67,\"shortfall_units\":0,\"dispatch_windows\":2,\"bid_score\":85,\"bid_state\":\"accepted\"}",
+      "json": {
+        "bid_key": "sunset-7",
+        "generation_units": 53,
+        "battery_buffer_units": 14,
+        "grid_required_units": 67,
+        "grid_capacity_units": 110,
+        "delivered_units": 67,
+        "shortfall_units": 0,
+        "dispatch_windows": 2,
+        "bid_score": 85,
+        "bid_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/microgrid-bids/sunset-7",
+        "retry-after": "3",
+        "x-bid-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/microgrid-bids/sunset-7"
+        ],
+        [
+          "retry-after",
+          "3"
+        ],
+        [
+          "x-bid-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_wrong_media",
+      "target": "http",
+      "status": 415,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:11:15 GMT",
+        "content-type": "application/json",
+        "content-length": "75"
+      },
+      "body": "{\"error\":\"json_content_type_required\",\"detail\":\"expected application/json\"}",
+      "json": {
+        "error": "json_content_type_required",
+        "detail": "expected application/json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 85,
+      "error": "",
+      "elapsed_seconds": 0.5497,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 85,
+    "error": "",
+    "elapsed_seconds": 0.4373,
+    "expected": 85,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'bid_key':v.bid_key,'generation_units':0,'battery_buffer_units':0,'grid_required_units':0,'grid_capacity_units':0,'delivered_units':0,'shortfall_units':0,'dispatch_windows':0,'bid_score':0,'bid_state':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if request.headers.get('x-grid-key','') != 'grid-045': return outcome(zero(v,'authorization_required'),401,{'www-authenticate': 'GridKey'})\n    if any(item < 0 for item in (v.solar_arrays,v.wind_turbines,v.storage_banks,v.interconnects,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.interconnects==0 and v.solar_arrays*9+v.wind_turbines*13>0: return outcome(zero(v,'invalid'),422,{'x-validation':'interconnects'})\n    if v.duplicate_bid: return outcome(zero(v,'duplicate'),409,{'x-conflict':'duplicate_bid'})\n    result=calculate(v)\n    return outcome(result,202,{\n        'location':f'/api/v9/microgrid-bids/{v.bid_key}',\n        'retry-after':'3',\n        'x-bid-state':str(result['bid_state']),\n    })\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/microgrid-bid-ready')\nasync def status(): return {'service':'Microgrid Bid','ready':True}\n@app.post('/api/v9/microgrid-bids')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "abcf7e1545676cff7efe1982988b08a5066a3a0df48c17ea2cd2454f218a6b52",
+        "bytes": 3443,
+        "lines": 48,
+        "rough_tokens": 958,
+        "o200k_base_tokens": 857
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(solar_arrays,wind_turbines,storage_banks,interconnects,emergency_mode)=>{\n  const generation=solar_arrays*9+wind_turbines*13;\n  const buffer=storage_banks*(emergency_mode?7:3);\n  const required=generation+buffer;\n  const capacity=interconnects*55;\n  const delivered=Math.min(required,capacity);\n  const shortfall=Math.max(required-capacity,0);\n  const dispatch_windows=Math.floor(required/31);\n  return delivered+shortfall*4+dispatch_windows*9;\n};\nexport async function loadParley(){return {microgrid_bid_score:(...args)=>BigInt(score(...args))}}\n",
+        "sha256": "51a5d84e4d90cb889bdecaf6019c88fc54614b6d9b287cba0252aa8efdac8d24",
+        "bytes": 560,
+        "lines": 11,
+        "rough_tokens": 137,
+        "o200k_base_tokens": 143
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); bid_key:str; solar_arrays:int; wind_turbines:int; storage_banks:int; interconnects:int; emergency_mode:bool; duplicate_bid:bool\ndef score(solar_arrays:int,wind_turbines:int,storage_banks:int,interconnects:int,emergency_mode:bool)->int:\n    generation=solar_arrays*9+wind_turbines*13\n    buffer=storage_banks*(7 if emergency_mode else 3)\n    required=generation+buffer\n    capacity=interconnects*55\n    delivered=min(required,capacity)\n    shortfall=max(required-capacity,0)\n    dispatch_windows=required//31\n    return delivered+shortfall*4+dispatch_windows*9\ndef calculate(v:RequestInput)->dict[str,object]:\n    generation=v.solar_arrays*9+v.wind_turbines*13; buffer=v.storage_banks*(7 if v.emergency_mode else 3); required=generation+buffer; capacity=v.interconnects*55; shortfall=max(required-capacity,0)\n    return {'bid_key':v.bid_key,'generation_units':generation,'battery_buffer_units':buffer,'grid_required_units':required,'grid_capacity_units':capacity,'delivered_units':min(required,capacity),'shortfall_units':shortfall,'dispatch_windows':required//31,'bid_score':score(v.solar_arrays,v.wind_turbines,v.storage_banks,v.interconnects,v.emergency_mode),'bid_state':'accepted' if shortfall==0 else 'emergency_shortfall' if v.emergency_mode else 'routine_shortfall'}\n",
+        "sha256": "3087cdc2c254e1b3c6f64aebe1b9c87268d4d385b76a5df09fb5821ae0fc8479",
+        "bytes": 1404,
+        "lines": 15,
+        "rough_tokens": 312,
+        "o200k_base_tokens": 359
+      }
+    },
+    "totals": {
+      "bytes": 5407,
+      "lines": 74,
+      "rough_tokens": 1407,
+      "o200k_base_tokens": 1359
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for microgrid_bid_build\n",
+  "stderr": ""
+}

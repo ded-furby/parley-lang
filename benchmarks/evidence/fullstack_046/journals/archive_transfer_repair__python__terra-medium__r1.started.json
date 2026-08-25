@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:32:44.877426Z",
+  "cell": {
+    "cell_id": "archive_transfer_repair__python__terra-medium__r1",
+    "plan_index": 42,
+    "task_id": "archive_transfer_repair",
+    "task_kind": "maintenance",
+    "language": "python",
+    "configuration_id": "terra-medium",
+    "replicate": 1
+  }
+}

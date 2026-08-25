@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:36:08.256945Z",
+  "cell": {
+    "cell_id": "estuary_assay_build__rust__sol-medium__r1",
+    "plan_index": 56,
+    "task_id": "estuary_assay_build",
+    "task_kind": "implementation",
+    "language": "rust",
+    "configuration_id": "sol-medium",
+    "replicate": 1
+  }
+}

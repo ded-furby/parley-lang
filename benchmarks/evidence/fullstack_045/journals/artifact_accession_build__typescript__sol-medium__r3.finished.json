@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "finished",
+  "recorded_at": "2026-08-13T06:08:22.302880Z",
+  "result": {
+    "schema_version": 1,
+    "recorded_at": "2026-08-13T06:08:22.302599Z",
+    "task_id": "artifact_accession_build",
+    "task_kind": "implementation",
+    "language": "typescript",
+    "configuration_id": "sol-medium",
+    "model": "gpt-5.6-sol",
+    "reasoning": "medium",
+    "replicate": 3,
+    "fresh_ephemeral_session": true,
+    "thread_id": "019ff9bb-b207-7540-b211-7fef401624d6",
+    "agent_returncode": 0,
+    "agent_timed_out": false,
+    "elapsed_seconds": 45.7159,
+    "cell_id": "artifact_accession_build__typescript__sol-medium__r3",
+    "plan_index": 57,
+    "checker_integrity_ok": true,
+    "read_only_integrity_ok": true,
+    "symlink_integrity_ok": true,
+    "transport_integrity": {
+      "ok": true,
+      "expected": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155378253,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155378254,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "actual": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155378253,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155378254,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "protocol_errors": []
+    },
+    "transport_integrity_ok": true,
+    "attempt_record_integrity_ok": false,
+    "public_execution_ok": true,
+    "post_build_integrity_ok": true,
+    "editable_file_integrity_ok": true,
+    "parent_attempt_records": [
+      {
+        "file": "/Users/arjun/Desktop/parley-lang-045-evidence/attempts/artifact_accession_build__typescript__sol-medium__r3/attempt-001.json",
+        "sha256": "b4da03d3a537d789b4a6596e27f1558adc96d309442da4cdfa501f3afeeab762"
+      }
+    ],
+    "broker_error": "",
+    "workspace_integrity_ok": false,
+    "unexpected_files": [],
+    "command_protocol": {
+      "compliant": true,
+      "commands": [
+        "/bin/zsh -lc ./sources",
+        "/bin/zsh -lc ./check"
+      ],
+      "violations": []
+    },
+    "public_attempts": [
+      {
+        "attempt": 1,
+        "request_id": "c828604f0358fda5ce453a8711358fe6",
+        "elapsed_seconds": 1.1686,
+        "ok": true,
+        "build": {
+          "ok": true,
+          "error": "",
+          "elapsed_seconds": 0.0597,
+          "protected_read_only_checks": [
+            {
+              "command": [
+                "/private/tmp/parley-fullstack-045-typescript/node_modules/.bin/tsc",
+                "-p",
+                "tsconfig.json",
+                "--outDir",
+                "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/.benchmark_build/dist"
+              ],
+              "protected_read_only_files": 12,
+              "changes": {},
+              "command_error": "",
+              "hashes_ok": true,
+              "ok": true
+            }
+          ],
+          "protected_read_only_ok": true
+        },
+        "cases": [
+          {
+            "id": "artifact_accession_status",
+            "target": "http",
+            "status": 200,
+            "content_type": "application/json",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:08:16 GMT",
+              "content-type": "application/json",
+              "content-length": "45"
+            },
+            "body": "{\"service\":\"Artifact Accession\",\"ready\":true}",
+            "json": {
+              "service": "Artifact Accession",
+              "ready": true
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_primary",
+            "target": "http",
+            "status": 201,
+            "content_type": "application/json",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:08:16 GMT",
+              "content-type": "application/json",
+              "location": "/api/v9/artifact-accessions/bronze-lyre",
+              "x-accession-state": "accepted",
+              "content-length": "179"
+            },
+            "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+            "json": {
+              "accession_key": "bronze-lyre",
+              "artifact_total": 5,
+              "packing_units": 48,
+              "capacity_units": 80,
+              "overflow_units": 0,
+              "inspection_rounds": 1,
+              "priority_score": 55,
+              "accession_state": "accepted"
+            },
+            "application_headers": {
+              "location": "/api/v9/artifact-accessions/bronze-lyre",
+              "x-accession-state": "accepted"
+            },
+            "application_header_pairs": [
+              [
+                "location",
+                "/api/v9/artifact-accessions/bronze-lyre"
+              ],
+              [
+                "x-accession-state",
+                "accepted"
+              ]
+            ],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_wrong_fragile_type",
+            "target": "http",
+            "status": 400,
+            "content_type": "application/json",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:08:16 GMT",
+              "content-type": "application/json",
+              "content-length": "235"
+            },
+            "body": "{\"error\":\"invalid_json\",\"detail\":\"[\\n  {\\n    \\\"expected\\\": \\\"number\\\",\\n    \\\"code\\\": \\\"invalid_type\\\",\\n    \\\"path\\\": [\\n      \\\"fragile_units\\\"\\n    ],\\n    \\\"message\\\": \\\"Invalid input: expected number, received boolean\\\"\\n  }\\n]\"}",
+            "json": {
+              "error": "invalid_json",
+              "detail": "[\n  {\n    \"expected\": \"number\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"fragile_units\"\n    ],\n    \"message\": \"Invalid input: expected number, received boolean\"\n  }\n]"
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_browser_primary",
+            "target": "browser",
+            "ok": true,
+            "value": 55,
+            "error": "",
+            "elapsed_seconds": 0.2782,
+            "pass": true
+          }
+        ],
+        "cross_target": {
+          "ok": true,
+          "value": 55,
+          "error": "",
+          "elapsed_seconds": 0.2786,
+          "expected": 55,
+          "pass": true
+        },
+        "source": {
+          "editable_files": {
+            "src/logic.ts": {
+              "exists": true,
+              "text": "export type RequestInput={accession_key:string;stable_units:number;fragile_units:number;packing_stations:number;expedited:boolean};export const score=(stable_units:number,fragile_units:number,packing_stations:number,expedited:boolean)=>{const artifact_total=stable_units+fragile_units,packing_units=stable_units*6+fragile_units*11+(expedited?packing_stations*4:0),capacity_units=packing_stations*40,overflow_units=Math.max(packing_units-capacity_units,0),inspection_rounds=Math.floor(artifact_total/5);return packing_units+overflow_units*5+inspection_rounds*7};export const calculate=(v:RequestInput)=>{const t=v.stable_units+v.fragile_units,x=v.stable_units*6+v.fragile_units*11+(v.expedited?v.packing_stations*4:0),c=v.packing_stations*40,o=Math.max(x-c,0);return {accession_key:v.accession_key,artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:Math.floor(t/5),priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:o===0?'accepted':'queued'}};export async function loadParley(){return {artifact_priority_score:(a0:number,a1:number,a2:number,a3:boolean)=>BigInt(score(a0,a1,a2,a3))}}\n",
+              "sha256": "1638969a9ef7230030fbca21b32501bffb5aec25d3cbb6d155a5cc6527551f39",
+              "bytes": 1166,
+              "lines": 1,
+              "rough_tokens": 307,
+              "o200k_base_tokens": 313
+            },
+            "src/server.ts": {
+              "exists": true,
+              "text": "import {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({accession_key:z.string(),stable_units:z.number().int(),fragile_units:z.number().int(),packing_stations:z.number().int(),expedited:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({accession_key:v.accession_key,artifact_total:0,packing_units:0,capacity_units:0,overflow_units:0,inspection_rounds:0,priority_score:0,accession_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\"Bearer accession-045\")return response(zero(v,'authorization_required'),401,{\"www-authenticate\":\"Bearer realm=artifact-accession\"});if([v.stable_units,v.fragile_units,v.packing_stations].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.packing_stations===0&&v.stable_units+v.fragile_units>0)return response(zero(v,'invalid'),422,{'x-validation':'packing_stations'});const result=calculate(v);return response(result,201,{'location':`/api/v9/artifact-accessions/${v.accession_key}`,'x-accession-state':result.accession_state});};\nconst app=new Hono();app.get('/status/artifact-accession-ready',()=>response({service:'Artifact Accession',ready:true}));app.post('/api/v9/artifact-accessions',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n",
+              "sha256": "8871308937256fe9327fb77f62f93703cf78bc867c830200197af7472e85880f",
+              "bytes": 3262,
+              "lines": 4,
+              "rough_tokens": 1064,
+              "o200k_base_tokens": 832
+            }
+          },
+          "totals": {
+            "bytes": 4428,
+            "lines": 5,
+            "rough_tokens": 1371,
+            "o200k_base_tokens": 1145
+          }
+        },
+        "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+        "stderr": ""
+      }
+    ],
+    "public_check_attempts": 1,
+    "first_public_check_success": true,
+    "final_public_check_success": true,
+    "repair_turns": 0,
+    "hidden_success": true,
+    "hidden_judgment": {
+      "ok": true,
+      "build": {
+        "ok": true,
+        "error": "",
+        "elapsed_seconds": 0.0782,
+        "protected_read_only_checks": [
+          {
+            "command": [
+              "/private/tmp/parley-fullstack-045-typescript/node_modules/.bin/tsc",
+              "-p",
+              "tsconfig.json",
+              "--outDir",
+              "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/.benchmark_build/dist"
+            ],
+            "protected_read_only_files": 12,
+            "changes": {},
+            "command_error": "",
+            "hashes_ok": true,
+            "ok": true
+          }
+        ],
+        "protected_read_only_ok": true
+      },
+      "cases": [
+        {
+          "id": "artifact_accession_unauthorized",
+          "target": "http",
+          "status": 401,
+          "content_type": "application/json",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:08:21 GMT",
+            "content-type": "application/json",
+            "www-authenticate": "Bearer realm=artifact-accession",
+            "content-length": "190"
+          },
+          "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":0,\"packing_units\":0,\"capacity_units\":0,\"overflow_units\":0,\"inspection_rounds\":0,\"priority_score\":0,\"accession_state\":\"authorization_required\"}",
+          "json": {
+            "accession_key": "bronze-lyre",
+            "artifact_total": 0,
+            "packing_units": 0,
+            "capacity_units": 0,
+            "overflow_units": 0,
+            "inspection_rounds": 0,
+            "priority_score": 0,
+            "accession_state": "authorization_required"
+          },
+          "application_headers": {
+            "www-authenticate": "Bearer realm=artifact-accession"
+          },
+          "application_header_pairs": [
+            [
+              "www-authenticate",
+              "Bearer realm=artifact-accession"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_zero_stations",
+          "target": "http",
+          "status": 422,
+          "content_type": "application/json",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:08:21 GMT",
+            "content-type": "application/json",
+            "x-validation": "packing_stations",
+            "content-length": "172"
+          },
+          "body": "{\"accession_key\":\"marble-4\",\"artifact_total\":0,\"packing_units\":0,\"capacity_units\":0,\"overflow_units\":0,\"inspection_rounds\":0,\"priority_score\":0,\"accession_state\":\"invalid\"}",
+          "json": {
+            "accession_key": "marble-4",
+            "artifact_total": 0,
+            "packing_units": 0,
+            "capacity_units": 0,
+            "overflow_units": 0,
+            "inspection_rounds": 0,
+            "priority_score": 0,
+            "accession_state": "invalid"
+          },
+          "application_headers": {
+            "x-validation": "packing_stations"
+          },
+          "application_header_pairs": [
+            [
+              "x-validation",
+              "packing_stations"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_unknown_field",
+          "target": "http",
+          "status": 400,
+          "content_type": "application/json",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:08:21 GMT",
+            "content-type": "application/json",
+            "content-length": "217"
+          },
+          "body": "{\"error\":\"invalid_json\",\"detail\":\"[\\n  {\\n    \\\"code\\\": \\\"unrecognized_keys\\\",\\n    \\\"keys\\\": [\\n      \\\"gallery_code\\\"\\n    ],\\n    \\\"path\\\": [],\\n    \\\"message\\\": \\\"Unrecognized key: \\\\\\\"gallery_code\\\\\\\"\\\"\\n  }\\n]\"}",
+          "json": {
+            "error": "invalid_json",
+            "detail": "[\n  {\n    \"code\": \"unrecognized_keys\",\n    \"keys\": [\n      \"gallery_code\"\n    ],\n    \"path\": [],\n    \"message\": \"Unrecognized key: \\\"gallery_code\\\"\"\n  }\n]"
+          },
+          "application_headers": {},
+          "application_header_pairs": [],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_browser_hidden_1",
+          "target": "browser",
+          "ok": true,
+          "value": 17,
+          "error": "",
+          "elapsed_seconds": 0.2715,
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_browser_hidden_2",
+          "target": "browser",
+          "ok": true,
+          "value": 318,
+          "error": "",
+          "elapsed_seconds": 0.271,
+          "pass": true
+        }
+      ],
+      "cross_target": null
+    },
+    "usage": {
+      "input_tokens": 79182,
+      "cached_input_tokens": 59392,
+      "output_tokens": 1776,
+      "reasoning_output_tokens": 123,
+      "uncached_input_tokens": 19790
+    },
+    "total_tokens": 80958,
+    "prompt_sha256": "756b0b530a001aa48f11e624518410cf608dd1e39a3fc9be18054063780b962c",
+    "prompt_chars": 4078,
+    "source": {
+      "editable_files": {
+        "src/logic.ts": {
+          "exists": true,
+          "text": "export type RequestInput={accession_key:string;stable_units:number;fragile_units:number;packing_stations:number;expedited:boolean};export const score=(stable_units:number,fragile_units:number,packing_stations:number,expedited:boolean)=>{const artifact_total=stable_units+fragile_units,packing_units=stable_units*6+fragile_units*11+(expedited?packing_stations*4:0),capacity_units=packing_stations*40,overflow_units=Math.max(packing_units-capacity_units,0),inspection_rounds=Math.floor(artifact_total/5);return packing_units+overflow_units*5+inspection_rounds*7};export const calculate=(v:RequestInput)=>{const t=v.stable_units+v.fragile_units,x=v.stable_units*6+v.fragile_units*11+(v.expedited?v.packing_stations*4:0),c=v.packing_stations*40,o=Math.max(x-c,0);return {accession_key:v.accession_key,artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:Math.floor(t/5),priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:o===0?'accepted':'queued'}};export async function loadParley(){return {artifact_priority_score:(a0:number,a1:number,a2:number,a3:boolean)=>BigInt(score(a0,a1,a2,a3))}}\n",
+          "sha256": "1638969a9ef7230030fbca21b32501bffb5aec25d3cbb6d155a5cc6527551f39",
+          "bytes": 1166,
+          "lines": 1,
+          "rough_tokens": 307,
+          "o200k_base_tokens": 313
+        },
+        "src/server.ts": {
+          "exists": true,
+          "text": "import {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({accession_key:z.string(),stable_units:z.number().int(),fragile_units:z.number().int(),packing_stations:z.number().int(),expedited:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({accession_key:v.accession_key,artifact_total:0,packing_units:0,capacity_units:0,overflow_units:0,inspection_rounds:0,priority_score:0,accession_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\"Bearer accession-045\")return response(zero(v,'authorization_required'),401,{\"www-authenticate\":\"Bearer realm=artifact-accession\"});if([v.stable_units,v.fragile_units,v.packing_stations].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.packing_stations===0&&v.stable_units+v.fragile_units>0)return response(zero(v,'invalid'),422,{'x-validation':'packing_stations'});const result=calculate(v);return response(result,201,{'location':`/api/v9/artifact-accessions/${v.accession_key}`,'x-accession-state':result.accession_state});};\nconst app=new Hono();app.get('/status/artifact-accession-ready',()=>response({service:'Artifact Accession',ready:true}));app.post('/api/v9/artifact-accessions',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n",
+          "sha256": "8871308937256fe9327fb77f62f93703cf78bc867c830200197af7472e85880f",
+          "bytes": 3262,
+          "lines": 4,
+          "rough_tokens": 1064,
+          "o200k_base_tokens": 832
+        }
+      },
+      "totals": {
+        "bytes": 4428,
+        "lines": 5,
+        "rough_tokens": 1371,
+        "o200k_base_tokens": 1145
+      }
+    },
+    "seed_source": {
+      "editable_files": {
+        "src/logic.ts": {
+          "text": "export type RequestInput={accession_key:string;stable_units:number;fragile_units:number;packing_stations:number;expedited:boolean};export const score=(..._args:unknown[])=>0;export const calculate=(v:RequestInput)=>{const t=v.stable_units+v.fragile_units,x=v.stable_units*6+v.fragile_units*11+(v.expedited?v.packing_stations*4:0),c=v.packing_stations*40,o=Math.max(x-c,0);return {accession_key:v.accession_key,artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:Math.trunc(t/5),priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:o===0?'accepted':'queued'}};export async function loadParley(){return {artifact_priority_score:(a0:number,a1:number,a2:number,a3:boolean)=>BigInt(score(a0,a1,a2,a3))}}\n",
+          "sha256": "c47e45f417fafcf9680280a23cad7d95d2c6b5e86deba91cca6af52e6df8244c",
+          "bytes": 779,
+          "lines": 1,
+          "rough_tokens": 232,
+          "o200k_base_tokens": 220
+        },
+        "src/server.ts": {
+          "text": "import {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({accession_key:z.string(),stable_units:z.number().int(),fragile_units:z.number().int(),packing_stations:z.number().int(),expedited:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({accession_key:v.accession_key,artifact_total:0,packing_units:0,capacity_units:0,overflow_units:0,inspection_rounds:0,priority_score:0,accession_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\"Bearer accession-045\")return response(zero(v,'authorization_required'),401,{\"www-authenticate\":\"Bearer realm=artifact-accession\"});if([v.stable_units,v.fragile_units,v.packing_stations].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.packing_stations===0&&v.stable_units+v.fragile_units>0)return response(zero(v,'invalid'),422,{'x-validation':'packing_stations'});return response(calculate(v),200,{});};\nconst app=new Hono();app.get('/status/artifact-accession-ready',()=>response({service:'Artifact Accession',ready:true}));app.post('/api/v9/artifact-accessions',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n",
+          "sha256": "e941b70868a42539c3a743a15120c5d151279615bc55504885d80bc7ad2838a2",
+          "bytes": 3140,
+          "lines": 4,
+          "rough_tokens": 1028,
+          "o200k_base_tokens": 801
+        }
+      },
+      "totals": {
+        "bytes": 3919,
+        "lines": 5,
+        "rough_tokens": 1260,
+        "o200k_base_tokens": 1021
+      }
+    },
+    "source_edits": {
+      "files": {
+        "src/logic.ts": {
+          "changed": true,
+          "rough_token_edit_count": 91
+        },
+        "src/server.ts": {
+          "changed": true,
+          "rough_token_edit_count": 44
+        }
+      },
+      "rough_token_edit_count": 135
+    },
+    "changed_files": [
+      "src/logic.ts",
+      "src/server.ts"
+    ],
+    "expected_root_files": [],
+    "root_quality_eligible": false,
+    "exact_root": false,
+    "agent_messages": [
+      "I\u2019ll inspect the supplied file map first, then implement only in the editable files and validate with the prescribed checker.",
+      "The scaffold already has strict JSON/media/body handling and the validation order. I\u2019m correcting the shared score calculation and the success response status and headers while preserving the contract\u2019s failure-body shape.",
+      "The implementation is in place. I\u2019m running the complete public full-stack check now; if it exposes a contract mismatch, I\u2019ll repair it using only that feedback.",
+      "Implemented the authenticated artifact accession workflow, shared scoring logic, validation responses, and success headers.\n\nComplete public HTTP and Chromium full-stack check passed."
+    ],
+    "agent_errors": [],
+    "command_events": [
+      {
+        "id": "item_1",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./sources",
+        "aggregated_output": "===== CONTRACT.md [read-only] =====\n# Build an authenticated artifact accession workflow\n\n    Implement the frozen Artifact Accession contract. The POST route requires Authorization: Bearer accession-045; otherwise return 401 with www-authenticate Bearer realm=artifact-accession and accession_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. A positive artifact_total with zero packing_stations returns 422 with x-validation packing_stations. Otherwise artifact_total is stable_units + fragile_units. packing_units is stable_units * 6 + fragile_units * 11 plus packing_stations * 4 when expedited. capacity_units is packing_stations * 40. overflow_units is max(packing_units - capacity_units, 0). inspection_rounds is artifact_total divided by 5 using floor division. priority_score is packing_units + overflow_units * 5 + inspection_rounds * 7. accession_state is accepted when overflow is zero and queued otherwise. Success returns 201 with location /api/v9/artifact-accessions/{accession_key} and x-accession-state. The browser export returns priority_score. Failure bodies use the request key and zero for all numeric result fields.\n\n    ## HTTP\n\n    - `GET /status/artifact-accession-ready` returns `{\"service\":\"Artifact Accession\",\"ready\":true}`.\n    - `POST /api/v9/artifact-accessions` uses strict JSON, then the application decides authorization,\n      domain validation, status, response headers, and body.\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\n    - Negative integers are well-typed and must reach the handler's 422 decision.\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\n\n    Request fields:\n\n    - `accession_key`: text\n- `stable_units`: number\n- `fragile_units`: number\n- `packing_stations`: number\n- `expedited`: yesno\n\n    Response fields:\n\n    - `accession_key`: text\n- `artifact_total`: number\n- `packing_units`: number\n- `capacity_units`: number\n- `overflow_units`: number\n- `inspection_rounds`: number\n- `priority_score`: number\n- `accession_state`: text\n\n    ## Browser\n\n    Export `artifact_priority_score` with arguments in this order:\n    `stable_units, fragile_units, packing_stations, expedited`. It returns `priority_score`.\n===== package-lock.json [read-only] =====\n{\n  \"name\": \"release-radar-typescript-035\",\n  \"lockfileVersion\": 3,\n  \"requires\": true,\n  \"packages\": {\n    \"\": {\n      \"name\": \"release-radar-typescript-035\",\n      \"dependencies\": {\n        \"@hono/node-server\": \"2.1.0\",\n        \"@hono/zod-validator\": \"0.9.0\",\n        \"hono\": \"4.13.0\",\n        \"zod\": \"4.4.3\"\n      },\n      \"devDependencies\": {\n        \"typescript\": \"7.0.2\"\n      }\n    },\n    \"node_modules/@hono/node-server\": {\n      \"version\": \"2.1.0\",\n      \"resolved\": \"https://registry.npmjs.org/@hono/node-server/-/node-server-2.1.0.tgz\",\n      \"integrity\": \"sha512-XovyyCCnBzW+zKu+z/zq8hwNs4KOR5rEMAOxo2f40Q5xoOI37IMm6MIg2COOUtUApo0i6850MTBKH2u4QLGIqg==\",\n      \"license\": \"MIT\",\n      \"engines\": {\n        \"node\": \">=20\"\n      },\n      \"peerDependencies\": {\n        \"hono\": \"^4\"\n      }\n    },\n    \"node_modules/@hono/zod-validator\": {\n      \"version\": \"0.9.0\",\n      \"resolved\": \"https://registry.npmjs.org/@hono/zod-validator/-/zod-validator-0.9.0.tgz\",\n      \"integrity\": \"sha512-n0ZSXmCiHVIp4Y5wlOOyZCeTd/rsawA/qW1cipB8QOYKZ9N8Tk0nZUZCXho9cu374AN4JpDNKioNKBJ/W+LBug==\",\n      \"license\": \"MIT\",\n      \"peerDependencies\": {\n        \"hono\": \">=4.11.2\",\n        \"zod\": \"^3.25.0 || ^4.0.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-aix-ppc64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz\",\n      \"integrity\": \"sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==\",\n      \"cpu\": [\n        \"ppc64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"aix\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-darwin-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"darwin\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-darwin-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"darwin\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-freebsd-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"freebsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-freebsd-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"freebsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-arm\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz\",\n      \"integrity\": \"sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==\",\n      \"cpu\": [\n        \"arm\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-loong64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz\",\n      \"integrity\": \"sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==\",\n      \"cpu\": [\n        \"loong64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-mips64el\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz\",\n      \"integrity\": \"sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==\",\n      \"cpu\": [\n        \"mips64el\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-ppc64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz\",\n      \"integrity\": \"sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==\",\n      \"cpu\": [\n        \"ppc64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-riscv64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz\",\n      \"integrity\": \"sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==\",\n      \"cpu\": [\n        \"riscv64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-s390x\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz\",\n      \"integrity\": \"sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==\",\n      \"cpu\": [\n        \"s390x\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-linux-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"linux\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-netbsd-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"netbsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-netbsd-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"netbsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-openbsd-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"openbsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-openbsd-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"openbsd\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-sunos-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"sunos\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-win32-arm64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz\",\n      \"integrity\": \"sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==\",\n      \"cpu\": [\n        \"arm64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"win32\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/@typescript/typescript-win32-x64\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz\",\n      \"integrity\": \"sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==\",\n      \"cpu\": [\n        \"x64\"\n      ],\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"optional\": true,\n      \"os\": [\n        \"win32\"\n      ],\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      }\n    },\n    \"node_modules/hono\": {\n      \"version\": \"4.13.0\",\n      \"resolved\": \"https://registry.npmjs.org/hono/-/hono-4.13.0.tgz\",\n      \"integrity\": \"sha512-jhunvfHWxd7J5EFfSgH4xsYJzSe/lfqbUCxiyyeaQasUsXeEHXtzVid+7EOGByc5JnFa23SSFL3Y2RV/z1T+eQ==\",\n      \"license\": \"MIT\",\n      \"engines\": {\n        \"node\": \">=16.9.0\"\n      }\n    },\n    \"node_modules/typescript\": {\n      \"version\": \"7.0.2\",\n      \"resolved\": \"https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz\",\n      \"integrity\": \"sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==\",\n      \"dev\": true,\n      \"license\": \"Apache-2.0\",\n      \"bin\": {\n        \"tsc\": \"bin/tsc\"\n      },\n      \"engines\": {\n        \"node\": \">=16.20.0\"\n      },\n      \"optionalDependencies\": {\n        \"@typescript/typescript-aix-ppc64\": \"7.0.2\",\n        \"@typescript/typescript-darwin-arm64\": \"7.0.2\",\n        \"@typescript/typescript-darwin-x64\": \"7.0.2\",\n        \"@typescript/typescript-freebsd-arm64\": \"7.0.2\",\n        \"@typescript/typescript-freebsd-x64\": \"7.0.2\",\n        \"@typescript/typescript-linux-arm\": \"7.0.2\",\n        \"@typescript/typescript-linux-arm64\": \"7.0.2\",\n        \"@typescript/typescript-linux-loong64\": \"7.0.2\",\n        \"@typescript/typescript-linux-mips64el\": \"7.0.2\",\n        \"@typescript/typescript-linux-ppc64\": \"7.0.2\",\n        \"@typescript/typescript-linux-riscv64\": \"7.0.2\",\n        \"@typescript/typescript-linux-s390x\": \"7.0.2\",\n        \"@typescript/typescript-linux-x64\": \"7.0.2\",\n        \"@typescript/typescript-netbsd-arm64\": \"7.0.2\",\n        \"@typescript/typescript-netbsd-x64\": \"7.0.2\",\n        \"@typescript/typescript-openbsd-arm64\": \"7.0.2\",\n        \"@typescript/typescript-openbsd-x64\": \"7.0.2\",\n        \"@typescript/typescript-sunos-x64\": \"7.0.2\",\n        \"@typescript/typescript-win32-arm64\": \"7.0.2\",\n        \"@typescript/typescript-win32-x64\": \"7.0.2\"\n      }\n    },\n    \"node_modules/zod\": {\n      \"version\": \"4.4.3\",\n      \"resolved\": \"https://registry.npmjs.org/zod/-/zod-4.4.3.tgz\",\n      \"integrity\": \"sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==\",\n      \"license\": \"MIT\",\n      \"funding\": {\n        \"url\": \"https://github.com/sponsors/colinhacks\"\n      }\n    }\n  }\n}\n===== package.json [read-only] =====\n{\n  \"name\": \"release-radar-typescript-035\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"scripts\": {\n    \"build\": \"tsc -p tsconfig.json\",\n    \"start\": \"node dist/server.js\"\n  },\n  \"dependencies\": {\n    \"@hono/node-server\": \"2.1.0\",\n    \"@hono/zod-validator\": \"0.9.0\",\n    \"hono\": \"4.13.0\",\n    \"zod\": \"4.4.3\"\n  },\n  \"devDependencies\": {\n    \"typescript\": \"7.0.2\"\n  }\n}\n===== public/index.html [read-only] =====\n<!doctype html>\n<meta charset=\"utf-8\">\n<title>Full-stack agent study 045</title>\n<main>Full-stack agent study 045 browser target</main>\n===== src/logic.ts [editable] =====\nexport type RequestInput={accession_key:string;stable_units:number;fragile_units:number;packing_stations:number;expedited:boolean};export const score=(..._args:unknown[])=>0;export const calculate=(v:RequestInput)=>{const t=v.stable_units+v.fragile_units,x=v.stable_units*6+v.fragile_units*11+(v.expedited?v.packing_stations*4:0),c=v.packing_stations*40,o=Math.max(x-c,0);return {accession_key:v.accession_key,artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:Math.trunc(t/5),priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:o===0?'accepted':'queued'}};export async function loadParley(){return {artifact_priority_score:(a0:number,a1:number,a2:number,a3:boolean)=>BigInt(score(a0,a1,a2,a3))}}\n===== src/server.ts [editable] =====\nimport {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({accession_key:z.string(),stable_units:z.number().int(),fragile_units:z.number().int(),packing_stations:z.number().int(),expedited:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({accession_key:v.accession_key,artifact_total:0,packing_units:0,capacity_units:0,overflow_units:0,inspection_rounds:0,priority_score:0,accession_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\"Bearer accession-045\")return response(zero(v,'authorization_required'),401,{\"www-authenticate\":\"Bearer realm=artifact-accession\"});if([v.stable_units,v.fragile_units,v.packing_stations].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.packing_stations===0&&v.stable_units+v.fragile_units>0)return response(zero(v,'invalid'),422,{'x-validation':'packing_stations'});return response(calculate(v),200,{});};\nconst app=new Hono();app.get('/status/artifact-accession-ready',()=>response({service:'Artifact Accession',ready:true}));app.post('/api/v9/artifact-accessions',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n===== tsconfig.json [read-only] =====\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"NodeNext\",\n    \"moduleResolution\": \"NodeNext\",\n    \"rootDir\": \"src\",\n    \"outDir\": \"dist\",\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true,\n    \"skipLibCheck\": true\n  },\n  \"include\": [\"src/**/*.ts\"]\n}\n",
+        "exit_code": 0,
+        "status": "completed"
+      },
+      {
+        "id": "item_5",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./check",
+        "aggregated_output": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    ],
+    "codex_stdout": "{\"type\":\"thread.started\",\"thread_id\":\"019ff9bb-b207-7540-b211-7fef401624d6\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"I\u2019ll inspect the supplied file map first, then implement only in the editable files and validate with the prescribed checker.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"===== CONTRACT.md [read-only] =====\\n# Build an authenticated artifact accession workflow\\n\\n    Implement the frozen Artifact Accession contract. The POST route requires Authorization: Bearer accession-045; otherwise return 401 with www-authenticate Bearer realm=artifact-accession and accession_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. A positive artifact_total with zero packing_stations returns 422 with x-validation packing_stations. Otherwise artifact_total is stable_units + fragile_units. packing_units is stable_units * 6 + fragile_units * 11 plus packing_stations * 4 when expedited. capacity_units is packing_stations * 40. overflow_units is max(packing_units - capacity_units, 0). inspection_rounds is artifact_total divided by 5 using floor division. priority_score is packing_units + overflow_units * 5 + inspection_rounds * 7. accession_state is accepted when overflow is zero and queued otherwise. Success returns 201 with location /api/v9/artifact-accessions/{accession_key} and x-accession-state. The browser export returns priority_score. Failure bodies use the request key and zero for all numeric result fields.\\n\\n    ## HTTP\\n\\n    - `GET /status/artifact-accession-ready` returns `{\\\"service\\\":\\\"Artifact Accession\\\",\\\"ready\\\":true}`.\\n    - `POST /api/v9/artifact-accessions` uses strict JSON, then the application decides authorization,\\n      domain validation, status, response headers, and body.\\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\\n    - Negative integers are well-typed and must reach the handler's 422 decision.\\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\\n\\n    Request fields:\\n\\n    - `accession_key`: text\\n- `stable_units`: number\\n- `fragile_units`: number\\n- `packing_stations`: number\\n- `expedited`: yesno\\n\\n    Response fields:\\n\\n    - `accession_key`: text\\n- `artifact_total`: number\\n- `packing_units`: number\\n- `capacity_units`: number\\n- `overflow_units`: number\\n- `inspection_rounds`: number\\n- `priority_score`: number\\n- `accession_state`: text\\n\\n    ## Browser\\n\\n    Export `artifact_priority_score` with arguments in this order:\\n    `stable_units, fragile_units, packing_stations, expedited`. It returns `priority_score`.\\n===== package-lock.json [read-only] =====\\n{\\n  \\\"name\\\": \\\"release-radar-typescript-035\\\",\\n  \\\"lockfileVersion\\\": 3,\\n  \\\"requires\\\": true,\\n  \\\"packages\\\": {\\n    \\\"\\\": {\\n      \\\"name\\\": \\\"release-radar-typescript-035\\\",\\n      \\\"dependencies\\\": {\\n        \\\"@hono/node-server\\\": \\\"2.1.0\\\",\\n        \\\"@hono/zod-validator\\\": \\\"0.9.0\\\",\\n        \\\"hono\\\": \\\"4.13.0\\\",\\n        \\\"zod\\\": \\\"4.4.3\\\"\\n      },\\n      \\\"devDependencies\\\": {\\n        \\\"typescript\\\": \\\"7.0.2\\\"\\n      }\\n    },\\n    \\\"node_modules/@hono/node-server\\\": {\\n      \\\"version\\\": \\\"2.1.0\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@hono/node-server/-/node-server-2.1.0.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-XovyyCCnBzW+zKu+z/zq8hwNs4KOR5rEMAOxo2f40Q5xoOI37IMm6MIg2COOUtUApo0i6850MTBKH2u4QLGIqg==\\\",\\n      \\\"license\\\": \\\"MIT\\\",\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=20\\\"\\n      },\\n      \\\"peerDependencies\\\": {\\n        \\\"hono\\\": \\\"^4\\\"\\n      }\\n    },\\n    \\\"node_modules/@hono/zod-validator\\\": {\\n      \\\"version\\\": \\\"0.9.0\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@hono/zod-validator/-/zod-validator-0.9.0.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-n0ZSXmCiHVIp4Y5wlOOyZCeTd/rsawA/qW1cipB8QOYKZ9N8Tk0nZUZCXho9cu374AN4JpDNKioNKBJ/W+LBug==\\\",\\n      \\\"license\\\": \\\"MIT\\\",\\n      \\\"peerDependencies\\\": {\\n        \\\"hono\\\": \\\">=4.11.2\\\",\\n        \\\"zod\\\": \\\"^3.25.0 || ^4.0.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-aix-ppc64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"ppc64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"aix\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-darwin-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"darwin\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-darwin-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"darwin\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-freebsd-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"freebsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-freebsd-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"freebsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-arm\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-loong64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"loong64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-mips64el\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"mips64el\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-ppc64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"ppc64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-riscv64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"riscv64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-s390x\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==\\\",\\n      \\\"cpu\\\": [\\n        \\\"s390x\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-linux-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"linux\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-netbsd-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"netbsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-netbsd-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"netbsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-openbsd-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"openbsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-openbsd-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"openbsd\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-sunos-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"sunos\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-win32-arm64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==\\\",\\n      \\\"cpu\\\": [\\n        \\\"arm64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"win32\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/@typescript/typescript-win32-x64\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==\\\",\\n      \\\"cpu\\\": [\\n        \\\"x64\\\"\\n      ],\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"optional\\\": true,\\n      \\\"os\\\": [\\n        \\\"win32\\\"\\n      ],\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      }\\n    },\\n    \\\"node_modules/hono\\\": {\\n      \\\"version\\\": \\\"4.13.0\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/hono/-/hono-4.13.0.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-jhunvfHWxd7J5EFfSgH4xsYJzSe/lfqbUCxiyyeaQasUsXeEHXtzVid+7EOGByc5JnFa23SSFL3Y2RV/z1T+eQ==\\\",\\n      \\\"license\\\": \\\"MIT\\\",\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.9.0\\\"\\n      }\\n    },\\n    \\\"node_modules/typescript\\\": {\\n      \\\"version\\\": \\\"7.0.2\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/typescript/-/typescript-7.0.2.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==\\\",\\n      \\\"dev\\\": true,\\n      \\\"license\\\": \\\"Apache-2.0\\\",\\n      \\\"bin\\\": {\\n        \\\"tsc\\\": \\\"bin/tsc\\\"\\n      },\\n      \\\"engines\\\": {\\n        \\\"node\\\": \\\">=16.20.0\\\"\\n      },\\n      \\\"optionalDependencies\\\": {\\n        \\\"@typescript/typescript-aix-ppc64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-darwin-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-darwin-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-freebsd-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-freebsd-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-arm\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-loong64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-mips64el\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-ppc64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-riscv64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-s390x\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-linux-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-netbsd-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-netbsd-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-openbsd-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-openbsd-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-sunos-x64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-win32-arm64\\\": \\\"7.0.2\\\",\\n        \\\"@typescript/typescript-win32-x64\\\": \\\"7.0.2\\\"\\n      }\\n    },\\n    \\\"node_modules/zod\\\": {\\n      \\\"version\\\": \\\"4.4.3\\\",\\n      \\\"resolved\\\": \\\"https://registry.npmjs.org/zod/-/zod-4.4.3.tgz\\\",\\n      \\\"integrity\\\": \\\"sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==\\\",\\n      \\\"license\\\": \\\"MIT\\\",\\n      \\\"funding\\\": {\\n        \\\"url\\\": \\\"https://github.com/sponsors/colinhacks\\\"\\n      }\\n    }\\n  }\\n}\\n===== package.json [read-only] =====\\n{\\n  \\\"name\\\": \\\"release-radar-typescript-035\\\",\\n  \\\"private\\\": true,\\n  \\\"type\\\": \\\"module\\\",\\n  \\\"scripts\\\": {\\n    \\\"build\\\": \\\"tsc -p tsconfig.json\\\",\\n    \\\"start\\\": \\\"node dist/server.js\\\"\\n  },\\n  \\\"dependencies\\\": {\\n    \\\"@hono/node-server\\\": \\\"2.1.0\\\",\\n    \\\"@hono/zod-validator\\\": \\\"0.9.0\\\",\\n    \\\"hono\\\": \\\"4.13.0\\\",\\n    \\\"zod\\\": \\\"4.4.3\\\"\\n  },\\n  \\\"devDependencies\\\": {\\n    \\\"typescript\\\": \\\"7.0.2\\\"\\n  }\\n}\\n===== public/index.html [read-only] =====\\n<!doctype html>\\n<meta charset=\\\"utf-8\\\">\\n<title>Full-stack agent study 045</title>\\n<main>Full-stack agent study 045 browser target</main>\\n===== src/logic.ts [editable] =====\\nexport type RequestInput={accession_key:string;stable_units:number;fragile_units:number;packing_stations:number;expedited:boolean};export const score=(..._args:unknown[])=>0;export const calculate=(v:RequestInput)=>{const t=v.stable_units+v.fragile_units,x=v.stable_units*6+v.fragile_units*11+(v.expedited?v.packing_stations*4:0),c=v.packing_stations*40,o=Math.max(x-c,0);return {accession_key:v.accession_key,artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:Math.trunc(t/5),priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:o===0?'accepted':'queued'}};export async function loadParley(){return {artifact_priority_score:(a0:number,a1:number,a2:number,a3:boolean)=>BigInt(score(a0,a1,a2,a3))}}\\n===== src/server.ts [editable] =====\\nimport {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({accession_key:z.string(),stable_units:z.number().int(),fragile_units:z.number().int(),packing_stations:z.number().int(),expedited:z.boolean()}).strict();\\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({accession_key:v.accession_key,artifact_total:0,packing_units:0,capacity_units:0,overflow_units:0,inspection_rounds:0,priority_score:0,accession_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\\\"Bearer accession-045\\\")return response(zero(v,'authorization_required'),401,{\\\"www-authenticate\\\":\\\"Bearer realm=artifact-accession\\\"});if([v.stable_units,v.fragile_units,v.packing_stations].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.packing_stations===0&&v.stable_units+v.fragile_units>0)return response(zero(v,'invalid'),422,{'x-validation':'packing_stations'});return response(calculate(v),200,{});};\\nconst app=new Hono();app.get('/status/artifact-accession-ready',()=>response({service:'Artifact Accession',ready:true}));app.post('/api/v9/artifact-accessions',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\\n===== tsconfig.json [read-only] =====\\n{\\n  \\\"compilerOptions\\\": {\\n    \\\"target\\\": \\\"ES2022\\\",\\n    \\\"module\\\": \\\"NodeNext\\\",\\n    \\\"moduleResolution\\\": \\\"NodeNext\\\",\\n    \\\"rootDir\\\": \\\"src\\\",\\n    \\\"outDir\\\": \\\"dist\\\",\\n    \\\"strict\\\": true,\\n    \\\"noUncheckedIndexedAccess\\\": true,\\n    \\\"exactOptionalPropertyTypes\\\": true,\\n    \\\"skipLibCheck\\\": true\\n  },\\n  \\\"include\\\": [\\\"src/**/*.ts\\\"]\\n}\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_2\",\"type\":\"agent_message\",\"text\":\"The scaffold already has strict JSON/media/body handling and the validation order. I\u2019m correcting the shared score calculation and the success response status and headers while preserving the contract\u2019s failure-body shape.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_3\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/src/logic.ts\",\"kind\":\"update\"},{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/src/server.ts\",\"kind\":\"update\"}],\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_3\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/src/logic.ts\",\"kind\":\"update\"},{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3/src/server.ts\",\"kind\":\"update\"}],\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_4\",\"type\":\"agent_message\",\"text\":\"The implementation is in place. I\u2019m running the complete public full-stack check now; if it exposes a contract mismatch, I\u2019ll repair it using only that feedback.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_5\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_5\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"public HTTP and Chromium checks passed for artifact_accession_build\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_6\",\"type\":\"agent_message\",\"text\":\"Implemented the authenticated artifact accession workflow, shared scoring logic, validation responses, and success headers.\\n\\nComplete public HTTP and Chromium full-stack check passed.\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":79182,\"cached_input_tokens\":59392,\"cache_write_input_tokens\":0,\"output_tokens\":1776,\"reasoning_output_tokens\":123}}\n",
+    "codex_stderr": "Reading additional input from stdin...\n2026-08-13T06:07:35.436095Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.439227Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.441412Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.443176Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.445357Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.447317Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.450394Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.452200Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.453957Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.455690Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.457407Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.459526Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.461503Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.463555Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.465301Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.467304Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.468874Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.470581Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.472339Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.474434Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.476465Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.478195Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.480177Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.482166Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.483859Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.486234Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.487926Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.489985Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.491746Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.493789Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.495602Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.497968Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.500050Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.501832Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.503580Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.505831Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.507799Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.510551Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.512220Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.514181Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.516283Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.518104Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.521345Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.523024Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.524955Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.526649Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.528654Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.530850Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.532971Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.534876Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.570993Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.572609Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.574820Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.576991Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.578703Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.581208Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.583417Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:35.585321Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:07:40.401062Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 94 column 5\n2026-08-13T06:08:19.982579Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/arjun/.codex/shell_snapshots/019ff9bb-b207-7540-b211-7fef401624d6.1786601255431505000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\n",
+    "workdir": "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-typescript-sol-medium-r3-s8yt_dl3",
+    "journal_attempt": 1,
+    "agent_session_started": true
+  }
+}

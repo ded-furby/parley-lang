@@ -1,0 +1,174 @@
+{
+  "attempt": 1,
+  "request_id": "cb853d0173cd5ebf95b74cdb943836a8",
+  "elapsed_seconds": 12.4316,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 10.877,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "artifact_accession_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:05:30 GMT",
+        "content-type": "application/json",
+        "content-length": "45"
+      },
+      "body": "{\"ready\":true,\"service\":\"Artifact Accession\"}",
+      "json": {
+        "ready": true,
+        "service": "Artifact Accession"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:05:30 GMT",
+        "content-type": "application/json",
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted",
+        "content-length": "179"
+      },
+      "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+      "json": {
+        "accession_key": "bronze-lyre",
+        "artifact_total": 5,
+        "packing_units": 48,
+        "capacity_units": 80,
+        "overflow_units": 0,
+        "inspection_rounds": 1,
+        "priority_score": 55,
+        "accession_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/artifact-accessions/bronze-lyre"
+        ],
+        [
+          "x-accession-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_wrong_fragile_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:05:30 GMT",
+        "content-type": "application/json",
+        "content-length": "98"
+      },
+      "body": "{\"detail\":\"invalid type: boolean `true`, expected i64 at line 1 column 68\",\"error\":\"invalid_json\"}",
+      "json": {
+        "detail": "invalid type: boolean `true`, expected i64 at line 1 column 68",
+        "error": "invalid_json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 55,
+      "error": "",
+      "elapsed_seconds": 0.3925,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 55,
+    "error": "",
+    "elapsed_seconds": 0.2788,
+    "expected": 55,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/lib.rs": {
+        "exists": true,
+        "text": "use serde::{Deserialize, Serialize};\n\n#[derive(Deserialize)]\n#[serde(deny_unknown_fields)]\npub struct RequestInput {\n    pub accession_key: String,\n    pub stable_units: i64,\n    pub fragile_units: i64,\n    pub packing_stations: i64,\n    pub expedited: bool,\n}\n\n#[derive(Serialize)]\npub struct ResponseOutput {\n    pub accession_key: String,\n    pub artifact_total: i64,\n    pub packing_units: i64,\n    pub capacity_units: i64,\n    pub overflow_units: i64,\n    pub inspection_rounds: i64,\n    pub priority_score: i64,\n    pub accession_state: String,\n}\n\npub fn score(stable_units: i64, fragile_units: i64, packing_stations: i64, expedited: bool) -> i64 {\n    let artifact_total = stable_units + fragile_units;\n    let packing_units = stable_units * 6\n        + fragile_units * 11\n        + if expedited { packing_stations * 4 } else { 0 };\n    let capacity_units = packing_stations * 40;\n    let overflow_units = (packing_units - capacity_units).max(0);\n    packing_units + overflow_units * 5 + (artifact_total / 5) * 7\n}\n\npub fn calculate(v: &RequestInput) -> ResponseOutput {\n    let artifact_total = v.stable_units + v.fragile_units;\n    let packing_units = v.stable_units * 6\n        + v.fragile_units * 11\n        + if v.expedited { v.packing_stations * 4 } else { 0 };\n    let capacity_units = v.packing_stations * 40;\n    let overflow_units = (packing_units - capacity_units).max(0);\n\n    ResponseOutput {\n        accession_key: v.accession_key.clone(),\n        artifact_total,\n        packing_units,\n        capacity_units,\n        overflow_units,\n        inspection_rounds: artifact_total / 5,\n        priority_score: score(v.stable_units, v.fragile_units, v.packing_stations, v.expedited),\n        accession_state: if overflow_units == 0 { \"accepted\" } else { \"queued\" }.into(),\n    }\n}\n\n#[unsafe(no_mangle)]\npub extern \"C\" fn parley_browser_score(a0: i64, a1: i64, a2: i64, a3: i32) -> i64 {\n    score(a0, a1, a2, a3 != 0)\n}\n",
+        "sha256": "08d9e04f4da030c7b85d24db06d4b347a9f01ab27ba2c2ae88dfa1757d7c6302",
+        "bytes": 1936,
+        "lines": 58,
+        "rough_tokens": 392,
+        "o200k_base_tokens": 526
+      },
+      "src/main.rs": {
+        "exists": true,
+        "text": "use std::env;\n\nuse axum::{\n    body::{to_bytes, Body},\n    extract::Request,\n    http::{header, HeaderMap, StatusCode},\n    response::{IntoResponse, Response},\n    routing::{any, get, post},\n    Router,\n};\nuse fullstack_agent_045::{calculate, RequestInput};\nuse serde::Serialize;\nuse serde_json::json;\nuse tower_http::services::{ServeDir, ServeFile};\n\nconst MAX_BODY_BYTES: usize = 16_384;\nconst BROWSER_MODULE: &str = r#\"const asI64=(v,n)=>{if(typeof v==='bigint')return v;if(!Number.isSafeInteger(v))throw new TypeError(`${n} must be a safe whole number`);return BigInt(v)};export async function loadParley(){const r=await fetch(new URL('/fullstack_agent_045.wasm',import.meta.url));const m=(await WebAssembly.instantiateStreaming(r)).instance.exports;return {artifact_priority_score:(a0,a1,a2,a3)=>m.parley_browser_score(asI64(a0,'a0'),asI64(a1,'a1'),asI64(a2,'a2'),a3?1:0)}}\"#;\n\nfn json_response(value: impl Serialize, status: u16, headers: &[(&str, &str)]) -> Response {\n    if headers.iter().any(|(name, _)| {\n        matches!(name.to_ascii_lowercase().as_str(), \"content-length\" | \"content-type\" | \"connection\" | \"transfer-encoding\" | \"x-content-type-options\")\n    }) {\n        return error(\"invalid_response_headers\", 500, \"server-owned response header\");\n    }\n    let mut response = (StatusCode::from_u16(status).unwrap(), serde_json::to_vec(&value).unwrap()).into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"application/json\"));\n    for (name, value) in headers {\n        response.headers_mut().insert(\n            header::HeaderName::from_bytes(name.as_bytes()).unwrap(),\n            header::HeaderValue::from_str(value).unwrap(),\n        );\n    }\n    response\n}\n\nfn error(code: &str, status: u16, detail: &str) -> Response {\n    let mut response = (StatusCode::from_u16(status).unwrap(), serde_json::to_vec(&json!({\"error\": code, \"detail\": detail})).unwrap()).into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"application/json\"));\n    response\n}\n\nfn zero(v: &RequestInput, state: &str) -> serde_json::Value {\n    json!({\n        \"accession_key\": v.accession_key,\n        \"artifact_total\": 0,\n        \"packing_units\": 0,\n        \"capacity_units\": 0,\n        \"overflow_units\": 0,\n        \"inspection_rounds\": 0,\n        \"priority_score\": 0,\n        \"accession_state\": state,\n    })\n}\n\nfn decide(v: RequestInput, headers: &HeaderMap) -> Response {\n    if headers.get(\"authorization\").and_then(|value| value.to_str().ok()).unwrap_or(\"\") != \"Bearer accession-045\" {\n        return json_response(zero(&v, \"authorization_required\"), 401, &[(\"www-authenticate\", \"Bearer realm=artifact-accession\")]);\n    }\n    if [v.stable_units, v.fragile_units, v.packing_stations].iter().any(|value| *value < 0) {\n        return json_response(zero(&v, \"invalid\"), 422, &[(\"x-validation\", \"nonnegative\")]);\n    }\n    if v.packing_stations == 0 && v.stable_units + v.fragile_units > 0 {\n        return json_response(zero(&v, \"invalid\"), 422, &[(\"x-validation\", \"packing_stations\")]);\n    }\n\n    let result = calculate(&v);\n    let location = format!(\"/api/v9/artifact-accessions/{}\", result.accession_key);\n    let state = result.accession_state.clone();\n    json_response(result, 201, &[(\"location\", &location), (\"x-accession-state\", &state)])\n}\n\nasync fn status() -> Response {\n    json_response(json!({\"service\": \"Artifact Accession\", \"ready\": true}), 200, &[])\n}\n\nasync fn endpoint(request: Request) -> Response {\n    let headers = request.headers().clone();\n    let media = headers.get(header::CONTENT_TYPE).and_then(|value| value.to_str().ok()).unwrap_or(\"\")\n        .split(';').next().unwrap_or(\"\").trim().to_ascii_lowercase();\n    if media != \"application/json\" && !media.ends_with(\"+json\") {\n        return error(\"json_content_type_required\", 415, \"expected application/json\");\n    }\n    if let Some(length) = headers.get(header::CONTENT_LENGTH) {\n        let declared = length.to_str().ok().and_then(|value| value.parse::<usize>().ok());\n        if declared.is_none_or(|value| value > MAX_BODY_BYTES) {\n            return error(\"body_too_large\", 413, \"request body exceeds 16384 bytes\");\n        }\n    }\n    let body = match to_bytes(request.into_body(), MAX_BODY_BYTES).await {\n        Ok(body) => body,\n        Err(_) => return error(\"body_too_large\", 413, \"request body exceeds 16384 bytes\"),\n    };\n    match serde_json::from_slice::<RequestInput>(&body) {\n        Ok(value) => decide(value, &headers),\n        Err(reason) => error(\"invalid_json\", 400, &reason.to_string()),\n    }\n}\n\nasync fn missing(request: Request<Body>) -> Response {\n    error(\"not_found\", 404, &format!(\"no API route {}\", request.uri().path()))\n}\n\nasync fn browser() -> Response {\n    let mut response = BROWSER_MODULE.into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"text/javascript; charset=utf-8\"));\n    response\n}\n\n#[tokio::main]\nasync fn main() {\n    let wasm = env::var_os(\"FULLSTACK_045_WASM\").map(std::path::PathBuf::from).unwrap();\n    let app = Router::new()\n        .route(\"/status/artifact-accession-ready\", get(status))\n        .route(\"/api/v9/artifact-accessions\", post(endpoint))\n        .route(\"/api/{*rest}\", any(missing))\n        .route(\"/parley.js\", get(browser))\n        .route_service(\"/fullstack_agent_045.wasm\", ServeFile::new(wasm))\n        .fallback_service(ServeDir::new(\"public\").append_index_html_on_directories(true));\n    let port = env::var(\"PARLEY_WEB_PORT\").unwrap().parse::<u16>().unwrap();\n    let listener = tokio::net::TcpListener::bind((\"127.0.0.1\", port)).await.unwrap();\n    axum::serve(listener, app).await.unwrap();\n}\n",
+        "sha256": "70cb002bc051c1b21110a470e759c0e3c8db5a7bf4e2041fec7f06c65f0a40d3",
+        "bytes": 5709,
+        "lines": 122,
+        "rough_tokens": 1658,
+        "o200k_base_tokens": 1477
+      }
+    },
+    "totals": {
+      "bytes": 7645,
+      "lines": 180,
+      "rough_tokens": 2050,
+      "o200k_base_tokens": 2003
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+  "stderr": ""
+}

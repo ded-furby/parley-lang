@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:34:41.165836Z",
+  "cell": {
+    "cell_id": "estuary_assay_build__python__terra-medium__r2",
+    "plan_index": 49,
+    "task_id": "estuary_assay_build",
+    "task_kind": "implementation",
+    "language": "python",
+    "configuration_id": "terra-medium",
+    "replicate": 2
+  }
+}

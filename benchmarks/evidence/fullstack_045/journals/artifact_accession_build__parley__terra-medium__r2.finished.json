@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "finished",
+  "recorded_at": "2026-08-13T06:00:47.324533Z",
+  "result": {
+    "schema_version": 1,
+    "recorded_at": "2026-08-13T06:00:47.324462Z",
+    "task_id": "artifact_accession_build",
+    "task_kind": "implementation",
+    "language": "parley",
+    "configuration_id": "terra-medium",
+    "model": "gpt-5.6-terra",
+    "reasoning": "medium",
+    "replicate": 2,
+    "fresh_ephemeral_session": true,
+    "thread_id": "019ff9b4-fb50-7911-8a89-b24944a2478f",
+    "agent_returncode": 0,
+    "agent_timed_out": false,
+    "elapsed_seconds": 29.7754,
+    "cell_id": "artifact_accession_build__parley__terra-medium__r2",
+    "plan_index": 27,
+    "checker_integrity_ok": true,
+    "read_only_integrity_ok": true,
+    "symlink_integrity_ok": true,
+    "transport_integrity": {
+      "ok": true,
+      "expected": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155337462,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155337463,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "actual": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155337462,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155337463,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "protocol_errors": []
+    },
+    "transport_integrity_ok": true,
+    "attempt_record_integrity_ok": false,
+    "public_execution_ok": true,
+    "post_build_integrity_ok": true,
+    "editable_file_integrity_ok": true,
+    "parent_attempt_records": [
+      {
+        "file": "/Users/arjun/Desktop/parley-lang-045-evidence/attempts/artifact_accession_build__parley__terra-medium__r2/attempt-001.json",
+        "sha256": "f6f41e378eb5d5978e2f0e61832740358d2159cd66ed3d50a77aebc49cb2a645"
+      }
+    ],
+    "broker_error": "",
+    "workspace_integrity_ok": false,
+    "unexpected_files": [],
+    "command_protocol": {
+      "compliant": true,
+      "commands": [
+        "/bin/zsh -lc ./sources",
+        "/bin/zsh -lc ./check"
+      ],
+      "violations": []
+    },
+    "public_attempts": [
+      {
+        "attempt": 1,
+        "request_id": "5b70bdb6ca326fa9b9caf46789e7cdd3",
+        "elapsed_seconds": 2.5153,
+        "ok": true,
+        "build": {
+          "ok": true,
+          "error": "",
+          "elapsed_seconds": 1.0452,
+          "protected_read_only_checks": [
+            {
+              "command": [
+                "/private/tmp/parley-fullstack-045-parley/bin/parley",
+                "web",
+                "build",
+                "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou",
+                "-o",
+                "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/.benchmark_build/bundle"
+              ],
+              "protected_read_only_files": 9,
+              "changes": {},
+              "command_error": "",
+              "hashes_ok": true,
+              "ok": true
+            }
+          ],
+          "protected_read_only_ok": true
+        },
+        "cases": [
+          {
+            "id": "artifact_accession_status",
+            "target": "http",
+            "status": 200,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:00:40 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "x-content-type-options": "nosniff",
+              "content-length": "45"
+            },
+            "body": "{\"service\":\"Artifact Accession\",\"ready\":true}",
+            "json": {
+              "service": "Artifact Accession",
+              "ready": true
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_primary",
+            "target": "http",
+            "status": 201,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:00:40 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "location": "/api/v9/artifact-accessions/bronze-lyre",
+              "x-accession-state": "accepted",
+              "x-content-type-options": "nosniff",
+              "content-length": "179"
+            },
+            "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+            "json": {
+              "accession_key": "bronze-lyre",
+              "artifact_total": 5,
+              "packing_units": 48,
+              "capacity_units": 80,
+              "overflow_units": 0,
+              "inspection_rounds": 1,
+              "priority_score": 55,
+              "accession_state": "accepted"
+            },
+            "application_headers": {
+              "location": "/api/v9/artifact-accessions/bronze-lyre",
+              "x-accession-state": "accepted"
+            },
+            "application_header_pairs": [
+              [
+                "location",
+                "/api/v9/artifact-accessions/bronze-lyre"
+              ],
+              [
+                "x-accession-state",
+                "accepted"
+              ]
+            ],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_wrong_fragile_type",
+            "target": "http",
+            "status": 400,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 06:00:40 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "x-content-type-options": "nosniff",
+              "content-length": "56"
+            },
+            "body": "{\"error\":\"invalid_json\",\"detail\":\"expected JSON number\"}",
+            "json": {
+              "error": "invalid_json",
+              "detail": "expected JSON number"
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "artifact_accession_browser_primary",
+            "target": "browser",
+            "ok": true,
+            "value": 55,
+            "error": "",
+            "elapsed_seconds": 0.3511,
+            "pass": true
+          }
+        ],
+        "cross_target": {
+          "ok": true,
+          "value": 55,
+          "error": "",
+          "elapsed_seconds": 0.3073,
+          "expected": 55,
+          "pass": true
+        },
+        "source": {
+          "editable_files": {
+            "logic.par": {
+              "exists": true,
+              "text": "to artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    let total be stable_units plus fragile_units\n    let packing be stable_units times 6 plus fragile_units times 11\n    if expedited:\n        set packing to packing plus packing_stations times 4\n    let capacity be packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    give back packing plus overflow times 5 plus rounds times 7\n",
+              "sha256": "29079708e955e8daf98730eb531c0143bf31a379bc6dbc8ad08c85bee5497464",
+              "bytes": 601,
+              "lines": 11,
+              "rough_tokens": 93,
+              "o200k_base_tokens": 134
+            },
+            "main.par": {
+              "exists": true,
+              "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    set item \"location\" of headers to \"/api/v9/artifact-accessions/\" plus body's accession_key\n    set item \"x-accession-state\" of headers to state\n    give back a controlled_response with status 201, headers headers, body result\n",
+              "sha256": "1624e5c45cba8595023c116ade0bd6dad127fb0fd446dbb9c636ad54fcce57a3",
+              "bytes": 3646,
+              "lines": 45,
+              "rough_tokens": 624,
+              "o200k_base_tokens": 785
+            },
+            "parley.web.json": {
+              "exists": true,
+              "text": "{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+              "sha256": "52e771326e37650070a1828d26352777a7290c8f2c391902ec3ea66b83019b83",
+              "bytes": 721,
+              "lines": 36,
+              "rough_tokens": 195,
+              "o200k_base_tokens": 212
+            }
+          },
+          "totals": {
+            "bytes": 4968,
+            "lines": 92,
+            "rough_tokens": 912,
+            "o200k_base_tokens": 1131
+          }
+        },
+        "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+        "stderr": ""
+      }
+    ],
+    "public_check_attempts": 1,
+    "first_public_check_success": true,
+    "final_public_check_success": true,
+    "repair_turns": 0,
+    "hidden_success": true,
+    "hidden_judgment": {
+      "ok": true,
+      "build": {
+        "ok": true,
+        "error": "",
+        "elapsed_seconds": 1.0445,
+        "protected_read_only_checks": [
+          {
+            "command": [
+              "/private/tmp/parley-fullstack-045-parley/bin/parley",
+              "web",
+              "build",
+              "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou",
+              "-o",
+              "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/.benchmark_build/bundle"
+            ],
+            "protected_read_only_files": 9,
+            "changes": {},
+            "command_error": "",
+            "hashes_ok": true,
+            "ok": true
+          }
+        ],
+        "protected_read_only_ok": true
+      },
+      "cases": [
+        {
+          "id": "artifact_accession_unauthorized",
+          "target": "http",
+          "status": 401,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:00:46 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "www-authenticate": "Bearer realm=artifact-accession",
+            "x-content-type-options": "nosniff",
+            "content-length": "190"
+          },
+          "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":0,\"packing_units\":0,\"capacity_units\":0,\"overflow_units\":0,\"inspection_rounds\":0,\"priority_score\":0,\"accession_state\":\"authorization_required\"}",
+          "json": {
+            "accession_key": "bronze-lyre",
+            "artifact_total": 0,
+            "packing_units": 0,
+            "capacity_units": 0,
+            "overflow_units": 0,
+            "inspection_rounds": 0,
+            "priority_score": 0,
+            "accession_state": "authorization_required"
+          },
+          "application_headers": {
+            "www-authenticate": "Bearer realm=artifact-accession"
+          },
+          "application_header_pairs": [
+            [
+              "www-authenticate",
+              "Bearer realm=artifact-accession"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_zero_stations",
+          "target": "http",
+          "status": 422,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:00:46 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "x-validation": "packing_stations",
+            "x-content-type-options": "nosniff",
+            "content-length": "172"
+          },
+          "body": "{\"accession_key\":\"marble-4\",\"artifact_total\":0,\"packing_units\":0,\"capacity_units\":0,\"overflow_units\":0,\"inspection_rounds\":0,\"priority_score\":0,\"accession_state\":\"invalid\"}",
+          "json": {
+            "accession_key": "marble-4",
+            "artifact_total": 0,
+            "packing_units": 0,
+            "capacity_units": 0,
+            "overflow_units": 0,
+            "inspection_rounds": 0,
+            "priority_score": 0,
+            "accession_state": "invalid"
+          },
+          "application_headers": {
+            "x-validation": "packing_stations"
+          },
+          "application_header_pairs": [
+            [
+              "x-validation",
+              "packing_stations"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_unknown_field",
+          "target": "http",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 06:00:46 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "x-content-type-options": "nosniff",
+            "content-length": "62"
+          },
+          "body": "{\"error\":\"invalid_json\",\"detail\":\"unknown field gallery_code\"}",
+          "json": {
+            "error": "invalid_json",
+            "detail": "unknown field gallery_code"
+          },
+          "application_headers": {},
+          "application_header_pairs": [],
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_browser_hidden_1",
+          "target": "browser",
+          "ok": true,
+          "value": 17,
+          "error": "",
+          "elapsed_seconds": 0.2824,
+          "pass": true
+        },
+        {
+          "id": "artifact_accession_browser_hidden_2",
+          "target": "browser",
+          "ok": true,
+          "value": 318,
+          "error": "",
+          "elapsed_seconds": 0.2751,
+          "pass": true
+        }
+      ],
+      "cross_target": null
+    },
+    "usage": {
+      "input_tokens": 61879,
+      "cached_input_tokens": 52224,
+      "output_tokens": 830,
+      "reasoning_output_tokens": 155,
+      "uncached_input_tokens": 9655
+    },
+    "total_tokens": 62709,
+    "prompt_sha256": "e72bedc20e5f8e2cb64a4d28eec6ca3546bbdfddf114c27c01043d228cd229a9",
+    "prompt_chars": 5235,
+    "source": {
+      "editable_files": {
+        "logic.par": {
+          "exists": true,
+          "text": "to artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    let total be stable_units plus fragile_units\n    let packing be stable_units times 6 plus fragile_units times 11\n    if expedited:\n        set packing to packing plus packing_stations times 4\n    let capacity be packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    give back packing plus overflow times 5 plus rounds times 7\n",
+          "sha256": "29079708e955e8daf98730eb531c0143bf31a379bc6dbc8ad08c85bee5497464",
+          "bytes": 601,
+          "lines": 11,
+          "rough_tokens": 93,
+          "o200k_base_tokens": 134
+        },
+        "main.par": {
+          "exists": true,
+          "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    set item \"location\" of headers to \"/api/v9/artifact-accessions/\" plus body's accession_key\n    set item \"x-accession-state\" of headers to state\n    give back a controlled_response with status 201, headers headers, body result\n",
+          "sha256": "1624e5c45cba8595023c116ade0bd6dad127fb0fd446dbb9c636ad54fcce57a3",
+          "bytes": 3646,
+          "lines": 45,
+          "rough_tokens": 624,
+          "o200k_base_tokens": 785
+        },
+        "parley.web.json": {
+          "exists": true,
+          "text": "{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+          "sha256": "52e771326e37650070a1828d26352777a7290c8f2c391902ec3ea66b83019b83",
+          "bytes": 721,
+          "lines": 36,
+          "rough_tokens": 195,
+          "o200k_base_tokens": 212
+        }
+      },
+      "totals": {
+        "bytes": 4968,
+        "lines": 92,
+        "rough_tokens": 912,
+        "o200k_base_tokens": 1131
+      }
+    },
+    "seed_source": {
+      "editable_files": {
+        "logic.par": {
+          "text": "to artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    give back 0\n",
+          "sha256": "11e2b3bc272fd729fa81b939b54bef4274f79eee36090a6a2f7df5d3d2007c23",
+          "bytes": 159,
+          "lines": 2,
+          "rough_tokens": 24,
+          "o200k_base_tokens": 34
+        },
+        "main.par": {
+          "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    give back a controlled_response with status 200, headers headers, body result\n",
+          "sha256": "4c022e01eab980d4c8b65e93cb5023d7034e422c42efdc21892905bb3f051f7a",
+          "bytes": 3498,
+          "lines": 43,
+          "rough_tokens": 589,
+          "o200k_base_tokens": 748
+        },
+        "parley.web.json": {
+          "text": "{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+          "sha256": "52e771326e37650070a1828d26352777a7290c8f2c391902ec3ea66b83019b83",
+          "bytes": 721,
+          "lines": 36,
+          "rough_tokens": 195,
+          "o200k_base_tokens": 212
+        }
+      },
+      "totals": {
+        "bytes": 4378,
+        "lines": 81,
+        "rough_tokens": 808,
+        "o200k_base_tokens": 994
+      }
+    },
+    "source_edits": {
+      "files": {
+        "logic.par": {
+          "changed": true,
+          "rough_token_edit_count": 71
+        },
+        "main.par": {
+          "changed": true,
+          "rough_token_edit_count": 37
+        },
+        "parley.web.json": {
+          "changed": false,
+          "rough_token_edit_count": 0
+        }
+      },
+      "rough_token_edit_count": 108
+    },
+    "changed_files": [
+      "logic.par",
+      "main.par"
+    ],
+    "expected_root_files": [],
+    "root_quality_eligible": false,
+    "exact_root": false,
+    "agent_messages": [
+      "I\u2019ll inspect the supplied scaffold, make the smallest editable implementation change, then run the public checker once.",
+      "The implementation now shares the priority calculation with the browser export and returns the required success status and headers. I\u2019m running the public check.",
+      "Complete public full-stack check passed."
+    ],
+    "agent_errors": [],
+    "command_events": [
+      {
+        "id": "item_1",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./sources",
+        "aggregated_output": "===== CONTRACT.md [read-only] =====\n# Build an authenticated artifact accession workflow\n\n    Implement the frozen Artifact Accession contract. The POST route requires Authorization: Bearer accession-045; otherwise return 401 with www-authenticate Bearer realm=artifact-accession and accession_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. A positive artifact_total with zero packing_stations returns 422 with x-validation packing_stations. Otherwise artifact_total is stable_units + fragile_units. packing_units is stable_units * 6 + fragile_units * 11 plus packing_stations * 4 when expedited. capacity_units is packing_stations * 40. overflow_units is max(packing_units - capacity_units, 0). inspection_rounds is artifact_total divided by 5 using floor division. priority_score is packing_units + overflow_units * 5 + inspection_rounds * 7. accession_state is accepted when overflow is zero and queued otherwise. Success returns 201 with location /api/v9/artifact-accessions/{accession_key} and x-accession-state. The browser export returns priority_score. Failure bodies use the request key and zero for all numeric result fields.\n\n    ## HTTP\n\n    - `GET /status/artifact-accession-ready` returns `{\"service\":\"Artifact Accession\",\"ready\":true}`.\n    - `POST /api/v9/artifact-accessions` uses strict JSON, then the application decides authorization,\n      domain validation, status, response headers, and body.\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\n    - Negative integers are well-typed and must reach the handler's 422 decision.\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\n\n    Request fields:\n\n    - `accession_key`: text\n- `stable_units`: number\n- `fragile_units`: number\n- `packing_stations`: number\n- `expedited`: yesno\n\n    Response fields:\n\n    - `accession_key`: text\n- `artifact_total`: number\n- `packing_units`: number\n- `capacity_units`: number\n- `overflow_units`: number\n- `inspection_rounds`: number\n- `priority_score`: number\n- `accession_state`: text\n\n    ## Browser\n\n    Export `artifact_priority_score` with arguments in this order:\n    `stable_units, fragile_units, packing_stations, expedited`. It returns `priority_score`.\n===== logic.par [editable] =====\nto artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    give back 0\n===== main.par [editable] =====\ninclude \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    give back a controlled_response with status 200, headers headers, body result\n===== parley.web.json [editable] =====\n{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n===== public/index.html [read-only] =====\n<!doctype html>\n<meta charset=\"utf-8\">\n<title>Full-stack agent study 045</title>\n<main>Full-stack agent study 045 browser target</main>\n",
+        "exit_code": 0,
+        "status": "completed"
+      },
+      {
+        "id": "item_4",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./check",
+        "aggregated_output": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    ],
+    "codex_stdout": "{\"type\":\"thread.started\",\"thread_id\":\"019ff9b4-fb50-7911-8a89-b24944a2478f\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"I\u2019ll inspect the supplied scaffold, make the smallest editable implementation change, then run the public checker once.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"===== CONTRACT.md [read-only] =====\\n# Build an authenticated artifact accession workflow\\n\\n    Implement the frozen Artifact Accession contract. The POST route requires Authorization: Bearer accession-045; otherwise return 401 with www-authenticate Bearer realm=artifact-accession and accession_state authorization_required. Negative numeric inputs return 422 with x-validation nonnegative. A positive artifact_total with zero packing_stations returns 422 with x-validation packing_stations. Otherwise artifact_total is stable_units + fragile_units. packing_units is stable_units * 6 + fragile_units * 11 plus packing_stations * 4 when expedited. capacity_units is packing_stations * 40. overflow_units is max(packing_units - capacity_units, 0). inspection_rounds is artifact_total divided by 5 using floor division. priority_score is packing_units + overflow_units * 5 + inspection_rounds * 7. accession_state is accepted when overflow is zero and queued otherwise. Success returns 201 with location /api/v9/artifact-accessions/{accession_key} and x-accession-state. The browser export returns priority_score. Failure bodies use the request key and zero for all numeric result fields.\\n\\n    ## HTTP\\n\\n    - `GET /status/artifact-accession-ready` returns `{\\\"service\\\":\\\"Artifact Accession\\\",\\\"ready\\\":true}`.\\n    - `POST /api/v9/artifact-accessions` uses strict JSON, then the application decides authorization,\\n      domain validation, status, response headers, and body.\\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\\n    - Negative integers are well-typed and must reach the handler's 422 decision.\\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\\n\\n    Request fields:\\n\\n    - `accession_key`: text\\n- `stable_units`: number\\n- `fragile_units`: number\\n- `packing_stations`: number\\n- `expedited`: yesno\\n\\n    Response fields:\\n\\n    - `accession_key`: text\\n- `artifact_total`: number\\n- `packing_units`: number\\n- `capacity_units`: number\\n- `overflow_units`: number\\n- `inspection_rounds`: number\\n- `priority_score`: number\\n- `accession_state`: text\\n\\n    ## Browser\\n\\n    Export `artifact_priority_score` with arguments in this order:\\n    `stable_units, fragile_units, packing_stations, expedited`. It returns `priority_score`.\\n===== logic.par [editable] =====\\nto artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\\n    give back 0\\n===== main.par [editable] =====\\ninclude \\\"logic.par\\\"\\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\\na controlled_response has status as number, headers as map from text to text, body as response_body\\na service_status has service as text, ready as yesno\\nto project_status giving service_status:\\n    give back a service_status with service \\\"Artifact Accession\\\", ready yes\\nto empty_body with key as text, state as text giving response_body:\\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\\nto handle_request with request as web_request, body as request_input giving controlled_response:\\n    let headers be a map from text to text\\n    let credential be (maybe item \\\"authorization\\\" of request's headers) otherwise \\\"\\\"\\n    if credential is not \\\"Bearer accession-045\\\":\\n        set item \\\"www-authenticate\\\" of headers to \\\"Bearer realm=artifact-accession\\\"\\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \\\"authorization_required\\\")\\n    if body's stable_units is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \\\"invalid\\\")\\n    if body's fragile_units is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \\\"invalid\\\")\\n    if body's packing_stations is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \\\"invalid\\\")\\n    if body's packing_stations is 0:\\n        if body's stable_units plus body's fragile_units is more than 0:\\n            set item \\\"x-validation\\\" of headers to \\\"packing_stations\\\"\\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \\\"invalid\\\")\\n    let total be body's stable_units plus body's fragile_units\\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\\n    if body's expedited:\\n        set packing to packing plus body's packing_stations times 4\\n    let capacity be body's packing_stations times 40\\n    let overflow be packing minus capacity\\n    if overflow is less than 0:\\n        set overflow to 0\\n    let rounds be number from (total divided by 5)\\n    let state be \\\"accepted\\\"\\n    if overflow is more than 0:\\n        set state to \\\"queued\\\"\\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\\n    give back a controlled_response with status 200, headers headers, body result\\n===== parley.web.json [editable] =====\\n{\\n  \\\"schema_version\\\": 1,\\n  \\\"name\\\": \\\"artifact_accession_build\\\",\\n  \\\"entrypoint\\\": \\\"main.par\\\",\\n  \\\"static_dir\\\": \\\"public\\\",\\n  \\\"routes\\\": [\\n    {\\n      \\\"method\\\": \\\"GET\\\",\\n      \\\"path\\\": \\\"/status/artifact-accession-ready\\\",\\n      \\\"handler\\\": \\\"project_status\\\"\\n    },\\n    {\\n      \\\"method\\\": \\\"POST\\\",\\n      \\\"path\\\": \\\"/api/v9/artifact-accessions\\\",\\n      \\\"handler\\\": \\\"handle_request\\\",\\n      \\\"response\\\": {\\n        \\\"status_field\\\": \\\"status\\\",\\n        \\\"headers_field\\\": \\\"headers\\\",\\n        \\\"body_field\\\": \\\"body\\\"\\n      }\\n    }\\n  ],\\n  \\\"browser\\\": {\\n    \\\"entrypoint\\\": \\\"main.par\\\",\\n    \\\"exports\\\": [\\n      {\\n        \\\"name\\\": \\\"artifact_priority_score\\\"\\n      }\\n    ]\\n  },\\n  \\\"server\\\": {\\n    \\\"host\\\": \\\"127.0.0.1\\\",\\n    \\\"port\\\": 8787,\\n    \\\"max_body_bytes\\\": 16384\\n  }\\n}\\n===== public/index.html [read-only] =====\\n<!doctype html>\\n<meta charset=\\\"utf-8\\\">\\n<title>Full-stack agent study 045</title>\\n<main>Full-stack agent study 045 browser target</main>\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_2\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/logic.par\",\"kind\":\"update\"},{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/main.par\",\"kind\":\"update\"}],\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_2\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/logic.par\",\"kind\":\"update\"},{\"path\":\"/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou/main.par\",\"kind\":\"update\"}],\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_3\",\"type\":\"agent_message\",\"text\":\"The implementation now shares the priority calculation with the browser export and returns the required success status and headers. I\u2019m running the public check.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_4\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_4\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"public HTTP and Chromium checks passed for artifact_accession_build\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_5\",\"type\":\"agent_message\",\"text\":\"Complete public full-stack check passed.\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":61879,\"cached_input_tokens\":52224,\"cache_write_input_tokens\":0,\"output_tokens\":830,\"reasoning_output_tokens\":155}}\n",
+    "codex_stderr": "Reading additional input from stdin...\n2026-08-13T06:00:15.449861Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.488309Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.491030Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.492933Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.495075Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.496916Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.499759Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.501708Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.504383Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.506394Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.508263Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.510070Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.512378Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.514231Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.516352Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.518169Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.520187Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.522127Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.524276Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.526061Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.527908Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.530269Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.532042Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.534105Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.536329Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.538049Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.540638Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.542467Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.544872Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.546818Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.550169Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.552640Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.555414Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.558088Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.561639Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.564403Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.568080Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.570443Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.573375Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.575736Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.579039Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.582194Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.584410Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.586528Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.588463Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.590858Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.593654Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.596023Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.597864Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.599784Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.601903Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.603881Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.606171Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.608459Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.610215Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.612541Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.614893Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:15.616849Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T06:00:44.204617Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/arjun/.codex/shell_snapshots/019ff9b4-fb50-7911-8a89-b24944a2478f.1786600815440871000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\n",
+    "workdir": "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-terra-medium-r2-m7a0ghou",
+    "journal_attempt": 1,
+    "agent_session_started": true
+  }
+}

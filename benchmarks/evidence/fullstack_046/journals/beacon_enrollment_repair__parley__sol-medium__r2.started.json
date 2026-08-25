@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:40:40.381535Z",
+  "cell": {
+    "cell_id": "beacon_enrollment_repair__parley__sol-medium__r2",
+    "plan_index": 74,
+    "task_id": "beacon_enrollment_repair",
+    "task_kind": "maintenance",
+    "language": "parley",
+    "configuration_id": "sol-medium",
+    "replicate": 2
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T06:01:40.247994Z",
+  "cell": {
+    "cell_id": "artifact_accession_build__parley__sol-medium__r3",
+    "plan_index": 34,
+    "task_id": "artifact_accession_build",
+    "task_kind": "implementation",
+    "language": "parley",
+    "configuration_id": "sol-medium",
+    "replicate": 3
+  }
+}

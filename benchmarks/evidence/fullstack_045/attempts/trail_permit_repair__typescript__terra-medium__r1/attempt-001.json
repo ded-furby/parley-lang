@@ -1,0 +1,151 @@
+{
+  "attempt": 1,
+  "request_id": "e4b29ed78403c59f2267f8389df31271",
+  "elapsed_seconds": 1.2362,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0642,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-typescript/node_modules/.bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--outDir",
+          "/private/tmp/parley-fullstack-045-measured-work/045-trail_permit_repair-typescript-terra-medium-r1-beua90b7/.benchmark_build/dist"
+        ],
+        "protected_read_only_files": 12,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "trail_permit_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:06:51 GMT",
+        "content-type": "application/json",
+        "content-length": "39"
+      },
+      "body": "{\"service\":\"Trail Permit\",\"ready\":true}",
+      "json": {
+        "service": "Trail Permit",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_primary",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:06:51 GMT",
+        "content-type": "application/json",
+        "x-permit-state": "issued",
+        "content-length": "167"
+      },
+      "body": "{\"permit_code\":\"ridge-12\",\"visitor_total\":6,\"trail_units\":56,\"guide_capacity_units\":76,\"admitted_units\":56,\"waiting_units\":0,\"permit_score\":56,\"permit_state\":\"issued\"}",
+      "json": {
+        "permit_code": "ridge-12",
+        "visitor_total": 6,
+        "trail_units": 56,
+        "guide_capacity_units": 76,
+        "admitted_units": 56,
+        "waiting_units": 0,
+        "permit_score": 56,
+        "permit_state": "issued"
+      },
+      "application_headers": {
+        "x-permit-state": "issued"
+      },
+      "application_header_pairs": [
+        [
+          "x-permit-state",
+          "issued"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_missing_guides",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:06:51 GMT",
+        "content-type": "application/json",
+        "content-length": "236"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"[\\n  {\\n    \\\"expected\\\": \\\"number\\\",\\n    \\\"code\\\": \\\"invalid_type\\\",\\n    \\\"path\\\": [\\n      \\\"trail_guides\\\"\\n    ],\\n    \\\"message\\\": \\\"Invalid input: expected number, received undefined\\\"\\n  }\\n]\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "[\n  {\n    \"expected\": \"number\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"trail_guides\"\n    ],\n    \"message\": \"Invalid input: expected number, received undefined\"\n  }\n]"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 56,
+      "error": "",
+      "elapsed_seconds": 0.3209,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 56,
+    "error": "",
+    "elapsed_seconds": 0.2885,
+    "expected": 56,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/logic.ts": {
+        "exists": true,
+        "text": "export type RequestInput={permit_code:string;day_hikers:number;overnight_hikers:number;trail_guides:number;storm_alert:boolean};export const score=(d:number,o:number,g:number,s:boolean)=>{const r=d*5+o*12+(s?g*6:0),c=g*38;return Math.min(r,c)+Math.max(r-c,0)*6};export const calculate=(v:RequestInput)=>{const t=v.day_hikers+v.overnight_hikers,r=v.day_hikers*5+v.overnight_hikers*12+(v.storm_alert?v.trail_guides*6:0),c=v.trail_guides*38,w=Math.max(r-c,0);return {permit_code:v.permit_code,visitor_total:t,trail_units:r,guide_capacity_units:c,admitted_units:Math.min(r,c),waiting_units:w,permit_score:score(v.day_hikers,v.overnight_hikers,v.trail_guides,v.storm_alert),permit_state:w===0?'issued':v.storm_alert?'storm_queue':'routine_queue'}};export async function loadParley(){return {trail_permit_score:(a0:number,a1:number,a2:number,a3:boolean)=>score(a0,a1,a2,a3)}}\n",
+        "sha256": "d959240015ee74b95bca7230879b4825edce0435c0843a4455cf6a8c3137299b",
+        "bytes": 870,
+        "lines": 1,
+        "rough_tokens": 293,
+        "o200k_base_tokens": 268
+      },
+      "src/server.ts": {
+        "exists": true,
+        "text": "import {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({permit_code:z.string(),day_hikers:z.number().int(),overnight_hikers:z.number().int(),trail_guides:z.number().int(),storm_alert:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({permit_code:v.permit_code,visitor_total:0,trail_units:0,guide_capacity_units:0,admitted_units:0,waiting_units:0,permit_score:0,permit_state:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('authorization')??'')!==\"Bearer trail-045\")return response(zero(v,'authorization_required'),401,{\"www-authenticate\":\"Bearer realm=trail-permit\"});if([v.day_hikers,v.overnight_hikers,v.trail_guides].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.trail_guides===0&&v.day_hikers+v.overnight_hikers>0)return response(zero(v,'invalid'),422,{'x-validation':'trail_guides'});const body=calculate(v);return response(body,200,{'x-permit-state':String(body.permit_state)});};\nconst app=new Hono();app.get('/status/trail-permit-ready',()=>response({service:'Trail Permit',ready:true}));app.post('/api/v9/trail-permits',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_045_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n",
+        "sha256": "760a078174fade7a0fc5e668d56493e92c3599869c7a9f50556541dab6f8d359",
+        "bytes": 3147,
+        "lines": 4,
+        "rough_tokens": 1046,
+        "o200k_base_tokens": 817
+      }
+    },
+    "totals": {
+      "bytes": 4017,
+      "lines": 5,
+      "rough_tokens": 1339,
+      "o200k_base_tokens": 1085
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for trail_permit_repair\n",
+  "stderr": ""
+}

@@ -1,0 +1,172 @@
+{
+  "attempt": 1,
+  "request_id": "d18c464183e6be4dd5987922e3062928",
+  "elapsed_seconds": 1.5023,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0593,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "trail_permit_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:01:10 GMT",
+        "content-type": "application/json",
+        "content-length": "39"
+      },
+      "body": "{\"service\":\"Trail Permit\",\"ready\":true}",
+      "json": {
+        "service": "Trail Permit",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_primary",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:01:10 GMT",
+        "x-permit-state": "issued",
+        "content-type": "application/json",
+        "content-length": "167"
+      },
+      "body": "{\"permit_code\":\"ridge-12\",\"visitor_total\":6,\"trail_units\":56,\"guide_capacity_units\":76,\"admitted_units\":56,\"waiting_units\":0,\"permit_score\":56,\"permit_state\":\"issued\"}",
+      "json": {
+        "permit_code": "ridge-12",
+        "visitor_total": 6,
+        "trail_units": 56,
+        "guide_capacity_units": 76,
+        "admitted_units": 56,
+        "waiting_units": 0,
+        "permit_score": 56,
+        "permit_state": "issued"
+      },
+      "application_headers": {
+        "x-permit-state": "issued"
+      },
+      "application_header_pairs": [
+        [
+          "x-permit-state",
+          "issued"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_missing_guides",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:01:10 GMT",
+        "content-type": "application/json",
+        "content-length": "279"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"1 validation error for RequestInput\\ntrail_guides\\n  Field required [type=missing, input_value={'permit_code': 'ridge-12... 2, 'storm_alert': True}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "1 validation error for RequestInput\ntrail_guides\n  Field required [type=missing, input_value={'permit_code': 'ridge-12... 2, 'storm_alert': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "trail_permit_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 56,
+      "error": "",
+      "elapsed_seconds": 0.2698,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 56,
+    "error": "",
+    "elapsed_seconds": 0.2713,
+    "expected": 56,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'permit_code':v.permit_code,'visitor_total':0,'trail_units':0,'guide_capacity_units':0,'admitted_units':0,'waiting_units':0,'permit_score':0,'permit_state':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if request.headers.get('authorization','') != 'Bearer trail-045': return outcome(zero(v,'authorization_required'),401,{'www-authenticate': 'Bearer realm=trail-permit'})\n    if any(item < 0 for item in (v.day_hikers,v.overnight_hikers,v.trail_guides,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.trail_guides==0 and v.day_hikers+v.overnight_hikers>0: return outcome(zero(v,'invalid'),422,{'x-validation':'trail_guides'})\n    body=calculate(v); return outcome(body,200,{'x-permit-state':str(body['permit_state'])})\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/trail-permit-ready')\nasync def status(): return {'service':'Trail Permit','ready':True}\n@app.post('/api/v9/trail-permits')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "f0af5ad2a29ee0e22867e85166ae36dc5c177fae15411b2d205afba043885d79",
+        "bytes": 3204,
+        "lines": 42,
+        "rough_tokens": 885,
+        "o200k_base_tokens": 787
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(d,o,g,s)=>{const r=d*5+o*12+(s?g*6:0),c=g*38;return Math.min(r,c)+Math.max(r-c,0)*6};\nexport async function loadParley(){return {trail_permit_score:(...args)=>score(...args)}}\n",
+        "sha256": "2fa455e870b4ef06982446e6cc40e9adfc12237bc831cb06f15f50141bb0a666",
+        "bytes": 189,
+        "lines": 2,
+        "rough_tokens": 94,
+        "o200k_base_tokens": 69
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); permit_code:str; day_hikers:int; overnight_hikers:int; trail_guides:int; storm_alert:bool\ndef score(day_hikers:int,overnight_hikers:int,trail_guides:int,storm_alert:bool)->int:\n    required=day_hikers*5+overnight_hikers*12+(trail_guides*6 if storm_alert else 0); capacity=trail_guides*38\n    return min(required,capacity)+max(required-capacity,0)*6\ndef calculate(v:RequestInput)->dict[str,object]:\n    total=v.day_hikers+v.overnight_hikers; required=v.day_hikers*5+v.overnight_hikers*12+(v.trail_guides*6 if v.storm_alert else 0); capacity=v.trail_guides*38; waiting=max(required-capacity,0)\n    return {'permit_code':v.permit_code,'visitor_total':total,'trail_units':required,'guide_capacity_units':capacity,'admitted_units':min(required,capacity),'waiting_units':waiting,'permit_score':score(v.day_hikers,v.overnight_hikers,v.trail_guides,v.storm_alert),'permit_state':'issued' if waiting==0 else 'storm_queue' if v.storm_alert else 'routine_queue'}\n",
+        "sha256": "d27f8f99412aee74c90ce9cf4732a9310e49b02da02a44248dd03f19e45afc23",
+        "bytes": 1082,
+        "lines": 9,
+        "rough_tokens": 264,
+        "o200k_base_tokens": 297
+      }
+    },
+    "totals": {
+      "bytes": 4475,
+      "lines": 53,
+      "rough_tokens": 1243,
+      "o200k_base_tokens": 1153
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for trail_permit_repair\n",
+  "stderr": ""
+}

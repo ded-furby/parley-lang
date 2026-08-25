@@ -1,0 +1,177 @@
+{
+  "attempt": 1,
+  "request_id": "32f0a5e5beeb20e839aec52d81ad4d79",
+  "elapsed_seconds": 2.244,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.9987,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-046-measured-work/046-beacon_enrollment_repair-parley-terra-medium-r3-6kwqjph4",
+          "-o",
+          "/private/tmp/parley-fullstack-046-measured-work/046-beacon_enrollment_repair-parley-terra-medium-r3-6kwqjph4/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "beacon_enrollment_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:44:30 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "44"
+      },
+      "body": "{\"service\":\"Beacon Enrollment\",\"ready\":true}",
+      "json": {
+        "service": "Beacon Enrollment",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:44:30 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled",
+        "x-content-type-options": "nosniff",
+        "content-length": "213"
+      },
+      "body": "{\"enrollment_ref\":\"ridge-6\",\"transponder_tally\":5,\"tuning_effort\":73,\"frame_allowance\":100,\"commissioned_effort\":73,\"uncommissioned_effort\":0,\"tuning_rounds\":1,\"enrollment_rating\":78,\"enrollment_phase\":\"enrolled\"}",
+      "json": {
+        "enrollment_ref": "ridge-6",
+        "transponder_tally": 5,
+        "tuning_effort": 73,
+        "frame_allowance": 100,
+        "commissioned_effort": 73,
+        "uncommissioned_effort": 0,
+        "tuning_rounds": 1,
+        "enrollment_rating": 78,
+        "enrollment_phase": "enrolled"
+      },
+      "application_headers": {
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/beacon-enrollments/ridge-6"
+        ],
+        [
+          "retry-after",
+          "4"
+        ],
+        [
+          "x-enrollment-phase",
+          "enrolled"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_wrong_frame_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:44:30 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "56"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"expected JSON number\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "expected JSON number"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.2939,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.2852,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to beacon_enrollment_rating with analog_transponders as number, digital_transponders as number, calibration_frames as number, whiteout_warning as yesno giving number:\n    let effort be analog_transponders times 9 plus digital_transponders times 16\n    if whiteout_warning:\n        set effort to effort plus calibration_frames times 7\n    let allowance be calibration_frames times 50\n    let commissioned be effort\n    if commissioned is more than allowance:\n        set commissioned to allowance\n    let remainder be effort minus allowance\n    if remainder is less than 0:\n        set remainder to 0\n    let rounds be number from ((analog_transponders plus digital_transponders plus 5) divided by 6)\n    give back commissioned plus remainder times 8 plus rounds times 5\n",
+        "sha256": "12d62c776db368789ed7b9eae9f1f83087a11d1dc51c47c9ead1a6c39cb86887",
+        "bytes": 770,
+        "lines": 13,
+        "rough_tokens": 108,
+        "o200k_base_tokens": 166
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has enrollment_ref as text, analog_transponders as number, digital_transponders as number, calibration_frames as number, whiteout_warning as yesno\na response_body has enrollment_ref as text, transponder_tally as number, tuning_effort as number, frame_allowance as number, commissioned_effort as number, uncommissioned_effort as number, tuning_rounds as number, enrollment_rating as number, enrollment_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Beacon Enrollment\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with enrollment_ref key, transponder_tally 0, tuning_effort 0, frame_allowance 0, commissioned_effort 0, uncommissioned_effort 0, tuning_rounds 0, enrollment_rating 0, enrollment_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"x-rescue-pass\" of request's headers) otherwise \"\"\n    if credential is not \"beacon-046\":\n        set item \"x-access-denial\" of headers to \"rescue_pass\"\n        give back a controlled_response with status 403, headers headers, body (empty_body with body's enrollment_ref, \"authorization_required\")\n    if body's analog_transponders is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's enrollment_ref, \"invalid\")\n    if body's digital_transponders is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's enrollment_ref, \"invalid\")\n    if body's calibration_frames is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's enrollment_ref, \"invalid\")\n    if body's calibration_frames is 0:\n        if body's analog_transponders plus body's digital_transponders is more than 0:\n            set item \"x-validation\" of headers to \"calibration_frames\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's enrollment_ref, \"invalid\")\n    let total be body's analog_transponders plus body's digital_transponders\n    let effort be body's analog_transponders times 9 plus body's digital_transponders times 16\n    if body's whiteout_warning:\n        set effort to effort plus body's calibration_frames times 7\n    let allowance be body's calibration_frames times 50\n    let commissioned be effort\n    if commissioned is more than allowance:\n        set commissioned to allowance\n    let remainder be effort minus allowance\n    if remainder is less than 0:\n        set remainder to 0\n    let rounds be number from ((total plus 5) divided by 6)\n    let state be \"enrolled\"\n    if remainder is more than 0:\n        set state to \"routine_hold\"\n        if body's whiteout_warning:\n            set state to \"whiteout_hold\"\n    let result be a response_body with enrollment_ref body's enrollment_ref, transponder_tally total, tuning_effort effort, frame_allowance allowance, commissioned_effort commissioned, uncommissioned_effort remainder, tuning_rounds rounds, enrollment_rating (beacon_enrollment_rating with body's analog_transponders, body's digital_transponders, body's calibration_frames, body's whiteout_warning), enrollment_phase state\n    set item \"location\" of headers to \"/api/v10/beacon-enrollments/{body's enrollment_ref}\"\n    set item \"retry-after\" of headers to \"4\"\n    set item \"x-enrollment-phase\" of headers to \"{state}\"\n    give back a controlled_response with status 202, headers headers, body result\n",
+        "sha256": "761213a74f33b787055abd8ef2180ec33afd6f9baccedc1f72a29df3e28f3775",
+        "bytes": 4120,
+        "lines": 51,
+        "rough_tokens": 681,
+        "o200k_base_tokens": 906
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\"schema_version\":1,\"name\":\"beacon_enrollment_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/beacon-enrollment-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/beacon-enrollments\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"beacon_enrollment_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+        "sha256": "36ec6a36fe7dfb9f2e90357ddb7763ec9a8f0a5f019779b42c00c017b8062a15",
+        "bytes": 511,
+        "lines": 1,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 132
+      }
+    },
+    "totals": {
+      "bytes": 5401,
+      "lines": 65,
+      "rough_tokens": 984,
+      "o200k_base_tokens": 1204
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for beacon_enrollment_repair\n",
+  "stderr": ""
+}

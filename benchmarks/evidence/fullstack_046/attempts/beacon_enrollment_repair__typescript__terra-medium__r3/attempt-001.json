@@ -1,0 +1,164 @@
+{
+  "attempt": 1,
+  "request_id": "f3d741b0e7843cda7e2234d5289b77ef",
+  "elapsed_seconds": 1.2954,
+  "ok": false,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0683,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-typescript/node_modules/.bin/tsc",
+          "-p",
+          "tsconfig.json",
+          "--outDir",
+          "/private/tmp/parley-fullstack-046-measured-work/046-beacon_enrollment_repair-typescript-terra-medium-r3-_9_q70c7/.benchmark_build/dist"
+        ],
+        "protected_read_only_files": 12,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "beacon_enrollment_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:41:27 GMT",
+        "content-type": "application/json",
+        "content-length": "44"
+      },
+      "body": "{\"service\":\"Beacon Enrollment\",\"ready\":true}",
+      "json": {
+        "service": "Beacon Enrollment",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:41:27 GMT",
+        "content-type": "application/json",
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled",
+        "content-length": "213"
+      },
+      "body": "{\"enrollment_ref\":\"ridge-6\",\"transponder_tally\":5,\"tuning_effort\":73,\"frame_allowance\":100,\"commissioned_effort\":73,\"uncommissioned_effort\":0,\"tuning_rounds\":1,\"enrollment_rating\":78,\"enrollment_phase\":\"enrolled\"}",
+      "json": {
+        "enrollment_ref": "ridge-6",
+        "transponder_tally": 5,
+        "tuning_effort": 73,
+        "frame_allowance": 100,
+        "commissioned_effort": 73,
+        "uncommissioned_effort": 0,
+        "tuning_rounds": 1,
+        "enrollment_rating": 78,
+        "enrollment_phase": "enrolled"
+      },
+      "application_headers": {
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/beacon-enrollments/ridge-6"
+        ],
+        [
+          "retry-after",
+          "4"
+        ],
+        [
+          "x-enrollment-phase",
+          "enrolled"
+        ]
+      ],
+      "pass": false
+    },
+    {
+      "id": "beacon_enrollment_wrong_frame_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:41:27 GMT",
+        "content-type": "application/json",
+        "content-length": "240"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"[\\n  {\\n    \\\"expected\\\": \\\"number\\\",\\n    \\\"code\\\": \\\"invalid_type\\\",\\n    \\\"path\\\": [\\n      \\\"calibration_frames\\\"\\n    ],\\n    \\\"message\\\": \\\"Invalid input: expected number, received boolean\\\"\\n  }\\n]\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "[\n  {\n    \"expected\": \"number\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"calibration_frames\"\n    ],\n    \"message\": \"Invalid input: expected number, received boolean\"\n  }\n]"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.3714,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.2881,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/logic.ts": {
+        "exists": true,
+        "text": "export type RequestInput={enrollment_ref:string;analog_transponders:number;digital_transponders:number;calibration_frames:number;whiteout_warning:boolean};export const score=(a:number,d:number,c:number,w:boolean)=>{const t=a+d,e=a*9+d*16+(w?c*7:0),x=c*50;return Math.min(e,x)+Math.max(e-x,0)*8+Math.ceil(t/6)*5};export const calculate=(v:RequestInput)=>{const t=v.analog_transponders+v.digital_transponders,e=v.analog_transponders*9+v.digital_transponders*16+(v.whiteout_warning?v.calibration_frames*7:0),a=v.calibration_frames*50,r=Math.max(e-a,0);return {enrollment_ref:v.enrollment_ref,transponder_tally:t,tuning_effort:e,frame_allowance:a,commissioned_effort:Math.min(e,a),uncommissioned_effort:r,tuning_rounds:Math.ceil(t/6),enrollment_rating:score(v.analog_transponders,v.digital_transponders,v.calibration_frames,v.whiteout_warning),enrollment_phase:r===0?'enrolled':v.whiteout_warning?'whiteout_hold':'routine_hold'}};export async function loadParley(){return {beacon_enrollment_rating:(a0:number,a1:number,a2:number,a3:boolean)=>score(a0,a1,a2,a3)}}\n",
+        "sha256": "e1c8c5b8ceef762fbae49d8e88d7e22772698ecdfcc50ae6926debf708178b46",
+        "bytes": 1059,
+        "lines": 1,
+        "rough_tokens": 321,
+        "o200k_base_tokens": 304
+      },
+      "src/server.ts": {
+        "exists": true,
+        "text": "import {serve} from '@hono/node-server';import {serveStatic} from '@hono/node-server/serve-static';import {Hono} from 'hono';import {z} from 'zod';import {calculate,type RequestInput} from './logic.js';\ndeclare const process:{env:Record<string,string|undefined>};const maxBodyBytes=16_384;const schema=z.object({enrollment_ref:z.string(),analog_transponders:z.number().int(),digital_transponders:z.number().int(),calibration_frames:z.number().int(),whiteout_warning:z.boolean()}).strict();\nconst response=(value:unknown,status=200,headers:Record<string,string>={})=>{if(Object.keys(headers).some(name=>['content-length','content-type','connection','transfer-encoding','x-content-type-options'].includes(name.toLowerCase())))return new Response(JSON.stringify({error:'invalid_response_headers',detail:'server-owned response header'}),{status:500,headers:{'content-type':'application/json'}});return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json',...headers}})};const error=(code:string,status:number,detail:string)=>response({error:code,detail},status);const zero=(v:RequestInput,state:string)=>({enrollment_ref:v.enrollment_ref,transponder_tally:0,tuning_effort:0,frame_allowance:0,commissioned_effort:0,uncommissioned_effort:0,tuning_rounds:0,enrollment_rating:0,enrollment_phase:state});const decide=(v:RequestInput,headers:Headers)=>{if((headers.get('x-rescue-pass')??'')!==\"beacon-046\")return response(zero(v,'authorization_required'),403,{\"x-access-denial\":\"rescue_pass\"});if([v.analog_transponders,v.digital_transponders,v.calibration_frames].some(item=>item<0))return response(zero(v,'invalid'),422,{'x-validation':'nonnegative'});if(v.calibration_frames===0&&v.analog_transponders+v.digital_transponders>0)return response(zero(v,'invalid'),422,{'x-validation':'calibration_frames'});const body=calculate(v);return response(body,201,{'location':`/api/v10/beacon-enrollments/${v.enrollment_ref}`,'retry-after':'4','x-enrollment-phase':String(body.enrollment_phase)});};\nconst app=new Hono();app.get('/status/beacon-enrollment-ready',()=>response({service:'Beacon Enrollment',ready:true}));app.post('/api/v10/beacon-enrollments',async context=>{const media=(context.req.header('content-type')??'').split(';',1)[0]!.trim().toLowerCase();if(media!=='application/json'&&!media.endsWith('+json'))return error('json_content_type_required',415,'expected application/json');const declared=context.req.header('content-length');if(declared&&(!/^\\d+$/.test(declared)||Number(declared)>maxBodyBytes))return error('body_too_large',413,'request body exceeds 16384 bytes');const raw=await context.req.arrayBuffer();if(raw.byteLength>maxBodyBytes)return error('body_too_large',413,'request body exceeds 16384 bytes');try{const parsed=schema.safeParse(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));if(!parsed.success)return error('invalid_json',400,parsed.error.message);return decide(parsed.data,context.req.raw.headers)}catch(caught){return error('invalid_json',400,String(caught))}});app.all('/api/*',context=>error('not_found',404,`no API route ${context.req.path}`));app.get('/parley.js',serveStatic({path:process.env.FULLSTACK_046_BROWSER??'./dist/logic.js'}));app.get('/*',serveStatic({root:'./public'}));serve({fetch:app.fetch,hostname:'127.0.0.1',port:Number(process.env.PARLEY_WEB_PORT)});\n",
+        "sha256": "c499808bc405fe66333029e03820761733e5b9536d9d9f1ccd0d9a9e66319be5",
+        "bytes": 3345,
+        "lines": 4,
+        "rough_tokens": 1080,
+        "o200k_base_tokens": 860
+      }
+    },
+    "totals": {
+      "bytes": 4404,
+      "lines": 5,
+      "rough_tokens": 1401,
+      "o200k_base_tokens": 1164
+    }
+  },
+  "stdout": "",
+  "stderr": "beacon_enrollment_primary failed: {\"application_header_pairs\": [[\"location\", \"/api/v10/beacon-enrollments/ridge-6\"], [\"retry-after\", \"4\"], [\"x-enrollment-phase\", \"enrolled\"]], \"application_headers\": {\"location\": \"/api/v10/beacon-enrollments/ridge-6\", \"retry-after\": \"4\", \"x-enrollment-phase\": \"enrolled\"}, \"body\": \"{\\\"enrollment_ref\\\":\\\"ridge-6\\\",\\\"transponder_tally\\\":5,\\\"tuning_effort\\\":73,\\\"frame_allowance\\\":100,\\\"commissioned_effort\\\":73,\\\"uncommissioned_effort\\\":0,\\\"tuning_rounds\\\":1,\\\"enrollment_rating\\\":78,\\\"enrollment_phase\\\":\\\"enrolled\\\"}\", \"content_type\": \"application/json\", \"headers\": {\"content-length\": \"213\", \"content-type\": \"application/json\", \"date\": \"Thu, 13 Aug 2026 07:41:27 GMT\", \"location\": \"/api/v10/beacon-enrollments/ridge-6\", \"retry-after\": \"4\", \"server\": \"BaseHTTP/0.6 Python/3.14.6\", \"x-enrollment-phase\": \"enrolled\"}, \"id\": \"beacon_enrollment_primary\", \"json\": {\"commissioned_effort\": 73, \"enrollment_phase\": \"enrolled\", \"enrollment_rating\": 78, \"enrollment_ref\": \"ridge-6\", \"frame_allowance\": 100, \"transponder_tally\": 5, \"tuning_effort\": 73, \"tuning_rounds\": 1, \"uncommissioned_effort\": 0}, \"pass\": false, \"status\": 201, \"target\": \"http\"}\n"
+}

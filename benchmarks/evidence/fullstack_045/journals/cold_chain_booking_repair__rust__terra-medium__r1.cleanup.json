@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "status": "removed",
+  "work_root": "/private/tmp/parley-fullstack-045-measured-work",
+  "workspace": "/private/tmp/parley-fullstack-045-measured-work/045-cold_chain_booking_repair-rust-terra-medium-r1-3zm4y3nn",
+  "finished_record": "/Users/arjun/Desktop/parley-lang-045-evidence/journals/cold_chain_booking_repair__rust__terra-medium__r1.finished.json",
+  "workspace_bytes": 161162059,
+  "cell_id": "cold_chain_booking_repair__rust__terra-medium__r1",
+  "recorded_at": "2026-08-13T06:14:51.096272Z"
+}

@@ -1,0 +1,170 @@
+{
+  "attempt": 1,
+  "request_id": "3b92eca8ae68716c90cd0baceca9ce6e",
+  "elapsed_seconds": 2.3482,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.936,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r1-1ruuvpm1",
+          "-o",
+          "/private/tmp/parley-fullstack-045-measured-work/045-artifact_accession_build-parley-sol-medium-r1-1ruuvpm1/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "artifact_accession_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:39 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "45"
+      },
+      "body": "{\"service\":\"Artifact Accession\",\"ready\":true}",
+      "json": {
+        "service": "Artifact Accession",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:39 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted",
+        "x-content-type-options": "nosniff",
+        "content-length": "179"
+      },
+      "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+      "json": {
+        "accession_key": "bronze-lyre",
+        "artifact_total": 5,
+        "packing_units": 48,
+        "capacity_units": 80,
+        "overflow_units": 0,
+        "inspection_rounds": 1,
+        "priority_score": 55,
+        "accession_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/artifact-accessions/bronze-lyre"
+        ],
+        [
+          "x-accession-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_wrong_fragile_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:39 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "56"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"expected JSON number\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "expected JSON number"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 55,
+      "error": "",
+      "elapsed_seconds": 0.2973,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 55,
+    "error": "",
+    "elapsed_seconds": 0.2678,
+    "expected": 55,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to artifact_priority_score with stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno giving number:\n    let artifact_total be stable_units plus fragile_units\n    let packing_units be stable_units times 6 plus fragile_units times 11\n    if expedited:\n        set packing_units to packing_units plus packing_stations times 4\n    let capacity_units be packing_stations times 40\n    let overflow_units be packing_units minus capacity_units\n    if overflow_units is less than 0:\n        set overflow_units to 0\n    let inspection_rounds be number from (artifact_total divided by 5)\n    give back packing_units plus overflow_units times 5 plus inspection_rounds times 7\n",
+        "sha256": "0d73d93a52c95c7759ce7b576670c2201f1b6554bf8f7da0772ab370a1305d27",
+        "bytes": 707,
+        "lines": 11,
+        "rough_tokens": 93,
+        "o200k_base_tokens": 151
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has accession_key as text, stable_units as number, fragile_units as number, packing_stations as number, expedited as yesno\na response_body has accession_key as text, artifact_total as number, packing_units as number, capacity_units as number, overflow_units as number, inspection_rounds as number, priority_score as number, accession_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Artifact Accession\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with accession_key key, artifact_total 0, packing_units 0, capacity_units 0, overflow_units 0, inspection_rounds 0, priority_score 0, accession_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"authorization\" of request's headers) otherwise \"\"\n    if credential is not \"Bearer accession-045\":\n        set item \"www-authenticate\" of headers to \"Bearer realm=artifact-accession\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's accession_key, \"authorization_required\")\n    if body's stable_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's fragile_units is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    if body's packing_stations is 0:\n        if body's stable_units plus body's fragile_units is more than 0:\n            set item \"x-validation\" of headers to \"packing_stations\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's accession_key, \"invalid\")\n    let total be body's stable_units plus body's fragile_units\n    let packing be body's stable_units times 6 plus body's fragile_units times 11\n    if body's expedited:\n        set packing to packing plus body's packing_stations times 4\n    let capacity be body's packing_stations times 40\n    let overflow be packing minus capacity\n    if overflow is less than 0:\n        set overflow to 0\n    let rounds be number from (total divided by 5)\n    let state be \"accepted\"\n    if overflow is more than 0:\n        set state to \"queued\"\n    let result be a response_body with accession_key body's accession_key, artifact_total total, packing_units packing, capacity_units capacity, overflow_units overflow, inspection_rounds rounds, priority_score (artifact_priority_score with body's stable_units, body's fragile_units, body's packing_stations, body's expedited), accession_state state\n    set item \"location\" of headers to \"/api/v9/artifact-accessions/\" plus body's accession_key\n    set item \"x-accession-state\" of headers to state\n    give back a controlled_response with status 201, headers headers, body result\n",
+        "sha256": "1624e5c45cba8595023c116ade0bd6dad127fb0fd446dbb9c636ad54fcce57a3",
+        "bytes": 3646,
+        "lines": 45,
+        "rough_tokens": 624,
+        "o200k_base_tokens": 785
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\n  \"schema_version\": 1,\n  \"name\": \"artifact_accession_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/artifact-accession-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/artifact-accessions\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"artifact_priority_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+        "sha256": "52e771326e37650070a1828d26352777a7290c8f2c391902ec3ea66b83019b83",
+        "bytes": 721,
+        "lines": 36,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 212
+      }
+    },
+    "totals": {
+      "bytes": 5074,
+      "lines": 92,
+      "rough_tokens": 912,
+      "o200k_base_tokens": 1148
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+  "stderr": ""
+}

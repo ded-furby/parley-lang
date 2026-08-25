@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:18:17.982056Z",
+  "cell": {
+    "cell_id": "orbital_clearance_build__rust__terra-medium__r2",
+    "plan_index": 7,
+    "task_id": "orbital_clearance_build",
+    "task_kind": "implementation",
+    "language": "rust",
+    "configuration_id": "terra-medium",
+    "replicate": 2
+  }
+}

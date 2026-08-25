@@ -1,0 +1,179 @@
+{
+  "attempt": 1,
+  "request_id": "99ffdd440adba280b2545b61add23179",
+  "elapsed_seconds": 1.5999,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0853,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "archive_transfer_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:32:59 GMT",
+        "content-type": "application/json",
+        "content-length": "43"
+      },
+      "body": "{\"service\":\"Archive Transfer\",\"ready\":true}",
+      "json": {
+        "service": "Archive Transfer",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:32:59 GMT",
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved",
+        "content-type": "application/json",
+        "content-length": "197"
+      },
+      "body": "{\"transfer_tag\":\"folio-8\",\"volume_tally\":6,\"relocation_effort\":64,\"cart_allowance\":86,\"shelved_effort\":64,\"quarantined_effort\":0,\"transfer_rounds\":2,\"transfer_rating\":78,\"transfer_phase\":\"shelved\"}",
+      "json": {
+        "transfer_tag": "folio-8",
+        "volume_tally": 6,
+        "relocation_effort": 64,
+        "cart_allowance": 86,
+        "shelved_effort": 64,
+        "quarantined_effort": 0,
+        "transfer_rounds": 2,
+        "transfer_rating": 78,
+        "transfer_phase": "shelved"
+      },
+      "application_headers": {
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/archive-transfers/folio-8"
+        ],
+        [
+          "x-transfer-phase",
+          "shelved"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_missing_carts",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:32:59 GMT",
+        "content-type": "application/json",
+        "content-length": "280"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"1 validation error for RequestInput\\ncatalog_carts\\n  Field required [type=missing, input_value={'transfer_tag': 'folio-8...humidity_warning': True}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "1 validation error for RequestInput\ncatalog_carts\n  Field required [type=missing, input_value={'transfer_tag': 'folio-8...humidity_warning': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.3432,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.3406,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'transfer_tag':v.transfer_tag,'volume_tally':0,'relocation_effort':0,'cart_allowance':0,'shelved_effort':0,'quarantined_effort':0,'transfer_rounds':0,'transfer_rating':0,'transfer_phase':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if any(item < 0 for item in (v.folio_boxes,v.atlas_tubes,v.catalog_carts,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.catalog_carts==0 and v.folio_boxes+v.atlas_tubes>0: return outcome(zero(v,'invalid'),422,{'x-validation':'catalog_carts'})\n    body=calculate(v); return outcome(body,201,{'location':f'/api/v10/archive-transfers/{v.transfer_tag}','x-transfer-phase':str(body['transfer_phase'])})\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/archive-transfer-ready')\nasync def status(): return {'service':'Archive Transfer','ready':True}\n@app.post('/api/v10/archive-transfers')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "e62d00ac3e1904a3b0d5d59d432e59ae2a96331772c830f068c26cfe77f8bf88",
+        "bytes": 3132,
+        "lines": 41,
+        "rough_tokens": 861,
+        "o200k_base_tokens": 767
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(f,a,c,h)=>{const t=f+a,e=f*6+a*17+(h?c*3:0),x=c*43;return Math.min(e,x)+Math.max(e-x,0)*6+Math.trunc((t+4)/5)*7};\nexport async function loadParley(){return {archive_transfer_rating:(...args)=>BigInt(score(...args))}}\n",
+        "sha256": "7bd676aabfe46337184afe33e276962b6180d269cc448d57afea7cfd63179c3f",
+        "bytes": 230,
+        "lines": 2,
+        "rough_tokens": 118,
+        "o200k_base_tokens": 84
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); transfer_tag:str; folio_boxes:int; atlas_tubes:int; catalog_carts:int; humidity_warning:bool\ndef score(folio_boxes:int,atlas_tubes:int,catalog_carts:int,humidity_warning:bool)->int:\n    total=folio_boxes+atlas_tubes; effort=folio_boxes*6+atlas_tubes*17+(catalog_carts*3 if humidity_warning else 0); allowance=catalog_carts*43\n    return min(effort,allowance)+max(effort-allowance,0)*6+((total+4)//5)*7\ndef calculate(v:RequestInput)->dict[str,object]:\n    total=v.folio_boxes+v.atlas_tubes; effort=v.folio_boxes*6+v.atlas_tubes*17+(v.catalog_carts*3 if v.humidity_warning else 0); allowance=v.catalog_carts*43; quarantine=max(effort-allowance,0)\n    return {'transfer_tag':v.transfer_tag,'volume_tally':total,'relocation_effort':effort,'cart_allowance':allowance,'shelved_effort':min(effort,allowance),'quarantined_effort':quarantine,'transfer_rounds':(total+4)//5,'transfer_rating':score(v.folio_boxes,v.atlas_tubes,v.catalog_carts,v.humidity_warning),'transfer_phase':'shelved' if quarantine==0 else 'humidity_hold' if v.humidity_warning else 'routine_hold'}\n",
+        "sha256": "ea6ea31826531f022a332654c015a556373ddf0d3341b3e5b11c5ccb18318cca",
+        "bytes": 1190,
+        "lines": 9,
+        "rough_tokens": 295,
+        "o200k_base_tokens": 341
+      }
+    },
+    "totals": {
+      "bytes": 4552,
+      "lines": 52,
+      "rough_tokens": 1274,
+      "o200k_base_tokens": 1192
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for archive_transfer_repair\n",
+  "stderr": ""
+}

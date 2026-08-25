@@ -1,0 +1,179 @@
+{
+  "attempt": 1,
+  "request_id": "3d0bb4dc53ca5b57eedc92fc89c365b7",
+  "elapsed_seconds": 1.8054,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0718,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "cold_chain_booking_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:57:26 GMT",
+        "content-type": "application/json",
+        "content-length": "45"
+      },
+      "body": "{\"service\":\"Cold-Chain Booking\",\"ready\":true}",
+      "json": {
+        "service": "Cold-Chain Booking",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:57:26 GMT",
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked",
+        "content-type": "application/json",
+        "content-length": "189"
+      },
+      "body": "{\"booking_code\":\"polar-8\",\"shipment_total\":5,\"cooling_units\":51,\"dock_capacity_units\":88,\"loaded_units\":51,\"deferred_units\":0,\"loading_rounds\":0,\"booking_score\":51,\"booking_state\":\"booked\"}",
+      "json": {
+        "booking_code": "polar-8",
+        "shipment_total": 5,
+        "cooling_units": 51,
+        "dock_capacity_units": 88,
+        "loaded_units": 51,
+        "deferred_units": 0,
+        "loading_rounds": 0,
+        "booking_score": 51,
+        "booking_state": "booked"
+      },
+      "application_headers": {
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/cold-chain-bookings/polar-8"
+        ],
+        [
+          "x-booking-state",
+          "booked"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_wrong_dock_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:57:26 GMT",
+        "content-type": "application/json",
+        "content-length": "252"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"1 validation error for RequestInput\\nloading_docks\\n  Input should be a valid integer [type=int_type, input_value=False, input_type=bool]\\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "1 validation error for RequestInput\nloading_docks\n  Input should be a valid integer [type=int_type, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 51,
+      "error": "",
+      "elapsed_seconds": 0.444,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 51,
+    "error": "",
+    "elapsed_seconds": 0.3463,
+    "expected": 51,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'booking_code':v.booking_code,'shipment_total':0,'cooling_units':0,'dock_capacity_units':0,'loaded_units':0,'deferred_units':0,'loading_rounds':0,'booking_score':0,'booking_state':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if any(item < 0 for item in (v.chilled_crates,v.frozen_crates,v.loading_docks,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.loading_docks==0 and v.chilled_crates+v.frozen_crates>0: return outcome(zero(v,'invalid'),422,{'x-validation':'loading_docks'})\n    body=calculate(v); return outcome(body,201,{'location':f'/api/v9/cold-chain-bookings/{v.booking_code}','x-booking-state':str(body['booking_state'])})\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/cold-chain-booking-ready')\nasync def status(): return {'service':'Cold-Chain Booking','ready':True}\n@app.post('/api/v9/cold-chain-bookings')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "d36051044daa42352633d926775061d1eb45cb50f4a3a51d2f07e2c1aacf36b0",
+        "bytes": 3139,
+        "lines": 41,
+        "rough_tokens": 869,
+        "o200k_base_tokens": 772
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(c,f,d,r)=>{const t=c+f,x=c*7+f*15+(r?d*5:0),k=d*44;return Math.min(x,k)+Math.max(x-k,0)*5+Math.trunc(t/6)*8};\nexport async function loadParley(){return {cold_chain_booking_score:(...args)=>score(...args)}}\n",
+        "sha256": "c1eb8a2b9833d75e52df0749699e441f8ff99e8ac3b372fc564b83f550d97e12",
+        "bytes": 219,
+        "lines": 2,
+        "rough_tokens": 111,
+        "o200k_base_tokens": 82
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); booking_code:str; chilled_crates:int; frozen_crates:int; loading_docks:int; rush_load:bool\ndef score(chilled_crates:int,frozen_crates:int,loading_docks:int,rush_load:bool)->int:\n    total=chilled_crates+frozen_crates; required=chilled_crates*7+frozen_crates*15+(loading_docks*5 if rush_load else 0); capacity=loading_docks*44\n    return min(required,capacity)+max(required-capacity,0)*5+(total//6)*8\ndef calculate(v:RequestInput)->dict[str,object]:\n    total=v.chilled_crates+v.frozen_crates; required=v.chilled_crates*7+v.frozen_crates*15+(v.loading_docks*5 if v.rush_load else 0); capacity=v.loading_docks*44; deferred=max(required-capacity,0)\n    return {'booking_code':v.booking_code,'shipment_total':total,'cooling_units':required,'dock_capacity_units':capacity,'loaded_units':min(required,capacity),'deferred_units':deferred,'loading_rounds':total//6,'booking_score':score(v.chilled_crates,v.frozen_crates,v.loading_docks,v.rush_load),'booking_state':'booked' if deferred==0 else 'rush_queue' if v.rush_load else 'routine_queue'}\n",
+        "sha256": "fc6ea36f17660504dceaafc721f02ee7dd6fdb33bd1c9c3bca64f3c87b199dc8",
+        "bytes": 1166,
+        "lines": 9,
+        "rough_tokens": 287,
+        "o200k_base_tokens": 323
+      }
+    },
+    "totals": {
+      "bytes": 4524,
+      "lines": 52,
+      "rough_tokens": 1267,
+      "o200k_base_tokens": 1177
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for cold_chain_booking_repair\n",
+  "stderr": ""
+}

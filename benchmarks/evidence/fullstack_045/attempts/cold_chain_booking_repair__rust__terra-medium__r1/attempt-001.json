@@ -1,0 +1,175 @@
+{
+  "attempt": 1,
+  "request_id": "9ccc2241d1430983b27e591fad228b13",
+  "elapsed_seconds": 12.3821,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 10.9381,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "cold_chain_booking_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:14:29 GMT",
+        "content-type": "application/json",
+        "content-length": "45"
+      },
+      "body": "{\"ready\":true,\"service\":\"Cold-Chain Booking\"}",
+      "json": {
+        "ready": true,
+        "service": "Cold-Chain Booking"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:14:29 GMT",
+        "content-type": "application/json",
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked",
+        "content-length": "189"
+      },
+      "body": "{\"booking_code\":\"polar-8\",\"shipment_total\":5,\"cooling_units\":51,\"dock_capacity_units\":88,\"loaded_units\":51,\"deferred_units\":0,\"loading_rounds\":0,\"booking_score\":51,\"booking_state\":\"booked\"}",
+      "json": {
+        "booking_code": "polar-8",
+        "shipment_total": 5,
+        "cooling_units": 51,
+        "dock_capacity_units": 88,
+        "loaded_units": 51,
+        "deferred_units": 0,
+        "loading_rounds": 0,
+        "booking_score": 51,
+        "booking_state": "booked"
+      },
+      "application_headers": {
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/cold-chain-bookings/polar-8"
+        ],
+        [
+          "x-booking-state",
+          "booked"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_wrong_dock_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:14:29 GMT",
+        "content-type": "application/json",
+        "content-length": "99"
+      },
+      "body": "{\"detail\":\"invalid type: boolean `false`, expected i64 at line 1 column 84\",\"error\":\"invalid_json\"}",
+      "json": {
+        "detail": "invalid type: boolean `false`, expected i64 at line 1 column 84",
+        "error": "invalid_json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 51,
+      "error": "",
+      "elapsed_seconds": 0.2936,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 51,
+    "error": "",
+    "elapsed_seconds": 0.2801,
+    "expected": 51,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/lib.rs": {
+        "exists": true,
+        "text": "use serde::{Deserialize,Serialize};#[derive(Deserialize)]#[serde(deny_unknown_fields)]pub struct RequestInput{pub booking_code:String,pub chilled_crates:i64,pub frozen_crates:i64,pub loading_docks:i64,pub rush_load:bool}#[derive(Serialize)]pub struct ResponseOutput{pub booking_code:String,pub shipment_total:i64,pub cooling_units:i64,pub dock_capacity_units:i64,pub loaded_units:i64,pub deferred_units:i64,pub loading_rounds:i64,pub booking_score:i64,pub booking_state:String}pub fn score(a:i64,b:i64,d:i64,r:bool)->i64{let t=a+b;let x=a*7+b*15+if r{d*5}else{0};let c=d*44;x.min(c)+(x-c).max(0)*5+(t/6)*8}pub fn calculate(v:&RequestInput)->ResponseOutput{let t=v.chilled_crates+v.frozen_crates;let x=v.chilled_crates*7+v.frozen_crates*15+if v.rush_load{v.loading_docks*5}else{0};let c=v.loading_docks*44;let d=(x-c).max(0);ResponseOutput{booking_code:v.booking_code.clone(),shipment_total:t,cooling_units:x,dock_capacity_units:c,loaded_units:x.min(c),deferred_units:d,loading_rounds:t/6,booking_score:score(v.chilled_crates,v.frozen_crates,v.loading_docks,v.rush_load),booking_state:if d==0{\"booked\"}else if v.rush_load{\"rush_queue\"}else{\"routine_queue\"}.into()}}#[unsafe(no_mangle)]pub extern \"C\" fn parley_browser_score(a0:i64,a1:i64,a2:i64,a3:i32)->i64{score(a0,a1,a2,a3!=0)}\n",
+        "sha256": "162409432c3051a94c979a2e510aaf51d5c3feb2099b11ecf67c4891c32d9755",
+        "bytes": 1280,
+        "lines": 1,
+        "rough_tokens": 421,
+        "o200k_base_tokens": 407
+      },
+      "src/main.rs": {
+        "exists": true,
+        "text": "use std::env;\n\nuse axum::{\n    body::{to_bytes, Body},\n    extract::Request,\n    http::{header, HeaderMap, StatusCode},\n    response::{IntoResponse, Response},\n    routing::{any, get, post},\n    Router,\n};\nuse fullstack_agent_045::{calculate, RequestInput};\nuse serde::Serialize;\nuse serde_json::json;\nuse tower_http::services::{ServeDir, ServeFile};\n\nconst MAX_BODY_BYTES: usize = 16_384;\nconst BROWSER_MODULE: &str = r#\"const asI64=(v,n)=>{if(typeof v==='bigint')return v;if(!Number.isSafeInteger(v))throw new TypeError(`${n} must be a safe whole number`);return BigInt(v)};export async function loadParley(){const r=await fetch(new URL('/fullstack_agent_045.wasm',import.meta.url));const m=(await WebAssembly.instantiateStreaming(r)).instance.exports;return {cold_chain_booking_score:(a0,a1,a2,a3)=>m.parley_browser_score(asI64(a0,'a0'),asI64(a1,'a1'),asI64(a2,'a2'),a3?1:0)}}\"#;\n\nfn json_response(value: impl Serialize, status: u16, headers: &[(&str, &str)]) -> Response {\n    if headers.iter().any(|(name, _)| {\n        matches!(name.to_ascii_lowercase().as_str(), \"content-length\" | \"content-type\" | \"connection\" | \"transfer-encoding\" | \"x-content-type-options\")\n    }) {\n        return error(\"invalid_response_headers\", 500, \"server-owned response header\");\n    }\n    let mut response = (StatusCode::from_u16(status).unwrap(), serde_json::to_vec(&value).unwrap()).into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"application/json\"));\n    for (name, value) in headers {\n        response.headers_mut().insert(\n            header::HeaderName::from_bytes(name.as_bytes()).unwrap(),\n            header::HeaderValue::from_str(value).unwrap(),\n        );\n    }\n    response\n}\n\nfn error(code: &str, status: u16, detail: &str) -> Response {\n    let mut response = (StatusCode::from_u16(status).unwrap(), serde_json::to_vec(&json!({\"error\": code, \"detail\": detail})).unwrap()).into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"application/json\"));\n    response\n}\n\nfn zero(value: &RequestInput, state: &str) -> serde_json::Value {\n    json!({\"booking_code\": value.booking_code, \"shipment_total\": 0, \"cooling_units\": 0, \"dock_capacity_units\": 0, \"loaded_units\": 0, \"deferred_units\": 0, \"loading_rounds\": 0, \"booking_score\": 0, \"booking_state\": state})\n}\n\nfn decide(value: RequestInput, _headers: &HeaderMap) -> Response {\n    if [value.chilled_crates, value.frozen_crates, value.loading_docks].iter().any(|number| *number < 0) {\n        return json_response(zero(&value, \"invalid\"), 422, &[(\"x-validation\", \"nonnegative\")]);\n    }\n    if value.loading_docks == 0 && value.chilled_crates + value.frozen_crates > 0 {\n        return json_response(zero(&value, \"invalid\"), 422, &[(\"x-validation\", \"loading_docks\")]);\n    }\n    let body = calculate(&value);\n    let owned = vec![\n        (\"location\", format!(\"/api/v9/cold-chain-bookings/{}\", value.booking_code)),\n        (\"x-booking-state\", body.booking_state.clone()),\n    ];\n    let refs: Vec<(&str, &str)> = owned.iter().map(|(name, value)| (*name, value.as_str())).collect();\n    json_response(body, 201, &refs)\n}\n\nasync fn status() -> Response {\n    json_response(json!({\"service\": \"Cold-Chain Booking\", \"ready\": true}), 200, &[])\n}\n\nasync fn endpoint(request: Request) -> Response {\n    let headers = request.headers().clone();\n    let media = headers.get(header::CONTENT_TYPE).and_then(|value| value.to_str().ok()).unwrap_or(\"\").split(';').next().unwrap_or(\"\").trim().to_ascii_lowercase();\n    if media != \"application/json\" && !media.ends_with(\"+json\") {\n        return error(\"json_content_type_required\", 415, \"expected application/json\");\n    }\n    if let Some(length) = headers.get(header::CONTENT_LENGTH) {\n        let declared = length.to_str().ok().and_then(|value| value.parse::<usize>().ok());\n        if declared.is_none_or(|value| value > MAX_BODY_BYTES) {\n            return error(\"body_too_large\", 413, \"request body exceeds 16384 bytes\");\n        }\n    }\n    let body = match to_bytes(request.into_body(), MAX_BODY_BYTES).await {\n        Ok(body) => body,\n        Err(_) => return error(\"body_too_large\", 413, \"request body exceeds 16384 bytes\"),\n    };\n    match serde_json::from_slice::<RequestInput>(&body) {\n        Ok(value) => decide(value, &headers),\n        Err(reason) => error(\"invalid_json\", 400, &reason.to_string()),\n    }\n}\n\nasync fn missing(request: Request<Body>) -> Response {\n    error(\"not_found\", 404, &format!(\"no API route {}\", request.uri().path()))\n}\n\nasync fn browser() -> Response {\n    let mut response = BROWSER_MODULE.into_response();\n    response.headers_mut().insert(header::CONTENT_TYPE, header::HeaderValue::from_static(\"text/javascript; charset=utf-8\"));\n    response\n}\n\n#[tokio::main]\nasync fn main() {\n    let wasm = env::var_os(\"FULLSTACK_045_WASM\").map(std::path::PathBuf::from).unwrap();\n    let app = Router::new()\n        .route(\"/status/cold-chain-booking-ready\", get(status))\n        .route(\"/api/v9/cold-chain-bookings\", post(endpoint))\n        .route(\"/api/{*rest}\", any(missing))\n        .route(\"/parley.js\", get(browser))\n        .route_service(\"/fullstack_agent_045.wasm\", ServeFile::new(wasm))\n        .fallback_service(ServeDir::new(\"public\").append_index_html_on_directories(true));\n    let port = env::var(\"PARLEY_WEB_PORT\").unwrap().parse::<u16>().unwrap();\n    let listener = tokio::net::TcpListener::bind((\"127.0.0.1\", port)).await.unwrap();\n    axum::serve(listener, app).await.unwrap();\n}\n",
+        "sha256": "a26de8009a54091e4e6a47c1d6102c67a73f38ee97a26c6c30e6c595c8dd94e6",
+        "bytes": 5524,
+        "lines": 111,
+        "rough_tokens": 1636,
+        "o200k_base_tokens": 1444
+      }
+    },
+    "totals": {
+      "bytes": 6804,
+      "lines": 112,
+      "rough_tokens": 2057,
+      "o200k_base_tokens": 1851
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for cold_chain_booking_repair\n",
+  "stderr": ""
+}

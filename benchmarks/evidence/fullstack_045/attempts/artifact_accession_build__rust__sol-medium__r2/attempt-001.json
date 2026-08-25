@@ -1,0 +1,174 @@
+{
+  "attempt": 1,
+  "request_id": "d177d0bc79efda561cb76999b9052ee6",
+  "elapsed_seconds": 16.668,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 14.9059,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "artifact_accession_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:04:32 GMT",
+        "content-type": "application/json",
+        "content-length": "45"
+      },
+      "body": "{\"ready\":true,\"service\":\"Artifact Accession\"}",
+      "json": {
+        "ready": true,
+        "service": "Artifact Accession"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:04:32 GMT",
+        "content-type": "application/json",
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted",
+        "content-length": "179"
+      },
+      "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+      "json": {
+        "accession_key": "bronze-lyre",
+        "artifact_total": 5,
+        "packing_units": 48,
+        "capacity_units": 80,
+        "overflow_units": 0,
+        "inspection_rounds": 1,
+        "priority_score": 55,
+        "accession_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/artifact-accessions/bronze-lyre"
+        ],
+        [
+          "x-accession-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_wrong_fragile_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:04:32 GMT",
+        "content-type": "application/json",
+        "content-length": "98"
+      },
+      "body": "{\"detail\":\"invalid type: boolean `true`, expected i64 at line 1 column 68\",\"error\":\"invalid_json\"}",
+      "json": {
+        "detail": "invalid type: boolean `true`, expected i64 at line 1 column 68",
+        "error": "invalid_json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 55,
+      "error": "",
+      "elapsed_seconds": 0.523,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 55,
+    "error": "",
+    "elapsed_seconds": 0.3758,
+    "expected": 55,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/lib.rs": {
+        "exists": true,
+        "text": "use serde::{Deserialize,Serialize};#[derive(Deserialize)]#[serde(deny_unknown_fields)]pub struct RequestInput{pub accession_key:String,pub stable_units:i64,pub fragile_units:i64,pub packing_stations:i64,pub expedited:bool}#[derive(Serialize)]pub struct ResponseOutput{pub accession_key:String,pub artifact_total:i64,pub packing_units:i64,pub capacity_units:i64,pub overflow_units:i64,pub inspection_rounds:i64,pub priority_score:i64,pub accession_state:String}pub fn score(s:i64,f:i64,p:i64,e:bool)->i64{let t=s+f;let x=s*6+f*11+if e{p*4}else{0};let c=p*40;let o=(x-c).max(0);x+o*5+(t/5)*7}pub fn calculate(v:&RequestInput)->ResponseOutput{let t=v.stable_units+v.fragile_units;let x=v.stable_units*6+v.fragile_units*11+if v.expedited{v.packing_stations*4}else{0};let c=v.packing_stations*40;let o=(x-c).max(0);ResponseOutput{accession_key:v.accession_key.clone(),artifact_total:t,packing_units:x,capacity_units:c,overflow_units:o,inspection_rounds:t/5,priority_score:score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),accession_state:if o==0{\"accepted\"}else{\"queued\"}.into()}}#[unsafe(no_mangle)]pub extern \"C\" fn parley_browser_score(a0:i64,a1:i64,a2:i64,a3:i32)->i64{score(a0,a1,a2,a3!=0)}\n",
+        "sha256": "c556d510aeacebb6900c0f2d894fda6daed1be1d42b26cfb6f6dbed97b9ba0ea",
+        "bytes": 1210,
+        "lines": 1,
+        "rough_tokens": 397,
+        "o200k_base_tokens": 386
+      },
+      "src/main.rs": {
+        "exists": true,
+        "text": "use std::env;use axum::{Router,body::{Body,to_bytes},extract::Request,http::{HeaderMap,StatusCode,header},response::{IntoResponse,Response},routing::{any,get,post}};use fullstack_agent_045::{RequestInput,calculate};use serde::Serialize;use serde_json::json;use tower_http::services::{ServeDir,ServeFile};const MAX_BODY_BYTES:usize=16_384;const BROWSER_MODULE:&str=r#\"const asI64=(v,n)=>{if(typeof v==='bigint')return v;if(!Number.isSafeInteger(v))throw new TypeError(`${n} must be a safe whole number`);return BigInt(v)};export async function loadParley(){const r=await fetch(new URL('/fullstack_agent_045.wasm',import.meta.url));const m=(await WebAssembly.instantiateStreaming(r)).instance.exports;return {artifact_priority_score:(a0,a1,a2,a3)=>m.parley_browser_score(asI64(a0,'a0'),asI64(a1,'a1'),asI64(a2,'a2'),a3?1:0)}}\"#;\nfn json_response(value:impl Serialize,status:u16,headers:&[(&str,&str)])->Response{if headers.iter().any(|(n,_)|matches!(n.to_ascii_lowercase().as_str(),\"content-length\"|\"content-type\"|\"connection\"|\"transfer-encoding\"|\"x-content-type-options\")){return error(\"invalid_response_headers\",500,\"server-owned response header\")}let status=StatusCode::from_u16(status).unwrap();let mut response=(status,serde_json::to_vec(&value).unwrap()).into_response();response.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));for(n,v)in headers{response.headers_mut().insert(header::HeaderName::from_bytes(n.as_bytes()).unwrap(),header::HeaderValue::from_str(v).unwrap());}response}fn error(code:&str,status:u16,detail:&str)->Response{let mut r=(StatusCode::from_u16(status).unwrap(),serde_json::to_vec(&json!({\"error\":code,\"detail\":detail})).unwrap()).into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));r}fn zero(v:&RequestInput,state:&str)->serde_json::Value{json!({\"accession_key\":v.accession_key,\"artifact_total\":0,\"packing_units\":0,\"capacity_units\":0,\"overflow_units\":0,\"inspection_rounds\":0,\"priority_score\":0,\"accession_state\":state})}fn decide(v:RequestInput,headers:&HeaderMap)->Response{if headers.get(\"authorization\").and_then(|x|x.to_str().ok()).unwrap_or(\"\")!=\"Bearer accession-045\"{return json_response(zero(&v,\"authorization_required\"),401,&[(\"www-authenticate\",\"Bearer realm=artifact-accession\")])}if [v.stable_units,v.fragile_units,v.packing_stations].iter().any(|x|*x<0){return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"nonnegative\")])}if v.packing_stations==0&&v.stable_units+v.fragile_units>0{return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"packing_stations\")])}let result=calculate(&v);let location=format!(\"/api/v9/artifact-accessions/{}\",v.accession_key);let state=result.accession_state.clone();json_response(result,201,&[(\"location\",&location),(\"x-accession-state\",&state)])}\nasync fn status()->Response{json_response(json!({\"service\":\"Artifact Accession\",\"ready\":true}),200,&[])}async fn endpoint(request:Request)->Response{let headers=request.headers().clone();let media=headers.get(header::CONTENT_TYPE).and_then(|v|v.to_str().ok()).unwrap_or(\"\").split(';').next().unwrap_or(\"\").trim().to_ascii_lowercase();if media!=\"application/json\"&&!media.ends_with(\"+json\"){return error(\"json_content_type_required\",415,\"expected application/json\")}if let Some(length)=headers.get(header::CONTENT_LENGTH){let declared=length.to_str().ok().and_then(|v|v.parse::<usize>().ok());if declared.is_none_or(|v|v>MAX_BODY_BYTES){return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")}}let body=match to_bytes(request.into_body(),MAX_BODY_BYTES).await{Ok(body)=>body,Err(_)=>return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")};match serde_json::from_slice::<RequestInput>(&body){Ok(v)=>decide(v,&headers),Err(reason)=>error(\"invalid_json\",400,&reason.to_string())}}async fn missing(request:Request<Body>)->Response{error(\"not_found\",404,&format!(\"no API route {}\",request.uri().path()))}async fn browser()->Response{let mut r=BROWSER_MODULE.into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"text/javascript; charset=utf-8\"));r}#[tokio::main]async fn main(){let wasm=env::var_os(\"FULLSTACK_045_WASM\").map(std::path::PathBuf::from).unwrap();let app=Router::new().route(\"/status/artifact-accession-ready\",get(status)).route(\"/api/v9/artifact-accessions\",post(endpoint)).route(\"/api/{*rest}\",any(missing)).route(\"/parley.js\",get(browser)).route_service(\"/fullstack_agent_045.wasm\",ServeFile::new(wasm)).fallback_service(ServeDir::new(\"public\").append_index_html_on_directories(true));let port=env::var(\"PARLEY_WEB_PORT\").unwrap().parse::<u16>().unwrap();let listener=tokio::net::TcpListener::bind((\"127.0.0.1\",port)).await.unwrap();axum::serve(listener,app).await.unwrap()}\n",
+        "sha256": "bd158b157422129c4b9aed9e040c8b67db47989322543ede34cd126f726251dd",
+        "bytes": 4801,
+        "lines": 3,
+        "rough_tokens": 1649,
+        "o200k_base_tokens": 1280
+      }
+    },
+    "totals": {
+      "bytes": 6011,
+      "lines": 4,
+      "rough_tokens": 2046,
+      "o200k_base_tokens": 1666
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+  "stderr": ""
+}

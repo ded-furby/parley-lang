@@ -1,0 +1,175 @@
+{
+  "attempt": 1,
+  "request_id": "455a9850c257cc7edd62248351ef4083",
+  "elapsed_seconds": 16.6859,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 14.9056,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "cargo",
+          "build",
+          "--locked",
+          "--offline",
+          "--release",
+          "--lib",
+          "--target",
+          "wasm32-unknown-unknown"
+        ],
+        "protected_read_only_files": 11,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "archive_transfer_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:34:41 GMT",
+        "content-type": "application/json",
+        "content-length": "43"
+      },
+      "body": "{\"ready\":true,\"service\":\"Archive Transfer\"}",
+      "json": {
+        "ready": true,
+        "service": "Archive Transfer"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:34:41 GMT",
+        "content-type": "application/json",
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved",
+        "content-length": "197"
+      },
+      "body": "{\"transfer_tag\":\"folio-8\",\"volume_tally\":6,\"relocation_effort\":64,\"cart_allowance\":86,\"shelved_effort\":64,\"quarantined_effort\":0,\"transfer_rounds\":2,\"transfer_rating\":78,\"transfer_phase\":\"shelved\"}",
+      "json": {
+        "transfer_tag": "folio-8",
+        "volume_tally": 6,
+        "relocation_effort": 64,
+        "cart_allowance": 86,
+        "shelved_effort": 64,
+        "quarantined_effort": 0,
+        "transfer_rounds": 2,
+        "transfer_rating": 78,
+        "transfer_phase": "shelved"
+      },
+      "application_headers": {
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/archive-transfers/folio-8"
+        ],
+        [
+          "x-transfer-phase",
+          "shelved"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_missing_carts",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:34:41 GMT",
+        "content-type": "application/json",
+        "content-length": "85"
+      },
+      "body": "{\"detail\":\"missing field `catalog_carts` at line 1 column 82\",\"error\":\"invalid_json\"}",
+      "json": {
+        "detail": "missing field `catalog_carts` at line 1 column 82",
+        "error": "invalid_json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.5199,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.3498,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "src/lib.rs": {
+        "exists": true,
+        "text": "use serde::{Deserialize,Serialize};#[derive(Deserialize)]#[serde(deny_unknown_fields)]pub struct RequestInput{pub transfer_tag:String,pub folio_boxes:i64,pub atlas_tubes:i64,pub catalog_carts:i64,pub humidity_warning:bool}#[derive(Serialize)]pub struct ResponseOutput{pub transfer_tag:String,pub volume_tally:i64,pub relocation_effort:i64,pub cart_allowance:i64,pub shelved_effort:i64,pub quarantined_effort:i64,pub transfer_rounds:i64,pub transfer_rating:i64,pub transfer_phase:String}pub fn score(f:i64,a:i64,c:i64,h:bool)->i64{let t=f+a;let e=f*6+a*17+if h{c*3}else{0};let x=c*43;e.min(x)+(e-x).max(0)*6+((t+4)/5)*7}pub fn calculate(v:&RequestInput)->ResponseOutput{let t=v.folio_boxes+v.atlas_tubes;let e=v.folio_boxes*6+v.atlas_tubes*17+if v.humidity_warning{v.catalog_carts*3}else{0};let a=v.catalog_carts*43;let q=(e-a).max(0);ResponseOutput{transfer_tag:v.transfer_tag.clone(),volume_tally:t,relocation_effort:e,cart_allowance:a,shelved_effort:e.min(a),quarantined_effort:q,transfer_rounds:(t+4)/5,transfer_rating:score(v.folio_boxes,v.atlas_tubes,v.catalog_carts,v.humidity_warning),transfer_phase:if q==0{\"shelved\"}else if v.humidity_warning{\"humidity_hold\"}else{\"routine_hold\"}.into()}}#[unsafe(no_mangle)]pub extern \"C\" fn parley_browser_score(a0:i64,a1:i64,a2:i64,a3:i32)->i64{score(a0,a1,a2,a3!=0)}\n",
+        "sha256": "41b7a65171b8ecca3b5614accba6bde2bd415f781d3b190ce7e65c06e0625a41",
+        "bytes": 1313,
+        "lines": 1,
+        "rough_tokens": 429,
+        "o200k_base_tokens": 424
+      },
+      "src/main.rs": {
+        "exists": true,
+        "text": "use std::env;use axum::{Router,body::{Body,to_bytes},extract::Request,http::{HeaderMap,StatusCode,header},response::{IntoResponse,Response},routing::{any,get,post}};use fullstack_agent_046::{RequestInput,calculate};use serde::Serialize;use serde_json::json;use tower_http::services::{ServeDir,ServeFile};const MAX_BODY_BYTES:usize=16_384;const BROWSER_MODULE:&str=r#\"const asI64=(v,n)=>{if(typeof v==='bigint')return v;if(!Number.isSafeInteger(v))throw new TypeError(`${n} must be a safe whole number`);return BigInt(v)};export async function loadParley(){const r=await fetch(new URL('/fullstack_agent_046.wasm',import.meta.url));const m=(await WebAssembly.instantiateStreaming(r)).instance.exports;return {archive_transfer_rating:(a0,a1,a2,a3)=>m.parley_browser_score(asI64(a0,'a0'),asI64(a1,'a1'),asI64(a2,'a2'),a3?1:0)}}\"#;\nfn json_response(value:impl Serialize,status:u16,headers:&[(&str,&str)])->Response{if headers.iter().any(|(n,_)|matches!(n.to_ascii_lowercase().as_str(),\"content-length\"|\"content-type\"|\"connection\"|\"transfer-encoding\"|\"x-content-type-options\")){return error(\"invalid_response_headers\",500,\"server-owned response header\")}let status=StatusCode::from_u16(status).unwrap();let mut response=(status,serde_json::to_vec(&value).unwrap()).into_response();response.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));for(n,v)in headers{response.headers_mut().insert(header::HeaderName::from_bytes(n.as_bytes()).unwrap(),header::HeaderValue::from_str(v).unwrap());}response}fn error(code:&str,status:u16,detail:&str)->Response{let mut r=(StatusCode::from_u16(status).unwrap(),serde_json::to_vec(&json!({\"error\":code,\"detail\":detail})).unwrap()).into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"application/json\"));r}fn zero(v:&RequestInput,state:&str)->serde_json::Value{json!({\"transfer_tag\":v.transfer_tag,\"volume_tally\":0,\"relocation_effort\":0,\"cart_allowance\":0,\"shelved_effort\":0,\"quarantined_effort\":0,\"transfer_rounds\":0,\"transfer_rating\":0,\"transfer_phase\":state})}fn decide(v:RequestInput,headers:&HeaderMap)->Response{if [v.folio_boxes,v.atlas_tubes,v.catalog_carts].iter().any(|x|*x<0){return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"nonnegative\")])}if v.catalog_carts==0&&v.folio_boxes+v.atlas_tubes>0{return json_response(zero(&v,\"invalid\"),422,&[(\"x-validation\",\"catalog_carts\")])}let body=calculate(&v);let owned=vec![(\"location\",format!(\"/api/v10/archive-transfers/{}\",v.transfer_tag)),(\"x-transfer-phase\",body.transfer_phase.clone())];let refs:Vec<(&str,&str)>=owned.iter().map(|(a,b)|(*a,b.as_str())).collect();json_response(body,201,&refs)}\nasync fn status()->Response{json_response(json!({\"service\":\"Archive Transfer\",\"ready\":true}),200,&[])}async fn endpoint(request:Request)->Response{let headers=request.headers().clone();let media=headers.get(header::CONTENT_TYPE).and_then(|v|v.to_str().ok()).unwrap_or(\"\").split(';').next().unwrap_or(\"\").trim().to_ascii_lowercase();if media!=\"application/json\"&&!media.ends_with(\"+json\"){return error(\"json_content_type_required\",415,\"expected application/json\")}if let Some(length)=headers.get(header::CONTENT_LENGTH){let declared=length.to_str().ok().and_then(|v|v.parse::<usize>().ok());if declared.is_none_or(|v|v>MAX_BODY_BYTES){return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")}}let body=match to_bytes(request.into_body(),MAX_BODY_BYTES).await{Ok(body)=>body,Err(_)=>return error(\"body_too_large\",413,\"request body exceeds 16384 bytes\")};match serde_json::from_slice::<RequestInput>(&body){Ok(v)=>decide(v,&headers),Err(reason)=>error(\"invalid_json\",400,&reason.to_string())}}async fn missing(request:Request<Body>)->Response{error(\"not_found\",404,&format!(\"no API route {}\",request.uri().path()))}async fn browser()->Response{let mut r=BROWSER_MODULE.into_response();r.headers_mut().insert(header::CONTENT_TYPE,header::HeaderValue::from_static(\"text/javascript; charset=utf-8\"));r}#[tokio::main]async fn main(){let wasm=env::var_os(\"FULLSTACK_046_WASM\").map(std::path::PathBuf::from).unwrap();let app=Router::new().route(\"/status/archive-transfer-ready\",get(status)).route(\"/api/v10/archive-transfers\",post(endpoint)).route(\"/api/{*rest}\",any(missing)).route(\"/parley.js\",get(browser)).route_service(\"/fullstack_agent_046.wasm\",ServeFile::new(wasm)).fallback_service(ServeDir::new(\"public\").append_index_html_on_directories(true));let port=env::var(\"PARLEY_WEB_PORT\").unwrap().parse::<u16>().unwrap();let listener=tokio::net::TcpListener::bind((\"127.0.0.1\",port)).await.unwrap();axum::serve(listener,app).await.unwrap()}\n",
+        "sha256": "acf9fe7177b34c0c56cf5e030c8b7621dd26cb99ae8e5ff1143bffb0097b96d8",
+        "bytes": 4631,
+        "lines": 3,
+        "rough_tokens": 1619,
+        "o200k_base_tokens": 1253
+      }
+    },
+    "totals": {
+      "bytes": 5944,
+      "lines": 4,
+      "rough_tokens": 2048,
+      "o200k_base_tokens": 1677
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for archive_transfer_repair\n",
+  "stderr": ""
+}

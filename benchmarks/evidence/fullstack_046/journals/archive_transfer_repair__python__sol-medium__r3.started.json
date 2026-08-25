@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:36:24.706715Z",
+  "cell": {
+    "cell_id": "archive_transfer_repair__python__sol-medium__r3",
+    "plan_index": 57,
+    "task_id": "archive_transfer_repair",
+    "task_kind": "maintenance",
+    "language": "python",
+    "configuration_id": "sol-medium",
+    "replicate": 3
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:38:02.775570Z",
+  "cell": {
+    "cell_id": "orbital_clearance_build__parley__terra-medium__r2",
+    "plan_index": 62,
+    "task_id": "orbital_clearance_build",
+    "task_kind": "implementation",
+    "language": "parley",
+    "configuration_id": "terra-medium",
+    "replicate": 2
+  }
+}

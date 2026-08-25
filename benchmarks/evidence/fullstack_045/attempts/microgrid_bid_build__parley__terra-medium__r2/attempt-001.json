@@ -1,0 +1,178 @@
+{
+  "attempt": 1,
+  "request_id": "ce84dc2809a74d8061bb0f892d7ce5b9",
+  "elapsed_seconds": 2.4695,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 1.0166,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-045-measured-work/045-microgrid_bid_build-parley-terra-medium-r2-bd7jcqfh",
+          "-o",
+          "/private/tmp/parley-fullstack-045-measured-work/045-microgrid_bid_build-parley-terra-medium-r2-bd7jcqfh/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "microgrid_bid_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:58:02 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "40"
+      },
+      "body": "{\"service\":\"Microgrid Bid\",\"ready\":true}",
+      "json": {
+        "service": "Microgrid Bid",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:58:02 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v9/microgrid-bids/sunset-7",
+        "retry-after": "3",
+        "x-bid-state": "accepted",
+        "x-content-type-options": "nosniff",
+        "content-length": "221"
+      },
+      "body": "{\"bid_key\":\"sunset-7\",\"generation_units\":53,\"battery_buffer_units\":14,\"grid_required_units\":67,\"grid_capacity_units\":110,\"delivered_units\":67,\"shortfall_units\":0,\"dispatch_windows\":2,\"bid_score\":85,\"bid_state\":\"accepted\"}",
+      "json": {
+        "bid_key": "sunset-7",
+        "generation_units": 53,
+        "battery_buffer_units": 14,
+        "grid_required_units": 67,
+        "grid_capacity_units": 110,
+        "delivered_units": 67,
+        "shortfall_units": 0,
+        "dispatch_windows": 2,
+        "bid_score": 85,
+        "bid_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/microgrid-bids/sunset-7",
+        "retry-after": "3",
+        "x-bid-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/microgrid-bids/sunset-7"
+        ],
+        [
+          "retry-after",
+          "3"
+        ],
+        [
+          "x-bid-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_wrong_media",
+      "target": "http",
+      "status": 415,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:58:02 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "95"
+      },
+      "body": "{\"error\":\"json_content_type_required\",\"detail\":\"typed request bodies require application/json\"}",
+      "json": {
+        "error": "json_content_type_required",
+        "detail": "typed request bodies require application/json"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "microgrid_bid_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 85,
+      "error": "",
+      "elapsed_seconds": 0.3088,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 85,
+    "error": "",
+    "elapsed_seconds": 0.2792,
+    "expected": 85,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to microgrid_bid_score with solar_arrays as number, wind_turbines as number, storage_banks as number, interconnects as number, emergency_mode as yesno giving number:\n    let generation be solar_arrays times 9 plus wind_turbines times 13\n    let buffer be storage_banks times 3\n    if emergency_mode:\n        set buffer to storage_banks times 7\n    let required be generation plus buffer\n    let capacity be interconnects times 55\n    let delivered be required\n    if delivered is more than capacity:\n        set delivered to capacity\n    let shortfall be required minus capacity\n    if shortfall is less than 0:\n        set shortfall to 0\n    let windows be number from (required divided by 31)\n    give back delivered plus shortfall times 4 plus windows times 9\n",
+        "sha256": "f03d9e03913cf52e14c56991e6df1c776510b5df6c275b0cd0fd37dc29b4e3c8",
+        "bytes": 763,
+        "lines": 15,
+        "rough_tokens": 116,
+        "o200k_base_tokens": 178
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has bid_key as text, solar_arrays as number, wind_turbines as number, storage_banks as number, interconnects as number, emergency_mode as yesno, duplicate_bid as yesno\na response_body has bid_key as text, generation_units as number, battery_buffer_units as number, grid_required_units as number, grid_capacity_units as number, delivered_units as number, shortfall_units as number, dispatch_windows as number, bid_score as number, bid_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Microgrid Bid\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with bid_key key, generation_units 0, battery_buffer_units 0, grid_required_units 0, grid_capacity_units 0, delivered_units 0, shortfall_units 0, dispatch_windows 0, bid_score 0, bid_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    let credential be (maybe item \"x-grid-key\" of request's headers) otherwise \"\"\n    if credential is not \"grid-045\":\n        set item \"www-authenticate\" of headers to \"GridKey\"\n        give back a controlled_response with status 401, headers headers, body (empty_body with body's bid_key, \"authorization_required\")\n    if body's solar_arrays is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's bid_key, \"invalid\")\n    if body's wind_turbines is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's bid_key, \"invalid\")\n    if body's storage_banks is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's bid_key, \"invalid\")\n    if body's interconnects is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's bid_key, \"invalid\")\n    if body's interconnects is 0:\n        if body's solar_arrays times 9 plus body's wind_turbines times 13 is more than 0:\n            set item \"x-validation\" of headers to \"interconnects\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's bid_key, \"invalid\")\n    if body's duplicate_bid:\n        set item \"x-conflict\" of headers to \"duplicate_bid\"\n        give back a controlled_response with status 409, headers headers, body (empty_body with body's bid_key, \"duplicate\")\n    let generation be body's solar_arrays times 9 plus body's wind_turbines times 13\n    let buffer be body's storage_banks times 3\n    if body's emergency_mode:\n        set buffer to body's storage_banks times 7\n    let required be generation plus buffer\n    let capacity be body's interconnects times 55\n    let delivered be required\n    if delivered is more than capacity:\n        set delivered to capacity\n    let shortfall be required minus capacity\n    if shortfall is less than 0:\n        set shortfall to 0\n    let windows be number from (required divided by 31)\n    let state be \"accepted\"\n    if shortfall is more than 0:\n        set state to \"routine_shortfall\"\n        if body's emergency_mode:\n            set state to \"emergency_shortfall\"\n    let result be a response_body with bid_key body's bid_key, generation_units generation, battery_buffer_units buffer, grid_required_units required, grid_capacity_units capacity, delivered_units delivered, shortfall_units shortfall, dispatch_windows windows, bid_score (microgrid_bid_score with body's solar_arrays, body's wind_turbines, body's storage_banks, body's interconnects, body's emergency_mode), bid_state state\n    set item \"location\" of headers to \"/api/v9/microgrid-bids/\" plus body's bid_key\n    set item \"retry-after\" of headers to \"3\"\n    set item \"x-bid-state\" of headers to state\n    give back a controlled_response with status 202, headers headers, body result\n",
+        "sha256": "0c34f1da1e5aefaab5cd188be2de270ddabe58ffcdf700600d0707f6a5ec2a0a",
+        "bytes": 4483,
+        "lines": 58,
+        "rough_tokens": 780,
+        "o200k_base_tokens": 1018
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\n  \"schema_version\": 1,\n  \"name\": \"microgrid_bid_build\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/microgrid-bid-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/microgrid-bids\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"microgrid_bid_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+        "sha256": "03e3c83708e6b2f26e5c29fc53d43d2358b837e8b1b5910dbc0560ba96dfeefd",
+        "bytes": 702,
+        "lines": 36,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 215
+      }
+    },
+    "totals": {
+      "bytes": 5948,
+      "lines": 109,
+      "rough_tokens": 1091,
+      "o200k_base_tokens": 1411
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for microgrid_bid_build\n",
+  "stderr": ""
+}

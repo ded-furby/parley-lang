@@ -1,0 +1,178 @@
+{
+  "attempt": 1,
+  "request_id": "91a12bf1f3c51ca8d9cbc399e6be50e6",
+  "elapsed_seconds": 1.4539,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0596,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "artifact_accession_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:55:43 GMT",
+        "content-type": "application/json",
+        "content-length": "45"
+      },
+      "body": "{\"service\":\"Artifact Accession\",\"ready\":true}",
+      "json": {
+        "service": "Artifact Accession",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:55:43 GMT",
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted",
+        "content-type": "application/json",
+        "content-length": "179"
+      },
+      "body": "{\"accession_key\":\"bronze-lyre\",\"artifact_total\":5,\"packing_units\":48,\"capacity_units\":80,\"overflow_units\":0,\"inspection_rounds\":1,\"priority_score\":55,\"accession_state\":\"accepted\"}",
+      "json": {
+        "accession_key": "bronze-lyre",
+        "artifact_total": 5,
+        "packing_units": 48,
+        "capacity_units": 80,
+        "overflow_units": 0,
+        "inspection_rounds": 1,
+        "priority_score": 55,
+        "accession_state": "accepted"
+      },
+      "application_headers": {
+        "location": "/api/v9/artifact-accessions/bronze-lyre",
+        "x-accession-state": "accepted"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/artifact-accessions/bronze-lyre"
+        ],
+        [
+          "x-accession-state",
+          "accepted"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_wrong_fragile_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 05:55:43 GMT",
+        "content-type": "application/json",
+        "content-length": "251"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"1 validation error for RequestInput\\nfragile_units\\n  Input should be a valid integer [type=int_type, input_value=True, input_type=bool]\\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "1 validation error for RequestInput\nfragile_units\n  Input should be a valid integer [type=int_type, input_value=True, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "artifact_accession_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 55,
+      "error": "",
+      "elapsed_seconds": 0.2654,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 55,
+    "error": "",
+    "elapsed_seconds": 0.2639,
+    "expected": 55,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'accession_key':v.accession_key,'artifact_total':0,'packing_units':0,'capacity_units':0,'overflow_units':0,'inspection_rounds':0,'priority_score':0,'accession_state':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if request.headers.get('authorization','') != 'Bearer accession-045': return outcome(zero(v,'authorization_required'),401,{'www-authenticate': 'Bearer realm=artifact-accession'})\n    if any(item < 0 for item in (v.stable_units,v.fragile_units,v.packing_stations,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.packing_stations==0 and v.stable_units+v.fragile_units>0: return outcome(zero(v,'invalid'),422,{'x-validation':'packing_stations'})\n    result=calculate(v)\n    return outcome(result,201,{'location':f'/api/v9/artifact-accessions/{v.accession_key}','x-accession-state':str(result['accession_state'])})\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/artifact-accession-ready')\nasync def status(): return {'service':'Artifact Accession','ready':True}\n@app.post('/api/v9/artifact-accessions')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "2b304f6de53bdfb7a3bcb611688f81c63c01616e02b02fd0bcc4c5567e7f14f0",
+        "bytes": 3327,
+        "lines": 43,
+        "rough_tokens": 904,
+        "o200k_base_tokens": 806
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(stable_units,fragile_units,packing_stations,expedited)=>{\n  const total=stable_units+fragile_units;\n  const packing=stable_units*6+fragile_units*11+(expedited ? packing_stations*4 : 0);\n  const overflow=Math.max(packing-packing_stations*40,0);\n  return packing+overflow*5+Math.floor(total/5)*7;\n};\nexport async function loadParley(){return {artifact_priority_score:(...args)=>BigInt(score(...args))}}\n",
+        "sha256": "de4b09bbf71e68bfd5ee0323116a2d1ae9e97ff26a7ae2ee1a75521a6336dbcd",
+        "bytes": 414,
+        "lines": 7,
+        "rough_tokens": 110,
+        "o200k_base_tokens": 111
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); accession_key:str; stable_units:int; fragile_units:int; packing_stations:int; expedited:bool\ndef score(stable_units:int,fragile_units:int,packing_stations:int,expedited:bool)->int:\n    packing=stable_units*6+fragile_units*11+(packing_stations*4 if expedited else 0)\n    overflow=max(packing-packing_stations*40,0)\n    total=stable_units+fragile_units\n    return packing+overflow*5+(total//5)*7\ndef calculate(v:RequestInput)->dict[str,object]:\n    total=v.stable_units+v.fragile_units; packing=v.stable_units*6+v.fragile_units*11+(v.packing_stations*4 if v.expedited else 0); capacity=v.packing_stations*40; overflow=max(packing-capacity,0)\n    return {'accession_key':v.accession_key,'artifact_total':total,'packing_units':packing,'capacity_units':capacity,'overflow_units':overflow,'inspection_rounds':total//5,'priority_score':score(v.stable_units,v.fragile_units,v.packing_stations,v.expedited),'accession_state':'accepted' if overflow==0 else 'queued'}\n",
+        "sha256": "48ecd09804b15ebe9dc0dc6ac276d47df46b8cb1090c919ac29bcc6f08dd8b64",
+        "bytes": 1087,
+        "lines": 11,
+        "rough_tokens": 263,
+        "o200k_base_tokens": 291
+      }
+    },
+    "totals": {
+      "bytes": 4828,
+      "lines": 61,
+      "rough_tokens": 1277,
+      "o200k_base_tokens": 1208
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for artifact_accession_build\n",
+  "stderr": ""
+}

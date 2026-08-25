@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T05:54:51.482968Z",
+  "cell": {
+    "cell_id": "artifact_accession_build__typescript__terra-medium__r3",
+    "plan_index": 1,
+    "task_id": "artifact_accession_build",
+    "task_kind": "implementation",
+    "language": "typescript",
+    "configuration_id": "terra-medium",
+    "replicate": 3
+  }
+}

@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "finished",
+  "recorded_at": "2026-08-13T07:28:44.141908Z",
+  "result": {
+    "schema_version": 1,
+    "recorded_at": "2026-08-13T07:28:44.141694Z",
+    "task_id": "archive_transfer_repair",
+    "task_kind": "maintenance",
+    "language": "parley",
+    "configuration_id": "terra-medium",
+    "model": "gpt-5.6-terra",
+    "reasoning": "medium",
+    "replicate": 1,
+    "fresh_ephemeral_session": true,
+    "thread_id": "019ffa04-f9bd-7a61-8183-1541939da2f3",
+    "agent_returncode": 0,
+    "agent_timed_out": false,
+    "elapsed_seconds": 62.4248,
+    "cell_id": "archive_transfer_repair__parley__terra-medium__r1",
+    "plan_index": 22,
+    "checker_integrity_ok": true,
+    "read_only_integrity_ok": true,
+    "symlink_integrity_ok": true,
+    "transport_integrity": {
+      "ok": true,
+      "expected": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155559213,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155559214,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "actual": {
+        ".benchmark_check_request": {
+          "device": 16777233,
+          "inode": 155559213,
+          "mode": 4480,
+          "uid": 501
+        },
+        ".benchmark_check_response": {
+          "device": 16777233,
+          "inode": 155559214,
+          "mode": 4480,
+          "uid": 501
+        }
+      },
+      "protocol_errors": []
+    },
+    "transport_integrity_ok": true,
+    "attempt_record_integrity_ok": true,
+    "public_execution_ok": true,
+    "post_build_integrity_ok": true,
+    "editable_file_integrity_ok": true,
+    "parent_attempt_records": [
+      {
+        "file": "/Users/arjun/Desktop/parley-lang-046-evidence/attempts/archive_transfer_repair__parley__terra-medium__r1/attempt-001.json",
+        "sha256": "aa0891e021ee0d6e3ea4050a71515fe774c59e04076437565d20a97faee79297"
+      }
+    ],
+    "broker_error": "",
+    "workspace_integrity_ok": true,
+    "unexpected_files": [],
+    "command_protocol": {
+      "compliant": true,
+      "commands": [
+        "/bin/zsh -lc ./sources",
+        "/bin/zsh -lc ./check"
+      ],
+      "violations": []
+    },
+    "public_attempts": [
+      {
+        "attempt": 1,
+        "request_id": "c7b005823fa5e15751360113283d72fc",
+        "elapsed_seconds": 2.3623,
+        "ok": true,
+        "build": {
+          "ok": true,
+          "error": "",
+          "elapsed_seconds": 0.9013,
+          "protected_read_only_checks": [
+            {
+              "command": [
+                "/private/tmp/parley-fullstack-046-parley/bin/parley",
+                "web",
+                "build",
+                "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim",
+                "-o",
+                "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim/.benchmark_build/bundle"
+              ],
+              "protected_read_only_files": 9,
+              "changes": {},
+              "command_error": "",
+              "hashes_ok": true,
+              "ok": true
+            }
+          ],
+          "protected_read_only_ok": true
+        },
+        "cases": [
+          {
+            "id": "archive_transfer_status",
+            "target": "http",
+            "status": 200,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 07:28:24 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "x-content-type-options": "nosniff",
+              "content-length": "43"
+            },
+            "body": "{\"service\":\"Archive Transfer\",\"ready\":true}",
+            "json": {
+              "service": "Archive Transfer",
+              "ready": true
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "archive_transfer_primary",
+            "target": "http",
+            "status": 201,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 07:28:24 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "location": "/api/v10/archive-transfers/folio-8",
+              "x-transfer-phase": "shelved",
+              "x-content-type-options": "nosniff",
+              "content-length": "197"
+            },
+            "body": "{\"transfer_tag\":\"folio-8\",\"volume_tally\":6,\"relocation_effort\":64,\"cart_allowance\":86,\"shelved_effort\":64,\"quarantined_effort\":0,\"transfer_rounds\":2,\"transfer_rating\":78,\"transfer_phase\":\"shelved\"}",
+            "json": {
+              "transfer_tag": "folio-8",
+              "volume_tally": 6,
+              "relocation_effort": 64,
+              "cart_allowance": 86,
+              "shelved_effort": 64,
+              "quarantined_effort": 0,
+              "transfer_rounds": 2,
+              "transfer_rating": 78,
+              "transfer_phase": "shelved"
+            },
+            "application_headers": {
+              "location": "/api/v10/archive-transfers/folio-8",
+              "x-transfer-phase": "shelved"
+            },
+            "application_header_pairs": [
+              [
+                "location",
+                "/api/v10/archive-transfers/folio-8"
+              ],
+              [
+                "x-transfer-phase",
+                "shelved"
+              ]
+            ],
+            "pass": true
+          },
+          {
+            "id": "archive_transfer_missing_carts",
+            "target": "http",
+            "status": 400,
+            "content_type": "application/json; charset=utf-8",
+            "headers": {
+              "server": "BaseHTTP/0.6 Python/3.14.6",
+              "date": "Thu, 13 Aug 2026 07:28:24 GMT",
+              "content-type": "application/json; charset=utf-8",
+              "x-content-type-options": "nosniff",
+              "content-length": "63"
+            },
+            "body": "{\"error\":\"invalid_json\",\"detail\":\"missing field catalog_carts\"}",
+            "json": {
+              "error": "invalid_json",
+              "detail": "missing field catalog_carts"
+            },
+            "application_headers": {},
+            "application_header_pairs": [],
+            "pass": true
+          },
+          {
+            "id": "archive_transfer_browser_primary",
+            "target": "browser",
+            "ok": true,
+            "value": 78,
+            "error": "",
+            "elapsed_seconds": 0.3342,
+            "pass": true
+          }
+        ],
+        "cross_target": {
+          "ok": true,
+          "value": 78,
+          "error": "",
+          "elapsed_seconds": 0.2682,
+          "expected": 78,
+          "pass": true
+        },
+        "source": {
+          "editable_files": {
+            "logic.par": {
+              "exists": true,
+              "text": "to archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\n    if humidity_warning:\n        set effort to effort plus catalog_carts times 3\n    let allowance be catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\n    give back shelved plus quarantine times 6 plus rounds times 7\n",
+              "sha256": "52646152d39544af7cd3d80f373db3c3a23d7e6562b1e17ceb3165a54610d13f",
+              "bytes": 687,
+              "lines": 13,
+              "rough_tokens": 108,
+              "o200k_base_tokens": 163
+            },
+            "main.par": {
+              "exists": true,
+              "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Archive Transfer\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's folio_boxes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's atlas_tubes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is 0:\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\n            set item \"x-validation\" of headers to \"catalog_carts\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    let total be body's folio_boxes plus body's atlas_tubes\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\n    if body's humidity_warning:\n        set effort to effort plus body's catalog_carts times 3\n    let allowance be body's catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((total plus 4) divided by 5)\n    let state be \"shelved\"\n    if quarantine is more than 0:\n        set state to \"routine_hold\"\n        if body's humidity_warning:\n            set state to \"humidity_hold\"\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\n    set item \"location\" of headers to \"/api/v10/archive-transfers/{body's transfer_tag}\"\n    set item \"x-transfer-phase\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n",
+              "sha256": "96d35d301b615f344da453fb507cdce8e3cf2eb81940363012744dd3edd776c1",
+              "bytes": 3529,
+              "lines": 46,
+              "rough_tokens": 601,
+              "o200k_base_tokens": 804
+            },
+            "parley.web.json": {
+              "exists": true,
+              "text": "{\"schema_version\":1,\"name\":\"archive_transfer_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/archive-transfer-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/archive-transfers\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"archive_transfer_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+              "sha256": "523b4b0332f3e3da51d0b6660ba82a6a499fbea86f40c74b696bbb8238d8dcec",
+              "bytes": 507,
+              "lines": 1,
+              "rough_tokens": 195,
+              "o200k_base_tokens": 124
+            }
+          },
+          "totals": {
+            "bytes": 4723,
+            "lines": 60,
+            "rough_tokens": 904,
+            "o200k_base_tokens": 1091
+          }
+        },
+        "stdout": "public HTTP and Chromium checks passed for archive_transfer_repair\n",
+        "stderr": ""
+      }
+    ],
+    "public_check_attempts": 1,
+    "first_public_check_success": true,
+    "final_public_check_success": true,
+    "repair_turns": 0,
+    "hidden_success": true,
+    "hidden_judgment": {
+      "ok": true,
+      "build": {
+        "ok": true,
+        "error": "",
+        "elapsed_seconds": 1.5312,
+        "protected_read_only_checks": [
+          {
+            "command": [
+              "/private/tmp/parley-fullstack-046-parley/bin/parley",
+              "web",
+              "build",
+              "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim",
+              "-o",
+              "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim/.benchmark_build/bundle"
+            ],
+            "protected_read_only_files": 9,
+            "changes": {},
+            "command_error": "",
+            "hashes_ok": true,
+            "ok": true
+          }
+        ],
+        "protected_read_only_ok": true
+      },
+      "cases": [
+        {
+          "id": "archive_transfer_negative_folios",
+          "target": "http",
+          "status": 422,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 07:28:42 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "x-validation": "nonnegative",
+            "x-content-type-options": "nosniff",
+            "content-length": "193"
+          },
+          "body": "{\"transfer_tag\":\"stack-3\",\"volume_tally\":0,\"relocation_effort\":0,\"cart_allowance\":0,\"shelved_effort\":0,\"quarantined_effort\":0,\"transfer_rounds\":0,\"transfer_rating\":0,\"transfer_phase\":\"invalid\"}",
+          "json": {
+            "transfer_tag": "stack-3",
+            "volume_tally": 0,
+            "relocation_effort": 0,
+            "cart_allowance": 0,
+            "shelved_effort": 0,
+            "quarantined_effort": 0,
+            "transfer_rounds": 0,
+            "transfer_rating": 0,
+            "transfer_phase": "invalid"
+          },
+          "application_headers": {
+            "x-validation": "nonnegative"
+          },
+          "application_header_pairs": [
+            [
+              "x-validation",
+              "nonnegative"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "archive_transfer_zero_carts",
+          "target": "http",
+          "status": 422,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 07:28:42 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "x-validation": "catalog_carts",
+            "x-content-type-options": "nosniff",
+            "content-length": "193"
+          },
+          "body": "{\"transfer_tag\":\"vault-5\",\"volume_tally\":0,\"relocation_effort\":0,\"cart_allowance\":0,\"shelved_effort\":0,\"quarantined_effort\":0,\"transfer_rounds\":0,\"transfer_rating\":0,\"transfer_phase\":\"invalid\"}",
+          "json": {
+            "transfer_tag": "vault-5",
+            "volume_tally": 0,
+            "relocation_effort": 0,
+            "cart_allowance": 0,
+            "shelved_effort": 0,
+            "quarantined_effort": 0,
+            "transfer_rounds": 0,
+            "transfer_rating": 0,
+            "transfer_phase": "invalid"
+          },
+          "application_headers": {
+            "x-validation": "catalog_carts"
+          },
+          "application_header_pairs": [
+            [
+              "x-validation",
+              "catalog_carts"
+            ]
+          ],
+          "pass": true
+        },
+        {
+          "id": "archive_transfer_unknown_field",
+          "target": "http",
+          "status": 400,
+          "content_type": "application/json; charset=utf-8",
+          "headers": {
+            "server": "BaseHTTP/0.6 Python/3.14.6",
+            "date": "Thu, 13 Aug 2026 07:28:42 GMT",
+            "content-type": "application/json; charset=utf-8",
+            "x-content-type-options": "nosniff",
+            "content-length": "61"
+          },
+          "body": "{\"error\":\"invalid_json\",\"detail\":\"unknown field shelf_aisle\"}",
+          "json": {
+            "error": "invalid_json",
+            "detail": "unknown field shelf_aisle"
+          },
+          "application_headers": {},
+          "application_header_pairs": [],
+          "pass": true
+        },
+        {
+          "id": "archive_transfer_browser_hidden_1",
+          "target": "browser",
+          "ok": true,
+          "value": 30,
+          "error": "",
+          "elapsed_seconds": 0.3711,
+          "pass": true
+        },
+        {
+          "id": "archive_transfer_browser_hidden_2",
+          "target": "browser",
+          "ok": true,
+          "value": 484,
+          "error": "",
+          "elapsed_seconds": 0.3468,
+          "pass": true
+        }
+      ],
+      "cross_target": null
+    },
+    "usage": {
+      "input_tokens": 60288,
+      "cached_input_tokens": 46080,
+      "output_tokens": 394,
+      "reasoning_output_tokens": 60,
+      "uncached_input_tokens": 14208
+    },
+    "total_tokens": 60682,
+    "prompt_sha256": "b92460ad323a8c7d791e160e8de4613fc7f5aeb9677ce74cf1514aa4239fadb3",
+    "prompt_chars": 4067,
+    "source": {
+      "editable_files": {
+        "logic.par": {
+          "exists": true,
+          "text": "to archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\n    if humidity_warning:\n        set effort to effort plus catalog_carts times 3\n    let allowance be catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\n    give back shelved plus quarantine times 6 plus rounds times 7\n",
+          "sha256": "52646152d39544af7cd3d80f373db3c3a23d7e6562b1e17ceb3165a54610d13f",
+          "bytes": 687,
+          "lines": 13,
+          "rough_tokens": 108,
+          "o200k_base_tokens": 163
+        },
+        "main.par": {
+          "exists": true,
+          "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Archive Transfer\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's folio_boxes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's atlas_tubes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is 0:\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\n            set item \"x-validation\" of headers to \"catalog_carts\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    let total be body's folio_boxes plus body's atlas_tubes\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\n    if body's humidity_warning:\n        set effort to effort plus body's catalog_carts times 3\n    let allowance be body's catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((total plus 4) divided by 5)\n    let state be \"shelved\"\n    if quarantine is more than 0:\n        set state to \"routine_hold\"\n        if body's humidity_warning:\n            set state to \"humidity_hold\"\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\n    set item \"location\" of headers to \"/api/v10/archive-transfers/{body's transfer_tag}\"\n    set item \"x-transfer-phase\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n",
+          "sha256": "96d35d301b615f344da453fb507cdce8e3cf2eb81940363012744dd3edd776c1",
+          "bytes": 3529,
+          "lines": 46,
+          "rough_tokens": 601,
+          "o200k_base_tokens": 804
+        },
+        "parley.web.json": {
+          "exists": true,
+          "text": "{\"schema_version\":1,\"name\":\"archive_transfer_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/archive-transfer-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/archive-transfers\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"archive_transfer_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+          "sha256": "523b4b0332f3e3da51d0b6660ba82a6a499fbea86f40c74b696bbb8238d8dcec",
+          "bytes": 507,
+          "lines": 1,
+          "rough_tokens": 195,
+          "o200k_base_tokens": 124
+        }
+      },
+      "totals": {
+        "bytes": 4723,
+        "lines": 60,
+        "rough_tokens": 904,
+        "o200k_base_tokens": 1091
+      }
+    },
+    "seed_source": {
+      "editable_files": {
+        "logic.par": {
+          "text": "to archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\n    if humidity_warning:\n        set effort to effort plus catalog_carts times 3\n    let allowance be catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\n    give back shelved plus quarantine times 6 plus rounds times 7\n",
+          "sha256": "52646152d39544af7cd3d80f373db3c3a23d7e6562b1e17ceb3165a54610d13f",
+          "bytes": 687,
+          "lines": 13,
+          "rough_tokens": 108,
+          "o200k_base_tokens": 163
+        },
+        "main.par": {
+          "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Archive Transfer\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's folio_boxes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's atlas_tubes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is 0:\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\n            set item \"x-validation\" of headers to \"catalog_carts\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    let total be body's folio_boxes plus body's atlas_tubes\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\n    if body's humidity_warning:\n        set effort to effort plus body's catalog_carts times 3\n    let allowance be body's catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((total plus 4) divided by 5)\n    let state be \"shelved\"\n    if quarantine is more than 0:\n        set state to \"routine_hold\"\n        if body's humidity_warning:\n            set state to \"humidity_hold\"\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\n    set item \"location\" of headers to \"/api/v10/archive-transfers/{body's transfer_tag}\"\n    set item \"x-transfer-state\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n",
+          "sha256": "086f95e639a84dd78c8b12f0005b4fa640a1010c20737b52cad90107cd54e70d",
+          "bytes": 3529,
+          "lines": 46,
+          "rough_tokens": 601,
+          "o200k_base_tokens": 804
+        },
+        "parley.web.json": {
+          "text": "{\"schema_version\":1,\"name\":\"archive_transfer_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/archive-transfer-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/archive-transfers\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"archive_transfer_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+          "sha256": "523b4b0332f3e3da51d0b6660ba82a6a499fbea86f40c74b696bbb8238d8dcec",
+          "bytes": 507,
+          "lines": 1,
+          "rough_tokens": 195,
+          "o200k_base_tokens": 124
+        }
+      },
+      "totals": {
+        "bytes": 4723,
+        "lines": 60,
+        "rough_tokens": 904,
+        "o200k_base_tokens": 1091
+      }
+    },
+    "source_edits": {
+      "files": {
+        "logic.par": {
+          "changed": false,
+          "rough_token_edit_count": 0
+        },
+        "main.par": {
+          "changed": true,
+          "rough_token_edit_count": 2
+        },
+        "parley.web.json": {
+          "changed": false,
+          "rough_token_edit_count": 0
+        }
+      },
+      "rough_token_edit_count": 2
+    },
+    "changed_files": [
+      "main.par"
+    ],
+    "expected_root_files": [
+      "main.par"
+    ],
+    "root_quality_eligible": true,
+    "exact_root": true,
+    "agent_messages": [
+      "I’ll inspect the provided editable scaffold, make the smallest repair, then run the public checker.",
+      "Repaired the success header to `x-transfer-phase`.\n\nComplete public full-stack check passed."
+    ],
+    "agent_errors": [],
+    "command_events": [
+      {
+        "id": "item_1",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./sources",
+        "aggregated_output": "===== CONTRACT.md [read-only] =====\n# Repair a custom response-header name in an archive transfer\n\n    Repair Archive Transfer. Negative numbers return 422 with x-validation nonnegative. Positive volume_tally with zero catalog_carts returns 422 with x-validation catalog_carts. volume_tally is folio_boxes + atlas_tubes. relocation_effort is folio_boxes*6 + atlas_tubes*17, plus catalog_carts*3 during humidity_warning. cart_allowance is catalog_carts*43. shelved_effort is min(effort, allowance); quarantined_effort is max(effort - allowance, 0); transfer_rounds is ceiling(volume_tally/5). transfer_rating is shelved_effort + quarantined_effort*6 + transfer_rounds*7. transfer_phase is shelved with no quarantine, humidity_hold during a warning, and routine_hold otherwise. Success returns 201 with location /api/v10/archive-transfers/{transfer_tag} and x-transfer-phase. The browser export returns the rating.\n\n    ## HTTP\n\n    - `GET /status/archive-transfer-ready` returns `{\"service\":\"Archive Transfer\",\"ready\":true}`.\n    - `POST /api/v10/archive-transfers` uses strict JSON, then the application decides authorization,\n      domain validation, status, response headers, and body.\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\n    - Negative integers are well-typed and must reach the handler's 422 decision.\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\n\n    Request fields:\n\n    - `transfer_tag`: text\n- `folio_boxes`: number\n- `atlas_tubes`: number\n- `catalog_carts`: number\n- `humidity_warning`: yesno\n\n    Response fields:\n\n    - `transfer_tag`: text\n- `volume_tally`: number\n- `relocation_effort`: number\n- `cart_allowance`: number\n- `shelved_effort`: number\n- `quarantined_effort`: number\n- `transfer_rounds`: number\n- `transfer_rating`: number\n- `transfer_phase`: text\n\n    ## Browser\n\n    Export `archive_transfer_rating` with arguments in this order:\n    `folio_boxes, atlas_tubes, catalog_carts, humidity_warning`. It returns `transfer_rating`.\n===== logic.par [editable] =====\nto archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\n    if humidity_warning:\n        set effort to effort plus catalog_carts times 3\n    let allowance be catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\n    give back shelved plus quarantine times 6 plus rounds times 7\n===== main.par [editable] =====\ninclude \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Archive Transfer\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's folio_boxes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's atlas_tubes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is 0:\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\n            set item \"x-validation\" of headers to \"catalog_carts\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    let total be body's folio_boxes plus body's atlas_tubes\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\n    if body's humidity_warning:\n        set effort to effort plus body's catalog_carts times 3\n    let allowance be body's catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((total plus 4) divided by 5)\n    let state be \"shelved\"\n    if quarantine is more than 0:\n        set state to \"routine_hold\"\n        if body's humidity_warning:\n            set state to \"humidity_hold\"\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\n    set item \"location\" of headers to \"/api/v10/archive-transfers/{body's transfer_tag}\"\n    set item \"x-transfer-state\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n===== parley.web.json [editable] =====\n{\"schema_version\":1,\"name\":\"archive_transfer_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/archive-transfer-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/archive-transfers\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"archive_transfer_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n===== public/index.html [read-only] =====\n<!doctype html>\n<meta charset=\"utf-8\">\n<title>Full-stack agent study 046</title>\n<main>Full-stack agent study 046 browser target</main>\n",
+        "exit_code": 0,
+        "status": "completed"
+      },
+      {
+        "id": "item_3",
+        "type": "command_execution",
+        "command": "/bin/zsh -lc ./check",
+        "aggregated_output": "public HTTP and Chromium checks passed for archive_transfer_repair\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    ],
+    "codex_stdout": "{\"type\":\"thread.started\",\"thread_id\":\"019ffa04-f9bd-7a61-8183-1541939da2f3\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"I’ll inspect the provided editable scaffold, make the smallest repair, then run the public checker.\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./sources\",\"aggregated_output\":\"===== CONTRACT.md [read-only] =====\\n# Repair a custom response-header name in an archive transfer\\n\\n    Repair Archive Transfer. Negative numbers return 422 with x-validation nonnegative. Positive volume_tally with zero catalog_carts returns 422 with x-validation catalog_carts. volume_tally is folio_boxes + atlas_tubes. relocation_effort is folio_boxes*6 + atlas_tubes*17, plus catalog_carts*3 during humidity_warning. cart_allowance is catalog_carts*43. shelved_effort is min(effort, allowance); quarantined_effort is max(effort - allowance, 0); transfer_rounds is ceiling(volume_tally/5). transfer_rating is shelved_effort + quarantined_effort*6 + transfer_rounds*7. transfer_phase is shelved with no quarantine, humidity_hold during a warning, and routine_hold otherwise. Success returns 201 with location /api/v10/archive-transfers/{transfer_tag} and x-transfer-phase. The browser export returns the rating.\\n\\n    ## HTTP\\n\\n    - `GET /status/archive-transfer-ready` returns `{\\\"service\\\":\\\"Archive Transfer\\\",\\\"ready\\\":true}`.\\n    - `POST /api/v10/archive-transfers` uses strict JSON, then the application decides authorization,\\n      domain validation, status, response headers, and body.\\n    - Missing, unknown, or wrongly typed JSON fields return 400 `invalid_json` before the handler.\\n    - Negative integers are well-typed and must reach the handler's 422 decision.\\n    - Non-JSON POSTs return 415; bodies above 16384 bytes return 413.\\n\\n    Request fields:\\n\\n    - `transfer_tag`: text\\n- `folio_boxes`: number\\n- `atlas_tubes`: number\\n- `catalog_carts`: number\\n- `humidity_warning`: yesno\\n\\n    Response fields:\\n\\n    - `transfer_tag`: text\\n- `volume_tally`: number\\n- `relocation_effort`: number\\n- `cart_allowance`: number\\n- `shelved_effort`: number\\n- `quarantined_effort`: number\\n- `transfer_rounds`: number\\n- `transfer_rating`: number\\n- `transfer_phase`: text\\n\\n    ## Browser\\n\\n    Export `archive_transfer_rating` with arguments in this order:\\n    `folio_boxes, atlas_tubes, catalog_carts, humidity_warning`. It returns `transfer_rating`.\\n===== logic.par [editable] =====\\nto archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\\n    if humidity_warning:\\n        set effort to effort plus catalog_carts times 3\\n    let allowance be catalog_carts times 43\\n    let shelved be effort\\n    if shelved is more than allowance:\\n        set shelved to allowance\\n    let quarantine be effort minus allowance\\n    if quarantine is less than 0:\\n        set quarantine to 0\\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\\n    give back shelved plus quarantine times 6 plus rounds times 7\\n===== main.par [editable] =====\\ninclude \\\"logic.par\\\"\\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\\na controlled_response has status as number, headers as map from text to text, body as response_body\\na service_status has service as text, ready as yesno\\nto project_status giving service_status:\\n    give back a service_status with service \\\"Archive Transfer\\\", ready yes\\nto empty_body with key as text, state as text giving response_body:\\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\\nto handle_request with request as web_request, body as request_input giving controlled_response:\\n    let headers be a map from text to text\\n    if body's folio_boxes is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \\\"invalid\\\")\\n    if body's atlas_tubes is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \\\"invalid\\\")\\n    if body's catalog_carts is less than 0:\\n        set item \\\"x-validation\\\" of headers to \\\"nonnegative\\\"\\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \\\"invalid\\\")\\n    if body's catalog_carts is 0:\\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\\n            set item \\\"x-validation\\\" of headers to \\\"catalog_carts\\\"\\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \\\"invalid\\\")\\n    let total be body's folio_boxes plus body's atlas_tubes\\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\\n    if body's humidity_warning:\\n        set effort to effort plus body's catalog_carts times 3\\n    let allowance be body's catalog_carts times 43\\n    let shelved be effort\\n    if shelved is more than allowance:\\n        set shelved to allowance\\n    let quarantine be effort minus allowance\\n    if quarantine is less than 0:\\n        set quarantine to 0\\n    let rounds be number from ((total plus 4) divided by 5)\\n    let state be \\\"shelved\\\"\\n    if quarantine is more than 0:\\n        set state to \\\"routine_hold\\\"\\n        if body's humidity_warning:\\n            set state to \\\"humidity_hold\\\"\\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\\n    set item \\\"location\\\" of headers to \\\"/api/v10/archive-transfers/{body's transfer_tag}\\\"\\n    set item \\\"x-transfer-state\\\" of headers to \\\"{state}\\\"\\n    give back a controlled_response with status 201, headers headers, body result\\n===== parley.web.json [editable] =====\\n{\\\"schema_version\\\":1,\\\"name\\\":\\\"archive_transfer_repair\\\",\\\"entrypoint\\\":\\\"main.par\\\",\\\"static_dir\\\":\\\"public\\\",\\\"routes\\\":[{\\\"method\\\":\\\"GET\\\",\\\"path\\\":\\\"/status/archive-transfer-ready\\\",\\\"handler\\\":\\\"project_status\\\"},{\\\"method\\\":\\\"POST\\\",\\\"path\\\":\\\"/api/v10/archive-transfers\\\",\\\"handler\\\":\\\"handle_request\\\",\\\"response\\\":{\\\"status_field\\\":\\\"status\\\",\\\"headers_field\\\":\\\"headers\\\",\\\"body_field\\\":\\\"body\\\"}}],\\\"browser\\\":{\\\"entrypoint\\\":\\\"main.par\\\",\\\"exports\\\":[{\\\"name\\\":\\\"archive_transfer_rating\\\"}]},\\\"server\\\":{\\\"host\\\":\\\"127.0.0.1\\\",\\\"port\\\":8787,\\\"max_body_bytes\\\":16384}}\\n===== public/index.html [read-only] =====\\n<!doctype html>\\n<meta charset=\\\"utf-8\\\">\\n<title>Full-stack agent study 046</title>\\n<main>Full-stack agent study 046 browser target</main>\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_2\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim/main.par\",\"kind\":\"update\"}],\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_2\",\"type\":\"file_change\",\"changes\":[{\"path\":\"/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim/main.par\",\"kind\":\"update\"}],\"status\":\"completed\"}}\n{\"type\":\"item.started\",\"item\":{\"id\":\"item_3\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"\",\"exit_code\":null,\"status\":\"in_progress\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_3\",\"type\":\"command_execution\",\"command\":\"/bin/zsh -lc ./check\",\"aggregated_output\":\"public HTTP and Chromium checks passed for archive_transfer_repair\\n\",\"exit_code\":0,\"status\":\"completed\"}}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_4\",\"type\":\"agent_message\",\"text\":\"Repaired the success header to `x-transfer-phase`.\\n\\nComplete public full-stack check passed.\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":60288,\"cached_input_tokens\":46080,\"cache_write_input_tokens\":0,\"output_tokens\":394,\"reasoning_output_tokens\":60}}\n",
+    "codex_stderr": "Reading additional input from stdin...\n2026-08-13T07:27:37.921951Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.925307Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.927490Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.929287Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.931370Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.933249Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.935963Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.938124Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.940000Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.941937Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.943781Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.946030Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.947878Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.950366Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.952167Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.954311Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.956183Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.958035Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.959923Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.962045Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.964160Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.966029Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.968053Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.969986Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.971838Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.974371Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.976206Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.978014Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.980210Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.982133Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.984276Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.986410Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.988599Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.990907Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.992679Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.994379Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.996700Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:37.998389Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.001233Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.002974Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.005330Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.007799Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.010295Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.012087Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.013678Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.015713Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.017597Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.019707Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.021965Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.023740Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.025495Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.061893Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.063753Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.066296Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.068358Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.070075Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.072501Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.074775Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:27:38.076469Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-13T07:28:39.570321Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/Users/arjun/.codex/shell_snapshots/019ffa04-f9bd-7a61-8183-1541939da2f3.1786606057917595000.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\n",
+    "workdir": "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-terra-medium-r1-6u8eubim",
+    "journal_attempt": 1,
+    "agent_session_started": true
+  }
+}

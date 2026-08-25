@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "046",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T07:39:32.127899Z",
+  "cell": {
+    "cell_id": "beacon_enrollment_repair__typescript__terra-medium__r1",
+    "plan_index": 70,
+    "task_id": "beacon_enrollment_repair",
+    "task_kind": "maintenance",
+    "language": "typescript",
+    "configuration_id": "terra-medium",
+    "replicate": 1
+  }
+}

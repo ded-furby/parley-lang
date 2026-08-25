@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "experiment_id": "045",
+  "status": "started",
+  "agent_session_started": true,
+  "recorded_at": "2026-08-13T06:00:47.329451Z",
+  "cell": {
+    "cell_id": "trail_permit_repair__rust__terra-medium__r2",
+    "plan_index": 30,
+    "task_id": "trail_permit_repair",
+    "task_kind": "maintenance",
+    "language": "rust",
+    "configuration_id": "terra-medium",
+    "replicate": 2
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "attempt": 1,
+  "request_id": "41566bc251f2ba1a418506d41f10aeb3",
+  "elapsed_seconds": 2.1691,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.9491,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-045-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-045-measured-work/045-cold_chain_booking_repair-parley-sol-medium-r1-anodqfju",
+          "-o",
+          "/private/tmp/parley-fullstack-045-measured-work/045-cold_chain_booking_repair-parley-sol-medium-r1-anodqfju/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "cold_chain_booking_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:11 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "45"
+      },
+      "body": "{\"service\":\"Cold-Chain Booking\",\"ready\":true}",
+      "json": {
+        "service": "Cold-Chain Booking",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:11 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked",
+        "x-content-type-options": "nosniff",
+        "content-length": "189"
+      },
+      "body": "{\"booking_code\":\"polar-8\",\"shipment_total\":5,\"cooling_units\":51,\"dock_capacity_units\":88,\"loaded_units\":51,\"deferred_units\":0,\"loading_rounds\":0,\"booking_score\":51,\"booking_state\":\"booked\"}",
+      "json": {
+        "booking_code": "polar-8",
+        "shipment_total": 5,
+        "cooling_units": 51,
+        "dock_capacity_units": 88,
+        "loaded_units": 51,
+        "deferred_units": 0,
+        "loading_rounds": 0,
+        "booking_score": 51,
+        "booking_state": "booked"
+      },
+      "application_headers": {
+        "location": "/api/v9/cold-chain-bookings/polar-8",
+        "x-booking-state": "booked"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v9/cold-chain-bookings/polar-8"
+        ],
+        [
+          "x-booking-state",
+          "booked"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_wrong_dock_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 06:18:11 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "56"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"expected JSON number\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "expected JSON number"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "cold_chain_booking_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 51,
+      "error": "",
+      "elapsed_seconds": 0.2873,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 51,
+    "error": "",
+    "elapsed_seconds": 0.2772,
+    "expected": 51,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to cold_chain_booking_score with chilled_crates as number, frozen_crates as number, loading_docks as number, rush_load as yesno giving number:\n    let cooling be chilled_crates times 7 plus frozen_crates times 15\n    if rush_load:\n        set cooling to cooling plus loading_docks times 5\n    let capacity be loading_docks times 44\n    let loaded be cooling\n    if loaded is more than capacity:\n        set loaded to capacity\n    let deferred be cooling minus capacity\n    if deferred is less than 0:\n        set deferred to 0\n    give back loaded plus deferred times 5 plus number from ((chilled_crates plus frozen_crates) divided by 6) times 8\n",
+        "sha256": "06f984b878284b4e8e1e4ad8a767d2ae5565de336829f71aebed7c7878caac50",
+        "bytes": 646,
+        "lines": 12,
+        "rough_tokens": 102,
+        "o200k_base_tokens": 154
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has booking_code as text, chilled_crates as number, frozen_crates as number, loading_docks as number, rush_load as yesno\na response_body has booking_code as text, shipment_total as number, cooling_units as number, dock_capacity_units as number, loaded_units as number, deferred_units as number, loading_rounds as number, booking_score as number, booking_state as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Cold-Chain Booking\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with booking_code key, shipment_total 0, cooling_units 0, dock_capacity_units 0, loaded_units 0, deferred_units 0, loading_rounds 0, booking_score 0, booking_state state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's chilled_crates is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's booking_code, \"invalid\")\n    if body's frozen_crates is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's booking_code, \"invalid\")\n    if body's loading_docks is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's booking_code, \"invalid\")\n    if body's loading_docks is 0:\n        if body's chilled_crates plus body's frozen_crates is more than 0:\n            set item \"x-validation\" of headers to \"loading_docks\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's booking_code, \"invalid\")\n    let total be body's chilled_crates plus body's frozen_crates\n    let cooling be body's chilled_crates times 7 plus body's frozen_crates times 15\n    if body's rush_load:\n        set cooling to cooling plus body's loading_docks times 5\n    let capacity be body's loading_docks times 44\n    let loaded be cooling\n    if loaded is more than capacity:\n        set loaded to capacity\n    let deferred be cooling minus capacity\n    if deferred is less than 0:\n        set deferred to 0\n    let rounds be number from (total divided by 6)\n    let state be \"booked\"\n    if deferred is more than 0:\n        set state to \"routine_queue\"\n        if body's rush_load:\n            set state to \"rush_queue\"\n    let result be a response_body with booking_code body's booking_code, shipment_total total, cooling_units cooling, dock_capacity_units capacity, loaded_units loaded, deferred_units deferred, loading_rounds rounds, booking_score (cold_chain_booking_score with body's chilled_crates, body's frozen_crates, body's loading_docks, body's rush_load), booking_state state\n    set item \"location\" of headers to \"/api/v9/cold-chain-bookings/{body's booking_code}\"\n    set item \"x-booking-state\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n",
+        "sha256": "38397a9f9cc4e511d075eb9551ce9eed968303c7e1932cfbea8f4d3caf3498e2",
+        "bytes": 3488,
+        "lines": 46,
+        "rough_tokens": 601,
+        "o200k_base_tokens": 783
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\n  \"schema_version\": 1,\n  \"name\": \"cold_chain_booking_repair\",\n  \"entrypoint\": \"main.par\",\n  \"static_dir\": \"public\",\n  \"routes\": [\n    {\n      \"method\": \"GET\",\n      \"path\": \"/status/cold-chain-booking-ready\",\n      \"handler\": \"project_status\"\n    },\n    {\n      \"method\": \"POST\",\n      \"path\": \"/api/v9/cold-chain-bookings\",\n      \"handler\": \"handle_request\",\n      \"response\": {\n        \"status_field\": \"status\",\n        \"headers_field\": \"headers\",\n        \"body_field\": \"body\"\n      }\n    }\n  ],\n  \"browser\": {\n    \"entrypoint\": \"main.par\",\n    \"exports\": [\n      {\n        \"name\": \"cold_chain_booking_score\"\n      }\n    ]\n  },\n  \"server\": {\n    \"host\": \"127.0.0.1\",\n    \"port\": 8787,\n    \"max_body_bytes\": 16384\n  }\n}\n",
+        "sha256": "6c1ec9681d086848c8e44da4fc0c43642520e098375e9769c5ddfd0886f9fcd2",
+        "bytes": 723,
+        "lines": 36,
+        "rough_tokens": 199,
+        "o200k_base_tokens": 216
+      }
+    },
+    "totals": {
+      "bytes": 4857,
+      "lines": 94,
+      "rough_tokens": 902,
+      "o200k_base_tokens": 1153
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for cold_chain_booking_repair\n",
+  "stderr": ""
+}

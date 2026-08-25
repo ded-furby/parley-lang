@@ -1,0 +1,185 @@
+{
+  "attempt": 1,
+  "request_id": "b69c0106c3b2af5eeb339645ac251144",
+  "elapsed_seconds": 1.4514,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.0561,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-python/bin/python",
+          "-m",
+          "py_compile",
+          "app.py",
+          "logic.py"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      },
+      {
+        "command": [
+          "node",
+          "--check",
+          "browser.js"
+        ],
+        "protected_read_only_files": 10,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "beacon_enrollment_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:29:30 GMT",
+        "content-type": "application/json",
+        "content-length": "44"
+      },
+      "body": "{\"service\":\"Beacon Enrollment\",\"ready\":true}",
+      "json": {
+        "service": "Beacon Enrollment",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_primary",
+      "target": "http",
+      "status": 202,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:29:30 GMT",
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled",
+        "content-type": "application/json",
+        "content-length": "213"
+      },
+      "body": "{\"enrollment_ref\":\"ridge-6\",\"transponder_tally\":5,\"tuning_effort\":73,\"frame_allowance\":100,\"commissioned_effort\":73,\"uncommissioned_effort\":0,\"tuning_rounds\":1,\"enrollment_rating\":78,\"enrollment_phase\":\"enrolled\"}",
+      "json": {
+        "enrollment_ref": "ridge-6",
+        "transponder_tally": 5,
+        "tuning_effort": 73,
+        "frame_allowance": 100,
+        "commissioned_effort": 73,
+        "uncommissioned_effort": 0,
+        "tuning_rounds": 1,
+        "enrollment_rating": 78,
+        "enrollment_phase": "enrolled"
+      },
+      "application_headers": {
+        "location": "/api/v10/beacon-enrollments/ridge-6",
+        "retry-after": "4",
+        "x-enrollment-phase": "enrolled"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/beacon-enrollments/ridge-6"
+        ],
+        [
+          "retry-after",
+          "4"
+        ],
+        [
+          "x-enrollment-phase",
+          "enrolled"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_wrong_frame_type",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:29:30 GMT",
+        "content-type": "application/json",
+        "content-length": "257"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"1 validation error for RequestInput\\ncalibration_frames\\n  Input should be a valid integer [type=int_type, input_value=False, input_type=bool]\\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "1 validation error for RequestInput\ncalibration_frames\n  Input should be a valid integer [type=int_type, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.13/v/int_type"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "beacon_enrollment_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.2688,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.2646,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "app.py": {
+        "exists": true,
+        "text": "from __future__ import annotations\nimport json,os\nfrom pathlib import Path\nfrom fastapi import FastAPI,Request\nfrom fastapi.responses import FileResponse,JSONResponse\nfrom fastapi.staticfiles import StaticFiles\nfrom pydantic import ValidationError\nfrom logic import RequestInput,calculate\ndef zero(v:RequestInput,state:str)->dict[str,object]: return {'enrollment_ref':v.enrollment_ref,'transponder_tally':0,'tuning_effort':0,'frame_allowance':0,'commissioned_effort':0,'uncommissioned_effort':0,'tuning_rounds':0,'enrollment_rating':0,'enrollment_phase':state}\ndef decide(v:RequestInput,request:Request)->JSONResponse:\n    if request.headers.get('x-rescue-pass','') != 'beacon-046': return outcome(zero(v,'authorization_required'),403,{'x-access-denial': 'rescue_pass'})\n    if any(item < 0 for item in (v.analog_transponders,v.digital_transponders,v.calibration_frames,)): return outcome(zero(v,'invalid'),422,{'x-validation':'nonnegative'})\n    if v.calibration_frames==0 and v.analog_transponders+v.digital_transponders>0: return outcome(zero(v,'invalid'),422,{'x-validation':'calibration_frames'})\n    body=calculate(v); return outcome(body,202,{'location':f'/api/v10/beacon-enrollments/{v.enrollment_ref}','retry-after':'4','x-enrollment-phase':str(body['enrollment_phase'])})\n\nMAX_BODY_BYTES=16_384\nPUBLIC=Path(__file__).with_name('public')\ndef error(code:str,status:int,detail:str)->JSONResponse: return JSONResponse({'error':code,'detail':detail},status_code=status)\ndef outcome(body:dict[str,object],status:int,headers:dict[str,str])->JSONResponse:\n    if any(name.lower() in {'content-length','content-type','connection','transfer-encoding','x-content-type-options'} for name in headers): return error('invalid_response_headers',500,'server-owned response header')\n    return JSONResponse(body,status_code=status,headers=headers)\napp=FastAPI(docs_url=None,redoc_url=None,openapi_url=None)\n@app.get('/status/beacon-enrollment-ready')\nasync def status(): return {'service':'Beacon Enrollment','ready':True}\n@app.post('/api/v10/beacon-enrollments')\nasync def endpoint(request:Request):\n    media=request.headers.get('content-type','').split(';',1)[0].strip().lower()\n    if media!='application/json' and not media.endswith('+json'): return error('json_content_type_required',415,'expected application/json')\n    declared=request.headers.get('content-length')\n    if declared and (not declared.isdigit() or int(declared)>MAX_BODY_BYTES): return error('body_too_large',413,'request body exceeds 16384 bytes')\n    raw=await request.body()\n    if len(raw)>MAX_BODY_BYTES: return error('body_too_large',413,'request body exceeds 16384 bytes')\n    try: parsed=RequestInput.model_validate(json.loads(raw),strict=True)\n    except (json.JSONDecodeError,UnicodeDecodeError,ValidationError) as exc: return error('invalid_json',400,str(exc))\n    return decide(parsed,request)\n@app.api_route('/api/{rest:path}',methods=['GET','POST','PUT','PATCH','DELETE'])\nasync def missing(rest:str): return error('not_found',404,f'no API route /api/{rest}')\n@app.get('/parley.js')\nasync def browser(): return FileResponse(Path(__file__).with_name('browser.js'),media_type='text/javascript')\napp.mount('/',StaticFiles(directory=PUBLIC,html=True),name='public')\nif __name__=='__main__':\n import uvicorn; uvicorn.run(app,host='127.0.0.1',port=int(os.environ['PARLEY_WEB_PORT']),log_level='warning')\n",
+        "sha256": "b79d2ae4b36dd828b745823e4ddba4e42d33d406bb66dc6d0627a108245bc111",
+        "bytes": 3377,
+        "lines": 42,
+        "rough_tokens": 919,
+        "o200k_base_tokens": 831
+      },
+      "browser.js": {
+        "exists": true,
+        "text": "const score=(a,d,c,w)=>{const t=a+d,e=a*9+d*16+(w?c*7:0),x=c*50;return Math.min(e,x)+Math.max(e-x,0)*8+Math.trunc((t+5)/6)*5};\nexport async function loadParley(){return {beacon_enrollment_rating:(...args)=>BigInt(score(...args))}}\n",
+        "sha256": "5e555b7131c99ed9cba264af676e07436d7c0f1522b15b49218c79e769a34bd1",
+        "bytes": 231,
+        "lines": 2,
+        "rough_tokens": 118,
+        "o200k_base_tokens": 86
+      },
+      "logic.py": {
+        "exists": true,
+        "text": "from pydantic import BaseModel,ConfigDict\nclass RequestInput(BaseModel):\n    model_config=ConfigDict(extra='forbid',strict=True); enrollment_ref:str; analog_transponders:int; digital_transponders:int; calibration_frames:int; whiteout_warning:bool\ndef score(analog_transponders:int,digital_transponders:int,calibration_frames:int,whiteout_warning:bool)->int:\n    total=analog_transponders+digital_transponders; effort=analog_transponders*9+digital_transponders*16+(calibration_frames*7 if whiteout_warning else 0); allowance=calibration_frames*50\n    return min(effort,allowance)+max(effort-allowance,0)*8+((total+5)//6)*5\ndef calculate(v:RequestInput)->dict[str,object]:\n    total=v.analog_transponders+v.digital_transponders; effort=v.analog_transponders*9+v.digital_transponders*16+(v.calibration_frames*7 if v.whiteout_warning else 0); allowance=v.calibration_frames*50; remainder=max(effort-allowance,0)\n    return {'enrollment_ref':v.enrollment_ref,'transponder_tally':total,'tuning_effort':effort,'frame_allowance':allowance,'commissioned_effort':min(effort,allowance),'uncommissioned_effort':remainder,'tuning_rounds':(total+5)//6,'enrollment_rating':score(v.analog_transponders,v.digital_transponders,v.calibration_frames,v.whiteout_warning),'enrollment_phase':'enrolled' if remainder==0 else 'whiteout_hold' if v.whiteout_warning else 'routine_hold'}\n",
+        "sha256": "4d5174493d35b854be8a5ef327d47e256a687331efc61372da5adae0aa6a0408",
+        "bytes": 1360,
+        "lines": 9,
+        "rough_tokens": 295,
+        "o200k_base_tokens": 365
+      }
+    },
+    "totals": {
+      "bytes": 4968,
+      "lines": 53,
+      "rough_tokens": 1332,
+      "o200k_base_tokens": 1282
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for beacon_enrollment_repair\n",
+  "stderr": ""
+}

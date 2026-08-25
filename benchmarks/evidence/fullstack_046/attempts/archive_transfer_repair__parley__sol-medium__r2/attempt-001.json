@@ -1,0 +1,171 @@
+{
+  "attempt": 1,
+  "request_id": "904c71e36d230b746c5415e05aa0ba57",
+  "elapsed_seconds": 2.3758,
+  "ok": true,
+  "build": {
+    "ok": true,
+    "error": "",
+    "elapsed_seconds": 0.9455,
+    "protected_read_only_checks": [
+      {
+        "command": [
+          "/private/tmp/parley-fullstack-046-parley/bin/parley",
+          "web",
+          "build",
+          "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-sol-medium-r2-cis5dgau",
+          "-o",
+          "/private/tmp/parley-fullstack-046-measured-work/046-archive_transfer_repair-parley-sol-medium-r2-cis5dgau/.benchmark_build/bundle"
+        ],
+        "protected_read_only_files": 9,
+        "changes": {},
+        "command_error": "",
+        "hashes_ok": true,
+        "ok": true
+      }
+    ],
+    "protected_read_only_ok": true
+  },
+  "cases": [
+    {
+      "id": "archive_transfer_status",
+      "target": "http",
+      "status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:35:25 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "43"
+      },
+      "body": "{\"service\":\"Archive Transfer\",\"ready\":true}",
+      "json": {
+        "service": "Archive Transfer",
+        "ready": true
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_primary",
+      "target": "http",
+      "status": 201,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:35:25 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved",
+        "x-content-type-options": "nosniff",
+        "content-length": "197"
+      },
+      "body": "{\"transfer_tag\":\"folio-8\",\"volume_tally\":6,\"relocation_effort\":64,\"cart_allowance\":86,\"shelved_effort\":64,\"quarantined_effort\":0,\"transfer_rounds\":2,\"transfer_rating\":78,\"transfer_phase\":\"shelved\"}",
+      "json": {
+        "transfer_tag": "folio-8",
+        "volume_tally": 6,
+        "relocation_effort": 64,
+        "cart_allowance": 86,
+        "shelved_effort": 64,
+        "quarantined_effort": 0,
+        "transfer_rounds": 2,
+        "transfer_rating": 78,
+        "transfer_phase": "shelved"
+      },
+      "application_headers": {
+        "location": "/api/v10/archive-transfers/folio-8",
+        "x-transfer-phase": "shelved"
+      },
+      "application_header_pairs": [
+        [
+          "location",
+          "/api/v10/archive-transfers/folio-8"
+        ],
+        [
+          "x-transfer-phase",
+          "shelved"
+        ]
+      ],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_missing_carts",
+      "target": "http",
+      "status": 400,
+      "content_type": "application/json; charset=utf-8",
+      "headers": {
+        "server": "BaseHTTP/0.6 Python/3.14.6",
+        "date": "Thu, 13 Aug 2026 07:35:25 GMT",
+        "content-type": "application/json; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "content-length": "63"
+      },
+      "body": "{\"error\":\"invalid_json\",\"detail\":\"missing field catalog_carts\"}",
+      "json": {
+        "error": "invalid_json",
+        "detail": "missing field catalog_carts"
+      },
+      "application_headers": {},
+      "application_header_pairs": [],
+      "pass": true
+    },
+    {
+      "id": "archive_transfer_browser_primary",
+      "target": "browser",
+      "ok": true,
+      "value": 78,
+      "error": "",
+      "elapsed_seconds": 0.2997,
+      "pass": true
+    }
+  ],
+  "cross_target": {
+    "ok": true,
+    "value": 78,
+    "error": "",
+    "elapsed_seconds": 0.2721,
+    "expected": 78,
+    "pass": true
+  },
+  "source": {
+    "editable_files": {
+      "logic.par": {
+        "exists": true,
+        "text": "to archive_transfer_rating with folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno giving number:\n    let effort be folio_boxes times 6 plus atlas_tubes times 17\n    if humidity_warning:\n        set effort to effort plus catalog_carts times 3\n    let allowance be catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((folio_boxes plus atlas_tubes plus 4) divided by 5)\n    give back shelved plus quarantine times 6 plus rounds times 7\n",
+        "sha256": "52646152d39544af7cd3d80f373db3c3a23d7e6562b1e17ceb3165a54610d13f",
+        "bytes": 687,
+        "lines": 13,
+        "rough_tokens": 108,
+        "o200k_base_tokens": 163
+      },
+      "main.par": {
+        "exists": true,
+        "text": "include \"logic.par\"\na web_request has method as text, path as text, query as text, headers as map from text to text, body as text\na request_input has transfer_tag as text, folio_boxes as number, atlas_tubes as number, catalog_carts as number, humidity_warning as yesno\na response_body has transfer_tag as text, volume_tally as number, relocation_effort as number, cart_allowance as number, shelved_effort as number, quarantined_effort as number, transfer_rounds as number, transfer_rating as number, transfer_phase as text\na controlled_response has status as number, headers as map from text to text, body as response_body\na service_status has service as text, ready as yesno\nto project_status giving service_status:\n    give back a service_status with service \"Archive Transfer\", ready yes\nto empty_body with key as text, state as text giving response_body:\n    give back a response_body with transfer_tag key, volume_tally 0, relocation_effort 0, cart_allowance 0, shelved_effort 0, quarantined_effort 0, transfer_rounds 0, transfer_rating 0, transfer_phase state\nto handle_request with request as web_request, body as request_input giving controlled_response:\n    let headers be a map from text to text\n    if body's folio_boxes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's atlas_tubes is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is less than 0:\n        set item \"x-validation\" of headers to \"nonnegative\"\n        give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    if body's catalog_carts is 0:\n        if body's folio_boxes plus body's atlas_tubes is more than 0:\n            set item \"x-validation\" of headers to \"catalog_carts\"\n            give back a controlled_response with status 422, headers headers, body (empty_body with body's transfer_tag, \"invalid\")\n    let total be body's folio_boxes plus body's atlas_tubes\n    let effort be body's folio_boxes times 6 plus body's atlas_tubes times 17\n    if body's humidity_warning:\n        set effort to effort plus body's catalog_carts times 3\n    let allowance be body's catalog_carts times 43\n    let shelved be effort\n    if shelved is more than allowance:\n        set shelved to allowance\n    let quarantine be effort minus allowance\n    if quarantine is less than 0:\n        set quarantine to 0\n    let rounds be number from ((total plus 4) divided by 5)\n    let state be \"shelved\"\n    if quarantine is more than 0:\n        set state to \"routine_hold\"\n        if body's humidity_warning:\n            set state to \"humidity_hold\"\n    let result be a response_body with transfer_tag body's transfer_tag, volume_tally total, relocation_effort effort, cart_allowance allowance, shelved_effort shelved, quarantined_effort quarantine, transfer_rounds rounds, transfer_rating (archive_transfer_rating with body's folio_boxes, body's atlas_tubes, body's catalog_carts, body's humidity_warning), transfer_phase state\n    set item \"location\" of headers to \"/api/v10/archive-transfers/{body's transfer_tag}\"\n    set item \"x-transfer-phase\" of headers to \"{state}\"\n    give back a controlled_response with status 201, headers headers, body result\n",
+        "sha256": "96d35d301b615f344da453fb507cdce8e3cf2eb81940363012744dd3edd776c1",
+        "bytes": 3529,
+        "lines": 46,
+        "rough_tokens": 601,
+        "o200k_base_tokens": 804
+      },
+      "parley.web.json": {
+        "exists": true,
+        "text": "{\"schema_version\":1,\"name\":\"archive_transfer_repair\",\"entrypoint\":\"main.par\",\"static_dir\":\"public\",\"routes\":[{\"method\":\"GET\",\"path\":\"/status/archive-transfer-ready\",\"handler\":\"project_status\"},{\"method\":\"POST\",\"path\":\"/api/v10/archive-transfers\",\"handler\":\"handle_request\",\"response\":{\"status_field\":\"status\",\"headers_field\":\"headers\",\"body_field\":\"body\"}}],\"browser\":{\"entrypoint\":\"main.par\",\"exports\":[{\"name\":\"archive_transfer_rating\"}]},\"server\":{\"host\":\"127.0.0.1\",\"port\":8787,\"max_body_bytes\":16384}}\n",
+        "sha256": "523b4b0332f3e3da51d0b6660ba82a6a499fbea86f40c74b696bbb8238d8dcec",
+        "bytes": 507,
+        "lines": 1,
+        "rough_tokens": 195,
+        "o200k_base_tokens": 124
+      }
+    },
+    "totals": {
+      "bytes": 4723,
+      "lines": 60,
+      "rough_tokens": 904,
+      "o200k_base_tokens": 1091
+    }
+  },
+  "stdout": "public HTTP and Chromium checks passed for archive_transfer_repair\n",
+  "stderr": ""
+}
